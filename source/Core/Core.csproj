@@ -31,23 +31,98 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.3.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Thinktecture.IdentityModel.Core">
+      <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.0.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AutoFacConfig.cs" />
+    <Compile Include="Configuration\Startup.cs" />
+    <Compile Include="Configuration\WebApiConfig.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Plumbing\BasicAuthenticationFilter.cs" />
+    <Compile Include="PrincipalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocols\Connect\Models\AuthorizationCode.cs" />
+    <Compile Include="Protocols\Connect\Models\AuthorizeError.cs" />
+    <Compile Include="Protocols\Connect\Models\OidcClient.cs" />
+    <Compile Include="Protocols\Connect\Models\OidcConfiguration.cs" />
+    <Compile Include="Protocols\Connect\Endpoints\OidcAuthorizeEndpointController.cs" />
+    <Compile Include="Protocols\Connect\Endpoints\OidcTokenEndpointController.cs" />
+    <Compile Include="Protocols\Connect\Repositories\Test\InMemoryOidcClientsRepository.cs" />
+    <Compile Include="Repositories\InMemorySettingsRepository.cs" />
+    <Compile Include="Protocols\Connect\Repositories\IOidcClientsRepository.cs" />
+    <Compile Include="Repositories\ISettingsRepository.cs" />
+    <Compile Include="Protocols\Connect\Models\AuthorizeResponse.cs" />
+    <Compile Include="Protocols\Connect\ResponseHandling\AuthorizeResponseGenerator.cs" />
+    <Compile Include="Protocols\Connect\Models\TokenResponse.cs" />
+    <Compile Include="Protocols\Connect\ResponseHandling\TokenResponseGenerator.cs" />
+    <Compile Include="Protocols\Connect\Results\LoginResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcAuthorizeCodeResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcAuthorizeErrorResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcAuthorizeImplicitFormPostResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcAuthorizeImplicitFragmentResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcTokenErrorResult.cs" />
+    <Compile Include="Protocols\Connect\Results\OidcTokenResult.cs" />
+    <Compile Include="Protocols\Connect\Results\ResultExtensions.cs" />
+    <Compile Include="Services\DebugLogger.cs" />
+    <Compile Include="Protocols\Connect\Services\DefaultOidcTokenService.cs" />
+    <Compile Include="Protocols\Connect\Services\IAuthorizationCodeService.cs" />
+    <Compile Include="Protocols\Connect\Services\IConsentService.cs" />
+    <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Protocols\Connect\Services\IOidcClientsService.cs" />
+    <Compile Include="Protocols\Connect\Services\IOidcTokenService.cs" />
+    <Compile Include="Services\IProfileService.cs" />
+    <Compile Include="Services\ISettingsService.cs" />
+    <Compile Include="Protocols\Connect\Services\ITokenHandleService.cs" />
+    <Compile Include="Services\LoggerExtensions.cs" />
+    <Compile Include="Protocols\Connect\Services\OidcClientsService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Protocols\Connect\Services\Test\TestAuthorizationCodeService.cs" />
+    <Compile Include="Protocols\Connect\Services\Test\TestConsentService.cs" />
+    <Compile Include="Protocols\Connect\Services\Test\TestProfileService.cs" />
+    <Compile Include="Protocols\Connect\Services\Test\TestTokenHandleService.cs" />
+    <Compile Include="Services\TraceSourceLogger.cs" />
+    <Compile Include="Protocols\Connect\Models\Token.cs" />
+    <Compile Include="Protocols\Connect\Validation\OidcAuthorizeRequestValidator.cs" />
+    <Compile Include="Protocols\Connect\Validation\OidcTokenRequestValidator.cs" />
+    <Compile Include="Protocols\Connect\Validation\ValidatedAuthorizeRequest.cs" />
+    <Compile Include="Protocols\Connect\Validation\ValidatedTokenRequest.cs" />
+    <Compile Include="Protocols\Connect\Validation\ValidationResult.cs" />
+    <Compile Include="Authentication\SignInMessage.cs" />
+    <Compile Include="StringsExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Authentication\" />
-    <Folder Include="Configuration\" />
-    <Folder Include="Protocols\Connect\" />
-    <Folder Include="Protocols\Models\" />
     <Folder Include="Server\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Protocols\Connect\FormPostResponse.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
