@@ -5,13 +5,17 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{FB9E026E-BAB3-498A-A954-B93B05C146A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagement.Api", "UserManagement.Api\UserManagement.Api.csproj", "{1AEA243F-5A85-402D-89DF-C178FEB522D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAdmin.Api", "UserAdmin.Api\UserAdmin.Api.csproj", "{1AEA243F-5A85-402D-89DF-C178FEB522D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.Api", "Admin.Api\Admin.Api.csproj", "{2BF02E9A-6C40-4961-85BA-538F6461B72A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerAdmin.Api", "ServerAdmin.Api\ServerAdmin.Api.csproj", "{2BF02E9A-6C40-4961-85BA-538F6461B72A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{C41ECC23-BB27-4BDD-990E-4908B872F12C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Admin.UI", "Admin.UI\Admin.UI.csproj", "{D1A280BE-52ED-4B41-BE67-BC933BA5D2B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.EntityFramework", "Core.EntityFramework\Core.EntityFramework.csproj", "{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Admin", "Admin", "{1F0DF45C-AFF2-4C57-80C6-93F90FE840FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,8 +43,17 @@ Global
 		{D1A280BE-52ED-4B41-BE67-BC933BA5D2B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1A280BE-52ED-4B41-BE67-BC933BA5D2B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1A280BE-52ED-4B41-BE67-BC933BA5D2B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1AEA243F-5A85-402D-89DF-C178FEB522D6} = {1F0DF45C-AFF2-4C57-80C6-93F90FE840FA}
+		{2BF02E9A-6C40-4961-85BA-538F6461B72A} = {1F0DF45C-AFF2-4C57-80C6-93F90FE840FA}
+		{D1A280BE-52ED-4B41-BE67-BC933BA5D2B1} = {1F0DF45C-AFF2-4C57-80C6-93F90FE840FA}
 	EndGlobalSection
 EndGlobal

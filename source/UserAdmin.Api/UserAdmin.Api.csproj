@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2BF02E9A-6C40-4961-85BA-538F6461B72A}</ProjectGuid>
+    <ProjectGuid>{1AEA243F-5A85-402D-89DF-C178FEB522D6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Thinktecture.IdentityServer.Admin.Api</RootNamespace>
-    <AssemblyName>Thinktecture.IdentityServer.Admin.Api</AssemblyName>
+    <RootNamespace>Thinktecture.IdentityServer.UserAdmin.Api</RootNamespace>
+    <AssemblyName>Thinktecture.IdentityServer.UserAdmin.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
