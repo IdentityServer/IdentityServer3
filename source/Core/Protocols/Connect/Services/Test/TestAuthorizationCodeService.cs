@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {

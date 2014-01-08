@@ -4,7 +4,6 @@ using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Protocols.Connect;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 

@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Protocols.Connect;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Models
 {
     public class TokenResponse

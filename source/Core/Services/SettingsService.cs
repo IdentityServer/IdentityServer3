@@ -1,5 +1,4 @@
 ﻿using Thinktecture.IdentityServer.Core.Repositories;
-using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
+﻿using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
