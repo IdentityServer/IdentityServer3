@@ -1,5 +1,4 @@
-﻿using Core.Services;
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;

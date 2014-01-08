@@ -1,5 +1,4 @@
-﻿using Core.Services;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;

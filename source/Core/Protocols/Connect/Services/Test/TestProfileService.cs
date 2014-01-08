@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public class TestProfileService : IProfileService
     {

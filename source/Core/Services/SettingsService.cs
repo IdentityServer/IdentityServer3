@@ -1,7 +1,7 @@
 ﻿using Thinktecture.IdentityServer.Core.Repositories;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Core.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public class SettingsService : ISettingsService
     {

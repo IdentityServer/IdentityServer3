@@ -11,7 +11,7 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     [RoutePrefix("connect/authorize")]
-    //[HostAuthentication("idsrv")]
+    [HostAuthentication("idsrv")]
     public class OidcAuthorizeEndpointController : ApiController
     {
         private ILogger _logger;
