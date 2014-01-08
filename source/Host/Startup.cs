@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Host
                         CookieSecure = CookieSecureOption.SameAsRequest
                     });
 
-                    app.UseWebApi(WebApiConfig.Configure());
+                    coreApp.UseWebApi(WebApiConfig.Configure());
                 });
         }
     }
