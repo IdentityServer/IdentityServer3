@@ -8,10 +8,22 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
+    public class LoginBody
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
     [RoutePrefix("login")]
     [Route]
     public class LoginController : ApiController
     {
+        IAuthenticationService authenticationService;
+        public LoginController(IAuthenticationService authenticationService)
+        {
+            this.authenticationService = authenticationService;
+        }
+
         string GetLoginPage()
         {
             var html = EmbeddedResourceManager.LoadResourceString("Thinktecture.IdentityServer.Core.Authentication.Assets.Login.html");
@@ -33,21 +45,28 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return GetLoginPageResponse();
         }
 
-        public IHttpActionResult Post([FromUri] SignInMessage msg)
+        public IHttpActionResult Post([FromUri] SignInMessage msg, [FromBody] LoginBody body)
         {
-            var message = Request.RequestUri.Query;
-
-            var id = new ClaimsIdentity("idsrv");
-            id.AddClaims(new[]
+            var claims = authenticationService.Authenticate(body.Username, body.Password);
+            if (claims != null)
             {
-                new Claim(Constants.ClaimTypes.Subject, "dominick"),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString())
-            });
+                var message = Request.RequestUri.Query;
 
-            Request.GetOwinContext().Authentication.SignIn(id);
+                var id = new ClaimsIdentity("idsrv");
+                id.AddClaims(new[]
+                {
+                    new Claim(Constants.ClaimTypes.Subject, body.Username),
+                    new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password),
+                    new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString())
+                });
+                id.AddClaims(claims);
 
-            return Redirect(msg.ReturnUrl);
+                Request.GetOwinContext().Authentication.SignIn(id);
+
+                return Redirect(msg.ReturnUrl);
+            }
+
+            return ResponseMessage(GetLoginPageResponse());
         }
     }
 }

@@ -44,6 +44,9 @@ namespace Thinktecture.IdentityServer.Core
             // controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // authN
+            builder.RegisterType<Thinktecture.IdentityServer.Core.Authentication.AuthenticationService>().As<Thinktecture.IdentityServer.Core.Authentication.IAuthenticationService>();
+
             return builder.Build();
         }
     }

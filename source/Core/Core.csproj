@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\LoginController.cs" />
     <Compile Include="Configuration\AutoFacConfig.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
