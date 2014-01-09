@@ -5,7 +5,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {
     public class TestConsentService : IConsentService
     {
-        public bool RequiresConsent(OidcClient client, List<string> scopes)
+        public bool RequiresConsent(Client client, List<string> scopes)
         {
             return false;
         }

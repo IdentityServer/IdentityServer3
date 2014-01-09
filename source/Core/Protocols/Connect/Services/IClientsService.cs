@@ -1,8 +1,8 @@
 ﻿using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
-namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
+namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {
-    public interface IOidcClientsRepository
+    public interface IClientsService
     {
         Client FindById(string clientId);
     }

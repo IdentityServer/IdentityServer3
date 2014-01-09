@@ -5,11 +5,11 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Models
 {
-    public class OidcConfiguration
+    public class Configuration
     {
         ISettingsService _settings;
 
-        public OidcConfiguration(ISettingsService settings)
+        public Configuration(ISettingsService settings)
         {
             _settings = settings;
             _settings.Prefix = "oidc";

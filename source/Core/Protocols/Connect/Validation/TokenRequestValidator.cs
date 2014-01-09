@@ -6,12 +6,12 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
-    public class OidcTokenRequestValidator
+    public class TokenRequestValidator
     {
-        private OidcConfiguration _configuration;
+        private Configuration _configuration;
         private ILogger _logger;
         private IAuthorizationCodeService _authorizationCodes;
-        private IOidcClientsService _clients;
+        private IClientsService _clients;
 
         private ValidatedTokenRequest _validatedRequest;
 
@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
             }
         }
 
-        public OidcTokenRequestValidator(OidcConfiguration configuration, ILogger logger, IOidcClientsService clients, IAuthorizationCodeService authorizationCodes)
+        public TokenRequestValidator(Configuration configuration, ILogger logger, IClientsService clients, IAuthorizationCodeService authorizationCodes)
         {
             _configuration = configuration;
             _logger = logger;

@@ -9,10 +9,10 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public OidcConfiguration Configuration { get; set; }
+        public Configuration Configuration { get; set; }
 
         public string ClientId { get; set; }
-        public OidcClient Client { get; set; }
+        public Client Client { get; set; }
         public Uri RedirectUri { get; set; }
         public List<string> Scopes { get; set; }
         public string State { get; set; }

@@ -6,13 +6,13 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
-    public class OidcAuthorizeRequestValidator
+    public class AuthorizeRequestValidator
     {
-        OidcConfiguration _configuration;
+        Configuration _configuration;
         ILogger _logger;
 
         ValidatedAuthorizeRequest _validatedRequest;
-        private IOidcClientsService _clients;
+        private IClientsService _clients;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
             }
         }
 
-        public OidcAuthorizeRequestValidator(OidcConfiguration configuration, IOidcClientsService clients, ILogger logger)
+        public AuthorizeRequestValidator(Configuration configuration, IClientsService clients, ILogger logger)
         {
             _clients = clients;
             _configuration = configuration;
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
         // basic protocol validation
         public ValidationResult ValidateProtocol(NameValueCollection parameters)
         {
-            _logger.Start("OIDC authorize request protocol validation");
+            _logger.Verbose("OIDC authorize request protocol validation");
 
             //////////////////////////////////////////////////////////
             // client_id must be present

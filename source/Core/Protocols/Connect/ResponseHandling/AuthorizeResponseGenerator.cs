@@ -7,11 +7,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     public class OidcAuthorizeResponseGenerator
     {
-        private IOidcTokenService _tokenService;
+        private ITokenService _tokenService;
         private IAuthorizationCodeService _authorizationCodes;
         private ITokenHandleService _tokenHandles;
 
-        public OidcAuthorizeResponseGenerator(IOidcTokenService tokenService, IAuthorizationCodeService authorizationCodes, ITokenHandleService tokenHandles)
+        public OidcAuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeService authorizationCodes, ITokenHandleService tokenHandles)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;

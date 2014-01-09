@@ -7,13 +7,13 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
 {
     public class InMemoryOidcClientsRepository : IOidcClientsRepository
     {
-        private static readonly List<OidcClient> _clients;
+        private static readonly List<Client> _clients;
 
         static InMemoryOidcClientsRepository()
         {
-            _clients = new List<OidcClient>
+            _clients = new List<Client>
             {
-                new OidcClient
+                new Client
                 {
                     ClientName = "Code Client",
                     ClientId = "codeclient",
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,
                 },
-                new OidcClient
+                new Client
                 {
                     ClientName = "Implicit Client",
                     ClientId = "implicitclient",
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
             };
         }
 
-        public OidcClient FindById(string clientId)
+        public Client FindById(string clientId)
         {
             return (from c in _clients
                     where c.ClientId == clientId

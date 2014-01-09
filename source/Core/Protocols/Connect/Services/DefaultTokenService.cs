@@ -9,11 +9,11 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {
-    public class DefaultOidcTokenService : IOidcTokenService
+    public class DefaultTokenService : ITokenService
     {
         private IProfileService _profile;
 
-        public DefaultOidcTokenService(IProfileService profile)
+        public DefaultTokenService(IProfileService profile)
         {
             _profile = profile;
         }
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
             return token;
         }
 
-        public virtual string CreateJsonWebToken(Token token, OidcClient client, OidcConfiguration configuration)
+        public virtual string CreateJsonWebToken(Token token, Client client, Configuration configuration)
         {
             // todo: sig key strategy??
             var signingCredentials = new X509SigningCredentials(configuration.SigningKey);

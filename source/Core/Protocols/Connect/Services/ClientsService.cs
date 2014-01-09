@@ -3,16 +3,16 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {
-    public class OidcClientsService : IOidcClientsService
+    public class ClientsService : IClientsService
     {
         IOidcClientsRepository _repository;
 
-        public OidcClientsService(IOidcClientsRepository repository)
+        public ClientsService(IOidcClientsRepository repository)
         {
             _repository = repository;
         }
 
-        public OidcClient FindById(string clientId)
+        public Client FindById(string clientId)
         {
             return _repository.FindById(clientId);
         }

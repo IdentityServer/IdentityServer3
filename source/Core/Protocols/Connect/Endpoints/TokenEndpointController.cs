@@ -9,14 +9,14 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     [BasicAuthenticationFilter]
     [RoutePrefix("connect/token")]
-    public class OidcTokenEndpointController : ApiController
+    public class TokenEndpointController : ApiController
     {
         private ILogger _logger;
        
-        private OidcTokenRequestValidator _validator;
+        private TokenRequestValidator _validator;
         private OidcTokenResponseGenerator _generator;
 
-        public OidcTokenEndpointController(OidcTokenRequestValidator validator, OidcTokenResponseGenerator generator, ILogger logger)
+        public TokenEndpointController(TokenRequestValidator validator, OidcTokenResponseGenerator generator, ILogger logger)
         {
             _validator = validator;
             _generator = generator;

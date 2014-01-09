@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Models
 {
-    public class OidcClient
+    public class Client
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }

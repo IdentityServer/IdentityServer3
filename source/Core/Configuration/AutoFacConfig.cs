@@ -16,8 +16,8 @@ namespace Thinktecture.IdentityServer.Core
             var builder = new ContainerBuilder();
 
             // validators
-            builder.RegisterType<OidcTokenRequestValidator>();
-            builder.RegisterType<OidcAuthorizeRequestValidator>();
+            builder.RegisterType<TokenRequestValidator>();
+            builder.RegisterType<AuthorizeRequestValidator>();
 
             // processors
             builder.RegisterType<OidcTokenResponseGenerator>();
@@ -28,21 +28,21 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<InMemorySettingsRepository>().As<ISettingsRepository>();
 
             // configuration
-            builder.RegisterType<OidcConfiguration>();
+            builder.RegisterType<Configuration>();
 
             // services
-            builder.RegisterType<OidcClientsService>().As<IOidcClientsService>();
+            builder.RegisterType<ClientsService>().As<IClientsService>();
             builder.RegisterType<SettingsService>().As<ISettingsService>();
             builder.RegisterType<TestAuthorizationCodeService>().As<IAuthorizationCodeService>();
             builder.RegisterType<TestConsentService>().As<IConsentService>();
             //builder.RegisterType<TraceSourceLogger>().As<ILogger>();
             builder.RegisterType<DebugLogger>().As<ILogger>();
             builder.RegisterType<TestTokenHandleService>().As<ITokenHandleService>();
-            builder.RegisterType<DefaultOidcTokenService>().As<IOidcTokenService>();
+            builder.RegisterType<DefaultTokenService>().As<ITokenService>();
             builder.RegisterType<TestProfileService>().As<IProfileService>();
 
             // controller
-            builder.RegisterApiControllers(typeof(OidcAuthorizeEndpointController).Assembly);
+            builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             return builder.Build();
         }

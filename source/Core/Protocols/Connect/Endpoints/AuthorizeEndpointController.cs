@@ -12,13 +12,13 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     [RoutePrefix("connect/authorize")]
     [HostAuthentication("idsrv")]
-    public class OidcAuthorizeEndpointController : ApiController
+    public class AuthorizeEndpointController : ApiController
     {
         private ILogger _logger;
         private OidcAuthorizeResponseGenerator _responseGenerator;
-        private OidcAuthorizeRequestValidator _validator;
+        private AuthorizeRequestValidator _validator;
 
-        public OidcAuthorizeEndpointController(ILogger logger, OidcAuthorizeRequestValidator validator, OidcAuthorizeResponseGenerator responseGenerator)
+        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, OidcAuthorizeResponseGenerator responseGenerator)
         {
             _logger = logger;
 

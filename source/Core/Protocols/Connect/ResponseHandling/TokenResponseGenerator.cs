@@ -6,11 +6,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     public class OidcTokenResponseGenerator
     {
-        private IOidcTokenService _tokenService;
+        private ITokenService _tokenService;
         private ITokenHandleService _tokenHandles;
-        private OidcConfiguration _configuration;
+        private Configuration _configuration;
         
-        public OidcTokenResponseGenerator(IOidcTokenService tokenService, ITokenHandleService tokenHandles, OidcConfiguration configuration)
+        public OidcTokenResponseGenerator(ITokenService tokenService, ITokenHandleService tokenHandles, Configuration configuration)
         {
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
