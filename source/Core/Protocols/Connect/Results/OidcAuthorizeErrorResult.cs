@@ -28,9 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 
             if (Error.ErrorType == ErrorTypes.User)
             {
-                //return BadRequest(error);
-
                 // todo: return error page
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(Error.Error)
+                };
             }
             else if (Error.ErrorType == ErrorTypes.Client)
             {
