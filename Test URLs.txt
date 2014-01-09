@@ -1,0 +1,8 @@
+http://localhost:3333/core/connect/authorize
+
+http://localhost:3333/core/connect/authorize?client_id=codeclient&redirect_uri=https://localhost/cb&response_type=code&scope=openid profile&state=123
+
+http://localhost:3333/core/connect/authorize?client_id=implicitclient&redirect_uri=https://localhost/cb&response_type=id_token token&scope=openid profile&state=123&nonce=456
+http://localhost:3333/core/connect/authorize?client_id=implicitclient&redirect_uri=https://localhost/cb&response_type=id_token&scope=openid profile&state=123&nonce=456
+
+http://localhost:3333/core/connect/authorize?client_id=implicitclient&redirect_uri=https://localhost/cb&response_type=id_token&response_mode=form_post&scope=openid profile&state=123&nonce=456
