@@ -79,6 +79,7 @@
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Plumbing\BasicAuthenticationFilter.cs" />
+    <Compile Include="Plumbing\EmbeddedResourceManager.cs" />
     <Compile Include="PrincipalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocols\Connect\Models\AuthorizationCode.cs" />
@@ -138,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Protocols\Connect\FormPostResponse.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Authentication\Assets\Login.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
