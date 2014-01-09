@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
             {
                 var returnUrl = WebUtility.UrlEncode(_request.RequestUri.AbsoluteUri);
 
-                var uri = new Uri(_request.RequestUri, "/login?returnUrl=" + returnUrl);
+                var uri = new Uri(_request.RequestUri, "/core/login?returnUrl=" + returnUrl);
                 response.Headers.Location = uri;
             }
             catch

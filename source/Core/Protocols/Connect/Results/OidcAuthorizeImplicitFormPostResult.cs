@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
         private HttpResponseMessage Execute()
         {
             string form;
-            using (var stream = this.GetType().Assembly.GetManifestResourceStream("Core.Oidc.FormPostResponse.html"))
+            using (var stream = this.GetType().Assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Core.Protocols.Connect.FormPostResponse.html"))
             {
                 using (var reader = new StreamReader(stream))
                 {
