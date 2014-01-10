@@ -6,19 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
+using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
-    public class LoginResponseGenerator
+    public class AuthorizeInteractionResponseGenerator
     {
         private SignInMessage _signIn;
+        private IConsentService _consent;
         
-        public LoginResponseGenerator()
+        public AuthorizeInteractionResponseGenerator(IConsentService consent)
         {
             _signIn = new SignInMessage();
+            _consent = consent;
         }
 
-        public LoginResponse Generate(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public InteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
@@ -38,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)
                 {
-                    return new LoginResponse
+                    return new InteractionResponse
                     {
                         IsError = true,
                         Error = new AuthorizeError
@@ -50,7 +53,13 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                             State = request.State
                         }
                     };
-                }   
+                }
+
+                return new InteractionResponse
+                {
+                    IsLogin = true,
+                    SignInMessage = _signIn
+                };
             }
 
             // check authentication freshness
@@ -59,15 +68,29 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                 var authTime = user.GetAuthenticationTime();
                 if (DateTime.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
                 {
-                    return new LoginResponse
+                    return new InteractionResponse
                     {
                         IsLogin = true,
                         SignInMessage = _signIn
                     };
                 }
             }
+    
+            return new InteractionResponse();
+        }
 
-            return new LoginResponse();
+        public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        {
+            if (request.PromptMode == Constants.PromptModes.Consent ||
+                _consent.RequiresConsent(request.Client, user, request.Scopes))
+            {
+                return new InteractionResponse
+                {
+                    IsConsent = true
+                };
+            }
+
+            return new InteractionResponse();
         }
     }
 }

@@ -90,9 +90,9 @@
     <Compile Include="Protocols\Connect\Models\Configuration.cs" />
     <Compile Include="Protocols\Connect\Endpoints\AuthorizeEndpointController.cs" />
     <Compile Include="Protocols\Connect\Endpoints\TokenEndpointController.cs" />
-    <Compile Include="Protocols\Connect\Models\LoginResponse.cs" />
+    <Compile Include="Protocols\Connect\Models\InteractionResponse.cs" />
     <Compile Include="Protocols\Connect\Repositories\Test\InMemoryClientsRepository.cs" />
-    <Compile Include="Protocols\Connect\ResponseHandling\LoginResponseGenerator.cs" />
+    <Compile Include="Protocols\Connect\ResponseHandling\AuthorizeInteractionResponseGenerator.cs" />
     <Compile Include="Repositories\InMemorySettingsRepository.cs" />
     <Compile Include="Protocols\Connect\Repositories\IClientsRepository.cs" />
     <Compile Include="Repositories\ISettingsRepository.cs" />

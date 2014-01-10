@@ -22,6 +22,7 @@ namespace Thinktecture.IdentityServer.Core
             // processors
             builder.RegisterType<TokenResponseGenerator>();
             builder.RegisterType<AuthorizeResponseGenerator>();
+            builder.RegisterType<AuthorizeInteractionResponseGenerator>();
 
             // repositories
             builder.RegisterType<InMemoryClientsRepository>().As<IClientsRepository>();

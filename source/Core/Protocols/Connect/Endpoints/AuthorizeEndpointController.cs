@@ -15,16 +15,17 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private ILogger _logger;
-        private AuthorizeResponseGenerator _responseGenerator;
-        private AuthorizeRequestValidator _validator;
-        private LoginResponseGenerator _loginGenerator;
 
-        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, LoginResponseGenerator loginGenerator)
+        private AuthorizeRequestValidator _validator;
+        private AuthorizeResponseGenerator _responseGenerator;
+        private AuthorizeInteractionResponseGenerator _interactionGenerator;
+
+        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, AuthorizeInteractionResponseGenerator interactionGenerator)
         {
             _logger = logger;
 
             _responseGenerator = responseGenerator;
-            _loginGenerator = loginGenerator;
+            _interactionGenerator = interactionGenerator;
 
             _validator = validator;
         }
@@ -64,15 +65,15 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                     request.State);
             }
 
-            var loginResponse = _loginGenerator.Generate(request, User as ClaimsPrincipal);
+            var interaction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
 
-            if (loginResponse.IsError)
+            if (interaction.IsError)
             {
-                return this.AuthorizeError(loginResponse.Error);
+                return this.AuthorizeError(interaction.Error);
             }
-            if (loginResponse.IsLogin)
+            if (interaction.IsLogin)
             {
-                return this.Login(loginResponse.SignInMessage);
+                return this.Login(interaction.SignInMessage);
             }
 
             ///////////////////////////////////////////////////////////////
@@ -90,13 +91,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                     request.State);
             }
 
-            // todo: consent handling
-            //if (request.PromptMode == Constants.PromptModes.Consent ||
-            //    _services.Consent.RequiresConsent(request.Client, request.Scopes))
-            //{
-            //    // show consent page
-            //    throw new NotImplementedException();
-            //}
+            interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal);
+            if (interaction.IsConsent)
+            {
+                // show consent page
+            }
 
             return CreateAuthorizeResponse(request);
         }

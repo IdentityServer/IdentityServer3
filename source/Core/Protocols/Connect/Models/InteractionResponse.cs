@@ -7,7 +7,7 @@ using Thinktecture.IdentityServer.Core.Authentication;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Models
 {
-    public class LoginResponse
+    public class InteractionResponse
     {
         public bool IsError { get; set; }
         public bool IsLogin { get; set; }
