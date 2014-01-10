@@ -7,6 +7,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
     public static class ResultExtensions
     {
+        public static IHttpActionResult AuthorizeError(this ApiController controller, AuthorizeError error)
+        {
+            return new AuthorizeErrorResult(error);
+        }
+
         public static IHttpActionResult AuthorizeError(this ApiController controller, ErrorTypes errorType, string error, string responseMode, Uri errorUri, string state)
         {
             return new AuthorizeErrorResult(new AuthorizeError

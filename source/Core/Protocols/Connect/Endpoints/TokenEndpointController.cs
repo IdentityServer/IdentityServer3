@@ -14,9 +14,9 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
         private ILogger _logger;
        
         private TokenRequestValidator _validator;
-        private OidcTokenResponseGenerator _generator;
+        private TokenResponseGenerator _generator;
 
-        public TokenEndpointController(TokenRequestValidator validator, OidcTokenResponseGenerator generator, ILogger logger)
+        public TokenEndpointController(TokenRequestValidator validator, TokenResponseGenerator generator, ILogger logger)
         {
             _validator = validator;
             _generator = generator;

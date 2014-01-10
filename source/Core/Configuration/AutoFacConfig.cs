@@ -20,11 +20,11 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<AuthorizeRequestValidator>();
 
             // processors
-            builder.RegisterType<OidcTokenResponseGenerator>();
-            builder.RegisterType<OidcAuthorizeResponseGenerator>();
+            builder.RegisterType<TokenResponseGenerator>();
+            builder.RegisterType<AuthorizeResponseGenerator>();
 
             // repositories
-            builder.RegisterType<InMemoryOidcClientsRepository>().As<IOidcClientsRepository>();
+            builder.RegisterType<InMemoryClientsRepository>().As<IClientsRepository>();
             builder.RegisterType<InMemorySettingsRepository>().As<ISettingsRepository>();
 
             // configuration

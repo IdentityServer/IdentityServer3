@@ -2,7 +2,7 @@
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
 {
-    public interface IOidcClientsRepository
+    public interface IClientsRepository
     {
         Client FindById(string clientId);
     }

@@ -5,11 +5,11 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories
 {
-    public class InMemoryOidcClientsRepository : IOidcClientsRepository
+    public class InMemoryClientsRepository : IClientsRepository
     {
         private static readonly List<Client> _clients;
 
-        static InMemoryOidcClientsRepository()
+        static InMemoryClientsRepository()
         {
             _clients = new List<Client>
             {
