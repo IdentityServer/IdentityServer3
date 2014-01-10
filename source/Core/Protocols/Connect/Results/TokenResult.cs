@@ -8,11 +8,11 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
-    public class OidcTokenResult : IHttpActionResult
+    public class TokenResult : IHttpActionResult
     {
         public TokenResponse Response { get; set; }
 
-        public OidcTokenResult(TokenResponse response)
+        public TokenResult(TokenResponse response)
         {
             Response = response;
         }

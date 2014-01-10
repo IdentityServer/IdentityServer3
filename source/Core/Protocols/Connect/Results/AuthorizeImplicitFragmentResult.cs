@@ -8,11 +8,11 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
-    public class OidcAuthorizeCodeResult : IHttpActionResult
+    public class AuthorizeImplicitFragmentResult : IHttpActionResult
     {
         AuthorizeResponse Response { get; set; }
 
-        public OidcAuthorizeCodeResult(AuthorizeResponse response)
+        public AuthorizeImplicitFragmentResult(AuthorizeResponse response)
         {
             Response = response;
         }
@@ -26,12 +26,23 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
 
-            var url = string.Format("{0}?code={1}", Response.RedirectUri.AbsoluteUri, Response.Code);
+            var url = string.Format("{0}#id_token={1}",
+                Response.RedirectUri.AbsoluteUri,
+                Response.IdentityToken);
 
+            if (Response.AccessToken.IsPresent())
+            {
+                url = string.Format("{0}&access_token={1}&token_type=bearer&expires_in={2}", 
+                    url, 
+                    Response.AccessToken,
+                    Response.AccessTokenLifetime);
+            }
             if (Response.State.IsPresent())
             {
                 url = string.Format("{0}&state={1}", url, Response.State);
             }
+
+            //_logger.InformationFormat("Redirecting back to: {0}", url);
 
             responseMessage.Headers.Location = new Uri(url);
             return responseMessage;

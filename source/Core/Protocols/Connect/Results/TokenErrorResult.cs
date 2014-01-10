@@ -7,11 +7,11 @@ using System.Web.Http;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
-    public class OidcTokenErrorResult : IHttpActionResult
+    public class TokenErrorResult : IHttpActionResult
     {
         public string Error { get; set; }
 
-        public OidcTokenErrorResult(string error)
+        public TokenErrorResult(string error)
         {
             Error = error;
         }

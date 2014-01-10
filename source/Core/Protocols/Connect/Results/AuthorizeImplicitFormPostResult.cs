@@ -9,11 +9,11 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
-    public class OidcAuthorizeImplicitFormPostResult : IHttpActionResult
+    public class AuthorizeImplicitFormPostResult : IHttpActionResult
     {
         AuthorizeResponse Response { get; set; }
 
-        public OidcAuthorizeImplicitFormPostResult(AuthorizeResponse response)
+        public AuthorizeImplicitFormPostResult(AuthorizeResponse response)
         {
             Response = response;
         }
