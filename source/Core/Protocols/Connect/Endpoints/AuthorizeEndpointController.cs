@@ -15,14 +15,17 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private ILogger _logger;
-        private OidcAuthorizeResponseGenerator _responseGenerator;
+        private AuthorizeResponseGenerator _responseGenerator;
         private AuthorizeRequestValidator _validator;
+        private LoginResponseGenerator _loginGenerator;
 
-        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, OidcAuthorizeResponseGenerator responseGenerator)
+        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, LoginResponseGenerator loginGenerator)
         {
             _logger = logger;
 
             _responseGenerator = responseGenerator;
+            _loginGenerator = loginGenerator;
+
             _validator = validator;
         }
 
@@ -61,46 +64,16 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                     request.State);
             }
 
-            // pass through display mode to signin service
-            if (request.DisplayMode.IsPresent())
+            var loginResponse = _loginGenerator.Generate(request, User as ClaimsPrincipal);
+
+            if (loginResponse.IsError)
             {
-                signin.DisplayMode = request.DisplayMode;
+                return this.AuthorizeError(loginResponse.Error);
             }
-
-            // pass through ui locales to signin service
-            if (request.UiLocales.IsPresent())
+            if (loginResponse.IsLogin)
             {
-                signin.UILocales = request.UiLocales;
+                return this.Login(loginResponse.SignInMessage);
             }
-
-            // unauthenticated user
-            if (!User.Identity.IsAuthenticated)
-            {
-                // prompt=none means user must be signed in already
-                if (request.PromptMode == Constants.PromptModes.None)
-                {
-                    return this.AuthorizeError(
-                        ErrorTypes.Client,
-                        Constants.AuthorizeErrors.InteractionRequired,
-                        request.ResponseMode,
-                        request.RedirectUri,
-                        request.State);
-                }
-
-                return this.Login(signin);
-            }
-
-            // check authentication freshness
-            if (request.MaxAge.HasValue)
-            {
-                var authTime = User.GetAuthenticationTime();
-                if (DateTime.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
-                {
-                    return this.Login(signin);
-                }
-            }
-
-            // todo: prompt=login handling
 
             ///////////////////////////////////////////////////////////////
             // validate client
