@@ -5,13 +5,13 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
-    public class OidcAuthorizeResponseGenerator
+    public class AuthorizeResponseGenerator
     {
         private ITokenService _tokenService;
         private IAuthorizationCodeService _authorizationCodes;
         private ITokenHandleService _tokenHandles;
 
-        public OidcAuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeService authorizationCodes, ITokenHandleService tokenHandles)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeService authorizationCodes, ITokenHandleService tokenHandles)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;

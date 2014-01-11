@@ -4,9 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Authentication;
 
-namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
+namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class LoginResult : IHttpActionResult
     {

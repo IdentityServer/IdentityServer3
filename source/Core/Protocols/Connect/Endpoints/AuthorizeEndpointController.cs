@@ -15,14 +15,18 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private ILogger _logger;
-        private OidcAuthorizeResponseGenerator _responseGenerator;
-        private AuthorizeRequestValidator _validator;
 
-        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, OidcAuthorizeResponseGenerator responseGenerator)
+        private AuthorizeRequestValidator _validator;
+        private AuthorizeResponseGenerator _responseGenerator;
+        private AuthorizeInteractionResponseGenerator _interactionGenerator;
+
+        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, AuthorizeInteractionResponseGenerator interactionGenerator)
         {
             _logger = logger;
 
             _responseGenerator = responseGenerator;
+            _interactionGenerator = interactionGenerator;
+
             _validator = validator;
         }
 
@@ -61,46 +65,16 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                     request.State);
             }
 
-            // pass through display mode to signin service
-            if (request.DisplayMode.IsPresent())
+            var interaction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
+
+            if (interaction.IsError)
             {
-                signin.DisplayMode = request.DisplayMode;
+                return this.AuthorizeError(interaction.Error);
             }
-
-            // pass through ui locales to signin service
-            if (request.UiLocales.IsPresent())
+            if (interaction.IsLogin)
             {
-                signin.UILocales = request.UiLocales;
+                return this.Login(interaction.SignInMessage);
             }
-
-            // unauthenticated user
-            if (!User.Identity.IsAuthenticated)
-            {
-                // prompt=none means user must be signed in already
-                if (request.PromptMode == Constants.PromptModes.None)
-                {
-                    return this.AuthorizeError(
-                        ErrorTypes.Client,
-                        Constants.AuthorizeErrors.InteractionRequired,
-                        request.ResponseMode,
-                        request.RedirectUri,
-                        request.State);
-                }
-
-                return this.Login(signin);
-            }
-
-            // check authentication freshness
-            if (request.MaxAge.HasValue)
-            {
-                var authTime = User.GetAuthenticationTime();
-                if (DateTime.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
-                {
-                    return this.Login(signin);
-                }
-            }
-
-            // todo: prompt=login handling
 
             ///////////////////////////////////////////////////////////////
             // validate client
@@ -117,13 +91,11 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                     request.State);
             }
 
-            // todo: consent handling
-            //if (request.PromptMode == Constants.PromptModes.Consent ||
-            //    _services.Consent.RequiresConsent(request.Client, request.Scopes))
-            //{
-            //    // show consent page
-            //    throw new NotImplementedException();
-            //}
+            interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal);
+            if (interaction.IsConsent)
+            {
+                // show consent page
+            }
 
             return CreateAuthorizeResponse(request);
         }

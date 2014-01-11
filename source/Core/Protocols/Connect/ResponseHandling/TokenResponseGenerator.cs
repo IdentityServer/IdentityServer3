@@ -4,13 +4,13 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect
 {
-    public class OidcTokenResponseGenerator
+    public class TokenResponseGenerator
     {
         private ITokenService _tokenService;
         private ITokenHandleService _tokenHandles;
         private Configuration _configuration;
         
-        public OidcTokenResponseGenerator(ITokenService tokenService, ITokenHandleService tokenHandles, Configuration configuration)
+        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleService tokenHandles, Configuration configuration)
         {
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;

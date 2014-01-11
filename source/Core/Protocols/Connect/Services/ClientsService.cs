@@ -5,9 +5,9 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Services
 {
     public class ClientsService : IClientsService
     {
-        IOidcClientsRepository _repository;
+        IClientsRepository _repository;
 
-        public ClientsService(IOidcClientsRepository repository)
+        public ClientsService(IClientsRepository repository)
         {
             _repository = repository;
         }

@@ -8,11 +8,11 @@ using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
-    public class OidcAuthorizeErrorResult : IHttpActionResult
+    public class AuthorizeErrorResult : IHttpActionResult
     {
         AuthorizeError Error { get; set; }
 
-        public OidcAuthorizeErrorResult(AuthorizeError error)
+        public AuthorizeErrorResult(AuthorizeError error)
         {
             Error = error;
         }
