@@ -10,6 +10,7 @@ using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
@@ -70,6 +71,15 @@ namespace Thinktecture.IdentityServer.Host
                     "/PasswordReset/Confirm/");
 
                 var config = new MembershipRebootConfiguration<UserAccount>();
+                config.AddCommandHandler(new DelegateCommandHandler<MapClaimsFromAccount<UserAccount>>(
+                    cmd =>
+                    {
+                        cmd.MappedClaims = new Claim[]
+                        {
+                            new Claim(Constants.ClaimTypes.Subject, cmd.Account.ID.ToString())
+                        };
+                    }
+                ));
                 var emailFormatter = new EmailMessageFormatter(appInfo);
                 // uncomment if you want email notifications -- also update smtp settings in web.config
                 //config.AddEventHandler(new EmailAccountEventsHandler(emailFormatter));
