@@ -35,12 +35,12 @@ namespace Thinktecture.IdentityServer.Host
                     });
                     coreApp.UseStageMarker(PipelineStage.MapHandler);
                     
-                    coreApp.UseCookieAuthentication(new CookieAuthenticationOptions
-                    {
-                        AuthenticationMode = AuthenticationMode.Passive,
-                        AuthenticationType = "idsrv",
-                        CookieSecure = CookieSecureOption.SameAsRequest
-                    });
+                    //coreApp.UseCookieAuthentication(new CookieAuthenticationOptions
+                    //{
+                    //    AuthenticationMode = AuthenticationMode.Passive,
+                    //    AuthenticationType = "idsrv",
+                    //    CookieSecure = CookieSecureOption.SameAsRequest
+                    //});
 
                     // this needs to be before web api (where it's used)
                     ConfigureMembershipReboot(coreApp);
@@ -54,7 +54,9 @@ namespace Thinktecture.IdentityServer.Host
             System.Data.Entity.Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<DefaultMembershipRebootDatabase, BrockAllen.MembershipReboot.Ef.Migrations.Configuration>());
             var cookieOptions = new CookieAuthenticationOptions
             {
-                AuthenticationType = MembershipRebootOwinConstants.AuthenticationType
+                AuthenticationType = "idsrv",
+                //AuthenticationMode = AuthenticationMode.Passive,
+                CookieSecure = CookieSecureOption.SameAsRequest
             };
             Func<IDictionary<string, object>, UserAccountService<UserAccount>> uaFunc = env =>
             {
