@@ -24,19 +24,19 @@ namespace Thinktecture.IdentityServer.Host
             // idsrv core
             app.Map("/core", coreApp =>
                 {
-                    coreApp.UseFileServer(new FileServerOptions
-                    {
-                        RequestPath = new PathString("/assets"),
-                        FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets")
-                    });
-                    coreApp.UseStageMarker(PipelineStage.MapHandler);
-                    
-                    coreApp.UseFileServer(new FileServerOptions
-                    {
-                        RequestPath = new PathString("/assets/libs/fonts"),
-                        FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets.libs.bootstrap.fonts")
-                    });
-                    coreApp.UseStageMarker(PipelineStage.MapHandler);
+                    //coreApp.UseFileServer(new FileServerOptions
+                    //{
+                    //    RequestPath = new PathString("/assets"),
+                    //    FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets")
+                    //});
+                    //coreApp.UseStageMarker(PipelineStage.MapHandler);
+
+                    //coreApp.UseFileServer(new FileServerOptions
+                    //{
+                    //    RequestPath = new PathString("/assets/libs/fonts"),
+                    //    FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets.libs.bootstrap.fonts")
+                    //});
+                    //coreApp.UseStageMarker(PipelineStage.MapHandler);
                     
                     //coreApp.UseCookieAuthentication(new CookieAuthenticationOptions
                     //{
@@ -47,8 +47,10 @@ namespace Thinktecture.IdentityServer.Host
 
                     // this needs to be before web api (where it's used)
                     ConfigureMembershipReboot(coreApp);
-                    
-                    coreApp.UseWebApi(WebApiConfig.Configure());
+
+                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions());
+
+                    //coreApp.UseWebApi(WebApiConfig.Configure());
                 });
         }
 
