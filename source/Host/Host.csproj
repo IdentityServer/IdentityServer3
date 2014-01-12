@@ -44,7 +44,7 @@
       <HintPath>..\..\..\BrockAllen.MembershipReboot\build\BrockAllen.MembershipReboot.dll</HintPath>
     </Reference>
     <Reference Include="BrockAllen.MembershipReboot.Ef">
-      <HintPath>..\..\..\BrockAllen.MembershipReboot\build\BrockAllen.MembershipReboot.Ef.dll</HintPath>
+      <HintPath>..\..\..\Membership.Reboot\build\BrockAllen.MembershipReboot.Ef.dll</HintPath>
     </Reference>
     <Reference Include="BrockAllen.MembershipReboot.Owin">
       <HintPath>..\..\..\BrockAllen.MembershipReboot\build\BrockAllen.MembershipReboot.Owin.dll</HintPath>
