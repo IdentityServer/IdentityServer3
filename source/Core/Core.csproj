@@ -101,6 +101,10 @@
     <Compile Include="Configuration\AutoFacConfig.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
+    <Compile Include="Connect\Services\Test\TestAuthorizationCodeService.cs" />
+    <Compile Include="Connect\Services\Test\TestConsentService.cs" />
+    <Compile Include="Connect\Services\Test\TestProfileService.cs" />
+    <Compile Include="Connect\Services\Test\TestTokenHandleService.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Plumbing\BasicAuthenticationFilter.cs" />
     <Compile Include="Plumbing\EmbeddedResourceManager.cs" />
@@ -143,10 +147,6 @@
     <Compile Include="Services\LoggerExtensions.cs" />
     <Compile Include="Connect\Services\ClientsService.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="Connect\Services\Test\TestAuthorizationCodeService.cs" />
-    <Compile Include="Connect\Services\Test\TestConsentService.cs" />
-    <Compile Include="Connect\Services\Test\TestProfileService.cs" />
-    <Compile Include="Connect\Services\Test\TestTokenHandleService.cs" />
     <Compile Include="Services\TraceSourceLogger.cs" />
     <Compile Include="Connect\Models\Token.cs" />
     <Compile Include="Connect\Validation\AuthorizeRequestValidator.cs" />

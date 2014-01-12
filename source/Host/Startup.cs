@@ -2,11 +2,7 @@
 using BrockAllen.MembershipReboot.Ef;
 using BrockAllen.MembershipReboot.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Extensions;
-using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Collections.Generic;
