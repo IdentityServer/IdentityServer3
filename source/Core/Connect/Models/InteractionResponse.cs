@@ -1,0 +1,14 @@
+﻿using Thinktecture.IdentityServer.Core.Authentication;
+
+namespace Thinktecture.IdentityServer.Core.Connect.Models
+{
+    public class InteractionResponse
+    {
+        public bool IsError { get; set; }
+        public bool IsLogin { get; set; }
+        public bool IsConsent { get; set; }
+
+        public AuthorizeError Error { get; set; }
+        public SignInMessage SignInMessage { get; set; }
+    }
+}

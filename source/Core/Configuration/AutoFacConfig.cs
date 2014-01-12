@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
-using Thinktecture.IdentityServer.Core.Protocols.Connect;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Models;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Repositories;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Services;
+using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Repositories;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Repositories;
 using Thinktecture.IdentityServer.Core.Services;
 

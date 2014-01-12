@@ -1,15 +1,12 @@
-﻿using System.Linq;
-using BrockAllen.MembershipReboot;
+﻿using BrockAllen.MembershipReboot;
 using Owin;
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
-using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Plumbing;
-using System.Net;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
