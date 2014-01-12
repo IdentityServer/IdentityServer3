@@ -10,5 +10,6 @@
         public string AuthenticationMethod { get; set; }
 
         public string ReturnUrl { get; set; }
+        public string LoginPromptCorrelationId { get; set; }
     }
 }

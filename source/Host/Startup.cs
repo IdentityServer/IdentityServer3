@@ -10,6 +10,7 @@ using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 
@@ -29,6 +30,7 @@ namespace Thinktecture.IdentityServer.Host
                         FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets")
                     });
                     coreApp.UseStageMarker(PipelineStage.MapHandler);
+                    
                     coreApp.UseFileServer(new FileServerOptions
                     {
                         RequestPath = new PathString("/assets/libs/fonts"),
@@ -52,13 +54,15 @@ namespace Thinktecture.IdentityServer.Host
 
         private static void ConfigureMembershipReboot(IAppBuilder app)
         {
-            System.Data.Entity.Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<DefaultMembershipRebootDatabase, BrockAllen.MembershipReboot.Ef.Migrations.Configuration>());
+            Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<DefaultMembershipRebootDatabase, BrockAllen.MembershipReboot.Ef.Migrations.Configuration>());
+            
             var cookieOptions = new CookieAuthenticationOptions
             {
                 AuthenticationType = "idsrv",
                 //AuthenticationMode = AuthenticationMode.Passive,
                 CookieSecure = CookieSecureOption.SameAsRequest
             };
+            
             Func<IDictionary<string, object>, UserAccountService<UserAccount>> uaFunc = env =>
             {
                 var appInfo = new OwinApplicationInformation(
@@ -71,6 +75,8 @@ namespace Thinktecture.IdentityServer.Host
                     "/PasswordReset/Confirm/");
 
                 var config = new MembershipRebootConfiguration<UserAccount>();
+                config.RequireAccountVerification = false;
+                
                 config.AddCommandHandler(new DelegateCommandHandler<MapClaimsFromAccount<UserAccount>>(
                     cmd =>
                     {

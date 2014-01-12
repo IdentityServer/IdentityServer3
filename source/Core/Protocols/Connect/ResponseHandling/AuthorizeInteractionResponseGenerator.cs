@@ -62,6 +62,12 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect
                 };
             }
 
+            // prompt=login
+
+            // clear the auth cookie
+            // remove the prompt=login
+            // redirect to login page
+
             // check authentication freshness
             if (request.MaxAge.HasValue)
             {

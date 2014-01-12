@@ -31,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 var returnUrl = WebUtility.UrlEncode(_request.RequestUri.AbsoluteUri);
 
+                // todo: fix relative paths (using OWIN magic)
                 var uri = new Uri(_request.RequestUri, "/core/login?returnUrl=" + returnUrl);
                 response.Headers.Location = uri;
             }
