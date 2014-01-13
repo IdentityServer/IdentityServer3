@@ -32,7 +32,6 @@ namespace Owin
 
             app.UseWebApi(WebApiConfig.Configure());
 
-
             return app;
         }
 

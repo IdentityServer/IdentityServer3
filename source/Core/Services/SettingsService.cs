@@ -19,14 +19,15 @@ namespace Thinktecture.IdentityServer.Core.Services
             _repository = repository;
         }
 
-        public void Set(string name, string value)
-        {
-            _repository.Set(_prefix + ":" + name, value);
-        }
-
         public string Get(string name)
         {
             return _repository.Get(_prefix + ":" + name);
+        }
+
+
+        public void Set(string name, string value)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
