@@ -30,7 +30,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            app.UseWebApi(WebApiConfig.Configure());
+            app.UseWebApi(WebApiConfig.Configure(options));
 
             return app;
         }

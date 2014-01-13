@@ -8,13 +8,20 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core
 {
+    public class IdentityServerServiceFactory
+    {
+        public Func<ILogger> Logger { get; set; }
+    }
+
     public class IdentityServerCoreOptions
     {
-        public ILogger Logger { get; set; }
-        public ICoreConfiguration Configuration { get; set; }
+        public IdentityServerServiceFactory Factory { get; set; }
 
-        public IAuthenticationService Authentication { get; set; }
-        public IProfileService Profile { get; set; }
+        //public ILogger Logger { get; set; }
+        //public ICoreConfiguration Configuration { get; set; }
+
+        //public IAuthenticationService Authentication { get; set; }
+        //public IProfileService Profile { get; set; }
     }
 
     public interface ICoreConfiguration

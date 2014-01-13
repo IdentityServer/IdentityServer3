@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Services;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
 namespace Thinktecture.IdentityServer.Host
@@ -40,11 +41,20 @@ namespace Thinktecture.IdentityServer.Host
                     //    AuthenticationType = "idsrv",
                     //    CookieSecure = CookieSecureOption.SameAsRequest
                     //});
+                    
+                    var logger = new DebugLogger();
+                    var factory = new IdentityServerServiceFactory
+                    {
+                        Logger = ()=> logger
+                    };
 
                     // this needs to be before web api (where it's used)
                     ConfigureMembershipReboot(coreApp);
 
-                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions());
+                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
+                        {
+                            Factory = factory
+                        });
 
                     //coreApp.UseWebApi(WebApiConfig.Configure());
                 });
