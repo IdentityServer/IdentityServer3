@@ -70,34 +70,34 @@ namespace Thinktecture.IdentityServer.Host
                 //AuthenticationMode = AuthenticationMode.Passive,
                 CookieSecure = CookieSecureOption.SameAsRequest
             };
-            
-            Func<IDictionary<string, object>, UserAccountService<UserAccount>> uaFunc = env =>
-            {
-                var appInfo = new OwinApplicationInformation(
-                    env,
-                    "Test",
-                    "Test Email Signature",
-                    "/Login",
-                    "/Register/Confirm/",
-                    "/Register/Cancel/",
-                    "/PasswordReset/Confirm/");
 
-                var config = new MembershipRebootConfiguration<UserAccount>();
-                config.RequireAccountVerification = false;
-                
-                config.AddCommandHandler(new DelegateCommandHandler<MapClaimsFromAccount<UserAccount>>(
-                    cmd =>
-                    {
-                        cmd.MappedClaims = new Claim[]
+            var appInfo = new OwinApplicationInformation(
+                app,
+                "Test",
+                "Test Email Signature",
+                "/Login",
+                "/Register/Confirm/",
+                "/Register/Cancel/",
+                "/PasswordReset/Confirm/");
+
+            var config = new MembershipRebootConfiguration<UserAccount>();
+            config.RequireAccountVerification = false;
+
+            config.AddCommandHandler(new DelegateCommandHandler<MapClaimsFromAccount<UserAccount>>(
+                cmd =>
+                {
+                    cmd.MappedClaims = new Claim[]
                         {
                             new Claim(Constants.ClaimTypes.Subject, cmd.Account.ID.ToString())
                         };
-                    }
-                ));
-                var emailFormatter = new EmailMessageFormatter(appInfo);
-                // uncomment if you want email notifications -- also update smtp settings in web.config
-                //config.AddEventHandler(new EmailAccountEventsHandler(emailFormatter));
-
+                }
+            ));
+            var emailFormatter = new EmailMessageFormatter(appInfo);
+            // uncomment if you want email notifications -- also update smtp settings in web.config
+            //config.AddEventHandler(new EmailAccountEventsHandler(emailFormatter));
+            
+            Func<IDictionary<string, object>, UserAccountService<UserAccount>> uaFunc = env =>
+            {
                 var svc = new UserAccountService<UserAccount>(config, new DefaultUserAccountRepository());
                 var debugging = false;
 #if DEBUG
