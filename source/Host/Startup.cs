@@ -83,15 +83,14 @@ namespace Thinktecture.IdentityServer.Host
             var config = new MembershipRebootConfiguration<UserAccount>();
             config.RequireAccountVerification = false;
 
-            config.AddCommandHandler(new DelegateCommandHandler<MapClaimsFromAccount<UserAccount>>(
-                cmd =>
+            config.AddCommandHandler((MapClaimsFromAccount<UserAccount> cmd) =>
                 {
                     cmd.MappedClaims = new Claim[]
                         {
                             new Claim(Constants.ClaimTypes.Subject, cmd.Account.ID.ToString())
                         };
                 }
-            ));
+            );
             var emailFormatter = new EmailMessageFormatter(appInfo);
             // uncomment if you want email notifications -- also update smtp settings in web.config
             //config.AddEventHandler(new EmailAccountEventsHandler(emailFormatter));
