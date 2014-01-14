@@ -1,4 +1,5 @@
-﻿using BrockAllen.MembershipReboot;
+﻿using Autofac;
+using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Ef;
 using BrockAllen.MembershipReboot.Owin;
 using Microsoft.Owin;
@@ -41,26 +42,44 @@ namespace Thinktecture.IdentityServer.Host
                     //    AuthenticationType = "idsrv",
                     //    CookieSecure = CookieSecureOption.SameAsRequest
                     //});
-                    
-                    var logger = new DebugLogger();
-                    var factory = new IdentityServerServiceFactory
+
+                    // our top ContainerBuilder
+                    var builder = new ContainerBuilder();
+
+                    // this would be a customer's customizations
+                    builder.RegisterType<DebugLogger>().As<ILogger>();
+                    var container = builder.Build();
+
+                    // we should be doing autofac modules, but i didin't get around to reworking it yet
+                    // configure MR -- this should be merged into the autofac class, i guess
+                    ConfigureMembershipReboot(coreApp, container);
+
+                    // configure the rest of idsrv
+                    AutoFacConfig.Configure(container);
+
+                    coreApp.Use(async (ctx, next) =>
                     {
-                        Logger = ()=> logger
-                    };
-
-                    // this needs to be before web api (where it's used)
-                    ConfigureMembershipReboot(coreApp);
-
-                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
+                        // this creates a per-request, disposable scope
+                        using (var scope = container.BeginLifetimeScope(b =>
+                            {
+                                // this makes owin context resolvable in the scope
+                                b.RegisterInstance(ctx).As<IOwinContext>();
+                            }))
                         {
-                            Factory = factory
-                        });
+                            // this makes scope available for downstream frameworks
+                            ctx.Set<ILifetimeScope>("idsrv:AutofacScope", scope);
+                            await next();
+                        }
+                    });
+
+                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions{
+                    });
 
                     //coreApp.UseWebApi(WebApiConfig.Configure());
                 });
         }
 
-        private static void ConfigureMembershipReboot(IAppBuilder app)
+        private static void ConfigureMembershipReboot(IAppBuilder app, IContainer container)
         {
             Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<DefaultMembershipRebootDatabase, BrockAllen.MembershipReboot.Ef.Migrations.Configuration>());
             
@@ -94,23 +113,42 @@ namespace Thinktecture.IdentityServer.Host
             var emailFormatter = new EmailMessageFormatter(appInfo);
             // uncomment if you want email notifications -- also update smtp settings in web.config
             //config.AddEventHandler(new EmailAccountEventsHandler(emailFormatter));
-            
-            Func<IDictionary<string, object>, UserAccountService<UserAccount>> uaFunc = env =>
-            {
-                var svc = new UserAccountService<UserAccount>(config, new DefaultUserAccountRepository());
-                var debugging = false;
-#if DEBUG
-                debugging = true;
-#endif
-                svc.ConfigureTwoFactorAuthenticationCookies(env, debugging);
-                return svc;
-            };
-            Func<IDictionary<string, object>, AuthenticationService<UserAccount>> authFunc = env =>
-            {
-                return new OwinAuthenticationService<UserAccount>(cookieOptions.AuthenticationType, uaFunc(env), env);
-            };
 
-            app.UseMembershipReboot(cookieOptions, uaFunc, authFunc);
+            var builder = new ContainerBuilder();
+
+            builder.RegisterInstance(config).As<MembershipRebootConfiguration<UserAccount>>();
+
+            builder.RegisterType<DefaultUserAccountRepository>()
+                .As<IUserAccountRepository<UserAccount>>()
+                .As<IUserAccountQuery>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<UserAccountService<UserAccount>>().OnActivating(e =>
+            {
+                var owin = e.Context.Resolve<IOwinContext>();
+                var debugging = false;
+                #if DEBUG
+                    debugging = true;
+                #endif
+                e.Instance.ConfigureTwoFactorAuthenticationCookies(owin.Environment, debugging);
+            })
+            .AsSelf()
+            .InstancePerLifetimeScope();
+
+            builder.Register(ctx =>
+            {
+                var owin = ctx.Resolve<IOwinContext>();
+                return new OwinAuthenticationService<UserAccount>(
+                    cookieOptions.AuthenticationType, 
+                    ctx.Resolve<UserAccountService<UserAccount>>(), 
+                    owin.Environment);
+            })
+            .As<AuthenticationService<UserAccount>>()
+            .InstancePerLifetimeScope();
+
+            app.UseMembershipReboot(cookieOptions);
+
+            builder.Update(container);
         }
     }
 }

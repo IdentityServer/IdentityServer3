@@ -20,9 +20,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
     public class LoginController : ApiController
     {
-        IAuthenticationService authenticationService;
-        public LoginController(IAuthenticationService authenticationService)
+        //IAuthenticationService authenticationService;
+        //public LoginController(IAuthenticationService authenticationService)
+        //{
+        //    this.authenticationService = authenticationService;
+        //}
+
+        UserAccountService<UserAccount> userAccountService;
+        AuthenticationService<UserAccount> authenticationService;
+        public LoginController(UserAccountService<UserAccount> userAccountService, AuthenticationService<UserAccount> authenticationService)
         {
+            this.userAccountService = userAccountService;
             this.authenticationService = authenticationService;
         }
 
@@ -32,27 +40,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var html = EmbeddedResourceManager.LoadResourceString("Thinktecture.IdentityServer.Core.Authentication.Assets.Login.html");
             html = html.Replace("{title}", "IdSrv3 Login");
             html = html.Replace("{loginurl}", Request.RequestUri.AbsoluteUri);
-            html = html.Replace("{returnUrl}", msg.ReturnUrl);
+            if (msg != null)
+            {
+                html = html.Replace("{returnUrl}", msg.ReturnUrl);
+            }
 
             return new HttpResponseMessage()
             {
                 Content = new StringContent(html, Encoding.UTF8, "text/html")
             };
-        }
-
-        UserAccountService<UserAccount> UserAccountService
-        {
-            get
-            {
-                return Request.GetOwinContext().Environment.GetUserAccountService<UserAccount>();
-            }
-        }
-        AuthenticationService<UserAccount> AuthenticationService
-        {
-            get
-            {
-                return Request.GetOwinContext().Environment.GetAuthenticationService<UserAccount>();
-            }
         }
 
         [Route("signin")]
@@ -74,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             UserAccount acct;
-            if (!UserAccountService.Authenticate(model.Username, model.Password, out acct))
+            if (!userAccountService.Authenticate(model.Username, model.Password, out acct))
             {
                 return BadRequest("Invalid Username or Password");
             }
@@ -85,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             //var ctx = Request.GetOwinContext();
             //ctx.Authentication.SignIn(ci);
 
-            AuthenticationService.SignIn(acct);
+            authenticationService.SignIn(acct);
 
             return Content(HttpStatusCode.OK, new
             {

@@ -11,6 +11,7 @@ namespace Thinktecture.IdentityServer.Core
     public class IdentityServerServiceFactory
     {
         public Func<ILogger> Logger { get; set; }
+        public Func<IAuthenticationService> Authentication { get; set; }
     }
 
     public class IdentityServerCoreOptions
