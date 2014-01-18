@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeFlowClient", "CodeFlowClient\CodeFlowClient.csproj", "{2B7A3A83-D22E-48D2-9345-E48018314F10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thinktecture.IdentityModel.Oidc", "Thinktecture.IdentityModel.Oidc\Thinktecture.IdentityModel.Oidc.csproj", "{9669AED6-CC75-4DA4-A639-13E084905CA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2B7A3A83-D22E-48D2-9345-E48018314F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B7A3A83-D22E-48D2-9345-E48018314F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B7A3A83-D22E-48D2-9345-E48018314F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B7A3A83-D22E-48D2-9345-E48018314F10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9669AED6-CC75-4DA4-A639-13E084905CA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9669AED6-CC75-4DA4-A639-13E084905CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9669AED6-CC75-4DA4-A639-13E084905CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9669AED6-CC75-4DA4-A639-13E084905CA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
