@@ -82,37 +82,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return handler.WriteToken(jwt);
         }
 
-
         public virtual Token CreateIdentityToken(ValidatedTokenRequest request, ClaimsPrincipal user)
         {
-            var token = new Token
-            {
-                Audience = request.Client.ClientId,
-                Lifetime = request.Client.IdentityTokenLifetime,
-                Type = Constants.TokenTypes.IdentityToken,
-                Claims = user.Claims.ToList()
-            };
-
-            return token;
+            return request.AuthorizationCode.IdentityToken;
         }
 
         public virtual Token CreateAccessToken(ValidatedTokenRequest request, ClaimsPrincipal user)
         {
-            var token = new Token
-            {
-                Audience = "userinfo",
-                Lifetime = request.Client.AccessTokenLifetime,
-                Type = Constants.TokenTypes.AccessToken,
-
-                Claims = new List<Claim>
-                {
-                    new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
-                    new Claim(Constants.ClaimTypes.ClientId, request.Client.ClientId),
-                    new Claim(Constants.ClaimTypes.Scope, request.AuthorizationCode.RequestedScopes)
-                }
-            };
-
-            return token;
+            return request.AuthorizationCode.AccessToken;
         }
     }
 }

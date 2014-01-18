@@ -10,7 +10,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private ITokenHandleService _tokenHandles;
         private Configuration _configuration;
         
-        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleService tokenHandles, Configuration configuration)
+        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleService tokenHandles, Configuration configuration, IAuthorizationCodeService codes)
         {
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
