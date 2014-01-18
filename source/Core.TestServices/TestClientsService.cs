@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Repositories
+namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 {
-    public class InMemoryClientsRepository : IClientsRepository
+    public class TestClientsService : IClientsService
     {
         private static readonly List<Client> _clients;
 
-        static InMemoryClientsRepository()
+        static TestClientsService()
         {
             _clients = new List<Client>
             {

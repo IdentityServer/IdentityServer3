@@ -3,7 +3,6 @@ using Autofac.Integration.WebApi;
 using BrockAllen.MembershipReboot;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Connect.Repositories;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Repositories;
 using Thinktecture.IdentityServer.Core.Services;
@@ -34,28 +33,20 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
 
             // repositories
-            builder.RegisterType<InMemoryClientsRepository>().As<IClientsRepository>();
             builder.RegisterType<InMemorySettingsRepository>().As<ISettingsRepository>();
 
             // configuration
             builder.RegisterType<Configuration>();
 
             // services
-            builder.RegisterType<ClientsService>().As<IClientsService>();
             builder.RegisterType<SettingsService>().As<ISettingsService>();
-            builder.RegisterType<TestAuthorizationCodeService>().As<IAuthorizationCodeService>();
-            builder.RegisterType<TestConsentService>().As<IConsentService>();
-            //builder.RegisterType<TraceSourceLogger>().As<ILogger>();
-            
+            builder.RegisterType<DefaultTokenService>().As<ITokenService>();
+
             // only add this default logger if the app hasn't customized one
             if (!container.IsRegistered<ILogger>())
             {
                 builder.RegisterType<DebugLogger>().As<ILogger>();
             }
-
-            builder.RegisterType<TestTokenHandleService>().As<ITokenHandleService>();
-            builder.RegisterType<DefaultTokenService>().As<ITokenService>();
-            builder.RegisterType<TestProfileService>().As<IProfileService>();
 
             // controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);

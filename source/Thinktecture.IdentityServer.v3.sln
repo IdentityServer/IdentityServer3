@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.EntityFramework", "Cor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Admin", "Admin", "{1F0DF45C-AFF2-4C57-80C6-93F90FE840FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.TestServices", "Core.TestServices\Core.TestServices.csproj", "{55EB5DB3-C50C-431F-8A45-548C1436E671}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

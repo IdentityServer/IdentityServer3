@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 {
     public class TestTokenHandleService : ITokenHandleService
     {

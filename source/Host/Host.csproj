@@ -135,6 +135,10 @@
       <Project>{f8047c14-06b6-4a21-952d-bf4ad2b2faea}</Project>
       <Name>Core.EntityFramework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Core.TestServices\Core.TestServices.csproj">
+      <Project>{55eb5db3-c50c-431f-8a45-548c1436e671}</Project>
+      <Name>Core.TestServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>
       <Name>Core</Name>

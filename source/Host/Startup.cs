@@ -10,7 +10,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Connect.TestServices;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
 namespace Thinktecture.IdentityServer.Host
@@ -22,32 +25,17 @@ namespace Thinktecture.IdentityServer.Host
             // idsrv core
             app.Map("/core", coreApp =>
                 {
-                    //coreApp.UseFileServer(new FileServerOptions
-                    //{
-                    //    RequestPath = new PathString("/assets"),
-                    //    FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets")
-                    //});
-                    //coreApp.UseStageMarker(PipelineStage.MapHandler);
-
-                    //coreApp.UseFileServer(new FileServerOptions
-                    //{
-                    //    RequestPath = new PathString("/assets/libs/fonts"),
-                    //    FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Authentication.Assets.libs.bootstrap.fonts")
-                    //});
-                    //coreApp.UseStageMarker(PipelineStage.MapHandler);
-                    
-                    //coreApp.UseCookieAuthentication(new CookieAuthenticationOptions
-                    //{
-                    //    AuthenticationMode = AuthenticationMode.Passive,
-                    //    AuthenticationType = "idsrv",
-                    //    CookieSecure = CookieSecureOption.SameAsRequest
-                    //});
-
                     // our top ContainerBuilder
                     var builder = new ContainerBuilder();
 
                     // this would be a customer's customizations
                     builder.RegisterType<DebugLogger>().As<ILogger>();
+                    builder.RegisterType<TestProfileService>().As<IProfileService>();
+                    builder.RegisterType<TestAuthorizationCodeService>().As<IAuthorizationCodeService>();
+                    builder.RegisterType<TestConsentService>().As<IConsentService>();
+                    builder.RegisterType<TestTokenHandleService>().As<ITokenHandleService>();
+                    builder.RegisterType<TestClientsService>().As<IClientsService>();
+
                     var container = builder.Build();
 
                     // we should be doing autofac modules, but i didin't get around to reworking it yet
