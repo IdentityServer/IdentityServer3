@@ -9,6 +9,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<ScopeClaim> Claims { get; set; }
+        public IEnumerable<ScopeClaim> Claims { get; set; }
     }
 }

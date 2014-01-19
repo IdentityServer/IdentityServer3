@@ -78,24 +78,40 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     select c).SingleOrDefault();
         }
 
-         public IEnumerable<Scope> GetScopes()
-         {
-             throw new NotImplementedException();
-         }
+        public IEnumerable<Scope> GetScopes()
+        {
+            return new Scope[]{
+                 new Scope{
+                     Name = Constants.StandardScopes.Profile, 
+                     Description = "Standard Profile",
+                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x}))
+                },
+                 new Scope{
+                     Name = Thinktecture.IdentityServer.Core.Constants.StandardScopes.Email, 
+                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x}))
+                },
+             };
+        }
 
-         public bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes)
-         {
-             return false;
-         }
+        public bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes)
+        {
+            return false;
+        }
 
-         public System.Security.Cryptography.X509Certificates.X509Certificate2 GetSigningCertificate()
-         {
-             return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();
-         }
+        public System.Security.Cryptography.X509Certificates.X509Certificate2 GetSigningCertificate()
+        {
+            return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();
+        }
 
-         public Uri GetIssuerUri()
-         {
-             return new Uri("https://idsrv3.com");
-         }
+        public Uri GetIssuerUri()
+        {
+            return new Uri("https://idsrv3.com");
+        }
+
+
+        public string GetSiteName()
+        {
+            return "tt.IdSrv 3";
+        }
     }
 }

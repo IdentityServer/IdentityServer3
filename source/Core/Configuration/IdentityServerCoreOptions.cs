@@ -28,9 +28,15 @@ namespace Thinktecture.IdentityServer.Core
         }
     }
 
+    public class SiteSettings
+    {
+
+    }
+
     public class IdentityServerCoreOptions
     {
         public IdentityServerServiceFactory Factory { get; set; }
+
 
         //public System.Security.Cryptography.X509Certificates.X509Certificate2 SigningCert { get; set; }
 
