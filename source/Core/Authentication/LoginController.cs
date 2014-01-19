@@ -1,12 +1,15 @@
-﻿using BrockAllen.MembershipReboot;
-using Owin;
+﻿using Owin;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Plumbing;
+using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -26,12 +29,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         //    this.authenticationService = authenticationService;
         //}
 
-        UserAccountService<UserAccount> userAccountService;
-        AuthenticationService<UserAccount> authenticationService;
-        public LoginController(UserAccountService<UserAccount> userAccountService, AuthenticationService<UserAccount> authenticationService)
+        IAuthenticationService authentication;
+
+        public LoginController(IAuthenticationService authentication)
         {
-            this.userAccountService = userAccountService;
-            this.authenticationService = authenticationService;
+            this.authentication = authentication;
         }
 
         [Route("login")]
@@ -69,11 +71,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return BadRequest(error.First());
             }
 
-            UserAccount acct;
-            if (!userAccountService.Authenticate(model.Username, model.Password, out acct))
+            var sub = authentication.Authenticate(model.Username, model.Password);
+            if (sub == null)
             {
                 return BadRequest("Invalid Username or Password");
             }
+
+            //UserAccount acct;
+            //if (!userAccountService.Authenticate(model.Username, model.Password, out acct))
+            //{
+            //    return BadRequest("Invalid Username or Password");
+            //}
 
             //var claims = acct.GetAllClaims();
             //var ci = new ClaimsIdentity(claims, "Cookie");
@@ -81,13 +89,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             //var ctx = Request.GetOwinContext();
             //ctx.Authentication.SignIn(ci);
 
-            authenticationService.SignIn(acct);
+            //authenticationService.SignIn(acct);
+            var identity = new ClaimsIdentity("idsrv");
+            identity.AddClaim(new Claim(Constants.ClaimTypes.Subject, sub));
+            identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString()));
+            identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password));
+            Request.GetOwinContext().Authentication.SignIn(identity);
 
             return Content(HttpStatusCode.OK, new
             {
-                id = acct.ID,
-                username = acct.Username,
-                email = acct.Email
+                id = sub,
             });
         }
 

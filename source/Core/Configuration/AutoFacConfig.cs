@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
-using BrockAllen.MembershipReboot;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -52,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             // authN
-            builder.RegisterType<Thinktecture.IdentityServer.Core.Authentication.AuthenticationService>().As<Thinktecture.IdentityServer.Core.Authentication.IAuthenticationService>();
+            //builder.RegisterType<Thinktecture.IdentityServer.Core.Authentication.AuthenticationService>().As<Thinktecture.IdentityServer.Core.Authentication.IAuthenticationService>();
 
             builder.Update(container);
         }
