@@ -172,6 +172,14 @@ namespace Thinktecture.IdentityServer.Core
             public const string InvalidScope            = "invalid_scope";
         }
 
+        public static class UserInfoErrors
+        {
+            public const string InvalidToken = "invalid_token";
+            public const string InvalidRequest = "invalid_request";
+            public const string InsufficientScope = "insufficient_scope";
+        }
+        
+
         public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new Dictionary<string, IEnumerable<string>>
         {
             { StandardScopes.Profile, new string[]

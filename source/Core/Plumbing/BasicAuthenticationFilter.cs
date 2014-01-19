@@ -11,7 +11,7 @@ namespace Thinktecture.IdentityServer.Core
 {
     public class BasicAuthenticationFilter : Attribute, IAuthenticationFilter
     {
-        public bool AllowMultiple { get { return true; } }
+        public bool AllowMultiple { get { return false; } }
 
         public Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {

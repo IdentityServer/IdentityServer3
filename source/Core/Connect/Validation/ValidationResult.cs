@@ -9,6 +9,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         
         public ValidationResult()
         {
+            IsError = true;
             ErrorType = ErrorTypes.User;
         }
     }
