@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -9,7 +10,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public Configuration Configuration { get; set; }
+        public ICoreSettings CoreSettings { get; set; }
 
         public string ClientId { get; set; }
         public Client Client { get; set; }

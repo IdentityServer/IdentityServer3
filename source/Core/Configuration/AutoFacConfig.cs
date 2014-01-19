@@ -3,7 +3,6 @@ using Autofac.Integration.WebApi;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Repositories;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core
@@ -18,9 +17,17 @@ namespace Thinktecture.IdentityServer.Core
 
     public static class AutoFacConfig
     {
-        public static void Configure(IContainer container)
+        public static IContainer Configure(IdentityServerServiceFactory fact)
         {
+            fact.Validate();
+
             var builder = new ContainerBuilder();
+
+            builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
+            builder.Register(ctx => fact.CoreSettings()).As<ICoreSettings>();
+            builder.Register(ctx => fact.Logger()).As<ILogger>();
+            builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
+            builder.Register(ctx => fact.UserService()).As<IUserService>();
 
             // validators
             builder.RegisterType<TokenRequestValidator>();
@@ -31,29 +38,13 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
 
-            // repositories
-            builder.RegisterType<InMemorySettingsRepository>().As<ISettingsRepository>();
-
-            // configuration
-            builder.RegisterType<Configuration>();
-
             // services
-            builder.RegisterType<SettingsService>().As<ISettingsService>();
             builder.RegisterType<DefaultTokenService>().As<ITokenService>();
-
-            // only add this default logger if the app hasn't customized one
-            if (!container.IsRegistered<ILogger>())
-            {
-                builder.RegisterType<DebugLogger>().As<ILogger>();
-            }
 
             // controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
-            // authN
-            //builder.RegisterType<Thinktecture.IdentityServer.Core.Authentication.AuthenticationService>().As<Thinktecture.IdentityServer.Core.Authentication.IAuthenticationService>();
-
-            builder.Update(container);
+            return builder.Build();
         }
     }
 }

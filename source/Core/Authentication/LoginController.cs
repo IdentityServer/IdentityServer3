@@ -10,6 +10,7 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -29,11 +30,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         //    this.authenticationService = authenticationService;
         //}
 
-        IAuthenticationService authentication;
+        IUserService userService;
 
-        public LoginController(IAuthenticationService authentication)
+        public LoginController(IUserService userService)
         {
-            this.authentication = authentication;
+            this.userService = userService;
         }
 
         [Route("login")]
@@ -71,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return BadRequest(error.First());
             }
 
-            var sub = authentication.Authenticate(model.Username, model.Password);
+            var sub = userService.Authenticate(model.Username, model.Password);
             if (sub == null)
             {
                 return BadRequest("Invalid Username or Password");

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Microsoft.Owin.Extensions;
+using Autofac;
 
 namespace Owin
 {
@@ -30,6 +31,23 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
+            var container = AutoFacConfig.Configure(options.Factory);
+
+            app.Use(async (ctx, next) =>
+            {
+                // this creates a per-request, disposable scope
+                using (var scope = container.BeginLifetimeScope(b =>
+                {
+                    // this makes owin context resolvable in the scope
+                    b.RegisterInstance(ctx).As<IOwinContext>();
+                }))
+                {
+                    // this makes scope available for downstream frameworks
+                    ctx.Set<ILifetimeScope>("idsrv:AutofacScope", scope);
+                    await next();
+                }
+            }); 
+            
             app.UseWebApi(WebApiConfig.Configure(options));
 
             return app;

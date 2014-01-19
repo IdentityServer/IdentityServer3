@@ -88,7 +88,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\LoginController.cs" />
     <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
@@ -98,6 +97,8 @@
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />
+    <Compile Include="Connect\Services\HashingTransientDataRepository.cs" />
+    <Compile Include="Connect\Services\ITransientDataRepository.cs" />
     <Compile Include="Connect\Validation\UserInfoRequestValidator.cs" />
     <Compile Include="Connect\Validation\ValidatedUserInfoRequest.cs" />
     <Compile Include="Constants.cs" />
@@ -108,13 +109,10 @@
     <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\AuthorizeError.cs" />
     <Compile Include="Connect\Models\Client.cs" />
-    <Compile Include="Connect\Models\Configuration.cs" />
     <Compile Include="Connect\Endpoints\AuthorizeEndpointController.cs" />
     <Compile Include="Connect\Endpoints\TokenEndpointController.cs" />
     <Compile Include="Connect\Models\InteractionResponse.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGenerator.cs" />
-    <Compile Include="Repositories\InMemorySettingsRepository.cs" />
-    <Compile Include="Repositories\ISettingsRepository.cs" />
     <Compile Include="Connect\Models\AuthorizeResponse.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeResponseGenerator.cs" />
     <Compile Include="Connect\Models\TokenResponse.cs" />
@@ -129,16 +127,16 @@
     <Compile Include="Connect\Results\ResultExtensions.cs" />
     <Compile Include="Services\DebugLogger.cs" />
     <Compile Include="Connect\Services\DefaultTokenService.cs" />
-    <Compile Include="Connect\Services\IAuthorizationCodeService.cs" />
-    <Compile Include="Connect\Services\IConsentService.cs" />
+    <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
     <Compile Include="Services\ILogger.cs" />
-    <Compile Include="Connect\Services\IClientsService.cs" />
     <Compile Include="Connect\Services\ITokenService.cs" />
-    <Compile Include="Services\IProfileService.cs" />
+    <Compile Include="Services\ICoreSettings.cs" />
+    <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
-    <Compile Include="Connect\Services\ITokenHandleService.cs" />
+    <Compile Include="Connect\Services\ITokenHandleStore.cs" />
     <Compile Include="Services\LoggerExtensions.cs" />
-    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Connect\Models\Scope.cs" />
+    <Compile Include="Connect\Models\ScopeClaim.cs" />
     <Compile Include="Services\TraceSourceLogger.cs" />
     <Compile Include="Connect\Models\Token.cs" />
     <Compile Include="Connect\Validation\AuthorizeRequestValidator.cs" />

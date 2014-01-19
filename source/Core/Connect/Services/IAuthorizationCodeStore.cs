@@ -2,8 +2,7 @@
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
-    public interface IClientsService
+    public interface IAuthorizationCodeStore : ITransientDataRepository<AuthorizationCode>
     {
-        Client FindById(string clientId);
     }
 }

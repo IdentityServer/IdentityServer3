@@ -8,10 +8,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenRequestValidator
     {
-        private Configuration _configuration;
+        private ICoreSettings _coreSettings;
         private ILogger _logger;
-        private IAuthorizationCodeService _authorizationCodes;
-        private IClientsService _clients;
+        private IAuthorizationCodeStore _authorizationCodes;
 
         private ValidatedTokenRequest _validatedRequest;
 
@@ -23,11 +22,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(Configuration configuration, ILogger logger, IClientsService clients, IAuthorizationCodeService authorizationCodes)
+        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes)
         {
-            _configuration = configuration;
+            _coreSettings = coreSettings;
             _logger = logger;
-            _clients = clients;
             _authorizationCodes = authorizationCodes;
         }
 
@@ -58,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidClient);
             }
 
-            var oidcClient = _clients.FindById(clientId.Value);
+            var oidcClient = _coreSettings.FindClientById(clientId.Value);
             if (oidcClient == null)
             {
                 _logger.ErrorFormat("Client not found in registry: {0}", clientId.Value);
@@ -114,12 +112,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var authZcode = _authorizationCodes.GetAndDelete(code);
+            var authZcode = _authorizationCodes.Get(code);
             if (authZcode == null)
             {
                 _logger.ErrorFormat("Invalid authorization code: ", code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
+            _authorizationCodes.Remove(code);
 
             // todo: check if code has expired
             _validatedRequest.AuthorizationCode = authZcode;

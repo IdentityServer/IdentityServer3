@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
@@ -11,6 +12,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         Token CreateAccessToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user);
         Token CreateAccessToken(ValidatedTokenRequest request, ClaimsPrincipal client);
 
-        string CreateJsonWebToken(Token token, Client client, Configuration configuration);
+        string CreateJsonWebToken(Token token, Client client, ICoreSettings coreSettings);
     }
 }

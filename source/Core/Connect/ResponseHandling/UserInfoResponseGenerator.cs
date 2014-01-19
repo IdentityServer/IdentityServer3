@@ -9,9 +9,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class UserInfoResponseGenerator
     {
-        private IProfileService _profile;
+        private IUserService _profile;
 
-        public UserInfoResponseGenerator(IProfileService profile)
+        public UserInfoResponseGenerator(IUserService profile)
         {
             _profile = profile;
         }

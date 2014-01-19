@@ -8,11 +8,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeRequestValidator
     {
-        Configuration _configuration;
         ILogger _logger;
 
         ValidatedAuthorizeRequest _validatedRequest;
-        private IClientsService _clients;
+        private ICoreSettings _core;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -22,14 +21,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(Configuration configuration, IClientsService clients, ILogger logger)
+        public AuthorizeRequestValidator(ICoreSettings core, ILogger logger)
         {
-            _clients = clients;
-            _configuration = configuration;
+            _core = core;
             _logger = logger;
 
             _validatedRequest = new ValidatedAuthorizeRequest();
-            _validatedRequest.Configuration = _configuration;
+            _validatedRequest.CoreSettings = _core;
         }
 
         // basic protocol validation
@@ -258,7 +256,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = _clients.FindById(_validatedRequest.ClientId);
+            var client = _core.FindClientById(_validatedRequest.ClientId);
             if (client == null)
             {
                 _logger.ErrorFormat("Unknown client: {0}", _validatedRequest.ClientId);

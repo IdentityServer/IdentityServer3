@@ -8,10 +8,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeResponseGenerator
     {
         private ITokenService _tokenService;
-        private IAuthorizationCodeService _authorizationCodes;
-        private ITokenHandleService _tokenHandles;
+        private IAuthorizationCodeStore _authorizationCodes;
+        private ITokenHandleStore _tokenHandles;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeService authorizationCodes, ITokenHandleService tokenHandles)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;
@@ -38,7 +38,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             };
 
             // store id token and access token and return authorization code
-            var id = _authorizationCodes.Store(code);
+            var id = Guid.NewGuid().ToString("N");
+            _authorizationCodes.Store(id, code);
 
             return new AuthorizeResponse
             {
@@ -51,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public AuthorizeResponse CreateImplicitFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             var idToken = _tokenService.CreateIdentityToken(request, user);
-            var jwt = _tokenService.CreateJsonWebToken(idToken, request.Client, request.Configuration);
+            var jwt = _tokenService.CreateJsonWebToken(idToken, request.Client, request.CoreSettings);
 
             string accessTokenReference = null;
             int accessTokenLifetime = 0;
@@ -60,7 +61,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 var accessToken = _tokenService.CreateAccessToken(request, user);
                 accessTokenLifetime = accessToken.Lifetime;
-                accessTokenReference = _tokenHandles.Store(accessToken);
+
+                accessTokenReference = Guid.NewGuid().ToString("N");
+                _tokenHandles.Store(accessTokenReference, accessToken);
             }
 
             return new AuthorizeResponse

@@ -6,34 +6,29 @@ using Thinktecture.IdentityServer.Core.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 {
-    public class TestTokenHandleService : ITokenHandleService
+    public class TestTokenHandleStore : ITokenHandleStore
     {
         static ConcurrentDictionary<string, Token> _repository = new ConcurrentDictionary<string, Token>();
 
-        public string Store(Token token)
+        public void Store(string key, Token value)
         {
-            var key = Guid.NewGuid().ToString("N");
-            _repository[key] = token;
-
-            return key;
+            _repository[key] = value;
         }
 
-        public Token Find(string id)
+        public Token Get(string key)
         {
             Token token;
-
-            if (_repository.TryGetValue(id, out token))
+            if (_repository.TryGetValue(key, out token))
             {
                 return token;
             }
-
             return null;
         }
 
-        public void Delete(string id)
+        public void Remove(string key)
         {
             Token token;
-            _repository.TryRemove(id, out token);
+            _repository.TryRemove(key, out token);
         }
     }
 }

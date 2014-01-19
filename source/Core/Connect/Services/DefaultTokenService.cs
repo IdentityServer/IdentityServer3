@@ -11,9 +11,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultTokenService : ITokenService
     {
-        private IProfileService _profile;
+        private IUserService _profile;
 
-        public DefaultTokenService(IProfileService profile)
+        public DefaultTokenService(IUserService profile)
         {
             _profile = profile;
         }
@@ -66,13 +66,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public virtual string CreateJsonWebToken(Token token, Client client, Configuration configuration)
+        public virtual string CreateJsonWebToken(Token token, Client client, ICoreSettings coreSettings)
         {
             // todo: sig key strategy??
-            var signingCredentials = new X509SigningCredentials(configuration.SigningKey);
+            var signingCredentials = new X509SigningCredentials(coreSettings.GetSigningCertificate());
 
             var jwt = new JwtSecurityToken(
-                configuration.IssuerName,
+                coreSettings.GetIssuerUri().AbsoluteUri,
                 token.Audience,
                 token.Claims,
                 new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddSeconds(token.Lifetime)),

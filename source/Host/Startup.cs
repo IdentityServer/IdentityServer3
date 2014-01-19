@@ -25,43 +25,26 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     coreApp.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType="idsrv" });
 
-                    // our top ContainerBuilder
-                    var builder = new ContainerBuilder();
-
-                    // this would be a customer's customizations
-                    builder.RegisterType<DebugLogger>().As<ILogger>();
-                    builder.RegisterType<TestProfileService>().As<IProfileService>();
-                    builder.RegisterType<TestAuthorizationCodeService>().As<IAuthorizationCodeService>();
-                    builder.RegisterType<TestConsentService>().As<IConsentService>();
-                    builder.RegisterType<TestTokenHandleService>().As<ITokenHandleService>();
-                    builder.RegisterType<TestClientsService>().As<IClientsService>();
-                    builder.RegisterType<TestAuthenticationService>().As<IAuthenticationService>();
-
-                    var container = builder.Build();
+                    var codeStore = new TestAuthorizationCodeStore();
+                    var tokenStore = new TestTokenHandleStore();
+                    var core = new TestCoreSettings();
+                    var fact = new IdentityServerServiceFactory
+                    {
+                        Logger = () => new DebugLogger(),
+                        UserService = () => new TestUserService(),
+                        AuthorizationCodeStore = () => codeStore,
+                        TokenHandleStore = () => tokenStore,
+                        CoreSettings = () => core,
+                    };
 
                     // we should be doing autofac modules, but i didin't get around to reworking it yet
                     // configure MR -- this should be merged into the autofac class, i guess
                     //ConfigureMembershipReboot(coreApp, container);
 
                     // configure the rest of idsrv
-                    AutoFacConfig.Configure(container);
-
-                    coreApp.Use(async (ctx, next) =>
-                    {
-                        // this creates a per-request, disposable scope
-                        using (var scope = container.BeginLifetimeScope(b =>
-                            {
-                                // this makes owin context resolvable in the scope
-                                b.RegisterInstance(ctx).As<IOwinContext>();
-                            }))
-                        {
-                            // this makes scope available for downstream frameworks
-                            ctx.Set<ILifetimeScope>("idsrv:AutofacScope", scope);
-                            await next();
-                        }
-                    });
 
                     coreApp.UseIdentityServerCore(new IdentityServerCoreOptions{
+                        Factory = fact
                     });
 
                     //coreApp.UseWebApi(WebApiConfig.Configure());

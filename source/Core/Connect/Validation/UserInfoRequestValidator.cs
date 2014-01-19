@@ -6,11 +6,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class UserInfoRequestValidator
     {
-        private ITokenHandleService _handles;
+        private ITokenHandleStore _handles;
 
         public ValidatedUserInfoRequest ValidatedRequest { get; protected set; }
         
-        public UserInfoRequestValidator(ITokenHandleService handles)
+        public UserInfoRequestValidator(ITokenHandleStore handles)
         {
             _handles = handles;
         }
@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public ValidationResult ValidateRequest(string tokenHandle)
         {
-            var token = _handles.Find(tokenHandle);
+            var token = _handles.Get(tokenHandle);
 
             if (token == null)
             {

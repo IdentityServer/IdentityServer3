@@ -3,18 +3,19 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeInteractionResponseGenerator
     {
         private SignInMessage _signIn;
-        private IConsentService _consent;
-        
-        public AuthorizeInteractionResponseGenerator(IConsentService consent)
+        private ICoreSettings _core;
+
+        public AuthorizeInteractionResponseGenerator(ICoreSettings core)
         {
             _signIn = new SignInMessage();
-            _consent = consent;
+            _core = core;
         }
 
         public InteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -84,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
-                _consent.RequiresConsent(request.Client, user, request.Scopes))
+                _core.RequiresConsent(request.Client.ClientId, user, request.Scopes))
             {
                 return new InteractionResponse
                 {

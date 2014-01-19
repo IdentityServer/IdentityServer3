@@ -20,10 +20,7 @@ namespace Thinktecture.IdentityServer.Core
             config.MapHttpAttributeRoutes();
             config.SuppressDefaultHostAuthentication();
             config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
-
-            //var resolver = new AutofacWebApiDependencyResolver(AutoFacConfig.Configure(options.Factory));
-            //config.DependencyResolver = resolver;
-
+            
             return config;
         }
     }
