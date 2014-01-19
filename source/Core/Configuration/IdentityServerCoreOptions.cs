@@ -32,15 +32,12 @@ namespace Thinktecture.IdentityServer.Core
     {
         public IdentityServerServiceFactory Factory { get; set; }
 
+        //public System.Security.Cryptography.X509Certificates.X509Certificate2 SigningCert { get; set; }
+
         //public ILogger Logger { get; set; }
         //public ICoreConfiguration Configuration { get; set; }
 
         //public IAuthenticationService Authentication { get; set; }
         //public IProfileService Profile { get; set; }
-    }
-
-    public interface ICoreConfiguration
-    {
-
     }
 }

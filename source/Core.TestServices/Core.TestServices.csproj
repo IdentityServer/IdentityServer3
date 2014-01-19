@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestOptionsFactory.cs" />
     <Compile Include="TestCoreSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAuthorizationCodeStore.cs" />

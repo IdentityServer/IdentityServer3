@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Microsoft.Owin.Extensions;
 using Autofac;
+using Microsoft.Owin.Security.Cookies;
 
 namespace Owin
 {
@@ -17,6 +18,8 @@ namespace Owin
     {
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = "idsrv" });
+
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),

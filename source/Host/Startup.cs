@@ -23,31 +23,9 @@ namespace Thinktecture.IdentityServer.Host
             // idsrv core
             app.Map("/core", coreApp =>
                 {
-                    coreApp.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType="idsrv" });
-
-                    var codeStore = new TestAuthorizationCodeStore();
-                    var tokenStore = new TestTokenHandleStore();
-                    var core = new TestCoreSettings();
-                    var fact = new IdentityServerServiceFactory
-                    {
-                        Logger = () => new DebugLogger(),
-                        UserService = () => new TestUserService(),
-                        AuthorizationCodeStore = () => codeStore,
-                        TokenHandleStore = () => tokenStore,
-                        CoreSettings = () => core,
-                    };
-
-                    // we should be doing autofac modules, but i didin't get around to reworking it yet
-                    // configure MR -- this should be merged into the autofac class, i guess
-                    //ConfigureMembershipReboot(coreApp, container);
-
-                    // configure the rest of idsrv
-
                     coreApp.UseIdentityServerCore(new IdentityServerCoreOptions{
-                        Factory = fact
+                        Factory = TestOptionsFactory.Create()
                     });
-
-                    //coreApp.UseWebApi(WebApiConfig.Configure());
                 });
         }
 
