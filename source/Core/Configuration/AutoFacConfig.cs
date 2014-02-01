@@ -32,11 +32,13 @@ namespace Thinktecture.IdentityServer.Core
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();
+            builder.RegisterType<UserInfoRequestValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
+            builder.RegisterType<UserInfoResponseGenerator>();
 
             // services
             builder.RegisterType<DefaultTokenService>().As<ITokenService>();

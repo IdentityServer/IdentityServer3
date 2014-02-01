@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Thinktecture.IdentityModel.Oidc;
+using Thinktecture.IdentityModel.Tokens;
 
 namespace CodeFlowClient
 {
@@ -26,6 +28,8 @@ namespace CodeFlowClient
 
             //OidcClientConfigurationSection.Instance.ClientId = "MyClientId";
             //OidcClientConfigurationSection.Instance.ClientId = "MySecret";
+
+            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
         void OpenIdConnectAuthenticationModule_AuthorizeResponse(object sender, AuthorizeResponseEventArgs args)
