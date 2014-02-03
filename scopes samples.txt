@@ -1,0 +1,129 @@
+possible scopes:
+
+
+
+openid
+	response: code
+		return return code for id token, access token with scope: openid
+	response: id_token
+		return minimal id token
+	response: id_token token
+		return minimal id token, access token with scope: openid 
+	response: token
+		error
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+openid profile
+	response: code
+		return return code for id token, access token with scope: openid profile
+	response: id_token
+		return id token with profile
+	response: id_token / post
+		return (== post) id token with profile
+	response: id_token token
+		return minimal id token, access token with scope: openid profile
+	response: token
+		error
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+openid profile resource
+	response: code
+		return return code for minimal id token, access token with scope: openid profile resource
+	response: id_token
+		error
+	response: id_token token
+		return minimal id token, access token with scope: openid profile resource
+	response: token
+		error
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+openid resource
+	response: code
+		return return code for minimal id token, access token with scope: openid resource
+	response: id_token
+		error
+	response: id_token token
+		return minimal id token, access token with scope: openid resource
+	response: token
+		error
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+resource
+	response: code
+		return return code for access token with scope: resource
+	response: id_token
+		error
+	response: id_token token
+		error
+	response: token
+		return access token with scope: resource
+
+
+
+
+
+
+
+
+
+
+
+
