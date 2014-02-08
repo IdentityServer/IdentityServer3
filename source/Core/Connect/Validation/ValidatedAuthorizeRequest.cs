@@ -18,6 +18,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public List<string> Scopes { get; set; }
         public string State { get; set; }
         public string UiLocales { get; set; }
+        public bool IsOpenIdRequest { get; set; }
+        public bool IsResourceRequest { get; set; }
         
         public string Nonce { get; set; }
         public List<string> AuthenticationContextClasses { get; set; }

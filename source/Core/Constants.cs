@@ -80,6 +80,7 @@ namespace Thinktecture.IdentityServer.Core
         public static readonly List<string> SupportedResponseTypes = new List<string> 
                             { 
                                 Constants.ResponseTypes.Code,
+                                Constants.ResponseTypes.Token,
                                 Constants.ResponseTypes.IdToken,
                                 Constants.ResponseTypes.IdTokenToken
                             };
@@ -212,6 +213,10 @@ namespace Thinktecture.IdentityServer.Core
                             {
                                 ClaimTypes.PhoneNumber,
                                 ClaimTypes.PhoneNumberVerified
+                            }},
+            { StandardScopes.OpenId, new string[]
+                            {
+                                ClaimTypes.Subject,
                             }},
         };
 

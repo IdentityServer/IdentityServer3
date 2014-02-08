@@ -29,12 +29,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     RedirectUris = new List<Uri>
                     {
                         new Uri("https://localhost/cb"),
-                        new Uri("https://localhost:44309/oidccallback")
+                        new Uri("https://web.local/oidccode/oidccallback")
                     },
                     
                     ScopeRestrictions = new List<string>
                     { 
-                        Constants.StandardScopes.Profile 
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.OpenId,
+                        "resource1"
                     },
 
                     
@@ -60,7 +62,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     ScopeRestrictions = new List<string>
                     { 
-                        Constants.StandardScopes.Profile 
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.OpenId
                     },
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret,
@@ -83,6 +86,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
         {
             return new Scope[]
             {
+                new Scope
+                 {
+                    Name = Constants.StandardScopes.OpenId, 
+                    Description = "User identifier",
+                    IsOpenIdScope = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x}))
+                },
                  new Scope
                  {
                     Name = Constants.StandardScopes.Profile, 
@@ -122,9 +132,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
             return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();
         }
 
-        public Uri GetIssuerUri()
+        public string GetIssuerUri()
         {
-            return new Uri("https://idsrv3.com");
+            return "https://idsrv3.com";
         }
 
 
@@ -138,7 +148,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
         {
             var settings = new InternalProtectionSettings
             {
-                Issuer = GetIssuerUri().AbsoluteUri,
+                Issuer = GetIssuerUri(),
                 Audience = "internal",
                 SigningKey = "jKhUkbfzz4IqMTo66J6GATNgOWqA38SFNMCo/FR1Yhs=",
                 Ttl = 60

@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             var signingCredentials = new X509SigningCredentials(coreSettings.GetSigningCertificate());
 
             var jwt = new JwtSecurityToken(
-                coreSettings.GetIssuerUri().AbsoluteUri,
+                coreSettings.GetIssuerUri(),
                 token.Audience,
                 token.Claims,
                 new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddSeconds(token.Lifetime)),

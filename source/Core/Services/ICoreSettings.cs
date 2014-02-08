@@ -14,7 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes);
 
         X509Certificate2 GetSigningCertificate();
-        Uri GetIssuerUri();
+        string GetIssuerUri();
         string GetSiteName();
         InternalProtectionSettings GetInternalProtectionSettings();
     }

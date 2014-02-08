@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await Process(await request.Content.ReadAsFormDataAsync());
         }
 
-        private async Task<IHttpActionResult> Process(NameValueCollection parameters)
+        private Task<IHttpActionResult> Process(NameValueCollection parameters)
         {
             _logger.Start("OIDC token endpoint.");
 
@@ -38,11 +38,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (result.IsError)
             {
-                return this.TokenErrorResponse(result.Error);
+                return Task.FromResult(this.TokenErrorResponse(result.Error));
             }
 
             var response = _generator.Process(_validator.ValidatedRequest, User as ClaimsPrincipal);
-            return this.TokenResponse(response);
+            return Task.FromResult(this.TokenResponse(response));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -103,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             //////////////////////////////////////////////////////////
-            // scope must be present, and start with openid
+            // scope must be present
             //////////////////////////////////////////////////////////
             var scope = parameters.Get(Constants.AuthorizeRequest.Scope);
             if (scope.IsMissing())
@@ -114,27 +115,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             scope = scope.Trim();
 
-            if (!scope.StartsWith(Constants.StandardScopes.OpenId))
+            if (scope.Contains(Constants.StandardScopes.OpenId))
             {
-                _logger.Error("scope does not start with openid");
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                _validatedRequest.IsOpenIdRequest = true;
             }
 
+            _validatedRequest.Scopes = scope.Split(' ').ToList();
             _logger.InformationFormat("scopes: {0}", scope);
-
-            if (scope.Length > Constants.StandardScopes.OpenId.Length)
-            {
-                var scopes = scope.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (scopes.Length > 1)
-                {
-                    for (int i = 1; i < scopes.Length; i++)
-                    {
-                        _validatedRequest.Scopes.Add(scopes[i]);
-                    }
-                }
-            }
-
-            
 
             //////////////////////////////////////////////////////////
             // check state
@@ -293,8 +280,57 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             else
             {
-                // todo: check scopes and allowed scopes
+                _logger.Information("Allowed scopes for client client: " + _validatedRequest.Client.ScopeRestrictions.ToSpaceSeparatedString());
+
+                foreach (var scope in _validatedRequest.Scopes)
+                {
+                    if (!_validatedRequest.Client.ScopeRestrictions.Contains(scope))
+                    {
+                        _logger.ErrorFormat("Requested scope not allowed: {0}", scope);
+                        return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+                    }
+                }
             }
+
+            // check if scopes are valid/supported and check for resource scopes
+            var scopeDetails = _core.GetScopes();
+            foreach (var scope in _validatedRequest.Scopes)
+            {
+                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
+
+                if (scopeDetail == null)
+                {
+                    _logger.ErrorFormat("Invalid scope: {0}", scope);
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                }
+
+                if (!scopeDetail.IsOpenIdScope)
+                {
+                    _validatedRequest.IsResourceRequest = true;
+                }
+            }
+
+            // check id vs resource scopes and response types plausability
+            switch (_validatedRequest.ResponseType)
+            {
+                case Constants.ResponseTypes.IdToken:
+                    if (!_validatedRequest.IsOpenIdRequest || _validatedRequest.IsResourceRequest)
+                    {
+                        _logger.Error("Scopes invalid for response_type id_token");
+                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                    }
+
+                    break;
+                case Constants.ResponseTypes.Token:
+                    if (_validatedRequest.IsOpenIdRequest || !_validatedRequest.IsResourceRequest)
+                    {
+                        _logger.Error("Scopes invalid for response_type token");
+                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                    }
+
+                    break;
+            }
+
 
             return Valid();
         }
