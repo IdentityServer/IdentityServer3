@@ -31,21 +31,30 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         //}
 
         IUserService userService;
+        private ICoreSettings _settings;
 
-        public LoginController(IUserService userService)
+        public LoginController(IUserService userService, ICoreSettings settings)
         {
             this.userService = userService;
+            _settings = settings;
         }
 
         [Route("login")]
-        public HttpResponseMessage Get([FromUri] SignInMessage msg)
+        public HttpResponseMessage Get([FromUri] string message)
         {
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey);
+
             var html = EmbeddedResourceManager.LoadResourceString("Thinktecture.IdentityServer.Core.Authentication.Assets.Login.html");
             html = html.Replace("{title}", "IdSrv3 Login");
             html = html.Replace("{loginurl}", Request.RequestUri.AbsoluteUri);
-            if (msg != null)
+            if (signInMessage != null)
             {
-                html = html.Replace("{returnUrl}", msg.ReturnUrl);
+                html = html.Replace("{returnUrl}", signInMessage.ReturnUrl);
             }
 
             return new HttpResponseMessage()

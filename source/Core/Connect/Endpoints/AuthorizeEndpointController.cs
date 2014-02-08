@@ -19,10 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private AuthorizeRequestValidator _validator;
         private AuthorizeResponseGenerator _responseGenerator;
         private AuthorizeInteractionResponseGenerator _interactionGenerator;
+        private ICoreSettings _settings;
 
-        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, AuthorizeInteractionResponseGenerator interactionGenerator)
+        public AuthorizeEndpointController(ILogger logger, AuthorizeRequestValidator validator, AuthorizeResponseGenerator responseGenerator, AuthorizeInteractionResponseGenerator interactionGenerator, ICoreSettings settings)
         {
             _logger = logger;
+            _settings = settings;
 
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
@@ -73,7 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             if (interaction.IsLogin)
             {
-                return this.Login(interaction.SignInMessage);
+                return this.Login(interaction.SignInMessage, _settings);
             }
 
             ///////////////////////////////////////////////////////////////

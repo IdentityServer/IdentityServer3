@@ -16,5 +16,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         X509Certificate2 GetSigningCertificate();
         Uri GetIssuerUri();
         string GetSiteName();
+        InternalProtectionSettings GetInternalProtectionSettings();
     }
 }

@@ -132,5 +132,19 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
         {
             return "tt.IdSrv 3";
         }
+
+
+        public InternalProtectionSettings GetInternalProtectionSettings()
+        {
+            var settings = new InternalProtectionSettings
+            {
+                Issuer = GetIssuerUri().AbsoluteUri,
+                Audience = "internal",
+                SigningKey = "jKhUkbfzz4IqMTo66J6GATNgOWqA38SFNMCo/FR1Yhs=",
+                Ttl = 60
+            };
+
+            return settings;
+        }
     }
 }
