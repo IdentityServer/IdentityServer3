@@ -37,7 +37,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                         Constants.StandardScopes.Profile 
                     },
 
-                    SigningKeyType = SigningKeyTypes.ClientSecret,
+                    
+                    IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret,
                     SubjectType = SubjectTypes.Global,
                     
                     IdentityTokenLifetime = 360,
@@ -62,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                         Constants.StandardScopes.Profile 
                     },
 
-                    SigningKeyType = SigningKeyTypes.ClientSecret,
+                    IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret,
                     SubjectType = SubjectTypes.Global,
                     
                     IdentityTokenLifetime = 360,
@@ -80,16 +81,34 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
         public IEnumerable<Scope> GetScopes()
         {
-            return new Scope[]{
-                 new Scope{
-                     Name = Constants.StandardScopes.Profile, 
-                     Description = "Standard Profile",
-                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x}))
+            return new Scope[]
+            {
+                 new Scope
+                 {
+                    Name = Constants.StandardScopes.Profile, 
+                    Description = "User profile",
+                    IsOpenIdScope = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x}))
                 },
-                 new Scope{
-                     Name = Thinktecture.IdentityServer.Core.Constants.StandardScopes.Email, 
-                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x}))
+                new Scope
+                {
+                    Name = Constants.StandardScopes.Email, 
+                    Description = "Email",
+                    IsOpenIdScope = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x}))
                 },
+                new Scope
+                {
+                    Name = "resource1",
+                    Description = "resource scope 1",
+                    IsOpenIdScope = false
+                },
+                new Scope
+                {
+                    Name = "resource2",
+                    Description = "resource scope 2",
+                    IsOpenIdScope = false
+                }
              };
         }
 
