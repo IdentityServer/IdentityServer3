@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {

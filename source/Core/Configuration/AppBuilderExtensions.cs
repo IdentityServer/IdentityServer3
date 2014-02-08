@@ -1,16 +1,11 @@
 ﻿
-using Microsoft.Owin;
-using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.StaticFiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Microsoft.Owin.Extensions;
 using Autofac;
+using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
+using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.StaticFiles;
+using Thinktecture.IdentityServer.Core;
 
 namespace Owin
 {

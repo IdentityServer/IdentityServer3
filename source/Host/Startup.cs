@@ -1,16 +1,6 @@
-﻿using Autofac;
-using Microsoft.Owin;
-using Microsoft.Owin.Security.Cookies;
+﻿using Microsoft.Owin;
 using Owin;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Authentication;
-using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Connect.TestServices;
-using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]

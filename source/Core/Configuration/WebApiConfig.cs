@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Integration.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;

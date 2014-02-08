@@ -1,5 +1,4 @@
-﻿using Owin;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -7,9 +6,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Plumbing;
-using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication

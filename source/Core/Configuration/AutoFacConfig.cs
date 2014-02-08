@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 

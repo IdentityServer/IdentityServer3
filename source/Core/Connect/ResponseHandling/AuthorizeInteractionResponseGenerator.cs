@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect

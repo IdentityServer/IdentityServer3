@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Services;
+using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 {
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
             return false;
         }
 
-        public System.Security.Cryptography.X509Certificates.X509Certificate2 GetSigningCertificate()
+        public X509Certificate2 GetSigningCertificate()
         {
             return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();
         }
@@ -136,7 +136,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
         {
             return "https://idsrv3.com";
         }
-
 
         public string GetSiteName()
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Connect.TestServices;
+﻿using Thinktecture.IdentityServer.Core.Connect.TestServices;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.TestServices
@@ -15,6 +10,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             var codeStore = new TestAuthorizationCodeStore();
             var tokenStore = new TestTokenHandleStore();
             var core = new TestCoreSettings();
+            
             var fact = new IdentityServerServiceFactory
             {
                 Logger = () => new DebugLogger(),
@@ -23,6 +19,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
                 TokenHandleStore = () => tokenStore,
                 CoreSettings = () => core,
             };
+
             return fact;
         }
     }
