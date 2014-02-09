@@ -35,6 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             // pass scopes/claims to profile service
             var payload = _generator.Process(_validator.ValidatedRequest);
+
             return new UserInfoResult(payload);
         }
     }
