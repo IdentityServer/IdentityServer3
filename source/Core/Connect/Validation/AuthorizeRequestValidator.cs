@@ -35,6 +35,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger.Verbose("OIDC authorize request protocol validation");
 
+            if (parameters == null)
+            {
+                _logger.Error("Parameters are null.");
+                throw new ArgumentNullException("parameters");
+            }
+
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
@@ -76,14 +82,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (responseType.IsMissing())
             {
                 _logger.Error("Missing response_type");
-                // todo: client or user?
-                return Invalid();
+                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             if (!Constants.SupportedResponseTypes.Contains(responseType))
             {
                 _logger.ErrorFormat("Response type not supported: {0}", responseType);
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
+                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             _logger.InformationFormat("response_type: {0}", responseType);
