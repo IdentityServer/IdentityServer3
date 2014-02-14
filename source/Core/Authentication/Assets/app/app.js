@@ -67,7 +67,7 @@
         };
     });
 
-    app.controller("LoginCtrl", function ($scope, authentication) {
+    app.controller("LoginCtrl", function ($scope, authentication, $location, ReturnUrl) {
         console.log("LoginCtrl");
 
         $scope.global = {
@@ -98,6 +98,8 @@
             authentication.signin($scope.model.username, $scope.model.password).then(function (user) {
                 $scope.model.success = true;
                 $scope.global.user = user;
+                window.location = ReturnUrl;
+                //$location.url(ReturnUrl, true);
             }, function (error) {
                 $scope.model.error = error;
             });

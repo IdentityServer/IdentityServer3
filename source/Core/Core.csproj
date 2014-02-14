@@ -166,7 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Authentication\Assets\app\app.min.js.map">
-      <DependentUpon>app.js</DependentUpon>
+      <DependentUpon>app.min.js</DependentUpon>
     </None>
     <None Include="Authentication\Assets\libs\bootstrap\custom.less" />
     <None Include="Authentication\Assets\libs\bootstrap\less\alerts.less" />
@@ -215,7 +215,7 @@
     <EmbeddedResource Include="Authentication\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Authentication\Assets\login.js.bundle" />
     <None Include="Authentication\Assets\login.min.js.map">
-      <DependentUpon>login.js.bundle</DependentUpon>
+      <DependentUpon>login.min.js</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -255,7 +255,7 @@
       <DependentUpon>login.css.bundle</DependentUpon>
     </Content>
     <EmbeddedResource Include="Authentication\Assets\login.min.css">
-      <DependentUpon>login.css.bundle</DependentUpon>
+      <DependentUpon>login.css</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Authentication\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Authentication\Assets\libs\bootstrap\js\bootstrap.js" />
@@ -266,7 +266,7 @@
       <DependentUpon>login.js.bundle</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Authentication\Assets\login.min.js">
-      <DependentUpon>login.js.bundle</DependentUpon>
+      <DependentUpon>login.js</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
