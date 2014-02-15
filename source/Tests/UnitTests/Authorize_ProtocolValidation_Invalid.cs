@@ -8,11 +8,12 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace UnitTests
 {
     [TestClass]
-    public class AuthorizeRequest_ProtocolValidation
+    public class Authorize_ProtocolValidation_Invalid
     {
         ILogger _logger = new DebugLogger();
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null_Parameter()
         {
@@ -21,6 +22,7 @@ namespace UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Empty_Parameters()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
@@ -30,86 +32,98 @@ namespace UnitTests
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
         }
 
+        // fails because openid scope is requested, but no response type that indicates an identity token
         [TestMethod]
-        public void Valid_Code_Request()
+        [TestCategory("Protocol Validation")]
+        public void OpenId_Token_Only_Request()
         {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, Constants.StandardScopes.OpenId);
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
+            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var result = validator.ValidateProtocol(parameters);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Code;
-
-            var result = validator.ValidateProtocol(RequestFactory.GetBaseAuthorizeRequest());
-            Assert.AreEqual(false, result.IsError);
+            Assert.AreEqual(true, result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
         }
 
         [TestMethod]
-        public void Valid_Token_Request()
+        [TestCategory("Protocol Validation")]
+        public void Resource_Only_IdToken_Request()
         {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "resource");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
+            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var result = validator.ValidateProtocol(parameters);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Token;
-
-            var result = validator.ValidateProtocol(RequestFactory.GetBaseAuthorizeRequest());
-            Assert.AreEqual(false, result.IsError);
+            Assert.AreEqual(true, result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
         }
 
         [TestMethod]
-        public void Valid_IdToken_Request()
+        [TestCategory("Protocol Validation")]
+        public void Mixed_Token_Only_Request()
         {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
+
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var result = validator.ValidateProtocol(parameters);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.IdToken;
-
-            var result = validator.ValidateProtocol(RequestFactory.GetBaseAuthorizeRequest());
-            Assert.AreEqual(false, result.IsError);
+            Assert.AreEqual(true, result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
         }
 
         [TestMethod]
-        public void Valid_IdToken_With_FormPost_ResponseMode_Request()
+        [TestCategory("Protocol Validation")]
+        public void OpenId_IdToken_Request_Nonce_Missing()
         {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
+
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var result = validator.ValidateProtocol(parameters);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.IdToken;
-            request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
-
-            var result = validator.ValidateProtocol(RequestFactory.GetBaseAuthorizeRequest());
-            Assert.AreEqual(false, result.IsError);
+            Assert.AreEqual(true, result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
         }
 
         [TestMethod]
-        public void Valid_IdTokenToken_Request()
-        {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
-
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.IdTokenToken;
-
-            var result = validator.ValidateProtocol(RequestFactory.GetBaseAuthorizeRequest());
-            Assert.AreEqual(false, result.IsError);
-        }
-
-        [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Missing_ClientId()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request.Remove(Constants.AuthorizeRequest.ClientId);
             var result = validator.ValidateProtocol(request);
-            
+
             Assert.AreEqual(true, result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
 
         }
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Missing_Scope()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request.Remove(Constants.AuthorizeRequest.Scope);
             var result = validator.ValidateProtocol(request);
@@ -119,10 +133,11 @@ namespace UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Missing_RedirectUri()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request.Remove(Constants.AuthorizeRequest.RedirectUri);
             var result = validator.ValidateProtocol(request);
@@ -132,10 +147,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Invalid_RedirectUri()
+        [TestCategory("Protocol Validation")]
+        public void Malformed_RedirectUri()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request[Constants.AuthorizeRequest.RedirectUri] = "invalid";
             var result = validator.ValidateProtocol(request);
@@ -145,10 +161,11 @@ namespace UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Missing_ResponseType()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request.Remove(Constants.AuthorizeRequest.ResponseType);
             var result = validator.ValidateProtocol(request);
@@ -158,10 +175,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Invalid_ResponseType()
+        [TestCategory("Protocol Validation")]
+        public void Malformed_ResponseType()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request[Constants.AuthorizeRequest.ResponseType] = "invalid";
             var result = validator.ValidateProtocol(request);
@@ -171,10 +189,11 @@ namespace UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Code;
             request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
@@ -185,10 +204,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Invalid_ResponseMode_For_Code_TokenResponseType()
+        [TestCategory("Protocol Validation")]
+        public void Invalid_ResponseMode_For_Token_ResponseType()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Token;
             request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
@@ -199,10 +219,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Invalid_MaxAge()
+        [TestCategory("Protocol Validation")]
+        public void Malformed_MaxAge()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetBaseAuthorizeRequest();
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
 
             request[Constants.AuthorizeRequest.MaxAge] = "invalid";
             var result = validator.ValidateProtocol(request);

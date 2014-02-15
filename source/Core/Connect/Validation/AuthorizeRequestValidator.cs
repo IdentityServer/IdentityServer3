@@ -128,6 +128,31 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
+            // check scope vs response type plausability
+            //////////////////////////////////////////////////////////
+            if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code)
+            {
+                if (_validatedRequest.IsOpenIdRequest)
+                {
+                    if (!_validatedRequest.ResponseType.Contains(Constants.ResponseTypes.IdToken))
+                    {
+                        _logger.Error("Request contains openid scope, but response_type does not contain an identity token");
+                        return Invalid(ErrorTypes.Client);
+                    }
+                }
+                else
+                {
+                    if (_validatedRequest.ResponseType != Constants.ResponseTypes.Token)
+                    {
+                        _logger.Error("Request does not contain the openid scope, but response_type contains an identity token");
+                        return Invalid(ErrorTypes.Client);
+                    }
+                }
+            }
+            
+            
+
+            //////////////////////////////////////////////////////////
             // check state
             //////////////////////////////////////////////////////////
             var state = parameters.Get(Constants.AuthorizeRequest.State);
@@ -156,8 +181,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 if (_validatedRequest.Flow == Flows.Implicit)
                 {
-                    _logger.Error("Nonce required for implicit flow");
-                    return Invalid(ErrorTypes.Client);
+                    if (_validatedRequest.IsOpenIdRequest)
+                    {
+                        _logger.Error("Nonce required for implicit flow with openid scope");
+                        return Invalid(ErrorTypes.Client);
+                    }
                 }
             }
 
@@ -278,7 +306,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check scopes and scope restrictions
             //////////////////////////////////////////////////////////
-            if (_validatedRequest.Client.ScopeRestrictions.Count == 0)
+            if (_validatedRequest.Client.ScopeRestrictions == null ||
+                _validatedRequest.Client.ScopeRestrictions.Count == 0)
             {
                 _logger.Information("All scopes allowed for client");
             }

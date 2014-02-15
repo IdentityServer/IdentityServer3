@@ -51,10 +51,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AuthorizeRequest_ProtocolValidation.cs" />
-    <Compile Include="NullLogger.cs" />
+    <Compile Include="Authorize_ProtocolValidation_Valid.cs" />
+    <Compile Include="Authorize_ProtocolValidation_Invalid.cs" />
+    <Compile Include="Plumbing\TestSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestFactory.cs" />
+    <Compile Include="Plumbing\RequestFactory.cs" />
+    <Compile Include="Authorize_ClientValidation_Valid.cs" />
+    <Compile Include="Authorize_ClientValidation_Code.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
