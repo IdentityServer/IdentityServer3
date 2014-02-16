@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     },
 
                     
-                    IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret,
+                    IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
                     
                     IdentityTokenLifetime = 360,
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                         Constants.StandardScopes.OpenId
                     },
 
-                    IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret,
+                    IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
                     
                     IdentityTokenLifetime = 360,

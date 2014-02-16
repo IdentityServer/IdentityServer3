@@ -12,10 +12,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     public class DefaultTokenService : ITokenService
     {
         private IUserService _profile;
+        private ICoreSettings _settings;
 
-        public DefaultTokenService(IUserService profile)
+        public DefaultTokenService(IUserService profile, ICoreSettings settings)
         {
             _profile = profile;
+            _settings = settings;
         }
 
         public virtual Token CreateIdentityToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -23,6 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             var token = new Token
             {
                 Audience = request.ClientId,
+                Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.IdentityTokenLifetime,
                 Type = Constants.TokenTypes.IdentityToken,
                 Claims = user.Claims.ToList()
@@ -51,7 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         {
             var token = new Token
             {
-                Audience = "userinfo",
+                Audience = _settings.GetIssuerUri() + "/resources",
+                Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.AccessTokenLifetime,
                 Type = Constants.TokenTypes.AccessToken,
 
@@ -66,17 +70,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public virtual string CreateJsonWebToken(Token token, Client client, ICoreSettings coreSettings)
+        public virtual string CreateJsonWebToken(Token token, SigningCredentials credentials)
         {
-            // todo: sig key strategy??
-            var signingCredentials = new X509SigningCredentials(coreSettings.GetSigningCertificate());
-
             var jwt = new JwtSecurityToken(
-                coreSettings.GetIssuerUri(),
+                token.Issuer,
                 token.Audience,
                 token.Claims,
                 new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddSeconds(token.Lifetime)),
-                signingCredentials);
+                credentials);
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);

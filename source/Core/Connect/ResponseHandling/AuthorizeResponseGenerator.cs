@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -10,12 +13,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private ITokenService _tokenService;
         private IAuthorizationCodeStore _authorizationCodes;
         private ITokenHandleStore _tokenHandles;
+        private ICoreSettings _settings;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles, ICoreSettings settings)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;
             _tokenHandles = tokenHandles;
+            _settings = settings;
         }
 
         public AuthorizeResponse CreateCodeFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -52,7 +57,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public AuthorizeResponse CreateImplicitFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             var idToken = _tokenService.CreateIdentityToken(request, user);
-            var jwt = _tokenService.CreateJsonWebToken(idToken, request.Client, request.CoreSettings);
+
+            SigningCredentials credentials;
+            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default)
+            {
+                credentials = new X509SigningCredentials(_settings.GetSigningCertificate()); ;
+            }
+            else
+            {
+                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+            }
+
+            var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
 
             string accessTokenReference = null;
             int accessTokenLifetime = 0;

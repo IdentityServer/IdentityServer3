@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -23,7 +25,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             var idToken = _tokenService.CreateIdentityToken(request, client);
             var accessToken = _tokenService.CreateAccessToken(request, client);
-            var jwt = _tokenService.CreateJsonWebToken(idToken, request.Client, _coreSettings);
+
+            SigningCredentials credentials;
+            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default)
+            {
+                credentials = new X509SigningCredentials(_coreSettings.GetSigningCertificate()); ;
+            }
+            else
+            {
+                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+            }
+
+            var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
 
             var accessTokenReference = Guid.NewGuid().ToString("N");
             _tokenHandles.Store(accessTokenReference, accessToken);
