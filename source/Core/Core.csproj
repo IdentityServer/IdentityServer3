@@ -115,6 +115,7 @@
     <Compile Include="Connect\Validation\UserInfoRequestValidator.cs" />
     <Compile Include="Connect\Validation\ValidatedUserInfoRequest.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="Plumbing\BasicAuthenticationFilter.cs" />
     <Compile Include="Plumbing\EmbeddedResourceManager.cs" />
     <Compile Include="PrincipalExtensions.cs" />

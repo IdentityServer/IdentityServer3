@@ -85,6 +85,11 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseTypes.IdTokenToken
                             };
 
+        public static readonly List<string> SupportedGrantTypes = new List<string> 
+                            { 
+                                Constants.GrantTypes.AuthorizationCode
+                            };
+
 
         public static class ResponseModes
         {

@@ -61,6 +61,7 @@
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdTokenToken.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
+    <Compile Include="TokenRequest Validation\TokenRequestValidation_Code.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
@@ -68,6 +69,7 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

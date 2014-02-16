@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _validatedRequest.IsOpenIdRequest = true;
             }
 
-            _validatedRequest.Scopes = scope.Split(' ').ToList();
+            _validatedRequest.Scopes = scope.Split(' ').Distinct().ToList();
             _logger.InformationFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
@@ -254,7 +254,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 int seconds;
                 if (int.TryParse(maxAge, out seconds))
                 {
-                    _validatedRequest.MaxAge = seconds;
+                    if (seconds >= 0)
+                    {
+                        _validatedRequest.MaxAge = seconds;
+                    }
+                    else
+                    {
+                        _logger.Error("Invalid max_age.");
+                        return Invalid(ErrorTypes.Client);
+                    }
                 }
                 else
                 {

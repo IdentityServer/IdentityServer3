@@ -20,6 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public int IdentityTokenLifetime { get; set; }
         public int AccessTokenLifetime { get; set; }
         public int RefreshTokenLifetime { get; set; }
+        public int AuthorizationCodeLifetime { get; set; }
 
         public List<string> ScopeRestrictions { get; set; }
 

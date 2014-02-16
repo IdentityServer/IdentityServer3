@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 token.Claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
             }
 
+            // todo
             if (!request.AccessTokenRequested)
             {
                 var requestedClaimTypes = new List<string>();

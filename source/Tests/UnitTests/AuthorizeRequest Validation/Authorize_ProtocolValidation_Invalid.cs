@@ -231,5 +231,19 @@ namespace UnitTests
             Assert.AreEqual(true, result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
         }
+
+        [TestMethod]
+        [TestCategory("Protocol Validation")]
+        public void Negative_MaxAge()
+        {
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var request = RequestFactory.GetMinimalAuthorizeRequest();
+
+            request[Constants.AuthorizeRequest.MaxAge] = "-1";
+            var result = validator.ValidateProtocol(request);
+
+            Assert.AreEqual(true, result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+        }
     }
 }

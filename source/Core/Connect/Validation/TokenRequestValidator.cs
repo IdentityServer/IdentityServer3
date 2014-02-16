@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -14,8 +15,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private ValidatedTokenRequest _validatedRequest;
 
-        public ValidatedTokenRequest ValidatedRequest 
-        { 
+        public ValidatedTokenRequest ValidatedRequest
+        {
             get
             {
                 return _validatedRequest;
@@ -82,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            if (grantType != Constants.GrantTypes.AuthorizationCode)
+            if (!Constants.SupportedGrantTypes.Contains(grantType))
             {
                 _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
@@ -91,8 +92,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
-            // todo: needs refactoring if refresh token support gets added
+            switch (grantType)
+            {
+                case Constants.GrantTypes.AuthorizationCode:
+                    return ValidateAuthorizationCodeRequest(parameters);
+            }
 
+            return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+        }
+
+        private ValidationResult ValidateAuthorizationCodeRequest(NameValueCollection parameters)
+        {
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
@@ -118,9 +128,33 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _logger.ErrorFormat("Invalid authorization code: ", code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
+            else
+            {
+                _logger.InformationFormat("Authorization code found: {0}", code);
+            }
+
             _authorizationCodes.Remove(code);
 
-            // todo: check if code has expired
+            /////////////////////////////////////////////
+            // validate client binding
+            /////////////////////////////////////////////
+            if (authZcode.ClientId != _validatedRequest.Client.ClientId)
+            {
+                _logger.ErrorFormat("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.ClientId);
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
+            /////////////////////////////////////////////
+            // validate code expiration
+            /////////////////////////////////////////////
+            // todo: make configurable
+
+            if (authZcode.CreationTime.HasExpired(60))
+            {
+                _logger.Error("Authorization code is expired");
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
             _validatedRequest.AuthorizationCode = authZcode;
 
             /////////////////////////////////////////////

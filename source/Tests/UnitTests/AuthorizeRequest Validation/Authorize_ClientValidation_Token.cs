@@ -31,9 +31,6 @@ namespace UnitTests.AuthorizeRequest_Validation
             Assert.AreEqual(true, clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
-
         }
-
-        
     }
 }
