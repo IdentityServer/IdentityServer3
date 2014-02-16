@@ -25,10 +25,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -43,10 +43,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -61,10 +61,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -79,10 +79,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -98,10 +98,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -117,10 +117,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -136,10 +136,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
@@ -154,10 +154,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(false, clientResult.IsError);
+            Assert.IsFalse(clientResult.IsError);
         }
     }
 }

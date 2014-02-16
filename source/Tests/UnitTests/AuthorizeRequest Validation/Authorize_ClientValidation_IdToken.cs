@@ -26,10 +26,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }

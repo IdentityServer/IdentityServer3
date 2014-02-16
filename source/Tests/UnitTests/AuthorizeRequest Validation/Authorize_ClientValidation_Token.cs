@@ -15,7 +15,7 @@ namespace UnitTests.AuthorizeRequest_Validation
 
         [TestMethod]
         [TestCategory("Client Validation - Token ResponseType")]
-        public void Mixed_Token_Request_Without_OpenId()
+        public void Mixed_Token_Request_Without_OpenId_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -28,7 +28,7 @@ namespace UnitTests.AuthorizeRequest_Validation
             Assert.AreEqual(false, protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }

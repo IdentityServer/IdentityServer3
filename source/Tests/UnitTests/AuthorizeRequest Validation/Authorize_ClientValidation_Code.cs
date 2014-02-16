@@ -15,7 +15,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("Client Validation - Code ResponseType")]
-        public void OpenId_Code_Request_Unknown_Scope()
+        public void Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -25,10 +25,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
@@ -45,17 +45,17 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
         [TestMethod]
         [TestCategory("Client Validation - Code ResponseType")]
-        public void OpenId_Code_Request_IdToken_ResponseType()
+        public void OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -66,17 +66,17 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
         [TestMethod]
         [TestCategory("Client Validation - Code ResponseType")]
-        public void OpenId_Code_Request_IdTokenToken_ResponseType()
+        public void OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -87,10 +87,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -107,10 +107,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -127,10 +127,10 @@ namespace UnitTests
 
             var validator = new AuthorizeRequestValidator(_settings, _logger);
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Assert.IsFalse(protocolResult.IsError);
 
             var clientResult = validator.ValidateClient();
-            Assert.AreEqual(true, clientResult.IsError);
+            Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
