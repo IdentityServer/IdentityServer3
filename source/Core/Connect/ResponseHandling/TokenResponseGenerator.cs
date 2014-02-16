@@ -10,13 +10,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenResponseGenerator
     {
-        private ICoreSettings _coreSettings;
+        private ICoreSettings _settings;
         private ITokenService _tokenService;
         private ITokenHandleStore _tokenHandles;
 
-        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, ICoreSettings coreSettings, IAuthorizationCodeStore codes)
+        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, ICoreSettings settings, IAuthorizationCodeStore codes)
         {
-            _coreSettings = coreSettings;
+            _settings = settings;
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
         }
@@ -27,13 +27,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var accessToken = _tokenService.CreateAccessToken(request, client);
 
             SigningCredentials credentials;
-            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default)
+            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
             {
-                credentials = new X509SigningCredentials(_coreSettings.GetSigningCertificate()); ;
+                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
             }
             else
             {
-                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+                credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
             }
 
             var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
