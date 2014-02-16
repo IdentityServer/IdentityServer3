@@ -28,8 +28,9 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(new NameValueCollection());
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         // fails because openid scope is requested, but no response type that indicates an identity token
@@ -42,13 +43,13 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.Scope, Constants.StandardScopes.OpenId);
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -65,8 +66,9 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -82,8 +84,9 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -99,8 +102,9 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -113,9 +117,9 @@ namespace UnitTests
             request.Remove(Constants.AuthorizeRequest.ClientId);
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -128,8 +132,9 @@ namespace UnitTests
             request.Remove(Constants.AuthorizeRequest.Scope);
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -142,8 +147,9 @@ namespace UnitTests
             request.Remove(Constants.AuthorizeRequest.RedirectUri);
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -156,8 +162,9 @@ namespace UnitTests
             request[Constants.AuthorizeRequest.RedirectUri] = "invalid";
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -170,22 +177,24 @@ namespace UnitTests
             request.Remove(Constants.AuthorizeRequest.ResponseType);
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
         [TestMethod]
         [TestCategory("Protocol Validation")]
-        public void Malformed_ResponseType()
+        public void Unknown_ResponseType()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
             var request = RequestFactory.GetMinimalAuthorizeRequest();
 
-            request[Constants.AuthorizeRequest.ResponseType] = "invalid";
+            request[Constants.AuthorizeRequest.ResponseType] = "unknown";
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
         [TestMethod]
@@ -199,8 +208,9 @@ namespace UnitTests
             request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
         [TestMethod]
@@ -214,8 +224,9 @@ namespace UnitTests
             request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -228,8 +239,9 @@ namespace UnitTests
             request[Constants.AuthorizeRequest.MaxAge] = "invalid";
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         [TestMethod]
@@ -242,8 +254,9 @@ namespace UnitTests
             request[Constants.AuthorizeRequest.MaxAge] = "-1";
             var result = validator.ValidateProtocol(request);
 
-            Assert.AreEqual(true, result.IsError);
+            Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
     }
 }

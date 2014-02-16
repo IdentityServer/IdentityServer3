@@ -40,7 +40,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
       
@@ -90,7 +90,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -108,7 +108,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -125,7 +125,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -142,7 +142,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace UnitTests
             var validator = new AuthorizeRequestValidator(null, _logger);
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Assert.IsFalse(result.IsError);
         }
     }
 }
