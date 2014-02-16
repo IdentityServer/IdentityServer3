@@ -51,13 +51,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Authorize_ProtocolValidation_Valid.cs" />
-    <Compile Include="Authorize_ProtocolValidation_Invalid.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
     <Compile Include="Plumbing\TestSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Plumbing\RequestFactory.cs" />
-    <Compile Include="Authorize_ClientValidation_Valid.cs" />
-    <Compile Include="Authorize_ClientValidation_Code.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdTokenToken.cs" />
+    <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">

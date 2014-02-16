@@ -75,24 +75,7 @@ namespace UnitTests
             Assert.AreEqual(false, result.IsError);
         }
 
-        [TestMethod]
-        [TestCategory("Protocol Validation")]
-        public void Mixed_Token_Request()
-        {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
-
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var result = validator.ValidateProtocol(parameters);
-
-            Assert.AreEqual(true, result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-        }
-        
-
+      
         [TestMethod]
         [TestCategory("Protocol Validation")]
         public void Valid_OpenId_IdToken_Request()
@@ -112,6 +95,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("Protocol Validation")]
+        // is valid because protocol validation on its own cannot know about resource scopes
         public void Valid_Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();

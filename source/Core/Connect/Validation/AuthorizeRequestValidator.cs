@@ -130,8 +130,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check scope vs response type plausability
             //////////////////////////////////////////////////////////
+
+            // if response_type is code - all scope variations are allowed
             if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code)
             {
+                // openid requests require a requested id_token
                 if (_validatedRequest.IsOpenIdRequest)
                 {
                     if (!_validatedRequest.ResponseType.Contains(Constants.ResponseTypes.IdToken))
@@ -142,6 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
                 else
                 {
+                    // resource requests require a token response_type
                     if (_validatedRequest.ResponseType != Constants.ResponseTypes.Token)
                     {
                         _logger.Error("Request does not contain the openid scope, but response_type contains an identity token");
@@ -149,8 +153,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     }
                 }
             }
-            
-            
 
             //////////////////////////////////////////////////////////
             // check state
@@ -181,6 +183,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 if (_validatedRequest.Flow == Flows.Implicit)
                 {
+                    // only openid requests require nonce
                     if (_validatedRequest.IsOpenIdRequest)
                     {
                         _logger.Error("Nonce required for implicit flow with openid scope");
@@ -325,7 +328,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
+            //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
+            //////////////////////////////////////////////////////////
             var scopeDetails = _core.GetScopes();
             foreach (var scope in _validatedRequest.Scopes)
             {
@@ -337,33 +342,49 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
                 }
 
+                if (scopeDetail.IsOpenIdScope && !_validatedRequest.IsOpenIdRequest)
+                {
+                    _logger.ErrorFormat("Identity related scope requests, but no openid scope: {0}", scope);
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                }
+
                 if (!scopeDetail.IsOpenIdScope)
                 {
                     _validatedRequest.IsResourceRequest = true;
                 }
             }
 
+            //////////////////////////////////////////////////////////
             // check id vs resource scopes and response types plausability
-            switch (_validatedRequest.ResponseType)
+            //////////////////////////////////////////////////////////
+            if (_validatedRequest.ResponseType == Constants.ResponseTypes.IdToken)
             {
-                case Constants.ResponseTypes.IdToken:
-                    if (!_validatedRequest.IsOpenIdRequest || _validatedRequest.IsResourceRequest)
-                    {
-                        _logger.Error("Scopes invalid for response_type id_token");
-                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                    }
-
-                    break;
-                case Constants.ResponseTypes.Token:
-                    if (_validatedRequest.IsOpenIdRequest || !_validatedRequest.IsResourceRequest)
-                    {
-                        _logger.Error("Scopes invalid for response_type token");
-                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                    }
-
-                    break;
+                // must include identity scopes, but no resource scopes
+                if (!_validatedRequest.IsOpenIdRequest || _validatedRequest.IsResourceRequest)
+                {
+                    _logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                }
+                
             }
-
+            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
+            {
+                // must include identity scopes
+                if (!_validatedRequest.IsOpenIdRequest)
+                {
+                    _logger.Error("Requests for id_token response type must include identity scopes");
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                }
+            }
+            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token)
+            {
+                // must include resource scopes, but no identity scopes
+                if (_validatedRequest.IsOpenIdRequest || !_validatedRequest.IsResourceRequest)
+                {
+                    _logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                }
+            }
 
             return Valid();
         }
