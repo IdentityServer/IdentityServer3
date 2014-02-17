@@ -12,7 +12,7 @@ namespace UnitTests
         ILogger _logger = new DebugLogger();
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -28,7 +28,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -44,7 +44,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -60,7 +60,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
@@ -75,9 +75,8 @@ namespace UnitTests
             Assert.IsFalse(result.IsError);
         }
 
-      
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -94,7 +93,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         // is valid because protocol validation on its own cannot know about resource scopes
         public void Valid_Mixed_IdToken_Request()
         {
@@ -112,7 +111,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -129,7 +128,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -146,7 +145,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_With_FormPost_ResponseMode_Request()
         {
             var parameters = new NameValueCollection();

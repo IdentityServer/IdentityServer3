@@ -37,6 +37,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Thinktecture.IdentityModel.Core.1.1.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -63,8 +68,9 @@
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdTokenToken.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
+    <Compile Include="TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
     <Compile Include="TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
-    <Compile Include="TokenRequest Validation\TokenRequestValidation_Code_Valid.cs" />
+    <Compile Include="TokenRequest Validation\TokenRequestValidation_Valid.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
@@ -72,7 +78,10 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

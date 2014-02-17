@@ -14,7 +14,7 @@ namespace UnitTests.AuthorizeRequest_Validation
         ICoreSettings _settings = new TestSettings();
 
         [TestMethod]
-        [TestCategory("Client Validation - Token ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Token")]
         public void Mixed_Token_Request_Without_OpenId_Scope()
         {
             var parameters = new NameValueCollection();

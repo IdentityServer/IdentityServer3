@@ -34,6 +34,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _validatedRequest = new ValidatedTokenRequest();
 
+            if (client == null)
+            {
+                throw new ArgumentNullException("client");
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters");
+            }
+
             /////////////////////////////////////////////
             // check client and credentials
             /////////////////////////////////////////////
@@ -149,7 +159,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // todo: make configurable
 
-            if (authZcode.CreationTime.HasExpired(60))
+            if (authZcode.CreationTime.HasExpired(_validatedRequest.Client.AuthorizationCodeLifetime))
             {
                 _logger.Error("Authorization code is expired");
                 return Invalid(Constants.TokenErrors.InvalidGrant);

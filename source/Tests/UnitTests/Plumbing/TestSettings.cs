@@ -26,6 +26,8 @@ namespace UnitTests.Plumbing
                     {
                         new Uri("https://server/cb"),
                     },
+
+                    AuthorizationCodeLifetime = 60
                 },
                 new Client
                 {

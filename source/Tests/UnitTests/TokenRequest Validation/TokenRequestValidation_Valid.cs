@@ -1,22 +1,22 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Specialized;
-using UnitTests.Plumbing;
-using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
+using UnitTests.Plumbing;
 
 namespace UnitTests.TokenRequest_Validation
 {
     [TestClass]
-    public class TokenRequestValidation_Code_Valid
+    public class TokenRequestValidation_Valid
     {
         ILogger _logger = new DebugLogger();
         ICoreSettings _settings = new TestSettings();
 
         [TestMethod]
-        [TestCategory("TokenRequest Validation - Valid")]
+        [TestCategory("TokenRequest Validation - General - Valid")]
         public void Valid_Code_Request()
         {
             var client = ClientFactory.CreateClient("codeclient");

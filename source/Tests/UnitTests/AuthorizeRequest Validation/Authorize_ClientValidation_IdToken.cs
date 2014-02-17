@@ -14,7 +14,7 @@ namespace UnitTests
         ICoreSettings _settings = new TestSettings();
 
         [TestMethod]
-        [TestCategory("Client Validation - IdToken ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - IdToken")]
         public void Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();

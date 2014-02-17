@@ -13,7 +13,7 @@ namespace UnitTests
         ILogger _logger = new DebugLogger();
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null_Parameter()
         {
@@ -22,7 +22,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
             var validator = new AuthorizeRequestValidator(null, _logger);
@@ -35,7 +35,7 @@ namespace UnitTests
 
         // fails because openid scope is requested, but no response type that indicates an identity token
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -53,7 +53,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -72,7 +72,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -90,7 +90,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
@@ -108,7 +108,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_ClientId()
         {
             var parameters = new NameValueCollection();
@@ -125,7 +125,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_Scope()
         {
             var parameters = new NameValueCollection();
@@ -142,7 +142,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -159,7 +159,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -177,7 +177,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri_Triple_Slash()
         {
             var parameters = new NameValueCollection();
@@ -196,7 +196,7 @@ namespace UnitTests
 
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -213,7 +213,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -231,7 +231,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -250,7 +250,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Token_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -269,7 +269,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -288,7 +288,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Protocol Validation")]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Negative_MaxAge()
         {
             var parameters = new NameValueCollection();

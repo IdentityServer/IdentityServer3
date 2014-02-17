@@ -14,7 +14,7 @@ namespace UnitTests
         ICoreSettings _settings = new TestSettings();
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
@@ -34,7 +34,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void OpenId_Code_Request_Invalid_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -54,7 +54,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -75,7 +75,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -96,7 +96,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void OpenId_Code_Request_With_Unknown_Client()
         {
             var parameters = new NameValueCollection();
@@ -116,7 +116,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation - Code ResponseType")]
+        [TestCategory("AuthorizeRequest Client Validation - Code")]
         public void OpenId_Code_Request_With_Restricted_Scope()
         {
             var parameters = new NameValueCollection();

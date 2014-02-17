@@ -14,7 +14,7 @@ namespace UnitTests
         ICoreSettings _settings = new TestSettings();
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -32,7 +32,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -50,7 +50,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -68,7 +68,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Mixed_Code_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
@@ -86,7 +86,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -105,7 +105,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -124,7 +124,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
@@ -143,7 +143,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [TestCategory("Client Validation")]
+        [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public void Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
