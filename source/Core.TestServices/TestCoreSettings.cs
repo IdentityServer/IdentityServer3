@@ -45,6 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,
+                    AuthorizationCodeLifetime = 120
                 },
                 new Client
                 {
@@ -57,13 +58,15 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     RedirectUris = new List<Uri>
                     {
-                        new Uri("https://localhost/cb")
+                        new Uri("oob://localhost/wpfclient")
                     },
                     
                     ScopeRestrictions = new List<string>
                     { 
                         Constants.StandardScopes.Profile,
-                        Constants.StandardScopes.OpenId
+                        Constants.StandardScopes.OpenId,
+                        "resource1",
+                        "resource2"
                     },
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
