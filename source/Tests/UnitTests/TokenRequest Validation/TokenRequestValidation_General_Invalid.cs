@@ -131,5 +131,36 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
+
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Invalid")]
+        public void Missing_Grant_Type()
+        {
+            var client = ClientFactory.CreateClient("codeclient");
+            var store = new TestCodeStore();
+
+            var code = new AuthorizationCode
+            {
+                ClientId = "codeclient",
+                IsOpenId = true,
+                RedirectUri = new Uri("https://server/cb"),
+
+                AccessToken = TokenFactory.CreateAccessToken(),
+                IdentityToken = TokenFactory.CreateIdentityToken()
+            };
+
+            store.Store("valid", code);
+
+            var validator = new TokenRequestValidator(_settings, _logger, store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = validator.ValidateRequest(parameters, client);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+        }
     }
 }
