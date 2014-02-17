@@ -54,14 +54,17 @@
     <Compile Include="AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
+    <Compile Include="Plumbing\ClientFactory.cs" />
+    <Compile Include="Plumbing\TestCodeStore.cs" />
     <Compile Include="Plumbing\TestSettings.cs" />
+    <Compile Include="Plumbing\TokenFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Plumbing\RequestFactory.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdTokenToken.cs" />
     <Compile Include="AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
-    <Compile Include="TokenRequest Validation\TokenRequestValidation_Code.cs" />
+    <Compile Include="TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
+    <Compile Include="TokenRequest Validation\TokenRequestValidation_Code_Valid.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">

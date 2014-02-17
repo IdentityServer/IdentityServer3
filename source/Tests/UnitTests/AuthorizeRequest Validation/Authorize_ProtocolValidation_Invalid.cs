@@ -111,11 +111,13 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Missing_ClientId()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            request.Remove(Constants.AuthorizeRequest.ClientId);
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
@@ -126,11 +128,13 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Missing_Scope()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            request.Remove(Constants.AuthorizeRequest.Scope);
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -141,11 +145,13 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Missing_RedirectUri()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            request.Remove(Constants.AuthorizeRequest.RedirectUri);
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
@@ -156,11 +162,14 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Malformed_RedirectUri()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "malformed");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            request[Constants.AuthorizeRequest.RedirectUri] = "invalid";
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.User, result.ErrorType);
@@ -169,13 +178,34 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("Protocol Validation")]
+        public void Malformed_RedirectUri_Triple_Slash()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https:///attacker.com");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+        }
+
+
+        [TestMethod]
+        [TestCategory("Protocol Validation")]
         public void Missing_ResponseType()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
 
-            request.Remove(Constants.AuthorizeRequest.ResponseType);
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -186,11 +216,14 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Unknown_ResponseType()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, "unknown");
 
-            request[Constants.AuthorizeRequest.ResponseType] = "unknown";
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -201,12 +234,15 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Code;
-            request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -217,12 +253,15 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Invalid_ResponseMode_For_Token_ResponseType()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
 
-            request[Constants.AuthorizeRequest.ResponseType] = Constants.ResponseTypes.Token;
-            request[Constants.AuthorizeRequest.ResponseMode] = Constants.ResponseModes.FormPost;
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -233,11 +272,15 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Malformed_MaxAge()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.MaxAge, "malformed");
 
-            request[Constants.AuthorizeRequest.MaxAge] = "invalid";
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
@@ -248,11 +291,15 @@ namespace UnitTests
         [TestCategory("Protocol Validation")]
         public void Negative_MaxAge()
         {
-            var validator = new AuthorizeRequestValidator(null, _logger);
-            var request = RequestFactory.GetMinimalAuthorizeRequest();
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.MaxAge, "-1");
 
-            request[Constants.AuthorizeRequest.MaxAge] = "-1";
-            var result = validator.ValidateProtocol(request);
+            var validator = new AuthorizeRequestValidator(null, _logger);
+            var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(ErrorTypes.Client, result.ErrorType);

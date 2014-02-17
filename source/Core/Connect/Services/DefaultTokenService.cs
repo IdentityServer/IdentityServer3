@@ -22,12 +22,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateIdentityToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            var token = new Token
+            var token = new Token(Constants.TokenTypes.IdentityToken)
             {
                 Audience = request.ClientId,
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.IdentityTokenLifetime,
-                Type = Constants.TokenTypes.IdentityToken,
                 Claims = user.Claims.ToList()
             };
 
@@ -53,12 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateAccessToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            var token = new Token
+            var token = new Token(Constants.TokenTypes.AccessToken)
             {
                 Audience = _settings.GetIssuerUri() + "/resources",
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.AccessTokenLifetime,
-                Type = Constants.TokenTypes.AccessToken,
 
                 Claims = new List<Claim>
                 {

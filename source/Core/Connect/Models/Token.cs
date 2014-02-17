@@ -14,8 +14,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
 
         public List<Claim> Claims { get; set; }
 
-        public Token()
+        public Token(string tokenType)
         {
+            Type = tokenType;
             CreationTime = DateTime.UtcNow;
         }
     }

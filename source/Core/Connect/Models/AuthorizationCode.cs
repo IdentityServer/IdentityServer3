@@ -13,5 +13,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
 
         public Token IdentityToken { get; set; }
         public Token AccessToken { get; set; }
+
+        public AuthorizationCode()
+        {
+            CreationTime = DateTime.UtcNow;
+        }
     }
 }

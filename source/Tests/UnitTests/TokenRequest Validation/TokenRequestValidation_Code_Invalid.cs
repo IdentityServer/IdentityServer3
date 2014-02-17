@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTests.TokenRequest_Validation
 {
     [TestClass]
-    public class TokenRequestValidation_Code
+    public class TokenRequestValidation_Code_Invalid
     {
         //client null
         //client anonymous

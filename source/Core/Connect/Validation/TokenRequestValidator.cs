@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidClient);
             }
 
-            _logger.InformationFormat("Client found in registry: {0}/{1}", oidcClient.ClientId, oidcClient.ClientName);
+            _logger.InformationFormat("Client found in registry: {0} / {1}", oidcClient.ClientId, oidcClient.ClientName);
             _validatedRequest.Client = oidcClient;
 
             /////////////////////////////////////////////
