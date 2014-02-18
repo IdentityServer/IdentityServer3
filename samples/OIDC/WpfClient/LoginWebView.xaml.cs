@@ -34,7 +34,7 @@ namespace Thinktecture.Samples
 
         private void webView_Navigating(object sender, NavigatingCancelEventArgs e)
         {
-            if (e.Uri.AbsolutePath.Equals(_callbackUri.AbsoluteUri))
+            if (e.Uri.ToString().StartsWith(_callbackUri.AbsoluteUri))
             {
                 AuthorizeResponse = new AuthorizeResponse(e.Uri.AbsoluteUri);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,7 @@ namespace WpfClient
 
         void _login_Done(object sender, AuthorizeResponse e)
         {
-            
+            Textbox1.Text = e.Raw;
         }
 
         private void LoginOnlyButton_Click(object sender, RoutedEventArgs e)
