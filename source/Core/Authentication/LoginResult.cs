@@ -46,8 +46,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     protection.SigningKey,
                     protection.Ttl);
 
-                // todo: fix relative paths (using OWIN magic)
-                var uri = new Uri(_request.RequestUri, "/core/login?message=" + jwt);
+                var baseUrl = new Uri(this._request.RequestUri, this._request.GetRequestContext().VirtualPathRoot).AbsoluteUri;
+                if (!baseUrl.EndsWith("/")) baseUrl += "/";
+                var uri = new Uri(baseUrl + "login?message=" + jwt);
                 response.Headers.Location = uri;
             }
             catch
