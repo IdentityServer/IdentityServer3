@@ -67,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="IdentityTokenViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoginWebView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,6 +82,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Base64Url.cs" />
+    <Compile Include="IdentityTokenViewer.xaml.cs">
+      <DependentUpon>IdentityTokenViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginWebView.xaml.cs">
       <DependentUpon>LoginWebView.xaml</DependentUpon>
