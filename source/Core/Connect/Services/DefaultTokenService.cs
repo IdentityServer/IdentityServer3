@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateIdentityToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
+            // minimal, mandatory claims
             var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
@@ -30,31 +31,47 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 new Claim(Constants.ClaimTypes.AuthenticationTime, user.GetAuthenticationTimeEpoch().ToString())
             };
 
+            // if nonce was sent, must be mirrored in id token
             if (request.Nonce.IsPresent())
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
             }
 
-            // todo: must share logic with userinfo endpoint
-            if (!request.AccessTokenRequested)
+            var scopeDetails = _settings.GetScopes();
+            var allIdentityClaims = new List<string>();
+            var alwaysIncludeIdentityClaims = new List<string>();
+
+            foreach (var scope in request.Scopes)
             {
-                var requestedClaimTypes = new List<string>();
-                var scopeDetails = _settings.GetScopes();
+                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
 
-                foreach (var scope in request.Scopes)
+                if (scopeDetail != null)
                 {
-                    var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-
-                    if (scopeDetail != null)
+                    if (scopeDetail.IsOpenIdScope)
                     {
-                        if (scopeDetail.IsOpenIdScope)
+                        foreach (var claim in scopeDetail.Claims)
                         {
-                            requestedClaimTypes.AddRange(scopeDetail.Claims.Select(c => c.Name));
+                            allIdentityClaims.Add(claim.Name);
+
+                            if (claim.AlwaysIncludeInIdToken)
+                            {
+                                alwaysIncludeIdentityClaims.Add(claim.Name);
+                            }
                         }
                     }
                 }
+            }
 
-                claims.AddRange(_profile.GetProfileData(user.GetSubject(), requestedClaimTypes));
+            // if no access token is request, all identity claims go into id token
+            if (!request.AccessTokenRequested)
+            {
+                alwaysIncludeIdentityClaims = alwaysIncludeIdentityClaims.Union(allIdentityClaims).ToList();
+            }
+
+            // fetch all identity claims that need to go into the id token
+            if (alwaysIncludeIdentityClaims.Count > 0)
+            {
+                claims.AddRange(_profile.GetProfileData(user.GetSubject(), allIdentityClaims));
             }
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
