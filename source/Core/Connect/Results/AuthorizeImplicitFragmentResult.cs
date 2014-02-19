@@ -27,6 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
             var url = Response.RedirectUri.AbsoluteUri;
 
+            //HttpValueCollection c = new HttpValueCollection();
+
+
             if (Response.IdentityToken.IsPresent() && Response.AccessToken.IsPresent())
             {
                 url = string.Format("{0}#id_token={1}&access_token={2}&token_type=bearer&expires_in={3}",
