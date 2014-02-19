@@ -56,24 +56,27 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public AuthorizeResponse CreateImplicitFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            var idToken = _tokenService.CreateIdentityToken(request, user);
-
-            SigningCredentials credentials;
-            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+            string jwt = null;
+            if (request.IsOpenIdRequest)
             {
-                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
-            }
-            else
-            {
-                credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
-            }
+                var idToken = _tokenService.CreateIdentityToken(request, user);
 
-            var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
+                SigningCredentials credentials;
+                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+                {
+                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+                }
+                else
+                {
+                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                }
+
+                jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
+            }
 
             string accessTokenReference = null;
             int accessTokenLifetime = 0;
-            
-            if (request.AccessTokenRequested)
+            if (request.IsResourceRequest)
             {
                 var accessToken = _tokenService.CreateAccessToken(request, user);
                 accessTokenLifetime = accessToken.Lifetime;

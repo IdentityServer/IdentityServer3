@@ -25,18 +25,33 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         private HttpResponseMessage Execute()
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
+            var url = Response.RedirectUri.AbsoluteUri;
 
-            var url = string.Format("{0}#id_token={1}",
-                Response.RedirectUri.AbsoluteUri,
-                Response.IdentityToken);
-
-            if (Response.AccessToken.IsPresent())
+            if (Response.IdentityToken.IsPresent() && Response.AccessToken.IsPresent())
             {
-                url = string.Format("{0}&access_token={1}&token_type=bearer&expires_in={2}", 
+                url = string.Format("{0}#id_token={1}&access_token={2}&token_type=bearer&expires_in={3}",
+                    url,
+                    Response.IdentityToken,
+                    Response.AccessToken,
+                    Response.AccessTokenLifetime);
+            }
+            else if (Response.IdentityToken.IsPresent())
+            {
+                url = string.Format("{0}#id_token={1}",
+                    url,
+                    Response.IdentityToken);
+
+                responseMessage.Headers.Location = new Uri(url);
+                return responseMessage;
+            }
+            else if (Response.AccessToken.IsPresent())
+            {
+                url = string.Format("{0}#access_token={1}&token_type=bearer&expires_in={2}", 
                     url, 
                     Response.AccessToken,
                     Response.AccessTokenLifetime);
             }
+
             if (Response.State.IsPresent())
             {
                 url = string.Format("{0}&state={1}", url, Response.State);
