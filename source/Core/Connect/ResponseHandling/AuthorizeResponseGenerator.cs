@@ -74,21 +74,30 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
             }
 
-            string accessTokenReference = null;
+            string accessTokenValue = null;
             int accessTokenLifetime = 0;
             if (request.IsResourceRequest)
             {
                 var accessToken = _tokenService.CreateAccessToken(request, user);
                 accessTokenLifetime = accessToken.Lifetime;
 
-                accessTokenReference = Guid.NewGuid().ToString("N");
-                _tokenHandles.Store(accessTokenReference, accessToken);
+                if (request.Client.AccessTokenType == AccessTokenType.JWT)
+                {
+                    accessTokenValue = _tokenService.CreateJsonWebToken(
+                        accessToken, 
+                        new X509SigningCredentials(_settings.GetSigningCertificate()));
+                }
+                else
+                {
+                    accessTokenValue = Guid.NewGuid().ToString("N");
+                    _tokenHandles.Store(accessTokenValue, accessToken);
+                }
             }
 
             return new AuthorizeResponse
             {
                 RedirectUri = request.RedirectUri,
-                AccessToken = accessTokenReference,
+                AccessToken = accessTokenValue,
                 AccessTokenLifetime = accessTokenLifetime,
                 IdentityToken = jwt,
                 State = request.State

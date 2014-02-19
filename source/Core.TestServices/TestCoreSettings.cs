@@ -42,6 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
+                    AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,
@@ -71,6 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
+                    AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,

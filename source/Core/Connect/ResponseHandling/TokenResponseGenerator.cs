@@ -38,13 +38,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
 
-            var accessTokenReference = Guid.NewGuid().ToString("N");
-            _tokenHandles.Store(accessTokenReference, accessToken);
+            string accessTokenValue = null;
+            if (request.Client.AccessTokenType == AccessTokenType.JWT)
+            {
+                accessTokenValue = _tokenService.CreateJsonWebToken(
+                    accessToken,
+                    new X509SigningCredentials(_settings.GetSigningCertificate()));
+            }
+            else
+            {
+                accessTokenValue = Guid.NewGuid().ToString("N");
+                _tokenHandles.Store(accessTokenValue, accessToken);
+            }
 
             return new TokenResponse
             {
                 Jwt = jwt,
-                AccessTokenReference = accessTokenReference,
+                AccessTokenReference = accessTokenValue,
                 AccessTokenLifetime = accessToken.Lifetime
             };
         }
