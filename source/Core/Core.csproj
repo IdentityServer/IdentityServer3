@@ -117,6 +117,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Plumbing\BasicAuthenticationFilter.cs" />
+    <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Plumbing\EmbeddedResourceManager.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
