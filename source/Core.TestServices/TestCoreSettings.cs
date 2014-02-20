@@ -95,6 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                  {
                     Name = Constants.StandardScopes.OpenId, 
                     Description = "User identifier",
+                    Required = true,
                     IsOpenIdScope = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x, Description = x}))
                 },
