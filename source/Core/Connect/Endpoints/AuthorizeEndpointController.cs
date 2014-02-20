@@ -99,6 +99,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal);
             if (interaction.IsConsent)
             {
+                var requestedScopes =
+                        from s in _settings.GetScopes()
+                        where request.Scopes.Contains(s.Name)
+                        select s;
+
                 string errorMessage = null;
                 IEnumerable<string> consentedScopes = null;
                 if (consent != null)
@@ -116,20 +121,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     {
                         consentedScopes = Enumerable.Empty<string>();
                     }
+
+                    var requiredScopes = requestedScopes.Where(x => x.Required).Select(x=>x.Name);
+                    consentedScopes = consentedScopes.Union(requiredScopes).Distinct();
                     
                     if (!consentedScopes.Any())
                     {
-                        errorMessage = "Must select a permission";
+                        errorMessage = "Must select at least one permission";
                     }
                 }
 
                 if (consent == null || errorMessage != null)
                 {
-                    var requestedScopes =
-                        from s in _settings.GetScopes()
-                        where request.Scopes.Contains(s.Name)
-                        select s;
-
                     var idScopes =
                         from s in requestedScopes
                         where s.IsOpenIdScope
@@ -174,7 +177,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
 
                 request.Scopes = consentedScopes.ToList();
-                // TODO: double check for scopes that are required, but absent from the consented list
             }
 
             return CreateAuthorizeResponse(request);
