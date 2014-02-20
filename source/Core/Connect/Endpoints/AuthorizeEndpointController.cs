@@ -128,14 +128,35 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     var requestedScopes =
                         from s in _settings.GetScopes()
                         where request.Scopes.Contains(s.Name)
+                        select s;
+
+                    var idScopes =
+                        from s in requestedScopes
+                        where s.IsOpenIdScope
+                        let claims = (from c in s.Claims ?? Enumerable.Empty<ScopeClaim>() select c.Description)
                         select new
                         {
                             selected = (consentedScopes != null ? consentedScopes.Contains(s.Name) : true),
                             s.Name,
                             s.Description,
                             s.Emphasize,
-                            claims = s.Claims.Select(x => x.Description)
+                            s.Required,
+                            claims
                         };
+                    var appScopes =
+                        from s in requestedScopes
+                        where !s.IsOpenIdScope
+                        let claims = (from c in s.Claims ?? Enumerable.Empty<ScopeClaim>() select c.Description)
+                        select new
+                        {
+                            selected = (consentedScopes != null ? consentedScopes.Contains(s.Name) : true),
+                            s.Name,
+                            s.Description,
+                            s.Emphasize,
+                            s.Required,
+                            claims
+                        };
+
 
                     return new EmbeddedHtmlResult(Request, new LayoutModel
                     {
@@ -146,10 +167,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         {
                             postUrl = "consent?" + parameters.ToQueryString(),
                             client = request.Client.ClientName,
-                            scopes = requestedScopes.ToArray()
+                            identityScopes = idScopes.ToArray(),
+                            appScopes = appScopes.ToArray(),
                         }
                     });
                 }
+
+                request.Scopes = consentedScopes.ToList();
+                // TODO: double check for scopes that are required, but absent from the consented list
             }
 
             return CreateAuthorizeResponse(request);

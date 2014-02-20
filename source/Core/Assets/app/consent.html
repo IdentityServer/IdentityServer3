@@ -10,18 +10,39 @@
                 {{layout.errorMessage}}
             </div>
             <form name="form" method="post" action="{{model.postUrl}}">
-                <ul class="list-group">
-                    <li ng-repeat="scope in model.scopes" class="list-group-item">
-                        <label>
-                            <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" />
-                            <strong>{{scope.description}}</strong>
-                            <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
-                        </label>
-                        <div>
-                            <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
-                        </div>
-                    </li>
-                </ul>
+
+                <div class="panel panel-default" ng-show="model.identityScopes">
+                    <div class="panel-heading">Personal Information</div>
+                    <ul class="list-group">
+                        <li ng-repeat="scope in model.identityScopes" class="list-group-item">
+                            <label>
+                                <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" ng-hide="scope.required" />
+                                <strong>{{scope.description}}</strong>
+                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
+                            </label>
+                            <div>
+                                <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel panel-default" ng-show="model.appScopes">
+                    <div class="panel-heading">Application Access</div>
+                    <ul class="list-group">
+                        <li ng-repeat="scope in model.appScopes" class="list-group-item">
+                            <label>
+                                <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" />
+                                <strong>{{scope.description}}</strong>
+                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
+                            </label>
+                            <div>
+                                <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
                 <p>
                     <button name="button" value="yes" class="btn btn-primary">Yes, Allow</button>
                     <button name="button" value="no" class="btn">No, Do Not Allow</button>
@@ -30,5 +51,3 @@
         </div>
     </div>
 </div>
-
-
