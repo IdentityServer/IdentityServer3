@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -26,42 +27,28 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
             var url = Response.RedirectUri.AbsoluteUri;
+            var query = new NameValueCollection();
 
-            //HttpValueCollection c = new HttpValueCollection();
-
-
-            if (Response.IdentityToken.IsPresent() && Response.AccessToken.IsPresent())
+            if (Response.IdentityToken.IsPresent())
             {
-                url = string.Format("{0}#id_token={1}&access_token={2}&token_type=bearer&expires_in={3}",
-                    url,
-                    Response.IdentityToken,
-                    Response.AccessToken,
-                    Response.AccessTokenLifetime);
+                query.Add("id_token", Response.IdentityToken);
             }
-            else if (Response.IdentityToken.IsPresent())
+            
+            if (Response.AccessToken.IsPresent())
             {
-                url = string.Format("{0}#id_token={1}",
-                    url,
-                    Response.IdentityToken);
-
-                responseMessage.Headers.Location = new Uri(url);
-                return responseMessage;
-            }
-            else if (Response.AccessToken.IsPresent())
-            {
-                url = string.Format("{0}#access_token={1}&token_type=bearer&expires_in={2}", 
-                    url, 
-                    Response.AccessToken,
-                    Response.AccessTokenLifetime);
+                query.Add("access_token", Response.AccessToken);
+                query.Add("token_type", "Bearer");
+                query.Add("expires_in", Response.AccessTokenLifetime.ToString());
             }
 
             if (Response.State.IsPresent())
             {
-                url = string.Format("{0}&state={1}", url, Response.State);
+                query.Add("state", Response.State);
             }
 
             //_logger.InformationFormat("Redirecting back to: {0}", url);
 
+            url = string.Format("{0}#{1}", url, query.ToQueryString());
             responseMessage.Headers.Location = new Uri(url);
             return responseMessage;
         }
