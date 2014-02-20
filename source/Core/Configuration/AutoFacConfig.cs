@@ -40,6 +40,7 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<UserInfoResponseGenerator>();
 
             // services
+            builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
             builder.RegisterType<DefaultTokenService>().As<ITokenService>();
 
             // controller

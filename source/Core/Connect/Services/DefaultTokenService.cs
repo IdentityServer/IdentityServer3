@@ -14,11 +14,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     {
         private IUserService _profile;
         private ICoreSettings _settings;
+        private IClaimsProvider _claimsProvider;
 
-        public DefaultTokenService(IUserService profile, ICoreSettings settings)
+        public DefaultTokenService(IUserService profile, ICoreSettings settings, IClaimsProvider claimsProvider)
         {
             _profile = profile;
             _settings = settings;
+            _claimsProvider = claimsProvider;
         }
 
         public virtual Token CreateIdentityToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -37,42 +39,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
             }
 
-            var scopeDetails = _settings.GetScopes();
-            var allIdentityClaims = new List<string>();
-            var alwaysIncludeIdentityClaims = new List<string>();
-
-            foreach (var scope in request.Scopes)
-            {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-
-                if (scopeDetail != null)
-                {
-                    if (scopeDetail.IsOpenIdScope)
-                    {
-                        foreach (var claim in scopeDetail.Claims)
-                        {
-                            allIdentityClaims.Add(claim.Name);
-
-                            if (claim.AlwaysIncludeInIdToken)
-                            {
-                                alwaysIncludeIdentityClaims.Add(claim.Name);
-                            }
-                        }
-                    }
-                }
-            }
-
-            // if no access token is request, all identity claims go into id token
-            if (!request.AccessTokenRequested)
-            {
-                alwaysIncludeIdentityClaims = alwaysIncludeIdentityClaims.Union(allIdentityClaims).ToList();
-            }
-
-            // fetch all identity claims that need to go into the id token
-            if (alwaysIncludeIdentityClaims.Count > 0)
-            {
-                claims.AddRange(_profile.GetProfileData(user.GetSubject(), allIdentityClaims));
-            }
+            claims.AddRange(_claimsProvider.GetIdentityTokenClaims(
+                user,
+                request.Client,
+                request.Scopes,
+                _settings,
+                !request.AccessTokenRequested,
+                _profile));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
@@ -87,18 +60,27 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateAccessToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
+            // minimal claims
+            var claims = new List<Claim>
+            {
+                new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
+                new Claim(Constants.ClaimTypes.ClientId, request.ClientId),
+                new Claim(Constants.ClaimTypes.Scope, request.Scopes.ToSpaceSeparatedString())
+            };
+
+            claims.AddRange(_claimsProvider.GetAccessTokenClaims(
+                user, 
+                request.Client, 
+                request.Scopes, 
+                _settings, 
+                _profile));
+
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
                 Audience = _settings.GetIssuerUri() + "/resources",
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.AccessTokenLifetime,
-
-                Claims = new List<Claim>
-                {
-                    new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
-                    new Claim(Constants.ClaimTypes.ClientId, request.ClientId),
-                    new Claim(Constants.ClaimTypes.Scope, request.Scopes.ToSpaceSeparatedString())
-                }
+                Claims = claims
             };
 
             return token;
