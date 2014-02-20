@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="true" runOnBuild="true" output="scripts.js">
+  <!--The order of the <file> elements determines the order of the file contents when bundled.-->
+  <file>/Assets/libs/jquery/jquery-1.11.0.min.js</file>
+  <file>/Assets/libs/bootstrap/js/bootstrap.min.js</file>
+  <file>/Assets/libs/angular/angular.1.2.13.min.js</file>
+  <file>/Assets/app/app.js</file>
+</bundle>

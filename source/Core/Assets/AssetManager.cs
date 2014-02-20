@@ -1,20 +1,45 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Assets
 {
-    class EmbeddedResourceManager
+    public class LayoutModel
     {
+        public string Title { get; set; }
+        public string SuccessMessage { get; set; }
+        public string ErrorMessage { get; set; }
+        public string Page { get; set; }
+        public string PageUrl 
+        { 
+            get
+            {
+                if (String.IsNullOrWhiteSpace(Page)) return null;
+                return "assets/app." + Page + ".html";
+            } 
+        }
+        public object PageModel { get; set; }
+    }
+
+    class AssetManager
+    {
+        public static string GetLayoutHtml(LayoutModel model)
+        {
+            model.Title = model.Title ?? "Thinktecture IdSrv3";
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
+            return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html", new { layoutModel = json });
+        }
+
         static ConcurrentDictionary<string, string> ResourceStrings = new ConcurrentDictionary<string, string>();
         internal static string LoadResourceString(string name)
         {
             string value;
             if (!ResourceStrings.TryGetValue(name, out value))
             {
-                var assembly = typeof(EmbeddedResourceManager).Assembly;
+                var assembly = typeof(AssetManager).Assembly;
                 using (var sr = new StreamReader(assembly.GetManifestResourceStream(name)))
                 {
                     ResourceStrings[name] = value = sr.ReadToEnd();

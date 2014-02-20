@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<bundle minify="true" runOnBuild="true" output="login.css">
-  <!--The order of the <file> elements determines the order of the file contents when bundled.-->
-  <file>/Authentication/Assets/libs/bootstrap/custom.css</file>
-  <file>/Authentication/Assets/app/app.css</file>
-</bundle>

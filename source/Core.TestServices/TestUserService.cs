@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
 
         public string Authenticate(string username, string password)
         {
-            return username;
+            return username == password ? username : null;
         }
     }
 }

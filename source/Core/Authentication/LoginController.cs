@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -7,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Plumbing;
+using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
@@ -22,12 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
     public class LoginController : ApiController
     {
-        //IAuthenticationService authenticationService;
-        //public LoginController(IAuthenticationService authenticationService)
-        //{
-        //    this.authenticationService = authenticationService;
-        //}
-
         IUserService userService;
         private ICoreSettings _settings;
 
@@ -38,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         [Route("login")]
-        public HttpResponseMessage Get([FromUri] string message)
+        public IHttpActionResult Get([FromUri] string message)
         {
             var protection = _settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
@@ -46,27 +41,35 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 protection.Issuer,
                 protection.Audience,
                 protection.SigningKey);
-
-            var html = EmbeddedResourceManager.LoadResourceString("Thinktecture.IdentityServer.Core.Authentication.Assets.Login.html");
-            html = html.Replace("{title}", "IdSrv3 Login");
-            html = html.Replace("{loginurl}", Request.RequestUri.AbsoluteUri);
-            if (signInMessage != null)
-            {
-                html = html.Replace("{returnUrl}", signInMessage.ReturnUrl);
-            }
-
-            return new HttpResponseMessage()
-            {
-                Content = new StringContent(html, Encoding.UTF8, "text/html")
-            };
+            
+            return new EmbeddedHtmlResult(
+                new LayoutModel { 
+                    Title=_settings.GetSiteName(),
+                    Page = "login", 
+                    PageModel = new { url=Request.RequestUri.AbsoluteUri } 
+                });
         }
 
-        [Route("signin")]
-        public IHttpActionResult Post(Credentials model)
+        [Route("login")]
+        public IHttpActionResult Post([FromUri] string message, Credentials model)
         {
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey); 
+            
             if (model == null)
             {
-                ModelState.AddModelError("", "Invalid Username or Password");
+                return new EmbeddedHtmlResult(
+                    new LayoutModel
+                    {
+                        Title = _settings.GetSiteName(),
+                        Page = "login",
+                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
+                        ErrorMessage = "Invalid Username or Password",
+                    });
             }
 
             if (!ModelState.IsValid)
@@ -76,42 +79,40 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     where item.Value.Errors.Any()
                     from err in item.Value.Errors
                     select err.ErrorMessage;
-                return BadRequest(error.First());
+                return new EmbeddedHtmlResult(
+                    new LayoutModel
+                    {
+                        Title = _settings.GetSiteName(),
+                        Page = "login",
+                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
+                        ErrorMessage = error.First(),
+                    });
             }
 
             var sub = userService.Authenticate(model.Username, model.Password);
             if (sub == null)
             {
-                return BadRequest("Invalid Username or Password");
+                return new EmbeddedHtmlResult(
+                    new LayoutModel
+                    {
+                        Title = _settings.GetSiteName(),
+                        Page = "login",
+                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
+                        ErrorMessage = "Invalid Username or Password",
+                    });
             }
 
-            //UserAccount acct;
-            //if (!userAccountService.Authenticate(model.Username, model.Password, out acct))
-            //{
-            //    return BadRequest("Invalid Username or Password");
-            //}
-
-            //var claims = acct.GetAllClaims();
-            //var ci = new ClaimsIdentity(claims, "Cookie");
-
-            //var ctx = Request.GetOwinContext();
-            //ctx.Authentication.SignIn(ci);
-
-            //authenticationService.SignIn(acct);
             var identity = new ClaimsIdentity("idsrv");
             identity.AddClaim(new Claim(Constants.ClaimTypes.Subject, sub));
             identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString()));
             identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password));
             Request.GetOwinContext().Authentication.SignIn(identity);
 
-            return Content(HttpStatusCode.OK, new
-            {
-                id = sub,
-            });
+            return Redirect(signInMessage.ReturnUrl);
         }
 
-        [Route("signout")]
-        public HttpResponseMessage Delete()
+        [Route("logout")]
+        public HttpResponseMessage Post()
         {
             var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut("Cookie");
