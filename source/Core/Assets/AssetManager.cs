@@ -28,9 +28,14 @@ namespace Thinktecture.IdentityServer.Core.Assets
     {
         public static string GetLayoutHtml(LayoutModel model, string rootUrl)
         {
-            model.Title = model.Title ?? "Thinktecture IdSrv3";
+            model.Title = model.Title ?? "Thinktecture IdentityServer";
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
-            return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html", new { layoutModel = json, rootUrl });
+            return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html",
+                new {
+                    title = model.Title,
+                    rootUrl,
+                    layoutModel = json, 
+                });
         }
 
         static ConcurrentDictionary<string, string> ResourceStrings = new ConcurrentDictionary<string, string>();

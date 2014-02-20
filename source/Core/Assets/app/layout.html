@@ -2,7 +2,7 @@
 <html ng-app="app" ng-controller="LayoutCtrl">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{{layout.title}}</title>
+    <title>{title}</title>
     <link href="{rootUrl}/assets/styles.min.css" rel="stylesheet" />
 </head>
 <body lang="en">
@@ -13,9 +13,7 @@
     </div>
 
     <div class="container">
-        <!--<ng-include src="'assets/app.login.html'"></ng-include>-->
         <ng-include src="'{rootUrl}/' + layout.pageUrl"></ng-include>
-
     </div>
 
     <script src="{rootUrl}/assets/scripts.js"></script>
