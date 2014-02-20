@@ -329,5 +329,9 @@ ngModel:fe,ngList:he,ngChange:ge,required:Oc,ngRequired:Oc,ngValue:je}).directiv
     //    };
     //});
 
+    app.controller("ConsentCtrl", function ($scope) {
+        $scope.model = $scope.layout.pageModel;
+    });
+
 })();
 

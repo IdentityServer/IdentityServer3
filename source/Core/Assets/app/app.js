@@ -108,4 +108,8 @@
     //    };
     //});
 
+    app.controller("ConsentCtrl", function ($scope) {
+        $scope.model = $scope.layout.pageModel;
+    });
+
 })();

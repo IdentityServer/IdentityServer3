@@ -1,109 +1,34 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{title}</title>
-    <link href="assets/login.min.css" rel="stylesheet" />
-</head>
-<body lang="en" ng-app="app" ng-controller="LoginCtrl">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-header">
-            <a href="#" class="navbar-brand">IdSrv3</a>
-            <button class="navbar-toggle" data-toggle="collapse" data-target="#top-menu">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="top-menu">
-            <ul class="nav navbar-nav">
-                <!--<li ng-hide="global.user"><a href="#">Login</a></li>-->
-                <!--<li ng-show="global.user"><a href="#/Logout">Logout</a></li>-->
-            </ul>
-            <p ng-show="global.user" class="navbar-text">Logged in as {{global.user.id}}</p>
-        </div>
+﻿<div ng-controller="ConsentCtrl">
+    <div class="page-header">
+        <h1>{{model.client}} <small>is requesting your permission</small></h1>
     </div>
 
-    <div class="container">
-        <div class="page-header">
-            <h1>IdSrv3 <small>Thinktecture</small></h1>
-        </div>
-
-        <!--<div class="row">
-            <div class="col-md-8 col-md-push-2" ng-show="hasErrors()">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">
-                            <h4>
-                                Errors
-                                <button class="pull-right btn btn-danger btn-xs" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>
-                            </h4>
-                        </h1>
-                    </div>
-                    <ul class="list-group" ng-repeat="error in errors">
-                        <li class="list-group-item">{{error.message}}</li>
-                    </ul>
-                </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <div ng-show="layout.errorMessage" class="alert alert-danger">
+                <strong>Error:</strong>
+                {{layout.errorMessage}}
             </div>
-        </div>-->
-
-        <div ng-show="model.success" class="alert alert-success">
-            <strong>Success:</strong>
-            You are now logged in.
-            <a class="alert alert-link" href="{returnUrl}">Click to continue.</a>
-        </div>
-        <div ng-show="model.error" class="alert alert-danger">
-            <strong>Error:</strong>
-            {{model.error}}
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Local Login</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form ng-hide="success" name="form" ng-submit="login()">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <input ng-minlength="3" name="username" autofocus id="username" type="text" class="form-control" placeholder="Username" ng-model="model.username">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input required id="password" name="password" type="password" class="form-control" placeholder="Password" ng-model="model.password">
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary" ng-disabled="form.$invalid">Login</button>
-                                    <a class="btn btn-default" ng-href="#/Home">Cancel</a>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6" ng-show="model.providers">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">External Login</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-inline" ng-repeat="provider in model.providers">
-                            <li>
-                                <a class="btn btn-default" href="{{provider.url}}">{{provider.name}}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <form name="form" method="post" action="{{model.postUrl}}">
+                <ul class="list-group">
+                    <li ng-repeat="scope in model.scopes" class="list-group-item">
+                        <label>
+                            <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" />
+                            <strong>{{scope.description}}</strong>
+                            <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
+                        </label>
+                        <div>
+                            <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
+                        </div>
+                    </li>
+                </ul>
+                <p>
+                    <button name="button" value="yes" class="btn btn-primary">Yes, Allow</button>
+                    <button name="button" value="no" class="btn">No, Do Not Allow</button>
+                </p>
+            </form>
         </div>
     </div>
+</div>
 
-    <script src="assets/login.js"></script>
-    <script>
-        angular.module("app").constant("ReturnUrl", "{returnUrl}");
-    </script>
-</body>
-</html>
+

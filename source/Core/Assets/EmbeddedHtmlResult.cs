@@ -10,15 +10,19 @@ namespace Thinktecture.IdentityServer.Core.Assets
 {
     class EmbeddedHtmlResult : IHttpActionResult
     {
+        HttpRequestMessage request;
         LayoutModel model;
-        public EmbeddedHtmlResult(LayoutModel model)
+        public EmbeddedHtmlResult(HttpRequestMessage request, LayoutModel model)
         {
+            this.request = request;
             this.model = model;
         }
 
         public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var html = AssetManager.GetLayoutHtml(model);
+            var root = this.request.GetRequestContext().VirtualPathRoot;
+            
+            var html = AssetManager.GetLayoutHtml(model, root);
             return Task.FromResult(new HttpResponseMessage()
             {
                 Content = new StringContent(html, Encoding.UTF8, "text/html")

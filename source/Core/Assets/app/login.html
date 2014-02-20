@@ -1,5 +1,14 @@
-﻿<div class="row" ng-controller="LoginCtrl">
+﻿<div class="page-header">
+    <h1>{{layout.title}}</h1>
+</div>
+
+<div class="row" ng-controller="LoginCtrl">
     <div class="col-md-6 col-sm-6">
+        <div ng-show="layout.errorMessage" class="alert alert-danger">
+            <strong>Error:</strong>
+            {{layout.errorMessage}}
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Local Login</h3>

@@ -3,35 +3,22 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{{layout.title}}</title>
-    <link href="assets/styles.min.css" rel="stylesheet" />
+    <link href="{rootUrl}/assets/styles.min.css" rel="stylesheet" />
 </head>
 <body lang="en">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
-            <a href="#" class="navbar-brand">{{layout.title}}</a>
+            <a href="#" class="navbar-brand">Thinktecture IdentityServer</a>
         </div>
     </div>
 
     <div class="container">
-        <div class="page-header">
-            <h1>IdSrv3 <small>Thinktecture</small></h1>
-        </div>
-
-        <div ng-show="layout.successMessage" class="alert alert-success">
-            <strong>Success:</strong>
-            {{layout.successMessage}}
-            <!--<a class="alert alert-link" href="{returnUrl}">Click to continue.</a>-->
-        </div>
-        <div ng-show="layout.errorMessage" class="alert alert-danger">
-            <strong>Error:</strong>
-            {{layout.errorMessage}}
-        </div>
-
         <!--<ng-include src="'assets/app.login.html'"></ng-include>-->
-        <ng-include src="layout.pageUrl"></ng-include>
+        <ng-include src="'{rootUrl}/' + layout.pageUrl"></ng-include>
+
     </div>
 
-    <script src="assets/scripts.js"></script>
+    <script src="{rootUrl}/assets/scripts.js"></script>
     <script>
         angular.module("app").constant("LayoutModel", {layoutModel});
     </script>

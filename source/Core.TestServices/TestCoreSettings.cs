@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     ClientSecret = "secret",
                     Flow = Flows.Code,
                     ApplicationType = ApplicationTypes.Web,
-                    RequireConsent = false,
+                    RequireConsent = true,
                     
                     RedirectUris = new List<Uri>
                     {
@@ -96,27 +96,30 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     Name = Constants.StandardScopes.OpenId, 
                     Description = "User identifier",
                     IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x}))
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x, Description = x}))
                 },
                  new Scope
                  {
                     Name = Constants.StandardScopes.Profile, 
                     Description = "User profile",
                     IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x}))
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x, Description = x}))
                 },
                 new Scope
                 {
                     Name = Constants.StandardScopes.Email, 
                     Description = "Email",
                     IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x}))
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x, Description = x}))
                 },
                 new Scope
                 {
                     Name = "resource1",
                     Description = "resource scope 1",
-                    IsOpenIdScope = false
+                    IsOpenIdScope = false,
+                    Emphasize = true,
                 },
                 new Scope
                 {
@@ -129,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
         public bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes)
         {
-            return false;
+            return true;
         }
 
         public X509Certificate2 GetSigningCertificate()

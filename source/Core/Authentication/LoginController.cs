@@ -43,6 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 protection.SigningKey);
             
             return new EmbeddedHtmlResult(
+                Request,
                 new LayoutModel { 
                     Title=_settings.GetSiteName(),
                     Page = "login", 
@@ -62,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             
             if (model == null)
             {
-                return new EmbeddedHtmlResult(
+                return new EmbeddedHtmlResult(Request,
                     new LayoutModel
                     {
                         Title = _settings.GetSiteName(),
@@ -79,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     where item.Value.Errors.Any()
                     from err in item.Value.Errors
                     select err.ErrorMessage;
-                return new EmbeddedHtmlResult(
+                return new EmbeddedHtmlResult(Request,
                     new LayoutModel
                     {
                         Title = _settings.GetSiteName(),
@@ -92,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var sub = userService.Authenticate(model.Username, model.Password);
             if (sub == null)
             {
-                return new EmbeddedHtmlResult(
+                return new EmbeddedHtmlResult(Request,
                     new LayoutModel
                     {
                         Title = _settings.GetSiteName(),

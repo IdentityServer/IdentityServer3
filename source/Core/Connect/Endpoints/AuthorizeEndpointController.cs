@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix("connect/authorize")]
+    [RoutePrefix("connect")]
     [HostAuthentication("idsrv")]
     public class AuthorizeEndpointController : ApiController
     {
@@ -32,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validator = validator;
         }
 
-        [Route]
+        [Route("authorize")]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
             return await ProcessRequest(request.RequestUri.ParseQueryString());
@@ -44,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         //    return await ProcessRequest(await request.Content.ReadAsFormDataAsync());
         //}
 
-        protected virtual async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters)
+        protected virtual async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters, ConsentInputModel consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");
             
@@ -96,11 +99,69 @@ namespace Thinktecture.IdentityServer.Core.Connect
             interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal);
             if (interaction.IsConsent)
             {
-                // show consent page
+                string errorMessage = null;
+                IEnumerable<string> consentedScopes = null;
+                if (consent != null)
+                {
+                    if (consent.Button != "yes")
+                    {
+                        return this.AuthorizeError(ErrorTypes.Client, Constants.AuthorizeErrors.AccessDenied, request.ResponseMode, request.RedirectUri, request.State);
+                    }
+
+                    if (consent.Scopes != null)
+                    {
+                        consentedScopes = request.Scopes.Intersect(consent.Scopes);
+                    }
+                    else
+                    {
+                        consentedScopes = Enumerable.Empty<string>();
+                    }
+                    
+                    if (!consentedScopes.Any())
+                    {
+                        errorMessage = "Must select a permission";
+                    }
+                }
+
+                if (consent == null || errorMessage != null)
+                {
+                    var requestedScopes =
+                        from s in _settings.GetScopes()
+                        where request.Scopes.Contains(s.Name)
+                        select new
+                        {
+                            selected = (consentedScopes != null ? consentedScopes.Contains(s.Name) : true),
+                            s.Name,
+                            s.Description,
+                            s.Emphasize,
+                            claims = s.Claims.Select(x => x.Description)
+                        };
+
+                    return new EmbeddedHtmlResult(Request, new LayoutModel
+                    {
+                        Title = request.Client.ClientName,
+                        ErrorMessage = errorMessage,
+                        Page = "consent",
+                        PageModel = new
+                        {
+                            postUrl = "consent?" + parameters.ToQueryString(),
+                            client = request.Client.ClientName,
+                            scopes = requestedScopes.ToArray()
+                        }
+                    });
+                }
             }
 
             return CreateAuthorizeResponse(request);
         }
+
+        [Route("consent")]
+        [HttpPost]
+        public Task<IHttpActionResult> PostConsent(ConsentInputModel model)
+        {
+            return ProcessRequest(Request.RequestUri.ParseQueryString(), model);
+        }
+
 
         private IHttpActionResult CreateAuthorizeResponse(ValidatedAuthorizeRequest request)
         {
