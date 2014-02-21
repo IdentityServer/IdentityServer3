@@ -1,6 +1,15 @@
 ﻿<div ng-controller="ConsentCtrl">
-    <div class="page-header">
-        <h1>{{model.client}} <small>is requesting your permission</small></h1>
+    <div class="row page-header">
+        <div class="col-md-1 col-sm-2 col-xs-3" ng-show="model.clientLogo">
+            <img class="img-responsive" ng-src="{{model.clientLogo}}">
+        </div>
+        <div class="col-sm-10">
+            <h1>
+                <a target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">{{model.client}}</a>
+                <span ng-hide="model.clientUrl">{{model.client}}</span>
+                <small>is requesting your permission</small>
+            </h1>
+        </div>
     </div>
 
     <div class="row">
@@ -54,21 +63,6 @@
                     <button name="button" value="no" class="btn">No, Do Not Allow</button>
                 </p>
             </form>
-        </div>
-        <div class="col-sm-4">
-            <div class="panel panel-default" ng-show="model.clientLogo">
-                <div class="panel-heading">
-                    <span class="glyphicon glyphicon-phone"></span>
-                    <strong>
-                        <a target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">{{model.client}}</a>
-                        <span ng-hide="model.clientUrl">{{model.client}}</span>
-                    </strong>
-                </div>
-                <div class="panel-body">
-                    <a target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}"><img class="img-responsive" ng-src="{{model.clientLogo}}"></a>
-                    <img class="img-responsive" ng-hide="model.clientUrl" ng-src="{{model.clientLogo}}">
-                </div>
-            </div>
         </div>
     </div>
 </div>
