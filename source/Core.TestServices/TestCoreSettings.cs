@@ -151,7 +151,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
         public string GetSiteName()
         {
-            return "tt.IdSrv 3";
+            return "IdentityServer v3 - alpha1";
         }
 
 
