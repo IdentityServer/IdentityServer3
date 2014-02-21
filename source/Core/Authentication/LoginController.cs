@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         Title = _settings.GetSiteName(),
                         Page = "login",
-                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
+                        PageModel = new { url = Request.RequestUri.AbsoluteUri, username=model.Username },
                         ErrorMessage = error.First(),
                     });
             }
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         Title = _settings.GetSiteName(),
                         Page = "login",
-                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
+                        PageModel = new { url = Request.RequestUri.AbsoluteUri, username = model.Username },
                         ErrorMessage = "Invalid Username or Password",
                     });
             }
