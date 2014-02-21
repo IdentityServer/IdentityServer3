@@ -170,6 +170,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         {
                             postUrl = "consent?" + parameters.ToQueryString(),
                             client = request.Client.ClientName,
+                            clientUrl = request.Client.ClientUri,
+                            clientLogo = request.Client.LogoUri,
                             identityScopes = idScopes.ToArray(),
                             appScopes = appScopes.ToArray(),
                         }

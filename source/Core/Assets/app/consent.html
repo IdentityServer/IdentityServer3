@@ -55,5 +55,20 @@
                 </p>
             </form>
         </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default" ng-show="model.clientLogo">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-phone"></span>
+                    <strong>
+                        <a target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">{{model.client}}</a>
+                        <span ng-hide="model.clientUrl">{{model.client}}</span>
+                    </strong>
+                </div>
+                <div class="panel-body">
+                    <a target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}"><img ng-src="{{model.clientLogo}}"></a>
+                    <img ng-hide="model.clientUrl" ng-src="{{model.clientLogo}}">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
