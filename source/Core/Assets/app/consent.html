@@ -12,13 +12,16 @@
             <form name="form" method="post" action="{{model.postUrl}}">
 
                 <div class="panel panel-default" ng-show="model.identityScopes">
-                    <div class="panel-heading">Personal Information</div>
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-user"></span>
+                        Personal Information
+                    </div>
                     <ul class="list-group">
                         <li ng-repeat="scope in model.identityScopes" class="list-group-item">
                             <label>
                                 <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" ng-hide="scope.required" />
                                 <strong>{{scope.description}}</strong>
-                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
+                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
                             </label>
                             <div>
                                 <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
@@ -28,13 +31,16 @@
                 </div>
 
                 <div class="panel panel-default" ng-show="model.appScopes">
-                    <div class="panel-heading">Application Access</div>
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-tasks"></span>
+                        Application Access
+                    </div>
                     <ul class="list-group">
                         <li ng-repeat="scope in model.appScopes" class="list-group-item">
                             <label>
                                 <input type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" />
                                 <strong>{{scope.description}}</strong>
-                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-warning-sign"></span>
+                                <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
                             </label>
                             <div>
                                 <span ng-repeat="claim in scope.claims">{{claim}}<span ng-hide="$last">, </span></span>
