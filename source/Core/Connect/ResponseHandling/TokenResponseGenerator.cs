@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IdentityModel.Tokens;
-using System.Security.Claims;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -21,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _tokenHandles = tokenHandles;
         }
 
-        public TokenResponse Process(ValidatedTokenRequest request, ClaimsPrincipal client)
+        public TokenResponse Process(ValidatedTokenRequest request)
         {
             if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {
@@ -30,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             else if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
                      request.GrantType == Constants.GrantTypes.Password)
             {
-                return ProcessTokenRequest(request, client);
+                return ProcessTokenRequest(request);
             }
 
             throw new InvalidOperationException("Unknown grant type.");
@@ -66,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return response;
         }
 
-        private TokenResponse ProcessTokenRequest(ValidatedTokenRequest request, ClaimsPrincipal clientPrincipal)
+        private TokenResponse ProcessTokenRequest(ValidatedTokenRequest request)
         {
             var response = new TokenResponse
             {
