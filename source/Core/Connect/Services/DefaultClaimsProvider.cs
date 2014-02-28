@@ -10,11 +10,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     {
         public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile)
         {
-            List<Claim> claims = new List<Claim>();
+            List<Claim> outputClaims = new List<Claim>();
             var scopeDetails = settings.GetScopes();
-            var allIdentityClaims = new List<string>();
-            var alwaysIncludeIdentityClaims = new List<string>();
 
+            var additionalClaims = new List<string>();
+
+            // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
             {
                 var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
@@ -23,42 +24,36 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 {
                     if (scopeDetail.IsOpenIdScope)
                     {
-                        foreach (var claim in scopeDetail.Claims)
+                        foreach (var scopeClaim in scopeDetail.Claims)
                         {
-                            allIdentityClaims.Add(claim.Name);
-
-                            if (claim.AlwaysIncludeInIdToken)
+                            if (includeAllIdentityClaims || scopeClaim.AlwaysIncludeInIdToken)
                             {
-                                alwaysIncludeIdentityClaims.Add(claim.Name);
+                                additionalClaims.Add(scopeClaim.Name);
                             }
                         }
                     }
                 }
             }
 
-            // if no access token is request, all identity claims go into id token
-            if (includeAllIdentityClaims)
+            if (additionalClaims.Count > 0)
             {
-                alwaysIncludeIdentityClaims = alwaysIncludeIdentityClaims.Union(allIdentityClaims).ToList();
+                outputClaims.AddRange(profile.GetProfileData(user.GetSubject(), additionalClaims));
             }
 
-            // fetch all identity claims that need to go into the id token
-            if (alwaysIncludeIdentityClaims.Count > 0)
-            {
-                claims.AddRange(profile.GetProfileData(user.GetSubject(), alwaysIncludeIdentityClaims));
-            }
-
-            return claims;
+            return outputClaims;
         }
-
 
         public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, IUserService _profile)
         {
             var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
-                new Claim(Constants.ClaimTypes.Scope, scopes.ToSpaceSeparatedString())
             };
+
+            foreach (var scope in scopes)
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.Scope, scope));
+            }
 
             if (user != null)
             {
