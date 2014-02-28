@@ -14,6 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private ICoreSettings _coreSettings;
         private ILogger _logger;
         private IAuthorizationCodeStore _authorizationCodes;
+        private IUserService _profile;
 
         private ValidatedTokenRequest _validatedRequest;
 
@@ -25,11 +26,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes)
+        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService profile)
         {
             _coreSettings = coreSettings;
             _logger = logger;
             _authorizationCodes = authorizationCodes;
+            _profile = profile;
         }
 
         public ValidationResult ValidateRequest(NameValueCollection parameters, ClaimsPrincipal clientPrincipal)
@@ -84,10 +86,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return ValidateAuthorizationCodeRequest(parameters);
                 case Constants.GrantTypes.ClientCredentials:
                     return ValidateClientCredentialsRequest(parameters);
+                case Constants.GrantTypes.Password:
+                    return ValidateResourceOwnerCredentialRequest(parameters);
             }
 
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
         }
+
+        
 
         private ValidationResult ValidateAuthorizationCodeRequest(NameValueCollection parameters)
         {
@@ -171,6 +177,50 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 _logger.Error("Client not authorized for client credentials flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
+            }
+
+            /////////////////////////////////////////////
+            // check if client is allowed to request scopes
+            /////////////////////////////////////////////
+            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
+            {
+                _logger.Error("Invalid scopes.");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
+            return Valid();
+        }
+
+        private ValidationResult ValidateResourceOwnerCredentialRequest(NameValueCollection parameters)
+        {
+            /////////////////////////////////////////////
+            // check if client is authorized for grant type
+            /////////////////////////////////////////////
+            if (_validatedRequest.Client.Flow != Flows.ResourceOwner)
+            {
+                _logger.Error("Client not authorized for client credentials flow");
+                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+            }
+
+            /////////////////////////////////////////////
+            // check resource owner credentials
+            /////////////////////////////////////////////
+            var userName = parameters.Get(Constants.TokenRequest.UserName);
+            var password = parameters.Get(Constants.TokenRequest.Password);
+
+            if (userName.IsMissing() || password.IsMissing())
+            {
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
+            var sub = _profile.Authenticate(userName, password);
+            if (sub.IsPresent())
+            {
+                _validatedRequest.UserName = userName;
+            }
+            else
+            {
+                return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
             /////////////////////////////////////////////

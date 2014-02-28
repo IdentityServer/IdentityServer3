@@ -27,12 +27,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 return ProcessAuthorizationCodeRequest(request);
             }
-            else if (request.GrantType == Constants.GrantTypes.ClientCredentials)
+            else if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
+                     request.GrantType == Constants.GrantTypes.Password)
             {
-                return ProcessClientCredentialsRequest(request, client);
+                return ProcessTokenRequest(request, client);
             }
 
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Unknown grant type.");
         }
 
         private TokenResponse ProcessAuthorizationCodeRequest(ValidatedTokenRequest request)
@@ -45,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = _tokenService.CreateIdentityToken(request, null);
+                var idToken = request.AuthorizationCode.IdentityToken;
 
                 SigningCredentials credentials;
                 if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
@@ -65,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return response;
         }
 
-        private TokenResponse ProcessClientCredentialsRequest(ValidatedTokenRequest request, ClaimsPrincipal clientPrincipal)
+        private TokenResponse ProcessTokenRequest(ValidatedTokenRequest request, ClaimsPrincipal clientPrincipal)
         {
             var response = new TokenResponse
             {
@@ -78,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private string CreateAccessToken(ValidatedTokenRequest request)
         {
-            var accessToken = _tokenService.CreateAccessToken(request, null);
+            var accessToken = _tokenService.CreateAccessToken(request);
 
             if (request.Client.AccessTokenType == AccessTokenType.JWT)
             {

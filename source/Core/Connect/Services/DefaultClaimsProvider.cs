@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             // fetch all identity claims that need to go into the id token
             if (alwaysIncludeIdentityClaims.Count > 0)
             {
-                claims.AddRange(profile.GetProfileData(user.GetSubject(), allIdentityClaims));
+                claims.AddRange(profile.GetProfileData(user.GetSubject(), alwaysIncludeIdentityClaims));
             }
 
             return claims;

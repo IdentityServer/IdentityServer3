@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -29,18 +30,16 @@ namespace Thinktecture.IdentityServer.Core
             if (credentials.IsPresent)
             {
                 context.Principal = CreatePrincipal(credentials);
+                return;
             }
 
-            
-            //if (!foundCredential)
-            //{
-            //    var creds = await ParsePostBodyAsync(context.Request);
+            await context.Request.Content.LoadIntoBufferAsync();
+            credentials = ParsePostBody(await context.Request.Content.ReadAsFormDataAsync());
 
-            //    if (creds.IsPresent)
-            //    {
-            //        context.Principal = CreatePrincipal(creds);
-            //    }
-            //}
+            if (credentials.IsPresent)
+            {
+                context.Principal = CreatePrincipal(credentials);
+            }
         }
 
         private IPrincipal CreatePrincipal(ClientCredentials credentials)
@@ -114,39 +113,28 @@ namespace Thinktecture.IdentityServer.Core
             };
         }
 
-        //    private async Task<ClientCredentials> ParsePostBodyAsync(HttpRequestMessage request)
-        //    {
-        //        var bytes = await request.Content.ReadAsByteArrayAsync();
-        //        var stream = new MemoryStream(bodyStream, false);
+        private ClientCredentials ParsePostBody(NameValueCollection body)
+        {
+            var id = body.Get("client_id");
+            var secret = body.Get("client_secret");
 
-        //        var formatter = new FormUrlEncodedMediaTypeFormatter();
-        //        formatter.ReadFromStreamAsync()
+            if (id.IsPresent() && secret.IsPresent())
+            {
+                return new ClientCredentials
+                {
+                    ClientId = id,
+                    Secret = secret,
 
-        //        var body = await request.Content.ReadAsFormDataAsync();
+                    IsMalformed = false,
+                    IsPresent = true
+                };
+            }
 
-        //        var id = body.Get("client_id");
-        //        var secret = body.Get("client_secret");
-
-        //        if (id.IsPresent() && secret.IsPresent())
-        //        {
-        //            return new ClientCredentials
-        //            {
-        //                ClientId = id,
-        //                Secret = secret,
-
-        //                IsMalformed = false,
-        //                IsPresent = true
-        //            };
-        //        }
-
-        //        return new ClientCredentials
-        //        {
-        //            IsPresent = false
-        //        };
-        //    }
-        //}
-
-
+            return new ClientCredentials
+            {
+                IsPresent = false
+            };
+        }
     }
 
     class ClientCredentials

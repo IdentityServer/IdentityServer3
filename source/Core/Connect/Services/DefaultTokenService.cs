@@ -4,6 +4,7 @@ using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -78,6 +79,26 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
+        public virtual Token CreateAccessToken(ValidatedTokenRequest request)
+        {
+            if (request.AuthorizationCode != null)
+            {
+                return request.AuthorizationCode.AccessToken;
+            }
+            else
+            {
+                ClaimsIdentity id = null;
+
+                if (request.UserName.IsPresent())
+                {
+                    id = Identity.Create("oauth2",
+                        new Claim(Constants.ClaimTypes.Subject, request.UserName));
+                }
+
+                return CreateAccessToken(null, request.Client, request.Scopes);
+            }
+        }
+
         public virtual Token CreateAccessToken(ClaimsPrincipal user, Client client, IEnumerable<string> scopes)
         {
             var claims = _claimsProvider.GetAccessTokenClaims(
@@ -109,23 +130,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);
-        }
-
-        public virtual Token CreateIdentityToken(ValidatedTokenRequest request, ClaimsPrincipal user)
-        {
-            return request.AuthorizationCode.IdentityToken;
-        }
-
-        public virtual Token CreateAccessToken(ValidatedTokenRequest request, ClaimsPrincipal user)
-        {
-            if (request.AuthorizationCode != null)
-            {
-                return request.AuthorizationCode.AccessToken;
-            }
-            else
-            {
-                return CreateAccessToken(user, request.Client, request.Scopes);
-            }
         }
     }
 }
