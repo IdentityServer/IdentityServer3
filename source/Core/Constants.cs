@@ -109,13 +109,6 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseModes.Fragment,
                             };
 
-        public static class Flows
-        {
-            public const string Implicit = "implicit";
-            public const string Code     = "code";
-            public const string Hybrid   = "hybrid";
-        }
-
         public static class DisplayModes
         {
             public const string Page  = "page";
@@ -284,6 +277,12 @@ namespace Thinktecture.IdentityServer.Core
             public const string Certificate             = "certificate";
             public const string Password                = "password";
             public const string TwoFactorAuthentication = "2fa";
+        }
+
+        public static class ClientAuthenticationMethods
+        {
+            public const string Basic    = "Basic";
+            public const string FormPost = "FormPost";
         }
     }
 }

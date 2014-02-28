@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -95,37 +92,64 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return new ClientCredential
                 {
                     IsPresent = false,
-                    IsMalformed = false
+                    IsMalformed = true
+                };
+            }
+
+            var clientId = pair.Substring(0, ix);
+            var secret = pair.Substring(ix + 1);
+
+            if (clientId.IsPresent() && secret.IsPresent())
+            {
+                return new ClientCredential
+                {
+                    ClientId = clientId,
+                    Secret = secret,
+
+                    IsPresent = true,
+                    IsMalformed = false,
+                    Type = Constants.ClientAuthenticationMethods.Basic
                 };
             }
 
             return new ClientCredential
             {
-                ClientId = pair.Substring(0, ix),
-                Secret = pair.Substring(ix + 1),
-
-                IsPresent = true,
-                IsMalformed = false
+                IsMalformed = true,
+                IsPresent = false
             };
         }
 
         private ClientCredential ParsePostBody(NameValueCollection body)
         {
+            if (body == null)
+            {
+                _logger.Warning("Post body is null.");
+
+                return new ClientCredential
+                {
+                    IsPresent = false
+                };
+            }
+
             var id = body.Get("client_id");
             var secret = body.Get("client_secret");
 
             if (id.IsPresent() && secret.IsPresent())
             {
+                _logger.Information("Client credentials in POST body found.");
+
                 return new ClientCredential
                 {
                     ClientId = id,
                     Secret = secret,
 
                     IsMalformed = false,
-                    IsPresent = true
+                    IsPresent = true,
+                    Type = Constants.ClientAuthenticationMethods.FormPost
                 };
             }
 
+            _logger.Information("No client credentials in POST body found.");
             return new ClientCredential
             {
                 IsPresent = false
