@@ -32,10 +32,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public Client ValidateClient(ClientCredential credential)
         {
+            if (credential == null || credential.ClientId == null || credential.Secret == null)
+            {
+                throw new InvalidOperationException("credential is null");
+            }
+
             var client = _settings.FindClientById(credential.ClientId);
             if (client == null)
             {
-                _logger.Error("Client not found in registry: " + client.ClientId);
+                _logger.Error("Client not found in registry: " + credential.ClientId);
                 return null;
             }
 

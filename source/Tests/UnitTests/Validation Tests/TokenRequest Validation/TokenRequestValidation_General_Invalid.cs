@@ -1,166 +1,109 @@
-﻿//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System;
-//using System.Collections.Specialized;
-//using Thinktecture.IdentityModel;
-//using Thinktecture.IdentityServer.Core;
-//using Thinktecture.IdentityServer.Core.Connect;
-//using Thinktecture.IdentityServer.Core.Connect.Models;
-//using Thinktecture.IdentityServer.Core.Services;
-//using UnitTests.Plumbing;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Specialized;
+using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
+using UnitTests.Plumbing;
 
-//namespace UnitTests.TokenRequest_Validation
-//{
-//    [TestClass]
-//    public class TokenRequestValidation_General_Invalid
-//    {
-//        ILogger _logger = new DebugLogger();
-//        ICoreSettings _settings = new TestSettings();
+namespace UnitTests.TokenRequest_Validation
+{
+    [TestClass]
+    public class TokenRequestValidation_General_Invalid
+    {
+        ILogger _logger = new DebugLogger();
+        ICoreSettings _settings = new TestSettings();
 
-//        [TestMethod]
-//        [ExpectedException(typeof(ArgumentNullException))]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Parameters_Null()
-//        {
-//            var store = new TestCodeStore();
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestCategory("TokenRequest Validation - General - Invalid")]
+        public void Parameters_Null()
+        {
+            var store = new TestCodeStore();
+            var validator = new TokenRequestValidator(_settings, _logger, store, null);
 
-//            var result = validator.ValidateRequest(null, null);
-//        }
-        
-//        [TestMethod]
-//        [ExpectedException(typeof(ArgumentNullException))]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Client_Null()
-//        {
-//            var store = new TestCodeStore();
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var result = validator.ValidateRequest(null, null);
+        }
 
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestCategory("TokenRequest Validation - General - Invalid")]
+        public void Client_Null()
+        {
+            var store = new TestCodeStore();
+            var validator = new TokenRequestValidator(_settings, _logger, store, null);
 
-//            var result = validator.ValidateRequest(parameters, null);
-//        }
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-//        [TestMethod]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Client_Anonymous()
-//        {
-//            var client = Principal.Anonymous;
-//            var store = new TestCodeStore();
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var result = validator.ValidateRequest(parameters, null);
+        }
 
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Invalid")]
+        public void Unknown_Grant_Type()
+        {
+            var client = _settings.FindClientById("codeclient");
+            var store = new TestCodeStore();
 
-//            var result = validator.ValidateRequest(parameters, client);
+            var code = new AuthorizationCode
+            {
+                ClientId = "codeclient",
+                IsOpenId = true,
+                RedirectUri = new Uri("https://server/cb"),
 
-//            Assert.IsTrue(result.IsError);
-//            Assert.AreEqual(Constants.TokenErrors.InvalidClient, result.Error);
-//        }
+                AccessToken = TokenFactory.CreateAccessToken(),
+                IdentityToken = TokenFactory.CreateIdentityToken()
+            };
 
-//        [TestMethod]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Client_Unknown()
-//        {
-//            var client = ClientFactory.CreateClient("unknown");
-//            var store = new TestCodeStore();
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            store.Store("valid", code);
 
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var validator = new TokenRequestValidator(_settings, _logger, store, null);
 
-//            var result = validator.ValidateRequest(parameters, client);
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, "unknown");
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-//            Assert.IsTrue(result.IsError);
-//            Assert.AreEqual(Constants.TokenErrors.InvalidClient, result.Error);
-//        }
+            var result = validator.ValidateRequest(parameters, client);
 
-//        [TestMethod]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Client_Invalid_Password()
-//        {
-//            var client = ClientFactory.CreateClient("codeclient", "invalid");
-//            var store = new TestCodeStore();
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+        }
 
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Invalid")]
+        public void Missing_Grant_Type()
+        {
+            var client = _settings.FindClientById("codeclient");
+            var store = new TestCodeStore();
 
-//            var result = validator.ValidateRequest(parameters, client);
+            var code = new AuthorizationCode
+            {
+                ClientId = "codeclient",
+                IsOpenId = true,
+                RedirectUri = new Uri("https://server/cb"),
 
-//            Assert.IsTrue(result.IsError);
-//            Assert.AreEqual(Constants.TokenErrors.InvalidClient, result.Error);
-//        }
+                AccessToken = TokenFactory.CreateAccessToken(),
+                IdentityToken = TokenFactory.CreateIdentityToken()
+            };
 
-//        [TestMethod]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Unknown_Grant_Type()
-//        {
-//            var client = ClientFactory.CreateClient("codeclient");
-//            var store = new TestCodeStore();
+            store.Store("valid", code);
 
-//            var code = new AuthorizationCode
-//            {
-//                ClientId = "codeclient",
-//                IsOpenId = true,
-//                RedirectUri = new Uri("https://server/cb"),
+            var validator = new TokenRequestValidator(_settings, _logger, store, null);
 
-//                AccessToken = TokenFactory.CreateAccessToken(),
-//                IdentityToken = TokenFactory.CreateIdentityToken()
-//            };
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-//            store.Store("valid", code);
+            var result = validator.ValidateRequest(parameters, client);
 
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
-
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.GrantType, "unknown");
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
-
-//            var result = validator.ValidateRequest(parameters, client);
-
-//            Assert.IsTrue(result.IsError);
-//            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
-//        }
-
-//        [TestMethod]
-//        [TestCategory("TokenRequest Validation - General - Invalid")]
-//        public void Missing_Grant_Type()
-//        {
-//            var client = ClientFactory.CreateClient("codeclient");
-//            var store = new TestCodeStore();
-
-//            var code = new AuthorizationCode
-//            {
-//                ClientId = "codeclient",
-//                IsOpenId = true,
-//                RedirectUri = new Uri("https://server/cb"),
-
-//                AccessToken = TokenFactory.CreateAccessToken(),
-//                IdentityToken = TokenFactory.CreateIdentityToken()
-//            };
-
-//            store.Store("valid", code);
-
-//            var validator = new TokenRequestValidator(_settings, _logger, store, null);
-
-//            var parameters = new NameValueCollection();
-//            parameters.Add(Constants.TokenRequest.Code, "valid");
-//            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
-
-//            var result = validator.ValidateRequest(parameters, client);
-
-//            Assert.IsTrue(result.IsError);
-//            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
-//        }
-//    }
-//}
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+        }
+    }
+}

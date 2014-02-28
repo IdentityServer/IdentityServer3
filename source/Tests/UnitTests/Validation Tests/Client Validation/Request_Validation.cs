@@ -11,7 +11,7 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace UnitTests.Validation_Tests.Client_Validation
 {
     [TestClass]
-    public class ClientValidation
+    public class Request_Validation
     {
         ILogger _logger = new DebugLogger();
 

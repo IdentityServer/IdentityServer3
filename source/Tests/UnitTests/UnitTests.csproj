@@ -77,7 +77,8 @@
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_IdTokenToken.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
-    <Compile Include="Validation Tests\Client Validation\ClientValidation.cs" />
+    <Compile Include="Validation Tests\Client Validation\Request_Validation.cs" />
+    <Compile Include="Validation Tests\Client Validation\Client_Validation.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_Valid.cs" />
