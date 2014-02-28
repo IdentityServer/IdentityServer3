@@ -47,7 +47,7 @@ namespace WpfClient
 
         private void LoginWithProfileAndAccessTokenButton_Click(object sender, RoutedEventArgs e)
         {
-            RequestToken("openid email read write", "id_token token");
+            RequestToken("openid profile read write", "id_token token");
         }
 
         private void AccessTokenOnlyButton_Click(object sender, RoutedEventArgs e)
@@ -82,6 +82,16 @@ namespace WpfClient
             {
                 var viewer = new IdentityTokenViewer();
                 viewer.IdToken = _response.Values["id_token"];
+                viewer.Show();
+            }
+        }
+
+        private void ShowAccessTokenButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_response.Values.ContainsKey("access_token"))
+            {
+                var viewer = new IdentityTokenViewer();
+                viewer.IdToken = _response.Values["access_token"];
                 viewer.Show();
             }
         }
