@@ -52,7 +52,7 @@ namespace WpfClient
 
         private void AccessTokenOnlyButton_Click(object sender, RoutedEventArgs e)
         {
-            RequestToken("read", "token");
+            RequestToken("read write", "token");
         }
 
         private void RequestToken(string scope, string responseType)
