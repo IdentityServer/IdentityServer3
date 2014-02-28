@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Assets
 {

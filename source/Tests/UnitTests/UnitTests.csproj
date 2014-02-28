@@ -68,7 +68,6 @@
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
-    <Compile Include="Plumbing\ClientFactory.cs" />
     <Compile Include="Plumbing\TestCodeStore.cs" />
     <Compile Include="Plumbing\TestSettings.cs" />
     <Compile Include="Plumbing\TokenFactory.cs" />

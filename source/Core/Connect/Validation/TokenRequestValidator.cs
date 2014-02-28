@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Security.Claims;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -47,15 +46,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 throw new ArgumentNullException("parameters");
             }
-
-            /////////////////////////////////////////////
-            // check client and credentials
-            /////////////////////////////////////////////
-            //var client = ValidateClient(clientPrincipal);
-            //if (client == null)
-            //{
-            //    return Invalid(Constants.TokenErrors.InvalidClient);
-            //}
 
             _validatedRequest.Client = client;
 
@@ -235,46 +225,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        //public Client ValidateClient(ClaimsPrincipal client)
-        //{
-        //    if (client == null || !client.Identity.IsAuthenticated)
-        //    {
-        //        _logger.Error("No client information present.");
-        //        return null;
-        //    }
-
-        //    var clientId = client.FindFirst(Constants.ClaimTypes.Id);
-        //    if (clientId == null)
-        //    {
-        //        _logger.Error("No id claim present.");
-        //        return null;
-        //    }
-
-        //    var secret = client.FindFirst(Constants.ClaimTypes.Secret);
-        //    if (secret == null)
-        //    {
-        //        _logger.Error("No secret claim present.");
-        //        return null;
-        //    }
-
-        //    var oidcClient = _coreSettings.FindClientById(clientId.Value);
-        //    if (oidcClient == null)
-        //    {
-        //        _logger.ErrorFormat("Client not found in registry: {0}", clientId.Value);
-        //        return null;
-        //    }
-
-        //    if (oidcClient.ClientSecret != secret.Value)
-        //    {
-        //        _logger.ErrorFormat("Invalid client secret for: {0}", clientId.Value);
-        //        return null;
-        //    }
-
-        //    _logger.InformationFormat("Client found in registry: {0} / {1}", oidcClient.ClientId, oidcClient.ClientName);
-        //    return oidcClient;
-        //}
-
-
         private void AnalyzeScopes(NameValueCollection parameters)
         {
             /////////////////////////////////////////////
@@ -315,7 +265,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return true;
         }
-
 
         private ValidationResult Valid()
         {
