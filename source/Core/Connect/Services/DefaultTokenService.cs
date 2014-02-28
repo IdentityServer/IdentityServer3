@@ -60,27 +60,39 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateAccessToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            // minimal claims
-            var claims = new List<Claim>
-            {
-                new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
-                new Claim(Constants.ClaimTypes.ClientId, request.ClientId),
-                new Claim(Constants.ClaimTypes.Scope, request.Scopes.ToSpaceSeparatedString())
-            };
-
-            claims.AddRange(_claimsProvider.GetAccessTokenClaims(
-                user, 
-                request.Client, 
-                request.Scopes, 
-                _settings, 
-                _profile));
+            var claims = _claimsProvider.GetAccessTokenClaims(
+                user,
+                request.Client,
+                request.Scopes,
+                _settings,
+                _profile);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
                 Audience = _settings.GetIssuerUri() + "/resources",
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = request.Client.AccessTokenLifetime,
-                Claims = claims
+                Claims = claims.ToList()
+            };
+
+            return token;
+        }
+
+        public virtual Token CreateAccessToken(ClaimsPrincipal user, Client client, IEnumerable<string> scopes)
+        {
+            var claims = _claimsProvider.GetAccessTokenClaims(
+                user,
+                client,
+                scopes,
+                _settings,
+                _profile);
+
+            var token = new Token(Constants.TokenTypes.AccessToken)
+            {
+                Audience = _settings.GetIssuerUri() + "/resources",
+                Issuer = _settings.GetIssuerUri(),
+                Lifetime = client.AccessTokenLifetime,
+                Claims = claims.ToList()
             };
 
             return token;
@@ -106,7 +118,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Token CreateAccessToken(ValidatedTokenRequest request, ClaimsPrincipal user)
         {
-            return request.AuthorizationCode.AccessToken;
+            if (request.AuthorizationCode != null)
+            {
+                return request.AuthorizationCode.AccessToken;
+            }
+            else
+            {
+                return CreateAccessToken(user, request.Client, request.Scopes);
+            }
         }
     }
 }

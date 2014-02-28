@@ -26,8 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
         {
             var dto = new TokenResponseDto
             {
-                id_token = Response.Jwt,
-                access_token = Response.AccessTokenReference,
+                id_token = Response.IdentityToken,
+                access_token = Response.AccessToken,
                 expires_in = Response.AccessTokenLifetime,
                 token_type = Constants.TokenTypes.Bearer
             };

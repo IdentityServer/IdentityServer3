@@ -7,7 +7,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [BasicAuthenticationFilter]
+    [ClientCredentialsFilter]
     [RoutePrefix("connect/token")]
     public class TokenEndpointController : ApiController
     {

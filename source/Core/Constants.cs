@@ -35,6 +35,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string ClientSecret = "client_secret";
             public const string Assertion    = "assertion";
             public const string Code         = "code";
+            public const string Scope = "scope";
         }
 
         public static class TokenResponse
@@ -87,7 +88,8 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
-                                Constants.GrantTypes.AuthorizationCode
+                                Constants.GrantTypes.AuthorizationCode,
+                                Constants.GrantTypes.ClientCredentials
                             };
 
 

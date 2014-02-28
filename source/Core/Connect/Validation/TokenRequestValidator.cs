@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
+using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -30,11 +32,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _authorizationCodes = authorizationCodes;
         }
 
-        public ValidationResult ValidateRequest(NameValueCollection parameters, ClaimsPrincipal client)
+        public ValidationResult ValidateRequest(NameValueCollection parameters, ClaimsPrincipal clientPrincipal)
         {
             _validatedRequest = new ValidatedTokenRequest();
 
-            if (client == null)
+            if (clientPrincipal == null)
             {
                 throw new ArgumentNullException("client");
             }
@@ -47,41 +49,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check client and credentials
             /////////////////////////////////////////////
-            if (client == null || !client.Identity.IsAuthenticated)
+            var client = ValidateClient(clientPrincipal);
+            if (client == null)
             {
-                _logger.Error("No client information present.");
                 return Invalid(Constants.TokenErrors.InvalidClient);
             }
 
-            var clientId = client.FindFirst(Constants.ClaimTypes.Id);
-            if (clientId == null)
-            {
-                _logger.Error("No id claim present.");
-                return Invalid(Constants.TokenErrors.InvalidClient);
-            }
-
-            var secret = client.FindFirst(Constants.ClaimTypes.Secret);
-            if (secret == null)
-            {
-                _logger.Error("No secret claim present.");
-                return Invalid(Constants.TokenErrors.InvalidClient);
-            }
-
-            var oidcClient = _coreSettings.FindClientById(clientId.Value);
-            if (oidcClient == null)
-            {
-                _logger.ErrorFormat("Client not found in registry: {0}", clientId.Value);
-                return Invalid(Constants.TokenErrors.InvalidClient);
-            }
-
-            if (oidcClient.ClientSecret != secret.Value)
-            {
-                _logger.ErrorFormat("Invalid client secret for: {0}", clientId.Value);
-                return Invalid(Constants.TokenErrors.InvalidClient);
-            }
-
-            _logger.InformationFormat("Client found in registry: {0} / {1}", oidcClient.ClientId, oidcClient.ClientName);
-            _validatedRequest.Client = oidcClient;
+            _validatedRequest.Client = client;
 
             /////////////////////////////////////////////
             // check grant type
@@ -102,10 +76,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
+            AnalyzeScopes(parameters);
+
             switch (grantType)
             {
                 case Constants.GrantTypes.AuthorizationCode:
                     return ValidateAuthorizationCodeRequest(parameters);
+                case Constants.GrantTypes.ClientCredentials:
+                    return ValidateClientCredentialsRequest(parameters);
             }
 
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
@@ -157,8 +135,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // validate code expiration
             /////////////////////////////////////////////
-            // todo: make configurable
-
             if (authZcode.CreationTime.HasExpired(_validatedRequest.Client.AuthorizationCodeLifetime))
             {
                 _logger.Error("Authorization code is expired");
@@ -185,6 +161,111 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return Valid();
         }
+
+        private ValidationResult ValidateClientCredentialsRequest(NameValueCollection parameters)
+        {
+            /////////////////////////////////////////////
+            // check if client is authorized for grant type
+            /////////////////////////////////////////////
+            if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
+            {
+                _logger.Error("Client not authorized for client credentials flow");
+                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+            }
+
+            /////////////////////////////////////////////
+            // check if client is allowed to request scopes
+            /////////////////////////////////////////////
+            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
+            {
+                _logger.Error("Invalid scopes.");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
+            return Valid();
+        }
+
+        public Client ValidateClient(ClaimsPrincipal client)
+        {
+            if (client == null || !client.Identity.IsAuthenticated)
+            {
+                _logger.Error("No client information present.");
+                return null;
+            }
+
+            var clientId = client.FindFirst(Constants.ClaimTypes.Id);
+            if (clientId == null)
+            {
+                _logger.Error("No id claim present.");
+                return null;
+            }
+
+            var secret = client.FindFirst(Constants.ClaimTypes.Secret);
+            if (secret == null)
+            {
+                _logger.Error("No secret claim present.");
+                return null;
+            }
+
+            var oidcClient = _coreSettings.FindClientById(clientId.Value);
+            if (oidcClient == null)
+            {
+                _logger.ErrorFormat("Client not found in registry: {0}", clientId.Value);
+                return null;
+            }
+
+            if (oidcClient.ClientSecret != secret.Value)
+            {
+                _logger.ErrorFormat("Invalid client secret for: {0}", clientId.Value);
+                return null;
+            }
+
+            _logger.InformationFormat("Client found in registry: {0} / {1}", oidcClient.ClientId, oidcClient.ClientName);
+            return oidcClient;
+        }
+
+
+        private void AnalyzeScopes(NameValueCollection parameters)
+        {
+            /////////////////////////////////////////////
+            // check scopes
+            /////////////////////////////////////////////
+            var scope = parameters.Get(Constants.TokenRequest.Scope);
+            if (scope.IsMissing())
+            {
+                _validatedRequest.Scopes = Enumerable.Empty<string>();
+            }
+            else
+            {
+                _validatedRequest.Scopes = scope.Split(' ').Distinct().ToList();
+                _logger.InformationFormat("scopes: {0}", scope);
+            }
+        }
+
+        private bool ValidateRequestedScopes(Client client, IEnumerable<string> requestedScopes)
+        {
+            var scopeDetails = _coreSettings.GetScopes();
+
+            foreach (var scope in requestedScopes)
+            {
+                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
+                if (scopeDetail == null)
+                {
+                    return false;
+                }
+
+                if (client.ScopeRestrictions != null && client.ScopeRestrictions.Count > 0)
+                {
+                    if (!client.ScopeRestrictions.Contains(scope))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
 
         private ValidationResult Valid()
         {

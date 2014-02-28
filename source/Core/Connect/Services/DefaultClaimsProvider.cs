@@ -54,7 +54,18 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, IUserService _profile)
         {
-            return new List<Claim>();
+            var claims = new List<Claim>
+            {
+                new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
+                new Claim(Constants.ClaimTypes.Scope, scopes.ToSpaceSeparatedString())
+            };
+
+            if (user != null)
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.Subject, user.GetSubject()));
+            }
+
+            return claims;
         }
     }
 }

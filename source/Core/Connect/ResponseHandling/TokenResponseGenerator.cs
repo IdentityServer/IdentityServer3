@@ -23,40 +23,76 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public TokenResponse Process(ValidatedTokenRequest request, ClaimsPrincipal client)
         {
-            var idToken = _tokenService.CreateIdentityToken(request, client);
-            var accessToken = _tokenService.CreateAccessToken(request, client);
-
-            SigningCredentials credentials;
-            if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+            if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {
-                credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+                return ProcessAuthorizationCodeRequest(request);
             }
-            else
+            else if (request.GrantType == Constants.GrantTypes.ClientCredentials)
             {
-                credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                return ProcessClientCredentialsRequest(request, client);
             }
 
-            var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
+            throw new NotImplementedException();
+        }
 
-            string accessTokenValue = null;
+        private TokenResponse ProcessAuthorizationCodeRequest(ValidatedTokenRequest request)
+        {
+            var response = new TokenResponse
+            {
+                AccessToken = CreateAccessToken(request),
+                AccessTokenLifetime = request.Client.AccessTokenLifetime
+            };
+
+            if (request.AuthorizationCode.IsOpenId)
+            {
+                var idToken = _tokenService.CreateIdentityToken(request, null);
+
+                SigningCredentials credentials;
+                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+                {
+                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+                }
+                else
+                {
+                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                }
+
+                var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
+
+                response.IdentityToken = jwt;
+            }
+
+            return response;
+        }
+
+        private TokenResponse ProcessClientCredentialsRequest(ValidatedTokenRequest request, ClaimsPrincipal clientPrincipal)
+        {
+            var response = new TokenResponse
+            {
+                AccessToken = CreateAccessToken(request),
+                AccessTokenLifetime = request.Client.AccessTokenLifetime
+            };
+
+            return response;
+        }
+
+        private string CreateAccessToken(ValidatedTokenRequest request)
+        {
+            var accessToken = _tokenService.CreateAccessToken(request, null);
+
             if (request.Client.AccessTokenType == AccessTokenType.JWT)
             {
-                accessTokenValue = _tokenService.CreateJsonWebToken(
+                return _tokenService.CreateJsonWebToken(
                     accessToken,
                     new X509SigningCredentials(_settings.GetSigningCertificate()));
             }
             else
             {
-                accessTokenValue = Guid.NewGuid().ToString("N");
-                _tokenHandles.Store(accessTokenValue, accessToken);
-            }
+                var reference = Guid.NewGuid().ToString("N");
+                _tokenHandles.Store(reference, accessToken);
 
-            return new TokenResponse
-            {
-                Jwt = jwt,
-                AccessTokenReference = accessTokenValue,
-                AccessTokenLifetime = accessToken.Lifetime
-            };
+                return reference;
+            }
         }
     }
 }

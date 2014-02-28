@@ -1,4 +1,5 @@
-﻿using Thinktecture.IdentityServer.Core.Connect.Models;
+﻿using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -7,5 +8,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public Client Client { get; set; }
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }
+        public IEnumerable<string> Scopes { get; set; }
     }
 }

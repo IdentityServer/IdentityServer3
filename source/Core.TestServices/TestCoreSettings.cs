@@ -36,9 +36,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     ScopeRestrictions = new List<string>
                     { 
-                        Constants.StandardScopes.Profile,
                         Constants.StandardScopes.OpenId,
-                        "resource1"
+                        Constants.StandardScopes.Profile,
+                        "read"
                     },
 
                     
@@ -67,10 +67,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     ScopeRestrictions = new List<string>
                     { 
-                        Constants.StandardScopes.Profile,
                         Constants.StandardScopes.OpenId,
-                        "resource1",
-                        "resource2"
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.Email,
+                        "read",
+                        "write"
                     },
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
@@ -78,6 +79,22 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
+                    AccessTokenLifetime = 360,
+                },
+                new Client
+                {
+                    ClientName = "Client Credentials Flow Client",
+                    ClientId = "client",
+                    ClientSecret = "secret",
+                    Flow = Flows.ClientCredentials,
+                    
+                    ScopeRestrictions = new List<string>
+                    { 
+                        "read",
+                        "write"
+                    },
+
+                    AccessTokenType = AccessTokenType.JWT,
                     AccessTokenLifetime = 360,
                 }
             };
@@ -95,13 +112,21 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
             return new Scope[]
             {
                 new Scope
-                 {
+                {
                     Name = Constants.StandardScopes.OpenId, 
                     Description = "User identifier",
                     Required = true,
                     IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x, Description = x}))
-                },
+                    Claims = new List<ScopeClaim>
+                        {
+                            new ScopeClaim
+                            {
+                                AlwaysIncludeInIdToken = true,
+                                Name = "sub",
+                                Description = "subject name"
+                            }
+                        }
+                 },
                  new Scope
                  {
                     Name = Constants.StandardScopes.Profile, 
@@ -116,20 +141,34 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     Description = "Email",
                     IsOpenIdScope = true,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(x=>new ScopeClaim{Name = x, Description = x}))
+                    Claims = new List<ScopeClaim>
+                    {
+                        new ScopeClaim
+                        {
+                            Name = "email",
+                            Description = "email address"
+                        },
+                        new ScopeClaim
+                        {
+                            Name = "email_verified",
+                            Description = "email is verified"
+                        }
+                    }
                 },
                 new Scope
                 {
-                    Name = "resource1",
-                    Description = "resource scope 1",
+                    Name = "read",
+                    Description = "Read data",
                     IsOpenIdScope = false,
-                    Emphasize = true,
+                    Emphasize = false,
                 },
                 new Scope
                 {
-                    Name = "resource2",
-                    Description = "resource scope 2",
-                    IsOpenIdScope = false
+                    Name = "write",
+                    Description = "Write data",
+                    IsOpenIdScope = false,
+                    Emphasize = true
+
                 }
              };
         }

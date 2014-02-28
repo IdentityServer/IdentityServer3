@@ -47,12 +47,12 @@ namespace WpfClient
 
         private void LoginWithProfileAndAccessTokenButton_Click(object sender, RoutedEventArgs e)
         {
-            RequestToken("openid profile resource1", "id_token token");
+            RequestToken("openid email read write", "id_token token");
         }
 
         private void AccessTokenOnlyButton_Click(object sender, RoutedEventArgs e)
         {
-            RequestToken("resource1", "token");
+            RequestToken("read", "token");
         }
 
         private void RequestToken(string scope, string responseType)
