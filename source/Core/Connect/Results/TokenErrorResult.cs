@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 error = Error 
             };
 
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new ObjectContent<ErrorDto>(dto, new JsonMediaTypeFormatter())
             };
