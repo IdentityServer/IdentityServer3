@@ -7,6 +7,8 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -52,6 +54,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validatedRequest.Client = client;
 
             /////////////////////////////////////////////
+            // check scopes
+            /////////////////////////////////////////////
+            AnalyzeScopes(parameters);
+
+            /////////////////////////////////////////////
             // check grant type
             /////////////////////////////////////////////
             var grantType = parameters.Get(Constants.TokenRequest.GrantType);
@@ -70,8 +77,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
-            AnalyzeScopes(parameters);
-
             switch (grantType)
             {
                 case Constants.GrantTypes.AuthorizationCode:
@@ -84,8 +89,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
         }
-
-        
 
         private ValidationResult ValidateAuthorizationCodeRequest(NameValueCollection parameters)
         {
@@ -195,6 +198,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             /////////////////////////////////////////////
+            // check if client is allowed to request scopes
+            /////////////////////////////////////////////
+            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
+            {
+                _logger.Error("Invalid scopes.");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
+            /////////////////////////////////////////////
             // check resource owner credentials
             /////////////////////////////////////////////
             var userName = parameters.Get(Constants.TokenRequest.UserName);
@@ -210,21 +222,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 _validatedRequest.UserName = userName;
 
-                _validatedRequest.Subject = Principal.Create("resourceownerflow",
-                    new Claim(Constants.ClaimTypes.Subject, sub));
+                _validatedRequest.Subject = IdentityServerPrincipal.Create(
+                    sub,
+                    Constants.AuthenticationMethods.Password);
             }
             else
             {
                 return Invalid(Constants.TokenErrors.InvalidGrant);
-            }
-
-            /////////////////////////////////////////////
-            // check if client is allowed to request scopes
-            /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
-            {
-                _logger.Error("Invalid scopes.");
-                return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
             return Valid();

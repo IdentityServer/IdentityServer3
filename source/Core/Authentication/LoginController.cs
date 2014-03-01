@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Assets;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
@@ -101,12 +102,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     });
             }
 
-            var identity = new ClaimsIdentity("idsrv");
-            identity.AddClaim(new Claim(Constants.ClaimTypes.Subject, sub));
-            identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString()));
-            identity.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password));
-            Request.GetOwinContext().Authentication.SignIn(identity);
+            var principal = IdentityServerPrincipal.Create(
+                sub,
+                Constants.AuthenticationMethods.Password);
 
+            Request.GetOwinContext().Authentication.SignIn(principal.Identities.First());
             return Redirect(signInMessage.ReturnUrl);
         }
 
