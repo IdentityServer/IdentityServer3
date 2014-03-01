@@ -1,9 +1,9 @@
 ﻿using Sample;
-using System.Security.Claims;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Thinktecture.IdentityModel;
@@ -20,7 +20,7 @@ namespace MvcFormPostClient.Controllers
             var url = client.CreateAuthorizeUrl(
 				"formpostclient",
 				"id_token",
-				"openid",
+				"openid email",
 				"http://localhost:11716/account/signInCallback",
 				"state",
 				new Dictionary<string, string>
