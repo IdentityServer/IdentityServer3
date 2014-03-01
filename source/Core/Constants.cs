@@ -91,14 +91,15 @@ namespace Thinktecture.IdentityServer.Core
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
                                 Constants.GrantTypes.AuthorizationCode,
-                                Constants.GrantTypes.ClientCredentials
+                                Constants.GrantTypes.ClientCredentials,
+                                Constants.GrantTypes.Password
                             };
 
 
         public static class ResponseModes
         {
             public const string FormPost = "form_post";
-            public const string Query = "query";
+            public const string Query    = "query";
             public const string Fragment = "fragment";
         }
 

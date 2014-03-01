@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;
@@ -32,9 +33,12 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
                 token_type = Constants.TokenTypes.Bearer
             };
 
+            var formatter = new JsonMediaTypeFormatter();
+            formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
+
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ObjectContent<TokenResponseDto>(dto, new JsonMediaTypeFormatter())
+                Content = new ObjectContent<TokenResponseDto>(dto, formatter)
             };
 
             return response;

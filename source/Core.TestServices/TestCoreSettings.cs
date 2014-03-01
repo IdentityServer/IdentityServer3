@@ -96,6 +96,22 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
                     AccessTokenType = AccessTokenType.JWT,
                     AccessTokenLifetime = 360,
+                },
+                new Client
+                {
+                    ClientName = "Resource Owner Flow Client",
+                    ClientId = "roclient",
+                    ClientSecret = "secret",
+                    Flow = Flows.ResourceOwner,
+                    
+                    ScopeRestrictions = new List<string>
+                    { 
+                        "read",
+                        "write"
+                    },
+
+                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenLifetime = 360,
                 }
             };
         }
