@@ -112,6 +112,25 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
 
                     AccessTokenType = AccessTokenType.JWT,
                     AccessTokenLifetime = 360,
+                },
+                new Client
+                {
+                    ClientName = "FormPost Client",
+                    ClientId = "formpostclient",
+                    ClientSecret = "secret",
+                    Flow = Flows.Implicit,
+                    RedirectUris = new List<Uri>
+                    {
+                        new Uri("http://localhost:11716/account/signInCallback")
+                    },
+                    
+                    ScopeRestrictions = new List<string>
+                    { 
+                        "openid",
+                        "profile"
+                    },
+
+                    IdentityTokenLifetime = 360
                 }
             };
         }
