@@ -19,7 +19,10 @@ namespace Thinktecture.IdentityServer.Core
             config.MapHttpAttributeRoutes();
             config.SuppressDefaultHostAuthentication();
             config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
-            
+
+            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+
             return config;
         }
     }
