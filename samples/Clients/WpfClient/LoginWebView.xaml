@@ -1,0 +1,8 @@
+﻿<Window x:Class="Thinktecture.Samples.LoginWebView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Login" Height="600" Width="800" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <WebBrowser x:Name="webView" />
+    </Grid>
+</Window>
