@@ -120,5 +120,11 @@ namespace UnitTests.Plumbing
         {
             throw new NotImplementedException();
         }
+
+
+        public string GetPublicHost()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

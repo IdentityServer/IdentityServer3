@@ -230,6 +230,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
             return "IdentityServer v3 - alpha1";
         }
 
+        public string GetPublicHost()
+        {
+            return "http://localhost:3333";
+        }
 
         public InternalProtectionSettings GetInternalProtectionSettings()
         {
