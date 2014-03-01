@@ -41,12 +41,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await ProcessRequest(request.RequestUri.ParseQueryString());
         }
 
-        //[Route]
-        //public async Task<IHttpActionResult> Post(HttpRequestMessage request)
-        //{
-        //    return await ProcessRequest(await request.Content.ReadAsFormDataAsync());
-        //}
-
         protected virtual async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters, ConsentInputModel consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");

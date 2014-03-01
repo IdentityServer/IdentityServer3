@@ -46,8 +46,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 query.Add("state", Response.State);
             }
 
-            //_logger.InformationFormat("Redirecting back to: {0}", url);
-
             url = string.Format("{0}#{1}", url, query.ToQueryString());
             responseMessage.Headers.Location = new Uri(url);
             return responseMessage;
