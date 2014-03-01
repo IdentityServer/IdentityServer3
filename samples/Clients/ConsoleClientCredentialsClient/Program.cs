@@ -25,7 +25,7 @@ namespace ConsoleClientCredentialsClient
                 "client",
                 "secret");
 
-            return client.RequestClientCredentialsAsync("read").Result;
+            return client.RequestClientCredentialsAsync("read write").Result;
         }
 
         private static void ShowResponse(TokenResponse response)
@@ -33,16 +33,19 @@ namespace ConsoleClientCredentialsClient
             "Token response:".ConsoleGreen();
             Console.WriteLine(response.Json);
 
-            if (response.AccessToken.Contains("."))
+            if (!response.IsError)
             {
-                "\nAccess Token (decoded):".ConsoleGreen();
+                if (response.AccessToken.Contains("."))
+                {
+                    "\nAccess Token (decoded):".ConsoleGreen();
 
-                var parts = response.AccessToken.Split('.');
-                var header = parts[0];
-                var claims = parts[1];
+                    var parts = response.AccessToken.Split('.');
+                    var header = parts[0];
+                    var claims = parts[1];
 
-                Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))));
-                Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))));
+                    Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))));
+                    Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))));
+                }
             }
         }
     }
