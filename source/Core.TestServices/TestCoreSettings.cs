@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     
                     RedirectUris = new List<Uri>
                     {
-                        new Uri("https://localhost/cb"),
+                        new Uri("https://localhost:44320/oidccallback"),
                         new Uri("https://web.local/oidccode/oidccallback")
                     },
                     

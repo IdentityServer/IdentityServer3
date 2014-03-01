@@ -266,13 +266,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="packages.config" />
-    <None Include="readme.txt" />
     <Content Include="Views\Home\OidcError.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Thinktecture.IdentityModel.Oidc\Thinktecture.IdentityModel.Oidc.csproj">
       <Project>{9669aed6-cc75-4da4-a639-13e084905ca7}</Project>
