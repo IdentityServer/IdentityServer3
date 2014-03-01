@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Claims;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -207,6 +209,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (sub.IsPresent())
             {
                 _validatedRequest.UserName = userName;
+
+                _validatedRequest.Subject = Principal.Create("resourceownerflow",
+                    new Claim(Constants.ClaimTypes.Subject, sub));
             }
             else
             {

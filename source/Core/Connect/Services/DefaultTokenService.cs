@@ -87,15 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             }
             else
             {
-                ClaimsIdentity id = null;
-
-                if (request.UserName.IsPresent())
-                {
-                    id = Identity.Create("oauth2",
-                        new Claim(Constants.ClaimTypes.Subject, request.UserName));
-                }
-
-                return CreateAccessToken(null, request.Client, request.Scopes);
+                return CreateAccessToken(request.Subject, request.Client, request.Scopes);
             }
         }
 

@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (user != null)
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Subject, user.GetSubject()));
+                claims.AddRange(user.Claims);
             }
 
             return claims;

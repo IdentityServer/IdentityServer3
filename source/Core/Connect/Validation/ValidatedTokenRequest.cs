@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -10,5 +11,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public AuthorizationCode AuthorizationCode { get; set; }
         public IEnumerable<string> Scopes { get; set; }
         public string UserName { get; set; }
+
+        public ClaimsPrincipal Subject { get; set; }
     }
 }
