@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -32,8 +33,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             try
             {
-                //var returnUrl = WebUtility.UrlEncode(_request.RequestUri.AbsoluteUri);
-
                 var message = new SignInMessage
                 {
                     ReturnUrl = _request.RequestUri.AbsoluteUri
@@ -46,8 +45,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     protection.SigningKey,
                     protection.Ttl);
 
-                var baseUrl = new Uri(this._request.RequestUri, this._request.GetRequestContext().VirtualPathRoot).AbsoluteUri;
-                if (!baseUrl.EndsWith("/")) baseUrl += "/";
+                var baseUrl = _request.GetBaseUrl(_settings.GetPublicHost());
+
+                //var baseUrl = new Uri(this._request.RequestUri, this._request.GetRequestContext().VirtualPathRoot).AbsoluteUri;
+                //if (!baseUrl.EndsWith("/")) baseUrl += "/";
                 var uri = new Uri(baseUrl + "login?message=" + jwt);
                 response.Headers.Location = uri;
             }

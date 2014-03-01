@@ -127,6 +127,7 @@
     <Compile Include="Connect\Validation\ValidatedUserInfoRequest.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
