@@ -258,6 +258,7 @@ namespace Thinktecture.IdentityServer.Core
             
             // more standard claims
             public const string UpdatedAt                           = "updated_at";
+            public const string IssuedAt                            = "iat";
             public const string AuthenticationMethod                = "amr";
             public const string AuthenticationContextClassReference = "acr";
             public const string AuthenticationTime                  = "auth_time";
@@ -268,9 +269,9 @@ namespace Thinktecture.IdentityServer.Core
 
             // more claims
             public const string ClientId = "client_id";
-            public const string Scope = "scope";
-            public const string Id = "id";
-            public const string Secret = "secret";
+            public const string Scope    = "scope";
+            public const string Id       = "id";
+            public const string Secret   = "secret";
         }
 
         public static class AuthenticationMethods

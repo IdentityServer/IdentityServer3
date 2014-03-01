@@ -8,6 +8,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
@@ -31,7 +32,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             {
                 new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
                 new Claim(Constants.ClaimTypes.AuthenticationMethod, user.GetAuthenticationMethod()),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, user.GetAuthenticationTimeEpoch().ToString())
+                new Claim(Constants.ClaimTypes.AuthenticationTime, user.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
+                new Claim(Constants.ClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer)
             };
 
             // if nonce was sent, must be mirrored in id token
