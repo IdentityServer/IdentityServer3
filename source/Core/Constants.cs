@@ -66,6 +66,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string AuthorizationCode = "authorization_code";
             public const string ClientCredentials = "client_credentials";
             public const string RefreshToken      = "refresh_token";
+            public const string Implicit          = "implicit";
            
             // assertion grants
             public const string Saml2Bearer = "urn:ietf:params:oauth:grant-type:saml2-bearer";
@@ -74,10 +75,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ResponseTypes
         {
-            public const string Token   = "token";
-            public const string IdToken = "id_token";
+            public const string Token        = "token";
+            public const string IdToken      = "id_token";
             public const string IdTokenToken = "id_token token";
-            public const string Code    = "code";
+            public const string Code         = "code";
         }
 
         public static readonly List<string> SupportedResponseTypes = new List<string> 
@@ -92,7 +93,8 @@ namespace Thinktecture.IdentityServer.Core
                             { 
                                 Constants.GrantTypes.AuthorizationCode,
                                 Constants.GrantTypes.ClientCredentials,
-                                Constants.GrantTypes.Password
+                                Constants.GrantTypes.Password,
+                                Constants.GrantTypes.Implicit
                             };
 
 

@@ -112,6 +112,7 @@
     <Compile Include="Configuration\AutoFacConfig.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
+    <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
     <Compile Include="Connect\Models\ClientCredential.cs" />
     <Compile Include="Connect\Models\ConsentInputModel.cs" />
