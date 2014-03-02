@@ -21,11 +21,11 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public void Invalid_GrantType_For_Client()
         {
-            var client = _settings.FindClientById("client");
+            var client = _settings.FindClientById("roclient");
             var validator = new TokenRequestValidator(_settings, _logger, null, null);
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = validator.ValidateRequest(parameters, client);
