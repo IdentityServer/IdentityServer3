@@ -9,7 +9,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     {
         IEnumerable<Scope> GetScopes();
         Client FindClientById(string clientId);
-        bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes);
+        bool RequiresConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
 
         X509Certificate2 GetSigningCertificate();
         string GetIssuerUri();

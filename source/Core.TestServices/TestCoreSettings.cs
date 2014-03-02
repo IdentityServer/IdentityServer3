@@ -209,12 +209,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
              };
         }
 
-        public bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes)
+        public bool RequiresConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
         {
-            var client = FindClientById(clientId);
+            //var client = FindClientById(clientId);
             return client.RequireConsent;
         }
-
+        
         public X509Certificate2 GetSigningCertificate()
         {
             return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();

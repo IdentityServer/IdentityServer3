@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
-                _core.RequiresConsent(request.Client.ClientId, user, request.RequestedScopes))
+                _core.RequiresConsent(request.Client, user, request.RequestedScopes))
             {
                 return new InteractionResponse
                 {

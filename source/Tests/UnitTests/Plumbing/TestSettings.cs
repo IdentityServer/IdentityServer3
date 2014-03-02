@@ -170,5 +170,11 @@ namespace UnitTests.Plumbing
         {
             throw new NotImplementedException();
         }
+
+
+        public bool RequiresConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
