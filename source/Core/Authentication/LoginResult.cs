@@ -46,10 +46,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     protection.Ttl);
 
                 var baseUrl = _request.GetBaseUrl(_settings.GetPublicHost());
-
-                //var baseUrl = new Uri(this._request.RequestUri, this._request.GetRequestContext().VirtualPathRoot).AbsoluteUri;
-                //if (!baseUrl.EndsWith("/")) baseUrl += "/";
                 var uri = new Uri(baseUrl + "login?message=" + jwt);
+                
                 response.Headers.Location = uri;
             }
             catch
