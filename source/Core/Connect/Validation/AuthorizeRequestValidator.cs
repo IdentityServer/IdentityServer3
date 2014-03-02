@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _validatedRequest.IsOpenIdRequest = true;
             }
 
-            _validatedRequest.Scopes = scope.Split(' ').Distinct().ToList();
+            _validatedRequest.RequestedScopes = scope.Split(' ').Distinct().ToList();
             _logger.InformationFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
@@ -317,81 +317,40 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check scopes and scope restrictions
             //////////////////////////////////////////////////////////
-            if (_validatedRequest.Client.ScopeRestrictions == null ||
-                _validatedRequest.Client.ScopeRestrictions.Count == 0)
-            {
-                _logger.Information("All scopes allowed for client");
-            }
-            else
-            {
-                _logger.Information("Allowed scopes for client client: " + _validatedRequest.Client.ScopeRestrictions.ToSpaceSeparatedString());
+            var scopeValidator = new ScopeValidator(_logger);
 
-                foreach (var scope in _validatedRequest.Scopes)
-                {
-                    if (!_validatedRequest.Client.ScopeRestrictions.Contains(scope))
-                    {
-                        _logger.ErrorFormat("Requested scope not allowed: {0}", scope);
-                        return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-                    }
-                }
+            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
+            {
+                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
-            var scopeDetails = _core.GetScopes();
-            foreach (var scope in _validatedRequest.Scopes)
+            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, _core.GetScopes()))
             {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-
-                if (scopeDetail == null)
-                {
-                    _logger.ErrorFormat("Invalid scope: {0}", scope);
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                }
-
-                if (scopeDetail.IsOpenIdScope && !_validatedRequest.IsOpenIdRequest)
-                {
-                    _logger.ErrorFormat("Identity related scope requests, but no openid scope: {0}", scope);
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                }
-
-                if (!scopeDetail.IsOpenIdScope)
-                {
-                    _validatedRequest.IsResourceRequest = true;
-                }
+                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
+
+            if (scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
+            {
+                _logger.Error("Identity related scope requests, but no openid scope");
+                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+            }
+
+            if (scopeValidator.ContainsResourceScopes)
+            {
+                _validatedRequest.IsResourceRequest = true;
+            }
+
+            _validatedRequest.ValidatedScopes = scopeValidator;
 
             //////////////////////////////////////////////////////////
             // check id vs resource scopes and response types plausability
             //////////////////////////////////////////////////////////
-            if (_validatedRequest.ResponseType == Constants.ResponseTypes.IdToken)
+            if (!scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
             {
-                // must include identity scopes, but no resource scopes
-                if (!_validatedRequest.IsOpenIdRequest || _validatedRequest.IsResourceRequest)
-                {
-                    _logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                }
-                
-            }
-            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
-            {
-                // must include identity scopes
-                if (!_validatedRequest.IsOpenIdRequest)
-                {
-                    _logger.Error("Requests for id_token response type must include identity scopes");
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                }
-            }
-            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token)
-            {
-                // must include resource scopes, but no identity scopes
-                if (_validatedRequest.IsOpenIdRequest || !_validatedRequest.IsResourceRequest)
-                {
-                    _logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-                }
+                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
             return Valid();

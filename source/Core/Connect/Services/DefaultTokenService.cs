@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             claims.AddRange(_claimsProvider.GetIdentityTokenClaims(
                 user,
                 request.Client,
-                request.Scopes,
+                request.RequestedScopes,
                 _settings,
                 !request.AccessTokenRequested,
                 _profile));
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             var claims = _claimsProvider.GetAccessTokenClaims(
                 user,
                 request.Client,
-                request.Scopes,
+                request.RequestedScopes,
                 _settings,
                 _profile);
 

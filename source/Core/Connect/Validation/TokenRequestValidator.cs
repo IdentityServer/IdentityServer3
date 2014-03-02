@@ -54,23 +54,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validatedRequest.Client = client;
 
             /////////////////////////////////////////////
-            // check scopes
-            /////////////////////////////////////////////
-            AnalyzeScopes(parameters);
-
-            /////////////////////////////////////////////
             // check grant type
             /////////////////////////////////////////////
             var grantType = parameters.Get(Constants.TokenRequest.GrantType);
             if (grantType.IsMissing())
             {
                 _logger.Error("Grant type is missing.");
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
-            }
-
-            if (!Constants.SupportedGrantTypes.Contains(grantType))
-            {
-                _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
@@ -87,6 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return ValidateResourceOwnerCredentialRequest(parameters);
             }
 
+            _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
         }
 
@@ -177,9 +167,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
+            if (!ValidateRequestedScopes(parameters))
             {
                 _logger.Error("Invalid scopes.");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
+            if (_validatedRequest.ValidatedScopes.ContainsOpenIdScopes)
+            {
+                _logger.Error("Client cannot request OpenID scopes in client credentials flow");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
@@ -200,7 +196,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(_validatedRequest.Client, _validatedRequest.Scopes))
+            if (!ValidateRequestedScopes(parameters))
             {
                 _logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -234,44 +230,28 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private void AnalyzeScopes(NameValueCollection parameters)
+        private bool ValidateRequestedScopes(NameValueCollection parameters)
         {
-            /////////////////////////////////////////////
-            // check scopes
-            /////////////////////////////////////////////
-            var scope = parameters.Get(Constants.TokenRequest.Scope);
-            if (scope.IsMissing())
-            {
-                _validatedRequest.Scopes = Enumerable.Empty<string>();
-            }
-            else
-            {
-                _validatedRequest.Scopes = scope.Split(' ').Distinct().ToList();
-                _logger.InformationFormat("scopes: {0}", scope);
-            }
-        }
+            var scopeValidator = new ScopeValidator(_logger);
+            var requestedScopes = scopeValidator.ParseScopes(parameters.Get(Constants.TokenRequest.Scope));
 
-        private bool ValidateRequestedScopes(Client client, IEnumerable<string> requestedScopes)
-        {
-            var scopeDetails = _coreSettings.GetScopes();
-
-            foreach (var scope in requestedScopes)
+            if (requestedScopes == null)
             {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-                if (scopeDetail == null)
-                {
-                    return false;
-                }
-
-                if (client.ScopeRestrictions != null && client.ScopeRestrictions.Count > 0)
-                {
-                    if (!client.ScopeRestrictions.Contains(scope))
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
 
+            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, requestedScopes))
+            {
+                return false;
+            }
+            
+            if (!scopeValidator.AreScopesValid(requestedScopes, _coreSettings.GetScopes()))
+            {
+                return false;
+            }
+
+            _validatedRequest.Scopes = requestedScopes;
+            _validatedRequest.ValidatedScopes = scopeValidator;
             return true;
         }
 

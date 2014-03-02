@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 var requestedScopes =
                         from s in _settings.GetScopes()
-                        where request.Scopes.Contains(s.Name)
+                        where request.RequestedScopes.Contains(s.Name)
                         select s;
 
                 string errorMessage = null;
@@ -109,7 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                     if (consent.Scopes != null)
                     {
-                        consentedScopes = request.Scopes.Intersect(consent.Scopes);
+                        consentedScopes = request.RequestedScopes.Intersect(consent.Scopes);
                     }
                     else
                     {
@@ -172,7 +172,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     });
                 }
 
-                request.Scopes = consentedScopes.ToList();
+                request.RequestedScopes = consentedScopes.ToList();
             }
 
             return CreateAuthorizeResponse(request);

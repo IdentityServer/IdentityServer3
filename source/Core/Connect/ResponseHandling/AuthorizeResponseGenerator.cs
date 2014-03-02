@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 ClientId = request.ClientId,
                 IsOpenId = true,
-                RequestedScopes = request.Scopes.ToSpaceSeparatedString(),
+                RequestedScopes = request.RequestedScopes.ToSpaceSeparatedString(),
 
                 CreationTime = DateTime.UtcNow,
                 RedirectUri = request.RedirectUri,
