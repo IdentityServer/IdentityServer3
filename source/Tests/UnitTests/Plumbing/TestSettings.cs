@@ -62,6 +62,44 @@ namespace UnitTests.Plumbing
                         new Uri("https://server/cb"),
                     },
                 },
+                new Client
+                {
+                    ClientName = "Client Credentials Client",
+                    ClientId = "client",
+                    ClientSecret = "secret",
+                    Flow = Flows.ClientCredentials,
+                },
+                new Client
+                {
+                    ClientName = "Client Credentials Client (restricted)",
+                    ClientId = "client_restricted",
+                    ClientSecret = "secret",
+                    Flow = Flows.ClientCredentials,
+
+                    ScopeRestrictions = new List<string>
+                    {
+                        "resource"
+                    },       
+                },
+                new Client
+                {
+                    ClientName = "Resource Owner Client",
+                    ClientId = "roclient",
+                    ClientSecret = "secret",
+                    Flow = Flows.ResourceOwner,
+                },
+                new Client
+                {
+                    ClientName = "Resource Owner Client (restricted)",
+                    ClientId = "roclient_restricted",
+                    ClientSecret = "secret",
+                    Flow = Flows.ResourceOwner,
+
+                    ScopeRestrictions = new List<string>
+                    {
+                        "resource"
+                    },       
+                }
         };
 
         public IEnumerable<Scope> GetScopes()
@@ -85,6 +123,12 @@ namespace UnitTests.Plumbing
                 new Scope
                 {
                     Name = "resource",
+                    Description = "resource scope",
+                    IsOpenIdScope = false
+                },
+                new Scope
+                {
+                    Name = "resource2",
                     Description = "resource scope",
                     IsOpenIdScope = false
                 },

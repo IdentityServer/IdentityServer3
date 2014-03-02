@@ -14,6 +14,7 @@ namespace UnitTests.TokenRequest_Validation
     {
         ILogger _logger = new DebugLogger();
         ICoreSettings _settings = new TestSettings();
+        IUserService _users = new TestUserService();
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - General - Valid")]
@@ -40,6 +41,78 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = validator.ValidateRequest(parameters, client);
+
+            Assert.IsFalse(result.IsError);
+        }
+
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Valid")]
+        public void Valid_ClientCredentials_Request()
+        {
+            var client = _settings.FindClientById("client");
+
+            var validator = new TokenRequestValidator(_settings, _logger, null, null);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
+
+            var result = validator.ValidateRequest(parameters, client);
+
+            Assert.IsFalse(result.IsError);
+        }
+
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Valid")]
+        public void Valid_ClientCredentials_Request_Restricted_Client()
+        {
+            var client = _settings.FindClientById("client_restricted");
+
+            var validator = new TokenRequestValidator(_settings, _logger, null, null);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
+
+            var result = validator.ValidateRequest(parameters, client);
+
+            Assert.IsFalse(result.IsError);
+        }
+
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Valid")]
+        public void Valid_ResourceOwner_Request()
+        {
+            var client = _settings.FindClientById("roclient");
+
+            var validator = new TokenRequestValidator(_settings, _logger, null, _users);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
+            parameters.Add(Constants.TokenRequest.UserName, "bob");
+            parameters.Add(Constants.TokenRequest.Password, "bob");
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
+
+            var result = validator.ValidateRequest(parameters, client);
+
+            Assert.IsFalse(result.IsError);
+        }
+
+        [TestMethod]
+        [TestCategory("TokenRequest Validation - General - Valid")]
+        public void Valid_ResourceOwner_Request_Restricted_Client()
+        {
+            var client = _settings.FindClientById("roclient_restricted");
+
+            var validator = new TokenRequestValidator(_settings, _logger, null, _users);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
+            parameters.Add(Constants.TokenRequest.UserName, "bob");
+            parameters.Add(Constants.TokenRequest.Password, "bob");
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = validator.ValidateRequest(parameters, client);
 
