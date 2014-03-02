@@ -7,7 +7,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public interface IClaimsProvider
     {
-        IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile);
-        IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, IUserService _profile);
+        IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile);
+        IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile);
     }
 }

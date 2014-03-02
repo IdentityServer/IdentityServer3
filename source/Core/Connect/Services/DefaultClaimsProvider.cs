@@ -8,7 +8,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile)
+        public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile)
         {
             List<Claim> outputClaims = new List<Claim>();
             var scopeDetails = settings.GetScopes();
@@ -18,18 +18,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
             {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-
-                if (scopeDetail != null)
+                if (scope.IsOpenIdScope)
                 {
-                    if (scopeDetail.IsOpenIdScope)
+                    foreach (var scopeClaim in scope.Claims)
                     {
-                        foreach (var scopeClaim in scopeDetail.Claims)
+                        if (includeAllIdentityClaims || scopeClaim.AlwaysIncludeInIdToken)
                         {
-                            if (includeAllIdentityClaims || scopeClaim.AlwaysIncludeInIdToken)
-                            {
-                                additionalClaims.Add(scopeClaim.Name);
-                            }
+                            additionalClaims.Add(scopeClaim.Name);
                         }
                     }
                 }
@@ -43,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return outputClaims;
         }
 
-        public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<string> scopes, ICoreSettings settings, IUserService _profile)
+        public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile)
         {
             var claims = new List<Claim>
             {
@@ -52,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             foreach (var scope in scopes)
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Scope, scope));
+                claims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
             }
 
             if (user != null)
