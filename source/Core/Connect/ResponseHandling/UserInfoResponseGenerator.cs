@@ -42,22 +42,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             var claims = new List<string>();
 
-            var tokenScopes = accessToken.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope);
-            if (tokenScopes == null)
+            var scopes = accessToken.Claims.FindAll(c => c.Type == Constants.ClaimTypes.Scope);
+            if (scopes == null)
             {
                 _logger.Warning("No scopes found in access token. aborting.");
                 return claims;
             }
 
-            _logger.InformationFormat("Scopes in access token: {0}", tokenScopes);
+            var scopeString = string.Join(" ", scopes.Select(s => s.Value).ToArray());
+            _logger.InformationFormat("Scopes in access token: {0}", scopeString);
 
-            var scopes = tokenScopes.Value.Split(new [] {' '}, StringSplitOptions.RemoveEmptyEntries);
             var scopeDetails = _settings.GetScopes();
             
-
             foreach (var scope in scopes)
             {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
+                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope.Value);
                 
                 if (scopeDetail != null)
                 {
