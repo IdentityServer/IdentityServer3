@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 

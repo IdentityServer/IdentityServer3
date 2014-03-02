@@ -4,11 +4,10 @@ using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityModel;
+using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
