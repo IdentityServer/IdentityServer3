@@ -4,7 +4,7 @@ using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core
+namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class OurModule : Module
     {
@@ -22,11 +22,31 @@ namespace Thinktecture.IdentityServer.Core
 
             var builder = new ContainerBuilder();
 
+            // mandatory from factory
             builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
             builder.Register(ctx => fact.CoreSettings()).As<ICoreSettings>();
             builder.Register(ctx => fact.Logger()).As<ILogger>();
             builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
             builder.Register(ctx => fact.UserService()).As<IUserService>();
+
+            // optional from factory
+            if (fact.ClaimsProvider != null)
+            {
+                builder.Register(ctx => fact.ClaimsProvider()).As<IClaimsProvider>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
+            }
+
+            if (fact.AssertionGrantValidator != null)
+            {
+                builder.Register(ctx => fact.AssertionGrantValidator()).As<IAssertionGrantValidator>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultAssertionGrantValidator>().As<IAssertionGrantValidator>();
+            }
 
             // validators
             builder.RegisterType<TokenRequestValidator>();
@@ -41,7 +61,6 @@ namespace Thinktecture.IdentityServer.Core
             builder.RegisterType<UserInfoResponseGenerator>();
 
             // services
-            builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
             builder.RegisterType<DefaultTokenService>().As<ITokenService>();
 
             // controller

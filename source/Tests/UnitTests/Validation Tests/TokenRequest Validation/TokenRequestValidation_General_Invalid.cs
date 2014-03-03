@@ -21,7 +21,7 @@ namespace UnitTests.TokenRequest_Validation
         public void Parameters_Null()
         {
             var store = new TestCodeStore();
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var result = validator.ValidateRequest(null, null);
         }
@@ -32,7 +32,7 @@ namespace UnitTests.TokenRequest_Validation
         public void Client_Null()
         {
             var store = new TestCodeStore();
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -61,7 +61,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "unknown");
@@ -93,7 +93,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.Code, "valid");

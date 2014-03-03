@@ -9,7 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Dependencies;
 using System.Web.Http.Hosting;
 
-namespace Thinktecture.IdentityServer.Core
+namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class WebApiConfig
     {

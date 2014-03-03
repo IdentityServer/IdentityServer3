@@ -35,7 +35,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -53,7 +53,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null);
+            var validator = new TokenRequestValidator(_settings, _logger, null, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -70,7 +70,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client_restricted");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null);
+            var validator = new TokenRequestValidator(_settings, _logger, null, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -87,7 +87,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users);
+            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -106,7 +106,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient_restricted");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users);
+            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);

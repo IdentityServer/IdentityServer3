@@ -40,7 +40,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         Code,
         Implicit,
         ClientCredentials,
-        ResourceOwner
+        ResourceOwner,
+        Assertion
     }
 
     public enum SubjectTypes

@@ -14,5 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string UserName { get; set; }
 
         public ClaimsPrincipal Subject { get; set; }
+
+        public string Assertion { get; set; }
     }
 }

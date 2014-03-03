@@ -1,11 +1,11 @@
-﻿
-using Autofac;
+﻿using Autofac;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.StaticFiles;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin
 {

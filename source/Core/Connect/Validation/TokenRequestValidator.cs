@@ -15,6 +15,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private IUserService _profile;
 
         private ValidatedTokenRequest _validatedRequest;
+        private IAssertionGrantValidator _assertionValidator;
 
         public ValidatedTokenRequest ValidatedRequest
         {
@@ -24,12 +25,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService profile)
+        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService profile, IAssertionGrantValidator assertionValidator)
         {
             _coreSettings = coreSettings;
             _logger = logger;
             _authorizationCodes = authorizationCodes;
             _profile = profile;
+            _assertionValidator = assertionValidator;
         }
 
         public ValidationResult ValidateRequest(NameValueCollection parameters, Client client)
@@ -69,6 +71,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return ValidateClientCredentialsRequest(parameters);
                 case Constants.GrantTypes.Password:
                     return ValidateResourceOwnerCredentialRequest(parameters);
+            }
+
+            if (parameters.Get(Constants.TokenRequest.Assertion).IsPresent())
+            {
+                return ValidateAssertionRequest(parameters);
             }
 
             _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
@@ -184,7 +191,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ResourceOwner)
             {
-                _logger.Error("Client not authorized for client credentials flow");
+                _logger.Error("Client not authorized for resource owner flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -222,6 +229,43 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            return Valid();
+        }
+
+        private ValidationResult ValidateAssertionRequest(NameValueCollection parameters)
+        {
+            var assertion = parameters.Get(Constants.TokenRequest.Assertion);
+            _validatedRequest.Assertion = assertion;
+
+            /////////////////////////////////////////////
+            // check if client is authorized for grant type
+            /////////////////////////////////////////////
+            if (_validatedRequest.Client.Flow != Flows.Assertion)
+            {
+                _logger.Error("Client not authorized for assertion flow");
+                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+            }
+
+            /////////////////////////////////////////////
+            // check if client is allowed to request scopes
+            /////////////////////////////////////////////
+            if (!ValidateRequestedScopes(parameters))
+            {
+                _logger.Error("Invalid scopes.");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
+            /////////////////////////////////////////////
+            // validate assertion
+            /////////////////////////////////////////////
+            var principal = _assertionValidator.Validate(_validatedRequest);
+            if (principal == null)
+            {
+                _logger.Error("Invalid assertion.");
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
+            _validatedRequest.Subject = principal;
             return Valid();
         }
 

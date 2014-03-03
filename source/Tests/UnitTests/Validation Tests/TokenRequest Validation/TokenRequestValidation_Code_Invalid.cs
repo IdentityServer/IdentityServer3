@@ -34,7 +34,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -65,7 +65,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -97,7 +97,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -129,7 +129,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -161,7 +161,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -192,7 +192,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -226,7 +226,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -258,7 +258,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null);
+            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -271,7 +271,7 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsFalse(result.IsError);
 
             // request second time
-            validator = new TokenRequestValidator(_settings, _logger, store, null);
+            validator = new TokenRequestValidator(_settings, _logger, store, null, null);
             result = validator.ValidateRequest(parameters, client);
 
             Assert.IsTrue(result.IsError);
