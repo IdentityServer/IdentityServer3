@@ -1,7 +1,9 @@
 ﻿using System.Collections.Specialized;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -34,20 +36,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger.Start("OIDC token endpoint.");
 
-            // validate client credentials on the wire
-            var credential = _clientValidator.ValidateRequest(Request.Headers.Authorization, parameters);
-
-            if (credential.IsMalformed || !credential.IsPresent)
-            {
-                _logger.Error("No or malformed client credential found.");
-                return Task.FromResult(this.TokenErrorResponse(Constants.TokenErrors.InvalidClient));
-            }
-
-            // validate client against configuration store
-            var client = _clientValidator.ValidateClient(credential);
+            // validate client credentials and client
+            var client = ValidateClient(parameters, Request.Headers.Authorization);
             if (client == null)
             {
-                _logger.Error("Invalid client credentials. Aborting.");
                 return Task.FromResult(this.TokenErrorResponse(Constants.TokenErrors.InvalidClient));
             }
 
@@ -62,6 +54,28 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // return response
             var response = _generator.Process(_requestValidator.ValidatedRequest);
             return Task.FromResult(this.TokenResponse(response));
+        }
+
+        private Client ValidateClient(NameValueCollection parameters, AuthenticationHeaderValue header)
+        {
+            // validate client credentials on the wire
+            var credential = _clientValidator.ValidateRequest(header, parameters);
+
+            if (credential.IsMalformed || !credential.IsPresent)
+            {
+                _logger.Error("No or malformed client credential found.");
+                return null;
+            }
+
+            // validate client against configuration store
+            var client = _clientValidator.ValidateClient(credential);
+            if (client == null)
+            {
+                _logger.Error("Invalid client credentials. Aborting.");
+                return null;
+            }
+
+            return client;
         }
     }
 }
