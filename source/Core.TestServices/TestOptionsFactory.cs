@@ -11,6 +11,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             var codeStore = new TestAuthorizationCodeStore();
             var tokenStore = new TestTokenHandleStore();
             var core = new TestCoreSettings();
+            var consent = new TestConsentService();
             
             var fact = new IdentityServerServiceFactory
             {
@@ -19,6 +20,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,
                 CoreSettings = () => core,
+                ConsentService = () => consent
             };
 
             return fact;

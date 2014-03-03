@@ -10,11 +10,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private SignInMessage _signIn;
         private ICoreSettings _core;
+        
+        private IConsentService _consent;
 
-        public AuthorizeInteractionResponseGenerator(ICoreSettings core)
+        public AuthorizeInteractionResponseGenerator(ICoreSettings core, IConsentService consent)
         {
             _signIn = new SignInMessage();
+            
             _core = core;
+            _consent = consent;
         }
 
         public InteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -84,7 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
-                _core.RequiresConsent(request.Client, user, request.RequestedScopes))
+                _consent.RequiresConsent(request.Client, user, request.RequestedScopes))
             {
                 return new InteractionResponse
                 {

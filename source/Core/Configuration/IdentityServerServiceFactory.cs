@@ -16,6 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Func<ICoreSettings> CoreSettings { get; set; }
         public Func<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
         public Func<ITokenHandleStore> TokenHandleStore { get; set; }
+        public Func<IConsentService> ConsentService { get; set; }
         
         // optional
         public Func<ITokenHandleStore> AssertionGrantValidator { get; set; }
@@ -28,6 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (CoreSettings == null) throw new InvalidOperationException("CoreSettings not configured");
             if (AuthorizationCodeStore == null) throw new InvalidOperationException("AuthorizationCodeStore not configured");
             if (TokenHandleStore == null) throw new InvalidOperationException("TokenHandleStore not configured");
+            if (ConsentService == null) throw new InvalidOperationException("ConsentService not configured");
         }
     }
 }
