@@ -41,6 +41,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 throw new ArgumentNullException("parameters");
             }
 
+            _validatedRequest.Raw = parameters;
+
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////

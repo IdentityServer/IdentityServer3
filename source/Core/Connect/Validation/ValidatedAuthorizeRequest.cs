@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -7,6 +8,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ValidatedAuthorizeRequest
     {
+        public NameValueCollection Raw { get; set; }
+
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
