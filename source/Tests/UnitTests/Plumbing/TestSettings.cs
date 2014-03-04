@@ -99,6 +99,13 @@ namespace UnitTests.Plumbing
                     {
                         "resource"
                     },       
+                },
+                new Client
+                {
+                    ClientName = "Assertion Flow Client",
+                    ClientId = "assertionclient",
+                    ClientSecret = "secret",
+                    Flow = Flows.Assertion,
                 }
         };
 

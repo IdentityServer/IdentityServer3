@@ -65,6 +65,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Plumbing\TestAssertionValidator.cs" />
     <Compile Include="Plumbing\TestUserService.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_Valid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_ClientCredentials_Invalid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
+    <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
