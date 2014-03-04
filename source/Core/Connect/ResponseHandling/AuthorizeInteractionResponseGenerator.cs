@@ -120,31 +120,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     }
                     else
                     {
-                        // user said yes, so let's validate the scopes they granted
-                        var requestedScopes =
-                            from s in _core.GetScopes()
-                            where request.RequestedScopes.Contains(s.Name)
-                            select s;
+                        // they said yes, set scopes they chose
+                        request.ValidatedScopes.SetConsentedScopes(consent.ScopedConsented);
 
-                        // the user has consented to all required scopes requested from client
-                        // and then any others they picked on the consent screen
-                        var consentedScopes = 
-                            from s in requestedScopes
-                            where s.Required || consent.ScopedConsented.Contains(s.Name)
-                            select s;
-                        
-                        if (!consentedScopes.Any())
+                        if (!request.ValidatedScopes.Scopes.Any())
                         {
                             // they said yes, but didn't pick any scopes
                             // show consent again and provide error message
                             response.IsConsent = true;
                             response.ConsentError = "Must select at least one permission.";
-                        }
-                        else
-                        {
-                            // they said yes, and chose scopes
-                            // so adjust requested scopes to consented scopes
-                            request.RequestedScopes = consentedScopes.Select(x => x.Name).ToList();
                         }
                     }
                 }

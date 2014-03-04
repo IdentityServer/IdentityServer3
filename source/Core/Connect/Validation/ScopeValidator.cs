@@ -22,6 +22,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Audiences = new List<string>();
         }
 
+        public void SetConsentedScopes(IEnumerable<string> consentedScopes)
+        {
+            consentedScopes = consentedScopes ?? Enumerable.Empty<string>();
+            
+            Scopes.RemoveAll(scope => !scope.Required && !consentedScopes.Contains(scope.Name));
+        }
+
         public bool AreScopesValid(IEnumerable<string> requestedScopes, IEnumerable<Scope> availableScopes)
         {
             foreach (var requestedScope in requestedScopes)
