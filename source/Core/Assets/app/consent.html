@@ -56,11 +56,19 @@
                     </ul>
                 </div>
 
+                <div class="well" ng-show="model.allowRememberConsent">
+                    <label>
+                        <input class="consent-scopecheck" type="checkbox" name="RememberConsent" value="true" checked />
+                        <strong>Remember My Decision</strong>
+                    </label>
+                </div>
+
                 <div class="consent-buttons">
                     <button name="button" value="yes" class="btn btn-primary">Yes, Allow</button>
                     <button name="button" value="no" class="btn">No, Do Not Allow</button>
                     <a class="pull-right btn btn-default" target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">
-                        Details: <strong>{{model.client}}</strong>
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <strong>{{model.client}}</strong>
                     </a>
                 </div>
             </form>

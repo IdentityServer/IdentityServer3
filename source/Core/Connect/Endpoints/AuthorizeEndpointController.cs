@@ -22,6 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private AuthorizeRequestValidator _validator;
         private AuthorizeResponseGenerator _responseGenerator;
         private AuthorizeInteractionResponseGenerator _interactionGenerator;
+        IConsentService _consentService;
         private ICoreSettings _settings;
 
         public AuthorizeEndpointController(
@@ -29,6 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
+            IConsentService consentService,
             ICoreSettings settings)
         {
             _logger = logger;
@@ -36,6 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
+            _consentService = consentService;
 
             _validator = validator;
         }
@@ -200,6 +203,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         clientLogo = validatedRequest.Client.LogoUri,
                         identityScopes = idScopes.ToArray(),
                         appScopes = appScopes.ToArray(),
+                        allowRememberConsent = validatedRequest.Client.AllowRememberConsent
                     }
                 });
         }

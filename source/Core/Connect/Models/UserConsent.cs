@@ -7,6 +7,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
     {
         public string Button { get; set; }
         public string[] Scopes { get; set; }
+        public bool RememberConsent { get; set; }
 
         public bool WasConsentGranted
         {

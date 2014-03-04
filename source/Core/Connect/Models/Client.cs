@@ -12,6 +12,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public Uri LogoUri { get; set; }
         public ApplicationTypes ApplicationType { get; set; }
         public bool RequireConsent { get; set; }
+        public bool AllowRememberConsent { get; set; }
 
         public Flows Flow { get; set; }
         //public bool AllowOpenId { get; set; }

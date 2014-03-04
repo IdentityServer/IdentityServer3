@@ -15,7 +15,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
         
         public void UpdateConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
         {
-            throw new NotImplementedException();
+            // TODO
         }
     }
 }
