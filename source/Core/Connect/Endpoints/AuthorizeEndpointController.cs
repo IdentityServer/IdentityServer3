@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (interaction.IsConsent)
             {
-                return CreateConsentResult(request, parameters, consent, interaction.ConsentError);
+                return CreateConsentResult(request, parameters, interaction.ConsentError);
             }
 
             return CreateAuthorizeResponse(request);
@@ -155,24 +155,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private IHttpActionResult CreateConsentResult(
             ValidatedAuthorizeRequest validatedRequest, 
             NameValueCollection requestParameters, 
-            UserConsent consent,
             string errorMessage)
         {
-            var requestedScopes =
-                from s in _settings.GetScopes()
-                where validatedRequest.RequestedScopes.Contains(s.Name)
-                select s;
-            var consentedScopes =
-                from s in requestedScopes
-                select s;
-            if (consent != null)
-            {
-                consentedScopes =
-                    from s in consentedScopes
-                    where s.Required || consent.ScopedConsented.Contains(s.Name)
-                    select s;
-            }
-            var consentedScopeNames = consentedScopes.Select(x => x.Name);
+            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;
+            var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
 
             var idScopes =
                 from s in requestedScopes

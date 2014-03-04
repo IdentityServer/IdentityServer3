@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         // they said yes, set scopes they chose
                         request.ValidatedScopes.SetConsentedScopes(consent.ScopedConsented);
 
-                        if (!request.ValidatedScopes.Scopes.Any())
+                        if (!request.ValidatedScopes.GrantedScopes.Any())
                         {
                             // they said yes, but didn't pick any scopes
                             // show consent again and provide error message

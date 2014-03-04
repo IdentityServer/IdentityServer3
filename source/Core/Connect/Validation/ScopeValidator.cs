@@ -12,13 +12,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
         public List<string> Audiences { get; private set; }
-        public List<Scope> Scopes { get; private set; }
+        public List<Scope> RequestedScopes { get; private set; }
+        public List<Scope> GrantedScopes { get; private set; }
 
         public ScopeValidator(ILogger logger)
         {
             _logger = logger;
 
-            Scopes = new List<Scope>();
+            RequestedScopes = new List<Scope>();
+            GrantedScopes = new List<Scope>();
             Audiences = new List<string>();
         }
 
@@ -26,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             consentedScopes = consentedScopes ?? Enumerable.Empty<string>();
             
-            Scopes.RemoveAll(scope => !scope.Required && !consentedScopes.Contains(scope.Name));
+            GrantedScopes.RemoveAll(scope => !scope.Required && !consentedScopes.Contains(scope.Name));
         }
 
         public bool AreScopesValid(IEnumerable<string> requestedScopes, IEnumerable<Scope> availableScopes)
@@ -50,8 +52,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     ContainsResourceScopes = true;
                 }
 
-                Scopes.Add(scopeDetail);
+                GrantedScopes.Add(scopeDetail);
             }
+            
+            RequestedScopes.AddRange(GrantedScopes);
 
             return true;
         }
