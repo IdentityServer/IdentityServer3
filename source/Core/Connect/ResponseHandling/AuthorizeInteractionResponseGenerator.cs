@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -85,15 +87,69 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new InteractionResponse();
         }
 
-        public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user, UserConsent consent)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
                 _consent.RequiresConsent(request.Client, user, request.RequestedScopes))
             {
-                return new InteractionResponse
+                var response = new InteractionResponse();
+
+                // did user provide consent
+                if (consent == null)
                 {
-                    IsConsent = true
-                };
+                    // user was not yet shown conset screen
+                    response.IsConsent = true;
+                }
+                else
+                {
+                    request.WasConsentShown = true;
+
+                    // user was shown consent -- did they say yes or no
+                    if (consent.WasConsentGranted == false)
+                    {
+                        // no need to show consent screen again
+                        // build access denied error to return to client
+                        response.IsError = true;
+                        response.Error = new AuthorizeError { 
+                            ErrorType = ErrorTypes.Client,
+                            Error = Constants.AuthorizeErrors.AccessDenied,
+                            ResponseMode = request.ResponseMode,
+                            ErrorUri = request.RedirectUri, 
+                            State = request.State
+                        };
+                    }
+                    else
+                    {
+                        // user said yes, so let's validate the scopes they granted
+                        var requestedScopes =
+                            from s in _core.GetScopes()
+                            where request.RequestedScopes.Contains(s.Name)
+                            select s;
+
+                        // the user has consented to all required scopes requested from client
+                        // and then any others they picked on the consent screen
+                        var consentedScopes = 
+                            from s in requestedScopes
+                            where s.Required || consent.ScopedConsented.Contains(s.Name)
+                            select s;
+                        
+                        if (!consentedScopes.Any())
+                        {
+                            // they said yes, but didn't pick any scopes
+                            // show consent again and provide error message
+                            response.IsConsent = true;
+                            response.ConsentError = "Must select at least one permission.";
+                        }
+                        else
+                        {
+                            // they said yes, and chose scopes
+                            // so adjust requested scopes to consented scopes
+                            request.RequestedScopes = consentedScopes.Select(x => x.Name).ToList();
+                        }
+                    }
+                }
+                
+                return response;
             }
 
             return new InteractionResponse();
