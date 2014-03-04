@@ -7291,6 +7291,22 @@ td.visible-print {
     }
 }
 body {
-    margin-top: 65px;
+  margin-top: 65px;
+}
+.consent-buttons {
+  margin-top: 25px;
+}
+.consent-form .consent-scopecheck {
+  display: inline-block;
+  margin-right: 15px;
+}
+.consent-form .consent-scopecheck[disabled] {
+  visibility: hidden;
+}
+.consent-form .consent-description {
+  margin-left: 33px;
+}
+.consent-form .consent-description label {
+  font-weight: normal;
 }
 

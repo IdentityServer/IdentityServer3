@@ -163,28 +163,26 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var idScopes =
                 from s in requestedScopes
                 where s.IsOpenIdScope
-                let claims = (from c in s.Claims ?? Enumerable.Empty<ScopeClaim>() select c.Description)
                 select new
                 {
                     selected = consentedScopeNames.Contains(s.Name),
                     s.Name,
+                    s.DisplayName,
                     s.Description,
                     s.Emphasize,
-                    s.Required,
-                    claims
+                    s.Required
                 };
             var appScopes =
                 from s in requestedScopes
                 where !s.IsOpenIdScope
-                let claims = (from c in s.Claims ?? Enumerable.Empty<ScopeClaim>() select c.Description)
                 select new
                 {
                     selected = consentedScopeNames.Contains(s.Name),
                     s.Name,
+                    s.DisplayName,
                     s.Description,
                     s.Emphasize,
-                    s.Required,
-                    claims
+                    s.Required
                 };
             
             return new EmbeddedHtmlResult(

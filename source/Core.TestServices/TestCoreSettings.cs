@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                 new Scope
                 {
                     Name = Constants.StandardScopes.OpenId, 
-                    Description = "User identifier",
+                    DisplayName = "Your username",
                     Required = true,
                     IsOpenIdScope = true,
                     Claims = new List<ScopeClaim>
@@ -166,7 +166,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                  new Scope
                  {
                     Name = Constants.StandardScopes.Profile, 
-                    Description = "User profile",
+                    DisplayName = "Basic profile",
+                    Description = "Your basic user profile information (first name, last name, etc.). This is a really long string to see what the UI look like when someone puts in too much stuff here. I know this is not what we really want, but this is just test data (for now). KThxBye.",
                     IsOpenIdScope = true,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x, Description = x}))
@@ -174,7 +175,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                 new Scope
                 {
                     Name = Constants.StandardScopes.Email, 
-                    Description = "Email",
+                    DisplayName = "Your email address",
                     IsOpenIdScope = true,
                     Emphasize = true,
                     Claims = new List<ScopeClaim>
@@ -194,14 +195,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                 new Scope
                 {
                     Name = "read",
-                    Description = "Read data",
+                    DisplayName = "Read data",
                     IsOpenIdScope = false,
                     Emphasize = false,
                 },
                 new Scope
                 {
                     Name = "write",
-                    Description = "Write data",
+                    DisplayName = "Write data",
                     IsOpenIdScope = false,
                     Emphasize = true
 
