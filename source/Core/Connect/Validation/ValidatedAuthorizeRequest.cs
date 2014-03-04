@@ -20,6 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public Client Client { get; set; }
         public Uri RedirectUri { get; set; }
         public List<string> RequestedScopes { get; set; }
+        public bool WasConsentShown { get; set; }
         public string State { get; set; }
         public string UiLocales { get; set; }
         public bool IsOpenIdRequest { get; set; }

@@ -9,6 +9,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public bool IsConsent { get; set; }
 
         public AuthorizeError Error { get; set; }
+        public string ConsentError { get; set; }
         public SignInMessage SignInMessage { get; set; }
     }
 }
