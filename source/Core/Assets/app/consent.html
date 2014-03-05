@@ -30,6 +30,7 @@
                                 <strong>{{scope.displayName}}</strong>
                                 <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
                             </label>
+                            <span ng-show="scope.required"><em>(required)</em></span>
                             <div class="consent-description" ng-show="scope.description">
                                 <label for="scopes_{{scope.name}}">{{scope.description}}</label>
                             </div>
@@ -49,14 +50,16 @@
                                 <strong>{{scope.displayName}}</strong>
                                 <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
                             </label>
+                            <span ng-show="scope.required"><em>(required)</em></span>
                             <div class="consent-description" ng-show="scope.description">
+                                <span ng-show="scope.required"><em>(required)</em></span>
                                 <label for="scopes_{{scope.name}}">{{scope.description}}</label>
                             </div>
                         </li>
                     </ul>
                 </div>
 
-                <div class="well" ng-show="model.allowRememberConsent">
+                <div class="consent-remember" ng-show="model.allowRememberConsent">
                     <label>
                         <input class="consent-scopecheck" type="checkbox" name="RememberConsent" value="true" checked />
                         <strong>Remember My Decision</strong>

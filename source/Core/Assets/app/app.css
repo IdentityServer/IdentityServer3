@@ -6,14 +6,14 @@ body {
 }
 .consent-form .consent-scopecheck {
   display: inline-block;
-  margin-right: 15px;
-}
-.consent-form .consent-scopecheck[disabled] {
-  visibility: hidden;
+  margin-right: 5px;
 }
 .consent-form .consent-description {
-  margin-left: 33px;
+  margin-left: 25px;
 }
 .consent-form .consent-description label {
   font-weight: normal;
+}
+.consent-form .consent-remember {
+  padding-left: 16px;
 }
