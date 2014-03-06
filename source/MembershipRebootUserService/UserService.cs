@@ -11,11 +11,13 @@ using Thinktecture.IdentityModel.Extensions;
 
 namespace MembershipRebootUserService
 {
-    public class UserService : IUserService, IDisposable
+    public class UserService : IUserService
     {
         UserAccountService userAccountService;
         public UserService(UserAccountService userAccountService)
         {
+            if (userAccountService == null) throw new ArgumentNullException("userAccountService");
+
             this.userAccountService = userAccountService;
         }
 
@@ -62,10 +64,6 @@ namespace MembershipRebootUserService
             claims.AddRange(acct.Claims.Select(x=>new Claim(x.Type, x.Value)));
 
             return claims.Where(x=>requestedClaimTypes.Contains(x.Type));
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

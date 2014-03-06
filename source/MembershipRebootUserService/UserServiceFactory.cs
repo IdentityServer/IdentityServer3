@@ -17,7 +17,7 @@ namespace MembershipRebootUserService
             var repo = new DefaultUserAccountRepository();
             var userAccountService = new UserAccountService(config, repo);
             var userSvc = new UserService(userAccountService);
-            return userSvc;
+            return new DisposableUserService(userSvc, repo);
         }
 
         static MembershipRebootConfiguration config;
