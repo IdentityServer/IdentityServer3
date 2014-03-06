@@ -199,14 +199,21 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     DisplayName = "Read data",
                     IsOpenIdScope = false,
                     Emphasize = false,
+                    Audience = "applicationA"
                 },
                 new Scope
                 {
                     Name = "write",
                     DisplayName = "Write data",
                     IsOpenIdScope = false,
+                    Emphasize = true,
+                    Audience = "applicationB"
+                },
+                new Scope
+                {
+                    Name = "offline_access",
+                    DisplayName = "Allow offline access",
                     Emphasize = true
-
                 }
              };
         }

@@ -10,6 +10,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
         public bool IsOpenIdScope { get; set; }
+        public string Audience { get; set; }
         public IEnumerable<ScopeClaim> Claims { get; set; }
     }
 }
