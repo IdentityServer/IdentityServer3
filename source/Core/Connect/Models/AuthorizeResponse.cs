@@ -11,5 +11,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public int AccessTokenLifetime { get; set; }
         public string Code { get; set; }
         public string State { get; set; }
+        public string Scope { get; set; }
     }
 }

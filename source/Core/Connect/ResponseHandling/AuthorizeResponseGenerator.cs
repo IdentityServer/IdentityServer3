@@ -5,6 +5,7 @@ using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -100,7 +101,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 AccessToken = accessTokenValue,
                 AccessTokenLifetime = accessTokenLifetime,
                 IdentityToken = jwt,
-                State = request.State
+                State = request.State,
+                Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString()
             };
         }
     }
