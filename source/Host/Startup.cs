@@ -14,8 +14,11 @@ namespace Thinktecture.IdentityServer.Host
             // idsrv core
             app.Map("/core", coreApp =>
                 {
+                    var factory = TestOptionsFactory.Create();
+                    factory.UserService = MembershipRebootUserService.UserServiceFactory.Factory;
+
                     coreApp.UseIdentityServerCore(new IdentityServerCoreOptions{
-                        Factory = TestOptionsFactory.Create()
+                        Factory = factory
                     });
                 });
         }

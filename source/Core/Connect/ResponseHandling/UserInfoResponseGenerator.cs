@@ -27,13 +27,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             var claims = _profile.GetProfileData(
                 request.AccessToken.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
-            
-            foreach (var claim in claims)
+            if (claims != null)
             {
-                profileData.Add(claim.Type, claim.Value);
-            }
+                foreach (var claim in claims)
+                {
+                    profileData.Add(claim.Type, claim.Value);
+                }
 
-            _logger.InformationFormat("Profile service returned to the following claim types: {0}", claims.Select(c => c.Type).ToSpaceSeparatedString());
+                _logger.InformationFormat("Profile service returned to the following claim types: {0}", claims.Select(c => c.Type).ToSpaceSeparatedString());
+            }
+            else
+            {
+                _logger.InformationFormat("Profile service returned no claims (null)");
+            }
 
             return profileData;
         }

@@ -32,7 +32,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (additionalClaims.Count > 0)
             {
-                outputClaims.AddRange(profile.GetProfileData(user.GetSubject(), additionalClaims));
+                var claims = profile.GetProfileData(user.GetSubject(), additionalClaims);
+                if (claims != null)
+                {
+                    outputClaims.AddRange(claims);
+                }
             }
 
             return outputClaims;
