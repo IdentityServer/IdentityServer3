@@ -130,11 +130,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
                             response.IsConsent = true;
                             response.ConsentError = "Must select at least one permission.";
                         }
-
-                        if (request.Client.AllowRememberConsent && consent.RememberConsent)
+                        
+                        if (request.Client.AllowRememberConsent)
                         {
                             // remember consent
-                            _consent.UpdateConsent(request.Client, user, request.ValidatedScopes.GrantedScopes.Select(x => x.Name));
+                            var scopes = Enumerable.Empty<string>();
+                            if (consent.RememberConsent)
+                            {
+                                // remember what user actually selected
+                                scopes = request.ValidatedScopes.GrantedScopes.Select(x => x.Name);
+                            }
+                            _consent.UpdateConsent(request.Client, user, scopes);
                         }
                     }
                 }
