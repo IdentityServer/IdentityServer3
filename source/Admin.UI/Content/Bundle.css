@@ -5776,4 +5776,7 @@ button.close {
 .container {
   margin-top: 30px;
 }
+.dropdown .dropdown-toggle {
+  cursor: pointer;
+}
 

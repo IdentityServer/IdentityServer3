@@ -240,12 +240,16 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
 var app = angular.module("app", ['ngRoute']);
 app.config(function ($routeProvider) {
     $routeProvider
-        .when("/", {
-            controller: 'UsersCtrl',
-            templateUrl: 'templates/users.html'
+        .when("/list", {
+            controller: 'ListUsersCtrl',
+            templateUrl: 'templates/users/list.html'
+        })
+        .when("/create", {
+            controller: 'NewUserCtrl',
+            templateUrl: 'templates/users/new.html'
         })
         .otherwise({
-            redirectTo:'/'
+            redirectTo:'/list'
         });
 });
 
@@ -272,7 +276,7 @@ app.controller("LayoutCtrl", function ($scope, admin) {
     });
 });
 
-app.controller("UsersCtrl", function ($scope, users) {
+app.controller("ListUsersCtrl", function ($scope, users) {
     $scope.model = {};
 
     $scope.search = function (filter) {
@@ -282,5 +286,9 @@ app.controller("UsersCtrl", function ($scope, users) {
     };
 
     $scope.search();
+});
+
+app.controller("NewUserCtrl", function ($scope, users) {
+    $scope.model = {};
 });
 

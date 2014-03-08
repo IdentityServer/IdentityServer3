@@ -183,7 +183,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Templates\users.html" />
+    <Content Include="Templates\users\new.html" />
+    <Content Include="Templates\users\list.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

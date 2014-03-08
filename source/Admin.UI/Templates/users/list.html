@@ -1,0 +1,33 @@
+﻿
+<div class="page-header">
+    <h1>Users</h1>
+</div>
+
+<form ng-submit="search(filter)" class="form-horizontal">
+    <div class="form-group">
+        <label for="filter" class="control-label col-sm-1">Filter:</label>
+        <div class="col-sm-6">
+            <input type="text" id="filter" ng-model="filter" class="form-control" placeholder="Filter">
+        </div>
+        <div class="col-sm-1"><button class="btn btn-primary">Search</button></div>
+    </div>
+</form>
+
+<div class="row" ng-hide="model.users">
+    <div class="col-sm-8">
+        <div class="alert alert-info">No Users Found</div>
+    </div>
+</div>
+
+<table class="table table-condensed" ng-show="model.users">
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Username</th>
+        </tr>
+    </thead>
+    <tr ng-repeat="user in model.users">
+        <td>{{user.subject}}</td>
+        <td>{{user.username}}</td>
+    </tr>
+</table>

@@ -10,7 +10,16 @@
         <div class="navbar-header">
             <a href="#/" class="navbar-brand">IdentityServer Administration</a>
         </div>
-        <span class="navbar-text">{{model.username}}</span>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <span class="dropdown-toggle navbar-text" data-toggle="dropdown">Users <b class="caret"></b></span>
+                <ul class="dropdown-menu">
+                    <li><a href="#/list">Show All Users</a></li>
+                    <li><a href="#/create">Create New User</a></li>
+                </ul>
+            </li>
+        </ul>
+        <span class="navbar-text pull-right">{{model.username}}</span>
     </div>
 
     <div class="container">
