@@ -5,15 +5,16 @@
     <title>IdentityServer Administration</title>
     <link href="Content/Bundle.min.css" rel="stylesheet" />
 </head>
-<body lang="en">
+<body lang="en" ng-app="app" ng-controller="LayoutCtrl" ng-cloak>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
-            <a href="#" class="navbar-brand">IdentityServer Administration</a>
+            <a href="#/" class="navbar-brand">IdentityServer Administration</a>
         </div>
+        <span class="navbar-text">{{model.username}}</span>
     </div>
 
-    <div class="container" ng-cloak>
-        <ng-include src="'{rootUrl}/' + layout.pageUrl"></ng-include>
+    <div class="container">
+        <ng-view></ng-view>
     </div>
 
     <script src="Scripts/Bundle.js"></script>

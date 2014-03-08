@@ -161,8 +161,12 @@
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
     <None Include="Scripts\Bundle.js.bundle" />
-    <Content Include="Scripts\App\App.js" />
+    <Content Include="Scripts\App\app.js" />
     <None Include="Scripts\Libs\jquery-2.1.0.intellisense.js" />
+    <Content Include="Scripts\Libs\angular-route.js" />
+    <Content Include="Scripts\Libs\angular-route.min.js" />
+    <Content Include="Scripts\Libs\angular.1.2.13.js" />
+    <Content Include="Scripts\Libs\angular.1.2.13.min.js" />
     <Content Include="Scripts\Libs\jquery-2.1.0.js" />
     <Content Include="Scripts\Libs\jquery-2.1.0.min.js" />
     <Content Include="Scripts\Libs\jquery-2.1.0.min.map" />
@@ -179,6 +183,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Templates\users.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +204,7 @@
       <Name>UserAdmin.Api</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

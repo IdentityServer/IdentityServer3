@@ -17,13 +17,17 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Configuration
             if (resolver == null) throw new ArgumentNullException("resolver");
 
             var apiConfig = new HttpConfiguration();
+            apiConfig.MapHttpAttributeRoutes();
             apiConfig.DependencyResolver = resolver;
+            
             apiConfig.SuppressDefaultHostAuthentication();
             apiConfig.Filters.Add(new HostAuthenticationAttribute("Bearer"));
-            apiConfig.MapHttpAttributeRoutes();
+            //apiConfig.Filters.Add(new AuthorizeAttribute());
+            
             apiConfig.Formatters.Remove(apiConfig.Formatters.XmlFormatter);
             apiConfig.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
                 new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+            
             app.UseWebApi(apiConfig);
         }
     }
