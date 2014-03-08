@@ -16,9 +16,12 @@ namespace Thinktecture.IdentityServer.Admin.UI
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseIdentityServerUserAdmin(new IdentityServerUserAdminConfiguration()
+            app.Map("/api", api =>
             {
-                UserManagerFactory = MembershipRebootUserManagerFactory.Create
+                api.UseIdentityServerUserAdmin(new IdentityServerUserAdminConfiguration()
+                {
+                    UserManagerFactory = MembershipRebootUserManagerFactory.Create
+                });
             });
         }
     }
