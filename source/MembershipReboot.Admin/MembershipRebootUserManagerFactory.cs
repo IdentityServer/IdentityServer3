@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BrockAllen.MembershipReboot;
+using BrockAllen.MembershipReboot.Ef;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +11,18 @@ namespace MembershipReboot.IdentityServer.Admin
 {
     public class MembershipRebootUserManagerFactory
     {
+        static MembershipRebootConfiguration config;
+        static MembershipRebootUserManagerFactory()
+        {
+            config = new MembershipRebootConfiguration();
+            config.PasswordHashingIterationCount = 10000;
+        }
+        
         public static IUserManager Create()
         {
-            return new MembershipRebootUserManager();
+            var repo = new DefaultUserAccountRepository();
+            var svc = new UserAccountService(config, repo);
+            return new MembershipRebootUserManager(svc, repo, repo);
         }
     }
 }

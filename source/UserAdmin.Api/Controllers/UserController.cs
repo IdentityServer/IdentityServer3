@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -19,9 +21,15 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
             this.userManager = userManager;
         }
 
-        public IHttpActionResult Get()
+        public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(1);
+            var result = await userManager.QueryAsync(null, 0, 100);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Result);
+            }
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
         }
     }
 }

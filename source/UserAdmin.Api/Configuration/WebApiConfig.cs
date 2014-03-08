@@ -21,6 +21,7 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Configuration
             apiConfig.SuppressDefaultHostAuthentication();
             apiConfig.Filters.Add(new HostAuthenticationAttribute("Bearer"));
             apiConfig.MapHttpAttributeRoutes();
+            apiConfig.Formatters.Remove(apiConfig.Formatters.XmlFormatter);
             apiConfig.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
                 new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
             app.UseWebApi(apiConfig);

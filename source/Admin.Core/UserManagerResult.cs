@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Admin.Core
 {
-    public class Result
+    public class UserManagerResult
     {
-        public static readonly Result Success = new Result();
+        public static readonly UserManagerResult Success = new UserManagerResult();
         
-        public Result()
+        public UserManagerResult(params string[] errors)
         {
-        }
-        public Result(IEnumerable<string> errors)
-        {
-            if (errors == null) throw new ArgumentNullException("errors");
             this.Errors = errors;
         }
 
