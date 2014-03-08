@@ -171,9 +171,9 @@
       <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MembershipRebootUserService\MembershipRebootUserService.csproj">
+    <ProjectReference Include="..\MembershipRebootUserService\MembershipReboot.UserService.csproj">
       <Project>{9eb9f5c7-49e1-440b-923f-bb842d9436d2}</Project>
-      <Name>MembershipRebootUserService</Name>
+      <Name>MembershipReboot.UserService</Name>
     </ProjectReference>
     <ProjectReference Include="..\ServerAdmin.Api\ServerAdmin.Api.csproj">
       <Project>{2bf02e9a-6c40-4961-85ba-538f6461b72a}</Project>

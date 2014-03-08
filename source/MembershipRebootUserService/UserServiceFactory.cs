@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipRebootUserService
+namespace MembershipReboot.IdentityServer.UserService
 {
     public class UserServiceFactory
     {

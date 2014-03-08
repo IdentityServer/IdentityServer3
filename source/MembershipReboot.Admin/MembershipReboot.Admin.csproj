@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9EB9F5C7-49E1-440B-923F-BB842D9436D2}</ProjectGuid>
+    <ProjectGuid>{DDCE2A99-EE37-42E3-A84E-00957F770B52}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MembershipRebootUserService</RootNamespace>
-    <AssemblyName>MembershipRebootUserService</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RootNamespace>MembershipReboot.IdentityServer.Admin</RootNamespace>
+    <AssemblyName>MembershipReboot.IdentityServer.Admin</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,21 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BrockAllen.MembershipReboot, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BrockAllen.MembershipReboot.7.0.0-beta-5\lib\net45\BrockAllen.MembershipReboot.dll</HintPath>
+    <Reference Include="BrockAllen.MembershipReboot">
+      <HintPath>..\packages\BrockAllen.MembershipReboot.7.0.0-beta-6\lib\net45\BrockAllen.MembershipReboot.dll</HintPath>
     </Reference>
-    <Reference Include="BrockAllen.MembershipReboot.Ef, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BrockAllen.MembershipReboot.Ef.7.0.0-beta-5\lib\net45\BrockAllen.MembershipReboot.Ef.dll</HintPath>
+    <Reference Include="BrockAllen.MembershipReboot.Ef">
+      <HintPath>..\packages\BrockAllen.MembershipReboot.Ef.7.0.0-beta-6\lib\net45\BrockAllen.MembershipReboot.Ef.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -56,27 +51,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.1.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisposableUserService.cs" />
-    <Compile Include="UserService.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="MembershipRebootUserManager.cs" />
+    <Compile Include="MembershipRebootUserManagerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserServiceFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Admin.Core\Admin.Core.csproj">
+      <Project>{319e13dd-c16a-4936-b179-bbfba52c693b}</Project>
+      <Name>Admin.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
