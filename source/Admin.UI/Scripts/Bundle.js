@@ -249,21 +249,38 @@ app.config(function ($routeProvider) {
         });
 });
 
-app.service("adminService", function ($http) {
+app.service("admin", function ($http) {
     this.getAdminName = function () {
         return $http.get("api/admin").then(function (response) {
             return response.data;
         });
     };
 });
+app.service("users", function ($http) {
+    this.getUsers = function (filter, start, count) {
+        return $http.get("api/users", { params: {filter:filter, start:start, count:count} }).then(function (response) {
+            return response.data;
+        });
+    };
+});
 
-app.controller("LayoutCtrl", function ($scope, adminService) {
+app.controller("LayoutCtrl", function ($scope, admin) {
     $scope.model = {};
 
-    adminService.getAdminName().then(function (data) {
+    admin.getAdminName().then(function (data) {
         $scope.model.username = data.username;
     });
 });
 
-app.controller("UsersCtrl", function ($scope) {
+app.controller("UsersCtrl", function ($scope, users) {
+    $scope.model = {};
+
+    $scope.search = function (filter) {
+        users.getUsers(filter, 0, 20).then(function (result) {
+            $scope.model.users = result.users;
+        });
+    };
+
+    $scope.search();
 });
+

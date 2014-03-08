@@ -21,9 +21,9 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
             this.userManager = userManager;
         }
 
-        public async Task<IHttpActionResult> GetAsync()
+        public async Task<IHttpActionResult> GetAsync(string filter = null, int start = 0, int count = 100)
         {
-            var result = await userManager.QueryAsync(null, 0, 100);
+            var result = await userManager.QueryAsync(filter, start, count);
             if (result.IsSuccess)
             {
                 return Ok(result.Result);
