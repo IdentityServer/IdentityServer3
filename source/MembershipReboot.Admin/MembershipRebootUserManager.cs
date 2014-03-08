@@ -1,6 +1,7 @@
 ﻿using BrockAllen.MembershipReboot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -39,12 +40,19 @@ namespace MembershipReboot.IdentityServer.Admin
             }
         }
 
-        public Task<UserManagerResult> CreateAsync(string username, IEnumerable<System.Security.Claims.Claim> claims)
+        public Task<UserManagerResult> CreateAsync(string username, string password)
         {
+            try
+            {
+                this.userAccountService.CreateAccount(username, password, null);
+            }
+            catch(ValidationException ex)
+            {
+                return Task.FromResult(new UserManagerResult(ex.Message));
+            }
+
             return Task.FromResult(UserManagerResult.Success);
         }
-
-
 
         public Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count)
         {

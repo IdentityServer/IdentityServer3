@@ -13,7 +13,12 @@
     </div>
 </form>
 
-<div class="row" ng-hide="model.users">
+<div class="row" ng-show="model.waiting">
+    <div class="col-sm-8">
+        <div class="alert alert-info">Please wait...</div>
+    </div>
+</div>
+<div class="row" ng-hide="model.users || model.waiting">
     <div class="col-sm-8">
         <div class="alert alert-info">No Users Found</div>
     </div>

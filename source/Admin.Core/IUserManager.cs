@@ -9,7 +9,7 @@ namespace Thinktecture.IdentityServer.Admin.Core
 {
     public interface IUserManager
     {
-        Task<UserManagerResult> CreateAsync(string username, IEnumerable<Claim> claims);
+        Task<UserManagerResult> CreateAsync(string username, string password);
         Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count);
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 <div class="page-header">
-    <h1>Create New User</h1>
+    <h1>Edit User : {{model.id}}</h1>
 </div>
 
 <div class="row" ng-show="model.message">
@@ -20,8 +20,7 @@
                 <input type="password" id="pwd" class="form-control" ng-model="pwd">
             </div>
             <div>
-                <button class="btn btn-primary">Create</button>
-                <a ng-show="model.last" class="btn btn-default" href="#/edit/{{model.last}}">View User {{model.last}}</a>
+                <button class="btn btn-primary">Update</button>
             </div>
         </form>
     </div>

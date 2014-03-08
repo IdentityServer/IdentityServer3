@@ -16,6 +16,7 @@ namespace MembershipReboot.IdentityServer.Admin
         {
             config = new MembershipRebootConfiguration();
             config.PasswordHashingIterationCount = 10000;
+            config.RequireAccountVerification = false;
         }
         
         public static IUserManager Create()

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Admin.Core;
+using Thinktecture.IdentityServer.UserAdmin.Api.Models;
 
 namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
 {
@@ -30,6 +31,33 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
             }
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
+        }
+
+        public async Task<IHttpActionResult> PostAsync(CreateUser model)
+        {
+            if (model == null)
+            {
+                ModelState.AddModelError("", "Data required");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var result = await this.userManager.CreateAsync(model.Username, model.Password);
+                if (result.IsError)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessage());
+            }
+            
+            return StatusCode(HttpStatusCode.Accepted);
         }
     }
 }
