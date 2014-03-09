@@ -14,9 +14,11 @@ namespace Owin
         {
             if (app == null) throw new ArgumentNullException("app");
             if (config == null) throw new ArgumentNullException("config");
+            //config.Validate();
 
+            //app.UseJsonWebToken();
             var resolver = AutofacConfig.Configure(config);
-            WebApiConfig.Configure(app, resolver);
+            WebApiConfig.Configure(app, resolver, config);
         }
     }
 }

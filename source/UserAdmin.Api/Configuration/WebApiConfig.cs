@@ -13,10 +13,11 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Configuration
 {
     class WebApiConfig
     {
-        public static void Configure(IAppBuilder app, IDependencyResolver resolver)
+        public static void Configure(IAppBuilder app, IDependencyResolver resolver, IdentityServerUserAdminConfiguration config)
         {
             if (app == null) throw new ArgumentNullException("app");
             if (resolver == null) throw new ArgumentNullException("resolver");
+            if (config == null) throw new ArgumentNullException("config");
 
             var apiConfig = new HttpConfiguration();
             apiConfig.MapHttpAttributeRoutes();
@@ -24,7 +25,7 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Configuration
 
             apiConfig.SuppressDefaultHostAuthentication();
             apiConfig.Filters.Add(new HostAuthenticationAttribute("Bearer"));
-            //apiConfig.Filters.Add(new AuthorizeAttribute());
+            //apiConfig.Filters.Add(new AuthorizeAttribute(){Roles=config.AdminRoleName});
 
             apiConfig.Formatters.Remove(apiConfig.Formatters.XmlFormatter);
             apiConfig.Formatters.JsonFormatter.SerializerSettings.ContractResolver =

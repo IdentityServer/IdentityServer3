@@ -20,6 +20,8 @@ namespace Thinktecture.IdentityServer.Admin.UI
             {
                 api.UseIdentityServerUserAdmin(new IdentityServerUserAdminConfiguration()
                 {
+                    //OAuthAuthorizationEndpoint = "/authorize",
+                    //AdminRoleName = "Foo",
                     UserManagerFactory = MembershipRebootUserManagerFactory.Create
                 });
             });
