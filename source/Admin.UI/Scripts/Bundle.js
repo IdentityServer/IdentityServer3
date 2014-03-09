@@ -249,6 +249,14 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
                 controller: 'ListUsersCtrl',
                 templateUrl: 'templates/users/list.html'
             })
+            .when("/list/:filter", {
+                controller: 'ListUsersCtrl',
+                templateUrl: 'templates/users/list.html'
+            })
+            .when("/list/:filter/:page", {
+                controller: 'ListUsersCtrl',
+                templateUrl: 'templates/users/list.html'
+            })
             .when("/create", {
                 controller: 'NewUserCtrl',
                 templateUrl: 'templates/users/new.html'
@@ -300,33 +308,65 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
         $scope.model = {};
     });
 
-    app.controller("ListUsersCtrl", function ($scope, users) {
-        var pageSize = 20;
-        $scope.model = {
-            filter: null,
-            page: 1,
-            totalPages: 0
-        };
+    app.controller("ListUsersCtrl", function ($scope, users, $sce, $routeParams) {
+        $scope.model = {};
 
-        //$scope.pager = [
-        //    //{ number: "&laquo;", page: } 
-        //];
-        //for (var i = 1; i < 5; i++) {
-        //    $scope.pager.push({ page: $scope.model.page - 1 });
-        //}
+        function PagerButton(text, page, enabled, current) {
+            this.text = $sce.trustAsHtml(text + "");
+            this.page = page;
+            this.enabled = enabled;
+            this.current = current;
+        }
 
-        $scope.search = function (filter) {
+        function Pager(start, count, total, pageSize) {
+            this.start = start;
+            this.count = count;
+            this.total = total;
+            this.pageSize = pageSize;
+
+            this.totalPages = Math.ceil(total / pageSize);
+            this.currentPage = (start / pageSize) + 1;
+            this.canPrev = this.currentPage > 1;
+            this.canNext = this.currentPage < this.totalPages;
+
+            this.buttons = [];
+
+            var totalButtons = 7; // ensure this is odd
+            var startButton = 1;
+            if (this.currentPage > Math.floor(totalButtons/2)) startButton = this.currentPage - Math.floor(totalButtons/2);
+
+            var endButton = startButton + totalButtons - 1;
+            if (endButton >= this.totalPages) endButton = this.totalPages;
+            if (this.totalPages > totalButtons &&
+                (endButton - startButton + 1) < totalButtons) {
+                startButton = endButton - totalButtons + 1;
+            }
+
+            this.buttons.push(new PagerButton("&laquo;", 1, endButton > totalButtons));
+
+            for (var i = startButton; i <= endButton; i++) {
+                this.buttons.push(new PagerButton(i, i, true, i === this.currentPage));
+            }
+
+            this.buttons.push(new PagerButton("&raquo;", this.totalPages, endButton < this.totalPages));
+        }
+
+        $scope.search = function (filter, page) {
             $scope.model.filter = filter;
             $scope.model.users = null;
+            $scope.model.pager = null;
             $scope.model.waiting = true;
 
-            users.getUsers(filter, 0, pageSize).then(function (result) {
+            users.getUsers(filter, (page-1)*10, 10).then(function (result) {
                 $scope.model.waiting = false;
                 $scope.model.users = result.users;
+                if (result.users && result.users.length) {
+                    $scope.model.pager = new Pager(result.start, result.count, result.total, 10);
+                }
             });
         };
 
-        $scope.search();
+        $scope.search($routeParams.filter, $routeParams.page);
     });
 
     app.controller("NewUserCtrl", function ($scope, users) {

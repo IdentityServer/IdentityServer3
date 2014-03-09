@@ -5779,4 +5779,15 @@ button.close {
 .dropdown .dropdown-toggle {
   cursor: pointer;
 }
+.pager-text {
+  margin-top: 26px;
+}
+.page-header h1 .badge {
+  position: relative;
+  top: -5px;
+}
+.page-header .label {
+  position: relative;
+  top: 15px;
+}
 

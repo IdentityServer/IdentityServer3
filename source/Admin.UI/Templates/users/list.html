@@ -1,30 +1,31 @@
 ﻿
 <div class="page-header">
-    <h1>Users</h1>
+    <div class="pull-right">
+        <span ng-show="model.waiting" class="label label-info">Searching...</span>
+    </div>
+    <h1>Users <span ng-show="model.pager" class="badge">{{model.pager.total}} found</span></h1>
 </div>
 
-<form ng-submit="search(model.filter)" class="form-horizontal">
-    <div class="form-group">
-        <label for="filter" class="control-label col-sm-1">Filter:</label>
-        <div class="col-sm-6">
+<form ng-submit="search(model.filter)" class="form-group">
+    <div class="col-sm-6">
+        <div class="input-group form-group">
+            <!--<span class="input-group-addon"><label for="filter">Filter</label></span>-->
             <input type="text" id="filter" ng-model="model.filter" class="form-control" placeholder="Filter" autofocus>
+            <span class="input-group-btn">
+                <button class="btn btn-primary">Search</button>
+            </span>
         </div>
-        <div class="col-sm-1"><button class="btn btn-primary">Search</button></div>
     </div>
 </form>
 
-<div class="row" ng-show="model.waiting">
-    <div class="col-sm-8">
-        <div class="alert alert-info">Please wait...</div>
-    </div>
-</div>
 <div class="row" ng-hide="model.users || model.waiting">
     <div class="col-sm-8">
         <div class="alert alert-info">No Users Found</div>
     </div>
 </div>
+
 <div class="row" ng-show="model.users">
-    <table class="table table-condensed table-responsive">
+    <table class="table table-condensed table-responsive table-striped xtable-bordered">
         <thead>
             <tr>
                 <th></th>
@@ -38,16 +39,18 @@
             <td>{{user.username}}</td>
         </tr>
     </table>
+</div>
 
-    <div class="center-block">
-        <ul class="pagination">
-            <li><a href="#">&laquo;</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">&raquo;</a></li>
+<div class="row" ng-show="model.pager">
+    <div class="col-sm-8">
+        <ul class="center-block pagination">
+            <li ng-repeat="button in model.pager.buttons"
+                ng-class="!button.enabled ? 'disabled' : (button.current ? 'active':'')">
+                <a href="#/list/{{model.filter}}/{{button.page}}" ng-bind-html="button.text"></a>
+            </li>
         </ul>
+    </div>
+    <div class="col-sm-4 pager-text">
+        <strong>Page</strong> <span class="badge bg-active">{{model.pager.currentPage}}</span> <strong>of</strong> <span class="badge">{{model.pager.totalPages}}</span>
     </div>
 </div>
