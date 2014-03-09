@@ -9,15 +9,7 @@
                 controller: 'HomeCtrl',
                 templateUrl: 'templates/home.html'
             })
-            .when("/list", {
-                controller: 'ListUsersCtrl',
-                templateUrl: 'templates/users/list.html'
-            })
-            .when("/list/:filter", {
-                controller: 'ListUsersCtrl',
-                templateUrl: 'templates/users/list.html'
-            })
-            .when("/list/:filter/:page", {
+            .when("/list/:filter?/:page?", {
                 controller: 'ListUsersCtrl',
                 templateUrl: 'templates/users/list.html'
             })
