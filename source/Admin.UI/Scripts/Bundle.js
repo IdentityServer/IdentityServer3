@@ -325,6 +325,7 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
             this.buttons = [];
 
             var totalButtons = 7; // ensure this is odd
+            var pageSkip = 10;
             var startButton = 1;
             if (this.currentPage > Math.floor(totalButtons/2)) startButton = this.currentPage - Math.floor(totalButtons/2);
 
@@ -335,13 +336,21 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
                 startButton = endButton - totalButtons + 1;
             }
 
-            this.buttons.push(new PagerButton("&laquo;", 1, endButton > totalButtons));
+            var prevPage = this.currentPage - pageSkip;
+            if (prevPage < 1) prevPage = 1;
+
+            var nextPage = this.currentPage + pageSkip;
+            if (nextPage > this.totalPages) nextPage = this.totalPages;
+
+            this.buttons.push(new PagerButton("<strong>&lt;&lt;</strong>", 1, endButton > totalButtons));
+            this.buttons.push(new PagerButton("<strong>&lt;</strong>", prevPage, endButton > totalButtons));
 
             for (var i = startButton; i <= endButton; i++) {
                 this.buttons.push(new PagerButton(i, i, true, i === this.currentPage));
             }
 
-            this.buttons.push(new PagerButton("&raquo;", this.totalPages, endButton < this.totalPages));
+            this.buttons.push(new PagerButton("<strong>&gt;</strong>", nextPage, endButton < this.totalPages));
+            this.buttons.push(new PagerButton("<strong>&gt;&gt;</strong>", this.totalPages, endButton < this.totalPages));
         }
 
         $scope.search = function (filter) {
