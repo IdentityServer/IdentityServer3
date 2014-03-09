@@ -64,7 +64,7 @@
         $scope.model = {};
     });
 
-    app.controller("ListUsersCtrl", function ($scope, users, $sce, $routeParams) {
+    app.controller("ListUsersCtrl", function ($scope, users, $sce, $routeParams, $location) {
         $scope.model = {};
 
         function PagerButton(text, page, enabled, current) {
@@ -74,14 +74,15 @@
             this.current = current;
         }
 
-        function Pager(start, count, total, pageSize) {
-            this.start = start;
-            this.count = count;
-            this.total = total;
+        function Pager(result, pageSize, filter) {
+            this.start = result.start;
+            this.count = result.count;
+            this.total = result.total;
             this.pageSize = pageSize;
+            this.filter = filter;
 
-            this.totalPages = Math.ceil(total / pageSize);
-            this.currentPage = (start / pageSize) + 1;
+            this.totalPages = Math.ceil(this.total / pageSize);
+            this.currentPage = (this.start / pageSize) + 1;
             this.canPrev = this.currentPage > 1;
             this.canNext = this.currentPage < this.totalPages;
 
@@ -107,22 +108,31 @@
             this.buttons.push(new PagerButton("&raquo;", this.totalPages, endButton < this.totalPages));
         }
 
-        $scope.search = function (filter, page) {
-            $scope.model.filter = filter;
-            $scope.model.users = null;
-            $scope.model.pager = null;
-            $scope.model.waiting = true;
-
-            users.getUsers(filter, (page-1)*10, 10).then(function (result) {
-                $scope.model.waiting = false;
-                $scope.model.users = result.users;
-                if (result.users && result.users.length) {
-                    $scope.model.pager = new Pager(result.start, result.count, result.total, 10);
-                }
-            });
+        $scope.search = function (filter) {
+            var url = "/list";
+            if (filter) {
+                url += "/" + filter;
+            }
+            $location.url(url);
         };
 
-        $scope.search($routeParams.filter, $routeParams.page);
+        var filter = $routeParams.filter;
+        $scope.model.filter = filter;
+        $scope.model.users = null;
+        $scope.model.pager = null;
+        $scope.model.waiting = true;
+
+        var itemsPerPage = 10;
+        var page = $routeParams.page || 1;
+        var startItem = (page - 1) * itemsPerPage;
+
+        users.getUsers(filter, startItem, itemsPerPage).then(function (result) {
+            $scope.model.waiting = false;
+            $scope.model.users = result.users;
+            if (result.users && result.users.length) {
+                $scope.model.pager = new Pager(result, itemsPerPage, filter);
+            }
+        });
     });
 
     app.controller("NewUserCtrl", function ($scope, users) {
