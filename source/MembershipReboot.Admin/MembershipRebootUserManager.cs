@@ -40,6 +40,49 @@ namespace MembershipReboot.IdentityServer.Admin
             }
         }
 
+        public Task<UserManagerMetadata> GetMetadataAsync()
+        {
+            var claims = new ClaimMetadata[]
+            {
+                new ClaimMetadata{
+                    ClaimType = Constants.ClaimTypes.Subject,
+                    DisplayName = "Subject",
+                }
+            };
+
+            return Task.FromResult(new UserManagerMetadata
+            {
+                UniqueIdentitiferClaimType = Constants.ClaimTypes.Subject,
+                Claims = claims
+            });
+        }
+
+        public Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count)
+        {
+            int total;
+            var users = query.Query(filter, start, count, out total);
+
+            var result = new QueryResult();
+            result.Start = start;
+            result.Count = count;
+            result.Total = total;
+            result.Users = users.Select(x =>
+            {
+                var s = new UserSummary
+                {
+                    Subject = x.ID.ToString("D"),
+                    Username = x.Username
+                };
+                if (!String.IsNullOrWhiteSpace(x.Email))
+                {
+                    s.Claims = new Claim[] { new Claim(Constants.ClaimTypes.Email, x.Email) };
+                }
+                return s;
+            });
+
+            return Task.FromResult(new UserManagerResult<QueryResult>(result));
+        }
+
         public Task<UserManagerResult> CreateAsync(string username, string password)
         {
             try
@@ -54,28 +97,24 @@ namespace MembershipReboot.IdentityServer.Admin
             return Task.FromResult(UserManagerResult.Success);
         }
 
-        public Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count)
+        public async Task<UserManagerResult> SetPasswordAsync(string id, string password)
         {
-            int total;
-            var users = query.Query(filter, start, count, out total);
-            
-            var result = new QueryResult();
-            result.Start = start;
-            result.Count = count;
-            result.Total = total;
-            result.Users = users.Select(x =>{
-                var s = new UserSummary { 
-                    Subject = x.ID.ToString("D"), 
-                    Username = x.Username
-                };
-                if (!String.IsNullOrWhiteSpace(x.Email))
-                {
-                    s.Claims = new Claim[] { new Claim(Constants.ClaimTypes.Email, x.Email) };
-                }
-                return s;
-            });
-            
-            return Task.FromResult(new UserManagerResult<QueryResult>(result));
+            Guid g;
+            if (!Guid.TryParse(id, out g))
+            {
+                return new UserManagerResult("Invalid id");
+            }
+
+            try
+            {
+                this.userAccountService.SetPassword(g, password);
+            }
+            catch (ValidationException ex)
+            {
+                return new UserManagerResult(ex.Message);
+            }
+
+            return UserManagerResult.Success;
         }
     }
 }

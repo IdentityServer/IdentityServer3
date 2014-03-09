@@ -9,7 +9,9 @@ namespace Thinktecture.IdentityServer.Admin.Core
 {
     public interface IUserManager
     {
-        Task<UserManagerResult> CreateAsync(string username, string password);
+        Task<UserManagerMetadata> GetMetadataAsync();
         Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count);
+        Task<UserManagerResult> CreateAsync(string username, string password);
+        Task<UserManagerResult> SetPasswordAsync(string id, string password);
     }
 }

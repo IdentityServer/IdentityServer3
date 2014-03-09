@@ -9,7 +9,7 @@ namespace Thinktecture.IdentityServer.Admin.Core
     public class UserManagerResult
     {
         public static readonly UserManagerResult Success = new UserManagerResult();
-        
+
         public UserManagerResult(params string[] errors)
         {
             this.Errors = errors;
