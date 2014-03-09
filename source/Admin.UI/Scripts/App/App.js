@@ -26,12 +26,24 @@
             });
     });
 
-    app.service("admin", function ($http) {
-        this.getAdminName = function () {
+    app.service("admin", function ($http, $q) {
+        var admin;
+
+        this.getCurrentAdmin = function () {
+            if (admin) {
+                var def = $q.defer();
+                def.resolve(admin);
+                return def.promise;
+            }
             return $http.get("api/admin").then(function (response) {
-                return response.data;
+                admin = response.data;
+                return admin;
             });
         };
+    });
+
+    app.service("meta", function ($http) {
+       
     });
 
     app.service("users", function ($http) {
@@ -55,7 +67,7 @@
     app.controller("LayoutCtrl", function ($scope, admin) {
         $scope.model = {};
 
-        admin.getAdminName().then(function (data) {
+        admin.getCurrentAdmin().then(function (data) {
             $scope.model.username = data.username;
         });
     });
