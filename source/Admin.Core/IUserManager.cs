@@ -11,7 +11,8 @@ namespace Thinktecture.IdentityServer.Admin.Core
     {
         Task<UserManagerMetadata> GetMetadataAsync();
         Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count);
-        Task<UserManagerResult> CreateAsync(string username, string password);
-        Task<UserManagerResult> SetPasswordAsync(string id, string password);
+        Task<UserManagerResult<UserResult>> GetUserAsync(string subject);
+        Task<UserManagerResult<CreateResult>> CreateAsync(string username, string password);
+        Task<UserManagerResult> SetPasswordAsync(string subject, string password);
     }
 }

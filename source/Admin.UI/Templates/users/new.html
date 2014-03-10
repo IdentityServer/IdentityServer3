@@ -19,6 +19,10 @@
                 <label for="pwd">Password</label>
                 <input type="password" id="pwd" class="form-control" ng-model="pwd">
             </div>
+            <div class="form-group" ng-repeat="claim in model.claims">
+                <label for="pwd">Password</label>
+                <input type="password" id="pwd" class="form-control" ng-model="pwd">
+            </div>
             <div>
                 <button class="btn btn-primary">Create</button>
                 <a ng-show="model.last" class="btn btn-default" href="#/edit/{{model.last}}">Edit User {{model.last}}</a>

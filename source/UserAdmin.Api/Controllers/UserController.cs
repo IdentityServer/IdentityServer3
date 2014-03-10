@@ -33,6 +33,14 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
         }
 
+        public async Task<IHttpActionResult> GetAsync(string subject)
+        {
+            var result = await this.userManager.GetUserAsync(subject);
+            return Ok(result.Result);
+
+            //return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
+        }
+
         public async Task<IHttpActionResult> PostAsync(CreateUser model)
         {
             if (model == null)
@@ -43,21 +51,18 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
             if (ModelState.IsValid)
             {
                 var result = await this.userManager.CreateAsync(model.Username, model.Password);
-                if (result.IsError)
+                if (result.IsSuccess)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    return Ok(result.Result);
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error);
                 }
             }
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState.GetErrorMessage());
-            }
-            
-            return StatusCode(HttpStatusCode.Accepted);
+            return BadRequest(ModelState.GetErrorMessage());
         }
     }
 }

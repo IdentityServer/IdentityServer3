@@ -83,18 +83,17 @@ namespace MembershipReboot.IdentityServer.Admin
             return Task.FromResult(new UserManagerResult<QueryResult>(result));
         }
 
-        public Task<UserManagerResult> CreateAsync(string username, string password)
+        public Task<UserManagerResult<CreateResult>> CreateAsync(string username, string password)
         {
             try
             {
-                this.userAccountService.CreateAccount(username, password, null);
+                var acct = this.userAccountService.CreateAccount(username, password, null);
+                return Task.FromResult(new UserManagerResult<CreateResult>(new CreateResult { Subject=acct.ID.ToString("D") }));
             }
             catch(ValidationException ex)
             {
-                return Task.FromResult(new UserManagerResult(ex.Message));
+                return Task.FromResult(new UserManagerResult<CreateResult>(ex.Message));
             }
-
-            return Task.FromResult(UserManagerResult.Success);
         }
 
         public async Task<UserManagerResult> SetPasswordAsync(string id, string password)
@@ -115,6 +114,35 @@ namespace MembershipReboot.IdentityServer.Admin
             }
 
             return UserManagerResult.Success;
+        }
+
+        public async Task<UserManagerResult<UserResult>> GetUserAsync(string subject)
+        {
+            Guid g;
+            if (!Guid.TryParse(subject, out g))
+            {
+                return new UserManagerResult<UserResult>("Invalid user.");
+            }
+
+            try
+            {
+                var acct = this.userAccountService.GetByID(g);
+                if (acct == null)
+                {
+                    return new UserManagerResult<UserResult>("Invalid user.");
+                }
+                
+                var user = new UserResult
+                {
+                    Subject = subject, 
+                    Username = acct.Username
+                };
+                return new UserManagerResult<UserResult>(user);
+            }
+            catch (ValidationException ex)
+            {
+                return new UserManagerResult<UserResult>(ex.Message);
+            }
         }
     }
 }

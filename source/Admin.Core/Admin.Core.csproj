@@ -40,12 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateResult.cs" />
     <Compile Include="IUserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryResult.cs" />
     <Compile Include="UserManagerMetadata.cs" />
     <Compile Include="UserManagerResult`1.cs" />
     <Compile Include="UserManagerResult.cs" />
+    <Compile Include="UserResult.cs" />
     <Compile Include="UserSummary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,5 @@
-﻿
-<div class="page-header">
-    <h1>Edit User : {{model.id}}</h1>
+﻿<div class="page-header">
+    <h1>Edit User <span ng-show="model.user">: {{model.user.username}}</span></h1>
 </div>
 
 <div class="row" ng-show="model.message">
@@ -9,21 +8,14 @@
     </div>
 </div>
 
-<!--<div class="row">
+<form ng-submit="setPassword(model.user.subject, model.password)" class="form-group">
     <div class="col-sm-8">
-        <form class="form" ng-submit="create(uid, pwd)">
-            <div class="form-group">
-                <label for="uid">Username</label>
-                <input type="text" id="uid" class="form-control" ng-model="uid" autofocus>
-            </div>
-            <div class="form-group">
-                <label for="pwd">Password</label>
-                <input type="password" id="pwd" class="form-control" ng-model="pwd">
-            </div>
-            <div>
-                <button class="btn btn-primary">Update</button>
-            </div>
-        </form>
+        <div class="input-group form-group">
+            <label for="password" class="input-group-addon">Set Password</label>
+            <input type="text" id="password" ng-model="model.password" class="form-control" placeholder="Password" autofocus>
+            <span class="input-group-btn">
+                <button class="btn btn-primary">Set</button>
+            </span>
+        </div>
     </div>
-</div>-->
-
+</form>

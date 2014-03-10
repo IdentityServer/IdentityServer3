@@ -17,7 +17,7 @@
                 controller: 'NewUserCtrl',
                 templateUrl: 'templates/users/new.html'
             })
-            .when("/edit/:id", {
+            .when("/edit/:subject", {
                 controller: 'EditUserCtrl',
                 templateUrl: 'templates/users/edit.html'
             })
@@ -43,12 +43,29 @@
     });
 
     app.service("meta", function ($http) {
-       
+        var meta;
+        this.getMetadata = function () {
+            if (meta) {
+                var def = $q.defer();
+                def.resolve(meta);
+                return def.promise;
+            }
+            return $http.get("api/meta").then(function (response) {
+                meta = response.data;
+                return meta;
+            });
+        };
     });
 
     app.service("users", function ($http) {
         this.getUsers = function (filter, start, count) {
             return $http.get("api/users", { params: { filter: filter, start: start, count: count } })
+                .then(function (response) {
+                    return response.data;
+                });
+        };
+        this.getUser = function (subject) {
+            return $http.get("api/users", { params: { subject: subject } })
                 .then(function (response) {
                     return response.data;
                 });
@@ -60,6 +77,14 @@
                 },
                 function (response) {
                     throw (response.data && response.data.message || "Error Creating User");
+                });
+        };
+        this.setPassword = function (subject, password) {
+            return $http.post("api/password", { subject: subject, password: password })
+                .then(function () {
+                    return;
+                }, function (response) {
+                    throw (response.data && response.data.message || "Error Setting Password");
                 });
         };
     });
@@ -156,16 +181,20 @@
         });
     });
 
-    app.controller("NewUserCtrl", function ($scope, users) {
+    app.controller("NewUserCtrl", function ($scope, users, meta) {
         $scope.model = {};
+
+        meta.getMetadata().then(function (result) {
+            //$scope.model.claims = [1,2,3];
+        });
 
         $scope.create = function (username, password) {
             $scope.model.message = null;
             $scope.model.success = true;
 
             users.createUser(username, password)
-                .then(function () {
-                    $scope.model.last = username;
+                .then(function (result) {
+                    $scope.model.last = result.subject;
                     $scope.model.message = "Create Success";
                 },
                 function (message) {
@@ -176,8 +205,25 @@
     });
 
     app.controller("EditUserCtrl", function ($scope, users, $routeParams) {
-        $scope.model = {
-            id: $routeParams.id
+        $scope.model = {};
+
+        users.getUser($routeParams.subject)
+            .then(function (result) {
+                $scope.model.user = result;
+            }, function (result) {
+                $scope.model.message = result.message;
+            });
+
+        $scope.setPassword = function (subject, password) {
+            $scope.model.message = null;
+            users.setPassword(subject, password)
+                .then(function () {
+                    $scope.model.success = true;
+                    $scope.model.message = "Password Changed";
+                }, function (message) {
+                    $scope.model.success = false;
+                    $scope.model.message = message;
+                });
         };
     });
 })(angular);
