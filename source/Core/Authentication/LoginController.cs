@@ -101,7 +101,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var principal = IdentityServerPrincipal.Create(
                 sub,
-                Constants.AuthenticationMethods.Password);
+                Constants.AuthenticationMethods.Password,
+                Constants.BuiltInIdentityProvider);
 
             Request.GetOwinContext().Authentication.SignIn(principal.Identities.First());
             return Redirect(signInMessage.ReturnUrl);

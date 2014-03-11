@@ -223,7 +223,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 _validatedRequest.Subject = IdentityServerPrincipal.Create(
                     sub,
-                    Constants.AuthenticationMethods.Password);
+                    Constants.AuthenticationMethods.Password,
+                    Constants.BuiltInIdentityProvider);
             }
             else
             {
