@@ -9,6 +9,9 @@ namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants
     {
+        public const string BuiltInAuthenticationType = "idsrv";
+        public const string BuiltInIdentityProvider = "idsrv";
+
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
@@ -274,6 +277,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Scope    = "scope";
             public const string Id       = "id";
             public const string Secret   = "secret";
+            public const string IdentityProvider = "idp";
         }
 
         public static class AuthenticationMethods
