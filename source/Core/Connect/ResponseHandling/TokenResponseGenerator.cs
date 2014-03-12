@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             else
             {
-                accessToken = _tokenService.CreateAccessToken(request);
+                accessToken = _tokenService.CreateAccessToken(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
             }
 
             if (request.Client.AccessTokenType == AccessTokenType.JWT)

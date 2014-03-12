@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core
         }
 
         [DebuggerStepThrough]
-        public static string GetSubject(this IPrincipal principal)
+        public static string GetSubjectId(this IPrincipal principal)
         {
             var cp = principal as ClaimsPrincipal;
             var value = cp.FindFirst(Constants.ClaimTypes.Subject).Value;

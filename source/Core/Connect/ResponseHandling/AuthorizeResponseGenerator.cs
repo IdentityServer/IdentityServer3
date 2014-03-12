@@ -27,8 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public AuthorizeResponse CreateCodeFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             // create id and access token
-            var idToken = _tokenService.CreateIdentityToken(request, user);
-            var accessToken = _tokenService.CreateAccessToken(request, user);
+            var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw);
+            var accessToken = _tokenService.CreateAccessToken(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
 
             var code = new AuthorizationCode
             {
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             string jwt = null;
             if (request.IsOpenIdRequest)
             {
-                var idToken = _tokenService.CreateIdentityToken(request, user);
+                var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw);
 
                 SigningCredentials credentials;
                 if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
@@ -79,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             int accessTokenLifetime = 0;
             if (request.IsResourceRequest)
             {
-                var accessToken = _tokenService.CreateAccessToken(request, user);
+                var accessToken = _tokenService.CreateAccessToken(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
                 accessTokenLifetime = accessToken.Lifetime;
 
                 if (request.Client.AccessTokenType == AccessTokenType.JWT)

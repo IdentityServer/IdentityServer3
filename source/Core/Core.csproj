@@ -121,6 +121,7 @@
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />
     <Compile Include="Connect\Services\DefaultAssertionGrantValidator.cs" />
+    <Compile Include="Connect\Services\DefaultTokenService.cs" />
     <Compile Include="Connect\Services\HashingTransientDataRepository.cs" />
     <Compile Include="Connect\Services\DefaultClaimsProvider.cs" />
     <Compile Include="Connect\Services\IAssertionGrantValidator.cs" />
@@ -159,7 +160,6 @@
     <Compile Include="Connect\Results\TokenResult.cs" />
     <Compile Include="Connect\Results\ResultExtensions.cs" />
     <Compile Include="Services\DebugLogger.cs" />
-    <Compile Include="Connect\Services\DefaultTokenService.cs" />
     <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Services\ILogger.cs" />
