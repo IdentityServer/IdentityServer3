@@ -87,6 +87,7 @@
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_ClientCredentials_Invalid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
     <Compile Include="Validation Tests\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
+    <Compile Include="Validation Tests\ScopeValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
