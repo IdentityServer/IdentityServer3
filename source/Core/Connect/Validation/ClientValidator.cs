@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -44,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return null;
             }
 
-            if (client.ClientSecret != credential.Secret)
+            if (!ObfuscatingComparer.IsEqual(client.ClientSecret, credential.Secret))
             {
                 _logger.Error("Invalid client secret: " + client.ClientId);
                 return null;
