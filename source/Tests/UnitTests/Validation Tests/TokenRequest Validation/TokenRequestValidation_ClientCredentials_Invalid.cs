@@ -21,7 +21,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("roclient");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -38,7 +39,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void No_Scopes()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -54,8 +55,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Unknown_Scope()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
-
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
+            
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
             parameters.Add(Constants.TokenRequest.Scope, "unknown");
@@ -71,7 +72,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Unknown_Scope_Multiple()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -88,7 +89,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Restricted_Scope()
         {
             var client = _settings.FindClientById("client_restricted");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -105,7 +106,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Restricted_Scope_Multiple()
         {
             var client = _settings.FindClientById("client_restricted");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -122,7 +123,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Identity_Scope()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null, null);
+            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
