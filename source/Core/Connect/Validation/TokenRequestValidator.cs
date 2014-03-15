@@ -16,6 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private ValidatedTokenRequest _validatedRequest;
         private IAssertionGrantValidator _assertionValidator;
+        private ICustomRequestValidator _customRequestValidator;
 
         public ValidatedTokenRequest ValidatedRequest
         {
@@ -25,13 +26,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService profile, IAssertionGrantValidator assertionValidator)
+        public TokenRequestValidator(ICoreSettings coreSettings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService profile, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
             _coreSettings = coreSettings;
             _logger = logger;
             _authorizationCodes = authorizationCodes;
             _profile = profile;
             _assertionValidator = assertionValidator;
+            _customRequestValidator = customRequestValidator;
         }
 
         public ValidationResult ValidateRequest(NameValueCollection parameters, Client client)
@@ -50,6 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             _validatedRequest.Raw = parameters;
             _validatedRequest.Client = client;
+            _validatedRequest.Settings = _coreSettings;
 
             /////////////////////////////////////////////
             // check grant type
@@ -67,20 +70,33 @@ namespace Thinktecture.IdentityServer.Core.Connect
             switch (grantType)
             {
                 case Constants.GrantTypes.AuthorizationCode:
-                    return ValidateAuthorizationCodeRequest(parameters);
+                    return RunValidation(ValidateAuthorizationCodeRequest, parameters);
                 case Constants.GrantTypes.ClientCredentials:
-                    return ValidateClientCredentialsRequest(parameters);
+                    return RunValidation(ValidateClientCredentialsRequest, parameters);
                 case Constants.GrantTypes.Password:
-                    return ValidateResourceOwnerCredentialRequest(parameters);
+                    return RunValidation(ValidateResourceOwnerCredentialRequest, parameters);
             }
 
             if (parameters.Get(Constants.TokenRequest.Assertion).IsPresent())
             {
-                return ValidateAssertionRequest(parameters);
+                return RunValidation(ValidateAssertionRequest, parameters);
             }
 
             _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+        }
+
+        ValidationResult RunValidation(Func<NameValueCollection, ValidationResult> validationFunc, NameValueCollection parameters)
+        {
+            // run standard validation
+            var result = validationFunc(parameters);
+            if (result.IsError)
+            {
+                return result;
+            }
+
+            // run custom validation
+            return _customRequestValidator.ValidateTokenRequest(_validatedRequest, _profile);
         }
 
         private ValidationResult ValidateAuthorizationCodeRequest(NameValueCollection parameters)
