@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -70,10 +71,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("scopes: {0}", scopes);
 
             scopes = scopes.Trim();
-            var parsedScopes = scopes.Split(' ').Distinct().ToList();
+            var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             
             if (parsedScopes.Count > 0)
             {
+                parsedScopes.Sort();
                 return parsedScopes;
             }
 
