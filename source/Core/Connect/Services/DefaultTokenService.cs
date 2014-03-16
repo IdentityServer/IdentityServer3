@@ -8,6 +8,10 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityModel.Extensions;
+using System.Security.Cryptography;
+using System.Text;
+using Thinktecture.IdentityModel;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
@@ -24,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             _claimsProvider = claimsProvider;
         }
 
-        public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request)
+        public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
             // host provided claims
             var claims = new List<Claim>(subject.Claims);
@@ -34,6 +38,15 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             if (nonce.IsPresent())
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Nonce, nonce));
+            }
+
+            // add iat claim
+            claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
+
+            // add at_hash claim
+            if (accessTokenToHash.IsPresent())
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAccessToken(accessTokenToHash)));
             }
 
             claims.AddRange(_claimsProvider.GetIdentityTokenClaims(
@@ -54,6 +67,17 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             };
 
             return token;
+        }
+
+        protected virtual string HashAccessToken(string accessTokenToHash)
+        {
+            var algorithm = SHA256.Create();
+            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
+
+            var leftPart = new byte[32];
+            Array.Copy(hash, leftPart, 32);
+
+            return Base64Url.Encode(leftPart);
         }
 
         public virtual Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)

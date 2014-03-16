@@ -50,24 +50,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public AuthorizeResponse CreateImplicitFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            string jwt = null;
-            if (request.IsOpenIdRequest)
-            {
-                var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw);
-
-                SigningCredentials credentials;
-                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-                {
-                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
-                }
-                else
-                {
-                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
-                }
-
-                jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
-            }
-
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
             if (request.IsResourceRequest)
@@ -86,6 +68,24 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     accessTokenValue = Guid.NewGuid().ToString("N");
                     _tokenHandles.Store(accessTokenValue, accessToken);
                 }
+            }
+
+            string jwt = null;
+            if (request.IsOpenIdRequest)
+            {
+                var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
+
+                SigningCredentials credentials;
+                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+                {
+                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
+                }
+                else
+                {
+                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                }
+
+                jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
             }
 
             return new AuthorizeResponse

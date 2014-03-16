@@ -12,8 +12,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile, NameValueCollection request)
         {
             List<Claim> outputClaims = new List<Claim>();
-            //var scopeDetails = settings.GetScopes();
-
             var additionalClaims = new List<string>();
 
             // fetch all identity claims that need to go into the id token
