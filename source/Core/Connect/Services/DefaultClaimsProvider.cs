@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;

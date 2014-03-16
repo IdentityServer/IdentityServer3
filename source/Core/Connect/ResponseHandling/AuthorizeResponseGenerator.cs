@@ -4,8 +4,8 @@ using System.Security.Claims;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {

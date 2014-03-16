@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace MembershipRebootUserService
 {

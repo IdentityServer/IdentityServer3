@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Connect.Models;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace UnitTests.Validation_Tests
 {

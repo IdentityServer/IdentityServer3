@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
