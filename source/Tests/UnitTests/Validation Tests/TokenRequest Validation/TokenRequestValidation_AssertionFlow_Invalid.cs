@@ -22,7 +22,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("client");
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
@@ -41,7 +41,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: _assertionValidator);
 
             var parameters = new NameValueCollection();
@@ -60,7 +60,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: _assertionValidator);
 
             var parameters = new NameValueCollection();

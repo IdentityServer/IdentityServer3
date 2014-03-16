@@ -39,7 +39,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store,
                 customRequestValidator: _customRequestValidator);
 
@@ -59,7 +59,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
@@ -77,7 +77,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client_restricted");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
@@ -95,7 +95,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users,
                 customRequestValidator: _customRequestValidator);
 
@@ -116,7 +116,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient_restricted");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users,
                 customRequestValidator: _customRequestValidator);
 
@@ -137,7 +137,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: new TestAssertionValidator(),
                 customRequestValidator: _customRequestValidator);
 

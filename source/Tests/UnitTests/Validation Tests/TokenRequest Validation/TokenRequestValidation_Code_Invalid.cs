@@ -35,7 +35,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -67,7 +67,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -100,7 +100,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -133,7 +133,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -166,7 +166,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -198,7 +198,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -233,7 +233,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -266,7 +266,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
 
@@ -281,7 +281,7 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsFalse(result.IsError);
 
             // request second time
-            validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
             

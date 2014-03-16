@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
     <Compile Include="Plumbing\TestUserService.cs" />
-    <Compile Include="Plumbing\TokenRequestValidatorFactory.cs" />
+    <Compile Include="Plumbing\ValidatorFactory.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />

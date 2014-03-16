@@ -21,7 +21,7 @@ namespace UnitTests.TokenRequest_Validation
         public void Parameters_Null()
         {
             var store = new TestCodeStore();
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var result = validator.ValidateRequest(null, null);
@@ -33,7 +33,7 @@ namespace UnitTests.TokenRequest_Validation
         public void Client_Null()
         {
             var store = new TestCodeStore();
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -63,7 +63,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -96,7 +96,7 @@ namespace UnitTests.TokenRequest_Validation
 
             store.Store("valid", code);
 
-            var validator = TokenRequestValidatorFactory.Create(_settings, _logger,
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
