@@ -74,8 +74,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             var algorithm = SHA256.Create();
             var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
 
-            var leftPart = new byte[32];
-            Array.Copy(hash, leftPart, 32);
+            var leftPart = new byte[16];
+            Array.Copy(hash, leftPart, 16);
 
             return Base64Url.Encode(leftPart);
         }
