@@ -163,5 +163,47 @@ namespace UnitTests.Validation_Tests
 
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Contains_Resource_and_Identity_Scopes()
+        {
+            var validator = new ScopeValidator(_logger);
+            var scopes = validator.ParseScopes("openid email resource1 resource2");
+
+            var result = validator.AreScopesValid(scopes, _allScopes);
+
+            Assert.IsTrue(result);
+            Assert.IsTrue(validator.ContainsOpenIdScopes);
+            Assert.IsTrue(validator.ContainsResourceScopes);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Contains_Resource_Scopes_Only()
+        {
+            var validator = new ScopeValidator(_logger);
+            var scopes = validator.ParseScopes("resource1 resource2");
+
+            var result = validator.AreScopesValid(scopes, _allScopes);
+
+            Assert.IsTrue(result);
+            Assert.IsFalse(validator.ContainsOpenIdScopes);
+            Assert.IsTrue(validator.ContainsResourceScopes);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Contains_Identity_Scopes_Only()
+        {
+            var validator = new ScopeValidator(_logger);
+            var scopes = validator.ParseScopes("openid email");
+
+            var result = validator.AreScopesValid(scopes, _allScopes);
+
+            Assert.IsTrue(result);
+            Assert.IsTrue(validator.ContainsOpenIdScopes);
+            Assert.IsFalse(validator.ContainsResourceScopes);
+        }
     }
 }
