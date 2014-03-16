@@ -115,6 +115,7 @@
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
+    <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\ConsentError.cs" />
     <Compile Include="Connect\Models\ClientCredential.cs" />
     <Compile Include="Connect\Models\UserConsent.cs" />
@@ -142,7 +143,6 @@
     <Compile Include="Extensions\PrincipalExtensions.cs" />
     <Compile Include="Plumbing\IdentityServerPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\AuthorizeError.cs" />
     <Compile Include="Connect\Models\Client.cs" />
     <Compile Include="Connect\Endpoints\AuthorizeEndpointController.cs" />

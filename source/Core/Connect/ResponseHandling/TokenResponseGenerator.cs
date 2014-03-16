@@ -45,8 +45,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = request.AuthorizationCode.IdentityToken;
-
+                var idToken = _tokenService.CreateIdentityToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
+                    
                 SigningCredentials credentials;
                 if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
                 {
@@ -81,7 +81,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Token accessToken;
             if (request.AuthorizationCode != null)
             {
-                accessToken = request.AuthorizationCode.AccessToken;
+                //accessToken = request.AuthorizationCode.AccessToken;
+                accessToken = _tokenService.CreateAccessToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
             }
             else
             {

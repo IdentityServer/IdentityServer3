@@ -136,9 +136,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // validate client binding
             /////////////////////////////////////////////
-            if (authZcode.ClientId != _validatedRequest.Client.ClientId)
+            if (authZcode.Client.ClientId!= _validatedRequest.Client.ClientId)
             {
-                _logger.ErrorFormat("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.ClientId);
+                _logger.ErrorFormat("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 

@@ -29,12 +29,9 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);

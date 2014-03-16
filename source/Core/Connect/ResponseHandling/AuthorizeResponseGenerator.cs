@@ -26,21 +26,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public AuthorizeResponse CreateCodeFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
-            // create id and access token
-            var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw);
-            var accessToken = _tokenService.CreateAccessToken(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
-
             var code = new AuthorizationCode
             {
-                ClientId = request.ClientId,
-                IsOpenId = true,
-                RequestedScopes = request.RequestedScopes.ToSpaceSeparatedString(),
+                Client = request.Client,
+                User = user,
 
-                CreationTime = DateTime.UtcNow,
+                IsOpenId = request.IsOpenIdRequest,
+                RequestedScopes = request.ValidatedScopes.GrantedScopes,
                 RedirectUri = request.RedirectUri,
-
-                IdentityToken = idToken,
-                AccessToken = accessToken
             };
 
             // store id token and access token and return authorization code
