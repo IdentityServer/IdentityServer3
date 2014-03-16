@@ -199,7 +199,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     DisplayName = "Read data",
                     IsOpenIdScope = false,
                     Emphasize = false,
-                    Audience = "applicationA"
                 },
                 new Scope
                 {
@@ -207,7 +206,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     DisplayName = "Write data",
                     IsOpenIdScope = false,
                     Emphasize = true,
-                    Audience = "applicationB"
                 },
                 new Scope
                 {

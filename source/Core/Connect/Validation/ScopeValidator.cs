@@ -12,7 +12,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
-        public List<string> Audiences { get; private set; }
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
 
@@ -22,7 +21,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             RequestedScopes = new List<Scope>();
             GrantedScopes = new List<Scope>();
-            Audiences = new List<string>();
         }
 
         public void SetConsentedScopes(IEnumerable<string> consentedScopes)
