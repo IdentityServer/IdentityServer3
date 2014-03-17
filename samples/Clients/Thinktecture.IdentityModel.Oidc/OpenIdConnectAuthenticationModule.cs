@@ -259,7 +259,7 @@ namespace Thinktecture.IdentityModel.Oidc
                         return;
                     }
 
-                    var claims = identityTokenValidatedEventArgs.Claims;
+                    var claims = identityTokenValidatedEventArgs.Claims.ToList();
 
                     if (callUserInfoEndpoint)
                     {
@@ -282,10 +282,11 @@ namespace Thinktecture.IdentityModel.Oidc
                             return;
                         }
 
-                        claims = userInfoClaimsReceivedEventArgs.Claims;
+                        claims = userInfoClaimsReceivedEventArgs.Claims.ToList();
                     }
 
                     // create identity
+                    claims.Add(new Claim("at", tokenResponse.AccessToken));
                     var id = new ClaimsIdentity(claims, "oidc");
 
                     if (!string.IsNullOrWhiteSpace(tokenResponse.RefreshToken))
