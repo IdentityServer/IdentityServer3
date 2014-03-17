@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 
@@ -21,7 +20,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -38,7 +38,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void No_Scopes()
         {
             var client = _settings.FindClientById("roclient");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -56,7 +57,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Unknown_Scope()
         {
             var client = _settings.FindClientById("roclient");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -75,7 +77,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Unknown_Scope_Multiple()
         {
             var client = _settings.FindClientById("roclient");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -94,7 +97,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Restricted_Scope()
         {
             var client = _settings.FindClientById("roclient_restricted");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -113,7 +117,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Restricted_Scope_Multiple()
         {
             var client = _settings.FindClientById("roclient_restricted");
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -132,8 +137,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void No_ResourceOwnerCredentials()
         {
             var client = _settings.FindClientById("roclient");
-
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -150,8 +155,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Missing_ResourceOwner_UserName()
         {
             var client = _settings.FindClientById("roclient");
-
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -169,8 +174,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Missing_ResourceOwner_Password()
         {
             var client = _settings.FindClientById("roclient");
-
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -188,8 +193,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public void Invalid_ResourceOwner_Credentials()
         {
             var client = _settings.FindClientById("roclient");
-
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);

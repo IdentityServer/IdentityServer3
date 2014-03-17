@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -8,11 +8,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile)
+        public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile, NameValueCollection request)
         {
             List<Claim> outputClaims = new List<Claim>();
-            var scopeDetails = settings.GetScopes();
-
             var additionalClaims = new List<string>();
 
             // fetch all identity claims that need to go into the id token
@@ -32,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = profile.GetProfileData(user.GetSubject(), additionalClaims);
+                var claims = profile.GetProfileData(subject.GetSubjectId(), additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -42,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return outputClaims;
         }
 
-        public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile)
+        public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile, NameValueCollection request)
         {
             var claims = new List<Claim>
             {

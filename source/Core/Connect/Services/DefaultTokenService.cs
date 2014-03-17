@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
@@ -24,75 +28,67 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             _claimsProvider = claimsProvider;
         }
 
-        public virtual Token CreateIdentityToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
-            // minimal, mandatory claims
-            var claims = new List<Claim>
-            {
-                new Claim(Constants.ClaimTypes.Subject, user.GetSubject()),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, user.GetAuthenticationMethod()),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, user.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
-                new Claim(Constants.ClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer)
-            };
-
+            // host provided claims
+            var claims = new List<Claim>(subject.Claims);
+            
             // if nonce was sent, must be mirrored in id token
-            if (request.Nonce.IsPresent())
+            var nonce = request.Get(Constants.AuthorizeRequest.Nonce);
+            if (nonce.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
+                claims.Add(new Claim(Constants.ClaimTypes.Nonce, nonce));
+            }
+
+            // add iat claim
+            claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
+
+            // add at_hash claim
+            if (accessTokenToHash.IsPresent())
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAccessToken(accessTokenToHash)));
             }
 
             claims.AddRange(_claimsProvider.GetIdentityTokenClaims(
-                user,
-                request.Client,
-                request.ValidatedScopes.GrantedScopes,
+                subject,
+                client,
+                scopes,
                 _settings,
-                !request.AccessTokenRequested,
-                _profile));
+                includeAllIdentityClaims,
+                _profile,
+                request));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
-                Audience = request.ClientId,
+                Audience = client.ClientId,
                 Issuer = _settings.GetIssuerUri(),
-                Lifetime = request.Client.IdentityTokenLifetime,
+                Lifetime = client.IdentityTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList()
             };
 
             return token;
         }
 
-        public virtual Token CreateAccessToken(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        protected virtual string HashAccessToken(string accessTokenToHash)
         {
-            var claims = _claimsProvider.GetAccessTokenClaims(
-                user,
-                request.Client,
-                request.ValidatedScopes.GrantedScopes,
-                _settings,
-                _profile);
+            var algorithm = SHA256.Create();
+            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
 
-            var token = new Token(Constants.TokenTypes.AccessToken)
-            {
-                Audience = _settings.GetIssuerUri() + "/resources",
-                Issuer = _settings.GetIssuerUri(),
-                Lifetime = request.Client.AccessTokenLifetime,
-                Claims = claims.ToList()
-            };
+            var leftPart = new byte[16];
+            Array.Copy(hash, leftPart, 16);
 
-            return token;
+            return Base64Url.Encode(leftPart);
         }
 
-        public virtual Token CreateAccessToken(ValidatedTokenRequest request)
-        {
-            return CreateAccessToken(request.Subject, request.Client, request.ValidatedScopes);
-        }
-
-        public virtual Token CreateAccessToken(ClaimsPrincipal user, Client client, ScopeValidator scopes)
+        public virtual Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
         {
             var claims = _claimsProvider.GetAccessTokenClaims(
-                user,
+                subject,
                 client,
-                scopes.GrantedScopes,
+                scopes,
                 _settings,
-                _profile);
+                _profile,
+                request);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {

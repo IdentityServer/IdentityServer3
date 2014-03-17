@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 
@@ -17,6 +17,7 @@ namespace UnitTests.TokenRequest_Validation
         ILogger _logger = new DebugLogger();
         ICoreSettings _settings = new TestSettings();
         IUserService _users = new TestUserService();
+        ICustomRequestValidator _customRequestValidator = new DefaultCustomRequestValidator();
 
         [TestMethod]
         [TestCategory(Category)]
@@ -27,17 +28,16 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store,
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -55,7 +55,8 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -72,7 +73,8 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("client_restricted");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -89,7 +91,9 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users,
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -108,7 +112,9 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("roclient_restricted");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, _users, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                userService: _users,
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -127,7 +133,9 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, new TestAssertionValidator());
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                assertionGrantValidator: new TestAssertionValidator(),
+                customRequestValidator: _customRequestValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");

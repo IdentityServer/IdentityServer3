@@ -40,6 +40,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
             }
 
+            if (fact.CustomRequestValidator != null)
+            {
+                builder.Register(ctx => fact.CustomRequestValidator()).As<ICustomRequestValidator>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultCustomRequestValidator>().As<ICustomRequestValidator>();
+            }
+
             if (fact.AssertionGrantValidator != null)
             {
                 builder.Register(ctx => fact.AssertionGrantValidator()).As<IAssertionGrantValidator>();

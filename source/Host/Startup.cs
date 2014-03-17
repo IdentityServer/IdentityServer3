@@ -1,6 +1,5 @@
 ﻿using Microsoft.Owin;
 using Owin;
-using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.TestServices;
 

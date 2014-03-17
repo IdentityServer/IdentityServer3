@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -199,7 +198,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     DisplayName = "Read data",
                     IsOpenIdScope = false,
                     Emphasize = false,
-                    Audience = "applicationA"
                 },
                 new Scope
                 {
@@ -207,7 +205,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     DisplayName = "Write data",
                     IsOpenIdScope = false,
                     Emphasize = true,
-                    Audience = "applicationB"
                 },
                 new Scope
                 {

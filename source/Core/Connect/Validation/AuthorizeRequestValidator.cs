@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -12,6 +13,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         ValidatedAuthorizeRequest _validatedRequest;
         private ICoreSettings _core;
+        private ICustomRequestValidator _customValidator;
+        private IUserService _users;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -21,10 +24,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(ICoreSettings core, ILogger logger)
+        public AuthorizeRequestValidator(ICoreSettings core, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
         {
             _core = core;
             _logger = logger;
+            _users = users;
+            _customValidator = customValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest();
             _validatedRequest.CoreSettings = _core;
@@ -355,7 +360,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            return Valid();
+            return _customValidator.ValidateAuthorizeRequest(_validatedRequest, _users);
         }
 
         private ValidationResult Invalid(ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)

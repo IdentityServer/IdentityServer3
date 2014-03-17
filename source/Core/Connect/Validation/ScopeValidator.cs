@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -11,7 +12,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
-        public List<string> Audiences { get; private set; }
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
 
@@ -21,7 +21,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             RequestedScopes = new List<Scope>();
             GrantedScopes = new List<Scope>();
-            Audiences = new List<string>();
         }
 
         public void SetConsentedScopes(IEnumerable<string> consentedScopes)
@@ -70,10 +69,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("scopes: {0}", scopes);
 
             scopes = scopes.Trim();
-            var parsedScopes = scopes.Split(' ').Distinct().ToList();
+            var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             
             if (parsedScopes.Count > 0)
             {
+                parsedScopes.Sort();
                 return parsedScopes;
             }
 

@@ -2,12 +2,14 @@
 using System.Collections.Specialized;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ValidatedTokenRequest
     {
         public NameValueCollection Raw { get; set; }
+        public ICoreSettings Settings { get; set; }
         public Client Client { get; set; }
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }

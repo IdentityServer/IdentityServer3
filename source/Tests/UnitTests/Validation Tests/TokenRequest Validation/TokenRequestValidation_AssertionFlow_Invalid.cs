@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
@@ -15,14 +14,14 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         ILogger _logger = new DebugLogger();
         ICoreSettings _settings = new TestSettings();
-        IAssertionGrantValidator assertionValidator = new TestAssertionValidator();
+        IAssertionGrantValidator _assertionValidator = new TestAssertionValidator();
 
         [TestMethod]
         [TestCategory(Category)]
         public void Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("client");
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
@@ -41,7 +40,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, assertionValidator);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                assertionGrantValidator: _assertionValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
@@ -59,7 +59,8 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         {
             var client = _settings.FindClientById("assertionclient");
 
-            var validator = new TokenRequestValidator(_settings, _logger, null, null, assertionValidator);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                assertionGrantValidator: _assertionValidator);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "unknownAssertionType");

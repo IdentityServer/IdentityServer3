@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 
@@ -24,17 +24,15 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -55,17 +53,15 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -87,17 +83,15 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -114,29 +108,28 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public void Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client1 = _settings.FindClientById("codeclient");
+            var client2 = _settings.FindClientById("codeclient_restricted");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
             {
-                ClientId = "othercodeclient",
+                Client = client1,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = validator.ValidateRequest(parameters, client2);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -151,17 +144,15 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -182,17 +173,15 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server1/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken()
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -214,19 +203,16 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken(),
-
                 CreationTime = DateTime.UtcNow.AddSeconds(-100)
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -248,17 +234,16 @@ namespace UnitTests.TokenRequest_Validation
 
             var code = new AuthorizationCode
             {
-                ClientId = "codeclient",
+                Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
-
-                AccessToken = TokenFactory.CreateAccessToken(),
-                IdentityToken = TokenFactory.CreateIdentityToken(),
             };
 
             store.Store("valid", code);
 
-            var validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store,
+                customRequestValidator: new DefaultCustomRequestValidator());
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -271,7 +256,10 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsFalse(result.IsError);
 
             // request second time
-            validator = new TokenRequestValidator(_settings, _logger, store, null, null);
+            validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+                authorizationCodeStore: store,
+                customRequestValidator: new DefaultCustomRequestValidator());
+            
             result = validator.ValidateRequest(parameters, client);
 
             Assert.IsTrue(result.IsError);
