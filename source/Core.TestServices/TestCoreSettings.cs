@@ -31,7 +31,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.TestServices
                     RedirectUris = new List<Uri>
                     {
                         new Uri("https://localhost:44320/oidccallback"),
-                        new Uri("https://web.local/oidccode/oidccallback")
+                        new Uri("https://web.local/oidccode/oidccallback"),
+                        new Uri("https://localhost:44312/callback")
                     },
                     
                     ScopeRestrictions = new List<string>
