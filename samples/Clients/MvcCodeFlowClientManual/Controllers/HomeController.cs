@@ -1,8 +1,5 @@
 ﻿using Sample;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Thinktecture.IdentityModel.Client;
 
@@ -20,7 +17,7 @@ namespace MvcCodeFlowClientManual.Controllers
         {
             var client = new OAuth2Client(new Uri(Constants.AuthorizeEndpoint));
             var url = client.CreateCodeFlowUrl(
-                "codeclient",
+                "codeclient_manual",
                 scopes,
                 "https://localhost:44312/callback",
                 "123");

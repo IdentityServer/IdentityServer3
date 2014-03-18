@@ -1,0 +1,61 @@
+﻿@model Thinktecture.IdentityModel.Client.TokenResponse
+
+@{
+    ViewBag.Title = "Token response";
+}
+
+<h2>Token response</h2>
+<br />
+
+<p>
+    <strong>Identity token:</strong>
+    <br />
+    <pre>@Model.IdentityToken</pre>
+</p>
+
+<p>
+    <pre>@ViewBag.IdentityTokenParsed</pre>
+</p>
+
+<p>
+    <strong>Access token:</strong>
+    <br />
+    <pre>@Model.AccessToken</pre>
+</p>
+
+<p>
+    <pre>@ViewBag.AccessTokenParsed</pre>
+</p>
+
+<p>
+    <strong>Token type:</strong>
+    <br />
+    @Model.TokenType
+</p>
+
+<p>
+    <strong>Expires:</strong>
+    <br />
+    @(DateTime.Now.AddSeconds(Model.ExpiresIn).ToString())
+</p>
+
+<p>
+    <strong>Refresh token:</strong>
+    <br />
+    @Model.RefreshToken
+</p>
+
+@using (Html.BeginForm("CallService", "Callback"))
+{
+    @Html.Hidden("token", @Model.AccessToken)
+
+    <input type="submit" value="Call service" />
+}
+
+<br />
+
+@using (Html.BeginForm("RenewToken", "Callback"))
+{
+    <input type="hidden" name="refreshToken" value="@Model.RefreshToken" />
+    <input type="submit" value="Renew Token" />
+}
