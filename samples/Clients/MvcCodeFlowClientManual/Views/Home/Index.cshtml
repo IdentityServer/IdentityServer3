@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>IdentityServer v3</h1>
+    <h2>code flow sample client</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Scopes</h3>
+        @using (Html.BeginForm())
+        {
+            <p>
+                <input type="text" name="scopes" style="width: 200px" value="openid profile" />
+            </p>
+            
+            <button name="OK">OK</button>
+        }
+    </div>
+</div>

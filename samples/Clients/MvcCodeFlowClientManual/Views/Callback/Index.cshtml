@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Callback</h2>
+
+Code: <strong>@ViewBag.Code</strong>
+<br />
+Error: <strong>@ViewBag.Error</strong>
+
+<br />
+<br />
+
+@if (ViewBag.Code != "none")
+{
+    using (Html.BeginForm())
+    {
+        <input type="submit" value="Get token" />
+    }
+}
