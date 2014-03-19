@@ -98,10 +98,12 @@
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\MetaController.cs" />
+    <Compile Include="Controllers\ClaimController.cs" />
     <Compile Include="Controllers\PasswordController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\CreateUser.cs" />
+    <Compile Include="Models\Claim.cs" />
     <Compile Include="Models\SetPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

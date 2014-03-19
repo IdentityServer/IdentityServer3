@@ -5775,6 +5775,13 @@ button.close {
 .container {
   margin-top: 30px;
 }
+.row.section {
+  margin-top: 20px;
+}
+form label.column {
+  display: inline-block;
+  width: 100px;
+}
 .dropdown .dropdown-toggle {
   cursor: pointer;
 }

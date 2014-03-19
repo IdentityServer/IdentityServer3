@@ -101,6 +101,23 @@ namespace MembershipReboot.IdentityServer.Admin
                     Subject = subject,
                     Username = acct.Username
                 };
+                var claims = new List<Thinktecture.IdentityServer.Admin.Core.UserClaim>();
+                if (!String.IsNullOrWhiteSpace(acct.Email) && !this.userAccountService.Configuration.EmailIsUsername)
+                {
+                    claims.Add(new Thinktecture.IdentityServer.Admin.Core.UserClaim { Type = Constants.ClaimTypes.Email, Value = acct.Email });
+                    claims.Add(new Thinktecture.IdentityServer.Admin.Core.UserClaim { Type = Constants.ClaimTypes.EmailVerified, Value = acct.IsAccountVerified ? "true" : "false" });
+                }
+                if (!String.IsNullOrWhiteSpace(acct.MobilePhoneNumber))
+                {
+                    claims.Add(new Thinktecture.IdentityServer.Admin.Core.UserClaim { Type = Constants.ClaimTypes.PhoneNumber, Value = acct.MobilePhoneNumber });
+                    claims.Add(new Thinktecture.IdentityServer.Admin.Core.UserClaim { Type = Constants.ClaimTypes.PhoneNumberVerified, Value = !String.IsNullOrWhiteSpace(acct.MobilePhoneNumber) ? "true" : "false" });
+                }
+                if (acct.Claims != null)
+                {
+                    claims.AddRange(acct.Claims.Select(x => new Thinktecture.IdentityServer.Admin.Core.UserClaim { Type = x.Type, Value = x.Value }));
+                }
+                user.Claims = claims.ToArray();
+                
                 return new UserManagerResult<UserResult>(user);
             }
             catch (ValidationException ex)

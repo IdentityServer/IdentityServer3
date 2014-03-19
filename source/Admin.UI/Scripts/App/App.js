@@ -91,6 +91,22 @@
                     throw (response.data && response.data.message || "Error Setting Password");
                 });
         };
+        this.addClaim = function (subject, type, value) {
+            return $http.post("api/claims/add", { subject: subject, type: type, value: value })
+                .then(function () {
+                    return;
+                }, function (response) {
+                    throw (response.data && response.data.message || "Error Adding Claim");
+                });
+        };
+        this.removeClaim = function (subject, type, value) {
+            return $http.post("api/claims/remove", { subject: subject, type: type, value: value })
+                .then(function () {
+                    return;
+                }, function (response) {
+                    throw (response.data && response.data.message || "Error Removing Claim");
+                });
+        };
     });
 
     app.controller("LayoutCtrl", function ($scope, admin) {
@@ -244,6 +260,26 @@
             else {
                 error("Password and Confirmation do not match");
             }
+        };
+
+        $scope.addClaim = function (subject, type, value) {
+            clear();
+            users.addClaim(subject, type, value)
+                .then(function () {
+                    success("Claim Added");
+                }, function (message) {
+                    error(message);
+                });
+        };
+
+        $scope.removeClaim = function (subject, type, value) {
+            clear();
+            users.removeClaim(subject, type, value)
+                .then(function () {
+                    success("Claim Removed");
+                }, function (message) {
+                    error(message);
+                });
         };
     });
 })(angular);
