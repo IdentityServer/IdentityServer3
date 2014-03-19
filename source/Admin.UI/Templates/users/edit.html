@@ -1,5 +1,8 @@
 ﻿<div class="page-header">
-    <h1>Edit User <span ng-show="model.user">: {{model.user.username}}</span></h1>
+    <h1>
+        Edit User <span ng-show="model.user">: {{model.user.username}}</span>
+        <small class="subject">{{model.user.subject}}</small>
+    </h1>
 </div>
 
 <div class="row" ng-show="model.message">
@@ -8,14 +11,15 @@
     </div>
 </div>
 
-<form ng-submit="setPassword(model.user.subject, model.password)" class="form-group">
-    <div class="col-sm-8">
-        <div class="input-group form-group">
-            <label for="password" class="input-group-addon">Set Password</label>
-            <input type="text" id="password" ng-model="model.password" class="form-control" placeholder="Password" autofocus>
-            <span class="input-group-btn">
-                <button class="btn btn-primary">Set</button>
-            </span>
+<form name="setPasswordForm" class="form-inline" ng-submit="setPassword(model.user.subject, model.password, model.confirm)">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label for="password">Set Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" required autofocus ng-model="model.password">
         </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="confirm" placeholder="Confirm" required ng-model="model.confirm">
+        </div>
+        <button type="submit" class="btn btn-primary" ng-disabled="setPasswordForm.$invalid">Set</button>
     </div>
 </form>

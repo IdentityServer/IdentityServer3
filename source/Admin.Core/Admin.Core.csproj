@@ -44,11 +44,11 @@
     <Compile Include="IUserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryResult.cs" />
+    <Compile Include="UserClaim.cs" />
     <Compile Include="UserManagerMetadata.cs" />
     <Compile Include="UserManagerResult`1.cs" />
     <Compile Include="UserManagerResult.cs" />
     <Compile Include="UserResult.cs" />
-    <Compile Include="UserSummary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

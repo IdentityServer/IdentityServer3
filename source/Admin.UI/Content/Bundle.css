@@ -5772,7 +5772,6 @@ button.close {
     display: none !important;
   }
 }
-
 .container {
   margin-top: 30px;
 }
@@ -5789,5 +5788,8 @@ button.close {
 .page-header .label {
   position: relative;
   top: 15px;
+}
+.page-header .subject {
+  color: #999999;
 }
 

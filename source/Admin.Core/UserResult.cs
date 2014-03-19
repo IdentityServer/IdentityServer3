@@ -9,5 +9,6 @@ namespace Thinktecture.IdentityServer.Admin.Core
     {
         public string Subject { get; set; }
         public string Username { get; set; }
+        public IEnumerable<UserClaim> Claims { get; set; }
     }
 }

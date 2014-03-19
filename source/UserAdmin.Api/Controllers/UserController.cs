@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
 
         public async Task<IHttpActionResult> GetAsync(string filter = null, int start = 0, int count = 100)
         {
-            var result = await userManager.QueryAsync(filter, start, count);
+            var result = await userManager.QueryUsersAsync(filter, start, count);
             if (result.IsSuccess)
             {
                 return Ok(result.Result);
@@ -36,9 +36,12 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
         public async Task<IHttpActionResult> GetAsync(string subject)
         {
             var result = await this.userManager.GetUserAsync(subject);
-            return Ok(result.Result);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Result);
+            }
 
-            //return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.InternalServerError, result.Errors));
         }
 
         public async Task<IHttpActionResult> PostAsync(CreateUser model)
@@ -50,7 +53,7 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await this.userManager.CreateAsync(model.Username, model.Password);
+                var result = await this.userManager.CreateUserAsync(model.Username, model.Password);
                 if (result.IsSuccess)
                 {
                     return Ok(result.Result);

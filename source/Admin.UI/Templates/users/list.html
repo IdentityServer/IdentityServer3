@@ -29,14 +29,14 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Subject</th>
                 <th>Username</th>
+                <th>Subject</th>
             </tr>
         </thead>
         <tr ng-repeat="user in model.users">
             <td><a href="#/edit/{{user.subject}}" class="btn btn-primary btn-xs">edit</a></td>
-            <td>{{user.subject}}</td>
             <td>{{user.username}}</td>
+            <td>{{user.subject}}</td>
         </tr>
     </table>
 </div>

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Admin.Core;
 using Thinktecture.IdentityServer.Core;
 
-
 namespace MembershipReboot.IdentityServer.Admin
 {
     public class MembershipRebootUserManager : IUserManager, IDisposable
@@ -19,7 +18,7 @@ namespace MembershipReboot.IdentityServer.Admin
         IDisposable cleanup;
 
         public MembershipRebootUserManager(
-            UserAccountService userAccountService, 
+            UserAccountService userAccountService,
             IUserAccountQuery query,
             IDisposable cleanup)
         {
@@ -57,7 +56,7 @@ namespace MembershipReboot.IdentityServer.Admin
             });
         }
 
-        public Task<UserManagerResult<QueryResult>> QueryAsync(string filter, int start, int count)
+        public Task<UserManagerResult<QueryResult>> QueryUsersAsync(string filter, int start, int count)
         {
             int total;
             var users = query.Query(filter, start, count, out total);
@@ -66,34 +65,90 @@ namespace MembershipReboot.IdentityServer.Admin
             result.Start = start;
             result.Count = count;
             result.Total = total;
+            result.Filter = filter;
             result.Users = users.Select(x =>
             {
-                var s = new UserSummary
+                var user = new UserResult
                 {
                     Subject = x.ID.ToString("D"),
                     Username = x.Username
                 };
-                if (!String.IsNullOrWhiteSpace(x.Email))
-                {
-                    s.Claims = new Claim[] { new Claim(Constants.ClaimTypes.Email, x.Email) };
-                }
-                return s;
-            });
+                
+                return user;
+            }).ToArray();
 
             return Task.FromResult(new UserManagerResult<QueryResult>(result));
         }
 
-        public Task<UserManagerResult<CreateResult>> CreateAsync(string username, string password)
+        public async Task<UserManagerResult<UserResult>> GetUserAsync(string subject)
+        {
+            Guid g;
+            if (!Guid.TryParse(subject, out g))
+            {
+                return new UserManagerResult<UserResult>("Invalid user.");
+            }
+
+            try
+            {
+                var acct = this.userAccountService.GetByID(g);
+                if (acct == null)
+                {
+                    return new UserManagerResult<UserResult>("Invalid user.");
+                }
+
+                var user = new UserResult
+                {
+                    Subject = subject,
+                    Username = acct.Username
+                };
+                return new UserManagerResult<UserResult>(user);
+            }
+            catch (ValidationException ex)
+            {
+                return new UserManagerResult<UserResult>(ex.Message);
+            }
+        }
+
+        public Task<UserManagerResult<CreateResult>> CreateUserAsync(string username, string password)
         {
             try
             {
-                var acct = this.userAccountService.CreateAccount(username, password, null);
-                return Task.FromResult(new UserManagerResult<CreateResult>(new CreateResult { Subject=acct.ID.ToString("D") }));
+                UserAccount acct;
+                if (this.userAccountService.Configuration.EmailIsUsername)
+                {
+                    acct = this.userAccountService.CreateAccount(null, password, username);
+                }
+                else
+                {
+                    acct = this.userAccountService.CreateAccount(username, password, null);
+                }
+
+                return Task.FromResult(new UserManagerResult<CreateResult>(new CreateResult { Subject = acct.ID.ToString("D") }));
             }
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
                 return Task.FromResult(new UserManagerResult<CreateResult>(ex.Message));
             }
+        }
+        
+        public Task<UserManagerResult> DeleteUserAsync(string subject)
+        {
+            Guid g;
+            if (!Guid.TryParse(subject, out g))
+            {
+                return Task.FromResult(new UserManagerResult("Invalid user."));
+            }
+
+            try
+            {
+                this.userAccountService.DeleteAccount(g);
+            }
+            catch (ValidationException ex)
+            {
+                return Task.FromResult(new UserManagerResult(ex.Message));
+            } 
+
+            return Task.FromResult(new UserManagerResult());
         }
 
         public async Task<UserManagerResult> SetPasswordAsync(string id, string password)
@@ -115,34 +170,45 @@ namespace MembershipReboot.IdentityServer.Admin
 
             return UserManagerResult.Success;
         }
-
-        public async Task<UserManagerResult<UserResult>> GetUserAsync(string subject)
+        
+        public Task<UserManagerResult> AddClaimAsync(string subject, string type, string value)
         {
             Guid g;
             if (!Guid.TryParse(subject, out g))
             {
-                return new UserManagerResult<UserResult>("Invalid user.");
+                return Task.FromResult(new UserManagerResult("Invalid user."));
             }
 
             try
             {
-                var acct = this.userAccountService.GetByID(g);
-                if (acct == null)
-                {
-                    return new UserManagerResult<UserResult>("Invalid user.");
-                }
-                
-                var user = new UserResult
-                {
-                    Subject = subject, 
-                    Username = acct.Username
-                };
-                return new UserManagerResult<UserResult>(user);
+                this.userAccountService.AddClaim(g, type, value);
             }
             catch (ValidationException ex)
             {
-                return new UserManagerResult<UserResult>(ex.Message);
+                return Task.FromResult(new UserManagerResult(ex.Message));
+            } 
+
+            return Task.FromResult(new UserManagerResult());
+        }
+
+        public Task<UserManagerResult> DeleteClaimAsync(string subject, string type, string value)
+        {
+            Guid g;
+            if (!Guid.TryParse(subject, out g))
+            {
+                return Task.FromResult(new UserManagerResult("Invalid user."));
             }
+
+            try
+            {
+                this.userAccountService.RemoveClaim(g, type, value);
+            }
+            catch (ValidationException ex)
+            {
+                return Task.FromResult(new UserManagerResult(ex.Message));
+            } 
+
+            return Task.FromResult(new UserManagerResult());
         }
     }
 }

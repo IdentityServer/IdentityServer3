@@ -68,8 +68,12 @@
             return $http.get("api/users", { params: { subject: subject } })
                 .then(function (response) {
                     return response.data;
+                },
+                function (response) {
+                    throw (response.data && response.data.message || "Error Getting User");
                 });
         };
+
         this.createUser = function (username, password) {
             return $http.post("api/users", { username: username, password: password })
                 .then(function (response) {
@@ -207,23 +211,39 @@
     app.controller("EditUserCtrl", function ($scope, users, $routeParams) {
         $scope.model = {};
 
+        function clear() {
+            $scope.model.success = false;
+            $scope.model.message = null;
+        }
+        function success(msg) {
+            $scope.model.success = true;
+            $scope.model.message = msg;
+        }
+        function error(msg) {
+            $scope.model.success = false;
+            $scope.model.message = msg;
+        }
+
         users.getUser($routeParams.subject)
             .then(function (result) {
                 $scope.model.user = result;
-            }, function (result) {
-                $scope.model.message = result.message;
+            }, function (message) {
+                error(message);
             });
 
-        $scope.setPassword = function (subject, password) {
-            $scope.model.message = null;
-            users.setPassword(subject, password)
-                .then(function () {
-                    $scope.model.success = true;
-                    $scope.model.message = "Password Changed";
-                }, function (message) {
-                    $scope.model.success = false;
-                    $scope.model.message = message;
-                });
+        $scope.setPassword = function (subject, password, confirm) {
+            clear();
+            if (password === confirm) {
+                users.setPassword(subject, password)
+                    .then(function () {
+                        success("Password Changed");
+                    }, function (message) {
+                        error(message);
+                    });
+            }
+            else {
+                error("Password and Confirmation do not match");
+            }
         };
     });
 })(angular);
