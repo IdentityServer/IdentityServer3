@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
             // host provided claims
-            var claims = new List<Claim>(subject.Claims);
+            var claims = new List<Claim>();
             
             // if nonce was sent, must be mirrored in id token
             var nonce = request.Get(Constants.AuthorizeRequest.Nonce);
@@ -69,17 +69,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        protected virtual string HashAccessToken(string accessTokenToHash)
-        {
-            var algorithm = SHA256.Create();
-            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
-
-            var leftPart = new byte[16];
-            Array.Copy(hash, leftPart, 16);
-
-            return Base64Url.Encode(leftPart);
-        }
-
         public virtual Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
         {
             var claims = _claimsProvider.GetAccessTokenClaims(
@@ -112,6 +101,17 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);
+        }
+
+        protected virtual string HashAccessToken(string accessTokenToHash)
+        {
+            var algorithm = SHA256.Create();
+            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
+
+            var leftPart = new byte[16];
+            Array.Copy(hash, leftPart, 16);
+
+            return Base64Url.Encode(leftPart);
         }
     }
 }
