@@ -110,8 +110,10 @@
     <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
     <Compile Include="Configuration\AutoFacConfig.cs" />
+    <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
+    <Compile Include="Configuration\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
@@ -141,6 +143,7 @@
     <Compile Include="Extensions\ScopeExtensions.cs" />
     <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
+    <Compile Include="Plumbing\ExceptionFilter.cs" />
     <Compile Include="Plumbing\IdentityServerPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Connect\Models\AuthorizeError.cs" />
