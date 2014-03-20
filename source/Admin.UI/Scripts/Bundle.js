@@ -484,12 +484,15 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
             $scope.model.message = msg;
         }
 
-        users.getUser($routeParams.subject)
-            .then(function (result) {
-                $scope.model.user = result;
-            }, function (message) {
-                error(message);
-            });
+        function loadUser() {
+            users.getUser($routeParams.subject)
+                .then(function (result) {
+                    $scope.model.user = result;
+                }, function (message) {
+                    error(message);
+                });
+        };
+        loadUser();
 
         $scope.setPassword = function (subject, password, confirm) {
             clear();
@@ -511,6 +514,7 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
             users.addClaim(subject, type, value)
                 .then(function () {
                     success("Claim Added");
+                    loadUser();
                 }, function (message) {
                     error(message);
                 });
@@ -521,10 +525,12 @@ function(){this.$get=function(){return{}}});n.directive("ngView",x);n.directive(
             users.removeClaim(subject, type, value)
                 .then(function () {
                     success("Claim Removed");
+                    loadUser();
                 }, function (message) {
                     error(message);
                 });
         };
+
         $scope.deleteUser = function (subject) {
             clear();
             users.deleteUser(subject)

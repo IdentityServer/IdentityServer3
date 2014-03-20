@@ -5772,11 +5772,15 @@ button.close {
     display: none !important;
   }
 }
-.container {
-  margin-top: 30px;
+body {
+  margin-top: 40px;
 }
-.row.section {
-  margin-top: 20px;
+.section {
+  padding: 15px 0;
+}
+.line {
+  padding: 15px 0;
+  border-bottom: 1px solid #eeeeee;
 }
 form label.column {
   display: inline-block;
