@@ -67,5 +67,31 @@ namespace Thinktecture.IdentityServer.UserAdmin.Api.Controllers
 
             return BadRequest(ModelState.GetErrorMessage());
         }
+
+        [Route("users/delete")]
+        [HttpPost]
+        public async Task<IHttpActionResult> DeleteUserAsync(DeleteUser model)
+        {
+            if (model == null)
+            {
+                ModelState.AddModelError("", "Data required");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var result = await this.userManager.DeleteUserAsync(model.Subject);
+                if (result.IsSuccess)
+                {
+                    return Ok();
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+
+            return BadRequest(ModelState.GetErrorMessage());
+        }
     }
 }

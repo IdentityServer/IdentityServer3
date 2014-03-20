@@ -83,6 +83,14 @@
                     throw (response.data && response.data.message || "Error Creating User");
                 });
         };
+        this.deleteUser = function (subject) {
+            return $http.post("api/users/delete", { subject:subject })
+                .then(function (response) {
+                },
+                function (response) {
+                    throw (response.data && response.data.message || "Error Creating User");
+                });
+        };
         this.setPassword = function (subject, password) {
             return $http.post("api/password", { subject: subject, password: password })
                 .then(function () {
@@ -277,6 +285,16 @@
             users.removeClaim(subject, type, value)
                 .then(function () {
                     success("Claim Removed");
+                }, function (message) {
+                    error(message);
+                });
+        };
+        $scope.deleteUser = function (subject) {
+            clear();
+            users.deleteUser(subject)
+                .then(function () {
+                    success("User Deleted");
+                    $scope.model.user = null;
                 }, function (message) {
                     error(message);
                 });

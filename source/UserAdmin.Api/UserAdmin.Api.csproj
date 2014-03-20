@@ -104,6 +104,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\CreateUser.cs" />
     <Compile Include="Models\Claim.cs" />
+    <Compile Include="Models\DeleteUser.cs" />
     <Compile Include="Models\SetPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
