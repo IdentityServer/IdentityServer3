@@ -110,8 +110,10 @@
     <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
     <Compile Include="Configuration\AutoFacConfig.cs" />
+    <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
+    <Compile Include="Configuration\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
