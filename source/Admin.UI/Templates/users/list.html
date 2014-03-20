@@ -1,9 +1,10 @@
 ﻿
 <div class="page-header">
-    <div class="pull-right">
-        <span ng-show="model.waiting" class="label label-info">Searching...</span>
-    </div>
-    <h1>Users <span ng-show="model.pager" class="badge">{{model.pager.total}} found</span></h1>
+    <h1>
+        Users
+        <span ng-show="model.waiting" class="waiting label label-info">Searching...</span>
+        <span ng-show="model.pager" class="badge">{{model.pager.total}} found</span>
+    </h1>
 </div>
 
 <form ng-submit="search(model.filter)" class="form-group">

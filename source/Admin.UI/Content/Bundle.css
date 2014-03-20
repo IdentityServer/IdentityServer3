@@ -5792,6 +5792,11 @@ form label.column {
   position: relative;
   top: -5px;
 }
+.page-header h1 .waiting {
+  position: relative;
+  top: -5px;
+  font-size: 35%;
+}
 .page-header .label {
   position: relative;
   top: 15px;
