@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Plumbing;
-using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -19,9 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             config.Formatters.Clear();
             config.Formatters.Add(new JsonMediaTypeFormatter());
 
-            // todo
-            //var logger = config.DependencyResolver.GetService(typeof(ILogger)) as ILogger;
-            //config.Filters.Add(new ExceptionFilter(logger));
+            config.Services.Add(typeof(IExceptionLogger), new IdentityServerExceptionLogger());
 
             return config;
         }
