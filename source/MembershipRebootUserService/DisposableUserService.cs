@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipRebootUserService
+namespace MembershipReboot.IdentityServer.UserService
 {
     public class DisposableUserService : IUserService, IDisposable
     {

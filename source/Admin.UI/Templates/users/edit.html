@@ -1,0 +1,81 @@
+﻿<div class="page-header">
+    <h1>
+        Edit User <span ng-show="model.user">: {{model.user.username}}</span>
+        <small class="subject">{{model.user.subject}}</small>
+    </h1>
+</div>
+
+<div class="row" ng-show="model.message">
+    <div class="col-sm-8">
+        <div ng-class="model.success ? 'alert alert-success alert-dismissable' : 'alert alert-danger alert-dismissable'">{{model.message}}</div>
+    </div>
+</div>
+
+<div ng-show="model.user">
+    <div class="line">
+        <div class="row">
+            <form name="setPasswordForm" class="form-inline" ng-submit="setPassword(model.user.subject, model.password, model.confirm)">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="password" class="column">Set Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" required autofocus ng-model="model.password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="confirm" placeholder="Confirm" required ng-model="model.confirm">
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-disabled="setPasswordForm.$invalid">Set</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="line">
+        <div class="row section">
+            <div class="col-sm-12">
+                <form name="addClaimForm" class="form-inline" ng-submit="addClaim(model.user.subject, model.type, model.value)">
+                    <div class="form-group">
+                        <label for="type" class="column">Add Claim</label>
+                        <input type="text" class="form-control" id="type" placeholder="Type" required autofocus ng-model="model.type">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="value" placeholder="Value" required ng-model="model.value">
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-disabled="addClaimForm.$invalid">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div ng-hide="model.user.claims" class="col-sm-8">
+                <div class="alert alert-info">
+                    <p>No Claims For User</p>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-condensed table-responsive table-striped xtable-bordered" ng-show="model.user.claims">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Type</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tr ng-repeat="claim in model.user.claims">
+                <td>
+                    <button class="btn btn-warning btn-xs" ng-click="removeClaim(model.user.subject, claim.type, claim.value)">delete</button>
+                </td>
+                <td>{{claim.type}}</td>
+                <td>{{claim.value}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row section">
+        <form name="deleteUserForm" class="form-inline" ng-submit="deleteUser(model.user.subject)">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary">Delete User</button>
+            </div>
+        </form>
+    </div>
+</div>

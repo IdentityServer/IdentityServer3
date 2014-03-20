@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MembershipRebootUserService
+namespace MembershipReboot.IdentityServer.UserService
 {
     static class Extensions
     {

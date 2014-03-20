@@ -7,7 +7,7 @@ using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipRebootUserService
+namespace MembershipReboot.IdentityServer.UserService
 {
     public class UserService : IUserService
     {

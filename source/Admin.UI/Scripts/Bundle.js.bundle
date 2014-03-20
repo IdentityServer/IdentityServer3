@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="false" runOnBuild="true" output="Bundle.js" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://vswebessentials.com/schemas/v1/bundle.xsd">
+  <!--The order of the <file> elements determines the order of the file contents when bundled.-->
+  <file>/Scripts/Libs/jquery-2.1.0.min.js</file>
+  <file>/Scripts/Libs/bootstrap.min.js</file>
+  <file>/Scripts/Libs/angular.1.2.13.min.js</file>
+  <file>/Scripts/Libs/angular-route.min.js</file>
+  <file>/Scripts/App/App.js</file>
+</bundle>

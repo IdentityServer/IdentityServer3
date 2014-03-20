@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>IdentityServer Administration</title>
+    <link href="Content/Bundle.min.css" rel="stylesheet" />
+</head>
+<body lang="en" ng-app="app" ng-controller="LayoutCtrl" ng-cloak>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <a href="#/" class="navbar-brand">IdentityServer Administration</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <span class="dropdown-toggle navbar-text" data-toggle="dropdown">Users <b class="caret"></b></span>
+                <ul class="dropdown-menu">
+                    <li><a href="#/list">View All Users</a></li>
+                    <li><a href="#/create">Create New User</a></li>
+                </ul>
+            </li>
+        </ul>
+        <span class="navbar-text pull-right">{{model.username}}</span>
+    </div>
+
+    <div class="container" ng-cloak>
+        <ng-view></ng-view>
+    </div>
+
+    <script src="Scripts/Bundle.js"></script>
+</body>
+</html>

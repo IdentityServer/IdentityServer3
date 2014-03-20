@@ -1,0 +1,57 @@
+﻿
+<div class="page-header">
+    <h1>
+        Users
+        <span ng-show="model.waiting" class="waiting label label-info">Searching...</span>
+        <span ng-show="model.pager" class="badge">{{model.pager.total}} found</span>
+    </h1>
+</div>
+
+<form ng-submit="search(model.filter)" class="form-group">
+    <div class="col-sm-6">
+        <div class="input-group form-group">
+            <!--<span class="input-group-addon"><label for="filter">Filter</label></span>-->
+            <input type="text" id="filter" ng-model="model.filter" class="form-control" placeholder="Filter" autofocus>
+            <span class="input-group-btn">
+                <button class="btn btn-primary">Search</button>
+            </span>
+        </div>
+    </div>
+</form>
+
+<div class="row" ng-hide="model.users || model.waiting">
+    <div class="col-sm-8">
+        <div class="alert alert-info">No Users Found</div>
+    </div>
+</div>
+
+<div class="row" ng-show="model.users">
+    <table class="table table-condensed table-responsive table-striped xtable-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Username</th>
+                <th>Subject</th>
+            </tr>
+        </thead>
+        <tr ng-repeat="user in model.users">
+            <td><a href="#/edit/{{user.subject}}" class="btn btn-primary btn-xs">edit</a></td>
+            <td>{{user.username}}</td>
+            <td>{{user.subject}}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="row" ng-show="model.pager">
+    <div class="col-sm-8">
+        <ul class="center-block pagination">
+            <li ng-repeat="button in model.pager.buttons"
+                ng-class="!button.enabled ? 'disabled' : (button.current ? 'active':'')">
+                <a href="#/list/{{model.pager.filter}}/{{button.page}}" ng-bind-html="button.text"></a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-4 pager-text">
+        <strong>Page</strong> <span class="badge bg-active">{{model.pager.currentPage}}</span> <strong>of</strong> <span class="badge">{{model.pager.totalPages}}</span>
+    </div>
+</div>

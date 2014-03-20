@@ -1,0 +1,33 @@
+﻿
+<div class="page-header">
+    <h1>Create New User</h1>
+</div>
+
+<div class="row" ng-show="model.message">
+    <div class="col-sm-8">
+        <div ng-class="model.success ? 'alert alert-success alert-dismissable' : 'alert alert-danger alert-dismissable'">{{model.message}}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8">
+        <form class="form" ng-submit="create(uid, pwd)">
+            <div class="form-group">
+                <label for="uid">Username</label>
+                <input type="text" id="uid" class="form-control" ng-model="uid" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password</label>
+                <input type="password" id="pwd" class="form-control" ng-model="pwd">
+            </div>
+            <div class="form-group" ng-repeat="claim in model.claims">
+                <label for="pwd">Password</label>
+                <input type="password" id="pwd" class="form-control" ng-model="pwd">
+            </div>
+            <div>
+                <button class="btn btn-primary">Create</button>
+                <a ng-show="model.last" class="btn btn-default" href="#/edit/{{model.last}}">Edit User {{model.last}}</a>
+            </div>
+        </form>
+    </div>
+</div>
+
