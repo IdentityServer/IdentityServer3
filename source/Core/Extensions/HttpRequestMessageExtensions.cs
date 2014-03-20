@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Net.Http;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -16,6 +17,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (!baseUrl.EndsWith("/")) baseUrl += "/";
 
             return baseUrl;
+        }
+
+        public static ILifetimeScope GetAutofacScope(this HttpRequestMessage request)
+        {
+            var owinContext = request.GetOwinContext();
+            var scope = owinContext.Get<ILifetimeScope>("idsrv:AutofacScope");
+
+            return scope;
         }
     }
 }
