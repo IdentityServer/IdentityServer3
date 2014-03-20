@@ -19,12 +19,16 @@ namespace MembershipReboot.IdentityServer.UserService
             this.userAccountService = userAccountService;
         }
 
-        public string Authenticate(string username, string password)
+        public AuthenticateResult Authenticate(string username, string password)
         {
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
             {
-                return acct.ID.ToString("D");
+                return new AuthenticateResult
+                {
+                    Subject = acct.ID.ToString("D"),
+                    Username = acct.Username
+                };
             }
             
             return null;

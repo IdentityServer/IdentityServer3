@@ -10,6 +10,16 @@
         <div class="navbar-header">
             <a href="#" class="navbar-brand">Thinktecture IdentityServer</a>
         </div>
+        <ul class="nav navbar-nav" ng-show="layout.username" ng-cloak>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{layout.username}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{rootUrl}/logout">Logout</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Login With Different Account</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 
     <div class="container" ng-cloak>

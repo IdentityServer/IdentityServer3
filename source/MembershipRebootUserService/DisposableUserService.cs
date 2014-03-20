@@ -27,7 +27,7 @@ namespace MembershipReboot.IdentityServer.UserService
             }
         }
 
-        public string Authenticate(string username, string password)
+        public AuthenticateResult Authenticate(string username, string password)
         {
             return inner.Authenticate(username, password);
         }

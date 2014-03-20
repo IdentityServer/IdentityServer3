@@ -31,9 +31,15 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             return claims;
         }
 
-        public string Authenticate(string username, string password)
+        public AuthenticateResult Authenticate(string username, string password)
         {
-            return username == password ? username : null;
+            if (username != password) return null;
+
+            return new AuthenticateResult
+            {
+                Subject = username,
+                Username = username
+            };
         }
     }
 }

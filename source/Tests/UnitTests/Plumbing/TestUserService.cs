@@ -6,11 +6,13 @@ namespace UnitTests.Plumbing
 {
     class TestUserService : IUserService
     {
-        public string Authenticate(string username, string password)
+        public AuthenticateResult Authenticate(string username, string password)
         {
             if (username == password)
             {
-                return username;
+                return new AuthenticateResult {
+                    Subject = username, Username = username
+                };
             }
 
             return null;

@@ -9,6 +9,7 @@ namespace Thinktecture.IdentityServer.Core.Assets
     public class LayoutModel
     {
         public string Title { get; set; }
+        public string Username { get; set; }
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
         public string Page { get; set; }

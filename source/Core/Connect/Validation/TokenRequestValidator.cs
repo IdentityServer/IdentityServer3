@@ -233,12 +233,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             var sub = _profile.Authenticate(userName, password);
-            if (sub.IsPresent())
+            if (sub != null)
             {
                 _validatedRequest.UserName = userName;
 
                 _validatedRequest.Subject = IdentityServerPrincipal.Create(
-                    sub,
+                    sub.Subject,
                     Constants.AuthenticationMethods.Password,
                     Constants.BuiltInIdentityProvider);
             }

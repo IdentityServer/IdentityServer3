@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
@@ -86,8 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     });
             }
 
-            var sub = userService.Authenticate(model.Username, model.Password);
-            if (sub == null)
+            var authResult = userService.Authenticate(model.Username, model.Password);
+            if (authResult == null)
             {
                 return new EmbeddedHtmlResult(Request,
                     new LayoutModel
@@ -100,21 +102,28 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             var principal = IdentityServerPrincipal.Create(
-                sub,
+                authResult.Subject,
                 Constants.AuthenticationMethods.Password,
                 Constants.BuiltInIdentityProvider);
+            principal.Identities.First().AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
 
             Request.GetOwinContext().Authentication.SignIn(principal.Identities.First());
             return Redirect(signInMessage.ReturnUrl);
         }
 
         [Route("logout")]
-        public HttpResponseMessage Post()
+        [HttpGet]
+        public IHttpActionResult Logout()
         {
             var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut("Cookie");
+            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType);
 
-            return Request.CreateResponse(HttpStatusCode.NoContent);
+            return new EmbeddedHtmlResult(Request,
+                   new LayoutModel
+                   {
+                       Title = _settings.GetSiteName(),
+                       Page = "logout"
+                   });
         }
 
         //public IHttpActionResult Post([FromUri] SignInMessage msg, [FromBody] LoginBody body)

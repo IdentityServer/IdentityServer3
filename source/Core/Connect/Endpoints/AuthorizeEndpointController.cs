@@ -194,6 +194,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     Title = validatedRequest.Client.ClientName,
                     ErrorMessage = errorMessage,
                     Page = "consent",
+                    Username = User.Identity.Name,
                     PageModel = new
                     {
                         postUrl = "consent?" + requestParameters.ToQueryString(),
