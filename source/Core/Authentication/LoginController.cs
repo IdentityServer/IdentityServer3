@@ -50,7 +50,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         [Route("login", Name="login")]
-        public IHttpActionResult Get([FromUri] string message = null)
+        [HttpGet]
+        public IHttpActionResult Login([FromUri] string message = null)
         {
             if (message != null)
             {
@@ -65,7 +66,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         [Route("login")]
-        public IHttpActionResult Post(Credentials model)
+        [HttpPost]
+        public IHttpActionResult LoginLocal(Credentials model)
         {
             VerifyLoginRequestMessage();
             
@@ -93,25 +95,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return SignInAndRedirect(authResult);
         }
 
-        [Route("logout")]
-        [HttpGet]
-        public IHttpActionResult Logout()
-        {
-            var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType);
-            ClearLoginRequestMessage();
-
-            return new EmbeddedHtmlResult(Request,
-                   new LayoutModel
-                   {
-                       Title = _settings.GetSiteName(),
-                       Page = "logout"
-                   });
-        }
-
         [Route("external", Name="external")]
         [HttpGet]
-        public IHttpActionResult SigninExternal(string provider)
+        public IHttpActionResult LoginExternal(string provider)
         {
             VerifyLoginRequestMessage();
 
@@ -125,7 +111,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route("callback", Name = "callback")]
         [HttpGet]
-        public async Task<IHttpActionResult> ExternalCallback()
+        public async Task<IHttpActionResult> LoginExternalCallback()
         {
             VerifyLoginRequestMessage();
 
@@ -142,6 +128,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             });
         }
 
+        [Route("logout")]
+        [HttpGet]
+        public IHttpActionResult Logout()
+        {
+            var ctx = Request.GetOwinContext();
+            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType, "idsrv.external");
+            ClearLoginRequestMessage();
+
+            return new EmbeddedHtmlResult(Request,
+                   new LayoutModel
+                   {
+                       Title = _settings.GetSiteName(),
+                       Page = "logout"
+                   });
+        }
+        
         private IHttpActionResult SignInAndRedirect(Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult)
         {
             var signInMessage = LoadLoginRequestMessage();
@@ -155,7 +157,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var id = principal.Identities.First();
             id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
             ctx.Authentication.SignIn(id);
-            
+
+            ctx.Authentication.SignOut("idsrv.external");
             ClearLoginRequestMessage();
 
             return Redirect(signInMessage.ReturnUrl);
