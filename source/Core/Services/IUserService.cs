@@ -12,6 +12,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     public interface IUserService
     {
         AuthenticateResult Authenticate(string username, string password);
+        AuthenticateResult Authenticate(IEnumerable<Claim> claims);
         IEnumerable<Claim> GetProfileData(string sub, IEnumerable<string> requestedClaimTypes = null);
     }
 }

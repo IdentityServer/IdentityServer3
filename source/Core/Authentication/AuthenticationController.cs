@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin.Security;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
@@ -14,36 +15,13 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
-    public class Credentials
-    {
-        [Required(ErrorMessage = "Username is required")]
-        public string Username { get; set; }
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
-    }
-
-    public class ErrorPageFilterAttribute : ExceptionFilterAttribute
-    {
-        public override void OnException(HttpActionExecutedContext actionExecutedContext)
-        {
-            var response = EmbeddedHtmlResult.GetResponseMessage(
-                actionExecutedContext.Request, 
-                new LayoutModel
-                {
-                    Page = "error"
-                });
-
-            actionExecutedContext.Response = response;
-        }
-    }
-
     [ErrorPageFilter]
-    public class LoginController : ApiController
+    public class AuthenticationController : ApiController
     {
         IUserService userService;
         private ICoreSettings _settings;
 
-        public LoginController(IUserService userService, ICoreSettings settings)
+        public AuthenticationController(IUserService userService, ICoreSettings settings)
         {
             this.userService = userService;
             _settings = settings;
@@ -67,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route("login")]
         [HttpPost]
-        public IHttpActionResult LoginLocal(Credentials model)
+        public IHttpActionResult LoginLocal(LoginCredentials model)
         {
             VerifyLoginRequestMessage();
             
@@ -116,16 +94,21 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             VerifyLoginRequestMessage();
 
             var ctx = Request.GetOwinContext();
-            var authResult = await ctx.Authentication.AuthenticateAsync("idsrv.external");
-            if (authResult == null)
+            var externalAuthResult = await ctx.Authentication.AuthenticateAsync("idsrv.external");
+            if (externalAuthResult == null ||
+                externalAuthResult.Identity == null ||
+                !externalAuthResult.Identity.Claims.Any())
             {
                 return RedirectToRoute("login", null);
             }
 
-            return SignInAndRedirect(new Thinktecture.IdentityServer.Core.Services.AuthenticateResult
+            var authResult = userService.Authenticate(externalAuthResult.Identity.Claims);
+            if (authResult == null)
             {
-                Subject = authResult.Identity.Name, Username = authResult.Identity.Name
-            });
+                return RenderLoginPage("Invalid Account");
+            }
+
+            return SignInAndRedirect(authResult);
         }
 
         [Route("logout")]

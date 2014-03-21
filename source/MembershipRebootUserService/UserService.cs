@@ -9,14 +9,25 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace MembershipReboot.IdentityServer.UserService
 {
-    public class UserService : IUserService
+    public class UserService : IUserService, IDisposable
     {
         UserAccountService userAccountService;
-        public UserService(UserAccountService userAccountService)
+        IDisposable cleanup;
+        public UserService(UserAccountService userAccountService, IDisposable cleanup)
         {
             if (userAccountService == null) throw new ArgumentNullException("userAccountService");
 
             this.userAccountService = userAccountService;
+            this.cleanup = cleanup;
+        }
+
+        public void Dispose()
+        {
+            if (this.cleanup != null)
+            {
+                this.cleanup.Dispose();
+                this.cleanup = null;
+            }
         }
 
         public AuthenticateResult Authenticate(string username, string password)
@@ -66,6 +77,26 @@ namespace MembershipReboot.IdentityServer.UserService
             claims.AddRange(acct.Claims.Select(x=>new Claim(x.Type, x.Value)));
 
             return claims.Where(x=>requestedClaimTypes.Contains(x.Type));
+        }
+
+        public AuthenticateResult Authenticate(IEnumerable<Claim> claims)
+        {
+            if (claims == null)
+            {
+                return null;
+            }
+
+            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            if (name == null)
+            {
+                return null;
+            }
+
+            return new AuthenticateResult
+            {
+                Subject = name.Value,
+                Username = name.Value
+            };
         }
     }
 }

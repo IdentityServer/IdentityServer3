@@ -247,9 +247,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
         IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, ICoreSettings settings)
         {
             message = message ?? new SignInMessage();
+
             var path = Url.Route("authorize", null) + "?" + parameters.ToQueryString();
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
+            
             return new LoginResult(message, this.Request, settings);
         }
     }

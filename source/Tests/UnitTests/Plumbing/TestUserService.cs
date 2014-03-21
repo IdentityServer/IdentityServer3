@@ -22,5 +22,11 @@ namespace UnitTests.Plumbing
         {
             throw new NotImplementedException();
         }
+
+
+        public AuthenticateResult Authenticate(IEnumerable<System.Security.Claims.Claim> claims)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

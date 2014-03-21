@@ -10,8 +10,8 @@ namespace MembershipReboot.IdentityServer.UserService
         {
             var repo = new DefaultUserAccountRepository();
             var userAccountService = new UserAccountService(config, repo);
-            var userSvc = new UserService(userAccountService);
-            return new DisposableUserService(userSvc, repo);
+            var userSvc = new UserService(userAccountService, repo);
+            return userSvc;
         }
 
         static MembershipRebootConfiguration config;

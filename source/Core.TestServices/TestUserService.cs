@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -39,6 +40,27 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             {
                 Subject = username,
                 Username = username
+            };
+        }
+
+
+        public AuthenticateResult Authenticate(IEnumerable<Claim> claims)
+        {
+            if (claims == null)
+            {
+                return null;
+            }
+
+            var name = claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
+            if (name == null)
+            {
+                return null;
+            }
+
+            return new AuthenticateResult
+            {
+                Subject = name.Value,
+                Username = name.Value
             };
         }
     }
