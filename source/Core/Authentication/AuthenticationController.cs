@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -103,9 +104,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             string currentSubject = null;
-            if (User != null && User.Identity.IsAuthenticated)
+            var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.BuiltInAuthenticationType);
+            if (currentAuth != null && 
+                currentAuth.Identity != null && 
+                currentAuth.Identity.IsAuthenticated)
             {
-                currentSubject = User.GetSubjectId();
+                currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
             }
 
             var authResult = userService.Authenticate(currentSubject, externalAuthResult.Identity.Claims);
