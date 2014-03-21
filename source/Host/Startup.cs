@@ -1,11 +1,29 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Security.Google;
 using Owin;
+using System;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
 namespace Thinktecture.IdentityServer.Host
 {
+    public class ExternalConfigBase 
+    {
+    }
+    public class ExternalConfig<TOptions> : ExternalConfigBase
+        where TOptions : Microsoft.Owin.Security.AuthenticationOptions
+    {
+        public ExternalConfig(TOptions options, Action<IAppBuilder> config)
+        {
+            this.Options = options;
+            this.Config = config;
+        }
+
+        public TOptions Options { get; set; }
+        public Action<IAppBuilder> Config { get; set; }
+    }
+
     public class Startup
     {
         public void Configuration(IAppBuilder app)
@@ -16,8 +34,17 @@ namespace Thinktecture.IdentityServer.Host
                     var factory = TestOptionsFactory.Create();
                     factory.UserService = MembershipReboot.IdentityServer.UserService.UserServiceFactory.Factory;
 
-                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions{
+                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
+                    {
                         Factory = factory
+                    }, 
+                    (appCtx, signInAs) =>
+                    {
+                        var google = new GoogleAuthenticationOptions
+                        {
+                            AuthenticationType = "Google", SignInAsAuthenticationType = signInAs
+                        };
+                        appCtx.UseGoogleAuthentication(google);
                     });
                 });
         }

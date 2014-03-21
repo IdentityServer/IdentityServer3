@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Owin.Security;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
@@ -30,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             _settings = settings;
         }
 
-        [Route("login")]
+        [Route("login", Name="login")]
         public IHttpActionResult Get([FromUri] string message)
         {
             var protection = _settings.GetInternalProtectionSettings();
@@ -45,7 +47,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 new LayoutModel { 
                     Title=_settings.GetSiteName(),
                     Page = "login", 
-                    PageModel = new { url=Request.RequestUri.AbsoluteUri } 
+                    PageModel = new { 
+                        url=Request.RequestUri.AbsoluteUri,
+                        providers = new [] { 
+                            new {
+                                name="Google", 
+                                url=Url.Route("external", new{provider="Google", message=message}) 
+                            }
+                        }
+                    } 
                 });
         }
 
@@ -105,9 +115,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 authResult.Subject,
                 Constants.AuthenticationMethods.Password,
                 Constants.BuiltInIdentityProvider);
-            principal.Identities.First().AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
+            
+            var id = principal.Identities.First();
+            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
 
-            Request.GetOwinContext().Authentication.SignIn(principal.Identities.First());
+            Request.GetOwinContext().Authentication.SignIn(id);
             return Redirect(signInMessage.ReturnUrl);
         }
 
@@ -126,29 +138,50 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                    });
         }
 
-        //public IHttpActionResult Post([FromUri] SignInMessage msg, [FromBody] LoginBody body)
-        //{
-        //    var claims = authenticationService.Authenticate(body.Username, body.Password);
-        //    if (claims != null)
-        //    {
-        //        var message = Request.RequestUri.Query;
+        [Route("external", Name="external")]
+        [HttpGet]
+        public IHttpActionResult SigninExternal(string provider, string message)
+        {
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey); 
+            
+            var ctx = Request.GetOwinContext();
+            var authProp = new AuthenticationProperties {
+                RedirectUri = Url.Route("callback", null)
+            };
+            authProp.Dictionary.Add("returnUrl", signInMessage.ReturnUrl);
+            Request.GetOwinContext().Authentication.Challenge(authProp, provider);
+            return Unauthorized();
+        }
 
-        //        var id = new ClaimsIdentity("idsrv");
-        //        id.AddClaims(new[]
-        //        {
-        //            new Claim(Constants.ClaimTypes.Subject, body.Username),
-        //            new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.AuthenticationMethods.Password),
-        //            new Claim(Constants.ClaimTypes.AuthenticationTime, DateTime.UtcNow.ToEpochTime().ToString())
-        //        });
-        //        id.AddClaims(claims);
+        [Route("callback", Name = "callback")]
+        [HttpGet]
+        public async Task<IHttpActionResult> ExternalCallback()
+        {
+            var ctx = Request.GetOwinContext();
+            var authResult = await ctx.Authentication.AuthenticateAsync("idsrv.external");
+            if (authResult == null)
+            {
+                return RedirectToRoute("login", null);
+            }
 
-        //        Request.GetOwinContext().Authentication.SignIn(id);
+            var principal = IdentityServerPrincipal.Create(
+               authResult.Identity.Name,
+               Constants.AuthenticationMethods.Password,
+               Constants.BuiltInIdentityProvider);
 
-        //        return Redirect(msg.ReturnUrl);
-        //    }
+            var id = principal.Identities.First();
+            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Identity.Name));
+            
+            ctx.Authentication.SignIn(id);
 
-        //    return ResponseMessage(GetLoginPageResponse());
-        //}
+            var url = authResult.Properties.Dictionary["returnUrl"];
+            return Redirect(url);
+        }
 
 
         //[Route("providers")]
@@ -179,45 +212,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         //    //} 
 
         //    return Ok(providers);
-        //}
-
-        //[Route("external", Name = "SigninExternal")]
-        //[HttpGet]
-        //public IHttpActionResult SigninExternal(string provider)
-        //{
-        //    var authProp = new AuthenticationProperties { RedirectUri = Url.Link("ExternalCallback", new { provider }) };
-        //    Request.GetOwinContext().Authentication.Challenge(authProp, provider);
-        //    return Unauthorized();
-        //}
-
-        //[Route("callback", Name = "ExternalCallback")]
-        //[HttpGet]
-        //[HostAuthentication("ExternalCookie")]
-        //public IHttpActionResult ExternalCallback(string provider)
-        //{
-        //    var ctx = Request.GetOwinContext();
-        //    ctx.Authentication.SignOut("ExternalCookie");
-
-        //    var cp = User as ClaimsPrincipal;
-        //    var id = cp.Claims.GetValue(ClaimTypes.NameIdentifier);
-        //    var otherClaims = cp.Claims.Where(x => x.Type != ClaimTypes.NameIdentifier);
-
-        //    // what to do?
-        //    // 1) interactive
-        //    // => redirect to some page so they can build the local account
-        //    // 2) silent
-        //    // => auto create account (via extensibility point) 
-        //    try
-        //    {
-        //        this.AuthenticationService.SignInWithLinkedAccount(provider, id, otherClaims);
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        ModelState.AddModelError("", ex.Message);
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    return Redirect("~/");
         //}
     }
 }

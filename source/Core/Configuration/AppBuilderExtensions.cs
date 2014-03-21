@@ -4,6 +4,7 @@ using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.StaticFiles;
+using System;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 
@@ -11,9 +12,15 @@ namespace Owin
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
+        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options, Action<IAppBuilder, string> externalConfiguration = null)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = "idsrv" });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = "idsrv.external", AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
+
+            if (externalConfiguration != null)
+            {
+                externalConfiguration(app, "idsrv.external");
+            }
 
             app.UseFileServer(new FileServerOptions
             {
