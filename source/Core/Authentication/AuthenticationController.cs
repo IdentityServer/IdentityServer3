@@ -157,37 +157,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return Redirect(signInMessage.ReturnUrl);
         }
 
-        //[Route("providers")]
-        //public IHttpActionResult GetProviders()
-        //{
-        //    var ctx = Request.GetOwinContext();
-        //    var providers =
-        //        from p in ctx.Authentication.GetAuthenticationTypes(d => !String.IsNullOrWhiteSpace(d.Caption))
-        //        select new { name = p.Caption, url = Url.Link("SigninExternal", new { provider = p.AuthenticationType }) };
-
-
-        //    //foreach (var provider in providers)
-        //    //{
-        //    //    ExternalLoginViewModel login = new ExternalLoginViewModel
-        //    //    {
-        //    //        Name = description.Caption,
-        //    //        Url = Url.Route("ExternalLogin", new
-        //    //        {
-        //    //            provider = description.AuthenticationType,
-        //    //            response_type = "token",
-        //    //            client_id = Startup.PublicClientId,
-        //    //            redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
-        //    //            state = state
-        //    //        }),
-        //    //        State = state
-        //    //    };
-        //    //    logins.Add(login);
-        //    //} 
-
-        //    return Ok(providers);
-        //}
-
-
         private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
         {
             var ctx = Request.GetOwinContext();
