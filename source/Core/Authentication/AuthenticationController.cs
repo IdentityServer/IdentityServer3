@@ -102,7 +102,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RedirectToRoute("login", null);
             }
 
-            var authResult = userService.Authenticate(externalAuthResult.Identity.Claims);
+            string currentSubject = null;
+            if (User != null && User.Identity.IsAuthenticated)
+            {
+                currentSubject = User.GetSubjectId();
+            }
+
+            var authResult = userService.Authenticate(currentSubject, externalAuthResult.Identity.Claims);
             if (authResult == null)
             {
                 return RenderLoginPage("Invalid Account");

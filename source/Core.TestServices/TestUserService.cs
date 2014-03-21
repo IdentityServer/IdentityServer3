@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
         }
 
 
-        public AuthenticateResult Authenticate(IEnumerable<Claim> claims)
+        public AuthenticateResult Authenticate(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {

@@ -41,14 +41,14 @@ namespace MembershipReboot.IdentityServer.UserService
                     Username = acct.Username
                 };
             }
-            
+
             return null;
         }
 
-        public IEnumerable<System.Security.Claims.Claim> GetProfileData(string sub, 
+        public IEnumerable<System.Security.Claims.Claim> GetProfileData(string subject,
             IEnumerable<string> requestedClaimTypes = null)
         {
-            var acct = userAccountService.GetByID(sub.ToGuid());
+            var acct = userAccountService.GetByID(subject.ToGuid());
             if (acct == null)
             {
                 throw new ArgumentException("Invalid subject identifier");
@@ -67,35 +67,89 @@ namespace MembershipReboot.IdentityServer.UserService
             if (!String.IsNullOrWhiteSpace(acct.Email))
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Email, acct.Email));
-                claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, acct.IsAccountVerified?"true":"false"));
+                claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, acct.IsAccountVerified ? "true" : "false"));
             }
             if (!String.IsNullOrWhiteSpace(acct.MobilePhoneNumber))
             {
                 claims.Add(new Claim(Constants.ClaimTypes.PhoneNumber, acct.MobilePhoneNumber));
                 claims.Add(new Claim(Constants.ClaimTypes.PhoneNumberVerified, !String.IsNullOrWhiteSpace(acct.MobilePhoneNumber) ? "true" : "false"));
             }
-            claims.AddRange(acct.Claims.Select(x=>new Claim(x.Type, x.Value)));
+            claims.AddRange(acct.Claims.Select(x => new Claim(x.Type, x.Value)));
 
-            return claims.Where(x=>requestedClaimTypes.Contains(x.Type));
+            return claims.Where(x => requestedClaimTypes.Contains(x.Type));
         }
 
-        public AuthenticateResult Authenticate(IEnumerable<Claim> claims)
+        public AuthenticateResult Authenticate(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
                 return null;
             }
 
-            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            if (name == null)
+            var subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+            {
+                subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
+            }
+            if (subClaim == null)
             {
                 return null;
             }
 
+            var provider = subClaim.Issuer;
+            var id = subClaim.Value;
+
+            UserAccount acct = null;
+            if (subject != null)
+            {
+                Guid g;
+                if (!Guid.TryParse(subject, out g))
+                {
+                    throw new ArgumentException("Invalid subject");
+                }
+
+                acct = userAccountService.GetByID(g);
+                if (acct == null)
+                {
+                    throw new ArgumentException("Invalid subject");
+                }
+            }
+            else
+            {
+                acct = this.userAccountService.GetByLinkedAccount(provider, id);
+                if (acct == null)
+                {
+                    try
+                    {
+                        acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            userAccountService.AddOrUpdateLinkedAccount(acct, provider, id, claims);
+
+            var displayName = acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
+            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Name);
+            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Name);
+            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Email);
+            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Email);
+
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Name);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Name);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Email);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Email);
+
+            displayName = displayName ?? acct.Username;
+
             return new AuthenticateResult
             {
-                Subject = name.Value,
-                Username = name.Value
+                Subject = acct.ID.ToString("D"),
+                Username = displayName
             };
         }
     }

@@ -24,7 +24,7 @@ namespace UnitTests.Plumbing
         }
 
 
-        public AuthenticateResult Authenticate(IEnumerable<System.Security.Claims.Claim> claims)
+        public AuthenticateResult Authenticate(string sub, IEnumerable<System.Security.Claims.Claim> claims)
         {
             throw new NotImplementedException();
         }
