@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validator = validator;
         }
 
-        [Route("authorize")]
+        [Route("authorize", Name="authorize")]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
             return await ProcessRequest(request.RequestUri.ParseQueryString());
@@ -51,8 +51,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         protected virtual async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters, UserConsent consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");
-            
-            var signin = new SignInMessage();
             
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters
@@ -79,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             if (interaction.IsLogin)
             {
-                return this.Login(interaction.SignInMessage, _settings);
+                return this.RedirectToLogin(interaction.SignInMessage, parameters, _settings);
             }
 
             ///////////////////////////////////////////////////////////////
@@ -117,6 +115,43 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
             return ProcessRequest(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
+        }
+
+        [Route("switch", Name="switch")]
+        [HttpGet]
+        public IHttpActionResult LoginAsDifferentUser()
+        {
+            var parameters = Request.RequestUri.ParseQueryString();
+            var result = _validator.ValidateProtocol(parameters);
+            var request = _validator.ValidatedRequest;
+            if (result.IsError)
+            {
+                return this.AuthorizeError(
+                    result.ErrorType,
+                    result.Error,
+                    request.ResponseMode,
+                    request.RedirectUri,
+                    request.State);
+            }
+
+            var interaction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
+            if (interaction.IsError)
+            {
+                return this.AuthorizeError(interaction.Error);
+            }
+
+            result = _validator.ValidateClient();
+            if (result.IsError)
+            {
+                return this.AuthorizeError(
+                    result.ErrorType,
+                    result.Error,
+                    request.ResponseMode,
+                    request.RedirectUri,
+                    request.State);
+            }
+            
+            return RedirectToLogin(interaction.SignInMessage, parameters, _settings);
         }
 
         private IHttpActionResult CreateAuthorizeResponse(ValidatedAuthorizeRequest request)
@@ -195,6 +230,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     ErrorMessage = errorMessage,
                     Page = "consent",
                     Username = User.Identity.Name,
+                    SwitchUrl = Url.Route("switch", null) + "?" + requestParameters.ToQueryString(),
                     PageModel = new
                     {
                         postUrl = "consent?" + requestParameters.ToQueryString(),
@@ -206,6 +242,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         allowRememberConsent = validatedRequest.Client.AllowRememberConsent
                     }
                 });
+        }
+
+        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, ICoreSettings settings)
+        {
+            message = message ?? new SignInMessage();
+            var path = Url.Route("authorize", null) + "?" + parameters.ToQueryString();
+            var url = new Uri(Request.RequestUri, path);
+            message.ReturnUrl = url.AbsoluteUri;
+            return new LoginResult(message, this.Request, settings);
         }
     }
 }

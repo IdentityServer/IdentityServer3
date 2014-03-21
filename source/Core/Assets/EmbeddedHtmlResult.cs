@@ -17,13 +17,17 @@ namespace Thinktecture.IdentityServer.Core.Assets
 
         public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            var root = this.request.GetRequestContext().VirtualPathRoot;
-            
+            return Task.FromResult(GetResponseMessage(this.request, this.model));
+        }
+
+        public static HttpResponseMessage GetResponseMessage(HttpRequestMessage request, LayoutModel model)
+        {
+            var root = request.GetRequestContext().VirtualPathRoot;
             var html = AssetManager.GetLayoutHtml(model, root);
-            return Task.FromResult(new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(html, Encoding.UTF8, "text/html")
-            });
+            };
         }
     }
 }

@@ -33,21 +33,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             try
             {
-                var message = new SignInMessage
-                {
-                    ReturnUrl = _request.RequestUri.AbsoluteUri
-                };
-
                 var protection = _settings.GetInternalProtectionSettings();
-                var jwt = message.ToJwt(
+                var jwt = _message.ToJwt(
                     protection.Issuer,
                     protection.Audience,
                     protection.SigningKey,
                     protection.Ttl);
 
-                var baseUrl = _request.GetBaseUrl(_settings.GetPublicHost());
-                var uri = new Uri(baseUrl + "login?message=" + jwt);
-                
+                var urlHelper = _request.GetUrlHelper();
+                var loginUrl = urlHelper.Route("login", new { message = jwt });
+                var uri = new Uri(_request.RequestUri, loginUrl);
+
                 response.Headers.Location = uri;
             }
             catch

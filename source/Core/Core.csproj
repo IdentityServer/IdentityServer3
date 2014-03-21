@@ -259,6 +259,7 @@
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <EmbeddedResource Include="Assets\app\logout.html" />
+    <EmbeddedResource Include="Assets\app\error.html" />
     <Content Include="Assets\libs\angular\angular.1.2.13.js" />
     <Content Include="Assets\libs\angular\angular.1.2.13.min.js" />
     <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.css" />

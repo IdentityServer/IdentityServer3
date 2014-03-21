@@ -12,6 +12,7 @@ namespace Thinktecture.IdentityServer.Core.Assets
         public string Username { get; set; }
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
+        public string SwitchUrl { get; set; }
         public string Page { get; set; }
         public string PageUrl 
         { 

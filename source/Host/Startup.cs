@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using System;
@@ -45,6 +46,13 @@ namespace Thinktecture.IdentityServer.Host
                             AuthenticationType = "Google", SignInAsAuthenticationType = signInAs
                         };
                         appCtx.UseGoogleAuthentication(google);
+
+                        var fb = new FacebookAuthenticationOptions
+                        {
+                            AuthenticationType = "Facebook", SignInAsAuthenticationType = signInAs,
+                            AppId = "676607329068058", AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
+                        };
+                        appCtx.UseFacebookAuthentication(fb);
                     });
                 });
         }

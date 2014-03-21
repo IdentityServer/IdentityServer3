@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -21,6 +22,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public string Password { get; set; }
     }
 
+    public class ErrorPageFilterAttribute : ExceptionFilterAttribute
+    {
+        public override void OnException(HttpActionExecutedContext actionExecutedContext)
+        {
+            var response = EmbeddedHtmlResult.GetResponseMessage(
+                actionExecutedContext.Request, 
+                new LayoutModel
+                {
+                    Page = "error"
+                });
+
+            actionExecutedContext.Response = response;
+        }
+    }
+
+    [ErrorPageFilter]
     public class LoginController : ApiController
     {
         IUserService userService;
@@ -33,31 +50,28 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         [Route("login", Name="login")]
-        public IHttpActionResult Get([FromUri] string message)
+        public IHttpActionResult Get([FromUri] string message = null)
         {
-            var protection = _settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
-                message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey);
+            if (message != null)
+            {
+                SaveLoginRequestMessage(message);
+            }
+            else
+            {
+                VerifyLoginRequestMessage();
+            }
 
-            return RenderLoginPage(message);
+            return RenderLoginPage();
         }
 
         [Route("login")]
-        public IHttpActionResult Post([FromUri] string message, Credentials model)
+        public IHttpActionResult Post(Credentials model)
         {
-            var protection = _settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
-                message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey); 
+            VerifyLoginRequestMessage();
             
             if (model == null)
             {
-                return RenderLoginPage(message, "Invalid Username or Password");
+                return RenderLoginPage("Invalid Username or Password");
             }
 
             if (!ModelState.IsValid)
@@ -67,25 +81,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     where item.Value.Errors.Any()
                     from err in item.Value.Errors
                     select err.ErrorMessage;
-                return RenderLoginPage(message, error.First(), model.Username);
+                return RenderLoginPage(error.First(), model.Username);
             }
 
             var authResult = userService.Authenticate(model.Username, model.Password);
             if (authResult == null)
             {
-                return RenderLoginPage(message, "Invalid Username or Password", model.Username);
+                return RenderLoginPage("Invalid Username or Password", model.Username);
             }
 
-            var principal = IdentityServerPrincipal.Create(
-                authResult.Subject,
-                Constants.AuthenticationMethods.Password,
-                Constants.BuiltInIdentityProvider);
-            
-            var id = principal.Identities.First();
-            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
-
-            Request.GetOwinContext().Authentication.SignIn(id);
-            return Redirect(signInMessage.ReturnUrl);
+            return SignInAndRedirect(authResult);
         }
 
         [Route("logout")]
@@ -94,6 +99,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType);
+            ClearLoginRequestMessage();
 
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
@@ -105,20 +111,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route("external", Name="external")]
         [HttpGet]
-        public IHttpActionResult SigninExternal(string provider, string message)
+        public IHttpActionResult SigninExternal(string provider)
         {
-            var protection = _settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
-                message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey); 
-            
+            VerifyLoginRequestMessage();
+
             var ctx = Request.GetOwinContext();
             var authProp = new AuthenticationProperties {
                 RedirectUri = Url.Route("callback", null)
             };
-            authProp.Dictionary.Add("returnUrl", signInMessage.ReturnUrl);
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
             return Unauthorized();
         }
@@ -127,6 +127,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> ExternalCallback()
         {
+            VerifyLoginRequestMessage();
+
             var ctx = Request.GetOwinContext();
             var authResult = await ctx.Authentication.AuthenticateAsync("idsrv.external");
             if (authResult == null)
@@ -134,20 +136,30 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RedirectToRoute("login", null);
             }
 
+            return SignInAndRedirect(new Thinktecture.IdentityServer.Core.Services.AuthenticateResult
+            {
+                Subject = authResult.Identity.Name, Username = authResult.Identity.Name
+            });
+        }
+
+        private IHttpActionResult SignInAndRedirect(Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult)
+        {
+            var signInMessage = LoadLoginRequestMessage();
+            var ctx = Request.GetOwinContext();
+
             var principal = IdentityServerPrincipal.Create(
-               authResult.Identity.Name,
+               authResult.Subject,
                Constants.AuthenticationMethods.Password,
                Constants.BuiltInIdentityProvider);
 
             var id = principal.Identities.First();
-            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Identity.Name));
-            
+            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
             ctx.Authentication.SignIn(id);
+            
+            ClearLoginRequestMessage();
 
-            var url = authResult.Properties.Dictionary["returnUrl"];
-            return Redirect(url);
+            return Redirect(signInMessage.ReturnUrl);
         }
-
 
         //[Route("providers")]
         //public IHttpActionResult GetProviders()
@@ -180,7 +192,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         //}
 
 
-        private IHttpActionResult RenderLoginPage(string authorizeRequestMessage, string errorMessage = null, string username = null)
+        private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
         {
             return new EmbeddedHtmlResult(
                 Request,
@@ -191,16 +203,89 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     ErrorMessage = errorMessage,
                     PageModel = new
                     {
-                        url = Request.RequestUri.AbsoluteUri,
+                        url = Url.Route("login", null),
                         username = username,
                         providers = new[] { 
                             new {
                                 name="Google", 
-                                url=Url.Route("external", new{provider="Google", message=authorizeRequestMessage}) 
-                            }
+                                url=Url.Route("external", new{provider="Google"}) 
+                            },
+                            new {
+                                name="Facebook", 
+                                url=Url.Route("external", new{provider="Facebook"}) 
+                            },
                         }
                     }
                 });
+        }
+
+        private void ClearLoginRequestMessage()
+        {
+            var ctx = Request.GetOwinContext();
+            ctx.Response.Cookies.Append(
+                "idsrv.login.message",
+                ".",
+                new Microsoft.Owin.CookieOptions
+                {
+                    Expires = DateTime.UtcNow.AddYears(-1),
+                    HttpOnly = true,
+#if DEBUG
+                    Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
+#else
+                    Secure = true
+#endif
+                });
+        }
+
+        private void SaveLoginRequestMessage(string message)
+        {
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey);
+
+            var ctx = Request.GetOwinContext();
+            ctx.Response.Cookies.Append(
+                "idsrv.login.message", 
+                message, 
+                new Microsoft.Owin.CookieOptions {
+                    HttpOnly = true,
+#if DEBUG
+                    Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
+#else
+                    Secure = true
+#endif
+                });
+        }
+
+        private SignInMessage LoadLoginRequestMessage()
+        {
+            var ctx = Request.GetOwinContext();
+            var message = ctx.Request.Cookies["idsrv.login.message"];
+
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey);
+
+            return signInMessage;
+        }
+
+        private void VerifyLoginRequestMessage()
+        {
+            var ctx = Request.GetOwinContext();
+            var message = ctx.Request.Cookies["idsrv.login.message"];
+
+            var protection = _settings.GetInternalProtectionSettings();
+            var signInMessage = SignInMessage.FromJwt(
+                message,
+                protection.Issuer,
+                protection.Audience,
+                protection.SigningKey);
         }
     }
 }

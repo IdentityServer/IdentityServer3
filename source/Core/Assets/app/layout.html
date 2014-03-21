@@ -15,8 +15,8 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{layout.username}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="{rootUrl}/logout">Logout</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Login With Different Account</a></li>
+                    <li class="divider" ng-show="layout.switchUrl"></li>
+                    <li><a href="{{layout.switchUrl}}" ng-show="layout.switchUrl">Login With Different Account</a></li>
                 </ul>
             </li>
         </ul>
