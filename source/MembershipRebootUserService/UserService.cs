@@ -99,25 +99,24 @@ namespace MembershipReboot.IdentityServer.UserService
             var provider = subClaim.Issuer;
             var id = subClaim.Value;
 
-            UserAccount acct = null;
-            if (subject != null)
+            var acct = this.userAccountService.GetByLinkedAccount(provider, id);
+            if (acct == null)
             {
-                Guid g;
-                if (!Guid.TryParse(subject, out g))
+                if (subject != null)
                 {
-                    throw new ArgumentException("Invalid subject");
-                }
+                    Guid g;
+                    if (!Guid.TryParse(subject, out g))
+                    {
+                        throw new ArgumentException("Invalid subject");
+                    }
 
-                acct = userAccountService.GetByID(g);
-                if (acct == null)
-                {
-                    throw new ArgumentException("Invalid subject");
+                    acct = userAccountService.GetByID(g);
+                    if (acct == null)
+                    {
+                        throw new ArgumentException("Invalid subject");
+                    }
                 }
-            }
-            else
-            {
-                acct = this.userAccountService.GetByLinkedAccount(provider, id);
-                if (acct == null)
+                else
                 {
                     try
                     {
@@ -132,7 +131,10 @@ namespace MembershipReboot.IdentityServer.UserService
 
             userAccountService.AddOrUpdateLinkedAccount(acct, provider, id, claims);
 
-            var displayName = acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
+            string displayName = null;
+            if (acct.HasPassword()) displayName = acct.Username;
+            
+            if (displayName == null) acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
             if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Name);
             if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Name);
             if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Email);
