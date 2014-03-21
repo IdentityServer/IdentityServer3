@@ -41,22 +41,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 protection.Issuer,
                 protection.Audience,
                 protection.SigningKey);
-            
-            return new EmbeddedHtmlResult(
-                Request,
-                new LayoutModel { 
-                    Title=_settings.GetSiteName(),
-                    Page = "login", 
-                    PageModel = new { 
-                        url=Request.RequestUri.AbsoluteUri,
-                        providers = new [] { 
-                            new {
-                                name="Google", 
-                                url=Url.Route("external", new{provider="Google", message=message}) 
-                            }
-                        }
-                    } 
-                });
+
+            return RenderLoginPage(message);
         }
 
         [Route("login")]
@@ -71,14 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             
             if (model == null)
             {
-                return new EmbeddedHtmlResult(Request,
-                    new LayoutModel
-                    {
-                        Title = _settings.GetSiteName(),
-                        Page = "login",
-                        PageModel = new { url = Request.RequestUri.AbsoluteUri },
-                        ErrorMessage = "Invalid Username or Password",
-                    });
+                return RenderLoginPage(message, "Invalid Username or Password");
             }
 
             if (!ModelState.IsValid)
@@ -88,27 +67,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     where item.Value.Errors.Any()
                     from err in item.Value.Errors
                     select err.ErrorMessage;
-                return new EmbeddedHtmlResult(Request,
-                    new LayoutModel
-                    {
-                        Title = _settings.GetSiteName(),
-                        Page = "login",
-                        PageModel = new { url = Request.RequestUri.AbsoluteUri, username=model.Username },
-                        ErrorMessage = error.First(),
-                    });
+                return RenderLoginPage(message, error.First(), model.Username);
             }
 
             var authResult = userService.Authenticate(model.Username, model.Password);
             if (authResult == null)
             {
-                return new EmbeddedHtmlResult(Request,
-                    new LayoutModel
-                    {
-                        Title = _settings.GetSiteName(),
-                        Page = "login",
-                        PageModel = new { url = Request.RequestUri.AbsoluteUri, username = model.Username },
-                        ErrorMessage = "Invalid Username or Password",
-                    });
+                return RenderLoginPage(message, "Invalid Username or Password", model.Username);
             }
 
             var principal = IdentityServerPrincipal.Create(
@@ -213,5 +178,29 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         //    return Ok(providers);
         //}
+
+
+        private IHttpActionResult RenderLoginPage(string authorizeRequestMessage, string errorMessage = null, string username = null)
+        {
+            return new EmbeddedHtmlResult(
+                Request,
+                new LayoutModel
+                {
+                    Title = _settings.GetSiteName(),
+                    Page = "login",
+                    ErrorMessage = errorMessage,
+                    PageModel = new
+                    {
+                        url = Request.RequestUri.AbsoluteUri,
+                        username = username,
+                        providers = new[] { 
+                            new {
+                                name="Google", 
+                                url=Url.Route("external", new{provider="Google", message=authorizeRequestMessage}) 
+                            }
+                        }
+                    }
+                });
+        }
     }
 }
