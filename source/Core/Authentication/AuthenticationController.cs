@@ -190,6 +190,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
         {
+            var ctx = Request.GetOwinContext();
+            var providers =
+                from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
+                select new { name = p.Caption, url = Url.Route("external", new { provider = p.AuthenticationType }) };
+
             return new EmbeddedHtmlResult(
                 Request,
                 new LayoutModel
@@ -201,16 +206,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         url = Url.Route("login", null),
                         username = username,
-                        providers = new[] { 
-                            new {
-                                name="Google", 
-                                url=Url.Route("external", new{provider="Google"}) 
-                            },
-                            new {
-                                name="Facebook", 
-                                url=Url.Route("external", new{provider="Facebook"}) 
-                            },
-                        }
+                        providers = providers.ToArray()
                     }
                 });
         }
