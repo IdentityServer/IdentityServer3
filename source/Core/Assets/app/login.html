@@ -40,8 +40,8 @@
                 <h3 class="panel-title">External Login</h3>
             </div>
             <div class="panel-body">
-                <ul class="list-inline" ng-repeat="provider in model.providers">
-                    <li>
+                <ul class="list-inline">
+                    <li ng-repeat="provider in model.providers">
                         <a class="btn btn-default" href="{{provider.url}}">{{provider.name}}</a>
                     </li>
                 </ul>
