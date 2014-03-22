@@ -14,12 +14,12 @@ namespace Owin
     {
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options, Action<IAppBuilder, string> externalConfiguration = null)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = "idsrv" });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = "idsrv.external", AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.BuiltInAuthenticationType });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
 
             if (externalConfiguration != null)
             {
-                externalConfiguration(app, "idsrv.external");
+                externalConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
             app.UseFileServer(new FileServerOptions

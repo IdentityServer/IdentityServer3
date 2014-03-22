@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             VerifyLoginRequestMessage();
 
             var ctx = Request.GetOwinContext();
-            var externalAuthResult = await ctx.Authentication.AuthenticateAsync("idsrv.external");
+            var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
             if (externalAuthResult == null ||
                 externalAuthResult.Identity == null ||
                 !externalAuthResult.Identity.Claims.Any())
@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public IHttpActionResult Logout()
         {
             var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType, "idsrv.external");
+            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType, Constants.ExternalAuthenticationType);
             ClearLoginRequestMessage();
 
             return new EmbeddedHtmlResult(Request,
@@ -151,7 +151,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
             ctx.Authentication.SignIn(id);
 
-            ctx.Authentication.SignOut("idsrv.external");
+            ctx.Authentication.SignOut(Constants.ExternalAuthenticationType);
             ClearLoginRequestMessage();
 
             return Redirect(signInMessage.ReturnUrl);

@@ -10,6 +10,7 @@ namespace Thinktecture.IdentityServer.Core
     public static class Constants
     {
         public const string BuiltInAuthenticationType = "idsrv";
+        public const string ExternalAuthenticationType = "idsrv.external";
         public const string BuiltInIdentityProvider = "idsrv";
 
         public static class AuthorizeRequest
