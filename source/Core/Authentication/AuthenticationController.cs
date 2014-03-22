@@ -144,12 +144,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var principal = IdentityServerPrincipal.Create(
                authResult.Subject,
+               authResult.Name,
                Constants.AuthenticationMethods.Password,
                Constants.BuiltInIdentityProvider);
-
-            var id = principal.Identities.First();
-            id.AddClaim(new Claim(ClaimTypes.Name, authResult.Username));
-            ctx.Authentication.SignIn(id);
+            ctx.Authentication.SignIn(principal.Identities.First());
 
             ctx.Authentication.SignOut(Constants.ExternalAuthenticationType);
             ClearLoginRequestMessage();

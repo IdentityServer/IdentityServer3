@@ -232,13 +232,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var sub = _profile.Authenticate(userName, password);
-            if (sub != null)
+            var authnResult = _profile.Authenticate(userName, password);
+            if (authnResult != null)
             {
                 _validatedRequest.UserName = userName;
 
                 _validatedRequest.Subject = IdentityServerPrincipal.Create(
-                    sub.Subject,
+                    authnResult.Subject,
+                    authnResult.Name,
                     Constants.AuthenticationMethods.Password,
                     Constants.BuiltInIdentityProvider);
             }

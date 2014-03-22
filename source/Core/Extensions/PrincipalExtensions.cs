@@ -33,6 +33,15 @@ namespace Thinktecture.IdentityServer.Core
         }
 
         [DebuggerStepThrough]
+        public static string GetName(this IPrincipal principal)
+        {
+            var cp = principal as ClaimsPrincipal;
+            var value = cp.FindFirst(Constants.ClaimTypes.Name).Value;
+
+            return value;
+        }
+
+        [DebuggerStepThrough]
         public static string GetAuthenticationMethod(this IPrincipal principal)
         {
             var cp = principal as ClaimsPrincipal;

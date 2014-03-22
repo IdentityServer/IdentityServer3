@@ -193,7 +193,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     s.Emphasize,
                     s.Required
                 };
-            
+
+            string name = User.Identity.IsAuthenticated ? User.GetName() : null;
             return new EmbeddedHtmlResult(
                 Request, 
                 new LayoutModel
@@ -201,7 +202,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     Title = validatedRequest.Client.ClientName,
                     ErrorMessage = errorMessage,
                     Page = "consent",
-                    Username = User.Identity.Name,
+                    Name = name,
                     SwitchUrl = Url.Route("switch", null) + "?" + requestParameters.ToQueryString(),
                     PageModel = new
                     {

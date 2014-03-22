@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             return new AuthenticateResult
             {
                 Subject = username,
-                Username = username
+                Name = username
             };
         }
 
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             return new AuthenticateResult
             {
                 Subject = name.Value,
-                Username = name.Value
+                Name = name.Value
             };
         }
     }

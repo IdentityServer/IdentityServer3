@@ -11,7 +11,7 @@ namespace UnitTests.Plumbing
             if (username == password)
             {
                 return new AuthenticateResult {
-                    Subject = username, Username = username
+                    Subject = username, Name = username
                 };
             }
 

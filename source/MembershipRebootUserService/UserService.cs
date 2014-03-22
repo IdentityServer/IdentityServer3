@@ -38,7 +38,7 @@ namespace MembershipReboot.IdentityServer.UserService
                 return new AuthenticateResult
                 {
                     Subject = acct.ID.ToString("D"),
-                    Username = acct.Username
+                    Name = acct.Username
                 };
             }
 
@@ -151,7 +151,7 @@ namespace MembershipReboot.IdentityServer.UserService
             return new AuthenticateResult
             {
                 Subject = acct.ID.ToString("D"),
-                Username = displayName
+                Name = displayName
             };
         }
     }
