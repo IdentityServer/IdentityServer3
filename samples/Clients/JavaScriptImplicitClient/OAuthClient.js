@@ -33,7 +33,7 @@ OAuthClient.prototype.parseResult = function (queryString) {
         m;
 
     while (m = regex.exec(queryString)) {
-        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2].replace(/\+/g, " "));
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
     }
 
     for (var prop in params) {

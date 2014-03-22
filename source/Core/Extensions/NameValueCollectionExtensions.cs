@@ -35,6 +35,15 @@ namespace Thinktecture.IdentityServer.Core
             return builder.ToString();
         }
 
+        internal static string ConvertFormUrlEncodedSpacesToUrlEncodedSpaces(string str)
+        {
+            if ((str != null) && (str.IndexOf('+') >= 0))
+            {
+                str = str.Replace("+", "%20");
+            }
+            return str;
+        }
+
         private static bool AppendNameValuePair(StringBuilder builder, bool first, bool urlEncode, string name, string value)
         {
             string effectiveName = name ?? String.Empty;
@@ -42,6 +51,7 @@ namespace Thinktecture.IdentityServer.Core
 
             string effectiveValue = value ?? String.Empty;
             string encodedValue = urlEncode ? WebUtility.UrlEncode(effectiveValue) : effectiveValue;
+            encodedValue = ConvertFormUrlEncodedSpacesToUrlEncodedSpaces(encodedValue);
 
             if (first)
             {
