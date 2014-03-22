@@ -5,10 +5,10 @@
 OAuthClient.prototype.createImplicitFlowRequest = function (clientid, callback, scope, responseType) {
     responseType = responseType || "token";
 
-    var state = Date.now() + "" + Math.random();
-    state = state.replace(".", "");
-    var nonce = Date.now() + "" + Math.random();
-    nonce = nonce.replace(".", "");
+    var state = (Date.now() + Math.random()) * Math.random();
+    state = state.toString().replace(".", "");
+    var nonce = (Date.now() + Math.random()) * Math.random();
+    nonce = nonce.toString().replace(".", "");
 
     var url =
         this.url + "?" + 
@@ -33,7 +33,7 @@ OAuthClient.prototype.parseResult = function (queryString) {
         m;
 
     while (m = regex.exec(queryString)) {
-        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2].replace(/\+/g, " "));
     }
 
     for (var prop in params) {
