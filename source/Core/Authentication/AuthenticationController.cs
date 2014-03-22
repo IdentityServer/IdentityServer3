@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage("Invalid Username or Password", model.Username);
             }
 
-            return SignInAndRedirect(authResult);
+            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
         }
 
         [Route("external", Name="external")]
@@ -118,7 +118,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage("Invalid Account");
             }
 
-            return SignInAndRedirect(authResult);
+            var identityProvider = externalAuthResult.Identity.Claims.First().Issuer;
+            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.External, identityProvider);
         }
 
         [Route("logout")]
@@ -137,7 +138,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                    });
         }
         
-        private IHttpActionResult SignInAndRedirect(Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult)
+        private IHttpActionResult SignInAndRedirect(Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult, string authenticationMethod, string identityProvider)
         {
             var signInMessage = LoadLoginRequestMessage();
             var ctx = Request.GetOwinContext();
@@ -145,8 +146,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var principal = IdentityServerPrincipal.Create(
                authResult.Subject,
                authResult.Name,
-               Constants.AuthenticationMethods.Password,
-               Constants.BuiltInIdentityProvider);
+               authenticationMethod,
+               identityProvider);
             ctx.Authentication.SignIn(principal.Identities.First());
 
             ctx.Authentication.SignOut(Constants.ExternalAuthenticationType);

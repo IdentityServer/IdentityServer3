@@ -286,6 +286,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Certificate             = "certificate";
             public const string Password                = "password";
             public const string TwoFactorAuthentication = "2fa";
+            public const string External                = "external";
         }
 
         public static class ClientAuthenticationMethods
