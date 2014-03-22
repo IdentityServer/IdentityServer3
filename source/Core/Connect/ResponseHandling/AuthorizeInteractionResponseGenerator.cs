@@ -63,11 +63,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            // prompt=login
-
-            // clear the auth cookie
-            // remove the prompt=login
-            // redirect to login page
+            if (request.PromptMode == Constants.PromptModes.Login)
+            {
+                // remove prompt so when we redirect back in from login page
+                // we won't think we need to force a prompt again
+                request.Raw.Remove(Constants.AuthorizeRequest.Prompt);
+                return new InteractionResponse
+                {
+                    IsLogin = true,
+                    SignInMessage = _signIn
+                };
+            }
 
             // check authentication freshness
             if (request.MaxAge.HasValue)

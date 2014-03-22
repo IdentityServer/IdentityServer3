@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             if (interaction.IsLogin)
             {
-                return this.RedirectToLogin(interaction.SignInMessage, parameters, _settings);
+                return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _settings);
             }
 
             ///////////////////////////////////////////////////////////////
@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (interaction.IsConsent)
             {
-                return CreateConsentResult(request, parameters, interaction.ConsentError);
+                return CreateConsentResult(request, request.Raw, interaction.ConsentError);
             }
 
             return CreateAuthorizeResponse(request);
@@ -119,28 +119,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         [Route("switch", Name="switch")]
         [HttpGet]
-        public IHttpActionResult LoginAsDifferentUser()
+        public async Task<IHttpActionResult> LoginAsDifferentUser()
         {
             var parameters = Request.RequestUri.ParseQueryString();
-            var result = _validator.ValidateProtocol(parameters);
-            var request = _validator.ValidatedRequest;
-            if (result.IsError)
-            {
-                return this.AuthorizeError(
-                    result.ErrorType,
-                    result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
-            }
-
-            var interaction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
-            if (interaction.IsError)
-            {
-                return this.AuthorizeError(interaction.Error);
-            }
-
-            return RedirectToLogin(interaction.SignInMessage, parameters, _settings);
+            parameters[Constants.AuthorizeRequest.Prompt] = Constants.PromptModes.Login;
+            return await ProcessRequest(parameters);
         }
 
         private IHttpActionResult CreateAuthorizeResponse(ValidatedAuthorizeRequest request)
