@@ -140,17 +140,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return this.AuthorizeError(interaction.Error);
             }
 
-            result = _validator.ValidateClient();
-            if (result.IsError)
-            {
-                return this.AuthorizeError(
-                    result.ErrorType,
-                    result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
-            }
-            
             return RedirectToLogin(interaction.SignInMessage, parameters, _settings);
         }
 
