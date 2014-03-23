@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -50,6 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 kty = "RSA",
                 use = "sig",
                 kid = thumbprint,
+                x5t = thumbprint,
                 x5c = new string[] { cert64 }
             };
 
