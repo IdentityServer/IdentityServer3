@@ -27,11 +27,11 @@ namespace ConsoleResourceOwnerClient
 
         private static void ShowResponse(TokenResponse response)
         {
-            "Token response:".ConsoleGreen();
-            Console.WriteLine(response.Json);
-
             if (!response.IsError)
             {
+                "Token response:".ConsoleGreen();
+                Console.WriteLine(response.Json);
+
                 if (response.AccessToken.Contains("."))
                 {
                     "\nAccess Token (decoded):".ConsoleGreen();
@@ -42,6 +42,21 @@ namespace ConsoleResourceOwnerClient
 
                     Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))));
                     Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))));
+                }
+            }
+            else
+            {
+                if (response.IsHttpError)
+                {
+                    "HTTP error: ".ConsoleGreen();
+                    Console.WriteLine(response.HttpErrorStatusCode);
+                    "HTTP error reason: ".ConsoleGreen();
+                    Console.WriteLine(response.HttpErrorReason);
+                }
+                else
+                {
+                    "Protocol error response:".ConsoleGreen();
+                    Console.WriteLine(response.Json);
                 }
             }
         }
