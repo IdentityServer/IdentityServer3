@@ -166,6 +166,11 @@
     <Compile Include="Connect\Results\TokenErrorResult.cs" />
     <Compile Include="Connect\Results\TokenResult.cs" />
     <Compile Include="Connect\Results\ResultExtensions.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\DebugLogger.cs" />
     <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
     <Compile Include="Services\IConsentService.cs" />
@@ -193,6 +198,10 @@
     <Folder Include="Server\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Assets\libs\bootstrap\custom.less" />
     <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
