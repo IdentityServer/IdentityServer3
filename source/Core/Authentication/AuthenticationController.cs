@@ -12,6 +12,7 @@ using System.Web.Http.Filters;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
@@ -52,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             
             if (model == null)
             {
-                return RenderLoginPage("Invalid Username or Password");
+                return RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
             if (!ModelState.IsValid)
@@ -65,10 +66,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage(error.First(), model.Username);
             }
 
-            var authResult = userService.Authenticate(model.Username, model.Password);
+            var authResult = userService.AuthenticateLocal(model.Username, model.Password);
             if (authResult == null)
             {
-                return RenderLoginPage("Invalid Username or Password", model.Username);
+                return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
 
             return SignInAndRedirect(authResult, Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
@@ -94,6 +95,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             VerifyLoginRequestMessage();
 
+            //string currentSubject = null;
+            //var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.BuiltInAuthenticationType);
+            //if (currentAuth != null && 
+            //    currentAuth.Identity != null && 
+            //    currentAuth.Identity.IsAuthenticated)
+            //{
+            //    currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
+            //}
+
             var ctx = Request.GetOwinContext();
             var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
             if (externalAuthResult == null ||
@@ -103,23 +113,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RedirectToRoute("login", null);
             }
 
-            string currentSubject = null;
-            var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.BuiltInAuthenticationType);
-            if (currentAuth != null && 
-                currentAuth.Identity != null && 
-                currentAuth.Identity.IsAuthenticated)
-            {
-                currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
-            }
-
-            var authResult = userService.Authenticate(currentSubject, externalAuthResult.Identity.Claims);
+            var claims = externalAuthResult.Identity.Claims;
+            var authResult = userService.AuthenticateExternal(claims);
             if (authResult == null)
             {
-                return RenderLoginPage("Invalid Account");
+                return RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
-            var identityProvider = externalAuthResult.Identity.Claims.First().Issuer;
-            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.External, identityProvider);
+            var provider = externalAuthResult.Identity.Claims.First().Issuer;
+            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.External, provider);
         }
 
         [Route("logout")]
@@ -179,11 +181,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 });
         }
 
+        const string LoginRequestMessageCookieName = "idsrv.login.message";
         private void ClearLoginRequestMessage()
         {
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                "idsrv.login.message",
+                LoginRequestMessageCookieName,
                 ".",
                 new Microsoft.Owin.CookieOptions
                 {
@@ -208,7 +211,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                "idsrv.login.message", 
+                LoginRequestMessageCookieName, 
                 message, 
                 new Microsoft.Owin.CookieOptions {
                     HttpOnly = true,
@@ -223,7 +226,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private SignInMessage LoadLoginRequestMessage()
         {
             var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies["idsrv.login.message"];
+            var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
             var protection = _settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
@@ -238,7 +241,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private void VerifyLoginRequestMessage()
         {
             var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies["idsrv.login.message"];
+            var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
             var protection = _settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(

@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
             return claims;
         }
 
-        public AuthenticateResult Authenticate(string username, string password)
+        public AuthenticateResult AuthenticateLocal(string username, string password)
         {
             if (username != password) return null;
 
@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.TestServices
         }
 
 
-        public AuthenticateResult Authenticate(string subject, IEnumerable<Claim> claims)
+        public AuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
         {
             if (claims == null)
             {

@@ -232,7 +232,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var authnResult = _profile.Authenticate(userName, password);
+            var authnResult = _profile.AuthenticateLocal(userName, password);
             if (authnResult != null)
             {
                 _validatedRequest.UserName = userName;

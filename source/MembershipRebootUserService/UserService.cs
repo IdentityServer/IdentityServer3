@@ -30,7 +30,7 @@ namespace MembershipReboot.IdentityServer.UserService
             }
         }
 
-        public AuthenticateResult Authenticate(string username, string password)
+        public AuthenticateResult AuthenticateLocal(string username, string password)
         {
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
@@ -79,57 +79,34 @@ namespace MembershipReboot.IdentityServer.UserService
             return claims.Where(x => requestedClaimTypes.Contains(x.Type));
         }
 
-        public AuthenticateResult Authenticate(string subject, IEnumerable<Claim> claims)
+        public AuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
                 return null;
             }
 
-            var subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
             if (subClaim == null)
             {
-                subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
-            }
-            if (subClaim == null)
-            {
-                return null;
+                subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+                
+                if (subClaim == null)
+                {
+                    return null;
+                }
             }
 
             var provider = subClaim.Issuer;
-            var id = subClaim.Value;
+            var providerId = subClaim.Value;
 
-            var acct = this.userAccountService.GetByLinkedAccount(provider, id);
+            var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
             if (acct == null)
             {
-                if (subject != null)
-                {
-                    Guid g;
-                    if (!Guid.TryParse(subject, out g))
-                    {
-                        throw new ArgumentException("Invalid subject");
-                    }
-
-                    acct = userAccountService.GetByID(g);
-                    if (acct == null)
-                    {
-                        throw new ArgumentException("Invalid subject");
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                }
+                acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
             }
-
-            userAccountService.AddOrUpdateLinkedAccount(acct, provider, id, claims);
+            
+            userAccountService.AddOrUpdateLinkedAccount(acct, provider, providerId, claims);
 
             string displayName = null;
             if (acct.HasPassword()) displayName = acct.Username;

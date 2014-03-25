@@ -6,7 +6,7 @@ namespace UnitTests.Plumbing
 {
     class TestUserService : IUserService
     {
-        public AuthenticateResult Authenticate(string username, string password)
+        public AuthenticateResult AuthenticateLocal(string username, string password)
         {
             if (username == password)
             {
@@ -24,7 +24,7 @@ namespace UnitTests.Plumbing
         }
 
 
-        public AuthenticateResult Authenticate(string sub, IEnumerable<System.Security.Claims.Claim> claims)
+        public AuthenticateResult AuthenticateExternal(IEnumerable<System.Security.Claims.Claim> claims)
         {
             throw new NotImplementedException();
         }
