@@ -109,8 +109,9 @@
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Thinktecture.IdentityModel.Client">
-      <HintPath>..\packages\Thinktecture.IdentityModel.Client.1.4.2\lib\portable-net45+wp80+win8\Thinktecture.IdentityModel.Client.dll</HintPath>
+    <Reference Include="Thinktecture.IdentityModel.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Thinktecture.IdentityModel.Client.1.4.3\lib\portable-net45+wp80+win8\Thinktecture.IdentityModel.Client.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

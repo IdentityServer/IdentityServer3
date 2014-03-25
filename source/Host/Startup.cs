@@ -9,7 +9,7 @@ using Thinktecture.IdentityServer.Core.TestServices;
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
 namespace Thinktecture.IdentityServer.Host
 {
-    public class ExternalConfigBase 
+    public class ExternalConfigBase
     {
     }
     public class ExternalConfig<TOptions> : ExternalConfigBase
@@ -33,24 +33,27 @@ namespace Thinktecture.IdentityServer.Host
             app.Map("/core", coreApp =>
                 {
                     var factory = TestOptionsFactory.Create();
-                    factory.UserService = MembershipReboot.IdentityServer.UserService.UserServiceFactory.Factory;
+                    //factory.UserService = MembershipReboot.IdentityServer.UserService.UserServiceFactory.Factory;
 
                     coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
                     {
                         Factory = factory
-                    }, 
+                    },
                     (appCtx, signInAs) =>
                     {
                         var google = new GoogleAuthenticationOptions
                         {
-                            AuthenticationType = "Google", SignInAsAuthenticationType = signInAs
+                            AuthenticationType = "Google",
+                            SignInAsAuthenticationType = signInAs
                         };
                         appCtx.UseGoogleAuthentication(google);
 
                         var fb = new FacebookAuthenticationOptions
                         {
-                            AuthenticationType = "Facebook", SignInAsAuthenticationType = signInAs,
-                            AppId = "676607329068058", AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
+                            AuthenticationType = "Facebook",
+                            SignInAsAuthenticationType = signInAs,
+                            AppId = "676607329068058",
+                            AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
                         };
                         appCtx.UseFacebookAuthentication(fb);
                     });
@@ -60,7 +63,7 @@ namespace Thinktecture.IdentityServer.Host
         //private static void ConfigureMembershipReboot(IAppBuilder app, IContainer container)
         //{
         //    Database.SetInitializer(new System.Data.Entity.MigrateDatabaseToLatestVersion<DefaultMembershipRebootDatabase, BrockAllen.MembershipReboot.Ef.Migrations.Configuration>());
-            
+
         //    var cookieOptions = new CookieAuthenticationOptions
         //    {
         //        AuthenticationType = "idsrv",
