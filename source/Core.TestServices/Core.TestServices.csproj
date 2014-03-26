@@ -47,11 +47,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestClients.cs" />
     <Compile Include="TestConsentService.cs" />
     <Compile Include="TestOptionsFactory.cs" />
     <Compile Include="TestCoreSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAuthorizationCodeStore.cs" />
+    <Compile Include="TestScopes.cs" />
     <Compile Include="TestUserService.cs" />
     <Compile Include="TestTokenHandleStore.cs" />
   </ItemGroup>

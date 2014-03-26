@@ -3,7 +3,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.TestServices
+namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestConsentService : IConsentService
     {

@@ -4,7 +4,7 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.TestServices;
+using Thinktecture.IdentityServer.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
 namespace Thinktecture.IdentityServer.Host

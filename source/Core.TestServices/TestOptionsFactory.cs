@@ -1,8 +1,7 @@
 ﻿using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Connect.TestServices;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.TestServices
+namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestOptionsFactory
     {
