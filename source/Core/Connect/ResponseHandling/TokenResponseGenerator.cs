@@ -46,19 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (request.AuthorizationCode.IsOpenId)
             {
                 var idToken = _tokenService.CreateIdentityToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
-                    
-                SigningCredentials credentials;
-                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-                {
-                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
-                }
-                else
-                {
-                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
-                }
-
-                var jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
-
+                var jwt = _tokenService.CreateSecurityToken(idToken);    
                 response.IdentityToken = jwt;
             }
 
@@ -81,7 +69,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Token accessToken;
             if (request.AuthorizationCode != null)
             {
-                //accessToken = request.AuthorizationCode.AccessToken;
                 accessToken = _tokenService.CreateAccessToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
             }
             else
@@ -89,19 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 accessToken = _tokenService.CreateAccessToken(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
             }
 
-            if (request.Client.AccessTokenType == AccessTokenType.JWT)
-            {
-                return _tokenService.CreateJsonWebToken(
-                    accessToken,
-                    new X509SigningCredentials(_settings.GetSigningCertificate()));
-            }
-            else
-            {
-                var reference = Guid.NewGuid().ToString("N");
-                _tokenHandles.Store(reference, accessToken);
-
-                return reference;
-            }
+            return _tokenService.CreateSecurityToken(accessToken);
         }
     }
 }

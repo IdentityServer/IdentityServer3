@@ -57,35 +57,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 var accessToken = _tokenService.CreateAccessToken(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
                 accessTokenLifetime = accessToken.Lifetime;
 
-                if (request.Client.AccessTokenType == AccessTokenType.JWT)
-                {
-                    accessTokenValue = _tokenService.CreateJsonWebToken(
-                        accessToken, 
-                        new X509SigningCredentials(_settings.GetSigningCertificate()));
-                }
-                else
-                {
-                    accessTokenValue = Guid.NewGuid().ToString("N");
-                    _tokenHandles.Store(accessTokenValue, accessToken);
-                }
+                accessTokenValue = _tokenService.CreateSecurityToken(accessToken);
             }
 
             string jwt = null;
             if (request.IsOpenIdRequest)
             {
                 var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
-
-                SigningCredentials credentials;
-                if (request.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-                {
-                    credentials = new HmacSigningCredentials(request.Client.ClientSecret);
-                }
-                else
-                {
-                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
-                }
-
-                jwt = _tokenService.CreateJsonWebToken(idToken, credentials);
+                jwt = _tokenService.CreateSecurityToken(idToken);
             }
 
             return new AuthorizeResponse

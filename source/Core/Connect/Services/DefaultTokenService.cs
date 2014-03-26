@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -20,12 +21,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         private IUserService _profile;
         private ICoreSettings _settings;
         private IClaimsProvider _claimsProvider;
+        private ITokenHandleStore _tokenHandles;
 
-        public DefaultTokenService(IUserService profile, ICoreSettings settings, IClaimsProvider claimsProvider)
+        public DefaultTokenService(IUserService profile, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
         {
             _profile = profile;
             _settings = settings;
             _claimsProvider = claimsProvider;
+            _tokenHandles = tokenHandles;
         }
 
         public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
@@ -63,7 +66,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 Audience = client.ClientId,
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = client.IdentityTokenLifetime,
-                Claims = claims.Distinct(new ClaimComparer()).ToList()
+                Claims = claims.Distinct(new ClaimComparer()).ToList(),
+                Client = client
             };
 
             return token;
@@ -84,13 +88,50 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 Audience = _settings.GetIssuerUri() + "/resources",
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = client.AccessTokenLifetime,
-                Claims = claims.ToList()
+                Claims = claims.ToList(),
+                Client = client
             };
 
             return token;
         }
 
-        public virtual string CreateJsonWebToken(Token token, SigningCredentials credentials)
+        public virtual string CreateSecurityToken(Token token)
+        {
+            if (token.Type == Constants.TokenTypes.AccessToken)
+            {
+                if (token.Client.AccessTokenType == AccessTokenType.JWT)
+                {
+                    return CreateJsonWebToken(
+                        token,
+                        new X509SigningCredentials(_settings.GetSigningCertificate()));
+                }
+                else
+                {
+                    var handle = Guid.NewGuid().ToString("N");
+                    _tokenHandles.Store(handle, token);
+
+                    return handle;
+                }
+            }
+            if (token.Type == Constants.TokenTypes.IdentityToken)
+            {
+                SigningCredentials credentials;
+                if (token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+                {
+                    credentials = new HmacSigningCredentials(token.Client.ClientSecret);
+                }
+                else
+                {
+                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                }
+
+                return CreateJsonWebToken(token, credentials);
+            }
+
+            throw new InvalidOperationException("Invalid token type.");
+        }
+
+        protected virtual string CreateJsonWebToken(Token token, SigningCredentials credentials)
         {
             var jwt = new JwtSecurityToken(
                 token.Issuer,

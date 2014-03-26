@@ -11,6 +11,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public DateTime CreationTime { get; set; }
         public int Lifetime { get; set; }
         public string Type { get; set; }
+        public Client Client { get; set; }
 
         public List<Claim> Claims { get; set; }
 

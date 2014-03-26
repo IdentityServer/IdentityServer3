@@ -11,6 +11,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null);
         Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request);
 
-        string CreateJsonWebToken(Token token, SigningCredentials credentials);
+        string CreateSecurityToken(Token token);
     }
 }
