@@ -2,7 +2,7 @@
 using BrockAllen.MembershipReboot.Ef;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipReboot.IdentityServer.UserService
+namespace MembershipReboot.IdentityServer
 {
     public class UserServiceFactory
     {

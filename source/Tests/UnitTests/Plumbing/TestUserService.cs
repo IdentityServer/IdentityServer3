@@ -10,9 +10,7 @@ namespace UnitTests.Plumbing
         {
             if (username == password)
             {
-                return new AuthenticateResult {
-                    Subject = username, Name = username
-                };
+                return new AuthenticateResult(username, username);
             }
 
             return null;
@@ -24,7 +22,7 @@ namespace UnitTests.Plumbing
         }
 
 
-        public AuthenticateResult AuthenticateExternal(IEnumerable<System.Security.Claims.Claim> claims)
+        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<System.Security.Claims.Claim> claims)
         {
             throw new NotImplementedException();
         }

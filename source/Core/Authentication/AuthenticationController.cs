@@ -14,6 +14,7 @@ using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -58,12 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (!ModelState.IsValid)
             {
-                var error =
-                    from item in ModelState
-                    where item.Value.Errors.Any()
-                    from err in item.Value.Errors
-                    select err.ErrorMessage;
-                return RenderLoginPage(error.First(), model.Username);
+                return RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
             var authResult = userService.AuthenticateLocal(model.Username, model.Password);
@@ -71,8 +67,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
+            
+            if (authResult.IsError)
+            {
+                return RenderLoginPage(authResult.ErrorMessage, model.Username);
+            }
 
-            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
+            return SignInAndRedirect(
+                authResult, 
+                Constants.AuthenticationMethods.Password, 
+                Constants.BuiltInIdentityProvider);
         }
 
         [Route("external", Name="external")]
@@ -120,8 +124,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
-            var provider = externalAuthResult.Identity.Claims.First().Issuer;
-            return SignInAndRedirect(authResult, Constants.AuthenticationMethods.External, provider);
+            if (authResult.IsError)
+            {
+                return RenderLoginPage(authResult.ErrorMessage);
+            }
+
+            return SignInAndRedirect(
+                authResult, 
+                Constants.AuthenticationMethods.External, 
+                authResult.Provider);
         }
 
         [Route("logout")]

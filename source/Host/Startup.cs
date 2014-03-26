@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Host
             app.Map("/core", coreApp =>
                 {
                     var factory = TestOptionsFactory.Create();
-                    //factory.UserService = MembershipReboot.IdentityServer.UserService.UserServiceFactory.Factory;
+                    factory.UserService = MembershipReboot.IdentityServer.UserServiceFactory.Factory;
 
                     coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
                     {

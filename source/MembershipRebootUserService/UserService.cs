@@ -7,7 +7,7 @@ using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipReboot.IdentityServer.UserService
+namespace MembershipReboot.IdentityServer
 {
     public class UserService : IUserService, IDisposable
     {
@@ -35,14 +35,59 @@ namespace MembershipReboot.IdentityServer.UserService
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
             {
-                return new AuthenticateResult
-                {
-                    Subject = acct.ID.ToString("D"),
-                    Name = acct.Username
-                };
+                return new AuthenticateResult(acct.ID.ToString("D"), acct.Username);
             }
 
             return null;
+        }
+
+        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
+        {
+            if (claims == null)
+            {
+                return null;
+            }
+
+            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
+            if (subClaim == null)
+            {
+                subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                if (subClaim == null)
+                {
+                    return null;
+                }
+            }
+
+            var provider = subClaim.Issuer;
+            var providerId = subClaim.Value;
+
+            var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
+            if (acct == null)
+            {
+                acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
+            }
+
+            userAccountService.AddOrUpdateLinkedAccount(acct, provider, providerId, claims);
+
+            string displayName = null;
+            if (acct.HasPassword()) displayName = acct.Username;
+
+            if (displayName == null) acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
+            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Name);
+            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Name);
+            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Email);
+            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Email);
+
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Name);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Name);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Email);
+            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Email);
+
+            displayName = displayName ?? acct.Username;
+
+            return new ExternalAuthenticateResult(acct.ID.ToString("D"), displayName, provider);
         }
 
         public IEnumerable<System.Security.Claims.Claim> GetProfileData(string subject,
@@ -77,59 +122,6 @@ namespace MembershipReboot.IdentityServer.UserService
             claims.AddRange(acct.Claims.Select(x => new Claim(x.Type, x.Value)));
 
             return claims.Where(x => requestedClaimTypes.Contains(x.Type));
-        }
-
-        public AuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
-        {
-            if (claims == null)
-            {
-                return null;
-            }
-
-            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
-            if (subClaim == null)
-            {
-                subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-                
-                if (subClaim == null)
-                {
-                    return null;
-                }
-            }
-
-            var provider = subClaim.Issuer;
-            var providerId = subClaim.Value;
-
-            var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
-            if (acct == null)
-            {
-                acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
-            }
-            
-            userAccountService.AddOrUpdateLinkedAccount(acct, provider, providerId, claims);
-
-            string displayName = null;
-            if (acct.HasPassword()) displayName = acct.Username;
-            
-            if (displayName == null) acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
-            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Name);
-            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Name);
-            if (displayName == null) displayName = acct.GetClaimValue(Constants.ClaimTypes.Email);
-            if (displayName == null) displayName = acct.GetClaimValue(ClaimTypes.Email);
-
-            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
-            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Name);
-            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Name);
-            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Email);
-            if (displayName == null) displayName = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Email);
-
-            displayName = displayName ?? acct.Username;
-
-            return new AuthenticateResult
-            {
-                Subject = acct.ID.ToString("D"),
-                Name = displayName
-            };
         }
     }
 }

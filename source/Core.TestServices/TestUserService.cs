@@ -37,15 +37,11 @@ namespace Thinktecture.IdentityServer.TestServices
         {
             if (username != password) return null;
 
-            return new AuthenticateResult
-            {
-                Subject = username,
-                Name = username
-            };
+            return new AuthenticateResult(username, username);
         }
 
 
-        public AuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
+        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
@@ -58,11 +54,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 return null;
             }
 
-            return new AuthenticateResult
-            {
-                Subject = name.Value,
-                Name = name.Value
-            };
+            return new ExternalAuthenticateResult(name.Value, name.Value, "external");
         }
     }
 }
