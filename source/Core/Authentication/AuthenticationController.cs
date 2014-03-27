@@ -50,8 +50,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpPost]
         public IHttpActionResult LoginLocal(LoginCredentials model)
         {
-            VerifyLoginRequestMessage();
-            
             if (model == null)
             {
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword);
@@ -73,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
-            return SignInAndRedirect(
+           return SignInAndRedirect(
                 authResult, 
                 Constants.AuthenticationMethods.Password, 
                 Constants.BuiltInIdentityProvider);
@@ -97,8 +95,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> LoginExternalCallback()
         {
-            VerifyLoginRequestMessage();
-
             //string currentSubject = null;
             //var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.BuiltInAuthenticationType);
             //if (currentAuth != null && 
@@ -140,7 +136,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public IHttpActionResult Logout()
         {
             var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(Constants.BuiltInAuthenticationType, Constants.ExternalAuthenticationType);
+            ctx.Authentication.SignOut(
+                Constants.PrimaryAuthenticationType,
+                Constants.ExternalAuthenticationType,
+                Constants.RedirectAuthenticationType);
+
             ClearLoginRequestMessage();
 
             return new EmbeddedHtmlResult(Request,
@@ -150,23 +150,73 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                        Page = "logout"
                    });
         }
-        
-        private IHttpActionResult SignInAndRedirect(Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult, string authenticationMethod, string identityProvider)
+
+        [Route("resume")]
+        [HttpGet]
+        public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
-            var signInMessage = LoadLoginRequestMessage();
             var ctx = Request.GetOwinContext();
+            var redirectAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.RedirectAuthenticationType);
+            if (redirectAuthResult == null ||
+                redirectAuthResult.Identity == null)
+            {
+                return RedirectToRoute("login", null);
+            }
+
+            var subject = redirectAuthResult.Identity.GetSubjectId();
+            var name = redirectAuthResult.Identity.GetName();
+            
+            var result = new Thinktecture.IdentityServer.Core.Services.AuthenticateResult(subject, name);
+            var method = redirectAuthResult.Identity.GetAuthenticationMethod();
+            var idp = redirectAuthResult.Identity.GetIdentityProvider();
+            var authTime = redirectAuthResult.Identity.GetAuthenticationTimeEpoch();
+
+            return SignInAndRedirect(result, method, idp, authTime);
+        }
+        
+        private IHttpActionResult SignInAndRedirect(
+            Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult, 
+            string authenticationMethod, 
+            string identityProvider,
+            long authTime = 0)
+        {
+            if (authResult == null) throw new ArgumentNullException("authResult");
+            if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
+            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
+
+            var signInMessage = LoadLoginRequestMessage();
+            var issuer = authResult.IsRedirect ? Constants.RedirectAuthenticationType : Constants.PrimaryAuthenticationType;
 
             var principal = IdentityServerPrincipal.Create(
                authResult.Subject,
                authResult.Name,
                authenticationMethod,
-               identityProvider);
+               identityProvider,
+               issuer, 
+               authTime);
+            
+            var ctx = Request.GetOwinContext();
+            ctx.Authentication.SignOut(
+                Constants.PrimaryAuthenticationType,
+                Constants.ExternalAuthenticationType, 
+                Constants.RedirectAuthenticationType);
             ctx.Authentication.SignIn(principal.Identities.First());
+            
+            if (authResult.IsRedirect)
+            {
+                var uri = new Uri(ctx.Request.Uri, authResult.RedirectPath.Value);
+                return Redirect(uri);
+            }
+            else
+            {
+                // TODO -- manage this state better if we're doing redirect to custom page
+                // would rather the redirect URL from request message put into cookie
+                // and named with a nonce, then the resume url + nonce set as claim
+                // in principal above so page being redirected to can know what url to return to
+                ClearLoginRequestMessage();
 
-            ctx.Authentication.SignOut(Constants.ExternalAuthenticationType);
-            ClearLoginRequestMessage();
-
-            return Redirect(signInMessage.ReturnUrl);
+                return Redirect(signInMessage.ReturnUrl);
+            }
         }
 
         private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)

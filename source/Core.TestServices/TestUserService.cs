@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 return null;
             }
 
-            return new ExternalAuthenticateResult(name.Value, name.Value, "external");
+            return new ExternalAuthenticateResult("external", name.Value, name.Value);
         }
     }
 }

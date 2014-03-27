@@ -14,8 +14,9 @@ namespace Owin
     {
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options, Action<IAppBuilder, string> externalConfiguration = null)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.BuiltInAuthenticationType });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.RedirectAuthenticationType, AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
 
             if (externalConfiguration != null)
             {

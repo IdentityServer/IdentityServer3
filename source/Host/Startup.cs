@@ -57,6 +57,16 @@ namespace Thinktecture.IdentityServer.Host
                         };
                         appCtx.UseFacebookAuthentication(fb);
                     });
+
+                    coreApp.Map("/foo", fooApp =>
+                    {
+                        fooApp.Run(async ctx =>
+                        {
+                            var r = await ctx.Authentication.AuthenticateAsync(Thinktecture.IdentityServer.Core.Constants.RedirectAuthenticationType);
+                            await ctx.Response.WriteAsync("<h1>" + r.Identity.Name + "</h1><a href='resume'>resume</a>");
+                        });
+
+                    });
                 });
         }
 

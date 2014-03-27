@@ -35,6 +35,15 @@ namespace MembershipReboot.IdentityServer
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
             {
+                if (acct.RequiresPasswordReset)
+                {
+                    return new AuthenticateResult("You must reset your password");
+                }
+                if (!acct.IsLoginAllowed)
+                {
+                    return new AuthenticateResult("/core/foo", acct.ID.ToString("D"), acct.Username);
+                }
+
                 return new AuthenticateResult(acct.ID.ToString("D"), acct.Username);
             }
 
@@ -87,7 +96,7 @@ namespace MembershipReboot.IdentityServer
 
             displayName = displayName ?? acct.Username;
 
-            return new ExternalAuthenticateResult(acct.ID.ToString("D"), displayName, provider);
+            return new ExternalAuthenticateResult(provider, acct.ID.ToString("D"), displayName);
         }
 
         public IEnumerable<System.Security.Claims.Claim> GetProfileData(string subject,
@@ -121,7 +130,7 @@ namespace MembershipReboot.IdentityServer
             }
             claims.AddRange(acct.Claims.Select(x => new Claim(x.Type, x.Value)));
 
-            return claims.Where(x => requestedClaimTypes.Contains(x.Type));
+            return claims;//.Where(x => requestedClaimTypes.Contains(x.Type));
         }
     }
 }
