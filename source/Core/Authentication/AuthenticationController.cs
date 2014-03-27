@@ -95,16 +95,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> LoginExternalCallback()
         {
-            //string currentSubject = null;
-            //var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.BuiltInAuthenticationType);
-            //if (currentAuth != null && 
-            //    currentAuth.Identity != null && 
-            //    currentAuth.Identity.IsAuthenticated)
-            //{
-            //    currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
-            //}
-
             var ctx = Request.GetOwinContext();
+
+            string currentSubject = null;
+            var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.PrimaryAuthenticationType);
+            if (currentAuth != null &&
+                currentAuth.Identity != null &&
+                currentAuth.Identity.IsAuthenticated)
+            {
+                currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
+            }
+
             var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
             if (externalAuthResult == null ||
                 externalAuthResult.Identity == null ||
@@ -114,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             var claims = externalAuthResult.Identity.Claims;
-            var authResult = userService.AuthenticateExternal(claims);
+            var authResult = userService.AuthenticateExternal(currentSubject, claims);
             if (authResult == null)
             {
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);
@@ -200,7 +201,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType, 
                 Constants.RedirectAuthenticationType);
-            ctx.Authentication.SignIn(principal.Identities.First());
+
+            var id = principal.Identities.First();
+
+            if (authResult.IsRedirect)
+            {
+                // allow redircting code to add claims for target page
+                id.AddClaims(authResult.RedirectClaims);
+            }
+
+            ctx.Authentication.SignIn(id);
             
             if (authResult.IsRedirect)
             {

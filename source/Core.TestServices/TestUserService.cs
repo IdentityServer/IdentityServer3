@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.TestServices
         }
 
 
-        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
+        public ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {

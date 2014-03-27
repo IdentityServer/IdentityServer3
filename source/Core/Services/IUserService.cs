@@ -7,7 +7,13 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class AuthenticateResult
     {
+        protected AuthenticateResult()
+        {
+            this.RedirectClaims = new HashSet<Claim>();
+        }
+
         public AuthenticateResult(string errorMessage)
+            : this()
         {
             if (String.IsNullOrWhiteSpace(errorMessage)) throw new ArgumentNullException("errorMessage");
 
@@ -15,6 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         }
 
         public AuthenticateResult(string subject, string name)
+            : this()
         {
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
@@ -24,7 +31,8 @@ namespace Thinktecture.IdentityServer.Core.Services
         }
 
         // TODO: maybe this should be a PathString?
-        public AuthenticateResult(string redirectPath, string subject = null, string name = null)
+        public AuthenticateResult(string redirectPath, string subject, string name)
+            : this()
         {
             if (String.IsNullOrWhiteSpace(redirectPath)) throw new ArgumentNullException("redirectPath");
             if (!String.IsNullOrWhiteSpace(subject) && String.IsNullOrWhiteSpace(name))
@@ -58,6 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 return RedirectPath.HasValue;
             }
         }
+        public ICollection<Claim> RedirectClaims { get; private set; }
     }
 
     public class ExternalAuthenticateResult : AuthenticateResult
@@ -75,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             this.Provider = provider;
         }
 
-        public ExternalAuthenticateResult(string redirectPath, string provider = null, string subject = null, string name = null)
+        public ExternalAuthenticateResult(string redirectPath, string provider, string subject, string name)
             : base(redirectPath, subject, name)
         {
             if (!String.IsNullOrWhiteSpace(provider) && String.IsNullOrWhiteSpace(subject))
@@ -96,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     public interface IUserService
     {
         AuthenticateResult AuthenticateLocal(string username, string password);
-        ExternalAuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims);
+        ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims);
         IEnumerable<Claim> GetProfileData(string subject, IEnumerable<string> requestedClaimTypes = null);
     }
 

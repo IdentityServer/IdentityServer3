@@ -22,7 +22,7 @@ namespace UnitTests.Plumbing
         }
 
 
-        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<System.Security.Claims.Claim> claims)
+        public ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<System.Security.Claims.Claim> claims)
         {
             throw new NotImplementedException();
         }

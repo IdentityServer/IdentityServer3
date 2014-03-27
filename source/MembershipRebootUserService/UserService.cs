@@ -35,22 +35,26 @@ namespace MembershipReboot.IdentityServer
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
             {
+                var subject = acct.ID.ToString("D");
+                var name = acct.Username;
+
                 if (acct.RequiresPasswordReset)
                 {
                     return new AuthenticateResult("You must reset your password");
                 }
+                
                 if (!acct.IsLoginAllowed)
                 {
-                    return new AuthenticateResult("/core/foo", acct.ID.ToString("D"), acct.Username);
+                    return new AuthenticateResult("/core/foo?bar=baz", subject, name);
                 }
 
-                return new AuthenticateResult(acct.ID.ToString("D"), acct.Username);
+                return new AuthenticateResult(subject, name);
             }
 
             return null;
         }
 
-        public ExternalAuthenticateResult AuthenticateExternal(IEnumerable<Claim> claims)
+        public ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
