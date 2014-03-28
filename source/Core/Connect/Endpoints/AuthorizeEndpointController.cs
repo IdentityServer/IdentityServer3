@@ -45,10 +45,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("authorize", Name="authorize")]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            return await ProcessRequest(request.RequestUri.ParseQueryString());
+            return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
-        protected virtual async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters, UserConsent consent = null)
+        protected virtual async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");
             
@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             ///////////////////////////////////////////////////////////////
             // validate client
             //////////////////////////////////////////////////////////////
-            result = _validator.ValidateClient();
+            result = await _validator.ValidateClientAsync();
 
             if (result.IsError)
             {
@@ -107,14 +107,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return CreateConsentResult(request, request.Raw, interaction.ConsentError);
             }
 
-            return CreateAuthorizeResponse(request);
+            return await CreateAuthorizeResponseAsync(request);
         }
 
         [Route("consent")]
         [HttpPost]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
-            return ProcessRequest(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
+            return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
         }
 
         [Route("switch", Name="switch")]
@@ -123,34 +123,34 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             var parameters = Request.RequestUri.ParseQueryString();
             parameters[Constants.AuthorizeRequest.Prompt] = Constants.PromptModes.Login;
-            return await ProcessRequest(parameters);
+            return await ProcessRequestAsync(parameters);
         }
 
-        private IHttpActionResult CreateAuthorizeResponse(ValidatedAuthorizeRequest request)
+        private async Task<IHttpActionResult> CreateAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
             if (request.Flow == Flows.Implicit)
             {
-                return CreateImplicitFlowAuthorizeResponse(request);
+                return await CreateImplicitFlowAuthorizeResponseAsync(request);
             }
 
             if (request.Flow == Flows.Code)
             {
-                return CreateCodeFlowAuthorizeResponse(request);
+                return await CreateCodeFlowAuthorizeResponseAsync(request);
             }
 
             _logger.Error("Unsupported flow. Aborting.");
             throw new InvalidOperationException("Unsupported flow");
         }
 
-        private IHttpActionResult CreateCodeFlowAuthorizeResponse(ValidatedAuthorizeRequest request)
+        private async Task<IHttpActionResult> CreateCodeFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
-            var response = _responseGenerator.CreateCodeFlowResponse(request, User as ClaimsPrincipal);
+            var response = await _responseGenerator.CreateCodeFlowResponseAsync(request, User as ClaimsPrincipal);
             return this.AuthorizeCodeResponse(response);
         }
 
-        private IHttpActionResult CreateImplicitFlowAuthorizeResponse(ValidatedAuthorizeRequest request)
+        private async Task<IHttpActionResult> CreateImplicitFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
-            var response = _responseGenerator.CreateImplicitFlowResponse(request, User as ClaimsPrincipal);
+            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request, User as ClaimsPrincipal);
 
             // create form post response if responseMode is set form_post
             if (request.ResponseMode == Constants.ResponseModes.FormPost)

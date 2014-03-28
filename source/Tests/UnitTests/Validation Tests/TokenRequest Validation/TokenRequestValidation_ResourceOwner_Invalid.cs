@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
@@ -17,7 +18,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Invalid_GrantType_For_Client()
+        public async Task Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -27,7 +28,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
@@ -35,7 +36,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void No_Scopes()
+        public async Task No_Scopes()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -46,7 +47,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
@@ -54,7 +55,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Unknown_Scope()
+        public async Task Unknown_Scope()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -66,7 +67,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
@@ -74,7 +75,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Unknown_Scope_Multiple()
+        public async Task Unknown_Scope_Multiple()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -86,7 +87,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
@@ -94,7 +95,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Restricted_Scope()
+        public async Task Restricted_Scope()
         {
             var client = _settings.FindClientById("roclient_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -106,7 +107,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
@@ -114,7 +115,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Restricted_Scope_Multiple()
+        public async Task Restricted_Scope_Multiple()
         {
             var client = _settings.FindClientById("roclient_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -126,7 +127,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
@@ -134,7 +135,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void No_ResourceOwnerCredentials()
+        public async Task No_ResourceOwnerCredentials()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -144,7 +145,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -152,7 +153,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Missing_ResourceOwner_UserName()
+        public async Task Missing_ResourceOwner_UserName()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -163,7 +164,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Scope, "resource");
             parameters.Add(Constants.TokenRequest.Password, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -171,7 +172,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Missing_ResourceOwner_Password()
+        public async Task Missing_ResourceOwner_Password()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -182,7 +183,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Scope, "resource");
             parameters.Add(Constants.TokenRequest.UserName, "bob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -190,7 +191,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Invalid_ResourceOwner_Credentials()
+        public async Task Invalid_ResourceOwner_Credentials()
         {
             var client = _settings.FindClientById("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -202,7 +203,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.UserName, "bob");
             parameters.Add(Constants.TokenRequest.Password, "notbob");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);

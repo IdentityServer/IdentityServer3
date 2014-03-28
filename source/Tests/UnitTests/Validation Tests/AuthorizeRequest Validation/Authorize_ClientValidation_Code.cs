@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
@@ -15,7 +16,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void Code_Request_Unknown_Scope()
+        public async Task Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -27,7 +28,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
@@ -35,7 +36,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void OpenId_Code_Request_Invalid_RedirectUri()
+        public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -47,7 +48,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
@@ -55,7 +56,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void OpenId_Code_Request_Invalid_IdToken_ResponseType()
+        public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -68,7 +69,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
@@ -76,7 +77,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
+        public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -89,7 +90,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
@@ -97,7 +98,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void OpenId_Code_Request_With_Unknown_Client()
+        public async Task OpenId_Code_Request_With_Unknown_Client()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "unknown");
@@ -109,7 +110,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
@@ -117,7 +118,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
-        public void OpenId_Code_Request_With_Restricted_Scope()
+        public async Task OpenId_Code_Request_With_Restricted_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient_restricted");
@@ -129,7 +130,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);

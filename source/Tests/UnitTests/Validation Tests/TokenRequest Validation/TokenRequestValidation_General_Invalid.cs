@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -17,19 +18,19 @@ namespace UnitTests.TokenRequest_Validation
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         [TestCategory("TokenRequest Validation - General - Invalid")]
-        public void Parameters_Null()
+        public async Task Parameters_Null()
         {
             var store = new TestCodeStore();
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
-            var result = validator.ValidateRequest(null, null);
+            var result = await validator.ValidateRequestAsync(null, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         [TestCategory("TokenRequest Validation - General - Invalid")]
-        public void Client_Null()
+        public async Task Client_Null()
         {
             var store = new TestCodeStore();
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
@@ -40,12 +41,12 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, null);
+            var result = await validator.ValidateRequestAsync(parameters, null);
         }
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - General - Invalid")]
-        public void Unknown_Grant_Type()
+        public async Task Unknown_Grant_Type()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -57,7 +58,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -67,7 +68,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
@@ -75,7 +76,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - General - Invalid")]
-        public void Missing_Grant_Type()
+        public async Task Missing_Grant_Type()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -87,7 +88,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -96,7 +97,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);

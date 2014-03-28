@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -20,63 +21,63 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _tokenHandles = tokenHandles;
         }
 
-        public TokenResponse Process(ValidatedTokenRequest request)
+        public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
         {
             if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {
-                return ProcessAuthorizationCodeRequest(request);
+                return await ProcessAuthorizationCodeRequestAsync(request);
             }
             else if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
                      request.GrantType == Constants.GrantTypes.Password)
             {
-                return ProcessTokenRequest(request);
+                return await ProcessTokenRequestAsync(request);
             }
 
             throw new InvalidOperationException("Unknown grant type.");
         }
 
-        private TokenResponse ProcessAuthorizationCodeRequest(ValidatedTokenRequest request)
+        private async Task<TokenResponse> ProcessAuthorizationCodeRequestAsync(ValidatedTokenRequest request)
         {
             var response = new TokenResponse
             {
-                AccessToken = CreateAccessToken(request),
+                AccessToken = await CreateAccessTokenAsync(request),
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
 
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = _tokenService.CreateIdentityToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
-                var jwt = _tokenService.CreateSecurityToken(idToken);    
+                var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
+                var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);    
                 response.IdentityToken = jwt;
             }
 
             return response;
         }
 
-        private TokenResponse ProcessTokenRequest(ValidatedTokenRequest request)
+        private async Task<TokenResponse> ProcessTokenRequestAsync(ValidatedTokenRequest request)
         {
             var response = new TokenResponse
             {
-                AccessToken = CreateAccessToken(request),
+                AccessToken = await CreateAccessTokenAsync(request),
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
 
             return response;
         }
 
-        private string CreateAccessToken(ValidatedTokenRequest request)
+        private async Task<string> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
             if (request.AuthorizationCode != null)
             {
-                accessToken = _tokenService.CreateAccessToken(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
+                accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
             }
             else
             {
-                accessToken = _tokenService.CreateAccessToken(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+                accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
             }
 
-            return _tokenService.CreateSecurityToken(accessToken);
+            return await _tokenService.CreateSecurityTokenAsync(accessToken);
         }
     }
 }

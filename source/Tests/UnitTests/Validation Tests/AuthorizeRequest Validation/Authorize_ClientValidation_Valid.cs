@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
@@ -14,7 +15,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_OpenId_Code_Request()
+        public async Task Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -26,13 +27,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Resource_Code_Request()
+        public async Task Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -44,13 +45,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Mixed_Code_Request()
+        public async Task Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -62,13 +63,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Mixed_Code_Request_Multiple_Scopes()
+        public async Task Valid_Mixed_Code_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
@@ -80,13 +81,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_OpenId_IdTokenToken_Request()
+        public async Task Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -99,13 +100,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Mixed_IdTokenToken_Request()
+        public async Task Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -118,13 +119,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Mixed_IdTokenToken_Request_Multiple_Scopes()
+        public async Task Valid_Mixed_IdTokenToken_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -137,13 +138,13 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
-        public void Valid_Resource_Token_Request()
+        public async Task Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -155,7 +156,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsFalse(clientResult.IsError);
         }
     }

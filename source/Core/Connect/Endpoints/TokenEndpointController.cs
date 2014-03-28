@@ -29,10 +29,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route]
         public async Task<IHttpActionResult> Post()
         {
-            return await Process(await Request.Content.ReadAsFormDataAsync());
+            return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
         }
 
-        private Task<IHttpActionResult> Process(NameValueCollection parameters)
+        private async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             _logger.Start("OIDC token endpoint.");
 
@@ -40,20 +40,20 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var client = ValidateClient(parameters, Request.Headers.Authorization);
             if (client == null)
             {
-                return Task.FromResult(this.TokenErrorResponse(Constants.TokenErrors.InvalidClient));
+                return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);
             }
 
             // validate the token request
-            var result = _requestValidator.ValidateRequest(parameters, client);
+            var result = await _requestValidator.ValidateRequestAsync(parameters, client);
 
             if (result.IsError)
             {
-                return Task.FromResult(this.TokenErrorResponse(result.Error));
+                return this.TokenErrorResponse(result.Error);
             }
 
             // return response
-            var response = _generator.Process(_requestValidator.ValidatedRequest);
-            return Task.FromResult(this.TokenResponse(response));
+            var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest);
+            return this.TokenResponse(response);
         }
 
         private Client ValidateClient(NameValueCollection parameters, AuthenticationHeaderValue header)

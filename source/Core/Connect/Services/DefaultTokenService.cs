@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityModel.Tokens;
@@ -31,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             _tokenHandles = tokenHandles;
         }
 
-        public Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
+        public async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
             // host provided claims
             var claims = new List<Claim>();
@@ -52,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAccessToken(accessTokenToHash)));
             }
 
-            claims.AddRange(_claimsProvider.GetIdentityTokenClaims(
+            claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
                 subject,
                 client,
                 scopes,
@@ -73,9 +74,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public virtual Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
+        public virtual async Task<Token> CreateAccessTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
         {
-            var claims = _claimsProvider.GetAccessTokenClaims(
+            var claims = await _claimsProvider.GetAccessTokenClaimsAsync(
                 subject,
                 client,
                 scopes,
@@ -95,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public virtual string CreateSecurityToken(Token token)
+        public virtual async Task<string> CreateSecurityTokenAsync(Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
@@ -108,7 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 else
                 {
                     var handle = Guid.NewGuid().ToString("N");
-                    _tokenHandles.Store(handle, token);
+                    await _tokenHandles.StoreAsync(handle, token);
 
                     return handle;
                 }

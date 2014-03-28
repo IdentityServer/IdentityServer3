@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
@@ -15,7 +16,7 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - IdToken")]
-        public void Mixed_IdToken_Request()
+        public async Task Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -28,7 +29,7 @@ namespace UnitTests
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
