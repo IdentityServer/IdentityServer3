@@ -108,14 +108,4 @@ namespace Thinktecture.IdentityServer.Core.Services
         ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims);
         IEnumerable<Claim> GetProfileData(string subject, IEnumerable<string> requestedClaimTypes = null);
     }
-
-    public interface IUserServiceCustomization
-    {
-        // IEnumerable<Claim> CreateFromExternal(IEnumerable<Claim> externalClaims)
-        // IEnumerable<Claim> UpdateFromExternal(IEnumerable<Claim> currentClaims, IEnumerable<Claim> externalClaims)
-        // email --> column
-        // phone --> columns
-        // Role: Admin
-        // Role: Mgr
-    }
 }
