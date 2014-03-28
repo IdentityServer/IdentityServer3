@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -18,13 +19,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger = logger;
         }
 
-        public Dictionary<string, object> Process(ValidatedUserInfoRequest request)
+        public async Task<Dictionary<string, object>> ProcessAsync(ValidatedUserInfoRequest request)
         {
             var profileData = new Dictionary<string, object>();
             var requestedClaimTypes = GetRequestedClaimTypes(request.AccessToken);
             _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var claims = _profile.GetProfileData(
+            var claims = await _profile.GetProfileDataAsync(
                 request.AccessToken.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
             if (claims != null)
             {

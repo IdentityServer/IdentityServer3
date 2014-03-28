@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = profile.GetProfileData(subject.GetSubjectId(), additionalClaims);
+                var claims = await profile.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);

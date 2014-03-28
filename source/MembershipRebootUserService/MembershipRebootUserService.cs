@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
@@ -30,7 +31,7 @@ namespace MembershipReboot.IdentityServer
             }
         }
 
-        public AuthenticateResult AuthenticateLocal(string username, string password)
+        public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             UserAccount acct;
             if (userAccountService.Authenticate(username, password, out acct))
@@ -54,7 +55,7 @@ namespace MembershipReboot.IdentityServer
             return null;
         }
 
-        public ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims)
+        public async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
@@ -109,7 +110,7 @@ namespace MembershipReboot.IdentityServer
             return name;
         }
         
-        public IEnumerable<System.Security.Claims.Claim> GetProfileData(string subject,
+        public async Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject,
             IEnumerable<string> requestedClaimTypes = null)
         {
             var acct = userAccountService.GetByID(subject.ToGuid());
@@ -124,7 +125,7 @@ namespace MembershipReboot.IdentityServer
             }
 
             var claims = GetClaimsFromAccount(acct);
-            return claims;//.Where(x => requestedClaimTypes.Contains(x.Type));
+            return claims.Where(x => requestedClaimTypes.Contains(x.Type));
         }
 
         IEnumerable<Claim> GetClaimsFromAccount(UserAccount account)

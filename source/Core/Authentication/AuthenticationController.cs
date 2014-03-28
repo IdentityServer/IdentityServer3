@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route("login")]
         [HttpPost]
-        public IHttpActionResult LoginLocal(LoginCredentials model)
+        public async Task<IHttpActionResult> LoginLocal(LoginCredentials model)
         {
             if (model == null)
             {
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
-            var authResult = userService.AuthenticateLocal(model.Username, model.Password);
+            var authResult = await userService.AuthenticateLocalAsync(model.Username, model.Password);
             if (authResult == null)
             {
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             var claims = externalAuthResult.Identity.Claims;
-            var authResult = userService.AuthenticateExternal(currentSubject, claims);
+            var authResult = await userService.AuthenticateExternalAsync(currentSubject, claims);
             if (authResult == null)
             {
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);

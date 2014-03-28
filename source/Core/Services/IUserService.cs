@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
@@ -104,8 +105,8 @@ namespace Thinktecture.IdentityServer.Core.Services
 
     public interface IUserService
     {
-        AuthenticateResult AuthenticateLocal(string username, string password);
-        ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims);
-        IEnumerable<Claim> GetProfileData(string subject, IEnumerable<string> requestedClaimTypes = null);
+        Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password);
+        Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims);
+        Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null);
     }
 }

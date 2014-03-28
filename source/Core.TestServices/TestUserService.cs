@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -8,7 +9,7 @@ namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestUserService : IUserService
     {
-        public IEnumerable<Claim> GetProfileData(string sub, IEnumerable<string> requestedClaimTypes = null)
+        public async Task<IEnumerable<Claim>> GetProfileDataAsync(string sub, IEnumerable<string> requestedClaimTypes = null)
         {
             var claims = new List<Claim>();
 
@@ -33,7 +34,7 @@ namespace Thinktecture.IdentityServer.TestServices
             return claims;
         }
 
-        public AuthenticateResult AuthenticateLocal(string username, string password)
+        public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             if (username != password) return null;
 
@@ -41,7 +42,7 @@ namespace Thinktecture.IdentityServer.TestServices
         }
 
 
-        public ExternalAuthenticateResult AuthenticateExternal(string subject, IEnumerable<Claim> claims)
+        public async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
