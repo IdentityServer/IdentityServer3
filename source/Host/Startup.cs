@@ -34,40 +34,33 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     var factory = TestOptionsFactory.Create();
                     factory.UserService = MembershipReboot.IdentityServer.UserServiceFactory.Factory;
-
-                    coreApp.UseIdentityServerCore(new IdentityServerCoreOptions
+                    //factory.UserService = AspNetIdentity.IdentityServer.UserServiceFactory.Factory;
+                    
+                    var opts = new IdentityServerCoreOptions
                     {
                         Factory = factory
-                    },
-                    (appCtx, signInAs) =>
-                    {
-                        var google = new GoogleAuthenticationOptions
-                        {
-                            AuthenticationType = "Google",
-                            SignInAsAuthenticationType = signInAs
-                        };
-                        appCtx.UseGoogleAuthentication(google);
-
-                        var fb = new FacebookAuthenticationOptions
-                        {
-                            AuthenticationType = "Facebook",
-                            SignInAsAuthenticationType = signInAs,
-                            AppId = "676607329068058",
-                            AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
-                        };
-                        appCtx.UseFacebookAuthentication(fb);
-                    });
-
-                    coreApp.Map("/foo", fooApp =>
-                    {
-                        fooApp.Run(async ctx =>
-                        {
-                            var r = await ctx.Authentication.AuthenticateAsync(Thinktecture.IdentityServer.Core.Constants.RedirectAuthenticationType);
-                            await ctx.Response.WriteAsync("<h1>" + r.Identity.Name + "</h1><a href='resume'>resume</a>");
-                        });
-
-                    });
+                    };
+                    coreApp.UseIdentityServerCore(opts, ConfigureExternalProviders);
                 });
+        }
+
+        public static void ConfigureExternalProviders(IAppBuilder app, string signInAsType)
+        {
+            var google = new GoogleAuthenticationOptions
+            {
+                AuthenticationType = "Google",
+                SignInAsAuthenticationType = signInAsType
+            };
+            app.UseGoogleAuthentication(google);
+
+            var fb = new FacebookAuthenticationOptions
+            {
+                AuthenticationType = "Facebook",
+                SignInAsAuthenticationType = signInAsType,
+                AppId = "676607329068058",
+                AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
+            };
+            app.UseFacebookAuthentication(fb);
         }
 
         //private static void ConfigureMembershipReboot(IAppBuilder app, IContainer container)
