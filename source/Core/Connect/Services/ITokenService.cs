@@ -2,15 +2,16 @@
 using System.Collections.Specialized;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public interface ITokenService
     {
-        Token CreateIdentityToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null);
-        Token CreateAccessToken(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request);
+        Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null);
+        Task<Token> CreateAccessTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request);
 
-        string CreateSecurityToken(Token token);
+        Task<string> CreateSecurityTokenAsync(Token token);
     }
 }

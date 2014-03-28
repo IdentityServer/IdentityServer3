@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -8,7 +9,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        public IEnumerable<Claim> GetIdentityTokenClaims(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile, NameValueCollection request)
+        public async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile, NameValueCollection request)
         {
             List<Claim> outputClaims = new List<Claim>(subject.Claims);
             var additionalClaims = new List<string>();
@@ -40,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return outputClaims;
         }
 
-        public IEnumerable<Claim> GetAccessTokenClaims(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile, NameValueCollection request)
+        public async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile, NameValueCollection request)
         {
             var claims = new List<Claim>
             {

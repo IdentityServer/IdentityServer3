@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -24,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _settings = settings;
         }
 
-        public AuthorizeResponse CreateCodeFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             var code = new AuthorizationCode
             {
@@ -48,23 +49,24 @@ namespace Thinktecture.IdentityServer.Core.Connect
             };
         }
 
-        public AuthorizeResponse CreateImplicitFlowResponse(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
+
             if (request.IsResourceRequest)
             {
-                var accessToken = _tokenService.CreateAccessToken(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+                var accessToken = await _tokenService.CreateAccessTokenAsync(user, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
                 accessTokenLifetime = accessToken.Lifetime;
 
-                accessTokenValue = _tokenService.CreateSecurityToken(accessToken);
+                accessTokenValue = await _tokenService.CreateSecurityTokenAsync(accessToken);
             }
 
             string jwt = null;
             if (request.IsOpenIdRequest)
             {
-                var idToken = _tokenService.CreateIdentityToken(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
-                jwt = _tokenService.CreateSecurityToken(idToken);
+                var idToken = await _tokenService.CreateIdentityTokenAsync(user, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
+                jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
             }
 
             return new AuthorizeResponse
