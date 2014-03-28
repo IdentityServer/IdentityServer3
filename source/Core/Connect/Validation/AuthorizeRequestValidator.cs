@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -283,7 +284,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        public ValidationResult ValidateClient()
+        public async Task<ValidationResult> ValidateClientAsync()
         {
             if (_validatedRequest.ClientId.IsMissing())
             {
@@ -360,7 +361,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            return _customValidator.ValidateAuthorizeRequest(_validatedRequest, _users);
+            return await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest, _users);
         }
 
         private ValidationResult Invalid(ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
@@ -15,7 +16,7 @@ namespace UnitTests.AuthorizeRequest_Validation
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Token")]
-        public void Mixed_Token_Request_Without_OpenId_Scope()
+        public async Task Mixed_Token_Request_Without_OpenId_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
@@ -27,7 +28,7 @@ namespace UnitTests.AuthorizeRequest_Validation
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.AreEqual(false, protocolResult.IsError);
 
-            var clientResult = validator.ValidateClient();
+            var clientResult = await validator.ValidateClientAsync();
             Assert.IsTrue(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);

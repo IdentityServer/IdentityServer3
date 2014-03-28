@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             ///////////////////////////////////////////////////////////////
             // validate client
             //////////////////////////////////////////////////////////////
-            result = _validator.ValidateClient();
+            result = await _validator.ValidateClientAsync();
 
             if (result.IsError)
             {
