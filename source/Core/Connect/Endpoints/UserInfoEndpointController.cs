@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Results;
 using Thinktecture.IdentityServer.Core.Services;
@@ -22,11 +23,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
         }
 
         [Route]
-        public IHttpActionResult Get(HttpRequestMessage request)
+        public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
             _logger.Start("OIDC userinfo endpoint.");
 
-            var result = _validator.ValidateRequest(request.Headers.Authorization);
+            var result = await _validator.ValidateRequestAsync(request.Headers.Authorization);
 
             if (result.IsError)
             {

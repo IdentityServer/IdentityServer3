@@ -30,7 +30,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -59,7 +59,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -89,7 +89,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -120,7 +120,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -150,7 +150,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -179,7 +179,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server1/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -210,7 +210,7 @@ namespace UnitTests.TokenRequest_Validation
                 CreationTime = DateTime.UtcNow.AddSeconds(-100)
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
@@ -240,7 +240,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store,

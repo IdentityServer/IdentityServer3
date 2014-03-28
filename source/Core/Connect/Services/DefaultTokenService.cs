@@ -96,22 +96,22 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public virtual Task<string> CreateSecurityTokenAsync(Token token)
+        public virtual async Task<string> CreateSecurityTokenAsync(Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
                 if (token.Client.AccessTokenType == AccessTokenType.JWT)
                 {
-                    return Task.FromResult(CreateJsonWebToken(
+                    return CreateJsonWebToken(
                         token,
-                        new X509SigningCredentials(_settings.GetSigningCertificate())));
+                        new X509SigningCredentials(_settings.GetSigningCertificate()));
                 }
                 else
                 {
                     var handle = Guid.NewGuid().ToString("N");
-                    _tokenHandles.Store(handle, token);
+                    await _tokenHandles.StoreAsync(handle, token);
 
-                    return Task.FromResult(handle);
+                    return handle;
                 }
             }
             if (token.Type == Constants.TokenTypes.IdentityToken)
@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                     credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
                 }
 
-                return Task.FromResult(CreateJsonWebToken(token, credentials));
+                return CreateJsonWebToken(token, credentials);
             }
 
             throw new InvalidOperationException("Invalid token type.");

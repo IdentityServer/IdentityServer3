@@ -121,7 +121,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var authZcode = _authorizationCodes.Get(code);
+            var authZcode = await _authorizationCodes.GetAsync(code);
             if (authZcode == null)
             {
                 _logger.ErrorFormat("Invalid authorization code: ", code);
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _logger.InformationFormat("Authorization code found: {0}", code);
             }
 
-            _authorizationCodes.Remove(code);
+            await _authorizationCodes.RemoveAsync(code);
 
             /////////////////////////////////////////////
             // validate client binding

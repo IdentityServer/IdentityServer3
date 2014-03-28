@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             // store id token and access token and return authorization code
             var id = Guid.NewGuid().ToString("N");
-            _authorizationCodes.Store(id, code);
+            await _authorizationCodes.StoreAsync(id, code);
 
             return new AuthorizeResponse
             {

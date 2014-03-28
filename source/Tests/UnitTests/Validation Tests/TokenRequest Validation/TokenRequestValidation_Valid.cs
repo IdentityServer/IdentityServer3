@@ -34,7 +34,7 @@ namespace UnitTests.TokenRequest_Validation
                 RedirectUri = new Uri("https://server/cb"),
             };
 
-            store.Store("valid", code);
+            await store.StoreAsync("valid", code);
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -15,7 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _handles = handles;
         }
 
-        public ValidationResult ValidateRequest(AuthenticationHeaderValue authorizationHeader)
+        public async Task<ValidationResult> ValidateRequestAsync(AuthenticationHeaderValue authorizationHeader)
         {
             if (authorizationHeader == null ||
                 !authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) ||
@@ -27,12 +28,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            return ValidateRequest(authorizationHeader.Parameter);
+            return await ValidateRequestAsync(authorizationHeader.Parameter);
         }
 
-        public ValidationResult ValidateRequest(string tokenHandle)
+        public async Task<ValidationResult> ValidateRequestAsync(string tokenHandle)
         {
-            var token = _handles.Get(tokenHandle);
+            var token = await _handles.GetAsync(tokenHandle);
 
             if (token == null)
             {
