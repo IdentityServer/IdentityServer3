@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -18,7 +19,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Invalid_GrantType_For_Client()
+        public async Task Invalid_GrantType_For_Client()
         {
             var client = _settings.FindClientById("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
@@ -28,7 +29,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Assertion, "assertion");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
@@ -36,7 +37,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Missing_Assertion()
+        public async Task Missing_Assertion()
         {
             var client = _settings.FindClientById("assertionclient");
 
@@ -47,7 +48,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
@@ -55,7 +56,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Invalid_Assertion()
+        public async Task Invalid_Assertion()
         {
             var client = _settings.FindClientById("assertionclient");
 
@@ -67,7 +68,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Assertion, "unknownAssertion");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -17,7 +18,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Missing_AuthorizationCode()
+        public async Task Missing_AuthorizationCode()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -38,7 +39,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -46,7 +47,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Invalid_AuthorizationCode()
+        public async Task Invalid_AuthorizationCode()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -68,7 +69,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "invalid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -76,7 +77,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Client_Not_Authorized_For_AuthorizationCode_Flow()
+        public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
             var client = _settings.FindClientById("implicitclient");
             var store = new TestCodeStore();
@@ -98,7 +99,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
@@ -106,7 +107,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Client_Trying_To_Request_Token_Using_Another_Clients_Code()
+        public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
             var client1 = _settings.FindClientById("codeclient");
             var client2 = _settings.FindClientById("codeclient_restricted");
@@ -129,7 +130,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client2);
+            var result = await validator.ValidateRequestAsync(parameters, client2);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -137,7 +138,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Missing_RedirectUri()
+        public async Task Missing_RedirectUri()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -158,7 +159,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
             parameters.Add(Constants.TokenRequest.Code, "valid");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
@@ -166,7 +167,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Different_RedirectUri_Between_Authorize_And_Token_Request()
+        public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -188,7 +189,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server2/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
@@ -196,7 +197,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Expired_AuthorizationCode()
+        public async Task Expired_AuthorizationCode()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -219,7 +220,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
@@ -227,7 +228,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
-        public void Reused_AuthorizationCode()
+        public async Task Reused_AuthorizationCode()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -251,7 +252,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
             // request first time
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
 
@@ -260,7 +261,7 @@ namespace UnitTests.TokenRequest_Validation
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
             
-            result = validator.ValidateRequest(parameters, client);
+            result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);

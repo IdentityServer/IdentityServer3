@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Plumbing;
@@ -36,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customRequestValidator = customRequestValidator;
         }
 
-        public ValidationResult ValidateRequest(NameValueCollection parameters, Client client)
+        public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
             _validatedRequest = new ValidatedTokenRequest();
 
@@ -70,26 +71,26 @@ namespace Thinktecture.IdentityServer.Core.Connect
             switch (grantType)
             {
                 case Constants.GrantTypes.AuthorizationCode:
-                    return RunValidation(ValidateAuthorizationCodeRequest, parameters);
+                    return await RunValidationAsync(ValidateAuthorizationCodeRequestAsync, parameters);
                 case Constants.GrantTypes.ClientCredentials:
-                    return RunValidation(ValidateClientCredentialsRequest, parameters);
+                    return await RunValidationAsync(ValidateClientCredentialsRequestAsync, parameters);
                 case Constants.GrantTypes.Password:
-                    return RunValidation(ValidateResourceOwnerCredentialRequest, parameters);
+                    return await RunValidationAsync(ValidateResourceOwnerCredentialRequestAsync, parameters);
             }
 
             if (parameters.Get(Constants.TokenRequest.Assertion).IsPresent())
             {
-                return RunValidation(ValidateAssertionRequest, parameters);
+                return await RunValidationAsync(ValidateAssertionRequestAsync, parameters);
             }
 
             _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
         }
 
-        ValidationResult RunValidation(Func<NameValueCollection, ValidationResult> validationFunc, NameValueCollection parameters)
+        async Task<ValidationResult> RunValidationAsync(Func<NameValueCollection, Task<ValidationResult>> validationFunc, NameValueCollection parameters)
         {
             // run standard validation
-            var result = validationFunc(parameters);
+            var result = await validationFunc(parameters);
             if (result.IsError)
             {
                 return result;
@@ -99,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return _customRequestValidator.ValidateTokenRequest(_validatedRequest, _profile);
         }
 
-        private ValidationResult ValidateAuthorizationCodeRequest(NameValueCollection parameters)
+        private async Task<ValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
         {
             /////////////////////////////////////////////
             // check if client is authorized for grant type
@@ -172,7 +173,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private ValidationResult ValidateClientCredentialsRequest(NameValueCollection parameters)
+        private async Task<ValidationResult> ValidateClientCredentialsRequestAsync(NameValueCollection parameters)
         {
             /////////////////////////////////////////////
             // check if client is authorized for grant type
@@ -201,7 +202,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private ValidationResult ValidateResourceOwnerCredentialRequest(NameValueCollection parameters)
+        private async Task<ValidationResult> ValidateResourceOwnerCredentialRequestAsync(NameValueCollection parameters)
         {
             /////////////////////////////////////////////
             // check if client is authorized for grant type
@@ -251,7 +252,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private ValidationResult ValidateAssertionRequest(NameValueCollection parameters)
+        private async Task<ValidationResult> ValidateAssertionRequestAsync(NameValueCollection parameters)
         {
             var assertion = parameters.Get(Constants.TokenRequest.Assertion);
             _validatedRequest.Assertion = assertion;
@@ -277,7 +278,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // validate assertion
             /////////////////////////////////////////////
-            var principal = _assertionValidator.Validate(_validatedRequest);
+            var principal = await _assertionValidator.ValidateAsync(_validatedRequest);
             if (principal == null)
             {
                 _logger.Error("Invalid assertion.");

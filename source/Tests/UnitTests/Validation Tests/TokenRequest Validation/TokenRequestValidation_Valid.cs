@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
@@ -21,7 +22,7 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_Code_Request()
+        public async Task Valid_Code_Request()
         {
             var client = _settings.FindClientById("codeclient");
             var store = new TestCodeStore();
@@ -44,14 +45,14 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_ClientCredentials_Request()
+        public async Task Valid_ClientCredentials_Request()
         {
             var client = _settings.FindClientById("client");
 
@@ -62,14 +63,14 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_ClientCredentials_Request_Restricted_Client()
+        public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
             var client = _settings.FindClientById("client_restricted");
 
@@ -80,14 +81,14 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_ResourceOwner_Request()
+        public async Task Valid_ResourceOwner_Request()
         {
             var client = _settings.FindClientById("roclient");
 
@@ -101,14 +102,14 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Password, "bob");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_ResourceOwner_Request_Restricted_Client()
+        public async Task Valid_ResourceOwner_Request_Restricted_Client()
         {
             var client = _settings.FindClientById("roclient_restricted");
 
@@ -122,14 +123,14 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Password, "bob");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_AssertionFlow_Request()
+        public async Task Valid_AssertionFlow_Request()
         {
             var client = _settings.FindClientById("assertionclient");
 
@@ -142,7 +143,7 @@ namespace UnitTests.TokenRequest_Validation
             parameters.Add(Constants.TokenRequest.Assertion, "assertion");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
-            var result = validator.ValidateRequest(parameters, client);
+            var result = await validator.ValidateRequestAsync(parameters, client);
 
             Assert.IsFalse(result.IsError);
         }

@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // validate the token request
-            var result = _requestValidator.ValidateRequest(parameters, client);
+            var result = await _requestValidator.ValidateRequestAsync(parameters, client);
 
             if (result.IsError)
             {
