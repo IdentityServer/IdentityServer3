@@ -1,6 +1,4 @@
-﻿using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Services;
-
+﻿
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public static class ResultExtensions
