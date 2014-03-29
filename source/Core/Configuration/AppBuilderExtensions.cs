@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.StaticFiles;
 using System;
@@ -15,8 +16,8 @@ namespace Owin
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options, Action<IAppBuilder, string> externalConfiguration = null)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.RedirectAuthenticationType, AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.RedirectAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
             if (externalConfiguration != null)
             {
@@ -58,7 +59,5 @@ namespace Owin
 
             return app;
         }
-
-
     }
 }
