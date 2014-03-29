@@ -43,7 +43,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            var container = AutoFacConfig.Configure(options.Factory);
+            var container = AutofacConfig.Configure(options.Factory);
 
             app.Use(async (ctx, next) =>
             {

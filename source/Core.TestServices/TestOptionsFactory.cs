@@ -15,10 +15,11 @@ namespace Thinktecture.IdentityServer.TestServices
             var tokenStore = new TestTokenHandleStore();
             var core = new TestCoreSettings();
             var consent = new TestConsentService();
+            var logger = new DebugLogger();
             
             var fact = new IdentityServerServiceFactory
             {
-                Logger = () => new DebugLogger(),
+                Logger = () => logger,
                 UserService = () => new TestUserService(),
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,

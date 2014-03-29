@@ -11,15 +11,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public class OurModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            base.Load(builder);
-        }
-    }
-
-    public static class AutoFacConfig
+    public static class AutofacConfig
     {
         public static IContainer Configure(IdentityServerServiceFactory fact)
         {
@@ -43,6 +35,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
+            }
+
+            if (fact.TokenService != null)
+            {
+                builder.Register(ctx => fact.TokenService()).As<ITokenService>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultTokenService>().As<ITokenService>();
             }
 
             if (fact.CustomRequestValidator != null)
@@ -74,9 +75,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
-
-            // services
-            builder.RegisterType<DefaultTokenService>().As<ITokenService>();
 
             // controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);

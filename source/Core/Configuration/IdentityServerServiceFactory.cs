@@ -21,8 +21,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         
         // optional
         public Func<ITokenHandleStore> AssertionGrantValidator { get; set; }
-        public Func<ITokenHandleStore> ClaimsProvider { get; set; }
         public Func<ICustomRequestValidator> CustomRequestValidator { get; set; }
+        public Func<IClaimsProvider> ClaimsProvider { get; set; }
+        public Func<ITokenService> TokenService { get; set; }
 
         internal void Validate()
         {
