@@ -1,4 +1,9 @@
-﻿using Autofac;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using Autofac;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -195,9 +195,7 @@
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Server\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,0 +1,6 @@
+extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */

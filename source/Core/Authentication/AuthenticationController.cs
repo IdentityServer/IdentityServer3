@@ -1,4 +1,9 @@
-﻿using Microsoft.Owin.Security;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using Microsoft.Owin.Security;
 using System;
 using System.Linq;
 using System.Net.Http;
