@@ -98,6 +98,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="UnitTests.licenseheader" />
   </ItemGroup>
   <ItemGroup />
   <Choose>

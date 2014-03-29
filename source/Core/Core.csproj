@@ -251,6 +251,7 @@
       <DependentUpon>scripts.min.js</DependentUpon>
     </None>
     <None Include="Assets\styles.css.bundle" />
+    <None Include="Core.licenseheader" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
