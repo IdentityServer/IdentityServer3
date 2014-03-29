@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal, consent);
+            interaction = await _interactionGenerator.ProcessConsentAsync(request, User as ClaimsPrincipal, consent);
             
             if (interaction.IsError)
             {

@@ -5,13 +5,14 @@
 
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IConsentService
     {
-        bool RequiresConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
-        void UpdateConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
+        Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
+        Task UpdateConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
     }
 }
