@@ -48,7 +48,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Unknown_Grant_Type()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -78,7 +78,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Missing_Grant_Type()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode

@@ -24,7 +24,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_Code_Request()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -54,7 +54,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 customRequestValidator: _customRequestValidator);
@@ -72,7 +72,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
-            var client = _settings.FindClientById("client_restricted");
+            var client = await _settings.FindClientByIdAsync("client_restricted");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 customRequestValidator: _customRequestValidator);
@@ -90,7 +90,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users,
@@ -111,7 +111,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request_Restricted_Client()
         {
-            var client = _settings.FindClientById("roclient_restricted");
+            var client = await _settings.FindClientByIdAsync("roclient_restricted");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users,
@@ -132,7 +132,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_AssertionFlow_Request()
         {
-            var client = _settings.FindClientById("assertionclient");
+            var client = await _settings.FindClientByIdAsync("assertionclient");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: new TestAssertionValidator(),

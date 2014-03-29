@@ -20,7 +20,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -38,7 +38,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task No_Scopes()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -57,7 +57,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Unknown_Scope()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -77,7 +77,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Unknown_Scope_Multiple()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -97,7 +97,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Restricted_Scope()
         {
-            var client = _settings.FindClientById("roclient_restricted");
+            var client = await _settings.FindClientByIdAsync("roclient_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -117,7 +117,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Restricted_Scope_Multiple()
         {
-            var client = _settings.FindClientById("roclient_restricted");
+            var client = await _settings.FindClientByIdAsync("roclient_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -137,7 +137,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task No_ResourceOwnerCredentials()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -155,7 +155,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Missing_ResourceOwner_UserName()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -174,7 +174,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Missing_ResourceOwner_Password()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -193,7 +193,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_ResourceOwner_Credentials()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 

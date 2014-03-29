@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -109,9 +110,9 @@ namespace UnitTests.Plumbing
                 }
         };
 
-        public IEnumerable<Scope> GetScopes()
+        public Task<IEnumerable<Scope>> GetScopesAsync()
         {
-            return new Scope[]
+            return Task.FromResult<IEnumerable<Scope>>(new Scope[]
             {
                 new Scope
                  {
@@ -139,12 +140,12 @@ namespace UnitTests.Plumbing
                     Description = "resource scope",
                     IsOpenIdScope = false
                 },
-             };
+             });
         }
 
-        public Client FindClientById(string clientId)
+        public Task<Client> FindClientByIdAsync(string clientId)
         {
-            return _clients.FirstOrDefault(c => c.ClientId == clientId);
+            return Task.FromResult(_clients.FirstOrDefault(c => c.ClientId == clientId));
         }
 
         public bool RequiresConsent(string clientId, ClaimsPrincipal user, IEnumerable<string> scopes)

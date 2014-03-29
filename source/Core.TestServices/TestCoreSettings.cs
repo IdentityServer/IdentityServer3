@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -9,16 +10,16 @@ namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestCoreSettings : ICoreSettings
     {
-        public Client FindClientById(string clientId)
+        public Task<Client> FindClientByIdAsync(string clientId)
         {
-            return (from c in TestClients.Get()
-                    where c.ClientId == clientId
-                    select c).SingleOrDefault();
+            return Task.FromResult((from c in TestClients.Get()
+                                    where c.ClientId == clientId
+                                    select c).SingleOrDefault());
         }
 
-        public IEnumerable<Scope> GetScopes()
+        public Task<IEnumerable<Scope>> GetScopesAsync()
         {
-            return TestScopes.Get();
+            return Task.FromResult(TestScopes.Get());
         }
 
         public X509Certificate2 GetSigningCertificate()

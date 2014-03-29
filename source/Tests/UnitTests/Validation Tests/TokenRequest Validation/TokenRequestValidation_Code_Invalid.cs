@@ -20,7 +20,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_AuthorizationCode()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -49,7 +49,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Invalid_AuthorizationCode()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -79,7 +79,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
-            var client = _settings.FindClientById("implicitclient");
+            var client = await _settings.FindClientByIdAsync("implicitclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -109,8 +109,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
-            var client1 = _settings.FindClientById("codeclient");
-            var client2 = _settings.FindClientById("codeclient_restricted");
+            var client1 = await _settings.FindClientByIdAsync("codeclient");
+            var client2 = await _settings.FindClientByIdAsync("codeclient_restricted");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -140,7 +140,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_RedirectUri()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -169,7 +169,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -199,7 +199,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Expired_AuthorizationCode()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -230,7 +230,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Reused_AuthorizationCode()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode

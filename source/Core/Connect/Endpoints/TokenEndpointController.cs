@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.Start("OIDC token endpoint.");
 
             // validate client credentials and client
-            var client = ValidateClient(parameters, Request.Headers.Authorization);
+            var client = await ValidateClientAsync(parameters, Request.Headers.Authorization);
             if (client == null)
             {
                 return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return this.TokenResponse(response);
         }
 
-        private Client ValidateClient(NameValueCollection parameters, AuthenticationHeaderValue header)
+        private async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
         {
             // validate client credentials on the wire
             var credential = _clientValidator.ValidateRequest(header, parameters);
@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // validate client against configuration store
-            var client = _clientValidator.ValidateClient(credential);
+            var client = await _clientValidator.ValidateClientAsync(credential);
             if (client == null)
             {
                 _logger.Error("Invalid client credentials. Aborting.");

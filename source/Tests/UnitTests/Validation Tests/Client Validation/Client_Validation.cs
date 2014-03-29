@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -13,8 +14,11 @@ namespace UnitTests.Validation_Tests.Client_Validation
         ILogger _logger = new DebugLogger();
         ICoreSettings _settings = new TestSettings();
 
+        const string Category = "Client validation";
+
         [TestMethod]
-        public void Valid_Client_Credentials()
+        [TestCategory(Category)]
+        public async Task Valid_Client_Credentials()
         {
             var credential = new ClientCredential
             {
@@ -23,14 +27,15 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = validator.ValidateClient(credential);
+            var client = await validator.ValidateClientAsync(credential);
 
             Assert.IsNotNull(client);
             Assert.AreEqual("codeclient", client.ClientId);
         }
 
         [TestMethod]
-        public void Invalid_Client_Credentials()
+        [TestCategory(Category)]
+        public async Task Invalid_Client_Credentials()
         {
             var credential = new ClientCredential
             {
@@ -39,33 +44,36 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = validator.ValidateClient(credential);
+            var client = await validator.ValidateClientAsync(credential);
 
             Assert.IsNull(client);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Null_Client_Credentials()
+        [TestCategory(Category)]
+        public async Task Null_Client_Credentials()
         {
             var credential = new ClientCredential();
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = validator.ValidateClient(credential);
+            var client = await validator.ValidateClientAsync(credential);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void Null_ClientId()
+        [TestCategory(Category)]
+        public async Task Null_ClientId()
         {
             var credential = new ClientCredential();
             
             var validator = new ClientValidator(_settings, _logger);
-            var client = validator.ValidateClient(credential);
+            var client = await validator.ValidateClientAsync(credential);
         }
 
         [TestMethod]
-        public void Empty_Client_Credentials()
+        [TestCategory(Category)]
+        public async Task Empty_Client_Credentials()
         {
             var credential = new ClientCredential
             {
@@ -74,7 +82,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = validator.ValidateClient(credential);
+            var client = await validator.ValidateClientAsync(credential);
 
             Assert.IsNull(client);
         }

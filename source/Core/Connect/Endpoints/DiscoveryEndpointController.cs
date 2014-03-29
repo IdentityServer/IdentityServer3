@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -19,9 +20,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         }
 
         [Route("openid-configuration")]
-        public dynamic GetConfiguration()
+        public async Task<dynamic> GetConfiguration()
         {
             var baseUrl = Request.GetBaseUrl(_settings.GetPublicHost());
+            var scopes = await _settings.GetScopesAsync();
 
             return new
             {
@@ -30,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 authorization_endpoint = baseUrl + "connect/authorize",
                 token_endpoint = baseUrl + "connect/token",
                 userinfo_endpoint = baseUrl + "connect/userinfo",
-                scopes_supported = _settings.GetScopes().Select(s => s.Name),
+                scopes_supported = scopes.Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
                 grant_types_supported = Constants.SupportedGrantTypes,

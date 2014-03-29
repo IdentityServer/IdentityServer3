@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public async Task<Dictionary<string, object>> ProcessAsync(ValidatedUserInfoRequest request)
         {
             var profileData = new Dictionary<string, object>();
-            var requestedClaimTypes = GetRequestedClaimTypes(request.AccessToken);
+            var requestedClaimTypes = await GetRequestedClaimTypesAsync(request.AccessToken);
             _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
             var claims = await _profile.GetProfileDataAsync(
@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return profileData;
         }
 
-        public IEnumerable<string> GetRequestedClaimTypes(Token accessToken)
+        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(Token accessToken)
         {
             var claims = new List<string>();
 
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var scopeString = string.Join(" ", scopes.Select(s => s.Value).ToArray());
             _logger.InformationFormat("Scopes in access token: {0}", scopeString);
 
-            var scopeDetails = _settings.GetScopes();
+            var scopeDetails = await _settings.GetScopesAsync();
             
             foreach (var scope in scopes)
             {
