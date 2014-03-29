@@ -1,4 +1,9 @@
-﻿using System.Net;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;

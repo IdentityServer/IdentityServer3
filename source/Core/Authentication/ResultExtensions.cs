@@ -1,5 +1,7 @@
-﻿using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Services;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {

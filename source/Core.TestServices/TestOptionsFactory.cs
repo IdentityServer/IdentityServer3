@@ -1,4 +1,8 @@
-﻿using Thinktecture.IdentityServer.Core.Configuration;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.TestServices
@@ -11,10 +15,11 @@ namespace Thinktecture.IdentityServer.TestServices
             var tokenStore = new TestTokenHandleStore();
             var core = new TestCoreSettings();
             var consent = new TestConsentService();
+            var logger = new DebugLogger();
             
             var fact = new IdentityServerServiceFactory
             {
-                Logger = () => new DebugLogger(),
+                Logger = () => logger,
                 UserService = () => new TestUserService(),
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,

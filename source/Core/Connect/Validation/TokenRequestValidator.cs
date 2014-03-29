@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -187,7 +192,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(parameters))
+            if (! (await ValidateRequestedScopesAsync(parameters)))
             {
                 _logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -216,7 +221,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(parameters))
+            if (! (await ValidateRequestedScopesAsync(parameters)))
             {
                 _logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -269,7 +274,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (!ValidateRequestedScopes(parameters))
+            if (! (await ValidateRequestedScopesAsync(parameters)))
             {
                 _logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -289,7 +294,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private bool ValidateRequestedScopes(NameValueCollection parameters)
+        private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
             var scopeValidator = new ScopeValidator(_logger);
             var requestedScopes = scopeValidator.ParseScopes(parameters.Get(Constants.TokenRequest.Scope));
@@ -304,7 +309,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return false;
             }
             
-            if (!scopeValidator.AreScopesValid(requestedScopes, _coreSettings.GetScopes()))
+            if (!scopeValidator.AreScopesValid(requestedScopes, await _coreSettings.GetScopesAsync()))
             {
                 return false;
             }

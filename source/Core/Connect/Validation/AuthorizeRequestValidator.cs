@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -294,7 +299,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = _core.FindClientById(_validatedRequest.ClientId);
+            var client = await _core.FindClientByIdAsync(_validatedRequest.ClientId);
             if (client == null)
             {
                 _logger.ErrorFormat("Unknown client: {0}", _validatedRequest.ClientId);
@@ -335,7 +340,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, _core.GetScopes()))
+            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, await _core.GetScopesAsync()))
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }

@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
@@ -20,7 +24,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
-            var client = _settings.FindClientById("roclient");
+            var client = await _settings.FindClientByIdAsync("roclient");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 userService: _users);
 
@@ -38,7 +42,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task No_Scopes()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
@@ -54,7 +58,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Unknown_Scope()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
             
             var parameters = new NameValueCollection();
@@ -71,7 +75,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Unknown_Scope_Multiple()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
@@ -88,7 +92,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Restricted_Scope()
         {
-            var client = _settings.FindClientById("client_restricted");
+            var client = await _settings.FindClientByIdAsync("client_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
@@ -105,7 +109,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Restricted_Scope_Multiple()
         {
-            var client = _settings.FindClientById("client_restricted");
+            var client = await _settings.FindClientByIdAsync("client_restricted");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
@@ -122,7 +126,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Identity_Scope()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();

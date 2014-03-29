@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;

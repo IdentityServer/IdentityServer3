@@ -1,6 +1,12 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -92,10 +98,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new InteractionResponse();
         }
 
-        public InteractionResponse ProcessConsent(ValidatedAuthorizeRequest request, ClaimsPrincipal user, UserConsent consent)
+        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user, UserConsent consent)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
-                _consent.RequiresConsent(request.Client, user, request.RequestedScopes))
+                await _consent.RequiresConsentAsync(request.Client, user, request.RequestedScopes))
             {
                 var response = new InteractionResponse();
 
@@ -145,7 +151,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                                 // remember what user actually selected
                                 scopes = request.ValidatedScopes.GrantedScopes.Select(x => x.Name);
                             }
-                            _consent.UpdateConsent(request.Client, user, scopes);
+                            
+                            await _consent.UpdateConsentAsync(request.Client, user, scopes);
                         }
                     }
                 }

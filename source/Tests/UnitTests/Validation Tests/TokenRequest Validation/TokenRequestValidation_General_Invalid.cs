@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
@@ -48,7 +52,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Unknown_Grant_Type()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode
@@ -78,7 +82,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Missing_Grant_Type()
         {
-            var client = _settings.FindClientById("codeclient");
+            var client = await _settings.FindClientByIdAsync("codeclient");
             var store = new TestCodeStore();
 
             var code = new AuthorizationCode

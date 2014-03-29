@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
@@ -95,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            interaction = _interactionGenerator.ProcessConsent(request, User as ClaimsPrincipal, consent);
+            interaction = await _interactionGenerator.ProcessConsentAsync(request, User as ClaimsPrincipal, consent);
             
             if (interaction.IsError)
             {

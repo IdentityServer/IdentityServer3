@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
@@ -21,7 +25,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
-            var client = _settings.FindClientById("client");
+            var client = await _settings.FindClientByIdAsync("client");
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
 
             var parameters = new NameValueCollection();
@@ -39,7 +43,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Missing_Assertion()
         {
-            var client = _settings.FindClientById("assertionclient");
+            var client = await _settings.FindClientByIdAsync("assertionclient");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: _assertionValidator);
@@ -58,7 +62,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_Assertion()
         {
-            var client = _settings.FindClientById("assertionclient");
+            var client = await _settings.FindClientByIdAsync("assertionclient");
 
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 assertionGrantValidator: _assertionValidator);

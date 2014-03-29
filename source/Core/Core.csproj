@@ -110,7 +110,7 @@
     <Compile Include="Authentication\LoginCredentials.cs" />
     <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
-    <Compile Include="Configuration\AutoFacConfig.cs" />
+    <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
@@ -195,14 +195,15 @@
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Server\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\default.licenseheader">
+      <Link>default.licenseheader</Link>
+    </None>
     <None Include="app.config" />
     <None Include="Assets\libs\bootstrap\custom.less" />
     <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />

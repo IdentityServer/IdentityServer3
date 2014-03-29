@@ -1,7 +1,13 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -31,14 +37,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return ParsePostBody(body);
         }
 
-        public Client ValidateClient(ClientCredential credential)
+        public async Task<Client> ValidateClientAsync(ClientCredential credential)
         {
             if (credential == null || credential.ClientId == null || credential.Secret == null)
             {
                 throw new InvalidOperationException("credential is null");
             }
 
-            var client = _settings.FindClientById(credential.ClientId);
+            var client = await _settings.FindClientByIdAsync(credential.ClientId);
             if (client == null)
             {
                 _logger.Error("Client not found in registry: " + credential.ClientId);

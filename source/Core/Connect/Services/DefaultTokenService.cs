@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IdentityModel.Protocols.WSTrust;
@@ -32,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             _tokenHandles = tokenHandles;
         }
 
-        public async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
+        public virtual async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
             // host provided claims
             var claims = new List<Claim>();
@@ -114,6 +119,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                     return handle;
                 }
             }
+
             if (token.Type == Constants.TokenTypes.IdentityToken)
             {
                 SigningCredentials credentials;

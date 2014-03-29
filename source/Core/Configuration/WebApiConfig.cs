@@ -1,6 +1,10 @@
-﻿using System.Net.Http.Formatting;
-using System.Web.Http;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
 using System.Linq;
+using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Plumbing;
 
