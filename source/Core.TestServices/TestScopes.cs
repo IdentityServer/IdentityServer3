@@ -51,12 +51,14 @@ namespace Thinktecture.IdentityServer.TestServices
                         new ScopeClaim
                         {
                             Name = "email",
-                            Description = "email address"
+                            Description = "email address",
+                            AlwaysIncludeInIdToken = true
                         },
                         new ScopeClaim
                         {
                             Name = "email_verified",
-                            Description = "email is verified"
+                            Description = "email is verified",
+                            AlwaysIncludeInIdToken = true
                         }
                     }
                 },
