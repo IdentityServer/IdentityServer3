@@ -7,6 +7,7 @@ using Microsoft.Owin.Security;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Extensions;
@@ -21,19 +22,23 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     [ErrorPageFilter]
     public class AuthenticationController : ApiController
     {
+        ILogger logger;
         IUserService userService;
-        private ICoreSettings _settings;
+        ICoreSettings settings;
 
-        public AuthenticationController(IUserService userService, ICoreSettings settings)
+        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings)
         {
+            this.logger = logger;
             this.userService = userService;
-            _settings = settings;
+            this.settings = settings;
         }
 
         [Route("login", Name="login")]
         [HttpGet]
         public IHttpActionResult Login([FromUri] string message = null)
         {
+            logger.Start("AuthenticationController.Login");
+
             if (message != null)
             {
                 SaveLoginRequestMessage(message);
@@ -50,6 +55,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpPost]
         public async Task<IHttpActionResult> LoginLocal(LoginCredentials model)
         {
+            logger.Start("AuthenticationController.LoginLocal");
+
             if (model == null)
             {
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword);
@@ -81,6 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public IHttpActionResult LoginExternal(string provider)
         {
+            logger.Start("AuthenticationController.LoginLocal");
+
             VerifyLoginRequestMessage();
 
             var ctx = Request.GetOwinContext();
@@ -147,7 +156,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
-                       Title = _settings.GetSiteName(),
+                       Title = settings.GetSiteName(),
                        Page = "logout"
                    });
         }
@@ -206,6 +215,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (authResult.IsRedirect)
             {
+                // TODO: put original return URL into cookie with a GUID ID
+                // and put the ID as route param for the resume URL. then
+                // we can always call ClearLoginRequestMessage()
+                id.AddClaim(new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, Url.Route("resume", null)));
+                
                 // allow redircting code to add claims for target page
                 id.AddClaims(authResult.RedirectClaims);
             }
@@ -240,7 +254,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Request,
                 new LayoutModel
                 {
-                    Title = _settings.GetSiteName(),
+                    Title = settings.GetSiteName(),
                     Page = "login",
                     ErrorMessage = errorMessage,
                     PageModel = new
@@ -273,7 +287,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private void SaveLoginRequestMessage(string message)
         {
-            var protection = _settings.GetInternalProtectionSettings();
+            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
                 message,
                 protection.Issuer,
@@ -299,7 +313,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
-            var protection = _settings.GetInternalProtectionSettings();
+            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
                 message,
                 protection.Issuer,
@@ -314,7 +328,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
-            var protection = _settings.GetInternalProtectionSettings();
+            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
                 message,
                 protection.Issuer,

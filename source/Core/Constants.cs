@@ -280,6 +280,9 @@ namespace Thinktecture.IdentityServer.Core
             public const string Id       = "id";
             public const string Secret   = "secret";
             public const string IdentityProvider = "idp";
+
+            // claims for authentication controller partial logins
+            public const string PartialLoginReturnUrl = "partial_login_return_url";
         }
 
         public static class AuthenticationMethods

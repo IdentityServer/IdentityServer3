@@ -78,23 +78,39 @@ namespace MembershipReboot.IdentityServer
         
         public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
-            UserAccount acct;
-            if (userAccountService.Authenticate(username, password, out acct))
+            UserAccount account;
+            if (userAccountService.Authenticate(username, password, out account))
             {
-                var subject = acct.ID.ToString("D");
-                var name = acct.Username;
+                var subject = account.ID.ToString("D");
+                var name = account.Username;
 
-                if (acct.RequiresPasswordReset)
+                if (account.RequiresTwoFactorAuthCodeToSignIn())
                 {
-                    return new AuthenticateResult("You must reset your password");
+                    return new AuthenticateResult("/core/account/twofactor", subject, name);
                 }
-                
-                if (!acct.IsLoginAllowed)
+                if (account.RequiresTwoFactorCertificateToSignIn())
                 {
-                    return new AuthenticateResult("/core/foo?bar=baz", subject, name);
+                    return new AuthenticateResult("/core/account/certificate", subject, name);
+                }
+                if (account.RequiresPasswordReset)
+                {
+                    return new AuthenticateResult("/core/account/changepassword", subject, name);
                 }
 
                 return new AuthenticateResult(subject, name);
+            }
+
+            if (account != null)
+            {
+                if (!account.IsLoginAllowed)
+                {
+                    return new AuthenticateResult("Account is not allowed to login");
+                }
+
+                if (account.IsAccountClosed)
+                {
+                    return new AuthenticateResult("Account is closed");
+                }
             }
 
             return null;
@@ -133,7 +149,7 @@ namespace MembershipReboot.IdentityServer
                 }
                 else
                 {
-                    return await ProcessExistingExternalAccountAsync(provider, providerId, acct.ID, externalClaims);
+                    return await ProcessExistingExternalAccountAsync(acct.ID, provider, providerId, externalClaims);
                 }
             }
             catch (ValidationException ex)
@@ -145,42 +161,47 @@ namespace MembershipReboot.IdentityServer
         protected virtual async Task<ExternalAuthenticateResult> ProcessNewExternalAccountAsync(string provider, string providerId, IEnumerable<Claim> claims)
         {
             var acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
-            
-            var result = await AccountCreatedFromExternalProviderAsync(provider, providerId, acct.ID, claims);
+
+            var result = await AccountCreatedFromExternalProviderAsync(acct.ID, provider, providerId, claims);
             if (result != null) return result;
-            
-            return await SignInFromExternalProviderAsync(provider, acct.ID);
+
+            return await SignInFromExternalProviderAsync(acct.ID, provider);
         }
 
-        protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
+        protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            claims = SetNewAccountUsername(accountID, claims);
-            claims = SetNewAccountEmail(accountID, claims);
-            claims = SetNewAccountPhone(accountID, claims);
+            var result = SetNewAccountUsername(accountID, provider, ref claims);
+            if (result != null) return result;
+            
+            result= SetNewAccountEmail(accountID, provider, ref claims);
+            if (result != null) return result;
+
+            result = SetNewAccountPhone(accountID, provider, ref claims);
+            if (result != null) return result;
 
             claims = FilterExternalClaimsForNewAccount(provider, claims);
-            return await UpdateAccountFromExternalClaimsAsync(provider, providerId, accountID, claims);
+            return await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
         }
 
-        protected async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(string provider, Guid accountID)
+        protected async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(Guid accountID, string provider)
         {
             var acct = userAccountService.GetByID(accountID);
-            return new ExternalAuthenticateResult(provider, acct.ID.ToString(), GetNameForAccount(acct));
+            return new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetNameForAccount(accountID));
         }
 
-        private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
+        private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            claims = SetNewAccountEmail(accountID, claims);
-            claims = SetNewAccountPhone(accountID, claims);
+            SetAccountEmail(accountID, ref claims);
+            SetAccountPhone(accountID, ref claims);
 
             claims = FilterExternalClaimsForExistingAccount(provider, claims);
-            var result = await UpdateAccountFromExternalClaimsAsync(provider, providerId, accountID, claims);
+            var result = await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
             if (result != null) return result;
 
-            return await SignInFromExternalProviderAsync(provider, accountID);
+            return await SignInFromExternalProviderAsync(accountID, provider);
         }
 
-        protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
+        protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
             var account = userAccountService.GetByID(accountID);
             userAccountService.AddOrUpdateLinkedAccount(account, provider, providerId, claims);
@@ -198,7 +219,7 @@ namespace MembershipReboot.IdentityServer
             return claims;
         }
 
-        protected virtual IEnumerable<Claim> SetNewAccountUsername(Guid accountID, IEnumerable<Claim> claims)
+        protected virtual ExternalAuthenticateResult SetNewAccountUsername(Guid accountID, string provider, ref IEnumerable<Claim> claims)
         {
             var name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
             if (name == null) name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Name);
@@ -212,19 +233,29 @@ namespace MembershipReboot.IdentityServer
                 {
                     userAccountService.ChangeUsername(acct.ID, name);
                     var nameClaims = new string[] { Constants.ClaimTypes.PreferredUserName, Constants.ClaimTypes.Name };
-                    return claims.Where(x => !nameClaims.Contains(x.Type));
+                    claims = claims.Where(x => !nameClaims.Contains(x.Type));
                 }
                 catch (ValidationException ex)
                 {
                     // presumably the name is already associated with another account or invalid
-                    // so eat the validation exception and let the claim pass thru
+                    // so let's register the user
+                    return new ExternalAuthenticateResult("/core/account/register", 
+                        provider, 
+                        accountID.ToString("D"), 
+                        GetNameForAccount(accountID));
                 }
             }
 
-            return claims;
+            return null;
         }
 
-        protected virtual IEnumerable<Claim> SetNewAccountEmail(Guid accountID, IEnumerable<Claim> claims)
+        protected virtual ExternalAuthenticateResult SetNewAccountEmail(Guid accountID, string provider, ref IEnumerable<Claim> claims)
+        {
+            SetAccountEmail(accountID, ref claims);
+            return null;
+        }
+
+        protected virtual void SetAccountEmail(Guid accountID, ref IEnumerable<Claim> claims)
         {
             var email = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Email);
             if (email != null)
@@ -245,7 +276,7 @@ namespace MembershipReboot.IdentityServer
                         }
 
                         var emailClaims = new string[] { Constants.ClaimTypes.Email, Constants.ClaimTypes.EmailVerified };
-                        return claims.Where(x => !emailClaims.Contains(x.Type));
+                        claims = claims.Where(x => !emailClaims.Contains(x.Type));
                     }
                     catch (ValidationException ex)
                     {
@@ -254,21 +285,24 @@ namespace MembershipReboot.IdentityServer
                     }
                 }
             }
-
-            return claims;
         }
 
-        protected virtual IEnumerable<Claim> SetNewAccountPhone(Guid accountID, IEnumerable<Claim> claims)
+        protected virtual ExternalAuthenticateResult SetNewAccountPhone(Guid accountID, string provider, ref IEnumerable<Claim> claims)
+        {
+            SetAccountPhone(accountID, ref claims);
+            return null;
+        }
+
+        protected virtual void SetAccountPhone(Guid accountID, ref IEnumerable<Claim> claims)
         {
             var phone = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumber);
             if (phone != null)
             {
                 var acct = userAccountService.GetByID(accountID);
-                if (acct.MobilePhoneNumber != phone)
+                if (acct.MobilePhoneNumber == null)
                 {
                     try
                     {
-
                         var phone_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumberVerified);
                         if (phone_verified != null && phone_verified == "true")
                         {
@@ -280,7 +314,7 @@ namespace MembershipReboot.IdentityServer
                         }
 
                         var phoneClaims = new string[] { Constants.ClaimTypes.PhoneNumber, Constants.ClaimTypes.PhoneNumberVerified };
-                        return claims.Where(x => !phoneClaims.Contains(x.Type));
+                        claims = claims.Where(x => !phoneClaims.Contains(x.Type));
                     }
                     catch (ValidationException ex)
                     {
@@ -289,12 +323,11 @@ namespace MembershipReboot.IdentityServer
                     }
                 }
             }
-
-            return claims;
         }
 
-        protected virtual string GetNameForAccount(UserAccount acct)
+        protected virtual string GetNameForAccount(Guid accountID)
         {
+            var acct = userAccountService.GetByID(accountID);
             string name = null;
             
             // if the user has a local password, then presumably they know
@@ -304,6 +337,17 @@ namespace MembershipReboot.IdentityServer
             if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
             if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.Name);
             if (name == null) name = acct.GetClaimValue(ClaimTypes.Name);
+
+            if (name == null)
+            {
+                name = acct.LinkedAccountClaims
+                    .Where(x =>
+                        x.Type == Constants.ClaimTypes.PreferredUserName ||
+                        x.Type == Constants.ClaimTypes.Name ||
+                        x.Type == ClaimTypes.Name)
+                    .Select(x=>x.Value)
+                    .FirstOrDefault();
+            }
 
             name = name ?? acct.Username;
             return name;
@@ -398,6 +442,7 @@ namespace MembershipReboot.IdentityServer
                 }
             }
 
+            dictionary2.Add("unique_name", "name");
             return dictionary2;
         }
 
