@@ -133,7 +133,7 @@ namespace MembershipReboot.IdentityServer
                 }
                 else
                 {
-                    return await ProcessExistingExternalAccountAsync(provider, providerId, acct, externalClaims);
+                    return await ProcessExistingExternalAccountAsync(provider, providerId, acct.ID, externalClaims);
                 }
             }
             catch (ValidationException ex)
@@ -154,8 +154,11 @@ namespace MembershipReboot.IdentityServer
 
         protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
         {
-            claims = FilterExternalClaimsForNewAccount(provider, claims);
+            claims = SetNewAccountUsername(accountID, claims);
+            claims = SetNewAccountEmail(accountID, claims);
+            claims = SetNewAccountPhone(accountID, claims);
 
+            claims = FilterExternalClaimsForNewAccount(provider, claims);
             return await UpdateAccountFromExternalClaimsAsync(provider, providerId, accountID, claims);
         }
 
@@ -165,14 +168,16 @@ namespace MembershipReboot.IdentityServer
             return new ExternalAuthenticateResult(provider, acct.ID.ToString(), GetNameForAccount(acct));
         }
 
-        private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string provider, string providerId, UserAccount acct, IEnumerable<Claim> claims)
+        private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
         {
-            claims = FilterExternalClaimsForExistingAccount(provider, claims);
+            claims = SetNewAccountEmail(accountID, claims);
+            claims = SetNewAccountPhone(accountID, claims);
 
-            var result = await UpdateAccountFromExternalClaimsAsync(provider, providerId, acct.ID, claims);
+            claims = FilterExternalClaimsForExistingAccount(provider, claims);
+            var result = await UpdateAccountFromExternalClaimsAsync(provider, providerId, accountID, claims);
             if (result != null) return result;
 
-            return await SignInFromExternalProviderAsync(provider, acct.ID);
+            return await SignInFromExternalProviderAsync(provider, accountID);
         }
 
         protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
@@ -193,64 +198,99 @@ namespace MembershipReboot.IdentityServer
             return claims;
         }
 
-        static string[] EmailAndPhoneClaims = new[] {
-            Constants.ClaimTypes.Email,
-            Constants.ClaimTypes.EmailVerified,
-            Constants.ClaimTypes.PhoneNumber,
-            Constants.ClaimTypes.PhoneNumberVerified,
-        };
-
-        protected virtual void UpdateAccountFromClaims(Guid accountID, IEnumerable<Claim> claims)
+        protected virtual IEnumerable<Claim> SetNewAccountUsername(Guid accountID, IEnumerable<Claim> claims)
         {
-            var account = userAccountService.GetByID(accountID);
-
-            UpdateEmail(account, claims);
-            UpdatePhone(account, claims);
-
-            claims = claims.Where(x => !EmailAndPhoneClaims.Contains(x.Type));
-
-            var oldClaims = account.Claims.Select(x => new Tuple<string, string>(x.Type, x.Value));
-            var newClaims = claims.Select(x => new Tuple<string, string>(x.Type, x.Value));
+            var name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
+            if (name == null) name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Name);
             
-            var intersection = newClaims.Intersect(oldClaims);
-            var claimsToAdd = newClaims.Except(intersection).Select(x=>new UserClaim(x.Item1, x.Item2));
-            var claimsToRemove = oldClaims.Except(intersection).Select(x => new UserClaim(x.Item1, x.Item2));
+            if (name != null)
+            {
+                name = new String(name.Where(x => Char.IsLetterOrDigit(x)).ToArray());
 
-            userAccountService.UpdateClaims(account.ID, claimsToAdd.ToCollection(), claimsToRemove.ToCollection());
+                var acct = userAccountService.GetByID(accountID);
+                try
+                {
+                    userAccountService.ChangeUsername(acct.ID, name);
+                    var nameClaims = new string[] { Constants.ClaimTypes.PreferredUserName, Constants.ClaimTypes.Name };
+                    return claims.Where(x => !nameClaims.Contains(x.Type));
+                }
+                catch (ValidationException ex)
+                {
+                    // presumably the name is already associated with another account or invalid
+                    // so eat the validation exception and let the claim pass thru
+                }
+            }
+
+            return claims;
         }
 
-        protected virtual void UpdateEmail(UserAccount acct, IEnumerable<Claim> claims)
+        protected virtual IEnumerable<Claim> SetNewAccountEmail(Guid accountID, IEnumerable<Claim> claims)
         {
             var email = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Email);
-            if (email != null && email != acct.Email)
+            if (email != null)
             {
-                var email_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.EmailVerified);
-                if (email_verified != null && email_verified == "true")
+                var acct = userAccountService.GetByID(accountID);
+                if (acct.Email == null)
                 {
-                    userAccountService.SetConfirmedEmail(acct.ID, email);
-                }
-                else
-                {
-                    userAccountService.ChangeEmailRequest(acct.ID, email);
+                    try
+                    {
+                        var email_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.EmailVerified);
+                        if (email_verified != null && email_verified == "true")
+                        {
+                            userAccountService.SetConfirmedEmail(acct.ID, email);
+                        }
+                        else
+                        {
+                            userAccountService.ChangeEmailRequest(acct.ID, email);
+                        }
+
+                        var emailClaims = new string[] { Constants.ClaimTypes.Email, Constants.ClaimTypes.EmailVerified };
+                        return claims.Where(x => !emailClaims.Contains(x.Type));
+                    }
+                    catch (ValidationException ex)
+                    {
+                        // presumably the email is already associated with another account
+                        // so eat the validation exception and let the claim pass thru
+                    }
                 }
             }
+
+            return claims;
         }
-        
-        protected virtual void UpdatePhone(UserAccount acct, IEnumerable<Claim> claims)
+
+        protected virtual IEnumerable<Claim> SetNewAccountPhone(Guid accountID, IEnumerable<Claim> claims)
         {
             var phone = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumber);
-            if (phone != null && acct.MobilePhoneNumber != phone)
+            if (phone != null)
             {
-                var phone_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumberVerified);
-                if (phone_verified != null && phone_verified == "true")
+                var acct = userAccountService.GetByID(accountID);
+                if (acct.MobilePhoneNumber != phone)
                 {
-                    userAccountService.SetConfirmedMobilePhone(acct.ID, phone);
-                }
-                else
-                {
-                    userAccountService.ChangeMobilePhoneRequest(acct.ID, phone);
+                    try
+                    {
+
+                        var phone_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumberVerified);
+                        if (phone_verified != null && phone_verified == "true")
+                        {
+                            userAccountService.SetConfirmedMobilePhone(acct.ID, phone);
+                        }
+                        else
+                        {
+                            userAccountService.ChangeMobilePhoneRequest(acct.ID, phone);
+                        }
+
+                        var phoneClaims = new string[] { Constants.ClaimTypes.PhoneNumber, Constants.ClaimTypes.PhoneNumberVerified };
+                        return claims.Where(x => !phoneClaims.Contains(x.Type));
+                    }
+                    catch (ValidationException ex)
+                    {
+                        // presumably the phone is already associated with another account
+                        // so eat the validation exception and let the claim pass thru
+                    }
                 }
             }
+
+            return claims;
         }
 
         protected virtual string GetNameForAccount(UserAccount acct)
@@ -283,7 +323,8 @@ namespace MembershipReboot.IdentityServer
             dictionary.Add("sub", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             dictionary.Add("nameid", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             dictionary.Add("website", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/webpage");
-            dictionary.Add("unique_name", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
+            // changed from unique_name
+            dictionary.Add("name", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
             dictionary.Add("oid", "http://schemas.microsoft.com/identity/claims/objectidentifier");
             dictionary.Add("scp", "http://schemas.microsoft.com/identity/claims/scope");
             dictionary.Add("tid", "http://schemas.microsoft.com/identity/claims/tenantid");
