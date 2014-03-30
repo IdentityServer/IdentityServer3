@@ -1,12 +1,14 @@
 ﻿using BrockAllen.MembershipReboot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
+using ClaimHelper = BrockAllen.MembershipReboot.ClaimsExtensions;
 
 namespace MembershipReboot.IdentityServer
 {
@@ -31,6 +33,49 @@ namespace MembershipReboot.IdentityServer
             }
         }
 
+        public async Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject,
+            IEnumerable<string> requestedClaimTypes = null)
+        {
+            var acct = userAccountService.GetByID(subject.ToGuid());
+            if (acct == null)
+            {
+                throw new ArgumentException("Invalid subject identifier");
+            }
+
+            var claims = GetClaimsFromAccount(acct);
+            if (requestedClaimTypes != null)
+            {
+                claims = claims.Where(x => requestedClaimTypes.Contains(x.Type));
+            }
+            return claims;
+        }
+
+        IEnumerable<Claim> GetClaimsFromAccount(UserAccount account)
+        {
+            var claims = new List<Claim>{
+                new Claim(Constants.ClaimTypes.Subject, account.ID.ToString("D")),
+                new Claim(Constants.ClaimTypes.Name, account.Username),
+                new Claim(Constants.ClaimTypes.UpdatedAt, account.LastUpdated.ToEpochTime().ToString()),
+            };
+            
+            if (!String.IsNullOrWhiteSpace(account.Email))
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.Email, account.Email));
+                claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, account.IsAccountVerified ? "true" : "false"));
+            }
+            
+            if (!String.IsNullOrWhiteSpace(account.MobilePhoneNumber))
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.PhoneNumber, account.MobilePhoneNumber));
+                claims.Add(new Claim(Constants.ClaimTypes.PhoneNumberVerified, !String.IsNullOrWhiteSpace(account.MobilePhoneNumber) ? "true" : "false"));
+            }
+            
+            claims.AddRange(account.Claims.Select(x => new Claim(x.Type, x.Value)));
+            claims.AddRange(account.LinkedAccountClaims.Select(x => new Claim(x.Type, x.Value)));
+
+            return claims;
+        }
+        
         public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             UserAccount acct;
@@ -57,13 +102,11 @@ namespace MembershipReboot.IdentityServer
 
         public async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> externalClaims)
         {
-            if (externalClaims == null)
+            if (externalClaims == null || !externalClaims.Any())
             {
                 return null;
             }
 
-            var claims = externalClaims.ToList();
-            
             var subClaim = externalClaims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
             if (subClaim == null)
             {
@@ -74,94 +117,153 @@ namespace MembershipReboot.IdentityServer
                     return null;
                 }
             }
-            
-            claims.Remove(subClaim);
-            claims = NormalizeFromWIFClaims(claims).ToList();
+
+            externalClaims = externalClaims.Except(new Claim[] { subClaim });
+            externalClaims = NormalizeExternalClaimTypes(externalClaims);
 
             var provider = subClaim.Issuer;
             var providerId = subClaim.Value;
 
-            var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
-            if (acct == null)
+            try
             {
-                acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
-                AccountCreatedFromExternalProvider(acct, claims);
+                var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
+                if (acct == null)
+                {
+                    return await ProcessNewExternalAccountAsync(provider, providerId, externalClaims);
+                }
+                else
+                {
+                    return await ProcessExistingExternalAccountAsync(provider, providerId, acct, externalClaims);
+                }
             }
-            else
+            catch (ValidationException ex)
             {
-                UpdateAccountFromExternalProvider(acct, claims);
+                return new ExternalAuthenticateResult(ex.Message);
             }
-
-            string name = GetNameFromExternalLogin(acct, externalClaims);
-            return new ExternalAuthenticateResult(provider, acct.ID.ToString("D"), name);
         }
 
-        public async Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject,
-            IEnumerable<string> requestedClaimTypes = null)
+        protected virtual async Task<ExternalAuthenticateResult> ProcessNewExternalAccountAsync(string provider, string providerId, IEnumerable<Claim> claims)
         {
-            var acct = userAccountService.GetByID(subject.ToGuid());
-            if (acct == null)
-            {
-                throw new ArgumentException("Invalid subject identifier");
-            }
-
-            if (requestedClaimTypes == null)
-            {
-                return null;
-            }
-
-            var claims = GetClaimsFromAccount(acct);
-            return claims.Where(x => requestedClaimTypes.Contains(x.Type));
+            var acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
+            
+            var result = await AccountCreatedFromExternalProviderAsync(provider, providerId, acct.ID, claims);
+            if (result != null) return result;
+            
+            return await SignInFromExternalProviderAsync(provider, acct.ID);
         }
 
-        IEnumerable<Claim> GetClaimsFromAccount(UserAccount account)
+        protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
         {
-            var claims = new List<Claim>{
-                new Claim(Constants.ClaimTypes.Subject, account.ID.ToString("D")),
-                new Claim(Constants.ClaimTypes.Name, account.Username),
-                new Claim(Constants.ClaimTypes.UpdatedAt, account.LastUpdated.ToEpochTime().ToString()),
-            };
-            if (!String.IsNullOrWhiteSpace(account.Email))
-            {
-                claims.Add(new Claim(Constants.ClaimTypes.Email, account.Email));
-                claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, account.IsAccountVerified ? "true" : "false"));
-            }
-            if (!String.IsNullOrWhiteSpace(account.MobilePhoneNumber))
-            {
-                claims.Add(new Claim(Constants.ClaimTypes.PhoneNumber, account.MobilePhoneNumber));
-                claims.Add(new Claim(Constants.ClaimTypes.PhoneNumberVerified, !String.IsNullOrWhiteSpace(account.MobilePhoneNumber) ? "true" : "false"));
-            }
-            claims.AddRange(account.Claims.Select(x => new Claim(x.Type, x.Value)));
+            claims = FilterExternalClaimsForNewAccount(provider, claims);
 
+            return await UpdateAccountFromExternalClaimsAsync(provider, providerId, accountID, claims);
+        }
+
+        protected async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(string provider, Guid accountID)
+        {
+            var acct = userAccountService.GetByID(accountID);
+            return new ExternalAuthenticateResult(provider, acct.ID.ToString(), GetNameForAccount(acct));
+        }
+
+        private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string provider, string providerId, UserAccount acct, IEnumerable<Claim> claims)
+        {
+            claims = FilterExternalClaimsForExistingAccount(provider, claims);
+
+            var result = await UpdateAccountFromExternalClaimsAsync(provider, providerId, acct.ID, claims);
+            if (result != null) return result;
+
+            return await SignInFromExternalProviderAsync(provider, acct.ID);
+        }
+
+        protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(string provider, string providerId, Guid accountID, IEnumerable<Claim> claims)
+        {
+            var account = userAccountService.GetByID(accountID);
+            userAccountService.AddOrUpdateLinkedAccount(account, provider, providerId, claims);
+
+            return null;
+        }
+        
+        protected virtual IEnumerable<Claim> FilterExternalClaimsForNewAccount(string provider, IEnumerable<Claim> claims)
+        {
             return claims;
         }
 
-        private void AccountCreatedFromExternalProvider(UserAccount acct, List<Claim> claims)
+        protected virtual IEnumerable<Claim> FilterExternalClaimsForExistingAccount(string provider, IEnumerable<Claim> claims)
         {
-
+            return claims;
         }
 
-        private void UpdateAccountFromExternalProvider(UserAccount acct, List<Claim> claims)
-        {
+        static string[] EmailAndPhoneClaims = new[] {
+            Constants.ClaimTypes.Email,
+            Constants.ClaimTypes.EmailVerified,
+            Constants.ClaimTypes.PhoneNumber,
+            Constants.ClaimTypes.PhoneNumberVerified,
+        };
 
+        protected virtual void UpdateAccountFromClaims(Guid accountID, IEnumerable<Claim> claims)
+        {
+            var account = userAccountService.GetByID(accountID);
+
+            UpdateEmail(account, claims);
+            UpdatePhone(account, claims);
+
+            claims = claims.Where(x => !EmailAndPhoneClaims.Contains(x.Type));
+
+            var oldClaims = account.Claims.Select(x => new Tuple<string, string>(x.Type, x.Value));
+            var newClaims = claims.Select(x => new Tuple<string, string>(x.Type, x.Value));
+            
+            var intersection = newClaims.Intersect(oldClaims);
+            var claimsToAdd = newClaims.Except(intersection).Select(x=>new UserClaim(x.Item1, x.Item2));
+            var claimsToRemove = oldClaims.Except(intersection).Select(x => new UserClaim(x.Item1, x.Item2));
+
+            userAccountService.UpdateClaims(account.ID, claimsToAdd.ToCollection(), claimsToRemove.ToCollection());
         }
 
-        private static string GetNameFromExternalLogin(UserAccount acct, IEnumerable<Claim> claims)
+        protected virtual void UpdateEmail(UserAccount acct, IEnumerable<Claim> claims)
+        {
+            var email = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Email);
+            if (email != null && email != acct.Email)
+            {
+                var email_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.EmailVerified);
+                if (email_verified != null && email_verified == "true")
+                {
+                    userAccountService.SetConfirmedEmail(acct.ID, email);
+                }
+                else
+                {
+                    userAccountService.ChangeEmailRequest(acct.ID, email);
+                }
+            }
+        }
+        
+        protected virtual void UpdatePhone(UserAccount acct, IEnumerable<Claim> claims)
+        {
+            var phone = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumber);
+            if (phone != null && acct.MobilePhoneNumber != phone)
+            {
+                var phone_verified = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumberVerified);
+                if (phone_verified != null && phone_verified == "true")
+                {
+                    userAccountService.SetConfirmedMobilePhone(acct.ID, phone);
+                }
+                else
+                {
+                    userAccountService.ChangeMobilePhoneRequest(acct.ID, phone);
+                }
+            }
+        }
+
+        protected virtual string GetNameForAccount(UserAccount acct)
         {
             string name = null;
+            
+            // if the user has a local password, then presumably they know
+            // their own username and will recognize it (rather than a generated one)
             if (acct.HasPassword()) name = acct.Username;
 
             if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
             if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.Name);
             if (name == null) name = acct.GetClaimValue(ClaimTypes.Name);
-            if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.Email);
-            if (name == null) name = acct.GetClaimValue(ClaimTypes.Email);
-
-            if (name == null) name = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
-            if (name == null) name = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Name);
-            if (name == null) name = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Name);
-            if (name == null) name = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, Constants.ClaimTypes.Email);
-            if (name == null) name = Thinktecture.IdentityModel.Extensions.ClaimsExtensions.GetValue(claims, ClaimTypes.Email);
 
             name = name ?? acct.Username;
             return name;
@@ -268,7 +370,7 @@ namespace MembershipReboot.IdentityServer
             return type;
         }
 
-        IEnumerable<Claim> NormalizeFromWIFClaims(IEnumerable<Claim> incomingClaims)
+        protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
         {
             var claimsToMap = incomingClaims.Where(x => ClaimTypeMap.ContainsKey(x.Type));
             var mappedClaims = claimsToMap.Select(x => new Claim(MapClaimType(x.Type), x.Value));
@@ -279,34 +381,5 @@ namespace MembershipReboot.IdentityServer
             
             return claims;
         }
-
-        //void UpdateAccountFromClaims(UserAccount account, IEnumerable<Claim> claims)
-        //{
-        //    var typesThatAreNotGeneral = new[]{
-        //        Constants.ClaimTypes.Subject, 
-        //        Constants.ClaimTypes.Name, 
-        //        Constants.ClaimTypes.Email,
-        //        Constants.ClaimTypes.EmailVerified,
-        //        Constants.ClaimTypes.PhoneNumber,
-        //        Constants.ClaimTypes.PhoneNumberVerified,
-        //    };
-
-        //    var oldGeneralClaims = account.Claims.Select(x => new Tuple<string, string>(x.Type, x.Value));
-        //    var newGeneralClaims = claims.Where(x => !typesThatAreNotGeneral.Contains(x.Type)).Select(x => new Tuple<string, string>(x.Type, x.Value));
-        //    var intersection = newGeneralClaims.Intersect(oldGeneralClaims);
-        //}
-
-        //void CalculateDelta(
-        //    IEnumerable<Tuple<string, string>> oldClaims,
-        //    IEnumerable<Tuple<string, string>> newClaims,
-        //    out IEnumerable<Tuple<string, string>> claimsToAdd,
-        //    out IEnumerable<Tuple<string, string>> claimsToRemove)
-        //{
-        //    var intersection = newClaims.Intersect(oldClaims);
-        //    claimsToAdd = newClaims.Except(intersection);
-        //    claimsToRemove = oldClaims.Except(intersection);
-        //}
-
-
     }
 }
