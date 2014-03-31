@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 authorization_endpoint = baseUrl + "connect/authorize",
                 token_endpoint = baseUrl + "connect/token",
                 userinfo_endpoint = baseUrl + "connect/userinfo",
+                end_session_endpoint = baseUrl + "connect/logout",
                 scopes_supported = scopes.Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,

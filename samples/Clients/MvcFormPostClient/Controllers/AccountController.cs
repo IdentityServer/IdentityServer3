@@ -62,7 +62,7 @@ namespace MvcFormPostClient.Controllers
 		public ActionResult SignOut()
 		{
             Request.GetOwinContext().Authentication.SignOut();
-            return Redirect("/");
-		}
+            return Redirect(Constants.LogoutEndpoint);
+        }
 	}
 }

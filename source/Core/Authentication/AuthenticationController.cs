@@ -154,8 +154,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 authResult.Provider);
         }
 
-        [Route("logout")]
-        [HttpGet]
+        [Route("logout", Name="logout")]
+        [HttpGet, HttpPost]
         public IHttpActionResult Logout()
         {
             logger.Start("AuthenticationController.Logout");

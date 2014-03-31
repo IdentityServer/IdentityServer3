@@ -117,6 +117,7 @@
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
+    <Compile Include="Connect\Endpoints\LogoutController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
     <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\ConsentError.cs" />
@@ -274,6 +275,7 @@
     </Content>
     <EmbeddedResource Include="Assets\app\logout.html" />
     <EmbeddedResource Include="Assets\app\error.html" />
+    <EmbeddedResource Include="Assets\app\logoutprompt.html" />
     <Content Include="Assets\libs\angular\angular.1.2.13.js" />
     <Content Include="Assets\libs\angular\angular.1.2.13.min.js" />
     <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.css" />
