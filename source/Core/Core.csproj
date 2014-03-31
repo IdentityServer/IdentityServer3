@@ -145,6 +145,7 @@
     <Compile Include="Extensions\ScopeExtensions.cs" />
     <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
+    <Compile Include="Plumbing\ClaimMap.cs" />
     <Compile Include="Plumbing\ErrorPageFilterAttribute.cs" />
     <Compile Include="Plumbing\IdentityServerExceptionLogger.cs" />
     <Compile Include="Plumbing\IdentityServerPrincipal.cs" />
