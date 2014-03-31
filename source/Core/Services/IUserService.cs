@@ -11,6 +11,13 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    public interface IUserService
+    {
+        Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password);
+        Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims);
+        Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null);
+    }
+
     public class AuthenticateResult
     {
         protected AuthenticateResult()
@@ -38,21 +45,11 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         // TODO: maybe this should be a PathString?
         public AuthenticateResult(string redirectPath, string subject, string name)
-            : this()
+            : this(subject, name)
         {
             if (String.IsNullOrWhiteSpace(redirectPath)) throw new ArgumentNullException("redirectPath");
-            if (!String.IsNullOrWhiteSpace(subject) && String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException("name");
-            }
-            if (String.IsNullOrWhiteSpace(subject) && !String.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException("subject");
-            }
 
             this.RedirectPath = new PathString(redirectPath);
-            this.Subject = subject;
-            this.Name = name;
         }
 
         public string ErrorMessage { get; private set; }
@@ -81,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             : base(errorMessage)
         {
         }
-        
+
         public ExternalAuthenticateResult(string provider, string subject, string name)
             : base(subject, name)
         {
@@ -93,25 +90,12 @@ namespace Thinktecture.IdentityServer.Core.Services
         public ExternalAuthenticateResult(string redirectPath, string provider, string subject, string name)
             : base(redirectPath, subject, name)
         {
-            if (!String.IsNullOrWhiteSpace(provider) && String.IsNullOrWhiteSpace(subject))
-            {
-                throw new ArgumentNullException("subject");
-            }
-            if (String.IsNullOrWhiteSpace(provider) && !String.IsNullOrWhiteSpace(subject))
-            {
-                throw new ArgumentNullException("provider");
-            }
-            
+            if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
+
             this.Provider = provider;
         }
 
         public string Provider { get; private set; }
     }
 
-    public interface IUserService
-    {
-        Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password);
-        Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims);
-        Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null);
-    }
 }
