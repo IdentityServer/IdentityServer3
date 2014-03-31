@@ -170,6 +170,8 @@ namespace MembershipReboot.IdentityServer
 
         protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
+            claims = FilterExternalClaimsForNewAccount(provider, claims);
+
             var result = SetNewAccountUsername(accountID, provider, ref claims);
             if (result != null) return result;
             
@@ -178,8 +180,7 @@ namespace MembershipReboot.IdentityServer
 
             result = SetNewAccountPhone(accountID, provider, ref claims);
             if (result != null) return result;
-
-            claims = FilterExternalClaimsForNewAccount(provider, claims);
+            
             return await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
         }
 
@@ -191,10 +192,11 @@ namespace MembershipReboot.IdentityServer
 
         private async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
+            claims = FilterExternalClaimsForExistingAccount(provider, claims); 
+
             SetAccountEmail(accountID, ref claims);
             SetAccountPhone(accountID, ref claims);
 
-            claims = FilterExternalClaimsForExistingAccount(provider, claims);
             var result = await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
             if (result != null) return result;
 
@@ -239,10 +241,10 @@ namespace MembershipReboot.IdentityServer
                 {
                     // presumably the name is already associated with another account or invalid
                     // so let's register the user
-                    return new ExternalAuthenticateResult("/core/account/register", 
-                        provider, 
-                        accountID.ToString("D"), 
-                        GetNameForAccount(accountID));
+                    //return new ExternalAuthenticateResult("/core/account/register", 
+                    //    provider, 
+                    //    accountID.ToString("D"), 
+                    //    GetNameForAccount(accountID));
                 }
             }
 
