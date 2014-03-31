@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         {
             if (String.IsNullOrWhiteSpace(redirectPath)) throw new ArgumentNullException("redirectPath");
 
-            this.RedirectPath = new PathString(redirectPath);
+            this.PartialSignInRedirectPath = new PathString(redirectPath);
         }
 
         public string ErrorMessage { get; private set; }
@@ -61,12 +61,12 @@ namespace Thinktecture.IdentityServer.Core.Services
         public string Subject { get; private set; }
         public string Name { get; private set; }
 
-        public PathString RedirectPath { get; private set; }
-        public bool IsRedirect
+        public PathString PartialSignInRedirectPath { get; private set; }
+        public bool IsPartialSignIn
         {
             get
             {
-                return RedirectPath.HasValue;
+                return PartialSignInRedirectPath.HasValue;
             }
         }
         public ICollection<Claim> RedirectClaims { get; private set; }

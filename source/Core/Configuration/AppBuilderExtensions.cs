@@ -22,7 +22,7 @@ namespace Owin
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.RedirectAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
             if (externalConfiguration != null)
             {

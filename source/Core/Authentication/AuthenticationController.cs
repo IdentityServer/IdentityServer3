@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public IHttpActionResult LoginExternal(string provider)
         {
-            logger.Start("AuthenticationController.LoginExternal");
+            logger.Start("[AuthenticationController.LoginExternal] called");
 
             VerifyLoginRequestMessage();
 
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> LoginExternalCallback()
         {
-            logger.Start("AuthenticationController.LoginExternalCallback");
+            logger.Start("[AuthenticationController.LoginExternalCallback] called");
 
             var ctx = Request.GetOwinContext();
 
@@ -158,13 +158,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet, HttpPost]
         public IHttpActionResult Logout()
         {
-            logger.Start("AuthenticationController.Logout");
+            logger.Start("[AuthenticationController.Logout] called");
 
             var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut(
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType,
-                Constants.RedirectAuthenticationType);
+                Constants.PartialSignInAuthenticationType);
 
             ClearLoginRequestMessage();
 
@@ -180,10 +180,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
-            logger.Start("AuthenticationController.ResumeLoginFromRedirect");
+            logger.Start("[AuthenticationController.ResumeLoginFromRedirect] called");
             
             var ctx = Request.GetOwinContext();
-            var redirectAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.RedirectAuthenticationType);
+            var redirectAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
             if (redirectAuthResult == null ||
                 redirectAuthResult.Identity == null)
             {
@@ -215,7 +215,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
 
             var signInMessage = LoadLoginRequestMessage();
-            var issuer = authResult.IsRedirect ? Constants.RedirectAuthenticationType : Constants.PrimaryAuthenticationType;
+            var issuer = authResult.IsPartialSignIn ? Constants.PartialSignInAuthenticationType : Constants.PrimaryAuthenticationType;
 
             var principal = IdentityServerPrincipal.Create(
                authResult.Subject,
@@ -229,11 +229,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             ctx.Authentication.SignOut(
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType, 
-                Constants.RedirectAuthenticationType);
+                Constants.PartialSignInAuthenticationType);
 
             var id = principal.Identities.First();
 
-            if (authResult.IsRedirect)
+            if (authResult.IsPartialSignIn)
             {
                 // TODO: put original return URL into cookie with a GUID ID
                 // and put the ID as route param for the resume URL. then
@@ -246,11 +246,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             ctx.Authentication.SignIn(id);
             
-            if (authResult.IsRedirect)
+            if (authResult.IsPartialSignIn)
             {
                 logger.Verbose("[AuthenticationController.SignInAndRedirect] partial login requested, redirecting to requested url");
 
-                var uri = new Uri(ctx.Request.Uri, authResult.RedirectPath.Value);
+                var uri = new Uri(ctx.Request.Uri, authResult.PartialSignInRedirectPath.Value);
                 return Redirect(uri);
             }
             else
