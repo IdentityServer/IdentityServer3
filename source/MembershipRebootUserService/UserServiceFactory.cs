@@ -1,4 +1,9 @@
-﻿using BrockAllen.MembershipReboot;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Ef;
 using Thinktecture.IdentityServer.Core.Services;
 
