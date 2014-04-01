@@ -157,7 +157,8 @@ namespace Thinktecture.IdentityServer.TestServices
                     Flow = Flows.Implicit,
                     RedirectUris = new List<Uri>
                     {
-                        new Uri("http://localhost:11716/account/signInCallback")
+                        new Uri("http://localhost:11716/account/signInCallback"),
+                        new Uri("http://localhost:5102/"),
                     },
                     
                     ScopeRestrictions = new List<string>
