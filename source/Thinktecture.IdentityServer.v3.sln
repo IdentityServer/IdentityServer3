@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E6CD03EB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MembershipReboot.UserService", "MembershipRebootUserService\MembershipReboot.UserService.csproj", "{9EB9F5C7-49E1-440B-923F-BB842D9436D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MembershipRebootUserService", "MembershipRebootUserService\MembershipRebootUserService.csproj", "{9EB9F5C7-49E1-440B-923F-BB842D9436D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserService", "UserService", "{41C085E2-3842-47DE-9A79-AE0C8AD4B93C}"
 EndProject

@@ -7,8 +7,8 @@
     <ProjectGuid>{9EB9F5C7-49E1-440B-923F-BB842D9436D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MembershipReboot.IdentityServer.UserService</RootNamespace>
-    <AssemblyName>MembershipReboot.IdentityServer.UserService</AssemblyName>
+    <RootNamespace>Thinktecture.IdentityServer.MembershipReboot</RootNamespace>
+    <AssemblyName>Thinktecture.IdentityServer.MembershipReboot</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -62,7 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MembershipRebootUserService.cs" />
+    <Compile Include="UserService.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserServiceFactory.cs" />

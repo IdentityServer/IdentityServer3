@@ -5,7 +5,7 @@
 
 using System;
 
-namespace MembershipReboot.IdentityServer
+namespace Thinktecture.IdentityServer.MembershipReboot
 {
     static class Extensions
     {

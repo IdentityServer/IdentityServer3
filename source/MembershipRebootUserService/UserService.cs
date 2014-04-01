@@ -15,14 +15,14 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using ClaimHelper = BrockAllen.MembershipReboot.ClaimsExtensions;
 
-namespace MembershipReboot.IdentityServer
+namespace Thinktecture.IdentityServer.MembershipReboot
 {
-    public class MembershipRebootUserService<TAccount> : IUserService, IDisposable
+    public class UserService<TAccount> : IUserService, IDisposable
         where TAccount : UserAccount
     {
         protected readonly UserAccountService<TAccount> userAccountService;
         IDisposable cleanup;
-        public MembershipRebootUserService(UserAccountService<TAccount> userAccountService, IDisposable cleanup)
+        public UserService(UserAccountService<TAccount> userAccountService, IDisposable cleanup)
         {
             if (userAccountService == null) throw new ArgumentNullException("userAccountService");
 
