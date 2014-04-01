@@ -15,7 +15,7 @@ namespace MembershipReboot.IdentityServer
         {
             var repo = new DefaultUserAccountRepository();
             var userAccountService = new UserAccountService(config, repo);
-            var userSvc = new MembershipRebootUserService(userAccountService, repo);
+            var userSvc = new MembershipRebootUserService<UserAccount>(userAccountService, repo);
             return userSvc;
         }
 

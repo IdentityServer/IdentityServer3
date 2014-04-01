@@ -17,11 +17,12 @@ using ClaimHelper = BrockAllen.MembershipReboot.ClaimsExtensions;
 
 namespace MembershipReboot.IdentityServer
 {
-    public class MembershipRebootUserService : IUserService, IDisposable
+    public class MembershipRebootUserService<TAccount> : IUserService, IDisposable
+        where TAccount : UserAccount
     {
-        protected readonly UserAccountService userAccountService;
+        protected readonly UserAccountService<TAccount> userAccountService;
         IDisposable cleanup;
-        public MembershipRebootUserService(UserAccountService userAccountService, IDisposable cleanup)
+        public MembershipRebootUserService(UserAccountService<TAccount> userAccountService, IDisposable cleanup)
         {
             if (userAccountService == null) throw new ArgumentNullException("userAccountService");
 
@@ -55,7 +56,7 @@ namespace MembershipReboot.IdentityServer
             return claims;
         }
 
-        protected virtual IEnumerable<Claim> GetClaimsFromAccount(UserAccount account)
+        protected virtual IEnumerable<Claim> GetClaimsFromAccount(TAccount account)
         {
             var claims = new List<Claim>{
                 new Claim(Constants.ClaimTypes.Subject, account.ID.ToString("D")),
@@ -83,7 +84,7 @@ namespace MembershipReboot.IdentityServer
         
         public virtual async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
-            UserAccount account;
+            TAccount account;
             if (userAccountService.Authenticate(username, password, out account))
             {
                 var subject = account.ID.ToString("D");
