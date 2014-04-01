@@ -233,8 +233,6 @@ namespace MembershipReboot.IdentityServer
             
             if (name != null)
             {
-                name = new String(name.Where(x => Char.IsLetterOrDigit(x)).ToArray());
-
                 var acct = userAccountService.GetByID(accountID);
                 try
                 {
