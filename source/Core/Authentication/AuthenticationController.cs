@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
             }
 
-            logger.VerboseFormat("[AuthenticationController.LoginExternalCallback] current subject: {0}", currentSubject);
+            logger.VerboseFormat("[AuthenticationController.LoginExternalCallback] current subject: {0}", currentSubject ?? "-anonymous-");
 
             var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
             if (externalAuthResult == null ||
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                    });
         }
 
-        [Route(Constants.RoutePaths.ResumeLoginFromRedirect)]
+        [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name=Constants.RouteNames.ResumeLoginFromRedirect)]
         [HttpGet]
         public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
