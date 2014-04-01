@@ -1,8 +1,13 @@
-﻿using BrockAllen.MembershipReboot;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+
+using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Ef;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace MembershipReboot.IdentityServer
+namespace Thinktecture.IdentityServer.MembershipReboot
 {
     public class UserServiceFactory
     {
@@ -10,7 +15,7 @@ namespace MembershipReboot.IdentityServer
         {
             var repo = new DefaultUserAccountRepository();
             var userAccountService = new UserAccountService(config, repo);
-            var userSvc = new MembershipRebootUserService(userAccountService, repo);
+            var userSvc = new UserService<UserAccount>(userAccountService, repo);
             return userSvc;
         }
 

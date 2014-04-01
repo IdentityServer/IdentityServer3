@@ -11,7 +11,7 @@ namespace Thinktecture.IdentityServer.Core
     {
         public const string PrimaryAuthenticationType = "idsrv";
         public const string ExternalAuthenticationType = "idsrv.external";
-        public const string RedirectAuthenticationType = "idsrv.redirect";
+        public const string PartialSignInAuthenticationType = "idsrv.partial";
         public const string BuiltInIdentityProvider = "idsrv";
 
         public static class AuthorizeRequest

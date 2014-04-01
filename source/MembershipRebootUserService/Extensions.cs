@@ -1,6 +1,11 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
 
-namespace MembershipReboot.IdentityServer
+using System;
+
+namespace Thinktecture.IdentityServer.MembershipReboot
 {
     static class Extensions
     {

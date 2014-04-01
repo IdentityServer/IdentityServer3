@@ -16,19 +16,19 @@ namespace Thinktecture.IdentityServer.Host
             app.Map("/core", coreApp =>
                 {
                     var factory = TestOptionsFactory.Create();
-                    
-                    //factory.UserService = MembershipReboot.IdentityServer.UserServiceFactory.Factory;
+
+                    factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = AspNetIdentity.IdentityServer.UserServiceFactory.Factory;
                     
                     var opts = new IdentityServerCoreOptions
                     {
                         Factory = factory
                     };
-                    coreApp.UseIdentityServerCore(opts, ConfigureExternalProviders);
+                    coreApp.UseIdentityServerCore(opts, ConfigureSocialIdentityProviders);
                 });
         }
 
-        public static void ConfigureExternalProviders(IAppBuilder app, string signInAsType)
+        public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
         {
             var google = new GoogleAuthenticationOptions
             {
