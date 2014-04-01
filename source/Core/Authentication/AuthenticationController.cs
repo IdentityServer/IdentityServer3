@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             this.settings = settings;
         }
 
-        [Route("login", Name="login")]
+        [Route(Constants.RoutePaths.Login, Name=Constants.RouteNames.Login)]
         [HttpGet]
         public IHttpActionResult Login([FromUri] string message = null)
         {
@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return RenderLoginPage();
         }
 
-        [Route("login")]
+        [Route(Constants.RoutePaths.Login)]
         [HttpPost]
         public async Task<IHttpActionResult> LoginLocal(LoginCredentials model)
         {
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.BuiltInIdentityProvider);
         }
 
-        [Route("external", Name="external")]
+        [Route(Constants.RoutePaths.LoginExternal, Name=Constants.RouteNames.LoginExternal)]
         [HttpGet]
         public IHttpActionResult LoginExternal(string provider)
         {
@@ -100,13 +100,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
             var authProp = new AuthenticationProperties {
-                RedirectUri = Url.Route("callback", null)
+                RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
             return Unauthorized();
         }
 
-        [Route("callback", Name = "callback")]
+        [Route(Constants.RoutePaths.LoginExternalCallback, Name = Constants.RouteNames.LoginExternalCallback)]
         [HttpGet]
         public async Task<IHttpActionResult> LoginExternalCallback()
         {
@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 !externalAuthResult.Identity.Claims.Any())
             {
                 logger.Verbose("[AuthenticationController.LoginExternalCallback] no external identity -- exiting to login page");
-                return RedirectToRoute("login", null);
+                return RedirectToRoute(Constants.RouteNames.Login, null);
             }
 
             var claims = externalAuthResult.Identity.Claims;
@@ -154,7 +154,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 authResult.Provider);
         }
 
-        [Route("logout", Name="logout")]
+        [Route(Constants.RoutePaths.Logout, Name=Constants.RouteNames.Logout)]
         [HttpGet, HttpPost]
         public IHttpActionResult Logout()
         {
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                    });
         }
 
-        [Route("resume")]
+        [Route(Constants.RoutePaths.ResumeLoginFromRedirect)]
         [HttpGet]
         public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
@@ -188,7 +188,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 redirectAuthResult.Identity == null)
             {
                 logger.Verbose("[AuthenticationController.ResumeLoginFromRedirect] no redirect identity - exiting to login page");
-                return RedirectToRoute("login", null);
+                return RedirectToRoute(Constants.RouteNames.Login, null);
             }
 
             var subject = redirectAuthResult.Identity.GetSubjectId();
@@ -215,21 +215,24 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
 
             var signInMessage = LoadLoginRequestMessage();
-            var issuer = authResult.IsPartialSignIn ? Constants.PartialSignInAuthenticationType : Constants.PrimaryAuthenticationType;
 
-            var principal = IdentityServerPrincipal.Create(
-               authResult.Subject,
-               authResult.Name,
-               authenticationMethod,
-               identityProvider,
-               issuer, 
-               authTime);
-            
             var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut(
                 Constants.PrimaryAuthenticationType,
-                Constants.ExternalAuthenticationType, 
+                Constants.ExternalAuthenticationType,
                 Constants.PartialSignInAuthenticationType);
+
+            var issuer = authResult.IsPartialSignIn ? 
+                Constants.PartialSignInAuthenticationType : 
+                Constants.PrimaryAuthenticationType;
+
+            var principal = IdentityServerPrincipal.Create(
+                authResult.Subject,
+                authResult.Name,
+                authenticationMethod,
+                identityProvider,
+                issuer,
+                authTime);
 
             var id = principal.Identities.First();
 
@@ -238,12 +241,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 // TODO: put original return URL into cookie with a GUID ID
                 // and put the ID as route param for the resume URL. then
                 // we can always call ClearLoginRequestMessage()
-                id.AddClaim(new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, Url.Route("resume", null)));
-                
+                id.AddClaim(new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, Url.Route(Constants.RouteNames.ResumeLoginFromRedirect, null)));
+
                 // allow redircting code to add claims for target page
                 id.AddClaims(authResult.RedirectClaims);
             }
-
+            
             ctx.Authentication.SignIn(id);
             
             if (authResult.IsPartialSignIn)
@@ -285,7 +288,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     ErrorMessage = errorMessage,
                     PageModel = new
                     {
-                        url = Url.Route("login", null),
+                        url = Url.Route(Constants.RouteNames.Login, null),
                         username = username,
                         providers = providers.ToArray()
                     }

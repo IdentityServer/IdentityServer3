@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     Page = "logoutprompt",
                     PageModel = new
                     {
-                        url = Url.Route("logout", null)
+                        url = Url.Route(Constants.RouteNames.Logout, null)
                     }
                 });
         }

@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     protection.Ttl);
 
                 var urlHelper = _request.GetUrlHelper();
-                var loginUrl = urlHelper.Route("login", new { message = jwt });
+                var loginUrl = urlHelper.Route(Constants.RouteNames.Login, new { message = jwt });
                 var uri = new Uri(_request.RequestUri, loginUrl);
 
                 response.Headers.Location = uri;

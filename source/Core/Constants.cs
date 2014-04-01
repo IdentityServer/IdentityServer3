@@ -295,8 +295,26 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ClientAuthenticationMethods
         {
-            public const string Basic    = "Basic";
+            public const string Basic = "Basic";
             public const string FormPost = "FormPost";
+        }
+
+        public static class RouteNames
+        {
+            public const string Login = "idsrv.authentication.login";
+            public const string LoginExternal = "idsrv.authentication.loginexternal";
+            public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
+            public const string Logout = "idsrv.authentication.logout";
+            public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
+        }
+        
+        public static class RoutePaths
+        {
+            public const string Login = "login";
+            public const string LoginExternal = "external";
+            public const string LoginExternalCallback = "callback";
+            public const string Logout = "logout";
+            public const string ResumeLoginFromRedirect = "resume";
         }
     }
 }

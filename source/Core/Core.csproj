@@ -141,6 +141,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="Extensions\IAuthenticationManagerExtensions.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
