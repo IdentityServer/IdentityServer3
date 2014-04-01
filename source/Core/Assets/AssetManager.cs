@@ -13,8 +13,8 @@ namespace Thinktecture.IdentityServer.Core.Assets
 {
     public class LayoutModel
     {
-        public string Title { get; set; }
-        public string Name { get; set; }
+        public string Server { get; set; }
+        public string Username { get; set; }
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
         public string SwitchUrl { get; set; }
@@ -34,11 +34,11 @@ namespace Thinktecture.IdentityServer.Core.Assets
     {
         public static string GetLayoutHtml(LayoutModel model, string rootUrl)
         {
-            model.Title = model.Title ?? "Thinktecture IdentityServer";
+            model.Server = model.Server ?? "Thinktecture IdentityServer";
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
             return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html",
                 new {
-                    title = model.Title,
+                    server = model.Server,
                     rootUrl,
                     layoutModel = json, 
                 });

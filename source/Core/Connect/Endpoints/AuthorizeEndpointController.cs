@@ -204,10 +204,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Request, 
                 new LayoutModel
                 {
-                    Title = validatedRequest.Client.ClientName,
+                    Server = _settings.GetSiteName(),
                     ErrorMessage = errorMessage,
                     Page = "consent",
-                    Name = name,
+                    Username = name,
                     SwitchUrl = Url.Route("switch", null) + "?" + requestParameters.ToQueryString(),
                     PageModel = new
                     {

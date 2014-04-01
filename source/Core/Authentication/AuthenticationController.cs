@@ -171,7 +171,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
-                       Title = settings.GetSiteName(),
+                       Server = settings.GetSiteName(),
                        Page = "logout"
                    });
         }
@@ -280,7 +280,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Request,
                 new LayoutModel
                 {
-                    Title = settings.GetSiteName(),
+                    Server = settings.GetSiteName(),
                     Page = "login",
                     ErrorMessage = errorMessage,
                     PageModel = new
