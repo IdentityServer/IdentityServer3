@@ -164,6 +164,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AspNetIdentityUserService\AspNetIdentityUserService.csproj">
+      <Project>{409b7496-b359-40eb-b92b-733f0b1f0088}</Project>
+      <Name>AspNetIdentityUserService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core.EntityFramework\Core.EntityFramework.csproj">
       <Project>{f8047c14-06b6-4a21-952d-bf4ad2b2faea}</Project>
       <Name>Core.EntityFramework</Name>

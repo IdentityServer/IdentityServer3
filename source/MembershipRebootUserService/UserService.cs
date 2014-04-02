@@ -192,7 +192,6 @@ namespace Thinktecture.IdentityServer.MembershipReboot
 
         protected virtual async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(Guid accountID, string provider)
         {
-            var acct = userAccountService.GetByID(accountID);
             return new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetNameForAccount(accountID));
         }
 
@@ -362,6 +361,16 @@ namespace Thinktecture.IdentityServer.MembershipReboot
         protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
         {
             return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
+        }
+        
+        protected virtual string GetNameFromClaims(IEnumerable<Claim> claims)
+        {
+            return claims.Where(x =>
+                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.PreferredUserName ||
+                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name ||
+                    x.Type == ClaimTypes.Name)
+                .Select(x => x.Value)
+                .FirstOrDefault();
         }
     }
 }

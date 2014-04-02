@@ -216,12 +216,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var signInMessage = LoadLoginRequestMessage();
 
-            var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(
-                Constants.PrimaryAuthenticationType,
-                Constants.ExternalAuthenticationType,
-                Constants.PartialSignInAuthenticationType);
-
             var issuer = authResult.IsPartialSignIn ? 
                 Constants.PartialSignInAuthenticationType : 
                 Constants.PrimaryAuthenticationType;
@@ -246,7 +240,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 // allow redircting code to add claims for target page
                 id.AddClaims(authResult.RedirectClaims);
             }
-            
+
+            var ctx = Request.GetOwinContext();
+            ctx.Authentication.SignOut(
+                Constants.PrimaryAuthenticationType,
+                Constants.ExternalAuthenticationType,
+                Constants.PartialSignInAuthenticationType);
             ctx.Authentication.SignIn(id);
             
             if (authResult.IsPartialSignIn)
@@ -277,7 +276,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var ctx = Request.GetOwinContext();
             var providers =
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                select new { name = p.Caption, url = Url.Route("external", new { provider = p.AuthenticationType }) };
+                select new { name = p.Caption, url = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType }) };
 
             return new EmbeddedHtmlResult(
                 Request,
