@@ -2,7 +2,7 @@
     <h1>Login</h1>
 </div>
 
-<div class="row" ng-controller="LoginCtrl">
+<div class="row login-page" ng-controller="LoginCtrl">
     <div class="col-md-6 col-sm-6">
         <div ng-show="layout.errorMessage" class="alert alert-danger">
             <strong>Error:</strong>
@@ -31,6 +31,9 @@
                     </fieldset>
                 </form>
             </div>
+            <ul class="list-unstyled">
+                <li ng-repeat="link in model.links"><a ng-href="{{link.href}}">{{link.text}}</a></li>
+            </ul>
         </div>
     </div>
 

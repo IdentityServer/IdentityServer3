@@ -110,6 +110,7 @@
     <Compile Include="Authentication\LoginCredentials.cs" />
     <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
+    <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />

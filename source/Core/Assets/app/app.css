@@ -17,3 +17,9 @@ body {
 .consent-form .consent-remember {
   padding-left: 16px;
 }
+.login-page .list-unstyled {
+  margin-left: 25px;
+}
+.login-page .list-unstyled li {
+  margin-bottom: 10px;
+}

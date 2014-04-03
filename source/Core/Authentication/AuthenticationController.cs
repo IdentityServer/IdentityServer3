@@ -3,7 +3,6 @@
  * see license
  */
 
-using Microsoft.Owin.Security;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Assets;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
@@ -25,12 +25,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         ILogger logger;
         IUserService userService;
         ICoreSettings settings;
+        AuthenticationOptions authenticationOptions;
 
-        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings)
+        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, AuthenticationOptions authenticationOptions)
         {
             this.logger = logger;
             this.userService = userService;
             this.settings = settings;
+            this.authenticationOptions = authenticationOptions;
         }
 
         [Route(Constants.RoutePaths.Login, Name=Constants.RouteNames.Login)]
@@ -99,7 +101,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             VerifyLoginRequestMessage();
 
             var ctx = Request.GetOwinContext();
-            var authProp = new AuthenticationProperties {
+            var authProp = new Microsoft.Owin.Security.AuthenticationProperties {
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
@@ -278,6 +280,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
                 select new { name = p.Caption, url = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType }) };
 
+            var links = this.authenticationOptions.LoginPageLinks;
+
             return new EmbeddedHtmlResult(
                 Request,
                 new LayoutModel
@@ -289,7 +293,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         url = Url.Route(Constants.RouteNames.Login, null),
                         username = username,
-                        providers = providers.ToArray()
+                        providers = providers.ToArray(),
+                        links = links
                     }
                 });
         }

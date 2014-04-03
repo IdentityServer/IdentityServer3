@@ -5,6 +5,7 @@
 
 using Autofac;
 using Autofac.Integration.WebApi;
+using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -13,8 +14,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerServiceFactory fact)
+        public static IContainer Configure(IdentityServerCoreOptions options)
         {
+            if (options == null) throw new ArgumentNullException("options");
+            if (options.Factory == null) throw new InvalidOperationException("null factory");
+            
+            IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
 
             var builder = new ContainerBuilder();
@@ -75,6 +80,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
+
+            // for authentication
+            var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
+            builder.RegisterInstance(authenticationOptions).AsSelf();
 
             // controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
