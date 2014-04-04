@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     var factory = TestOptionsFactory.Create();
 
-                    //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
+                    factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
                     
                     var opts = new IdentityServerCoreOptions

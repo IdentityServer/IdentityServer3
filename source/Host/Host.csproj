@@ -184,14 +184,6 @@
       <Project>{9eb9f5c7-49e1-440b-923f-bb842d9436d2}</Project>
       <Name>MembershipRebootUserService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ServerAdmin.Api\ServerAdmin.Api.csproj">
-      <Project>{2bf02e9a-6c40-4961-85ba-538f6461b72a}</Project>
-      <Name>ServerAdmin.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UserAdmin.Api\UserAdmin.Api.csproj">
-      <Project>{1aea243f-5a85-402d-89df-c178feb522d6}</Project>
-      <Name>UserAdmin.Api</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
