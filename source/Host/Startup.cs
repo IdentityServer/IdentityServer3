@@ -30,9 +30,10 @@ namespace Thinktecture.IdentityServer.Host
                                 new LoginPageLink{Text="New user?", Href="/core/account/register"},
                                 new LoginPageLink{Text="Forgot password?", Href="/core/account/resetpassword"},
                             }
-                        }
+                        },
+                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
-                    coreApp.UseIdentityServerCore(opts, ConfigureSocialIdentityProviders);
+                    coreApp.UseIdentityServerCore(opts);
                 });
         }
 

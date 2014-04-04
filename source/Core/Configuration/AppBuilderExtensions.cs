@@ -18,15 +18,17 @@ namespace Owin
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options, Action<IAppBuilder, string> externalConfiguration = null)
+        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
+            if (options == null) throw new ArgumentNullException("options");
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
-            if (externalConfiguration != null)
+            if (options.SocialIdentityProviderConfiguration != null)
             {
-                externalConfiguration(app, Constants.ExternalAuthenticationType);
+                options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
             app.UseFileServer(new FileServerOptions
