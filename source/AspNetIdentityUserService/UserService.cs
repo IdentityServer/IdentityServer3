@@ -265,8 +265,8 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
         {
             var existingClaims = await userManager.GetClaimsAsync(userID);
-            var intersection = existingClaims.Intersect(claims, new ClaimsComparer());
-            var newClaims = claims.Except(intersection, new ClaimsComparer());
+            var intersection = existingClaims.Intersect(claims, new Thinktecture.IdentityServer.Core.Plumbing.ClaimComparer());
+            var newClaims = claims.Except(intersection, new Thinktecture.IdentityServer.Core.Plumbing.ClaimComparer());
 
             foreach (var claim in newClaims)
             {
@@ -289,34 +289,6 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         {
             return claims;
         }
-
-        //protected virtual async Task<ExternalAuthenticateResult> SetNewAccountUsername(string userID, string provider, ref IEnumerable<Claim> claims)
-        //{
-        //    var name = claims.FirstOrDefault(x=>x.Type==Thinktecture.IdentityServer.Core.Constants.ClaimTypes.PreferredUserName);
-        //    if (name == null) name = claims.FirstOrDefault(x => x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name);
-
-        //    if (name != null)
-        //    {
-        //        var user = await userManager.FindById(userID);
-        //        try
-        //        {
-        //            userManager.ChangeUsername(acct.ID, name);
-        //            var nameClaims = new string[] { Constants.ClaimTypes.PreferredUserName, Constants.ClaimTypes.Name };
-        //            claims = claims.Where(x => !nameClaims.Contains(x.Type));
-        //        }
-        //        catch (ValidationException ex)
-        //        {
-        //            // presumably the name is already associated with another account or invalid
-        //            // so let's register the user
-        //            //return new ExternalAuthenticateResult("/core/account/register", 
-        //            //    provider, 
-        //            //    accountID.ToString("D"), 
-        //            //    GetNameForAccount(accountID));
-        //        }
-        //    }
-
-        //    return null;
-        //}
 
         protected virtual async Task<Tuple<ExternalAuthenticateResult, IEnumerable<Claim>>> SetNewAccountEmailAsync(string userID, string provider, IEnumerable<Claim> claims)
         {
@@ -420,25 +392,6 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
         {
             return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
-        }
-    }
-
-    class ClaimsComparer : IEqualityComparer<Claim>
-    {
-        public bool Equals(Claim x, Claim y)
-        {
-            if (x == null && y == null) return true;
-            if (x == null && y != null) return false;
-            if (x != null && y == null) return false;
-
-            return 
-                x.Type == y.Type &&
-                x.Value == y.Value;
-        }
-
-        public int GetHashCode(Claim obj)
-        {
-            return obj.Type.GetHashCode() ^ obj.Value.GetHashCode();
         }
     }
 }
