@@ -1,4 +1,5 @@
-﻿/*
+﻿using System;
+/*
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
@@ -59,7 +60,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 return null;
             }
 
-            return new ExternalAuthenticateResult("external", name.Value, name.Value);
+            return new ExternalAuthenticateResult(name.Issuer, Guid.NewGuid().ToString("D"), name.Value);
         }
     }
 }
