@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
+                var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
                 var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);    
                 response.IdentityToken = jwt;
             }
@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Token accessToken;
             if (request.AuthorizationCode != null)
             {
-                accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.User, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
+                accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
             }
             else
             {

@@ -9,8 +9,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
     public class ConsentModel
     {
-        private ValidatedAuthorizeRequest validatedRequest;
-
         public ConsentModel(ValidatedAuthorizeRequest validatedRequest, NameValueCollection requestParameters)
         {
             var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;

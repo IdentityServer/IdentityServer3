@@ -21,14 +21,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication("idsrv")]
     public class AuthorizeEndpointController : ApiController
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
+        private readonly IConsentService _consentService;
+        private readonly ICoreSettings _settings;
 
-        private AuthorizeRequestValidator _validator;
-        private AuthorizeResponseGenerator _responseGenerator;
-        private AuthorizeInteractionResponseGenerator _interactionGenerator;
-        IConsentService _consentService;
-        private ICoreSettings _settings;
-
+        private readonly AuthorizeRequestValidator _validator;
+        private readonly AuthorizeResponseGenerator _responseGenerator;
+        private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
+        
         public AuthorizeEndpointController(
             ILogger logger, 
             AuthorizeRequestValidator validator, 
@@ -39,11 +39,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger = logger;
             _settings = settings;
+            _consentService = consentService;
 
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
-            _consentService = consentService;
-
             _validator = validator;
         }
 
@@ -53,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
-        protected virtual async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
+        protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");
             
@@ -61,7 +60,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // validate protocol parameters
             //////////////////////////////////////////////////////////////
             var result = _validator.ValidateProtocol(parameters);
-
             var request = _validator.ValidatedRequest;
 
             if (result.IsError)
