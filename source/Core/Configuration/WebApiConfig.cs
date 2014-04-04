@@ -22,8 +22,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
             config.Services.Add(typeof(IExceptionLogger), new IdentityServerExceptionLogger());
 
-            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
-            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            //var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
+            //config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
 
             return config;
         }

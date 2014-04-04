@@ -52,13 +52,11 @@ namespace Thinktecture.IdentityServer.TestServices
                         {
                             Name = "email",
                             Description = "email address",
-                            AlwaysIncludeInIdToken = true
                         },
                         new ScopeClaim
                         {
                             Name = "email_verified",
                             Description = "email is verified",
-                            AlwaysIncludeInIdToken = true
                         }
                     }
                 },
@@ -78,8 +76,8 @@ namespace Thinktecture.IdentityServer.TestServices
                 },
                 new Scope
                 {
-                    Name = "offline_access",
-                    DisplayName = "Allow offline access",
+                    Name = "forbidden",
+                    DisplayName = "Forbidden scope",
                     Emphasize = true
                 }
              };
