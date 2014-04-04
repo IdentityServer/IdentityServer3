@@ -123,6 +123,7 @@
     <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\ConsentError.cs" />
     <Compile Include="Connect\Models\ClientCredential.cs" />
+    <Compile Include="Connect\Models\ConsentModel.cs" />
     <Compile Include="Connect\Models\UserConsent.cs" />
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />

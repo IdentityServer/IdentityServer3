@@ -171,35 +171,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             NameValueCollection requestParameters, 
             string errorMessage)
         {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;
-            var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
-
-            var idScopes =
-                from s in requestedScopes
-                where s.IsOpenIdScope
-                select new
-                {
-                    selected = consentedScopeNames.Contains(s.Name),
-                    s.Name,
-                    s.DisplayName,
-                    s.Description,
-                    s.Emphasize,
-                    s.Required
-                };
-            var appScopes =
-                from s in requestedScopes
-                where !s.IsOpenIdScope
-                select new
-                {
-                    selected = consentedScopeNames.Contains(s.Name),
-                    s.Name,
-                    s.DisplayName,
-                    s.Description,
-                    s.Emphasize,
-                    s.Required
-                };
-
-            string name = User.Identity.IsAuthenticated ? User.GetName() : null;
+            var consentModel = new ConsentModel(validatedRequest, requestParameters);
+            string name = User.GetName();
+            
             return new EmbeddedHtmlResult(
                 Request, 
                 new LayoutModel
@@ -209,16 +183,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     Page = "consent",
                     Username = name,
                     SwitchUrl = Url.Route("switch", null) + "?" + requestParameters.ToQueryString(),
-                    PageModel = new
-                    {
-                        postUrl = "consent?" + requestParameters.ToQueryString(),
-                        client = validatedRequest.Client.ClientName,
-                        clientUrl = validatedRequest.Client.ClientUri,
-                        clientLogo = validatedRequest.Client.LogoUri,
-                        identityScopes = idScopes.ToArray(),
-                        appScopes = appScopes.ToArray(),
-                        allowRememberConsent = validatedRequest.Client.AllowRememberConsent
-                    }
+                    PageModel = consentModel
                 });
         }
 
