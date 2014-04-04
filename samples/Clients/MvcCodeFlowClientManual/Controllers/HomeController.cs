@@ -17,7 +17,7 @@ namespace MvcCodeFlowClientManual.Controllers
         {
             var client = new OAuth2Client(new Uri(Constants.AuthorizeEndpoint));
             var url = client.CreateCodeFlowUrl(
-                "codeclient_manual",
+                "codeclient",
                 scopes,
                 "https://localhost:44312/callback",
                 "123");

@@ -18,7 +18,7 @@ namespace MvcFormPostClient.Controllers
 			var client = new OAuth2Client(new Uri(Constants.AuthorizeEndpoint));
 			
             var url = client.CreateAuthorizeUrl(
-				"formpostclient",
+				"implicitclient",
 				"id_token",
 				"openid email",
 				"http://localhost:11716/account/signInCallback",
@@ -50,7 +50,7 @@ namespace MvcFormPostClient.Controllers
         {
             var parameters = new TokenValidationParameters
             {
-                AllowedAudience = "formpostclient",
+                AllowedAudience = "implicitclient",
                 ValidIssuer = "https://idsrv3.com",
                 SigningToken = new X509SecurityToken(X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First())
             };

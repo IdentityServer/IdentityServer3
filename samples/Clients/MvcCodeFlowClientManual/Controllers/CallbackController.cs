@@ -24,7 +24,7 @@ namespace MvcCodeFlowClientManual.Controllers
         {
             var client = new OAuth2Client(
                 new Uri(Constants.TokenEndpoint),
-                "codeclient_manual",
+                "codeclient",
                 "secret");
 
             var code = Request.QueryString["code"];
