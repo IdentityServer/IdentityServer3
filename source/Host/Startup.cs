@@ -15,7 +15,10 @@ namespace Thinktecture.IdentityServer.Host
             // idsrv core
             app.Map("/core", coreApp =>
                 {
-                    var factory = TestOptionsFactory.Create();
+                    var factory = TestOptionsFactory.Create(
+                        issuerUri: "https://idsrv3.com",
+                        siteName: "Thinktecture IdentityServer v3 - preview 1",
+                        certificateName: "CN=sts");
 
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
@@ -31,8 +34,10 @@ namespace Thinktecture.IdentityServer.Host
                                 new LoginPageLink{Text="Forgot password?", Href="/core/account/resetpassword"},
                             }
                         },
+
                         SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
+
                     coreApp.UseIdentityServerCore(opts);
                 });
         }

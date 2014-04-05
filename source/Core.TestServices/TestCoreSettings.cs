@@ -14,6 +14,17 @@ namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestCoreSettings : ICoreSettings
     {
+        private string _issuerUri;
+        private string _siteName;
+        private X509Certificate2 _certificate;
+
+        public TestCoreSettings(string issuerUri, string siteName, string certificateName)
+        {
+            _issuerUri = issuerUri;
+            _siteName = siteName;
+            _certificate = X509.LocalMachine.My.SubjectDistinguishedName.Find(certificateName, false).First();
+        }
+
         public Task<Client> FindClientByIdAsync(string clientId)
         {
             return Task.FromResult((from c in TestClients.Get()
@@ -28,17 +39,17 @@ namespace Thinktecture.IdentityServer.TestServices
 
         public X509Certificate2 GetSigningCertificate()
         {
-            return X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First();
+            return _certificate;
         }
 
         public string GetIssuerUri()
         {
-            return "https://idsrv3.com";
+            return _issuerUri;
         }
 
         public string GetSiteName()
         {
-            return "IdentityServer v3 - alpha1";
+            return _siteName;
         }
 
         public string GetPublicHost()
