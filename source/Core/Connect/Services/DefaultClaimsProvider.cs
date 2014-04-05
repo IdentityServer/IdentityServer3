@@ -14,7 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService profile, NameValueCollection request)
+        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, bool includeAllIdentityClaims, IUserService users, NameValueCollection request)
         {
             List<Claim> outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
             var additionalClaims = new List<string>();
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = await profile.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
+                var claims = await users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return outputClaims;
         }
 
-        public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal user, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService _profile, NameValueCollection request)
+        public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService users, NameValueCollection request)
         {
             var claims = new List<Claim>
             {
@@ -58,9 +58,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 claims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
             }
 
-            if (user != null)
+            if (subject != null)
             {
-                claims.AddRange(GetStandardSubjectClaims(user));
+                claims.AddRange(GetStandardSubjectClaims(subject));
             }
 
             return claims;

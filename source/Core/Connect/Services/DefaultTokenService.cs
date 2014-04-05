@@ -24,14 +24,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultTokenService : ITokenService
     {
-        private IUserService _profile;
+        private IUserService _users;
         private ICoreSettings _settings;
         private IClaimsProvider _claimsProvider;
         private ITokenHandleStore _tokenHandles;
 
-        public DefaultTokenService(IUserService profile, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
+        public DefaultTokenService(IUserService users, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
         {
-            _profile = profile;
+            _users = users;
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
