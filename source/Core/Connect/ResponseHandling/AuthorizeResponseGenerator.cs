@@ -52,14 +52,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             };
         }
 
-        public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal subject)
+        public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
 
             if (request.IsResourceRequest)
             {
-                var accessToken = await _tokenService.CreateAccessTokenAsync(subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+                var accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
                 accessTokenLifetime = accessToken.Lifetime;
 
                 accessTokenValue = await _tokenService.CreateSecurityTokenAsync(accessToken);
@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             string jwt = null;
             if (request.IsOpenIdRequest)
             {
-                var idToken = await _tokenService.CreateIdentityTokenAsync(subject, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
+                var idToken = await _tokenService.CreateIdentityTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
                 jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
             }
 

@@ -98,10 +98,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new InteractionResponse();
         }
 
-        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user, UserConsent consent)
+        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent)
         {
             if (request.PromptMode == Constants.PromptModes.Consent ||
-                await _consent.RequiresConsentAsync(request.Client, user, request.RequestedScopes))
+                await _consent.RequiresConsentAsync(request.Client, request.Subject, request.RequestedScopes))
             {
                 var response = new InteractionResponse();
 
@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                                 scopes = request.ValidatedScopes.GrantedScopes.Select(x => x.Name);
                             }
                             
-                            await _consent.UpdateConsentAsync(request.Client, user, scopes);
+                            await _consent.UpdateConsentAsync(request.Client, request.Subject, scopes);
                         }
                     }
                 }

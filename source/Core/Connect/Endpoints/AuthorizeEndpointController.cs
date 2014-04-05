@@ -22,7 +22,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private readonly ILogger _logger;
-        private readonly IConsentService _consentService;
         private readonly ICoreSettings _settings;
 
         private readonly AuthorizeRequestValidator _validator;
@@ -39,8 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger = logger;
             _settings = settings;
-            _consentService = consentService;
-
+        
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
             _validator = validator;
@@ -83,6 +81,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _settings);
             }
 
+            // user must be authenticated at this point
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new InvalidOperationException("User is not authenticated");
+            }
+            
+            request.Subject = User as ClaimsPrincipal;
+
             ///////////////////////////////////////////////////////////////
             // validate client
             //////////////////////////////////////////////////////////////
@@ -98,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            interaction = await _interactionGenerator.ProcessConsentAsync(request, User as ClaimsPrincipal, consent);
+            interaction = await _interactionGenerator.ProcessConsentAsync(request, consent);
             
             if (interaction.IsError)
             {
@@ -153,7 +159,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<IHttpActionResult> CreateImplicitFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
-            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request, User as ClaimsPrincipal);
+            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request);
 
             // create form post response if responseMode is set form_post
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
