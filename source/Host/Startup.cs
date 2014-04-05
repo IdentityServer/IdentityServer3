@@ -12,13 +12,13 @@ namespace Thinktecture.IdentityServer.Host
     {
         public void Configuration(IAppBuilder app)
         {
-            // idsrv core
             app.Map("/core", coreApp =>
                 {
                     var factory = TestOptionsFactory.Create(
-                        issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1",
-                        certificateName: "CN=sts");
+                        issuerUri:         "https://idsrv3.com",
+                        siteName:          "Thinktecture IdentityServer v3 - preview 1",
+                        certificateName:   "CN=sts",
+                        publicHostAddress: "http://localhost:3333");
 
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;

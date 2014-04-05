@@ -17,12 +17,14 @@ namespace Thinktecture.IdentityServer.TestServices
         private string _issuerUri;
         private string _siteName;
         private X509Certificate2 _certificate;
+        private string _publicHostAddress;
 
-        public TestCoreSettings(string issuerUri, string siteName, string certificateName)
+        public TestCoreSettings(string issuerUri, string siteName, string certificateName, string publicHostAddress)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
             _certificate = X509.LocalMachine.My.SubjectDistinguishedName.Find(certificateName, false).First();
+            _publicHostAddress = publicHostAddress;
         }
 
         public Task<Client> FindClientByIdAsync(string clientId)
@@ -54,7 +56,7 @@ namespace Thinktecture.IdentityServer.TestServices
 
         public string GetPublicHost()
         {
-            return "http://localhost:3333";
+            return _publicHostAddress;
         }
 
         public InternalProtectionSettings GetInternalProtectionSettings()
