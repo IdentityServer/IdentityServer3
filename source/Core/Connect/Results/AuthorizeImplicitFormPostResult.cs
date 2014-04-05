@@ -16,11 +16,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeImplicitFormPostResult : IHttpActionResult
     {
-        AuthorizeResponse Response { get; set; }
+        private readonly AuthorizeResponse _response;
 
         public AuthorizeImplicitFormPostResult(AuthorizeResponse response)
         {
-            Response = response;
+            _response = response;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -39,9 +39,9 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 }
             }
 
-            form = form.Replace("{{redirect_uri}}", Response.RedirectUri.AbsoluteUri);
-            form = form.Replace("{{id_token}}", Response.IdentityToken);
-            form = form.Replace("{{state}}", Response.State ?? "");
+            form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
+            form = form.Replace("{{id_token}}", _response.IdentityToken);
+            form = form.Replace("{{state}}", _response.State ?? "");
 
             var content = new StringContent(form, Encoding.UTF8, "text/html");
             var message = new HttpResponseMessage(HttpStatusCode.OK)

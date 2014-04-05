@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
@@ -35,7 +35,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 Content = content
             };
 
-            //_logger.InformationFormat("Post back form: {0}", form);
             return message;
         }
     }

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
     public class ConsentModel
     {
-        private ValidatedAuthorizeRequest validatedRequest;
-
         public ConsentModel(ValidatedAuthorizeRequest validatedRequest, NameValueCollection requestParameters)
         {
             var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;

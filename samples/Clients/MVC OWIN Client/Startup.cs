@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Owin;
+﻿using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Owin;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens;
-using Microsoft.Owin;
 
-[assembly:OwinStartup(typeof(MVC_OWIN_Client.Startup))]
+[assembly: OwinStartup(typeof(MVC_OWIN_Client.Startup))]
 
 namespace MVC_OWIN_Client
 {
@@ -22,7 +20,7 @@ namespace MVC_OWIN_Client
                     AuthenticationType = "Cookies"
                 });
 
-            app.UseOpenIdConnectAuthentication(new Microsoft.Owin.Security.OpenIdConnect.OpenIdConnectAuthenticationOptions
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
                 {
                     Client_Id = "implicitclient",
                     Authority = "http://localhost:3333/core",

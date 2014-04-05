@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -21,14 +20,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication("idsrv")]
     public class AuthorizeEndpointController : ApiController
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
+        private readonly ICoreSettings _settings;
 
-        private AuthorizeRequestValidator _validator;
-        private AuthorizeResponseGenerator _responseGenerator;
-        private AuthorizeInteractionResponseGenerator _interactionGenerator;
-        IConsentService _consentService;
-        private ICoreSettings _settings;
-
+        private readonly AuthorizeRequestValidator _validator;
+        private readonly AuthorizeResponseGenerator _responseGenerator;
+        private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
+        
         public AuthorizeEndpointController(
             ILogger logger, 
             AuthorizeRequestValidator validator, 
@@ -39,11 +37,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger = logger;
             _settings = settings;
-
+        
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
-            _consentService = consentService;
-
             _validator = validator;
         }
 
@@ -53,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
-        protected virtual async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
+        protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
             _logger.Start("OIDC authorize endpoint.");
             
@@ -61,7 +57,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // validate protocol parameters
             //////////////////////////////////////////////////////////////
             var result = _validator.ValidateProtocol(parameters);
-
             var request = _validator.ValidatedRequest;
 
             if (result.IsError)
@@ -85,6 +80,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _settings);
             }
 
+            // user must be authenticated at this point
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new InvalidOperationException("User is not authenticated");
+            }
+            
+            request.Subject = User as ClaimsPrincipal;
+
             ///////////////////////////////////////////////////////////////
             // validate client
             //////////////////////////////////////////////////////////////
@@ -100,7 +103,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            interaction = await _interactionGenerator.ProcessConsentAsync(request, User as ClaimsPrincipal, consent);
+            interaction = await _interactionGenerator.ProcessConsentAsync(request, consent);
             
             if (interaction.IsError)
             {
@@ -155,7 +158,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<IHttpActionResult> CreateImplicitFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
-            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request, User as ClaimsPrincipal);
+            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request);
 
             // create form post response if responseMode is set form_post
             if (request.ResponseMode == Constants.ResponseModes.FormPost)

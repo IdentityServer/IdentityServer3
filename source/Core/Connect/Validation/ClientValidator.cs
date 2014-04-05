@@ -16,8 +16,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ClientValidator
     {
-        private ICoreSettings _settings;
-        private ILogger _logger;
+        private readonly ICoreSettings _settings;
+        private readonly ILogger _logger;
 
         public ClientValidator(ICoreSettings settings, ILogger logger)
         {
@@ -25,7 +25,29 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger = logger;
         }
 
-        public ClientCredential ValidateRequest(AuthenticationHeaderValue header, NameValueCollection body)
+        public async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
+        {
+            // validate client credentials on the wire
+            var credential = ValidateHttpRequest(header, parameters);
+
+            if (credential.IsMalformed || !credential.IsPresent)
+            {
+                _logger.Error("No or malformed client credential found.");
+                return null;
+            }
+
+            // validate client against configuration store
+            var client = await ValidateClientCredentialsAsync(credential);
+            if (client == null)
+            {
+                _logger.Error("Invalid client credentials. Aborting.");
+                return null;
+            }
+
+            return client;
+        }
+
+        public ClientCredential ValidateHttpRequest(AuthenticationHeaderValue header, NameValueCollection body)
         {
             var credentials = ParseBasicAuthenticationScheme(header);
 
@@ -37,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return ParsePostBody(body);
         }
 
-        public async Task<Client> ValidateClientAsync(ClientCredential credential)
+        public async Task<Client> ValidateClientCredentialsAsync(ClientCredential credential)
         {
             if (credential == null || credential.ClientId == null || credential.Secret == null)
             {

@@ -16,11 +16,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeImplicitFragmentResult : IHttpActionResult
     {
-        AuthorizeResponse Response { get; set; }
+        private readonly AuthorizeResponse _response;
 
         public AuthorizeImplicitFragmentResult(AuthorizeResponse response)
         {
-            Response = response;
+            _response = response;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -31,29 +31,29 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         private HttpResponseMessage Execute()
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
-            var url = Response.RedirectUri.AbsoluteUri;
+            var url = _response.RedirectUri.AbsoluteUri;
             var query = new NameValueCollection();
 
-            if (Response.IdentityToken.IsPresent())
+            if (_response.IdentityToken.IsPresent())
             {
-                query.Add("id_token", Response.IdentityToken);
+                query.Add("id_token", _response.IdentityToken);
             }
             
-            if (Response.AccessToken.IsPresent())
+            if (_response.AccessToken.IsPresent())
             {
-                query.Add("access_token", Response.AccessToken);
+                query.Add("access_token", _response.AccessToken);
                 query.Add("token_type", "Bearer");
-                query.Add("expires_in", Response.AccessTokenLifetime.ToString());
+                query.Add("expires_in", _response.AccessTokenLifetime.ToString());
             }
 
-            if (Response.Scope.IsPresent())
+            if (_response.Scope.IsPresent())
             {
-                query.Add("scope", Response.Scope);
+                query.Add("scope", _response.Scope);
             }
 
-            if (Response.State.IsPresent())
+            if (_response.State.IsPresent())
             {
-                query.Add("state", Response.State);
+                query.Add("state", _response.State);
             }
 
             url = string.Format("{0}#{1}", url, query.ToQueryString());

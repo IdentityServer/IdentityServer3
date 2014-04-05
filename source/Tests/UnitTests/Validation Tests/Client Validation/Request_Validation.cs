@@ -26,7 +26,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var validator = new ClientValidator(null, _logger);
             var header = new BasicAuthenticationHeaderValue("client", "secret");
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsFalse(credential.IsMalformed);
             Assert.IsTrue(credential.IsPresent);
@@ -45,7 +45,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             body.Add("client_id", "client");
             body.Add("client_secret", "secret");
 
-            var credential = validator.ValidateRequest(null, body);
+            var credential = validator.ValidateHttpRequest(null, body);
 
             Assert.IsFalse(credential.IsMalformed);
             Assert.IsTrue(credential.IsPresent);
@@ -66,7 +66,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             body.Add("client_id", "client");
             body.Add("client_secret", "secret");
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsFalse(credential.IsMalformed);
             Assert.IsTrue(credential.IsPresent);
@@ -81,7 +81,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
         public void No_Client_Credentials()
         {
             var validator = new ClientValidator(null, _logger);
-            var credential = validator.ValidateRequest(null, null);
+            var credential = validator.ValidateHttpRequest(null, null);
 
             Assert.IsFalse(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);
@@ -94,7 +94,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var validator = new ClientValidator(null, _logger);
             var header = new AuthenticationHeaderValue("Basic");
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsTrue(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);
@@ -107,7 +107,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var validator = new ClientValidator(null, _logger);
             var header = new AuthenticationHeaderValue("Unkown", "data");
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsFalse(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);
@@ -120,7 +120,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var validator = new ClientValidator(null, _logger);
             var header = new AuthenticationHeaderValue("Basic", "somerandomdata");
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsTrue(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);
@@ -136,7 +136,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(invalidCred));
             var header = new AuthenticationHeaderValue("Basic", encoded);
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsTrue(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);
@@ -152,7 +152,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(invalidCred));
             var header = new AuthenticationHeaderValue("Basic", encoded);
 
-            var credential = validator.ValidateRequest(header, null);
+            var credential = validator.ValidateHttpRequest(header, null);
 
             Assert.IsTrue(credential.IsMalformed);
             Assert.IsFalse(credential.IsPresent);

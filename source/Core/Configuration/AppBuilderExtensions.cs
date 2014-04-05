@@ -45,23 +45,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            var container = AutofacConfig.Configure(options);
-
-            app.Use(async (ctx, next) =>
-            {
-                // this creates a per-request, disposable scope
-                using (var scope = container.BeginLifetimeScope(b =>
-                {
-                    // this makes owin context resolvable in the scope
-                    b.RegisterInstance(ctx).As<IOwinContext>();
-                }))
-                {
-                    // this makes scope available for downstream frameworks
-                    ctx.Set<ILifetimeScope>("idsrv:AutofacScope", scope);
-                    await next();
-                }
-            }); 
-            
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
             app.UseWebApi(WebApiConfig.Configure(options));
 
             return app;

@@ -24,14 +24,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultTokenService : ITokenService
     {
-        private IUserService _profile;
+        private IUserService _users;
         private ICoreSettings _settings;
         private IClaimsProvider _claimsProvider;
         private ITokenHandleStore _tokenHandles;
 
-        public DefaultTokenService(IUserService profile, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
+        public DefaultTokenService(IUserService users, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
         {
-            _profile = profile;
+            _users = users;
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 scopes,
                 _settings,
                 includeAllIdentityClaims,
-                _profile,
+                _users,
                 request));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 client,
                 scopes,
                 _settings,
-                _profile,
+                _users,
                 request);
 
             var token = new Token(Constants.TokenTypes.AccessToken)

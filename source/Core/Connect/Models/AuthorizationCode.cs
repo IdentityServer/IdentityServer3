@@ -14,7 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public DateTime CreationTime { get; set; }
 
         public Client Client { get; set; }
-        public ClaimsPrincipal User { get; set; }
+        public ClaimsPrincipal Subject { get; set; }
     
         public bool IsOpenId { get; set; }
         public IEnumerable<Scope> RequestedScopes { get; set; }

@@ -14,6 +14,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class ValidatedTokenRequest
     {
         public NameValueCollection Raw { get; set; }
+        public ClaimsPrincipal Subject { get; set; }
+
         public ICoreSettings Settings { get; set; }
         public Client Client { get; set; }
         public string GrantType { get; set; }
@@ -21,8 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public IEnumerable<string> Scopes { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
         public string UserName { get; set; }
-
-        public ClaimsPrincipal Subject { get; set; }
         public string Assertion { get; set; }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Services;
-using System.Linq;
+﻿using System.IdentityModel.Services;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CodeFlowClient.Controllers

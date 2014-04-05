@@ -15,11 +15,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeErrorResult : IHttpActionResult
     {
-        AuthorizeError Error { get; set; }
+        private readonly AuthorizeError _error;
 
         public AuthorizeErrorResult(AuthorizeError error)
         {
-            Error = error;
+            _error = error;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -31,19 +31,19 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
 
-            if (Error.ErrorType == ErrorTypes.User)
+            if (_error.ErrorType == ErrorTypes.User)
             {
                 // todo: return error page
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    Content = new StringContent(Error.Error)
+                    Content = new StringContent(_error.Error)
                 };
             }
-            else if (Error.ErrorType == ErrorTypes.Client)
+            else if (_error.ErrorType == ErrorTypes.Client)
             {
                 string character;
-                if (Error.ResponseMode == Constants.ResponseModes.Query ||
-                    Error.ResponseMode == Constants.ResponseModes.FormPost)
+                if (_error.ResponseMode == Constants.ResponseModes.Query ||
+                    _error.ResponseMode == Constants.ResponseModes.FormPost)
                 {
                     character = "?";
                 }
@@ -52,11 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                     character = "#";
                 }
 
-                var url = string.Format("{0}{1}error={2}", Error.ErrorUri.AbsoluteUri, character, Error.Error);
+                var url = string.Format("{0}{1}error={2}", _error.ErrorUri.AbsoluteUri, character, _error.Error);
 
-                if (Error.State.IsPresent())
+                if (_error.State.IsPresent())
                 {
-                    url = string.Format("{0}&state={1}", url, Error.State);
+                    url = string.Format("{0}&state={1}", url, _error.State);
                 }
 
                 responseMessage.Headers.Location = new Uri(url);
