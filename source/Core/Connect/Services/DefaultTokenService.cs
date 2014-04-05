@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 scopes,
                 _settings,
                 includeAllIdentityClaims,
-                _profile,
+                _users,
                 request));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 client,
                 scopes,
                 _settings,
-                _profile,
+                _users,
                 request);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
