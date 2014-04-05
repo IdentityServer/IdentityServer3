@@ -112,6 +112,7 @@
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
+    <Compile Include="Configuration\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
