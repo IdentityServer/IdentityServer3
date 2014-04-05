@@ -14,11 +14,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class TokenErrorResult : IHttpActionResult
     {
-        public string Error { get; set; }
+        private readonly string _error;
 
         public TokenErrorResult(string error)
         {
-            Error = error;
+            _error = error;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             var dto = new ErrorDto
             {
-                error = Error 
+                error = _error 
             };
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest)

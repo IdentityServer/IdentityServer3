@@ -15,11 +15,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeCodeResult : IHttpActionResult
     {
-        AuthorizeResponse Response { get; set; }
+        private readonly AuthorizeResponse _response;
 
         public AuthorizeCodeResult(AuthorizeResponse response)
         {
-            Response = response;
+            _response = response;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -31,11 +31,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
 
-            var url = string.Format("{0}?code={1}", Response.RedirectUri.AbsoluteUri, Response.Code);
+            var url = string.Format("{0}?code={1}", _response.RedirectUri.AbsoluteUri, _response.Code);
 
-            if (Response.State.IsPresent())
+            if (_response.State.IsPresent())
             {
-                url = string.Format("{0}&state={1}", url, Response.State);
+                url = string.Format("{0}&state={1}", url, _response.State);
             }
 
             responseMessage.Headers.Location = new Uri(url);

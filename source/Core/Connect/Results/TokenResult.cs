@@ -16,32 +16,32 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 {
     public class TokenResult : IHttpActionResult
     {
-        public TokenResponse Response { get; set; }
+        private readonly TokenResponse _response;
 
         public TokenResult(TokenResponse response)
         {
-            Response = response;
+            _response = response;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
         {
             var dto = new TokenResponseDto
             {
-                id_token = Response.IdentityToken,
-                access_token = Response.AccessToken,
-                expires_in = Response.AccessTokenLifetime,
+                id_token = _response.IdentityToken,
+                access_token = _response.AccessToken,
+                expires_in = _response.AccessTokenLifetime,
                 token_type = Constants.TokenTypes.Bearer
             };
 
             var formatter = new JsonMediaTypeFormatter();
             formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
 
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new ObjectContent<TokenResponseDto>(dto, formatter)
             };
