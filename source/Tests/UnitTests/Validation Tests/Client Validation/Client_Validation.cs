@@ -31,7 +31,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientAsync(credential);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNotNull(client);
             Assert.AreEqual("codeclient", client.ClientId);
@@ -48,7 +48,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientAsync(credential);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }
@@ -61,7 +61,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var credential = new ClientCredential();
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientAsync(credential);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             var credential = new ClientCredential();
             
             var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientAsync(credential);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
             };
 
             var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientAsync(credential);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }

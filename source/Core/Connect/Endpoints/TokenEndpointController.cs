@@ -16,19 +16,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect/token")]
     public class TokenEndpointController : ApiController
     {
-        private ILogger _logger;
-        private TokenResponseGenerator _generator;
+        private readonly ILogger _logger;
 
-        private TokenRequestValidator _requestValidator;
-        private ClientValidator _clientValidator;
+        private readonly TokenResponseGenerator _generator;
+        private readonly TokenRequestValidator _requestValidator;
+        private readonly ClientValidator _clientValidator;
         
         public TokenEndpointController(TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, ILogger logger)
         {
+            _logger = logger;
+
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
-
             _generator = generator;
-            _logger = logger;
         }
 
         [Route]
@@ -37,12 +37,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
         }
 
-        private async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
+        public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             _logger.Start("OIDC token endpoint.");
 
             // validate client credentials and client
-            var client = await ValidateClientAsync(parameters, Request.Headers.Authorization);
+            var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);
             if (client == null)
             {
                 return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);
@@ -59,28 +59,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // return response
             var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest);
             return this.TokenResponse(response);
-        }
-
-        private async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
-        {
-            // validate client credentials on the wire
-            var credential = _clientValidator.ValidateRequest(header, parameters);
-
-            if (credential.IsMalformed || !credential.IsPresent)
-            {
-                _logger.Error("No or malformed client credential found.");
-                return null;
-            }
-
-            // validate client against configuration store
-            var client = await _clientValidator.ValidateClientAsync(credential);
-            if (client == null)
-            {
-                _logger.Error("Invalid client credentials. Aborting.");
-                return null;
-            }
-
-            return client;
         }
     }
 }
