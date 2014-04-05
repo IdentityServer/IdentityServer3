@@ -15,9 +15,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect/userinfo")]
     public class UserInfoEndpointController : ApiController
     {
-        private UserInfoRequestValidator _validator;
-        private UserInfoResponseGenerator _generator;
-        private ILogger _logger;
+        private readonly UserInfoRequestValidator _validator;
+        private readonly UserInfoResponseGenerator _generator;
+        private readonly ILogger _logger;
 
         public UserInfoEndpointController(UserInfoRequestValidator validator, UserInfoResponseGenerator generator, ILogger logger)
         {

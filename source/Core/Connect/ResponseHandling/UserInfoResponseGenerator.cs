@@ -13,13 +13,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class UserInfoResponseGenerator
     {
-        private IUserService _profile;
-        private ICoreSettings _settings;
-        private ILogger _logger;
+        private readonly IUserService _users;
+        private readonly ICoreSettings _settings;
+        private readonly ILogger _logger;
 
-        public UserInfoResponseGenerator(IUserService profile, ICoreSettings settings, ILogger logger)
+        public UserInfoResponseGenerator(IUserService users, ICoreSettings settings, ILogger logger)
         {
-            _profile = profile;
+            _users = users;
             _settings = settings;
             _logger = logger;
         }
@@ -27,11 +27,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public async Task<Dictionary<string, object>> ProcessAsync(ValidatedUserInfoRequest request)
         {
             var profileData = new Dictionary<string, object>();
+            
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(request.AccessToken);
             _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var claims = await _profile.GetProfileDataAsync(
+            var claims = await _users.GetProfileDataAsync(
                 request.AccessToken.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
+            
             if (claims != null)
             {
                 foreach (var claim in claims)
