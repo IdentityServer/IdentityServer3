@@ -43,7 +43,7 @@ IdSrv3 is designed as an OWIN/Katana component. The following configuration give
 	        });
 	}
 
-You can find the *CN=idsrv3test* certificate and setup instructions in the samples/certificates folder in the repository.
+You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tree/master/samples/Certificates) folder in the repository.
 
 If you want to plugin a real user storage system, we provide out of the box support for MembershipReboot and ASP.NET identity - simply uncomment the UserService assignment.
 
