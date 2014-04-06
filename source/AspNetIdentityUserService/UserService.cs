@@ -2,7 +2,6 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
-
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
