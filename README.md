@@ -20,7 +20,7 @@ IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider 
 * **/.well-known/openid-configuration** - OpenID Connect discovery endpoint
 
 ## Getting started ##
-We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo.
+We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples folder to exercise the various flows.
 
 IdSrv3 is designed as an OWIN/Katana component. The following configuration gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).
 
