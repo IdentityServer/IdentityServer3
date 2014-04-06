@@ -25,7 +25,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Missing_AuthorizationCode()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -54,7 +54,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Invalid_AuthorizationCode()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -84,7 +84,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
             var client = await _settings.FindClientByIdAsync("implicitclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -115,7 +115,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client1 = await _settings.FindClientByIdAsync("codeclient");
             var client2 = await _settings.FindClientByIdAsync("codeclient_restricted");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -145,7 +145,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Missing_RedirectUri()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -174,7 +174,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -204,7 +204,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Expired_AuthorizationCode()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -235,7 +235,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Reused_AuthorizationCode()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {

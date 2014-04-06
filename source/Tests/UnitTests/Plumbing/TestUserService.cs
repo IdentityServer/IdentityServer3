@@ -11,23 +11,23 @@ namespace UnitTests.Plumbing
 {
     class TestUserService : IUserService
     {
-        public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             if (username == password)
             {
-                return new AuthenticateResult(username, username);
+                return Task.FromResult(new AuthenticateResult(username, username));
             }
 
-            return null;
+            return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public async Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string sub, IEnumerable<string> requestedClaimTypes = null)
         {
             throw new NotImplementedException();
         }
 
 
-        public async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<System.Security.Claims.Claim> claims)
+        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<System.Security.Claims.Claim> claims)
         {
             throw new NotImplementedException();
         }

@@ -14,14 +14,14 @@ namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestUserService : IUserService
     {
-        public async Task<IEnumerable<Claim>> GetProfileDataAsync(string sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(string sub, IEnumerable<string> requestedClaimTypes = null)
         {
             var claims = new List<Claim>();
 
             if (requestedClaimTypes == null)
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Subject, sub));
-                return claims;
+                return Task.FromResult<IEnumerable<Claim>>(claims);
             }
 
             foreach (var requestedClaim in requestedClaimTypes)
@@ -36,22 +36,22 @@ namespace Thinktecture.IdentityServer.TestServices
                 }
             }
 
-            return claims;
+            return Task.FromResult<IEnumerable<Claim>>(claims);
         }
 
-        public async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
-            if (username != password) return null;
+            if (username != password) return Task.FromResult<AuthenticateResult>(null);
 
-            return new AuthenticateResult(username, username);
+            return Task.FromResult(new AuthenticateResult(username, username));
         }
 
 
-        public async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims)
+        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims)
         {
             if (claims == null)
             {
-                return null;
+                return Task.FromResult<ExternalAuthenticateResult>(null);
             }
 
             var name = claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 return null;
             }
 
-            return new ExternalAuthenticateResult(name.Issuer, Guid.NewGuid().ToString("D"), name.Value);
+            return Task.FromResult(new ExternalAuthenticateResult(name.Issuer, Guid.NewGuid().ToString("D"), name.Value));
         }
     }
 }

@@ -14,25 +14,30 @@ namespace Thinktecture.IdentityServer.TestServices
     {
         static ConcurrentDictionary<string, Token> _repository = new ConcurrentDictionary<string, Token>();
 
-        public async Task StoreAsync(string key, Token value)
+        public Task StoreAsync(string key, Token value)
         {
             _repository[key] = value;
+
+            return Task.FromResult<object>(null);
         }
 
-        public async Task<Token> GetAsync(string key)
+        public Task<Token> GetAsync(string key)
         {
             Token token;
             if (_repository.TryGetValue(key, out token))
             {
-                return token;
+                return Task.FromResult(token);
             }
-            return null;
+
+            return Task.FromResult<Token>(null);
         }
 
-        public async Task RemoveAsync(string key)
+        public Task RemoveAsync(string key)
         {
             Token token;
             _repository.TryRemove(key, out token);
+
+            return Task.FromResult<object>(null);
         }
     }
 }

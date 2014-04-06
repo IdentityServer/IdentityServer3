@@ -29,7 +29,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Valid_Code_Request()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {

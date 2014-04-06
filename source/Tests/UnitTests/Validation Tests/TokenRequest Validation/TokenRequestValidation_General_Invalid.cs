@@ -24,7 +24,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Parameters_Null()
         {
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
@@ -36,7 +36,7 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Client_Null()
         {
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
             var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
                 authorizationCodeStore: store);
 
@@ -53,7 +53,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Unknown_Grant_Type()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -83,7 +83,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Missing_Grant_Type()
         {
             var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestCodeStore();
+            var store = new TestAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {

@@ -12,14 +12,14 @@ namespace UnitTests.Plumbing
 {
     class TestAssertionValidator : IAssertionGrantValidator
     {
-        public async Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
+        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
         {
             if (request.GrantType == "assertionType" && request.Assertion == "assertion")
             {
-                return Principal.Create("Assertion", new Claim("sub", "bob"));
+                return Task.FromResult(Principal.Create("Assertion", new Claim("sub", "bob")));
             };
 
-            return null;
+            return Task.FromResult<ClaimsPrincipal>(null);
         }
     }
 }

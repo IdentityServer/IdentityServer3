@@ -66,12 +66,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
+    <Compile Include="Plumbing\TestAuthorizationCodeStore.cs" />
     <Compile Include="Plumbing\TestUserService.cs" />
     <Compile Include="Plumbing\ValidatorFactory.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
-    <Compile Include="Plumbing\TestCodeStore.cs" />
     <Compile Include="Plumbing\TestSettings.cs" />
     <Compile Include="Plumbing\TokenFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
