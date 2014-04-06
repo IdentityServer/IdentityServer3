@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -24,19 +25,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger = logger;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(ValidatedUserInfoRequest request)
+        public async Task<Dictionary<string, object>> ProcessAsync(IEnumerable<Claim> claims)
         {
             var profileData = new Dictionary<string, object>();
             
-            var requestedClaimTypes = await GetRequestedClaimTypesAsync(request.AccessToken);
+            var requestedClaimTypes = await GetRequestedClaimTypesAsync(claims);
             _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var claims = await _users.GetProfileDataAsync(
-                request.AccessToken.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
+            var profileClaims = await _users.GetProfileDataAsync(
+                    claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
             
-            if (claims != null)
+            if (profileClaims != null)
             {
-                foreach (var claim in claims)
+                foreach (var claim in profileClaims)
                 {
                     profileData.Add(claim.Type, claim.Value);
                 }
@@ -51,15 +52,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return profileData;
         }
 
-        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(Token accessToken)
+        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(IEnumerable<Claim> claims)
         {
-            var claims = new List<string>();
+            var scopeClaims = new List<string>();
 
-            var scopes = accessToken.Claims.FindAll(c => c.Type == Constants.ClaimTypes.Scope);
+            var scopes = claims.ToList().FindAll(c => c.Type == Constants.ClaimTypes.Scope);
             if (scopes == null)
             {
                 _logger.Warning("No scopes found in access token. aborting.");
-                return claims;
+                return scopeClaims;
             }
 
             var scopeString = string.Join(" ", scopes.Select(s => s.Value).ToArray());
@@ -75,12 +76,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 {
                     if (scopeDetail.IsOpenIdScope)
                     {
-                        claims.AddRange(scopeDetail.Claims.Select(c => c.Name));
+                        scopeClaims.AddRange(scopeDetail.Claims.Select(c => c.Name));
                     }
                 }
             }
 
-            return claims;
+            return scopeClaims;
         }
     }
 }

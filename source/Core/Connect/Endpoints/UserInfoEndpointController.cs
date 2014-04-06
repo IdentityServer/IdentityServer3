@@ -18,10 +18,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly UserInfoRequestValidator _validator;
         private readonly UserInfoResponseGenerator _generator;
         private readonly ILogger _logger;
+        private readonly TokenValidator _tokenValidator;
 
-        public UserInfoEndpointController(UserInfoRequestValidator validator, UserInfoResponseGenerator generator, ILogger logger)
+        public UserInfoEndpointController(TokenValidator tokenValidator, UserInfoRequestValidator validator, UserInfoResponseGenerator generator, ILogger logger)
         {
             _validator = validator;
+
+            _tokenValidator = tokenValidator;
             _generator = generator;
 
             _logger = logger;
@@ -32,15 +35,26 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             _logger.Start("OIDC userinfo endpoint.");
 
-            var result = await _validator.ValidateRequestAsync(request.Headers.Authorization);
+            var authorizationHeader = request.Headers.Authorization;
+
+            if (authorizationHeader == null ||
+                !authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) ||
+                authorizationHeader.Parameter.IsMissing())
+            {
+                return Unauthorized();
+            }
+
+            var result = await _tokenValidator.ValidateAccessTokenAsync(
+                authorizationHeader.Parameter, 
+                Constants.StandardScopes.OpenId);
 
             if (result.IsError)
             {
-                throw new Exception();
+                return BadRequest(Constants.UserInfoErrors.InvalidToken);
             }
 
             // pass scopes/claims to profile service
-            var payload = await _generator.ProcessAsync(_validator.ValidatedRequest);
+            var payload = await _generator.ProcessAsync(result.Claims);
 
             return new UserInfoResult(payload);
         }

@@ -9,10 +9,10 @@ namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants
     {
-        public const string PrimaryAuthenticationType = "idsrv";
-        public const string ExternalAuthenticationType = "idsrv.external";
+        public const string PrimaryAuthenticationType       = "idsrv";
+        public const string ExternalAuthenticationType      = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
-        public const string BuiltInIdentityProvider = "idsrv";
+        public const string BuiltInIdentityProvider         = "idsrv";
 
         public static class AuthorizeRequest
         {
@@ -185,8 +185,8 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class UserInfoErrors
         {
-            public const string InvalidToken = "invalid_token";
-            public const string InvalidRequest = "invalid_request";
+            public const string InvalidToken      = "invalid_token";
+            public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
         }
         
@@ -262,6 +262,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string PhoneNumber                         = "phone_number";
             public const string PhoneNumberVerified                 = "phone_number_verified";
             public const string Address                             = "address";
+            public const string Audience                            = "aud";
+            public const string Issuer                              = "iss";
+            public const string NotBefore                           = "nbf";
+            public const string Expiration                          = "exp";
             
             // more standard claims
             public const string UpdatedAt                           = "updated_at";
@@ -275,10 +279,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string Nonce                               = "nonce";
 
             // more claims
-            public const string ClientId = "client_id";
-            public const string Scope    = "scope";
-            public const string Id       = "id";
-            public const string Secret   = "secret";
+            public const string ClientId         = "client_id";
+            public const string Scope            = "scope";
+            public const string Id               = "id";
+            public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
 
             // claims for authentication controller partial logins
@@ -295,25 +299,25 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ClientAuthenticationMethods
         {
-            public const string Basic = "Basic";
+            public const string Basic    = "Basic";
             public const string FormPost = "FormPost";
         }
 
         public static class RouteNames
         {
-            public const string Login = "idsrv.authentication.login";
-            public const string LoginExternal = "idsrv.authentication.loginexternal";
-            public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
-            public const string Logout = "idsrv.authentication.logout";
+            public const string Login                   = "idsrv.authentication.login";
+            public const string LoginExternal           = "idsrv.authentication.loginexternal";
+            public const string LoginExternalCallback   = "idsrv.authentication.loginexternalcallback";
+            public const string Logout                  = "idsrv.authentication.logout";
             public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
         }
         
         public static class RoutePaths
         {
-            public const string Login = "login";
-            public const string LoginExternal = "external";
-            public const string LoginExternalCallback = "callback";
-            public const string Logout = "logout";
+            public const string Login                   = "login";
+            public const string LoginExternal           = "external";
+            public const string LoginExternalCallback   = "callback";
+            public const string Logout                  = "logout";
             public const string ResumeLoginFromRedirect = "resume";
         }
     }

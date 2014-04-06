@@ -6,7 +6,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenValidationResult
     {
-        public Token Token { get; set; }
+        public IEnumerable<Claim> Claims { get; set; }
+
         public string Error { get; set; }
         public bool IsError { get; set; }
     }

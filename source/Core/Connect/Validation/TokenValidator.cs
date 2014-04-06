@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -25,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             throw new NotImplementedException();
         }
 
-        public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token)
+        public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
         {
             var result = new TokenValidationResult();
 
@@ -36,6 +41,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             else
             {
                 result = await ValidateReferenceAccessTokenAsync(token);
+            }
+
+            if (expectedScope.IsPresent())
+            {
+                var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
+                if (scope == null)
+                {
+                    return Invalid("missing_scope");
+                }
             }
 
             return result;
@@ -67,8 +81,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return new TokenValidationResult
             {
-                Token = token
+                Claims = ReferenceTokenToClaims(token)
             };
+        }
+
+        protected virtual IEnumerable<Claim> ReferenceTokenToClaims(Token token)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(Constants.ClaimTypes.Audience, token.Audience),
+                new Claim(Constants.ClaimTypes.Issuer, token.Issuer),
+                new Claim(Constants.ClaimTypes.NotBefore, token.CreationTime.ToEpochTime().ToString()),
+                new Claim(Constants.ClaimTypes.Expiration, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString())
+            };
+
+            claims.AddRange(token.Claims);
+
+            return claims;
         }
 
         protected virtual TokenValidationResult Invalid(string error)
