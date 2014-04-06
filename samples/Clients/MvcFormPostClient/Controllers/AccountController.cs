@@ -52,7 +52,7 @@ namespace MvcFormPostClient.Controllers
             {
                 AllowedAudience = "implicitclient",
                 ValidIssuer = "https://idsrv3.com",
-                SigningToken = new X509SecurityToken(X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=sts", false).First())
+                SigningToken = new X509SecurityToken(X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=idsrv3test", false).First())
             };
 
             var id = new JwtSecurityTokenHandler().ValidateToken(token, parameters);
