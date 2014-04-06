@@ -94,22 +94,22 @@ To support social logins, you can simply add existing OWIN/Katana middleware to 
             });
     }
 
-        public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
+    public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
+    {
+        var google = new GoogleAuthenticationOptions
         {
-            var google = new GoogleAuthenticationOptions
-            {
-                AuthenticationType = "Google",
-                SignInAsAuthenticationType = signInAsType
-            };
-            app.UseGoogleAuthentication(google);
+            AuthenticationType = "Google",
+            SignInAsAuthenticationType = signInAsType
+        };
+        app.UseGoogleAuthentication(google);
 
-            var fb = new FacebookAuthenticationOptions
-            {
-                AuthenticationType = "Facebook",
-                SignInAsAuthenticationType = signInAsType,
-                AppId = "67...8",
-                AppSecret = "9....3"
-            };
-            app.UseFacebookAuthentication(fb);
-        }
+        var fb = new FacebookAuthenticationOptions
+        {
+            AuthenticationType = "Facebook",
+            SignInAsAuthenticationType = signInAsType,
+            AppId = "67...8",
+            AppSecret = "9....3"
+        };
+        app.UseFacebookAuthentication(fb);
     }
+    
