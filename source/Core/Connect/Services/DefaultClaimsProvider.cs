@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return outputClaims;
         }
 
-        public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService users, NameValueCollection request)
+        public virtual Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ICoreSettings settings, IUserService users, NameValueCollection request)
         {
             var claims = new List<Claim>
             {
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 claims.AddRange(GetStandardSubjectClaims(subject));
             }
 
-            return claims;
+            return Task.FromResult<IEnumerable<Claim>>(claims);
         }
 
         protected virtual IEnumerable<Claim> GetStandardSubjectClaims(ClaimsPrincipal subject)
