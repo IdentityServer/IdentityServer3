@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
-using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -36,10 +36,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (token.Contains("."))
             {
+                _logger.Verbose("Validating a JWT access token");
                 result = await ValidateJwtAccessTokenAsync(token);
             }
             else
             {
+                _logger.Verbose("Validating a reference access token");
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
@@ -48,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
                 if (scope == null)
                 {
-                    return Invalid("missing_scope");
+                    return Invalid(Constants.ProtectedResourceErrors.InsufficientScope);
                 }
             }
 
@@ -62,22 +64,28 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
         {
+            _logger.InformationFormat("Validating token handle: {0}", tokenHandle);
             var token = await _tokenHandles.GetAsync(tokenHandle);
 
             if (token == null)
             {
-                return Invalid("invalid_token");
+                _logger.Error("Token handle not found");
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             if (token.Type != Constants.TokenTypes.AccessToken)
             {
-                return Invalid("invalid_token");
+                _logger.ErrorFormat("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type);
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             if (DateTime.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
             {
-                return Invalid("expired_token");
+                _logger.Error("Token expired.");
+                return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
             }
+
+            _logger.Information("Validation successful");
 
             return new TokenValidationResult
             {

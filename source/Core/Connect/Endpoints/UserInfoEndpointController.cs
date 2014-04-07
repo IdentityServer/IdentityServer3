@@ -9,21 +9,19 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Results;
 using Thinktecture.IdentityServer.Core.Services;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     [RoutePrefix("connect/userinfo")]
     public class UserInfoEndpointController : ApiController
     {
-        private readonly UserInfoRequestValidator _validator;
         private readonly UserInfoResponseGenerator _generator;
         private readonly ILogger _logger;
         private readonly TokenValidator _tokenValidator;
 
-        public UserInfoEndpointController(TokenValidator tokenValidator, UserInfoRequestValidator validator, UserInfoResponseGenerator generator, ILogger logger)
+        public UserInfoEndpointController(TokenValidator tokenValidator, UserInfoResponseGenerator generator, ILogger logger)
         {
-            _validator = validator;
-
             _tokenValidator = tokenValidator;
             _generator = generator;
 
@@ -41,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 !authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) ||
                 authorizationHeader.Parameter.IsMissing())
             {
-                return Unauthorized();
+                return Error(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             var result = await _tokenValidator.ValidateAccessTokenAsync(
@@ -50,13 +48,20 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (result.IsError)
             {
-                return BadRequest(Constants.UserInfoErrors.InvalidToken);
+                return Error(result.Error);
             }
 
             // pass scopes/claims to profile service
-            var payload = await _generator.ProcessAsync(result.Claims);
+            var payload = await _generator.ProcessAsync(
+                subject: result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value,
+                scopes:  result.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value).ToArray());
 
             return new UserInfoResult(payload);
+        }
+
+        IHttpActionResult Error(string error, string description = null)
+        {
+            return new ProtectedResourceErrorResult(error, description);
         }
     }
 }

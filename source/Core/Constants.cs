@@ -183,9 +183,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string InvalidScope            = "invalid_scope";
         }
 
-        public static class UserInfoErrors
+        public static class ProtectedResourceErrors
         {
             public const string InvalidToken      = "invalid_token";
+            public const string ExpiredToken      = "expired_token";
             public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
         }

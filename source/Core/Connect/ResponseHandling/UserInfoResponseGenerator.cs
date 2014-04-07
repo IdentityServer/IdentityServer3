@@ -25,24 +25,30 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger = logger;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(IEnumerable<Claim> claims)
+        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
         {
             var profileData = new Dictionary<string, object>();
             
-            var requestedClaimTypes = await GetRequestedClaimTypesAsync(claims);
+            var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
             _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var profileClaims = await _users.GetProfileDataAsync(
-                    claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value, requestedClaimTypes);
+            var profileClaims = await _users.GetProfileDataAsync(subject, requestedClaimTypes);
             
             if (profileClaims != null)
             {
                 foreach (var claim in profileClaims)
                 {
-                    profileData.Add(claim.Type, claim.Value);
+                    if (profileData.ContainsKey(claim.Type))
+                    {
+                        _logger.Warning("Duplicate claim type detected: " + claim.Type);
+                    }
+                    else
+                    {
+                        profileData.Add(claim.Type, claim.Value);
+                    }
                 }
 
-                _logger.InformationFormat("Profile service returned to the following claim types: {0}", claims.Select(c => c.Type).ToSpaceSeparatedString());
+                _logger.InformationFormat("Profile service returned to the following claim types: {0}", profileClaims.Select(c => c.Type).ToSpaceSeparatedString());
             }
             else
             {
@@ -52,25 +58,22 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return profileData;
         }
 
-        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(IEnumerable<Claim> claims)
+        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(IEnumerable<string> scopes)
         {
-            var scopeClaims = new List<string>();
-
-            var scopes = claims.ToList().FindAll(c => c.Type == Constants.ClaimTypes.Scope);
-            if (scopes == null)
+            if (scopes == null || scopes.Count() == 0)
             {
-                _logger.Warning("No scopes found in access token. aborting.");
-                return scopeClaims;
+                return Enumerable.Empty<string>();
             }
 
-            var scopeString = string.Join(" ", scopes.Select(s => s.Value).ToArray());
+            var scopeString = string.Join(" ", scopes);
             _logger.InformationFormat("Scopes in access token: {0}", scopeString);
 
             var scopeDetails = await _settings.GetScopesAsync();
-            
+            var scopeClaims = new List<string>();
+
             foreach (var scope in scopes)
             {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope.Value);
+                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
                 
                 if (scopeDetail != null)
                 {

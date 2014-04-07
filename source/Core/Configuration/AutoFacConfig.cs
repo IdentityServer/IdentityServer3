@@ -72,7 +72,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();
-            builder.RegisterType<UserInfoRequestValidator>();
             builder.RegisterType<ClientValidator>();
             builder.RegisterType<TokenValidator>();
 

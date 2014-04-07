@@ -127,6 +127,7 @@
     <Compile Include="Connect\Models\ConsentModel.cs" />
     <Compile Include="Connect\Models\UserConsent.cs" />
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
+    <Compile Include="Connect\Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />
     <Compile Include="Connect\Services\DefaultAssertionGrantValidator.cs" />
     <Compile Include="Connect\Services\DefaultCustomRequestValidator.cs" />
@@ -141,7 +142,6 @@
     <Compile Include="Connect\Validation\ScopeValidator.cs" />
     <Compile Include="Connect\Validation\TokenValidationResult.cs" />
     <Compile Include="Connect\Validation\TokenValidator.cs" />
-    <Compile Include="Connect\Validation\UserInfoRequestValidator.cs" />
     <Compile Include="Connect\Validation\ValidatedUserInfoRequest.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
