@@ -11,6 +11,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     public class DefaultExternalClaimsFilter : IExternalClaimsFilter
     {
         protected string FacebookProviderName = "Facebook";
+        protected string TwitterProviderName = "Twitter";
 
         public IEnumerable<Claim> Filter(IdentityProvider provider, IEnumerable<Claim> claims)
         {
@@ -32,6 +33,10 @@ namespace Thinktecture.IdentityServer.Core.Services
             {
                 claims = TransformFacebookClaims(claims);
             }
+            else if (provider.Name == TwitterProviderName)
+            {
+                claims = TransformTwitterClaims(claims);
+            }
 
             return claims;
         }
@@ -43,11 +48,16 @@ namespace Thinktecture.IdentityServer.Core.Services
             {
                 var list = claims.ToList();
                 list.Remove(nameClaim);
-                list.RemoveAll(x=>x.Type == Constants.ClaimTypes.Name);
+                list.RemoveAll(x => x.Type == Constants.ClaimTypes.Name);
                 list.Add(new Claim(Constants.ClaimTypes.Name, nameClaim.Value));
                 return list;
             }
             return claims;
+        }
+
+        protected virtual IEnumerable<Claim> TransformTwitterClaims(IEnumerable<Claim> claims)
+        {
+            return claims.Where(x => x.Type != "urn:twitter:userid");
         }
     }
 }
