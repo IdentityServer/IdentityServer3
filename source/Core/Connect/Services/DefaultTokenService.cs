@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
-                Audience = _settings.GetIssuerUri() + "/resources",
+                Audience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri()),
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = client.AccessTokenLifetime,
                 Claims = claims.ToList(),

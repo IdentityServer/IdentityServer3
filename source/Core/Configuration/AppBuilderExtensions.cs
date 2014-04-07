@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.StaticFiles;
 using System;
+using System.IdentityModel.Tokens;
+using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 
@@ -21,6 +23,10 @@ namespace Owin
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
+
+            // thank you Microsoft for the clean syntax
+            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
+            JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });

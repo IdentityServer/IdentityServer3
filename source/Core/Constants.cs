@@ -14,6 +14,8 @@ namespace Thinktecture.IdentityServer.Core
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         public const string BuiltInIdentityProvider         = "idsrv";
 
+        public const string AccessTokenAudience             = "{0}/resources";
+
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";

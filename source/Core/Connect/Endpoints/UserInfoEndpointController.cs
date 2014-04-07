@@ -52,9 +52,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // pass scopes/claims to profile service
-            var payload = await _generator.ProcessAsync(
-                subject: result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject).Value,
-                scopes:  result.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value).ToArray());
+            var subject = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
+            var scopes = result.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
+
+            var payload = await _generator.ProcessAsync(subject, scopes);
 
             return new UserInfoResult(payload);
         }

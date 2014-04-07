@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Selectors;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
+using System.ServiceModel.Security;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -36,12 +39,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (token.Contains("."))
             {
-                _logger.Verbose("Validating a JWT access token");
+                _logger.VerboseFormat("Validating a JWT access token: {0}", token);
                 result = await ValidateJwtAccessTokenAsync(token);
             }
             else
             {
-                _logger.Verbose("Validating a reference access token");
+                _logger.VerboseFormat("Validating a reference access token: {0}", token);
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
@@ -59,12 +62,41 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
         {
-            throw new NotImplementedException();
+            var handler = new JwtSecurityTokenHandler();
+            handler.Configuration = new SecurityTokenHandlerConfiguration();
+            handler.Configuration.CertificateValidationMode = X509CertificateValidationMode.None;
+            handler.Configuration.CertificateValidator = X509CertificateValidator.None;
+            
+            var parameters = new TokenValidationParameters
+            {
+                ValidIssuer = _settings.GetIssuerUri(),
+                SigningToken = new X509SecurityToken(_settings.GetSigningCertificate()),
+                AllowedAudience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri())
+            };
+
+            try
+            {
+                var id = handler.ValidateToken(jwt, parameters);
+
+                return Task.FromResult(new TokenValidationResult
+                {
+                    Claims = id.Claims
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorFormat("JWT token validation error: {0}", ex.ToString());
+
+                return Task.FromResult(new TokenValidationResult
+                {
+                    IsError = true,
+                    Error = Constants.ProtectedResourceErrors.InvalidToken
+                });                
+            }
         }
 
         protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
         {
-            _logger.InformationFormat("Validating token handle: {0}", tokenHandle);
             var token = await _tokenHandles.GetAsync(tokenHandle);
 
             if (token == null)
