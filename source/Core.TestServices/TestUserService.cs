@@ -58,7 +58,8 @@ namespace Thinktecture.IdentityServer.TestServices
                 return Task.FromResult<ExternalAuthenticateResult>(null);
             }
 
-            var name = claims.FirstOrDefault(x=>x.Type==ClaimTypes.NameIdentifier);
+            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+            if (name==null) name = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
             if (name == null)
             {
                 return null;
