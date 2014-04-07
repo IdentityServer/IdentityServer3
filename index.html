@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Thinktecture IdentityServer v3 by thinktecture</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Thinktecture IdentityServer v3</h1>
+        <p class="header">OpenID Connect and OAuth2 based security token service</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/thinktecture/Thinktecture.IdentityServer.v3/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/thinktecture/Thinktecture.IdentityServer.v3">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/thinktecture">thinktecture</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="thinktecture-identityserver-v3" class="anchor" href="#thinktecture-identityserver-v3"><span class="octicon octicon-link"></span></a>Thinktecture IdentityServer v3</h1>
+
+<p><strong>current status: preview 1</strong></p>
+
+<h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server.</p>
+
+<p><a href="http://openid.net/specs/openid-connect-core-1_0.html" title="OpenID Connect specification">http://openid.net/specs/openid-connect-core-1_0.html</a></p>
+
+<p><a href="http://tools.ietf.org/html/rfc6749" title="OAuth2 specification">http://tools.ietf.org/html/rfc6749</a></p>
+
+<p><strong>Endpoints:</strong></p>
+
+<ul>
+<li>
+<strong>/connect/authorize</strong> - OpenID Connect/OAuth2 code and implicit client support</li>
+<li>
+<strong>/connect/token</strong> - OpenID Connect/OAuth2 code, password, client credentials and assertion grant support</li>
+<li>
+<strong>/connect/userinfo</strong> - OpenID Connect userinfo endpoint</li>
+<li>
+<strong>/connect/logout</strong> - client initiated logout (aka end session endpoint)</li>
+<li>
+<strong>/.well-known/openid-configuration</strong> - OpenID Connect discovery endpoint</li>
+</ul><h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
+
+<p>We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples folder to exercise the various flows.</p>
+
+<p>IdSrv3 is designed as an OWIN/Katana component. The following configuration gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).</p>
+
+<pre><code>public void Configuration(IAppBuilder app)
+{
+    app.Map("/core", coreApp =&gt;
+        {
+            var factory = TestOptionsFactory.Create(
+                issuerUri:         "https://idsrv3.com",
+                siteName:          "Thinktecture IdentityServer v3 - preview 1",
+                certificateName:   "CN=idsrv3test",
+                publicHostAddress: "http://localhost:3333");
+
+            var options = new IdentityServerCoreOptions
+            {
+                Factory = factory,
+            };
+
+            coreApp.UseIdentityServerCore(options);
+        });
+}
+</code></pre>
+
+<p>You can find the <em>CN=idsrv3test</em> certificate and setup instructions in the <a href="https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tree/master/samples/Certificates">certificates</a> folder in the repository.</p>
+
+<p>If you want to plugin a real user storage system, we provide out of the box support for MembershipReboot and ASP.NET identity - simply uncomment the UserService assignment.</p>
+
+<pre><code>public void Configuration(IAppBuilder app)
+{
+    app.Map("/core", coreApp =&gt;
+        {
+            var factory = TestOptionsFactory.Create(
+                issuerUri: "https://idsrv3.com",
+                siteName: "Thinktecture IdentityServer v3 - preview 1",
+                certificateName: "CN=idsrv3test",
+                publicHostAddress: "http://localhost:3333");
+
+            //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
+            //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
+
+            var options = new IdentityServerCoreOptions
+            {
+                Factory = factory,
+            };
+
+            coreApp.UseIdentityServerCore(options);
+        });
+}
+</code></pre>
+
+<p>To support social logins, you can simply add existing OWIN/Katana middleware to the IdSrv3 configuration:</p>
+
+<pre><code>public void Configuration(IAppBuilder app)
+{
+    app.Map("/core", coreApp =&gt;
+        {
+            var factory = TestOptionsFactory.Create(
+                issuerUri: "https://idsrv3.com",
+                siteName: "Thinktecture IdentityServer v3 - preview 1",
+                certificateName: "CN=idsrv3test",
+                publicHostAddress: "http://localhost:3333");
+
+            //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
+            //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
+
+            var options = new IdentityServerCoreOptions
+            {
+                Factory = factory,
+                SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
+            };
+
+            coreApp.UseIdentityServerCore(options);
+        });
+}
+
+public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
+{
+    var google = new GoogleAuthenticationOptions
+    {
+        AuthenticationType = "Google",
+        SignInAsAuthenticationType = signInAsType
+    };
+    app.UseGoogleAuthentication(google);
+
+    var fb = new FacebookAuthenticationOptions
+    {
+        AuthenticationType = "Facebook",
+        SignInAsAuthenticationType = signInAsType,
+        AppId = "67...8",
+        AppSecret = "9....3"
+    };
+    app.UseFacebookAuthentication(fb);
+}
+</code></pre>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
