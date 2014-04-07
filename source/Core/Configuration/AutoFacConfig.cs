@@ -69,6 +69,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultAssertionGrantValidator>().As<IAssertionGrantValidator>();
             }
 
+            if (fact.ExternalClaimsFilter != null)
+            {
+                builder.Register(ctx => fact.ExternalClaimsFilter()).As<IExternalClaimsFilter>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultExternalClaimsFilter>().As<IExternalClaimsFilter>();
+            }
+
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();

@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -13,6 +14,7 @@ using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
@@ -26,12 +28,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         IUserService userService;
         ICoreSettings settings;
         AuthenticationOptions authenticationOptions;
+        IExternalClaimsFilter externalClaimsFilter;
 
-        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, AuthenticationOptions authenticationOptions)
+        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions)
         {
             this.logger = logger;
             this.userService = userService;
             this.settings = settings;
+            this.externalClaimsFilter = externalClaimsFilter;
             this.authenticationOptions = authenticationOptions;
         }
 
@@ -137,7 +141,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             var claims = externalAuthResult.Identity.Claims;
-            var authResult = await userService.AuthenticateExternalAsync(currentSubject, claims);
+            var externalIdentity = GetExternalIdentity(claims);
+            if (externalIdentity == null)
+            {
+                logger.Verbose("[AuthenticationController.LoginExternalCallback] null external identity");
+                return RenderLoginPage(Messages.NoMatchingExternalAccount);
+            }
+
+            var authResult = await userService.AuthenticateExternalAsync(currentSubject, externalIdentity);
             if (authResult == null)
             {
                 logger.Verbose("[AuthenticationController.LoginExternalCallback] authenticate external returned null");
@@ -154,6 +165,42 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 authResult, 
                 Constants.AuthenticationMethods.External, 
                 authResult.Provider);
+        }
+
+        ExternalIdentity GetExternalIdentity(IEnumerable<Claim> claims)
+        {
+            if (claims == null || !claims.Any())
+            {
+                return null;
+            }
+
+            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
+            if (subClaim == null)
+            {
+                subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+
+                if (subClaim == null)
+                {
+                    return null;
+                }
+            }
+
+            claims = claims.Except(new Claim[] { subClaim });
+
+            var idp = new IdentityProvider { Name = subClaim.Issuer };
+            if (this.externalClaimsFilter != null)
+            {
+                claims = externalClaimsFilter.Filter(idp, claims);
+            }
+
+            claims = claims ?? Enumerable.Empty<Claim>();
+
+            return new ExternalIdentity
+            {
+                Provider = idp,
+                ProviderId = subClaim.Value,
+                Claims = claims
+            };
         }
 
         [Route(Constants.RoutePaths.Logout, Name=Constants.RouteNames.Logout)]

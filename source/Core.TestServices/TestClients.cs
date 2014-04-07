@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.TestServices
 {
@@ -31,7 +32,7 @@ namespace Thinktecture.IdentityServer.TestServices
                     RedirectUris = new List<Uri>
                     {
                         // MVC code client with module
-                        new Uri("https://localhost:44320/oidccallback"),
+                        new Uri("http://localhost:31349/oidccallback"),
                         
                         // MVC code client manual
                         new Uri("https://localhost:44312/callback"),

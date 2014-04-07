@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Models;
+
+namespace Thinktecture.IdentityServer.Core.Services
+{
+    public class DefaultExternalClaimsFilter : IExternalClaimsFilter
+    {
+        protected string FacebookProviderName = "Facebook";
+
+        public IEnumerable<Claim> Filter(IdentityProvider provider, IEnumerable<Claim> claims)
+        {
+            claims = NormalizeExternalClaimTypes(claims);
+
+            claims = TransformSocialClaims(provider, claims);
+
+            return claims;
+        }
+
+        protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
+        {
+            return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
+        }
+
+        protected virtual IEnumerable<Claim> TransformSocialClaims(IdentityProvider provider, IEnumerable<Claim> claims)
+        {
+            if (provider.Name == FacebookProviderName)
+            {
+                claims = TransformFacebookClaims(claims);
+            }
+
+            return claims;
+        }
+
+        protected virtual IEnumerable<Claim> TransformFacebookClaims(IEnumerable<Claim> claims)
+        {
+            var nameClaim = claims.FirstOrDefault(x => x.Type == "urn:facebook:name");
+            if (nameClaim != null)
+            {
+                var list = claims.ToList();
+                list.Remove(nameClaim);
+                list.RemoveAll(x=>x.Type == Constants.ClaimTypes.Name);
+                list.Add(new Claim(Constants.ClaimTypes.Name, nameClaim.Value));
+                return list;
+            }
+            return claims;
+        }
+    }
+}

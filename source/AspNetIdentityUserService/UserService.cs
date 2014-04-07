@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.AspNetIdentity
@@ -18,7 +19,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
     {
         protected readonly UserManager<TUser> userManager;
         IDisposable cleanup;
-        public UserService(UserManager<TUser> userManager, IDisposable cleanup = null)
+        public UserService(UserManager<TUser> userManager, IDisposable cleanup)
         {
             if (userManager == null) throw new ArgumentNullException("userManager");
 
@@ -56,7 +57,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         {
             var claims = new List<Claim>{
                 new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Subject, user.Id),
-                new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name, await GetNameForAccountAsync(user.Id)),
+                new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name, await GetDisplayNameForAccountAsync(user.Id)),
             };
 
             if (userManager.SupportsUserEmail)
@@ -95,6 +96,17 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             }
 
             return claims;
+        }
+
+        protected virtual async Task<string> GetDisplayNameForAccountAsync(string userID)
+        {
+            var claims = await userManager.GetClaimsAsync(userID);
+            var nameClaim = claims.FirstOrDefault(x => x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name);
+            if (nameClaim == null) nameClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+            if (nameClaim != null) return nameClaim.Value;
+
+            var user = await userManager.FindByIdAsync(userID);
+            return user.UserName;
         }
 
         public virtual async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
@@ -137,128 +149,57 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             return null;
         }
 
-        public virtual async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> externalClaims)
+        public virtual async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, ExternalIdentity externalUser)
         {
-            if (externalClaims == null || !externalClaims.Any())
+            if (externalUser == null)
             {
-                return null;
+                throw new ArgumentNullException("externalUser");
             }
 
-            var subClaim = externalClaims.FirstOrDefault(x => x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Subject);
-            if (subClaim == null)
-            {
-                subClaim = externalClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-
-                if (subClaim == null)
-                {
-                    return null;
-                }
-            }
-
-            externalClaims = externalClaims.Except(new Claim[] { subClaim });
-            externalClaims = NormalizeExternalClaimTypes(externalClaims);
-
-            var provider = subClaim.Issuer;
-            var providerId = subClaim.Value;
-
-            var user = await userManager.FindAsync(new UserLoginInfo(provider, providerId));
+            var user = await userManager.FindAsync(new UserLoginInfo(externalUser.Provider.Name, externalUser.ProviderId));
             if (user == null)
             {
-                return await ProcessNewExternalAccountAsync(provider, providerId, externalClaims);
+                return await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
             }
             else
             {
-                return await ProcessExistingExternalAccountAsync(user.Id, provider, providerId, externalClaims);
+                return await ProcessExistingExternalAccountAsync(user.Id, externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
             }
         }
 
         protected virtual async Task<ExternalAuthenticateResult> ProcessNewExternalAccountAsync(string provider, string providerId, IEnumerable<Claim> claims)
         {
-            var createResult = await CreateNewUserFromExternalAccountAsync(provider, providerId, claims);
-            if (createResult.Item1 != null)
+            var user = new TUser { UserName = Guid.NewGuid().ToString("N") };
+            var createResult = await userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
             {
-                return createResult.Item1;
+                return new ExternalAuthenticateResult(createResult.Errors.First());
             }
 
-            var userID = createResult.Item2;
-            var result = await AccountCreatedFromExternalProviderAsync(userID, provider, providerId, claims);
-            if (result != null) return result;
-
-            return await SignInFromExternalProviderAsync(userID, provider);
-        }
-
-        protected virtual async Task<Tuple<ExternalAuthenticateResult, string>> CreateNewUserFromExternalAccountAsync(string provider, string providerId, IEnumerable<Claim> claims)
-        {
-            string userID = null;
-            var name = GetNameFromClaims(claims);
-            if (name != null)
-            {
-                // guess at a username from external provider's supplied name
-                var user = await userManager.FindByNameAsync(name);
-                if (user == null)
-                {
-                    user = new TUser { UserName = name };
-                    var createResult = await userManager.CreateAsync(user);
-                    if (createResult.Succeeded)
-                    {
-                        userID = user.Id;
-                    }
-                }
-            }
-
-            if (userID == null)
-            {
-                // generate a username
-                var user = new TUser { UserName = Guid.NewGuid().ToString("N") };
-                var createResult = await userManager.CreateAsync(user);
-                if (!createResult.Succeeded)
-                {
-                    return new Tuple<ExternalAuthenticateResult, string>(new ExternalAuthenticateResult(createResult.Errors.First()), null);
-                }
-                userID = user.Id;
-            }
-
-            return new Tuple<ExternalAuthenticateResult, string>(null, userID);
-        }
-
-        protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
-        {
             var externalLogin = new UserLoginInfo(provider, providerId);
-            var addExternalResult = await userManager.AddLoginAsync(userID, externalLogin);
+            var addExternalResult = await userManager.AddLoginAsync(user.Id, externalLogin);
             if (!addExternalResult.Succeeded)
             {
                 return new ExternalAuthenticateResult(addExternalResult.Errors.First());
             }
-            
-            claims = FilterExternalClaimsForNewAccount(provider, claims);
 
-            var result = await SetNewAccountEmailAsync(userID, provider, claims);
-            if (result.Item1 != null) return result.Item1;
-            claims = result.Item2;
+            var result = await AccountCreatedFromExternalProviderAsync(user.Id, provider, providerId, claims);
+            if (result != null) return result;
 
-            result = await SetNewAccountPhoneAsync(userID, provider, claims);
-            if (result.Item1 != null) return result.Item1;
-            claims = result.Item2;
+            return await SignInFromExternalProviderAsync(user.Id, provider);
+        }
+
+        protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
+        {
+            claims = await SetAccountEmailAsync(userID, claims);
+            claims = await SetAccountPhoneAsync(userID, claims);
 
             return await UpdateAccountFromExternalClaimsAsync(userID, provider, providerId, claims);
         }
 
         protected virtual async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(string userID, string provider)
         {
-            return new ExternalAuthenticateResult(provider, userID, await GetNameForAccountAsync(userID));
-        }
-
-        protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
-        {
-            claims = FilterExternalClaimsForExistingAccount(userID, provider, claims);
-
-            claims = await SetAccountEmailAsync(userID, claims);
-            claims = await SetAccountPhoneAsync(userID, claims);
-
-            var result = await UpdateAccountFromExternalClaimsAsync(userID, provider, providerId, claims);
-            if (result != null) return result;
-
-            return await SignInFromExternalProviderAsync(userID, provider);
+            return new ExternalAuthenticateResult(provider, userID, await GetDisplayNameForAccountAsync(userID));
         }
 
         protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
@@ -279,20 +220,9 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             return null;
         }
 
-        protected virtual IEnumerable<Claim> FilterExternalClaimsForNewAccount(string provider, IEnumerable<Claim> claims)
+        protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            return claims;
-        }
-
-        protected virtual IEnumerable<Claim> FilterExternalClaimsForExistingAccount(string userID, string provider, IEnumerable<Claim> claims)
-        {
-            return claims;
-        }
-
-        protected virtual async Task<Tuple<ExternalAuthenticateResult, IEnumerable<Claim>>> SetNewAccountEmailAsync(string userID, string provider, IEnumerable<Claim> claims)
-        {
-            var result = await SetAccountEmailAsync(userID, claims);
-            return new Tuple<ExternalAuthenticateResult,IEnumerable<Claim>>(null, result);
+            return await SignInFromExternalProviderAsync(userID, provider);
         }
 
         protected virtual async Task<IEnumerable<Claim>> SetAccountEmailAsync(string userID, IEnumerable<Claim> claims)
@@ -324,12 +254,6 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             return claims;
         }
 
-        protected virtual async Task<Tuple<ExternalAuthenticateResult, IEnumerable<Claim>>> SetNewAccountPhoneAsync(string userID, string provider, IEnumerable<Claim> claims)
-        {
-            var result = await SetAccountPhoneAsync(userID, claims);
-            return new Tuple<ExternalAuthenticateResult, IEnumerable<Claim>>(null, result);
-        }
-
         protected virtual async Task<IEnumerable<Claim>> SetAccountPhoneAsync(string userID, IEnumerable<Claim> claims)
         {
             var phone = claims.FirstOrDefault(x=>x.Type==Thinktecture.IdentityServer.Core.Constants.ClaimTypes.PhoneNumber);
@@ -357,35 +281,6 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             }
             
             return claims;
-        }
-
-        protected virtual async Task<string> GetNameForAccountAsync(string userID)
-        {
-            var user = await userManager.FindByIdAsync(userID);
-            string name = null;
-
-            // if the user has a local password, then presumably they know
-            // their own username and will recognize it (rather than a generated one)
-            if (await userManager.HasPasswordAsync(userID)) name = user.UserName;
-
-            if (name == null)
-            {
-                var claims = await userManager.GetClaimsAsync(userID);
-                name = GetNameFromClaims(claims);
-            }
-
-            name = name ?? user.UserName;
-            return name;
-        }
-
-        protected virtual string GetNameFromClaims(IEnumerable<Claim> claims)
-        {
-            return claims.Where(x =>
-                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.PreferredUserName ||
-                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name ||
-                    x.Type == ClaimTypes.Name)
-                .Select(x => x.Value)
-                .FirstOrDefault();
         }
 
         protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)

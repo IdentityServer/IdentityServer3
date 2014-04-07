@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Models
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class Scope
     {

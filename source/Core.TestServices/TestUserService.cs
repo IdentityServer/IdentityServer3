@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.TestServices
@@ -51,15 +52,20 @@ namespace Thinktecture.IdentityServer.TestServices
         }
 
 
-        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> claims)
+        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, ExternalIdentity user)
         {
+            if (user == null)
+            {
+                return Task.FromResult<ExternalAuthenticateResult>(null);
+            }
+
+            var claims = user.Claims;
             if (claims == null)
             {
                 return Task.FromResult<ExternalAuthenticateResult>(null);
             }
 
-            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
-            if (name==null) name = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            var name = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name || x.Type == Constants.ClaimTypes.Name);
             if (name == null)
             {
                 return null;

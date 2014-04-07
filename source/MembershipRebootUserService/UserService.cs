@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using ClaimHelper = BrockAllen.MembershipReboot.ClaimsExtensions;
 
@@ -60,7 +61,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
         {
             var claims = new List<Claim>{
                 new Claim(Constants.ClaimTypes.Subject, account.ID.ToString("D")),
-                new Claim(Constants.ClaimTypes.Name, GetNameForAccount(account.ID)),
+                new Claim(Constants.ClaimTypes.Name, GetDisplayNameForAccount(account.ID)),
                 new Claim(Constants.ClaimTypes.UpdatedAt, account.LastUpdated.ToEpochTime().ToString()),
             };
             
@@ -80,6 +81,17 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             claims.AddRange(account.LinkedAccountClaims.Select(x => new Claim(x.Type, x.Value)));
 
             return claims;
+        }
+
+        protected virtual string GetDisplayNameForAccount(Guid accountID)
+        {
+            var acct = userAccountService.GetByID(accountID);
+
+            var name = acct.GetClaimValue(Constants.ClaimTypes.Name);
+            if (name == null) name = acct.GetClaimValue(ClaimTypes.Name);
+            if (name == null) name = acct.Username;
+
+            return name;
         }
         
         public virtual async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
@@ -122,40 +134,23 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             return null;
         }
 
-        public virtual async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, IEnumerable<Claim> externalClaims)
+        public virtual async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, ExternalIdentity externalUser)
         {
-            if (externalClaims == null || !externalClaims.Any())
+            if (externalUser == null)
             {
-                return null;
+                throw new ArgumentNullException("externalUser");
             }
-
-            var subClaim = externalClaims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
-            if (subClaim == null)
-            {
-                subClaim = externalClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-
-                if (subClaim == null)
-                {
-                    return null;
-                }
-            }
-
-            externalClaims = externalClaims.Except(new Claim[] { subClaim });
-            externalClaims = NormalizeExternalClaimTypes(externalClaims);
-
-            var provider = subClaim.Issuer;
-            var providerId = subClaim.Value;
 
             try
             {
-                var acct = this.userAccountService.GetByLinkedAccount(provider, providerId);
+                var acct = this.userAccountService.GetByLinkedAccount(externalUser.Provider.Name, externalUser.ProviderId);
                 if (acct == null)
                 {
-                    return await ProcessNewExternalAccountAsync(provider, providerId, externalClaims);
+                    return await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
                 }
                 else
                 {
-                    return await ProcessExistingExternalAccountAsync(acct.ID, provider, providerId, externalClaims);
+                    return await ProcessExistingExternalAccountAsync(acct.ID, externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
                 }
             }
             catch (ValidationException ex)
@@ -167,6 +162,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
         protected virtual async Task<ExternalAuthenticateResult> ProcessNewExternalAccountAsync(string provider, string providerId, IEnumerable<Claim> claims)
         {
             var acct = userAccountService.CreateAccount(Guid.NewGuid().ToString("N"), null, null);
+            userAccountService.AddOrUpdateLinkedAccount(acct, provider, providerId);
 
             var result = await AccountCreatedFromExternalProviderAsync(acct.ID, provider, providerId, claims);
             if (result != null) return result;
@@ -176,88 +172,26 @@ namespace Thinktecture.IdentityServer.MembershipReboot
 
         protected virtual async Task<ExternalAuthenticateResult> AccountCreatedFromExternalProviderAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            claims = FilterExternalClaimsForNewAccount(provider, claims);
+            SetAccountEmail(accountID, ref claims);
+            SetAccountPhone(accountID, ref claims);
 
-            var result = SetNewAccountUsername(accountID, provider, ref claims);
-            if (result != null) return result;
-            
-            result= SetNewAccountEmail(accountID, provider, ref claims);
-            if (result != null) return result;
-
-            result = SetNewAccountPhone(accountID, provider, ref claims);
-            if (result != null) return result;
-            
             return await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
         }
 
         protected virtual async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(Guid accountID, string provider)
         {
-            return new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetNameForAccount(accountID));
-        }
-
-        protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
-        {
-            claims = FilterExternalClaimsForExistingAccount(accountID, provider, claims); 
-
-            SetAccountEmail(accountID, ref claims);
-            SetAccountPhone(accountID, ref claims);
-
-            var result = await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
-            if (result != null) return result;
-
-            return await SignInFromExternalProviderAsync(accountID, provider);
+            return new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetDisplayNameForAccount(accountID));
         }
 
         protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            var account = userAccountService.GetByID(accountID);
-            userAccountService.AddOrUpdateLinkedAccount(account, provider, providerId, claims);
-
+            userAccountService.AddClaims(accountID, new UserClaimCollection(claims));
             return null;
         }
 
-        protected virtual IEnumerable<Claim> FilterExternalClaimsForNewAccount(string provider, IEnumerable<Claim> claims)
+        protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
-            return claims;
-        }
-
-        protected virtual IEnumerable<Claim> FilterExternalClaimsForExistingAccount(Guid accountID, string provider, IEnumerable<Claim> claims)
-        {
-            return claims;
-        }
-
-        protected virtual ExternalAuthenticateResult SetNewAccountUsername(Guid accountID, string provider, ref IEnumerable<Claim> claims)
-        {
-            var name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PreferredUserName);
-            if (name == null) name = ClaimHelper.GetValue(claims, Constants.ClaimTypes.Name);
-            
-            if (name != null)
-            {
-                var acct = userAccountService.GetByID(accountID);
-                try
-                {
-                    userAccountService.ChangeUsername(acct.ID, name);
-                    var nameClaims = new string[] { Constants.ClaimTypes.PreferredUserName, Constants.ClaimTypes.Name };
-                    claims = claims.Where(x => !nameClaims.Contains(x.Type));
-                }
-                catch (ValidationException ex)
-                {
-                    // presumably the name is already associated with another account or invalid
-                    // so let's register the user
-                    //return new ExternalAuthenticateResult("/core/account/register", 
-                    //    provider, 
-                    //    accountID.ToString("D"), 
-                    //    GetNameForAccount(accountID));
-                }
-            }
-
-            return null;
-        }
-
-        protected virtual ExternalAuthenticateResult SetNewAccountEmail(Guid accountID, string provider, ref IEnumerable<Claim> claims)
-        {
-            SetAccountEmail(accountID, ref claims);
-            return null;
+            return await SignInFromExternalProviderAsync(accountID, provider);
         }
 
         protected virtual void SetAccountEmail(Guid accountID, ref IEnumerable<Claim> claims)
@@ -292,12 +226,6 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             }
         }
 
-        protected virtual ExternalAuthenticateResult SetNewAccountPhone(Guid accountID, string provider, ref IEnumerable<Claim> claims)
-        {
-            SetAccountPhone(accountID, ref claims);
-            return null;
-        }
-
         protected virtual void SetAccountPhone(Guid accountID, ref IEnumerable<Claim> claims)
         {
             var phone = ClaimHelper.GetValue(claims, Constants.ClaimTypes.PhoneNumber);
@@ -328,49 +256,6 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                     }
                 }
             }
-        }
-
-        protected virtual string GetNameForAccount(Guid accountID)
-        {
-            var acct = userAccountService.GetByID(accountID);
-            string name = null;
-            
-            // if the user has a local password, then presumably they know
-            // their own username and will recognize it (rather than a generated one)
-            if (acct.HasPassword()) name = acct.Username;
-
-            if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.PreferredUserName);
-            if (name == null) name = acct.GetClaimValue(Constants.ClaimTypes.Name);
-            if (name == null) name = acct.GetClaimValue(ClaimTypes.Name);
-
-            if (name == null)
-            {
-                name = acct.LinkedAccountClaims
-                    .Where(x =>
-                        x.Type == Constants.ClaimTypes.PreferredUserName ||
-                        x.Type == Constants.ClaimTypes.Name ||
-                        x.Type == ClaimTypes.Name)
-                    .Select(x=>x.Value)
-                    .FirstOrDefault();
-            }
-
-            name = name ?? acct.Username;
-            return name;
-        }
-
-        protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
-        {
-            return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
-        }
-        
-        protected virtual string GetNameFromClaims(IEnumerable<Claim> claims)
-        {
-            return claims.Where(x =>
-                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.PreferredUserName ||
-                    x.Type == Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name ||
-                    x.Type == ClaimTypes.Name)
-                .Select(x => x.Value)
-                .FirstOrDefault();
         }
     }
 }
