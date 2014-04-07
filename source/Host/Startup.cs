@@ -26,15 +26,6 @@ namespace Thinktecture.IdentityServer.Host
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        AuthenticationOptions = new AuthenticationOptions
-                        {
-                            LoginPageLinks = new LoginPageLink[] 
-                            { 
-                                new LoginPageLink{Text="New user?", Href="/core/account/register"},
-                                new LoginPageLink{Text="Forgot password?", Href="/core/account/resetpassword"},
-                            }
-                        },
-
                         SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
 
