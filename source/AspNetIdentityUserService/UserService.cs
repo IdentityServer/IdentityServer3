@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         {
             var claims = new List<Claim>{
                 new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Subject, user.Id),
-                new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name, user.UserName),
+                new Claim(Thinktecture.IdentityServer.Core.Constants.ClaimTypes.Name, await GetNameForAccountAsync(user.Id)),
             };
 
             if (userManager.SupportsUserEmail)
@@ -245,7 +245,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
 
         protected virtual async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(string userID, string provider)
         {
-            return new ExternalAuthenticateResult(provider, userID, await GetNameForAccount(userID));
+            return new ExternalAuthenticateResult(provider, userID, await GetNameForAccountAsync(userID));
         }
 
         protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(string userID, string provider, string providerId, IEnumerable<Claim> claims)
@@ -359,7 +359,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             return claims;
         }
 
-        protected virtual async Task<string> GetNameForAccount(string userID)
+        protected virtual async Task<string> GetNameForAccountAsync(string userID)
         {
             var user = await userManager.FindByIdAsync(userID);
             string name = null;

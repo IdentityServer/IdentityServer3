@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
         {
             var claims = new List<Claim>{
                 new Claim(Constants.ClaimTypes.Subject, account.ID.ToString("D")),
-                new Claim(Constants.ClaimTypes.Name, account.Username),
+                new Claim(Constants.ClaimTypes.Name, GetNameForAccount(account.ID)),
                 new Claim(Constants.ClaimTypes.UpdatedAt, account.LastUpdated.ToEpochTime().ToString()),
             };
             
@@ -90,18 +90,18 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 var subject = account.ID.ToString("D");
                 var name = account.Username;
 
-                if (account.RequiresTwoFactorAuthCodeToSignIn())
-                {
-                    return new AuthenticateResult("/core/account/twofactor", subject, name);
-                }
-                if (account.RequiresTwoFactorCertificateToSignIn())
-                {
-                    return new AuthenticateResult("/core/account/certificate", subject, name);
-                }
-                if (account.RequiresPasswordReset)
-                {
-                    return new AuthenticateResult("/core/account/changepassword", subject, name);
-                }
+                //if (account.RequiresTwoFactorAuthCodeToSignIn())
+                //{
+                //    return new AuthenticateResult("/core/account/twofactor", subject, name);
+                //}
+                //if (account.RequiresTwoFactorCertificateToSignIn())
+                //{
+                //    return new AuthenticateResult("/core/account/certificate", subject, name);
+                //}
+                //if (account.RequiresPasswordReset)
+                //{
+                //    return new AuthenticateResult("/core/account/changepassword", subject, name);
+                //}
 
                 return new AuthenticateResult(subject, name);
             }
