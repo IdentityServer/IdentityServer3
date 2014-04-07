@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 return null;
             }
 
-            return Task.FromResult(new ExternalAuthenticateResult(name.Issuer, Guid.NewGuid().ToString("D"), name.Value));
+            return Task.FromResult(new ExternalAuthenticateResult(user.Provider.Name, Guid.NewGuid().ToString("D"), name.Value));
         }
     }
 }
