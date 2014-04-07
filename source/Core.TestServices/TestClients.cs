@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.TestServices
                     RedirectUris = new List<Uri>
                     {
                         // MVC code client with module
-                        new Uri("http://localhost:31349/oidccallback"),
+                        new Uri("https://localhost:44320/oidccallback"),
                         
                         // MVC code client manual
                         new Uri("https://localhost:44312/callback"),
