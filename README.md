@@ -4,11 +4,11 @@
 
 ## Overview ##
 
-IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server.
+IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server (check the [wiki](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/wiki) for more info).
 
-[http://openid.net/specs/openid-connect-core-1_0.html](http://openid.net/specs/openid-connect-core-1_0.html "OpenID Connect specification")
+[OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html)
 
-[http://tools.ietf.org/html/rfc6749](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
+[OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
 
 **Endpoints:**
