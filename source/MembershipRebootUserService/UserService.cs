@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             if (userAccountService.Authenticate(username, password, out account))
             {
                 var subject = account.ID.ToString("D");
-                var name = account.Username;
+                var name = GetDisplayNameForAccount(account.ID);
 
                 //if (account.RequiresTwoFactorAuthCodeToSignIn())
                 //{

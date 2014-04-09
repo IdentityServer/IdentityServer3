@@ -177,7 +177,7 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
                 //    return SignInStatus.RequiresTwoFactorAuthentication;
                 //}
 
-                return new AuthenticateResult(user.Id.ToString(), username);
+                return new AuthenticateResult(user.Id.ToString(), await GetDisplayNameForAccountAsync(user.Id));
             }
             else if (userManager.SupportsUserLockout)
             {
