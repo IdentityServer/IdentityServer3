@@ -31,13 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BrockAllen.MembershipReboot, Version=7.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BrockAllen.MembershipReboot, Version=7.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BrockAllen.MembershipReboot.7.0.2\lib\net45\BrockAllen.MembershipReboot.dll</HintPath>
+      <HintPath>..\packages\BrockAllen.MembershipReboot.7.1.1\lib\net45\BrockAllen.MembershipReboot.dll</HintPath>
     </Reference>
-    <Reference Include="BrockAllen.MembershipReboot.Ef, Version=7.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BrockAllen.MembershipReboot.Ef, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\BrockAllen.MembershipReboot.Ef.7.0.3\lib\net45\BrockAllen.MembershipReboot.Ef.dll</HintPath>
+      <HintPath>..\packages\BrockAllen.MembershipReboot.Ef.7.1.0\lib\net45\BrockAllen.MembershipReboot.Ef.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
