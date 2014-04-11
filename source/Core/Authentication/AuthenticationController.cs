@@ -359,7 +359,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 {
                     Expires = DateTime.UtcNow.AddYears(-1),
                     HttpOnly = true,
-#if DEBUG
+#if !DEBUG
                     Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
 #else
                     Secure = true
@@ -384,7 +384,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 message, 
                 new Microsoft.Owin.CookieOptions {
                     HttpOnly = true,
-#if DEBUG
+#if !DEBUG
                     Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
 #else
                     Secure = true
