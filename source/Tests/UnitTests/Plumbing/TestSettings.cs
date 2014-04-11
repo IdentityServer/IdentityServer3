@@ -4,7 +4,9 @@
  */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -17,6 +19,17 @@ namespace UnitTests.Plumbing
 {
     class TestSettings : ICoreSettings
     {
+        static X509Certificate2 _certificate;
+
+        static TestSettings()
+        {
+            var assembly = typeof(TestSettings).Assembly;
+            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Tests.Plumbing.idsrv3test.pfx"))
+            {
+                _certificate = new X509Certificate2(ReadStream(stream));
+            }
+        }
+
         List<Client> _clients = new List<Client>
         {
             new Client
@@ -74,6 +87,7 @@ namespace UnitTests.Plumbing
                     ClientId = "client",
                     ClientSecret = "secret",
                     Flow = Flows.ClientCredentials,
+                    AccessTokenType = AccessTokenType.JWT
                 },
                 new Client
                 {
@@ -160,12 +174,12 @@ namespace UnitTests.Plumbing
 
         public X509Certificate2 GetSigningCertificate()
         {
-            throw new NotImplementedException();
+            return _certificate;
         }
 
         public string GetIssuerUri()
         {
-            throw new NotImplementedException();
+            return "https://idsrv3.test";
         }
 
         public string GetSiteName()
@@ -185,9 +199,19 @@ namespace UnitTests.Plumbing
         }
 
 
-        public bool RequiresConsent(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+       
+        private static byte[] ReadStream(Stream input)
         {
-            throw new NotImplementedException();
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }

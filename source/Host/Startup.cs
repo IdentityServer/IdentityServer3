@@ -18,7 +18,6 @@ namespace Thinktecture.IdentityServer.Host
                     var factory = TestOptionsFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
-                        certificateName: "CN=idsrv3test",
                         publicHostAddress: "http://localhost:3333");
 
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;

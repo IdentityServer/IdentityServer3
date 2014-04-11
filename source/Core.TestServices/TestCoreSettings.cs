@@ -10,6 +10,9 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core;
+using System;
+using System.IO;
 
 namespace Thinktecture.IdentityServer.TestServices
 {
@@ -24,8 +27,18 @@ namespace Thinktecture.IdentityServer.TestServices
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
-            _certificate = X509.LocalMachine.My.SubjectDistinguishedName.Find(certificateName, false).First();
             _publicHostAddress = publicHostAddress;
+
+            if (certificateName.IsMissing())
+            {
+                certificateName = "idsrv3test.pfx";
+            }
+
+            var assembly = this.GetType().Assembly;
+            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.TestServices." + certificateName))
+            {
+                _certificate = new X509Certificate2(ReadStream(stream));
+            }
         }
 
         public Task<Client> FindClientByIdAsync(string clientId)
@@ -42,6 +55,11 @@ namespace Thinktecture.IdentityServer.TestServices
 
         public X509Certificate2 GetSigningCertificate()
         {
+            if (_certificate == null)
+            {
+                throw new InvalidOperationException("No certificate specified.");
+            }
+
             return _certificate;
         }
 
@@ -71,6 +89,20 @@ namespace Thinktecture.IdentityServer.TestServices
             };
 
             return settings;
+        }
+
+        private static byte[] ReadStream(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
     }
 }
