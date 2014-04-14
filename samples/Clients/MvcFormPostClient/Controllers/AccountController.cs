@@ -17,7 +17,7 @@ namespace MvcFormPostClient.Controllers
 		{
 			var client = new OAuth2Client(new Uri(Constants.AuthorizeEndpoint));
 			
-            var url = client.CreateAuthorizeUrl(
+			var url = client.CreateAuthorizeUrl(
 				"implicitclient",
 				"id_token",
 				"openid email",
@@ -29,40 +29,40 @@ namespace MvcFormPostClient.Controllers
 					{ "response_mode", "form_post" }
 				});
 				
-            return Redirect(url);
+			return Redirect(url);
 		}
 
-        [HttpPost]
+		[HttpPost]
 		public ActionResult SignInCallback()
 		{
-            var token = Request.Form["id_token"];
-            var state = Request.Form["state"];
+			var token = Request.Form["id_token"];
+			var state = Request.Form["state"];
 
-            var claims = ValidateIdentityToken(token);
+			var claims = ValidateIdentityToken(token);
 
-            var id = new ClaimsIdentity(claims, "Cookies");
-            Request.GetOwinContext().Authentication.SignIn(id);
+			var id = new ClaimsIdentity(claims, "Cookies");
+			Request.GetOwinContext().Authentication.SignIn(id);
 
-            return Redirect("/");
+			return Redirect("/");
 		}
 
-        private IEnumerable<Claim> ValidateIdentityToken(string token)
-        {
-            var parameters = new TokenValidationParameters
-            {
-                AllowedAudience = "implicitclient",
-                ValidIssuer = "https://idsrv3.com",
-                SigningToken = new X509SecurityToken(X509.LocalMachine.My.SubjectDistinguishedName.Find("CN=idsrv3test", false).First())
-            };
+		private IEnumerable<Claim> ValidateIdentityToken(string token)
+		{
+			var parameters = new TokenValidationParameters
+			{
+				AllowedAudience = "implicitclient",
+				ValidIssuer = "https://idsrv3.com",
+				SigningToken = new X509SecurityToken(X509.LocalMachine.TrustedPeople.SubjectDistinguishedName.Find("CN=idsrv3test", false).First())
+			};
 
-            var id = new JwtSecurityTokenHandler().ValidateToken(token, parameters);
-            return id.Claims;
-        }
+			var id = new JwtSecurityTokenHandler().ValidateToken(token, parameters);
+			return id.Claims;
+		}
 
 		public ActionResult SignOut()
 		{
-            Request.GetOwinContext().Authentication.SignOut();
-            return Redirect(Constants.LogoutEndpoint);
-        }
+			Request.GetOwinContext().Authentication.SignOut();
+			return Redirect(Constants.LogoutEndpoint);
+		}
 	}
 }

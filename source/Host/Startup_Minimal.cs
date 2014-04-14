@@ -16,7 +16,6 @@ namespace Thinktecture.IdentityServer.Host.Sample
                     var factory = TestOptionsFactory.Create(
                         issuerUri:         "https://idsrv3.com",
                         siteName:          "Thinktecture IdentityServer v3 - preview 1",
-                        certificateName:   "CN=idsrv3test",
                         publicHostAddress: "http://localhost:3333");
                     
                     var opts = new IdentityServerCoreOptions
