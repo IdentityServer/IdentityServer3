@@ -7,6 +7,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
+
 namespace Thinktecture.IdentityServer.Host
 {
     public class Startup
@@ -15,11 +16,6 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    //var factory = TestOptionsFactory.Create(
-                    //    issuerUri: "https://idsrv3.com",
-                    //    siteName: "Thinktecture IdentityServer v3 - preview 1",
-                    //    publicHostAddress: "http://idsrv3.azurewebsites.net");
-
                     var factory = TestOptionsFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
