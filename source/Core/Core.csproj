@@ -196,6 +196,7 @@
     <Compile Include="Services\LoggerExtensions.cs" />
     <Compile Include="Models\Scope.cs" />
     <Compile Include="Models\ScopeClaim.cs" />
+    <Compile Include="Services\TraceLogger.cs" />
     <Compile Include="Services\TraceSourceLogger.cs" />
     <Compile Include="Connect\Models\Token.cs" />
     <Compile Include="Connect\Validation\AuthorizeRequestValidator.cs" />
