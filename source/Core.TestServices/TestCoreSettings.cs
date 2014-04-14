@@ -23,21 +23,16 @@ namespace Thinktecture.IdentityServer.TestServices
         private X509Certificate2 _certificate;
         private string _publicHostAddress;
 
-        public TestCoreSettings(string issuerUri, string siteName, string certificateName, string publicHostAddress)
+        public TestCoreSettings(string issuerUri, string siteName, string publicHostAddress)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
             _publicHostAddress = publicHostAddress;
 
-            if (certificateName.IsMissing())
-            {
-                certificateName = "idsrv3test.pfx";
-            }
-
             var assembly = this.GetType().Assembly;
-            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.TestServices." + certificateName))
+            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.TestServices.idsrv3test.pfx"))
             {
-                _certificate = new X509Certificate2(ReadStream(stream));
+                _certificate = new X509Certificate2(ReadStream(stream), "idsrv3test");
             }
         }
 

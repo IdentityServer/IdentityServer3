@@ -15,10 +15,15 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
+                    //var factory = TestOptionsFactory.Create(
+                    //    issuerUri: "https://idsrv3.com",
+                    //    siteName: "Thinktecture IdentityServer v3 - preview 1",
+                    //    publicHostAddress: "http://idsrv3.azurewebsites.net");
+
                     var factory = TestOptionsFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
-                        publicHostAddress: "http://localhost:3333");
+                        publicHostAddress: "http://localhost:3333/core");
 
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
