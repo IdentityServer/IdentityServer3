@@ -7,9 +7,9 @@
     <ProjectGuid>{55EB5DB3-C50C-431F-8A45-548C1436E671}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Thinktecture.IdentityServer.Core.TestServices</RootNamespace>
+    <RootNamespace>Thinktecture.IdentityServer.TestServices</RootNamespace>
     <AssemblyName>Thinktecture.IdentityServer.Core.TestServices</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -68,6 +68,7 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <EmbeddedResource Include="idsrv3test.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

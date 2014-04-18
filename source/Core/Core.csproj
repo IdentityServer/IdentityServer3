@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Thinktecture.IdentityServer.Core</RootNamespace>
     <AssemblyName>Thinktecture.IdentityServer.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -196,6 +196,7 @@
     <Compile Include="Services\LoggerExtensions.cs" />
     <Compile Include="Models\Scope.cs" />
     <Compile Include="Models\ScopeClaim.cs" />
+    <Compile Include="Services\TraceLogger.cs" />
     <Compile Include="Services\TraceSourceLogger.cs" />
     <Compile Include="Connect\Models\Token.cs" />
     <Compile Include="Connect\Validation\AuthorizeRequestValidator.cs" />

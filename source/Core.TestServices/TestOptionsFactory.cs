@@ -10,13 +10,13 @@ namespace Thinktecture.IdentityServer.TestServices
 {
     public class TestOptionsFactory
     {
-        public static IdentityServerServiceFactory Create(string issuerUri, string siteName, string certificateName, string publicHostAddress = "")
+        public static IdentityServerServiceFactory Create(string issuerUri, string siteName, string publicHostAddress = "")
         {
-            var settings = new TestCoreSettings(issuerUri, siteName, certificateName, publicHostAddress);
+            var settings = new TestCoreSettings(issuerUri, siteName, publicHostAddress);
             var codeStore = new TestAuthorizationCodeStore();
             var tokenStore = new TestTokenHandleStore();
             var consent = new TestConsentService();
-            var logger = new DebugLogger();
+            var logger = new TraceLogger();
             
             var fact = new IdentityServerServiceFactory
             {

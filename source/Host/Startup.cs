@@ -7,6 +7,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.TestServices;
 
 [assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
+
 namespace Thinktecture.IdentityServer.Host
 {
     public class Startup
@@ -18,8 +19,7 @@ namespace Thinktecture.IdentityServer.Host
                     var factory = TestOptionsFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
-                        certificateName: "CN=idsrv3test",
-                        publicHostAddress: "http://localhost:3333");
+                        publicHostAddress: "http://localhost:3333/core");
 
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;

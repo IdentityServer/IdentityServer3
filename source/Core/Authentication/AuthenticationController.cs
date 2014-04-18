@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             this.authenticationOptions = authenticationOptions;
         }
 
-        [Route(Constants.RoutePaths.Login, Name=Constants.RouteNames.Login)]
+        [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
         [HttpGet]
         public IHttpActionResult Login([FromUri] string message = null)
         {
@@ -83,20 +83,20 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 logger.Verbose("[AuthenticationController.LoginLocal] authenticate returned null");
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
-            
+
             if (authResult.IsError)
             {
                 logger.Verbose("[AuthenticationController.LoginLocal] authenticate returned an error message");
                 return RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
-           return SignInAndRedirect(
-                authResult, 
-                Constants.AuthenticationMethods.Password, 
-                Constants.BuiltInIdentityProvider);
+            return SignInAndRedirect(
+                 authResult,
+                 Constants.AuthenticationMethods.Password,
+                 Constants.BuiltInIdentityProvider);
         }
 
-        [Route(Constants.RoutePaths.LoginExternal, Name=Constants.RouteNames.LoginExternal)]
+        [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
         [HttpGet]
         public IHttpActionResult LoginExternal(string provider)
         {
@@ -105,7 +105,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             VerifyLoginRequestMessage();
 
             var ctx = Request.GetOwinContext();
-            var authProp = new Microsoft.Owin.Security.AuthenticationProperties {
+            var authProp = new Microsoft.Owin.Security.AuthenticationProperties
+            {
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
@@ -162,8 +163,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             return SignInAndRedirect(
-                authResult, 
-                Constants.AuthenticationMethods.External, 
+                authResult,
+                Constants.AuthenticationMethods.External,
                 authResult.Provider);
         }
 
@@ -203,7 +204,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             };
         }
 
-        [Route(Constants.RoutePaths.Logout, Name=Constants.RouteNames.Logout)]
+        [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
         [HttpGet, HttpPost]
         public IHttpActionResult Logout()
         {
@@ -225,12 +226,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                    });
         }
 
-        [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name=Constants.RouteNames.ResumeLoginFromRedirect)]
+        [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name = Constants.RouteNames.ResumeLoginFromRedirect)]
         [HttpGet]
         public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
             logger.Start("[AuthenticationController.ResumeLoginFromRedirect] called");
-            
+
             var ctx = Request.GetOwinContext();
             var redirectAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
             if (redirectAuthResult == null ||
@@ -242,7 +243,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var subject = redirectAuthResult.Identity.GetSubjectId();
             var name = redirectAuthResult.Identity.GetName();
-            
+
             var result = new Thinktecture.IdentityServer.Core.Services.AuthenticateResult(subject, name);
             var method = redirectAuthResult.Identity.GetAuthenticationMethod();
             var idp = redirectAuthResult.Identity.GetIdentityProvider();
@@ -250,10 +251,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             return SignInAndRedirect(result, method, idp, authTime);
         }
-        
+
         private IHttpActionResult SignInAndRedirect(
-            Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult, 
-            string authenticationMethod, 
+            Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult,
+            string authenticationMethod,
             string identityProvider,
             long authTime = 0)
         {
@@ -265,8 +266,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var signInMessage = LoadLoginRequestMessage();
 
-            var issuer = authResult.IsPartialSignIn ? 
-                Constants.PartialSignInAuthenticationType : 
+            var issuer = authResult.IsPartialSignIn ?
+                Constants.PartialSignInAuthenticationType :
                 Constants.PrimaryAuthenticationType;
 
             var principal = IdentityServerPrincipal.Create(
@@ -296,7 +297,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.ExternalAuthenticationType,
                 Constants.PartialSignInAuthenticationType);
             ctx.Authentication.SignIn(id);
-            
+
             if (authResult.IsPartialSignIn)
             {
                 logger.Verbose("[AuthenticationController.SignInAndRedirect] partial login requested, redirecting to requested url");
@@ -359,11 +360,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 {
                     Expires = DateTime.UtcNow.AddYears(-1),
                     HttpOnly = true,
-#if DEBUG
                     Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
-#else
-                    Secure = true
-#endif
                 });
         }
 
@@ -380,24 +377,27 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                LoginRequestMessageCookieName, 
-                message, 
-                new Microsoft.Owin.CookieOptions {
+                LoginRequestMessageCookieName,
+                message,
+                new Microsoft.Owin.CookieOptions
+                {
                     HttpOnly = true,
-#if DEBUG
                     Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
-#else
-                    Secure = true
-#endif
                 });
         }
 
         private SignInMessage LoadLoginRequestMessage()
         {
             logger.Verbose("[AuthenticationController.LoadLoginRequestMessage] called");
-            
+
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
+
+            if (message.IsMissing())
+            {
+                logger.Error("LoginRequestMessage cookie is empty.");
+                throw new Exception("LoginRequestMessage cookie is empty.");
+            }
 
             var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.FromJwt(
