@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             }
         }
 
-        public virtual async Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject,
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(string subject,
             IEnumerable<string> requestedClaimTypes = null)
         {
             var acct = userAccountService.GetByID(subject.ToGuid());
@@ -54,7 +54,8 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             {
                 claims = claims.Where(x => requestedClaimTypes.Contains(x.Type));
             }
-            return claims;
+
+            return Task.FromResult<IEnumerable<Claim>>(claims);
         }
 
         protected virtual IEnumerable<Claim> GetClaimsFromAccount(TAccount account)
@@ -64,19 +65,19 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 new Claim(Constants.ClaimTypes.Name, GetDisplayNameForAccount(account.ID)),
                 new Claim(Constants.ClaimTypes.UpdatedAt, account.LastUpdated.ToEpochTime().ToString()),
             };
-            
+
             if (!String.IsNullOrWhiteSpace(account.Email))
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Email, account.Email));
                 claims.Add(new Claim(Constants.ClaimTypes.EmailVerified, account.IsAccountVerified ? "true" : "false"));
             }
-            
+
             if (!String.IsNullOrWhiteSpace(account.MobilePhoneNumber))
             {
                 claims.Add(new Claim(Constants.ClaimTypes.PhoneNumber, account.MobilePhoneNumber));
                 claims.Add(new Claim(Constants.ClaimTypes.PhoneNumberVerified, !String.IsNullOrWhiteSpace(account.MobilePhoneNumber) ? "true" : "false"));
             }
-            
+
             claims.AddRange(account.Claims.Select(x => new Claim(x.Type, x.Value)));
             claims.AddRange(account.LinkedAccountClaims.Select(x => new Claim(x.Type, x.Value)));
 
@@ -93,8 +94,8 @@ namespace Thinktecture.IdentityServer.MembershipReboot
 
             return name;
         }
-        
-        public virtual async Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             TAccount account;
             if (userAccountService.Authenticate(username, password, out account))
@@ -115,19 +116,19 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 //    return new AuthenticateResult("/core/account/changepassword", subject, name);
                 //}
 
-                return new AuthenticateResult(subject, name);
+                return Task.FromResult(new AuthenticateResult(subject, name));
             }
 
             if (account != null)
             {
                 if (!account.IsLoginAllowed)
                 {
-                    return new AuthenticateResult("Account is not allowed to login");
+                    return Task.FromResult(new AuthenticateResult("Account is not allowed to login"));
                 }
 
                 if (account.IsAccountClosed)
                 {
-                    return new AuthenticateResult("Account is closed");
+                    return Task.FromResult(new AuthenticateResult("Account is closed"));
                 }
             }
 
@@ -178,15 +179,15 @@ namespace Thinktecture.IdentityServer.MembershipReboot
             return await UpdateAccountFromExternalClaimsAsync(accountID, provider, providerId, claims);
         }
 
-        protected virtual async Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(Guid accountID, string provider)
+        protected virtual Task<ExternalAuthenticateResult> SignInFromExternalProviderAsync(Guid accountID, string provider)
         {
-            return new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetDisplayNameForAccount(accountID));
+            return Task.FromResult(new ExternalAuthenticateResult(provider, accountID.ToString("D"), GetDisplayNameForAccount(accountID)));
         }
 
-        protected virtual async Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
+        protected virtual Task<ExternalAuthenticateResult> UpdateAccountFromExternalClaimsAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
         {
             userAccountService.AddClaims(accountID, new UserClaimCollection(claims));
-            return null;
+            return Task.FromResult<ExternalAuthenticateResult>(null);
         }
 
         protected virtual async Task<ExternalAuthenticateResult> ProcessExistingExternalAccountAsync(Guid accountID, string provider, string providerId, IEnumerable<Claim> claims)
@@ -217,7 +218,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                         var emailClaims = new string[] { Constants.ClaimTypes.Email, Constants.ClaimTypes.EmailVerified };
                         claims = claims.Where(x => !emailClaims.Contains(x.Type));
                     }
-                    catch (ValidationException ex)
+                    catch (ValidationException)
                     {
                         // presumably the email is already associated with another account
                         // so eat the validation exception and let the claim pass thru
@@ -249,7 +250,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                         var phoneClaims = new string[] { Constants.ClaimTypes.PhoneNumber, Constants.ClaimTypes.PhoneNumberVerified };
                         claims = claims.Where(x => !phoneClaims.Contains(x.Type));
                     }
-                    catch (ValidationException ex)
+                    catch (ValidationException)
                     {
                         // presumably the phone is already associated with another account
                         // so eat the validation exception and let the claim pass thru
