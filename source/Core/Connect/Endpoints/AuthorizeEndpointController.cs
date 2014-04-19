@@ -33,7 +33,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
-            IConsentService consentService,
             ICoreSettings settings)
         {
             _logger = logger;
