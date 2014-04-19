@@ -214,13 +214,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 if (Constants.SupportedResponseModes.Contains(responseMode))
                 {
-                    if (responseMode == Constants.ResponseModes.FormPost &&
-                        _validatedRequest.ResponseType != Constants.ResponseTypes.IdToken)
+                    if (responseMode == Constants.ResponseModes.FormPost)
                     {
-                        _logger.Error("Invalid response_type for response_mode");
-                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                        if (_validatedRequest.ResponseType != Constants.ResponseTypes.IdToken &&
+                            _validatedRequest.ResponseType != Constants.ResponseTypes.IdTokenToken)
+                        {
+                            _logger.Error("Invalid response_type for response_mode");
+                            return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    
+                        }
                     }
-
+                    
                     _validatedRequest.ResponseMode = responseMode;
                     _logger.InformationFormat("response_mode: {0}", responseMode);
                 }

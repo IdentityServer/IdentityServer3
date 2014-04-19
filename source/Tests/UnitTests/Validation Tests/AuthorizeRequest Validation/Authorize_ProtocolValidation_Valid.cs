@@ -165,5 +165,23 @@ namespace UnitTests
 
             Assert.IsFalse(result.IsError);
         }
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        public void Valid_OpenId_IdToken_Token_With_FormPost_ResponseMode_Request()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
+            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+
+            var validator = ValidatorFactory.CreateAuthorizeValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsFalse(result.IsError);
+        }
     }
 }
