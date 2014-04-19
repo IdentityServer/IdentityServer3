@@ -12,6 +12,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
     public class Token
     {
+        public Token()
+        {
+
+        }
         public string Audience { get; set; }
         public string Issuer { get; set; }
         public DateTime CreationTime { get; set; }
