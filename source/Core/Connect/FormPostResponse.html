@@ -3,8 +3,7 @@
 
 <body onload="javascript:document.forms[0].submit()">
     <form method="post" action="{{redirect_uri}}">
-        <input type="hidden" name="state" value="{{state}}" />
-        <input type="hidden" name="id_token" value="{{id_token}}" />
+        {{fields}}
     </form>
 </body>
 </html>

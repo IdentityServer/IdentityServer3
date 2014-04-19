@@ -40,8 +40,27 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             }
 
             form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
-            form = form.Replace("{{id_token}}", _response.IdentityToken);
-            form = form.Replace("{{state}}", _response.State ?? "");
+
+            var sb = new StringBuilder(128);
+            var inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />\n";
+
+            if (_response.IdentityToken.IsPresent())
+            {
+                sb.AppendFormat(inputFieldFormat, "id_token", _response.IdentityToken);
+            }
+
+            if (_response.AccessToken.IsPresent())
+            {
+                sb.AppendFormat(inputFieldFormat, "token", _response.AccessToken);
+                sb.AppendFormat(inputFieldFormat, "expires_in", _response.AccessTokenLifetime);
+            }
+            
+            if (_response.State.IsPresent())
+            {
+                sb.AppendFormat(inputFieldFormat, "state", _response.State);
+            }
+
+            form = form.Replace("{{fields}}", sb.ToString());
 
             var content = new StringContent(form, Encoding.UTF8, "text/html");
             var message = new HttpResponseMessage(HttpStatusCode.OK)
@@ -49,7 +68,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 Content = content
             };
 
-            //_logger.InformationFormat("Post back form: {0}", form);
             return message;
         }
     }
