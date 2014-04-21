@@ -256,25 +256,6 @@ namespace UnitTests
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_Token_ResponseType()
-        {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
-            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
-
-            var validator = ValidatorFactory.CreateAuthorizeValidator();
-            var result = validator.ValidateProtocol(parameters);
-
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
-        }
-
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
