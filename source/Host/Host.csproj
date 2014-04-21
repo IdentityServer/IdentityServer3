@@ -166,7 +166,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup_Minimal.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="Startup_LocalTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetIdentityUserService\AspNetIdentityUserService.csproj">

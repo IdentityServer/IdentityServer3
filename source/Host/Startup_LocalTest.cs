@@ -6,11 +6,11 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.TestServices;
 
-[assembly: OwinStartup(typeof(Thinktecture.IdentityServer.Host.Startup))]
+[assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
 
 namespace Thinktecture.IdentityServer.Host
 {
-    public class Startup
+    public class Startup_LocalTest
     {
         public void Configuration(IAppBuilder app)
         {

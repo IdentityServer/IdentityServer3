@@ -5,6 +5,8 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.TestServices;
 
+[assembly: OwinStartup("Minimal", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
+
 namespace Thinktecture.IdentityServer.Host.Sample
 {
     public class Startup_Minimal
