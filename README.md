@@ -31,7 +31,6 @@ IdSrv3 is designed as an OWIN/Katana component. The following configuration give
 	            var factory = TestOptionsFactory.Create(
 	                issuerUri:         "https://idsrv3.com",
 	                siteName:          "Thinktecture IdentityServer v3 - preview 1",
-	                certificateName:   "CN=idsrv3test",
 	                publicHostAddress: "http://localhost:3333");
 	                    
 	            var options = new IdentityServerCoreOptions
@@ -54,7 +53,6 @@ If you want to plugin a real user storage system, we provide out of the box supp
                 var factory = TestOptionsFactory.Create(
                     issuerUri: "https://idsrv3.com",
                     siteName: "Thinktecture IdentityServer v3 - preview 1",
-                    certificateName: "CN=idsrv3test",
                     publicHostAddress: "http://localhost:3333");
 
                 //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
