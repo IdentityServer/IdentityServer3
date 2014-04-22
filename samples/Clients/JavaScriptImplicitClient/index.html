@@ -106,6 +106,8 @@
 
         app.controller("OAuthCtrl", function ($scope, $window, storage, $location) {
             var oauth = new OAuthClient("http://localhost:3333/core/connect/authorize");
+            //var oauth = new OAuthClient("http://idsrv3.azurewebsites.net/core/connect/authorize");
+
             var store = storage.create("js_implicit_demo");
 
             $scope.response = {};

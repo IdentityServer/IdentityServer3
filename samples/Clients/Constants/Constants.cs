@@ -1,10 +1,12 @@
-﻿
-namespace Sample
+﻿namespace Sample
 {
     public static class Constants
     {
-        public const string AuthorizeEndpoint = "http://localhost:3333/core/connect/authorize";
-        public const string LogoutEndpoint = "http://localhost:3333/core/connect/logout";
-        public const string TokenEndpoint = "http://localhost:3333/core/connect/token";
+        public const string BaseAddress = "http://localhost:3333/core";
+        //public const string BaseAddress = "http://idsrv3.azurewebsites.net/core";
+        
+        public const string AuthorizeEndpoint = BaseAddress + "/connect/authorize";
+        public const string LogoutEndpoint = BaseAddress + "/connect/logout";
+        public const string TokenEndpoint = BaseAddress + "/connect/token";
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
+using Sample;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 
@@ -23,7 +24,7 @@ namespace MVC_OWIN_Client
             app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
                 {
                     Client_Id = "implicitclient",
-                    Authority = "http://localhost:3333/core",
+                    Authority = Constants.BaseAddress,
                     Redirect_Uri = "http://localhost:2671/",
                     Response_Type = "id_token",
                     Scope = "openid email",
