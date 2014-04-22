@@ -18,16 +18,13 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     var factory = TestOptionsFactory.Create(
                         issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1",
+                        siteName: "Thinktecture IdentityServer v3 - preview 1 (WAWS)",
                         publicHostAddress: "http://idsrv3.azurewebsites.net");
-
-                    //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
-                    //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
 
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        //SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
+                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
 
                     coreApp.UseIdentityServerCore(options);
@@ -42,24 +39,6 @@ namespace Thinktecture.IdentityServer.Host
                 SignInAsAuthenticationType = signInAsType
             };
             app.UseGoogleAuthentication(google);
-
-            var fb = new FacebookAuthenticationOptions
-            {
-                AuthenticationType = "Facebook",
-                SignInAsAuthenticationType = signInAsType,
-                AppId = "676607329068058",
-                AppSecret = "9d6ab75f921942e61fb43a9b1fc25c63"
-            };
-            app.UseFacebookAuthentication(fb);
-
-            var twitter = new TwitterAuthenticationOptions
-            {
-                AuthenticationType = "Twitter",
-                SignInAsAuthenticationType = signInAsType,
-                ConsumerKey = "N8r8w7PIepwtZZwtH066kMlmq",
-                ConsumerSecret = "df15L2x6kNI50E4PYcHS0ImBQlcGIt6huET8gQN41VFpUCwNjM"
-            };
-            app.UseTwitterAuthentication(twitter);
         }
     }
 }
