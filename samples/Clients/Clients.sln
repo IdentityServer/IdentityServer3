@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript Implicit Client"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC OWIN Client", "MVC OWIN Client\MVC OWIN Client.csproj", "{A0D39237-D450-4F23-A3CC-79EBCA1D720D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{22C083F3-1F8A-4E90-B79C-13A6012492BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAspNetWebApi", "SampleAspNetWebApi\SampleAspNetWebApi.csproj", "{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,10 @@ Global
 		{A0D39237-D450-4F23-A3CC-79EBCA1D720D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0D39237-D450-4F23-A3CC-79EBCA1D720D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0D39237-D450-4F23-A3CC-79EBCA1D720D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +86,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9669AED6-CC75-4DA4-A639-13E084905CA7} = {C80B5683-6239-42D6-8A8B-36702504C593}
 		{D4B8ACDF-5CC3-4A7B-AE30-5055522E025A} = {C80B5683-6239-42D6-8A8B-36702504C593}
+		{C8CD1733-783A-4655-814B-9CF7FD7FDFE8} = {22C083F3-1F8A-4E90-B79C-13A6012492BC}
 	EndGlobalSection
 EndGlobal
