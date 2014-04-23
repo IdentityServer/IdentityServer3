@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Sample;
 using System;
+using System.Net.Http;
 using System.Text;
 using Thinktecture.IdentityModel.Client;
 using Thinktecture.IdentityModel.Extensions;
@@ -13,6 +14,9 @@ namespace ConsoleClientCredentialsClient
         {
             var response = RequestToken();
             ShowResponse(response);
+
+            Console.ReadLine();
+            CallService(response.AccessToken);
         }
 
         static TokenResponse RequestToken()
@@ -23,6 +27,22 @@ namespace ConsoleClientCredentialsClient
                 "secret");
 
             return client.RequestClientCredentialsAsync("read write").Result;
+        }
+
+        static void CallService(string token)
+        {
+            var baseAddress = Constants.AspNetWebApiSampleApi;
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(baseAddress)
+            };
+
+            client.SetBearerToken(token);
+            var response = client.GetStringAsync("identity").Result;
+
+            "\n\nService claims:".ConsoleGreen();
+            Console.WriteLine(JArray.Parse(response));
         }
 
         private static void ShowResponse(TokenResponse response)
