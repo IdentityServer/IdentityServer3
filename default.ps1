@@ -6,6 +6,7 @@ properties {
 	$target_config = "Release"
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
+	$buildNumber = 0;
 	$version = "0.0.0.0"
 }
 
@@ -28,7 +29,8 @@ task UpdateVersion {
 	}
 	$major = $vSplit[0]
 	$minor = $vSplit[1]
-	$assemblyFileVersion = $version
+	$patch = $vSplit[2]
+	$assemblyFileVersion =  "$major.$minor.$patch.$buildNumber"
 	$assemblyVersion = "$major.$minor.0.0"
 	$versionAssemblyInfoFile = "$src_directory/VersionAssemblyInfo.cs"
 	"using System.Reflection;" > $versionAssemblyInfoFile
