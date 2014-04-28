@@ -102,6 +102,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Assets\AssetManager.cs" />
     <Compile Include="Assets\EmbeddedHtmlResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />

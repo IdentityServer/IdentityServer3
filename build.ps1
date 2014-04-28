@@ -1,3 +1,5 @@
+Param([string]$buildNumber = "0")
+
 $teamCityBlockName = "Restore Dependencies"
 if($env:TEAMCITY_PROJECT_NAME -ne $null){
 	"##teamcity[blockOpened name='$teamCityBlockName']"
