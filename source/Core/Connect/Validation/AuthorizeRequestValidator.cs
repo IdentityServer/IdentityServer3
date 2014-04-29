@@ -16,12 +16,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeRequestValidator
     {
-        ILogger _logger;
+        private readonly ILogger _logger;
 
-        ValidatedAuthorizeRequest _validatedRequest;
-        private ICoreSettings _core;
-        private ICustomRequestValidator _customValidator;
-        private IUserService _users;
+        private readonly ValidatedAuthorizeRequest _validatedRequest;
+        private readonly ICoreSettings _core;
+        private readonly ICustomRequestValidator _customValidator;
+        private readonly IUserService _users;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -108,13 +108,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _logger.InformationFormat("response_type: {0}", responseType);
             _validatedRequest.ResponseType = responseType;
 
+            //////////////////////////////////////////////////////////
+            // match response_type to flow
+            //////////////////////////////////////////////////////////
             if (_validatedRequest.ResponseType == Constants.ResponseTypes.Code)
             {
                 _logger.Information("Flow: code");
                 _validatedRequest.Flow = Flows.Code;
                 _validatedRequest.ResponseMode = Constants.ResponseModes.Query;
             }
-            else
+            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token ||
+                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdToken ||
+                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
             {
                 _logger.Information("Flow: implicit");
                 _validatedRequest.Flow = Flows.Implicit;
