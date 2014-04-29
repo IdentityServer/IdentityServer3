@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             
             if (result.IsError)
             {
-                return Unauthorized(new AuthenticationHeaderValue("Bearer", result.Error));
+                return BadRequest(result.Error);
             }
 
             return result.Claims.Select(c => new { c.Type, c.Value });
