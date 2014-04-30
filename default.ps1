@@ -2,6 +2,7 @@ properties {
 	$base_directory = Resolve-Path . 
 	$src_directory = "$base_directory\source"
 	$output_directory = "$base_directory\build"
+	$dist_directory = "$base_directory\dist"
 	$sln_file = "$src_directory\Thinktecture.IdentityServer.v3.sln"
 	$target_config = "Release"
 	$framework_version = "v4.5"
@@ -12,10 +13,11 @@ properties {
 	$version = "0.0.0.0"
 }
 
-task default -depends Clean, Compile, ILRepack
+task default -depends Clean, Compile, CreateDistribution
 
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
+	rmdir $dist_directory -ea SilentlyContinue -recurse
 	exec { msbuild /nologo /verbosity:quiet $sln_file /p:Configuration=$target_config /t:Clean }
 }
 
@@ -48,6 +50,7 @@ task ILRepack -depends Compile {
 		foreach-object {
 			# Not including $output_directory\Autofac.dll as it procuces a reference error: 
 			#	Mono.Cecil.AssemblyResolutionException: Failed to resolve assembly: 'System.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'
+			# Seems to be th eresult of Autofac being a portable assembly
 			if ("$_" -ne "Autofac.dll") {
 				$input_dlls = "$input_dlls $output_directory\$_"
 			}
@@ -56,4 +59,10 @@ task ILRepack -depends Compile {
 	"input_dlls = $input_dlls"
 
 	Invoke-Expression "$ilrepack_path /targetplatform:v4 /internalize /target:library /out:$output_directory\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll $input_dlls"
+}
+
+task CreateDistribution -depends ILRepack {
+	New-Item $dist_directory -Type Directory
+	Copy-Item $output_directory\Thinktecture.IdentityServer.dll $dist_directory
+	Copy-Item $output_directory\Autofac.dll $dist_directory
 }
