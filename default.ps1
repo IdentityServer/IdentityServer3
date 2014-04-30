@@ -6,11 +6,13 @@ properties {
 	$target_config = "Release"
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
+	$ilrepack_path = "$src_directory\packages\ILRepack.1.25.0\tools\ILRepack.exe"
+
 	$buildNumber = 0;
 	$version = "0.0.0.0"
 }
 
-task default -depends Clean, Compile
+task default -depends Clean, Compile, ILRepack
 
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
@@ -37,4 +39,21 @@ task UpdateVersion {
 	"" >> $versionAssemblyInfoFile
 	"[assembly: AssemblyVersion(""$assemblyVersion"")]" >> $versionAssemblyInfoFile
 	"[assembly: AssemblyFileVersion(""$assemblyFileVersion"")]" >> $versionAssemblyInfoFile
+}
+
+task ILRepack -depends Compile {
+	$input_dlls = ""
+
+	Get-ChildItem -Path $output_directory -Filter *.dll |
+		foreach-object {
+			# Not including $output_directory\Autofac.dll as it procuces a reference error: 
+			#	Mono.Cecil.AssemblyResolutionException: Failed to resolve assembly: 'System.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'
+			if ("$_" -ne "Autofac.dll") {
+				$input_dlls = "$input_dlls $output_directory\$_"
+			}
+	}
+
+	"input_dlls = $input_dlls"
+
+	Invoke-Expression "$ilrepack_path /targetplatform:v4 /internalize /target:library /out:$output_directory\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll $input_dlls"
 }
