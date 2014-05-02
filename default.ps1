@@ -8,12 +8,13 @@ properties {
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
 	$ilmerge_path = "$src_directory\packages\ILMerge.2.13.0307\ILMerge.exe"
+	$nuget_path = "$src_directory\packages\Midori.0.8.0.0\tools\nuget.exe"
 
 	$buildNumber = 0;
 	$version = "0.0.0.0"
 }
 
-task default -depends Clean, Compile, ILRepack
+task default -depends Clean, Compile, ILRepack, CreateNuGetPackage
 
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
@@ -54,6 +55,21 @@ task ILRepack -depends Compile {
 			}
 	}
 
-	New-Item $dist_directory -Type Directory
-	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll  $input_dlls"
+	New-Item $dist_directory\lib\net45 -Type Directory
+	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll  $input_dlls"
+}
+
+task CreateNuGetPackage -depends ILRepack {
+	$vSplit = $version.Split('.')
+	if($vSplit.Length -ne 4)
+	{
+		throw "Version number is invalid. Must be in the form of 0.0.0.0"
+	}
+	$major = $vSplit[0]
+	$minor = $vSplit[1]
+	$patch = $vSplit[2]
+	$packageVersion =  "$major.$minor.$patch"
+
+	copy-item $src_directory\Thinktecture.IdentityServer.nuspec $dist_directory
+	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
 }
