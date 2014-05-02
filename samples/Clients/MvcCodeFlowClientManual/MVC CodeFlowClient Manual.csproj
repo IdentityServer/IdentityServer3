@@ -202,6 +202,7 @@
     <Content Include="Views\Callback\Index.cshtml" />
     <Content Include="Views\Callback\Token.cshtml" />
     <Content Include="Views\App\Index.cshtml" />
+    <Content Include="Views\App\CallService.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
