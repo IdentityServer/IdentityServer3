@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Thinktecture.IdentityServer</id>
+    <version>0.0.0</version>
+    <title>Thinktecture IdentityServer 3</title>
+    <authors>Brock Allen, Dominick Baier</authors>
+    <owners>Brock Allen, Dominick Baier</owners>
+    <projectUrl>https://github.com/thinktecture/Thinktecture.IdentityServer.v3</projectUrl>
+    <iconUrl>http://www.thinktecture.com/images/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Thinktecture IdentityServer is a light-weight security token service built with .NET 4.5, MVC 4, Web API and WCF</description>
+    <releaseNotes>current status: preview 1.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Thinktecture IdentityServer OpenIDConnect OAuth2</tags>
+    <dependencies>
+      <dependency id="Owin" />
+    </dependencies>
+  </metadata>
+</package>
