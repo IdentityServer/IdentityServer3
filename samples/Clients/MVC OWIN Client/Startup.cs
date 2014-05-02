@@ -36,28 +36,28 @@ namespace MVC_OWIN_Client
                     SignInAsAuthenticationType = "Cookies",
 
                     // sample how to access token on form (for token response type)
-                    Notifications = new OpenIdConnectAuthenticationNotifications
-                    {
-                        MessageReceived = async n =>
-                            {
-                                var token = n.ProtocolMessage.Token;
+                    //Notifications = new OpenIdConnectAuthenticationNotifications
+                    //{
+                    //    MessageReceived = async n =>
+                    //        {
+                    //            var token = n.ProtocolMessage.Token;
 
-                                if (!string.IsNullOrEmpty(token))
-                                {
-                                    n.OwinContext.Set<string>("idsrv:token", token);
-                                }
-                            },
-                        SecurityTokenValidated = async n =>
-                            {
-                                var token = n.OwinContext.Get<string>("idsrv:token");
+                    //            if (!string.IsNullOrEmpty(token))
+                    //            {
+                    //                n.OwinContext.Set<string>("idsrv:token", token);
+                    //            }
+                    //        },
+                    //    SecurityTokenValidated = async n =>
+                    //        {
+                    //            var token = n.OwinContext.Get<string>("idsrv:token");
 
-                                if (!string.IsNullOrEmpty(token))
-                                {
-                                    n.AuthenticationTicket.Identity.AddClaim(
-                                        new Claim("access_token", token));
-                                }
-                            }
-                    }
+                    //            if (!string.IsNullOrEmpty(token))
+                    //            {
+                    //                n.AuthenticationTicket.Identity.AddClaim(
+                    //                    new Claim("access_token", token));
+                    //            }
+                    //        }
+                    //}
                 });
         }
     }
