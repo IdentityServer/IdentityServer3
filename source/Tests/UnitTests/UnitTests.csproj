@@ -74,6 +74,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\..\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
     <Compile Include="Plumbing\TestAuthorizationCodeStore.cs" />
     <Compile Include="Plumbing\TestUserService.cs" />

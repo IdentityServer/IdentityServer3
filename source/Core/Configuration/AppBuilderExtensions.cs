@@ -15,9 +15,12 @@ using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
 namespace Owin
 {
+    using Microsoft.Owin.Builder;
+
     public static class AppBuilderExtensions
     {
         public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
@@ -52,6 +55,7 @@ namespace Owin
             app.UseStageMarker(PipelineStage.MapHandler);
 
             app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
+            Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
             return app;

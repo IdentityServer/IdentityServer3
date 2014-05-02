@@ -56,6 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="TestClients.cs" />
     <Compile Include="TestConsentService.cs" />
     <Compile Include="TestOptionsFactory.cs" />
