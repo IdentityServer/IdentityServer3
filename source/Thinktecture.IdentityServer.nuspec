@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Thinktecture.IdentityServer.3</id>
+    <id>Thinktecture.IdentityServer</id>
     <version>0.0.0</version>
     <title>Thinktecture IdentityServer 3</title>
     <authors>Brock Allen, Dominick Baier</authors>
@@ -13,5 +13,8 @@
     <releaseNotes>current status: preview 1.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Thinktecture IdentityServer OpenIDConnect OAuth2</tags>
+    <dependencies>
+      <dependency id="Owin" />
+    </dependencies>
   </metadata>
 </package>

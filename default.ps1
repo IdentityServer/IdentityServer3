@@ -11,7 +11,7 @@ properties {
 	$nuget_path = "$src_directory\packages\Midori.0.8.0.0\tools\nuget.exe"
 
 	$buildNumber = 0;
-	$version = "0.0.0.0"
+	$version = "3.0.0.0"
 }
 
 task default -depends Clean, Compile, ILRepack, CreateNuGetPackage
@@ -45,18 +45,21 @@ task UpdateVersion {
 }
 
 task ILRepack -depends Compile {
-	$input_dlls = ""
+	$input_dlls = "$output_directory\Thinktecture.IdentityServer.Core.dll"
 
 	Get-ChildItem -Path $output_directory -Filter *.dll |
 		foreach-object {
 			# Exclude Thinktecture.IdentityServer.Core.dll as that will be the primary assembly
-			if ("$_" -ne "Thinktecture.IdentityServer.Core.dll") {
+			if ("$_" -ne "Thinktecture.IdentityServer.Core.dll" -and 
+			    "$_" -ne "Owin.dll") {
 				$input_dlls = "$input_dlls $output_directory\$_"
 			}
 	}
 
+	#$input_dlls = "$output_directory\Thinktecture.IdentityServer.Core.dll $output_directory\Thinktecture.IdentityServer.Core.EntityFramework.dll $output_directory\Thinktecture.IdentityServer.Core.TestServices.dll $output_directory\Thinktecture.IdentityModel.Core.dll $output_directory\Autofac.dll $output_directory\Autofac.Integration.WebApi.dll"
+
 	New-Item $dist_directory\lib\net45 -Type Directory
-	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll  $input_dlls"
+	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer.dll $input_dlls"
 }
 
 task CreateNuGetPackage -depends ILRepack {
