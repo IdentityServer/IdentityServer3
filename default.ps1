@@ -2,18 +2,18 @@ properties {
 	$base_directory = Resolve-Path . 
 	$src_directory = "$base_directory\source"
 	$output_directory = "$base_directory\build"
-	$dist_directory = "$base_directory\dist"
+	$dist_directory = "$base_directory\distribution"
 	$sln_file = "$src_directory\Thinktecture.IdentityServer.v3.sln"
 	$target_config = "Release"
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
-	$ilrepack_path = "$src_directory\packages\ILRepack.1.25.0\tools\ILRepack.exe"
+	$ilmerge_path = "$src_directory\packages\ILMerge.2.13.0307\ILMerge.exe"
 
 	$buildNumber = 0;
 	$version = "0.0.0.0"
 }
 
-task default -depends Clean, Compile, CreateDistribution
+task default -depends Clean, Compile, ILRepack
 
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
@@ -48,21 +48,12 @@ task ILRepack -depends Compile {
 
 	Get-ChildItem -Path $output_directory -Filter *.dll |
 		foreach-object {
-			# Not including $output_directory\Autofac.dll as it procuces a reference error: 
-			#	Mono.Cecil.AssemblyResolutionException: Failed to resolve assembly: 'System.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'
-			# Seems to be th eresult of Autofac being a portable assembly
-			if ("$_" -ne "Autofac.dll") {
+			# Exclude Thinktecture.IdentityServer.Core.dll as that will be the primary assembly
+			if ("$_" -ne "Thinktecture.IdentityServer.Core.dll") {
 				$input_dlls = "$input_dlls $output_directory\$_"
 			}
 	}
 
-	"input_dlls = $input_dlls"
-
-	Invoke-Expression "$ilrepack_path /targetplatform:v4 /internalize /target:library /out:$output_directory\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll $input_dlls"
-}
-
-task CreateDistribution -depends ILRepack {
 	New-Item $dist_directory -Type Directory
-	Copy-Item $output_directory\Thinktecture.IdentityServer.dll $dist_directory
-	Copy-Item $output_directory\Autofac.dll $dist_directory
+	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\Thinktecture.IdentityServer.dll $output_directory\Thinktecture.IdentityServer.Core.dll  $input_dlls"
 }
