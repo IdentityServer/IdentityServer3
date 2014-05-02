@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Claims</h2>
+
+<dl>
+    @foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
+    {
+        <dt>
+            @claim.Type
+        </dt>
+        
+        <dd>
+            @claim.Value
+        </dd>
+    }
+</dl>
+
+<p>
+    @Html.ActionLink("Call service", "CallService")
+</p>
+
+<p>
+    @Html.ActionLink("Refresh token", "RefreshToken")
+</p>

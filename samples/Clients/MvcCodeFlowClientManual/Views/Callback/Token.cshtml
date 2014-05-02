@@ -40,18 +40,3 @@
     <br />
     @Model.RefreshToken
 </p>
-
-@using (Html.BeginForm("CallService", "Callback"))
-{
-    @Html.Hidden("token", @Model.AccessToken)
-
-    <input type="submit" value="Call service" />
-}
-
-<br />
-
-@using (Html.BeginForm("RenewToken", "Callback"))
-{
-    <input type="hidden" name="refreshToken" value="@Model.RefreshToken" />
-    <input type="submit" value="Renew Token" />
-}

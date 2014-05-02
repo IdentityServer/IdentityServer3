@@ -1,6 +1,7 @@
 ﻿using Sample;
 using System;
 using System.Web.Mvc;
+using System.Web;
 using Thinktecture.IdentityModel.Client;
 
 namespace MvcCodeFlowClientManual.Controllers
@@ -9,6 +10,8 @@ namespace MvcCodeFlowClientManual.Controllers
     {
         public ActionResult Index()
         {
+            Request.GetOwinContext().Authentication.SignOut("Cookies");
+
             return View();
         }
 
