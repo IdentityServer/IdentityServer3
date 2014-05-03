@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Thinktecture.IdentityServer</id>
+    <id>Thinktecture.IdentityServer.v3</id>
     <version>0.0.0</version>
     <title>Thinktecture IdentityServer 3</title>
     <authors>Brock Allen, Dominick Baier</authors>
