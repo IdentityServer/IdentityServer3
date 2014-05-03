@@ -8,13 +8,14 @@ properties {
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
 	$ilmerge_path = "$src_directory\packages\ILMerge.2.13.0307\ILMerge.exe"
-	$nuget_path = "$src_directory\packages\Midori.0.8.0.0\tools\nuget.exe"
-
+	$nuget_path = "$src_directory\.nuget\nuget.exe"
+	
 	$buildNumber = 0;
-	$version = "3.0.0.0"
+	$version = "1.0.0.0"
+	$preRelease = $null
 }
 
-task default -depends Clean, Compile, ILRepack, CreateNuGetPackage
+task default -depends Clean, CreateNuGetPackage
 
 task Clean {
 	rmdir $output_directory -ea SilentlyContinue -recurse
@@ -44,7 +45,7 @@ task UpdateVersion {
 	"[assembly: AssemblyFileVersion(""$assemblyFileVersion"")]" >> $versionAssemblyInfoFile
 }
 
-task ILRepack -depends Compile {
+task ILMerge -depends Compile {
 	$input_dlls = "$output_directory\Thinktecture.IdentityServer.Core.dll"
 
 	Get-ChildItem -Path $output_directory -Filter *.dll |
@@ -56,13 +57,11 @@ task ILRepack -depends Compile {
 			}
 	}
 
-	#$input_dlls = "$output_directory\Thinktecture.IdentityServer.Core.dll $output_directory\Thinktecture.IdentityServer.Core.EntityFramework.dll $output_directory\Thinktecture.IdentityServer.Core.TestServices.dll $output_directory\Thinktecture.IdentityModel.Core.dll $output_directory\Autofac.dll $output_directory\Autofac.Integration.WebApi.dll"
-
 	New-Item $dist_directory\lib\net45 -Type Directory
 	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize:ilmerge.exclude /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer.dll $input_dlls"
 }
 
-task CreateNuGetPackage -depends ILRepack {
+task CreateNuGetPackage -depends ILMerge {
 	$vSplit = $version.Split('.')
 	if($vSplit.Length -ne 4)
 	{
@@ -72,7 +71,10 @@ task CreateNuGetPackage -depends ILRepack {
 	$minor = $vSplit[1]
 	$patch = $vSplit[2]
 	$packageVersion =  "$major.$minor.$patch"
+	if($preRelease){
+		$packageVersion = "$packageVersion-$preRelease" 
+	}
 
-	copy-item $src_directory\Thinktecture.IdentityServer.nuspec $dist_directory
-	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
+	copy-item $src_directory\Thinktecture.IdentityServer.v3.nuspec $dist_directory
+	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer.v3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
 }
