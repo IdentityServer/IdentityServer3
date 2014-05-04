@@ -34,6 +34,11 @@ namespace Thinktecture.IdentityServer.Core.Assets
     {
         public static string GetLayoutHtml(LayoutModel model, string rootUrl)
         {
+            if (model == null) throw new ArgumentNullException("model");
+
+            if (rootUrl == null) rootUrl = "";
+            if (rootUrl.EndsWith("/")) rootUrl = rootUrl.Substring(0, rootUrl.Length - 1);
+
             model.Server = model.Server ?? "Thinktecture IdentityServer";
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
             return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html",
