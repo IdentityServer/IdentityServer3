@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         }
 
         [Route]
-        public async Task<dynamic> Get()
+        public async Task<IHttpActionResult> Get()
         {
             var parameters = Request.RequestUri.ParseQueryString();
 
@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return BadRequest(result.Error);
             }
 
-            return result.Claims.Select(c => new { c.Type, c.Value });
+            return Ok(result.Claims.Select(c => new { c.Type, c.Value }));
         }
     }
 }
