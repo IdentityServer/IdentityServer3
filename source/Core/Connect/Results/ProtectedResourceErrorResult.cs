@@ -33,7 +33,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             var parameter = string.Format("error=\"{0}\"", _error);
             if (_errorDescription.IsPresent())
             {
-                parameter = string.Format("error_description=\"{0}\"", _errorDescription);
+                parameter = string.Format("{0}, error_description=\"{1}\"",
+                    parameter, _errorDescription);
             }
 
             var header = new AuthenticationHeaderValue("Bearer", parameter);
