@@ -152,6 +152,7 @@
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
     <Compile Include="Models\IdentityProvider.cs" />
     <Compile Include="Plumbing\ClaimComparer.cs" />
