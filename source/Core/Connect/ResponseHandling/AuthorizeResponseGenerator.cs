@@ -15,10 +15,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeResponseGenerator
     {
-        private ITokenService _tokenService;
-        private IAuthorizationCodeStore _authorizationCodes;
-        private ITokenHandleStore _tokenHandles;
-        private ICoreSettings _settings;
+        private readonly ITokenService _tokenService;
+        private readonly IAuthorizationCodeStore _authorizationCodes;
+        private readonly ITokenHandleStore _tokenHandles;
+        private readonly ICoreSettings _settings;
 
         public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles, ICoreSettings settings)
         {
@@ -38,6 +38,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 IsOpenId = request.IsOpenIdRequest,
                 RequestedScopes = request.ValidatedScopes.GrantedScopes,
                 RedirectUri = request.RedirectUri,
+
+                WasConsentShown = request.WasConsentShown,
+                RefreshTokenLifetime = request.Client.RefreshTokenLifetime
             };
 
             // store id token and access token and return authorization code
