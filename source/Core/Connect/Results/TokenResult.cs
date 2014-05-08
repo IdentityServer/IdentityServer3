@@ -32,10 +32,10 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
         {
             var dto = new TokenResponseDto
             {
-                id_token = _response.IdentityToken,
-                access_token = _response.AccessToken,
-                expires_in = _response.AccessTokenLifetime,
-                token_type = Constants.TokenTypes.Bearer
+                IdToken = _response.IdentityToken,
+                AccessToken = _response.AccessToken,
+                ExpiresIn = _response.AccessTokenLifetime,
+                TokenType = Constants.TokenTypes.Bearer
             };
 
             var formatter = new JsonMediaTypeFormatter();
@@ -51,10 +51,17 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
 
         internal class TokenResponseDto
         {
-            public string id_token { get; set; }
-            public string access_token { get; set; }
-            public int expires_in { get; set; }
-            public string token_type { get; set; }
+			[JsonProperty("id_token")]
+            public string IdToken { get; set; }
+
+			[JsonProperty("access_token")]
+            public string AccessToken { get; set; }
+
+			[JsonProperty("expires_in")]
+            public int ExpiresIn { get; set; }
+
+			[JsonProperty("token_type")]
+            public string TokenType { get; set; }
         }    
     }
 }
