@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Protocols;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,28 @@ namespace Thinktecture.IdentityServer.WsFed
         [Route("wsfed")]
         public IHttpActionResult Get()
         {
-            return Ok("okay!");
+            var msg = WsFederationMessage.FromUri(Request.RequestUri);
+            if (msg.IsSignInMessage)
+            {
+                return ProcessSignIn(msg);
+            }
+
+            if (msg.IsSignOutMessage)
+            {
+                return ProcessSignOut(msg);
+            }
+
+            return BadRequest();
         }
 
+        private IHttpActionResult ProcessSignIn(WsFederationMessage msg)
+        {
+            return Ok("signin");
+        }
+
+        private IHttpActionResult ProcessSignOut(WsFederationMessage msg)
+        {
+            return Ok("signout");
+        }
     }
 }
