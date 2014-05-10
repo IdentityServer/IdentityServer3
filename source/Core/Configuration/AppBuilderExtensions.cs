@@ -23,7 +23,7 @@ namespace Owin
 
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
+        public static IdentityServerAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
 
@@ -58,7 +58,7 @@ namespace Owin
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
-            return app;
+            return new IdentityServerAppBuilder(app);
         }
     }
 }
