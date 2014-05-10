@@ -95,7 +95,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(authenticationOptions).AsSelf();
 
             // controller
-            builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
+            //builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
+
+            builder.RegisterApiControllers(AppDomain.CurrentDomain.GetAssemblies());
+            
 
             return builder.Build();
         }
