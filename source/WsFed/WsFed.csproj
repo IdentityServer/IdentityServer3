@@ -62,6 +62,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.1.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IdentityServerAppBuilderExtensions.cs" />
@@ -70,6 +74,7 @@
     <Compile Include="Protocol\AuthenticationProtocolMessage.cs" />
     <Compile Include="Protocol\WsFederationConstants.cs" />
     <Compile Include="Protocol\WsFederationMessage.cs" />
+    <Compile Include="Services\TestRelyingPartyService.cs" />
     <Compile Include="Results\WsFederationResult.cs" />
     <Compile Include="Services\IRelyingPartyService.cs" />
     <Compile Include="WsFederationController.cs" />

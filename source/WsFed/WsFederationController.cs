@@ -13,6 +13,7 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Models;
+using Thinktecture.IdentityServer.WsFed.Results;
 using Thinktecture.IdentityServer.WsFed.Services;
 
 namespace Thinktecture.IdentityServer.WsFed
@@ -26,6 +27,7 @@ namespace Thinktecture.IdentityServer.WsFed
         public WsFederationController(ICoreSettings settings)
         {
             _settings = settings;
+            _relyingParties = new TestRelyingPartyService();
         }
 
         [Route("wsfed")]
@@ -85,14 +87,17 @@ namespace Thinktecture.IdentityServer.WsFed
                 serializer,
                 new WSTrustSerializationContext());
 
-
-
-            return Ok("signin");
+            return new WsFederationResult(responseMessage);
         }
 
         private ClaimsIdentity CreateSubject(RelyingParty rp)
         {
-            return null;
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "dominick")
+            };
+
+            return new ClaimsIdentity(claims, "idsrv");
         }
 
         private SecurityToken CreateSecurityToken(RelyingParty rp, ClaimsIdentity subject)

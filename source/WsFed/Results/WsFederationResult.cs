@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Services;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -23,8 +24,8 @@ namespace Thinktecture.IdentityServer.WsFed.Results
         HttpResponseMessage Execute()
         {
             var response = new HttpResponseMessage();
-            response.Content = new StringContent(_message.WriteFormPost());
-
+            response.Content = new StringContent(_message.WriteFormPost(), Encoding.UTF8, "text/html");
+            
             return response;
         }
     }
