@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Services;
@@ -44,7 +48,7 @@ namespace Thinktecture.IdentityServer.WsFed
                 }
             }
 
-            return BadRequest();
+            return BadRequest("Invalid WS-Federation request");
         }
 
         private IHttpActionResult ProcessSignIn(SignInRequestMessage msg)
@@ -113,16 +117,25 @@ namespace Thinktecture.IdentityServer.WsFed
                 TokenType = rp.TokenType
             };
 
-            var handler = SecurityTokenHandlerCollection.CreateDefaultSecurityTokenHandlerCollection();
-            return handler.CreateToken(descriptor);            
+            return CreateSupportedSecurityTokenHandler().CreateToken(descriptor);
         }
-
-
 
         private IHttpActionResult ProcessSignOut(SignOutRequestMessage msg)
         {
             return Ok("signout");
         }
+
+        private SecurityTokenHandlerCollection CreateSupportedSecurityTokenHandler()
+        {
+            return new SecurityTokenHandlerCollection(new SecurityTokenHandler[]
+            {
+                new SamlSecurityTokenHandler(),
+                new EncryptedSecurityTokenHandler(),
+                new Saml2SecurityTokenHandler(),
+                new JwtSecurityTokenHandler()
+            });
+        }
+
 
         IHttpActionResult RedirectToLogin(ICoreSettings settings)
         {
