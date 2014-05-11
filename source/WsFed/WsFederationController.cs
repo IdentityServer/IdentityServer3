@@ -21,11 +21,15 @@ namespace Thinktecture.IdentityServer.WsFed
     public class WsFederationController : ApiController
     {
         private readonly ICoreSettings _settings;
+        private readonly IUserService _users;
+
         private readonly IRelyingPartyService _relyingParties;
 
-        public WsFederationController(ICoreSettings settings)
+        public WsFederationController(ICoreSettings settings, IUserService users)
         {
             _settings = settings;
+            _users = users;
+
             _relyingParties = new TestRelyingPartyService();
         }
 
@@ -61,7 +65,7 @@ namespace Thinktecture.IdentityServer.WsFed
             // check rp
             var rp = _relyingParties.GetByRealm(msg.Realm);
             
-            if (rp == null)
+            if (rp == null || rp.Enabled == false)
             {
                 return BadRequest();
             }

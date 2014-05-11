@@ -9,6 +9,9 @@ namespace Thinktecture.IdentityServer.WsFed.Models
 {
     public class RelyingParty
     {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
+
         public string Realm { get; set; }
         public Uri ReplyUrl { get; set; }
         public string TokenType { get; set; }
