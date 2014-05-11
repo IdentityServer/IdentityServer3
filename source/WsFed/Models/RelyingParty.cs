@@ -13,7 +13,7 @@ namespace Thinktecture.IdentityServer.WsFed.Models
         public bool Enabled { get; set; }
 
         public string Realm { get; set; }
-        public Uri ReplyUrl { get; set; }
+        public string ReplyUrl { get; set; }
         public string TokenType { get; set; }
         public int TokenLifeTime { get; set; }
         public IEnumerable<string> Claims { get; set; }

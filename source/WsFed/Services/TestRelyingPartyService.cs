@@ -16,7 +16,7 @@ namespace Thinktecture.IdentityServer.WsFed.Services
             {
                 Realm = "urn:testrp",
                 Enabled = true,
-                ReplyUrl = new Uri("https://web.local/idsrvrp/"),
+                ReplyUrl = "https://web.local/idsrvrp/",
                 TokenType = Thinktecture.IdentityModel.Constants.TokenTypes.Saml2TokenProfile11,
                 Claims = new[] { ClaimTypes.Name },
                 TokenLifeTime = 1

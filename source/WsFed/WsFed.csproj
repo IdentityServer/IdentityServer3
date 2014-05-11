@@ -76,9 +76,13 @@
     <Compile Include="IdentityServerAppBuilderExtensions.cs" />
     <Compile Include="Models\RelyingParty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseHandling\SignInResponseGenerator.cs" />
+    <Compile Include="ResponseHandling\SignInResult.cs" />
     <Compile Include="Services\TestRelyingPartyService.cs" />
     <Compile Include="Results\WsFederationResult.cs" />
     <Compile Include="Services\IRelyingPartyService.cs" />
+    <Compile Include="Validation\SignInValidationResult.cs" />
+    <Compile Include="Validation\SignInValidator.cs" />
     <Compile Include="WsFederationController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +98,7 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

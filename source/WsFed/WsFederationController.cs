@@ -2,18 +2,14 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Services;
-using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.WsFed.Models;
+using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Results;
-using Thinktecture.IdentityServer.WsFed.Services;
+using Thinktecture.IdentityServer.WsFed.Validation;
 
 namespace Thinktecture.IdentityServer.WsFed
 {
@@ -23,14 +19,19 @@ namespace Thinktecture.IdentityServer.WsFed
         private readonly ICoreSettings _settings;
         private readonly IUserService _users;
 
-        private readonly IRelyingPartyService _relyingParties;
+        private ILogger _logger;
+        private SignInValidator _validator;
+        private SignInResponseGenerator _signInResponseGenerator;
+        
 
-        public WsFederationController(ICoreSettings settings, IUserService users)
+        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger)
         {
             _settings = settings;
             _users = users;
+            _logger = logger;
 
-            _relyingParties = new TestRelyingPartyService();
+            _validator = new SignInValidator(logger);
+            _signInResponseGenerator = new SignInResponseGenerator(logger, settings);
         }
 
         [Route("wsfed")]
@@ -57,89 +58,25 @@ namespace Thinktecture.IdentityServer.WsFed
 
         private IHttpActionResult ProcessSignIn(SignInRequestMessage msg)
         {
-            if (!User.Identity.IsAuthenticated)
+            var result = _validator.Validate(msg, User as ClaimsPrincipal);
+
+            if (result.IsSignInRequired)
             {
-                return this.RedirectToLogin(_settings);
+                return RedirectToLogin(_settings);
+            }
+            if (result.IsError)
+            {
+                return BadRequest(result.Error);
             }
 
-            // check rp
-            var rp = _relyingParties.GetByRealm(msg.Realm);
-            
-            if (rp == null || rp.Enabled == false)
-            {
-                return BadRequest();
-            }
-
-            // create subject
-            var subject = CreateSubject(rp);
-
-            // create token for user
-            var token = CreateSecurityToken(rp, subject);
-
-            // return response
-            var rstr = new RequestSecurityTokenResponse
-            {
-                AppliesTo = new EndpointReference(rp.Realm),
-                Context = msg.Context,
-                ReplyTo = rp.ReplyUrl.AbsoluteUri,
-                RequestedSecurityToken = new RequestedSecurityToken(token)
-            };
-
-            var serializer = new WSFederationSerializer(
-                new WSTrust13RequestSerializer(), 
-                new WSTrust13ResponseSerializer());
-
-            var responseMessage = new SignInResponseMessage(
-                rp.ReplyUrl,
-                rstr,
-                serializer,
-                new WSTrustSerializationContext());
-
-            return new WsFederationResult(responseMessage);
-        }
-
-        private ClaimsIdentity CreateSubject(RelyingParty rp)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "dominick")
-            };
-
-            return new ClaimsIdentity(claims, "idsrv");
-        }
-
-        private SecurityToken CreateSecurityToken(RelyingParty rp, ClaimsIdentity subject)
-        {
-            var descriptor = new SecurityTokenDescriptor
-            {
-                AppliesToAddress = rp.Realm,
-                Lifetime = new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(rp.TokenLifeTime)),
-                ReplyToAddress = rp.ReplyUrl.AbsoluteUri,
-                SigningCredentials = new X509SigningCredentials(_settings.GetSigningCertificate()),
-                Subject = subject,
-                TokenIssuerName = _settings.GetIssuerUri(),
-                TokenType = rp.TokenType
-            };
-
-            return CreateSupportedSecurityTokenHandler().CreateToken(descriptor);
+            var response = _signInResponseGenerator.GenerateResponse(result);
+            return new WsFederationResult(response.SignInResponseMessage);
         }
 
         private IHttpActionResult ProcessSignOut(SignOutRequestMessage msg)
         {
             return Ok("signout");
         }
-
-        private SecurityTokenHandlerCollection CreateSupportedSecurityTokenHandler()
-        {
-            return new SecurityTokenHandlerCollection(new SecurityTokenHandler[]
-            {
-                new SamlSecurityTokenHandler(),
-                new EncryptedSecurityTokenHandler(),
-                new Saml2SecurityTokenHandler(),
-                new JwtSecurityTokenHandler()
-            });
-        }
-
 
         IHttpActionResult RedirectToLogin(ICoreSettings settings)
         {
