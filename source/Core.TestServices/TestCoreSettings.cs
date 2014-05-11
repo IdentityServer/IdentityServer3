@@ -39,7 +39,8 @@ namespace Thinktecture.IdentityServer.TestServices
         public Task<Client> FindClientByIdAsync(string clientId)
         {
             return Task.FromResult((from c in TestClients.Get()
-                                    where c.ClientId == clientId
+                                    where c.ClientId == clientId &&
+                                          c.Enabled == true
                                     select c).SingleOrDefault());
         }
 

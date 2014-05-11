@@ -10,6 +10,8 @@ namespace Thinktecture.IdentityServer.Core.Models
 {
     public class Client
     {
+        public bool Enabled { get; set; }
+
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string ClientName { get; set; }
