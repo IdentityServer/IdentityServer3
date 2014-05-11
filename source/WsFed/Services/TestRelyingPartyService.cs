@@ -15,6 +15,7 @@ namespace Thinktecture.IdentityServer.WsFed.Services
             return new RelyingParty
             {
                 Realm = "urn:testrp",
+                Enabled = true,
                 ReplyUrl = new Uri("https://web.local/idsrvrp/"),
                 TokenType = Thinktecture.IdentityModel.Constants.TokenTypes.Saml2TokenProfile11,
                 Claims = new[] { ClaimTypes.Name },
