@@ -1,14 +1,9 @@
-﻿using Microsoft.IdentityModel.Protocols;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
@@ -33,29 +28,34 @@ namespace Thinktecture.IdentityServer.WsFed
         [Route("wsfed")]
         public IHttpActionResult Get()
         {
-            if (!User.Identity.IsAuthenticated)
+            WSFederationMessage message;
+            if (WSFederationMessage.TryCreateFromUri(Request.RequestUri, out message))
             {
-                return this.RedirectToLogin(_settings);
-            }
+                var signin = message as SignInRequestMessage;
+                if (signin != null)
+                {
+                    return ProcessSignIn(signin);
+                }
 
-            var msg = WsFederationMessage.FromUri(Request.RequestUri);
-            if (msg.IsSignInMessage)
-            {
-                return ProcessSignIn(msg);
-            }
-
-            if (msg.IsSignOutMessage)
-            {
-                return ProcessSignOut(msg);
+                var signout = message as SignOutRequestMessage;
+                if (signout != null)
+                {
+                    return ProcessSignOut(signout);
+                }
             }
 
             return BadRequest();
         }
 
-        private IHttpActionResult ProcessSignIn(WsFederationMessage msg)
+        private IHttpActionResult ProcessSignIn(SignInRequestMessage msg)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return this.RedirectToLogin(_settings);
+            }
+
             // check rp
-            var rp = _relyingParties.GetByRealm(msg.Wtrealm);
+            var rp = _relyingParties.GetByRealm(msg.Realm);
             
             if (rp == null)
             {
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.WsFed
             var rstr = new RequestSecurityTokenResponse
             {
                 AppliesTo = new EndpointReference(rp.Realm),
-                Context = msg.Wctx,
+                Context = msg.Context,
                 ReplyTo = rp.ReplyUrl.AbsoluteUri,
                 RequestedSecurityToken = new RequestedSecurityToken(token)
             };
@@ -119,7 +119,7 @@ namespace Thinktecture.IdentityServer.WsFed
 
 
 
-        private IHttpActionResult ProcessSignOut(WsFederationMessage msg)
+        private IHttpActionResult ProcessSignOut(SignOutRequestMessage msg)
         {
             return Ok("signout");
         }

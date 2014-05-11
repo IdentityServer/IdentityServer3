@@ -71,9 +71,6 @@
     <Compile Include="IdentityServerAppBuilderExtensions.cs" />
     <Compile Include="Models\RelyingParty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol\AuthenticationProtocolMessage.cs" />
-    <Compile Include="Protocol\WsFederationConstants.cs" />
-    <Compile Include="Protocol\WsFederationMessage.cs" />
     <Compile Include="Services\TestRelyingPartyService.cs" />
     <Compile Include="Results\WsFederationResult.cs" />
     <Compile Include="Services\IRelyingPartyService.cs" />
