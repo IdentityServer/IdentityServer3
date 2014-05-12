@@ -54,6 +54,38 @@ namespace UnitTests.Validation_Tests.Client_Validation
         }
 
         [TestMethod]
+        [TestCategory(Category)]
+        public async Task Unkown_Client()
+        {
+            var credential = new ClientCredential
+            {
+                ClientId = "unknown",
+                Secret = "invalid"
+            };
+
+            var validator = new ClientValidator(_settings, _logger);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
+
+            Assert.IsNull(client);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Disabled_Client()
+        {
+            var credential = new ClientCredential
+            {
+                ClientId = "disabled",
+                Secret = "invalid"
+            };
+
+            var validator = new ClientValidator(_settings, _logger);
+            var client = await validator.ValidateClientCredentialsAsync(credential);
+
+            Assert.IsNull(client);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         [TestCategory(Category)]
         public async Task Null_Client_Credentials()

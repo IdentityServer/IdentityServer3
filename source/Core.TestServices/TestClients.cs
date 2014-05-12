@@ -19,6 +19,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 new Client
                 {
                     ClientName = "Code Flow Clients",
+                    Enabled = true,
                     ClientId = "codeclient",
                     ClientSecret = "secret",
                     Flow = Flows.Code,
@@ -60,6 +61,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 new Client
                 {
                     ClientName = "Implicit Clients",
+                    Enabled = true,
                     ClientId = "implicitclient",
                     ClientSecret = "secret",
                     Flow = Flows.Implicit,
@@ -104,6 +106,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 new Client
                 {
                     ClientName = "Client Credentials Flow Client",
+                    Enabled = true,
                     ClientId = "client",
                     ClientSecret = "secret",
                     Flow = Flows.ClientCredentials,
@@ -120,6 +123,7 @@ namespace Thinktecture.IdentityServer.TestServices
                 new Client
                 {
                     ClientName = "Resource Owner Flow Client",
+                    Enabled = true,
                     ClientId = "roclient",
                     ClientSecret = "secret",
                     Flow = Flows.ResourceOwner,

@@ -310,9 +310,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // check for valid client
             //////////////////////////////////////////////////////////
             var client = await _core.FindClientByIdAsync(_validatedRequest.ClientId);
-            if (client == null)
+            if (client == null || client.Enabled == false)
             {
-                _logger.ErrorFormat("Unknown client: {0}", _validatedRequest.ClientId);
+                _logger.ErrorFormat("Unknown client or not enabled: {0}", _validatedRequest.ClientId);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 

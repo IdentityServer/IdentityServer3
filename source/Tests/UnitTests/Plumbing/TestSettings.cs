@@ -35,6 +35,7 @@ namespace UnitTests.Plumbing
             new Client
                 {
                     ClientName = "Code Client",
+                    Enabled = true,
                     ClientId = "codeclient",
                     ClientSecret = "secret",
                     Flow = Flows.Code,
@@ -51,6 +52,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Implicit Client",
+                    Enabled = true,
                     ClientId = "implicitclient",
                     ClientSecret = "secret",
                     Flow = Flows.Implicit,
@@ -65,6 +67,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Code Client with Scope Restrictions",
+                    Enabled = true,
                     ClientId = "codeclient_restricted",
                     ClientSecret = "secret",
                     Flow = Flows.Code,
@@ -84,6 +87,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Client Credentials Client",
+                    Enabled = true,
                     ClientId = "client",
                     ClientSecret = "secret",
                     Flow = Flows.ClientCredentials,
@@ -92,6 +96,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Client Credentials Client (restricted)",
+                    Enabled = true,
                     ClientId = "client_restricted",
                     ClientSecret = "secret",
                     Flow = Flows.ClientCredentials,
@@ -104,6 +109,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Resource Owner Client",
+                    Enabled = true,
                     ClientId = "roclient",
                     ClientSecret = "secret",
                     Flow = Flows.ResourceOwner,
@@ -111,6 +117,7 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Resource Owner Client (restricted)",
+                    Enabled = true,
                     ClientId = "roclient_restricted",
                     ClientSecret = "secret",
                     Flow = Flows.ResourceOwner,
@@ -123,10 +130,20 @@ namespace UnitTests.Plumbing
                 new Client
                 {
                     ClientName = "Assertion Flow Client",
+                    Enabled = true,
                     ClientId = "assertionclient",
                     ClientSecret = "secret",
                     Flow = Flows.Assertion,
+                },
+                new Client
+                {
+                    ClientName = "Disabled Client",
+                    Enabled = false,
+                    ClientId = "disabled",
+                    ClientSecret = "invalid",
+                    Flow = Flows.Assertion,
                 }
+
         };
 
         public Task<IEnumerable<Scope>> GetScopesAsync()

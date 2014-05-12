@@ -68,9 +68,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             var client = await _settings.FindClientByIdAsync(credential.ClientId);
-            if (client == null)
+            if (client == null || client.Enabled == false)
             {
-                _logger.Error("Client not found in registry: " + credential.ClientId);
+                _logger.Error("Client not found in registry or not enabled: " + credential.ClientId);
                 return null;
             }
 
