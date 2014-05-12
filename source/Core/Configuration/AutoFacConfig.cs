@@ -97,6 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // controller
             //builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // todo: validate approach for all hosting environments
             builder.RegisterApiControllers(AppDomain.CurrentDomain.GetAssemblies());
             
 

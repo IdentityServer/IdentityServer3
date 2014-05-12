@@ -30,7 +30,9 @@ namespace Thinktecture.IdentityServer.Host
                         SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
 
-                    coreApp.UseIdentityServerCore(options);
+                    coreApp
+                        .UseIdentityServerCore(options)
+                        .WithWsFed();
                 });
         }
 

@@ -25,9 +25,7 @@ namespace Thinktecture.IdentityServer.Host.Sample
                         Factory = factory,
                     };
 
-                    coreApp
-                        .UseIdentityServerCore(opts)
-                        .WithWsFed();
+                    coreApp.UseIdentityServerCore(opts);
                 });
         }
     }
