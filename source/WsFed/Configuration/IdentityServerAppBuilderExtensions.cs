@@ -12,13 +12,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class IdentityServerAppBuilderExtensions
     {
-        public static IdentityServerAppBuilder WithWsFed(this IdentityServerAppBuilder app)
+        public static IAppBuilder UseWsFederationPlugin(this IAppBuilder app)
         {
-            //app.UseCookieAuthentication(new CookieAuthenticationOptions
-            //    {
-            //        AuthenticationType = WsFederationConfiguration.WsFedCookieAuthenticationType,
-            //        AuthenticationMode = AuthenticationMode.Passive
-            //    });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = WsFederationConfiguration.WsFedCookieAuthenticationType,
+                    AuthenticationMode = AuthenticationMode.Passive
+                });
 
             return app;
         }

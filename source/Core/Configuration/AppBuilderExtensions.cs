@@ -40,6 +40,11 @@ namespace Owin
                 options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
+            if (options.PluginConfiguration != null)
+            {
+                options.PluginConfiguration(app);
+            }
+
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),

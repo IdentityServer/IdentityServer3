@@ -27,13 +27,19 @@ namespace Thinktecture.IdentityServer.Host
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
+                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders,
+                        PluginConfiguration = ConfigurePlugins
                     };
 
-                    coreApp
-                        .UseIdentityServerCore(options)
-                        .WithWsFed();
+                    coreApp.UseIdentityServerCore(options);
+                        
+
                 });
+        }
+
+        private void ConfigurePlugins(IAppBuilder app)
+        {
+            app.UseWsFederationPlugin();
         }
 
         public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
