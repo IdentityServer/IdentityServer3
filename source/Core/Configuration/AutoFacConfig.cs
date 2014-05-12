@@ -99,7 +99,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             // todo: validate approach for all hosting environments
             builder.RegisterApiControllers(AppDomain.CurrentDomain.GetAssemblies());
-            
+
+            // todo: validate this approach
+            //var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //builder.RegisterApiControllers(Directory.GetFiles(path, "*Services.dll").Select(Assembly.LoadFile).ToArray());
 
             return builder.Build();
         }
