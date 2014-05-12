@@ -15,6 +15,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.WsFed.Services;
 using System.Threading.Tasks;
 using System;
+using Thinktecture.IdentityServer.Core;
 
 namespace Thinktecture.IdentityServer.WsFed
 {
@@ -56,11 +57,25 @@ namespace Thinktecture.IdentityServer.WsFed
                 var signout = message as SignOutRequestMessage;
                 if (signout != null)
                 {
-                    return await ProcessSignOutAsync(signout);
+                    // todo: call main signout page which in turn calls back the ws-fed specific one 
+                    var ctx = Request.GetOwinContext();
+                    ctx.Authentication.SignOut(Constants.PrimaryAuthenticationType);
+                    
+                    return await SignOutCallback();
                 }
             }
 
             return BadRequest("Invalid WS-Federation request");
+        }
+
+        [Route("wsfed/signout")]
+        [HttpGet]
+        public async Task<IHttpActionResult> SignOutCallback()
+        {
+            var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
+            var urls = await cookies.GetValuesAndDeleteCookieAsync();
+
+            return new WsFederationSignOutResult(urls);
         }
 
         [Route("wsfed/metadata")]
@@ -90,12 +105,7 @@ namespace Thinktecture.IdentityServer.WsFed
             var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
             await cookies.AddValueAsync(result.ReplyUrl);
 
-            return new WsFederationResult(response.SignInResponseMessage);
-        }
-
-        private Task<IHttpActionResult> ProcessSignOutAsync(SignOutRequestMessage msg)
-        {
-            throw new NotImplementedException();
+            return new WsFederationSignInResult(response.SignInResponseMessage);
         }
 
         IHttpActionResult RedirectToLogin(ICoreSettings settings)

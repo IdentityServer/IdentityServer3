@@ -88,10 +88,11 @@
     <Compile Include="ResponseHandling\SignInResponseGenerator.cs" />
     <Compile Include="ResponseHandling\SignInResult.cs" />
     <Compile Include="Results\MetadataResult.cs" />
+    <Compile Include="Results\WsFederationSignOutResult.cs" />
     <Compile Include="Services\ICookieService.cs" />
     <Compile Include="Services\CookieMiddlewareCookieService.cs" />
     <Compile Include="Services\TestRelyingPartyService.cs" />
-    <Compile Include="Results\WsFederationResult.cs" />
+    <Compile Include="Results\WsFederationSignInResult.cs" />
     <Compile Include="Services\IRelyingPartyService.cs" />
     <Compile Include="Validation\SignInValidationResult.cs" />
     <Compile Include="Validation\SignInValidator.cs" />
