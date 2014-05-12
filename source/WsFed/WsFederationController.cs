@@ -5,12 +5,16 @@
 using System.IdentityModel.Services;
 using System.Security.Claims;
 using System.Web.Http;
+using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Results;
 using Thinktecture.IdentityServer.WsFed.Validation;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.WsFed.Services;
+using System.Threading.Tasks;
+using System;
 
 namespace Thinktecture.IdentityServer.WsFed
 {
@@ -38,7 +42,7 @@ namespace Thinktecture.IdentityServer.WsFed
         }
 
         [Route("wsfed")]
-        public IHttpActionResult Get()
+        public async Task<IHttpActionResult> Get()
         {
             WSFederationMessage message;
             if (WSFederationMessage.TryCreateFromUri(Request.RequestUri, out message))
@@ -46,13 +50,13 @@ namespace Thinktecture.IdentityServer.WsFed
                 var signin = message as SignInRequestMessage;
                 if (signin != null)
                 {
-                    return ProcessSignIn(signin);
+                    return await ProcessSignInAsync(signin);
                 }
 
                 var signout = message as SignOutRequestMessage;
                 if (signout != null)
                 {
-                    return ProcessSignOut(signout);
+                    return await ProcessSignOutAsync(signout);
                 }
             }
 
@@ -68,7 +72,7 @@ namespace Thinktecture.IdentityServer.WsFed
             return new MetadataResult(entity);
         }
 
-        private IHttpActionResult ProcessSignIn(SignInRequestMessage msg)
+        private async Task<IHttpActionResult> ProcessSignInAsync(SignInRequestMessage msg)
         {
             var result = _validator.Validate(msg, User as ClaimsPrincipal);
 
@@ -82,12 +86,16 @@ namespace Thinktecture.IdentityServer.WsFed
             }
 
             var response = _signInResponseGenerator.GenerateResponse(result);
+
+            var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
+            await cookies.AddValueAsync(result.ReplyUrl);
+
             return new WsFederationResult(response.SignInResponseMessage);
         }
 
-        private IHttpActionResult ProcessSignOut(SignOutRequestMessage msg)
+        private Task<IHttpActionResult> ProcessSignOutAsync(SignOutRequestMessage msg)
         {
-            return Ok("signout");
+            throw new NotImplementedException();
         }
 
         IHttpActionResult RedirectToLogin(ICoreSettings settings)

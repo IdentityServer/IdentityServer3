@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.WsFed.Services
 {
     public interface ICookieService
     {
-        void AddValue(string value);
-        IEnumerable<string> GetValuesAndDeleteCookie();
+        Task AddValueAsync(string value);
+        Task<IEnumerable<string>> GetValuesAndDeleteCookieAsync();
     }
 }
