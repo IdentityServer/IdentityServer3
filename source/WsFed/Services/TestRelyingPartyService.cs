@@ -3,6 +3,7 @@
  * see license
  */
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.WsFed.Models;
 
@@ -18,8 +19,13 @@ namespace Thinktecture.IdentityServer.WsFed.Services
                 Enabled = true,
                 ReplyUrl = "https://web.local/idsrvrp/",
                 TokenType = Thinktecture.IdentityModel.Constants.TokenTypes.Saml2TokenProfile11,
-                Claims = new[] { ClaimTypes.Name },
-                TokenLifeTime = 1
+                TokenLifeTime = 1,
+
+                ClaimMappings = new Dictionary<string,string>
+                {
+                    { "sub", ClaimTypes.NameIdentifier },
+                    { "name", ClaimTypes.Name }
+                }
             };
         }
     }

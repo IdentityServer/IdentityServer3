@@ -16,6 +16,6 @@ namespace Thinktecture.IdentityServer.WsFed.Models
         public string ReplyUrl { get; set; }
         public string TokenType { get; set; }
         public int TokenLifeTime { get; set; }
-        public IEnumerable<string> Claims { get; set; }
+        public Dictionary<string, string> ClaimMappings { get; set; }
     }
 }
