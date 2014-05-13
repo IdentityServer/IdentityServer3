@@ -8,8 +8,10 @@ using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Validation;
+using Thinktecture.IdentityServer.Core;
 
 namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 {
@@ -17,17 +19,19 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
     {
         private ILogger _logger;
         private ICoreSettings _settings;
+        private IUserService _users;
         
-        public SignInResponseGenerator(ILogger logger, ICoreSettings settings)
+        public SignInResponseGenerator(ILogger logger, ICoreSettings settings, IUserService users)
         {
             _logger = logger;
             _settings = settings;
+            _users = users;
         }
 
-        public SignInResponseMessage GenerateResponse(SignInValidationResult validationResult)
+        public async Task<SignInResponseMessage> GenerateResponseAsync(SignInValidationResult validationResult)
         {
             // create subject
-            var outgoingSubject = CreateSubject(validationResult);
+            var outgoingSubject = await CreateSubjectAsync(validationResult);
 
             // create token for user
             var token = CreateSecurityToken(validationResult, outgoingSubject);
@@ -55,14 +59,24 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
         }
 
         // todo: use user service
-        private ClaimsIdentity CreateSubject(SignInValidationResult validationResult)
+        private async Task<ClaimsIdentity> CreateSubjectAsync(SignInValidationResult validationResult)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "dominick")
-            };
+            var claims = await _users.GetProfileDataAsync(
+                validationResult.Subject.GetSubjectId(), 
+                validationResult.RelyingParty.ClaimMappings.Keys);
 
-            return new ClaimsIdentity(claims, "idsrv");
+            var mappedClaims = new List<Claim>();
+
+            foreach (var claim in claims)
+            {
+                string mappedType;
+                if (validationResult.RelyingParty.ClaimMappings.TryGetValue(claim.Type, out mappedType))
+                {
+                    mappedClaims.Add(new Claim(mappedType, claim.Value));
+                }
+            }
+            
+            return new ClaimsIdentity(mappedClaims, "idsrv");
         }
 
         private SecurityToken CreateSecurityToken(SignInValidationResult validationResult, ClaimsIdentity outgoingSubject)

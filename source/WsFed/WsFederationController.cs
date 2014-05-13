@@ -22,23 +22,20 @@ namespace Thinktecture.IdentityServer.WsFed
     public class WsFederationController : ApiController
     {
         private readonly ICoreSettings _settings;
-        private readonly IUserService _users;
-
         private ILogger _logger;
+  
         private SignInValidator _validator;
         private SignInResponseGenerator _signInResponseGenerator;
         private MetadataResponseGenerator _metadataResponseGenerator;
 
-
         public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger)
         {
             _settings = settings;
-            _users = users;
             _logger = logger;
 
             // todo: DI
             _validator = new SignInValidator(logger);
-            _signInResponseGenerator = new SignInResponseGenerator(logger, settings);
+            _signInResponseGenerator = new SignInResponseGenerator(logger, settings, users);
             _metadataResponseGenerator = new MetadataResponseGenerator(logger, settings);
         }
 
@@ -100,7 +97,7 @@ namespace Thinktecture.IdentityServer.WsFed
                 return BadRequest(result.Error);
             }
 
-            var responseMessage = _signInResponseGenerator.GenerateResponse(result);
+            var responseMessage = await _signInResponseGenerator.GenerateResponseAsync(result);
 
             // todo: DI
             var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
