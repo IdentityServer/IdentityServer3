@@ -22,8 +22,10 @@ namespace SelfHost
         {
             public void Configuration(IAppBuilder appBuilder)
             {
-                IdentityServerServiceFactory factory = TestOptionsFactory.Create("https://idsrv3.com",
-                    "Thinktecture IdentityServer v3", "http://localhost:3333");
+                IdentityServerServiceFactory factory = TestOptionsFactory.Create(
+                    "https://idsrv3.com",
+                    "Thinktecture IdentityServer v3- Selfhost", 
+                    "http://localhost:3333");
 
                 var opts = new IdentityServerCoreOptions
                 {
