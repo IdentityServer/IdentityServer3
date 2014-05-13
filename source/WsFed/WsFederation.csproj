@@ -81,7 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\WsFederationConfiguration.cs" />
-    <Compile Include="Configuration\IdentityServerAppBuilderExtensions.cs" />
+    <Compile Include="Configuration\PluginAppBuilderExtensions.cs" />
+    <Compile Include="Configuration\WsFederationPluginOptions.cs" />
     <Compile Include="Models\RelyingParty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseHandling\MetadataResponseGenerator.cs" />

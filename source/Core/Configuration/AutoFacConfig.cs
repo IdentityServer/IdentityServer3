@@ -6,6 +6,7 @@
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options)
+        public static IContainer Configure(IdentityServerCoreOptions options, Dictionary<Type, Func<object>> pluginDepencies)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
@@ -107,6 +108,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             //var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             //var plugins = Directory.GetFiles(path, "*Plugin.dll").Select(Assembly.LoadFile).ToArray();
             //builder.RegisterApiControllers(plugins);
+
+            if (pluginDepencies != null)
+            {
+                foreach (var pair in pluginDepencies)
+                {
+                    if (pair.Value == null)
+                    {
+                        builder.RegisterType(pair.Key);
+                    }
+                    else
+                    {
+                        builder.Register(ctx => pair.Value()).As(pair.Key);
+                    }
+                }
+            }
 
             return builder.Build();
         }

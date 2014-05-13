@@ -10,9 +10,6 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
     {
         public const string WsFedCookieAuthenticationType = "WsFedSignInOut";
 
-        public IRelyingPartyService RelyingPartyService { get; set; }
-        
         public bool EnabledFederationMetadata { get; set; }
-        
     }
 }

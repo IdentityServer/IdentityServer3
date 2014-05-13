@@ -20,6 +20,7 @@ using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, objec
 namespace Owin
 {
     using Microsoft.Owin.Builder;
+    using System.Collections.Generic;
 
     public static class AppBuilderExtensions
     {
@@ -40,9 +41,10 @@ namespace Owin
                 options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
+            var pluginDependencies = new Dictionary<Type, Func<object>>();
             if (options.PluginConfiguration != null)
             {
-                options.PluginConfiguration(app);
+                options.PluginConfiguration(app, pluginDependencies);
             }
 
             app.UseFileServer(new FileServerOptions
@@ -59,7 +61,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, pluginDependencies));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 

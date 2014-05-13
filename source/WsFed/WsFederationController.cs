@@ -28,15 +28,14 @@ namespace Thinktecture.IdentityServer.WsFed
         private SignInResponseGenerator _signInResponseGenerator;
         private MetadataResponseGenerator _metadataResponseGenerator;
 
-        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger)
+        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator)
         {
             _settings = settings;
             _logger = logger;
 
-            // todo: DI
-            _validator = new SignInValidator(logger);
-            _signInResponseGenerator = new SignInResponseGenerator(logger, settings, users);
-            _metadataResponseGenerator = new MetadataResponseGenerator(logger, settings);
+            _validator = validator;
+            _signInResponseGenerator = signInResponseGenerator;
+            _metadataResponseGenerator = metadataResponseGenerator;
         }
 
         [Route("wsfed")]

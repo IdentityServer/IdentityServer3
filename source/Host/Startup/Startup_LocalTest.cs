@@ -3,8 +3,12 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
+using System;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.TestServices;
+using Thinktecture.IdentityServer.WsFed.Configuration;
+using Thinktecture.IdentityServer.WsFed.Services;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
 
@@ -37,9 +41,15 @@ namespace Thinktecture.IdentityServer.Host
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder app)
+        private void ConfigurePlugins(IAppBuilder app, Dictionary<Type, Func<object>> dependencies)
         {
-            app.UseWsFederationPlugin();
+            var options = new WsFederationPluginOptions
+            {
+                RelyingPartyService = () => new TestRelyingPartyService(),
+                Dependencies = dependencies
+            };
+
+            app.UseWsFederationPlugin(options);
         }
 
         public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
