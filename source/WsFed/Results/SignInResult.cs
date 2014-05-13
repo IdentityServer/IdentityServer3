@@ -11,11 +11,11 @@ using System.Web.Http;
 
 namespace Thinktecture.IdentityServer.WsFed.Results
 {
-    public class WsFederationSignInResult : IHttpActionResult
+    public class SignInResult : IHttpActionResult
     {
         SignInResponseMessage _message;
 
-        public WsFederationSignInResult(SignInResponseMessage message)
+        public SignInResult(SignInResponseMessage message)
         {
             _message = message;
         }

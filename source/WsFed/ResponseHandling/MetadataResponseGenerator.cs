@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.IdentityModel.Metadata;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Constants;
 using Thinktecture.IdentityServer.Core.Services;
 

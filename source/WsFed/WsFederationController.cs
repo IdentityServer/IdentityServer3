@@ -3,19 +3,18 @@
  * see license
  */
 using System.IdentityModel.Services;
-using System.Security.Claims;
-using System.Web.Http;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web.Http;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Results;
-using Thinktecture.IdentityServer.WsFed.Validation;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.WsFed.Services;
-using System.Threading.Tasks;
-using System;
-using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.WsFed.Validation;
 
 namespace Thinktecture.IdentityServer.WsFed
 {
@@ -37,6 +36,7 @@ namespace Thinktecture.IdentityServer.WsFed
             _users = users;
             _logger = logger;
 
+            // todo: DI
             _validator = new SignInValidator(logger);
             _signInResponseGenerator = new SignInResponseGenerator(logger, settings);
             _metadataResponseGenerator = new MetadataResponseGenerator(logger, settings);
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.WsFed
             var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
             var urls = await cookies.GetValuesAndDeleteCookieAsync();
 
-            return new WsFederationSignOutResult(urls);
+            return new SignOutResult(urls);
         }
 
         [Route("wsfed/metadata")]
@@ -100,12 +100,13 @@ namespace Thinktecture.IdentityServer.WsFed
                 return BadRequest(result.Error);
             }
 
-            var response = _signInResponseGenerator.GenerateResponse(result);
+            var responseMessage = _signInResponseGenerator.GenerateResponse(result);
 
+            // todo: DI
             var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
             await cookies.AddValueAsync(result.ReplyUrl);
 
-            return new WsFederationSignInResult(response.SignInResponseMessage);
+            return new SignInResult(responseMessage);
         }
 
         IHttpActionResult RedirectToLogin(ICoreSettings settings)

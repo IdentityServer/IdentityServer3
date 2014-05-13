@@ -1,14 +1,14 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Services;
 using System.IdentityModel.Tokens;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.WsFed.Models;
 using Thinktecture.IdentityServer.WsFed.Validation;
 
 namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
             _settings = settings;
         }
 
-        public SignInResult GenerateResponse(SignInValidationResult validationResult)
+        public SignInResponseMessage GenerateResponse(SignInValidationResult validationResult)
         {
             // create subject
             var outgoingSubject = CreateSubject(validationResult);
@@ -51,10 +51,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 serializer,
                 new WSTrustSerializationContext());
 
-            return new SignInResult
-            {
-                SignInResponseMessage = responseMessage
-            };
+            return responseMessage;
         }
 
         // todo: use user service

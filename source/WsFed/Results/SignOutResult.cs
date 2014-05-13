@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -7,11 +11,11 @@ using System.Web.Http;
 
 namespace Thinktecture.IdentityServer.WsFed.Results
 {
-    public class WsFederationSignOutResult : IHttpActionResult
+    public class SignOutResult : IHttpActionResult
     {
         IEnumerable<string> _urls;
 
-        public WsFederationSignOutResult(IEnumerable<string> urls)
+        public SignOutResult(IEnumerable<string> urls)
         {
             _urls = urls;
 

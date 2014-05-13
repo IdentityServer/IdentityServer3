@@ -1,4 +1,8 @@
-﻿using System.IdentityModel.Metadata;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System.IdentityModel.Metadata;
 using System.IO;
 using System.Net.Http;
 using System.Text;

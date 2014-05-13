@@ -1,4 +1,8 @@
-﻿using Microsoft.Owin;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.Owin;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
