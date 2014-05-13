@@ -6,6 +6,9 @@
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -94,15 +97,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
             builder.RegisterInstance(authenticationOptions).AsSelf();
 
-            // controller
+            // load core controller
             //builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
-            // todo: validate approach for all hosting environments
+            // todo: right way to scan all assemblies?
             builder.RegisterApiControllers(AppDomain.CurrentDomain.GetAssemblies());
 
-            // todo: validate this approach
+            // load plugins
             //var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            //builder.RegisterApiControllers(Directory.GetFiles(path, "*Services.dll").Select(Assembly.LoadFile).ToArray());
+            //var plugins = Directory.GetFiles(path, "*Plugin.dll").Select(Assembly.LoadFile).ToArray();
+            //builder.RegisterApiControllers(plugins);
 
             return builder.Build();
         }
