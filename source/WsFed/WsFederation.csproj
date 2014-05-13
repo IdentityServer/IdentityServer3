@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Thinktecture.IdentityServer.WsFed</RootNamespace>
-    <AssemblyName>Thinktecture.IdentityServer.WsFed</AssemblyName>
+    <AssemblyName>Thinktecture.IdentityServer.WsFed.Plugin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
