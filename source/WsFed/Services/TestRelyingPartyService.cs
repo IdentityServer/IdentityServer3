@@ -23,7 +23,9 @@ namespace Thinktecture.IdentityServer.WsFed.Services
                 ClaimMappings = new Dictionary<string,string>
                 {
                     { "sub", ClaimTypes.NameIdentifier },
-                    { "name", ClaimTypes.Name }
+                    { "name", ClaimTypes.Name },
+                    { "given_name", ClaimTypes.GivenName },
+                    { "email", ClaimTypes.Email }
                 }
             };
         }
