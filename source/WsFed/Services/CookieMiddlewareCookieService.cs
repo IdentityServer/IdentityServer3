@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.WsFed.Services
             urls.Add(value);
 
             var claims = new List<Claim>(from u in urls select new Claim("url", u));
-            var id = new ClaimsIdentity(claims, WsFederationConfiguration.WsFedCookieAuthenticationType);
+            var id = new ClaimsIdentity(claims, WsFederationPluginOptions.WsFedCookieAuthenticationType);
 
             _context.Authentication.SignIn(id);
         }
@@ -41,14 +41,14 @@ namespace Thinktecture.IdentityServer.WsFed.Services
         public async Task<IEnumerable<string>> GetValuesAndDeleteCookieAsync()
         {
             var urls = await GetValuesAsync();
-            _context.Authentication.SignOut(WsFederationConfiguration.WsFedCookieAuthenticationType);
+            _context.Authentication.SignOut(WsFederationPluginOptions.WsFedCookieAuthenticationType);
 
             return urls;
         }
 
         async Task<List<string>> GetValuesAsync()
         {
-            var result = await _context.Authentication.AuthenticateAsync(WsFederationConfiguration.WsFedCookieAuthenticationType);
+            var result = await _context.Authentication.AuthenticateAsync(WsFederationPluginOptions.WsFedCookieAuthenticationType);
             
             if (result == null || result.Identity == null)
             {

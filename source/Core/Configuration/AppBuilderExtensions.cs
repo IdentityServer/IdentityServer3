@@ -41,7 +41,7 @@ namespace Owin
                 options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
-            var pluginDependencies = new Dictionary<Type, Func<object>>();
+            var pluginDependencies = new PluginDependencies();
             if (options.PluginConfiguration != null)
             {
                 options.PluginConfiguration(app, pluginDependencies);

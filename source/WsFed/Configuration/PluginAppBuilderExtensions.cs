@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.WsFed;
 using Thinktecture.IdentityServer.WsFed.Configuration;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Services;
@@ -21,16 +22,24 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
-                    AuthenticationType = WsFederationConfiguration.WsFedCookieAuthenticationType,
+                    AuthenticationType = WsFederationPluginOptions.WsFedCookieAuthenticationType,
                     AuthenticationMode = AuthenticationMode.Passive
                 });
 
-            options.Dependencies.Add(typeof(IRelyingPartyService), options.RelyingPartyService);
+            if (options.RelyingPartyService == null)
+            {
+                throw new ArgumentNullException("RelyingPartyService");
+            }
 
-            options.Dependencies.Add(typeof(SignInValidator), null);
-            options.Dependencies.Add(typeof(SignInResponseGenerator), null);
-            options.Dependencies.Add(typeof(MetadataResponseGenerator), null);
+            options.Dependencies.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
             
+            options.Dependencies.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
+            
+            options.Dependencies.AddType(typeof(SignInValidator));
+            options.Dependencies.AddType(typeof(SignInResponseGenerator));
+            options.Dependencies.AddType(typeof(MetadataResponseGenerator));
+            options.Dependencies.AddType(typeof(CookieMiddlewareCookieService), typeof(ICookieService));
+
             return app;
         }
     }

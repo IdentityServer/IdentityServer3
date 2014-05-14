@@ -80,7 +80,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\WsFederationConfiguration.cs" />
     <Compile Include="Configuration\PluginAppBuilderExtensions.cs" />
     <Compile Include="Configuration\WsFederationPluginOptions.cs" />
     <Compile Include="Models\RelyingParty.cs" />

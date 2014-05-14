@@ -15,6 +15,7 @@ namespace Thinktecture.IdentityServer.WsFed.Results
     public class MetadataResult : IHttpActionResult
     {
         private EntityDescriptor _entity;
+
         public MetadataResult(EntityDescriptor entity)
         {
             _entity = entity;

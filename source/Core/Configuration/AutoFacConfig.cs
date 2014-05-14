@@ -18,11 +18,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options, Dictionary<Type, Func<object>> pluginDepencies)
+        public static IContainer Configure(IdentityServerCoreOptions options, PluginDependencies pluginDepencies)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
-            
+
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
 
@@ -99,27 +99,38 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(authenticationOptions).AsSelf();
 
             // load core controller
-            //builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
-
-            // todo: right way to scan all assemblies?
-            builder.RegisterApiControllers(AppDomain.CurrentDomain.GetAssemblies());
-
-            // load plugins
-            //var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            //var plugins = Directory.GetFiles(path, "*Plugin.dll").Select(Assembly.LoadFile).ToArray();
-            //builder.RegisterApiControllers(plugins);
+            builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             if (pluginDepencies != null)
             {
-                foreach (var pair in pluginDepencies)
+                if (pluginDepencies.ApiControllerAssemblies != null)
                 {
-                    if (pair.Value == null)
+                    foreach (var asm in pluginDepencies.ApiControllerAssemblies)
                     {
-                        builder.RegisterType(pair.Key);
+                        builder.RegisterApiControllers(asm);
                     }
-                    else
+                }
+
+                if (pluginDepencies.Types != null)
+                {
+                    foreach (var type in pluginDepencies.Types)
                     {
-                        builder.Register(ctx => pair.Value()).As(pair.Key);
+                        if (type.Value == null)
+                        {
+                            builder.RegisterType(type.Key);
+                        }
+                        else
+                        {
+                            builder.RegisterType(type.Key).As(type.Value);
+                        }
+                    }
+                }
+
+                if (pluginDepencies.Factories != null)
+                {
+                    foreach (var factory in pluginDepencies.Factories)
+                    {
+                        builder.Register(ctx => factory.Value()).As(factory.Key);
                     }
                 }
             }

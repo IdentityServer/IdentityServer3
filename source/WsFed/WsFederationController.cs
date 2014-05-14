@@ -27,8 +27,9 @@ namespace Thinktecture.IdentityServer.WsFed
         private SignInValidator _validator;
         private SignInResponseGenerator _signInResponseGenerator;
         private MetadataResponseGenerator _metadataResponseGenerator;
+        private ICookieService _cookies;
 
-        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator)
+        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies)
         {
             _settings = settings;
             _logger = logger;
@@ -36,6 +37,7 @@ namespace Thinktecture.IdentityServer.WsFed
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
             _metadataResponseGenerator = metadataResponseGenerator;
+            _cookies = cookies;
         }
 
         [Route("wsfed")]
@@ -68,9 +70,7 @@ namespace Thinktecture.IdentityServer.WsFed
         [HttpGet]
         public async Task<IHttpActionResult> SignOutCallback()
         {
-            var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
-            var urls = await cookies.GetValuesAndDeleteCookieAsync();
-
+            var urls = await _cookies.GetValuesAndDeleteCookieAsync();
             return new SignOutResult(urls);
         }
 
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.WsFed
 
         private async Task<IHttpActionResult> ProcessSignInAsync(SignInRequestMessage msg)
         {
-            var result = _validator.Validate(msg, User as ClaimsPrincipal);
+            var result = await _validator.ValidateAsync(msg, User as ClaimsPrincipal);
 
             if (result.IsSignInRequired)
             {
@@ -97,10 +97,7 @@ namespace Thinktecture.IdentityServer.WsFed
             }
 
             var responseMessage = await _signInResponseGenerator.GenerateResponseAsync(result);
-
-            // todo: DI
-            var cookies = new CookieMiddlewareCookieService(Request.GetOwinContext());
-            await cookies.AddValueAsync(result.ReplyUrl);
+            await _cookies.AddValueAsync(result.ReplyUrl);
 
             return new SignInResult(responseMessage);
         }

@@ -119,6 +119,7 @@
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
+    <Compile Include="Configuration\PluginDependencies.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />

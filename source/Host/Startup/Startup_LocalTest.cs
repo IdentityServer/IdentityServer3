@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Host
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder app, Dictionary<Type, Func<object>> dependencies)
+        private void ConfigurePlugins(IAppBuilder app, PluginDependencies dependencies)
         {
             var options = new WsFederationPluginOptions
             {
