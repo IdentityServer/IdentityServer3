@@ -115,9 +115,11 @@
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Configuration\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
+    <Compile Include="Configuration\IdentityServerAppBuilder.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
+    <Compile Include="Configuration\PluginDependencies.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />

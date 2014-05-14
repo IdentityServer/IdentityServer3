@@ -1,0 +1,13 @@
+﻿<h3>@ViewBag.Message</h3>
+
+<dl>
+    @foreach (var claim in System.Security.Claims.ClaimsPrincipal.Current.Claims)
+    {
+        <dt>
+            @claim.Type
+        </dt>
+        <dd>
+            @claim.Value
+        </dd>
+    }
+</dl>

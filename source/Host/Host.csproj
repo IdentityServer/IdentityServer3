@@ -196,6 +196,10 @@
       <Project>{9eb9f5c7-49e1-440b-923f-bb842d9436d2}</Project>
       <Name>MembershipRebootUserService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WsFed\WsFederation.csproj">
+      <Project>{3e97192f-35d5-4dac-9cab-a2e9b166e68c}</Project>
+      <Name>WsFederation</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
