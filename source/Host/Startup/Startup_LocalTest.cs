@@ -43,10 +43,9 @@ namespace Thinktecture.IdentityServer.Host
 
         private void ConfigurePlugins(IAppBuilder app, PluginDependencies dependencies)
         {
-            var options = new WsFederationPluginOptions
+            var options = new WsFederationPluginOptions(dependencies)
             {
                 RelyingPartyService = () => new TestRelyingPartyService(),
-                Dependencies = dependencies
             };
 
             app.UseWsFederationPlugin(options);
