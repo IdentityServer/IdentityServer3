@@ -4,15 +4,16 @@
  */
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.WsFed.Models;
 
 namespace Thinktecture.IdentityServer.WsFed.Services
 {
     public class TestRelyingPartyService : IRelyingPartyService
     {
-        public RelyingParty GetByRealm(string realm)
+        public Task<RelyingParty> GetByRealmAsync(string realm)
         {
-            return new RelyingParty
+            return Task.FromResult(new RelyingParty
             {
                 Realm = "urn:testrp",
                 Enabled = true,
@@ -27,7 +28,7 @@ namespace Thinktecture.IdentityServer.WsFed.Services
                     { "given_name", ClaimTypes.GivenName },
                     { "email", ClaimTypes.Email }
                 }
-            };
+            });
         }
     }
 }

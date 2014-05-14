@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Validation;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityModel;
 
 namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 {
@@ -58,7 +59,6 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
             return responseMessage;
         }
 
-        // todo: use user service
         private async Task<ClaimsIdentity> CreateSubjectAsync(SignInValidationResult validationResult)
         {
             var claims = await _users.GetProfileDataAsync(
@@ -74,6 +74,13 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 {
                     mappedClaims.Add(new Claim(mappedType, claim.Value));
                 }
+            }
+
+            // todo: do complete mapping
+            if (validationResult.Subject.GetAuthenticationMethod() == Constants.AuthenticationMethods.Password)
+            {
+                mappedClaims.Add(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationMethods.Password));
+                mappedClaims.Add(AuthenticationInstantClaim.Now);
             }
             
             return new ClaimsIdentity(mappedClaims, "idsrv");

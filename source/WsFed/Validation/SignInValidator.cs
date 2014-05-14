@@ -4,6 +4,7 @@
  */
 using System.IdentityModel.Services;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Services;
 
@@ -11,18 +12,16 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 {
     public class SignInValidator
     {
-        private ILogger _logger;
-        private TestRelyingPartyService _relyingParties;
+        private readonly ILogger _logger;
+        private readonly IRelyingPartyService _relyingParties;
 
-        public SignInValidator(ILogger logger)
+        public SignInValidator(ILogger logger, IRelyingPartyService relyingParties)
         {
             _logger = logger;
-
-            // todo: DI
-            _relyingParties = new TestRelyingPartyService();
+            _relyingParties = relyingParties;
         }
 
-        public SignInValidationResult Validate(SignInRequestMessage message, ClaimsPrincipal subject)
+        public async Task<SignInValidationResult> ValidateAsync(SignInRequestMessage message, ClaimsPrincipal subject)
         {
             var result = new SignInValidationResult();
 
@@ -35,7 +34,7 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
                 };
             };
 
-            var rp = _relyingParties.GetByRealm(message.Realm);
+            var rp = await _relyingParties.GetByRealmAsync(message.Realm);
 
             if (rp == null || rp.Enabled == false)
             {
