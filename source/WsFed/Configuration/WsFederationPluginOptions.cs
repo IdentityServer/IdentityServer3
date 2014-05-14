@@ -14,6 +14,11 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
 
         public WsFederationPluginOptions(PluginDependencies dependencies)
         {
+            if (dependencies == null)
+            {
+                throw new ArgumentNullException("dependencies");
+            }
+            
             _dependencies = dependencies;
         }
 
