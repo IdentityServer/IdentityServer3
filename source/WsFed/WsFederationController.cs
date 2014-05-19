@@ -55,11 +55,7 @@ namespace Thinktecture.IdentityServer.WsFed
                 var signout = message as SignOutRequestMessage;
                 if (signout != null)
                 {
-                    // todo: call main signout page which in turn calls back the ws-fed specific one 
-                    var ctx = Request.GetOwinContext();
-                    ctx.Authentication.SignOut(Constants.PrimaryAuthenticationType);
-                    
-                    return await SignOutCallback();
+                    return RedirectToRoute(Constants.RouteNames.LogoutPrompt, null);
                 }
             }
 

@@ -21,12 +21,15 @@ namespace Owin
 {
     using Microsoft.Owin.Builder;
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class AppBuilderExtensions
     {
         public static IdentityServerAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
+
+            var internalConfig = new InternalConfiguration();
 
             // thank you Microsoft for the clean syntax
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
@@ -41,10 +44,9 @@ namespace Owin
                 options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
-            var pluginDependencies = new PluginDependencies();
             if (options.PluginConfiguration != null)
             {
-                options.PluginConfiguration(app, pluginDependencies);
+                options.PluginConfiguration(app, internalConfig.PluginDependencies);
             }
 
             app.UseFileServer(new FileServerOptions
@@ -61,7 +63,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, pluginDependencies));
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 

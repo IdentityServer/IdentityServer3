@@ -40,6 +40,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             options.Dependencies.AddType(typeof(MetadataResponseGenerator));
             options.Dependencies.AddType(typeof(CookieMiddlewareCookieService), typeof(ICookieService));
 
+            options.Dependencies.AddSignOutCallbackUrl("/wsfed/signout");
+
             return app;
         }
     }

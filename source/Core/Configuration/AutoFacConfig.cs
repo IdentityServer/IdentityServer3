@@ -18,15 +18,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options, PluginDependencies pluginDepencies)
+        public static IContainer Configure(IdentityServerCoreOptions options, InternalConfiguration internalConfig)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
+            if (internalConfig == null) throw new ArgumentNullException("internalConfig");
 
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
 
             var builder = new ContainerBuilder();
+
+            builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
             builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
@@ -101,6 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            var pluginDepencies = internalConfig.PluginDependencies;
             if (pluginDepencies != null)
             {
                 if (pluginDepencies.ApiControllerAssemblies != null)

@@ -29,14 +29,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         ICoreSettings settings;
         AuthenticationOptions authenticationOptions;
         IExternalClaimsFilter externalClaimsFilter;
+        InternalConfiguration internalConfiguration;
 
-        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions)
+        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
         {
             this.logger = logger;
             this.userService = userService;
             this.settings = settings;
             this.externalClaimsFilter = externalClaimsFilter;
             this.authenticationOptions = authenticationOptions;
+            this.internalConfiguration = internalConfiguration;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -218,11 +220,24 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             ClearLoginRequestMessage();
 
+            var baseUrl = Request.GetBaseUrl(settings.GetPublicHost());
+            var urls = new List<string>();
+            foreach(var url in this.internalConfiguration.PluginDependencies.SignOutCallbackUrls)
+            {
+                var tmp = url;
+                if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
+                urls.Add(baseUrl + tmp);
+            }
+
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
                        Server = settings.GetSiteName(),
-                       Page = "logout"
+                       Page = "logout",
+                       PageModel = new
+                       {
+                           signOutUrls = urls.ToArray()
+                       }
                    });
         }
 
