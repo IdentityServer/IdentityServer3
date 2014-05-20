@@ -77,6 +77,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new AuthorizeImplicitFormPostResult(response);
         }
 
+        public static IHttpActionResult AuthorizeImplicitJsonResponse(this ApiController controller, AuthorizeResponse response)
+        {
+            return new AuthorizeImplicitJsonResult(response);
+        }
+
         public static IHttpActionResult TokenResponse(this ApiController controller, TokenResponse response)
         {
             return new TokenResult(response);
