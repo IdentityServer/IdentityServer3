@@ -6,6 +6,10 @@
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
@@ -14,11 +18,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options)
+        public static IContainer Configure(IdentityServerCoreOptions options, PluginDependencies pluginDepencies)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
-            
+
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
 
@@ -94,8 +98,42 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
             builder.RegisterInstance(authenticationOptions).AsSelf();
 
-            // controller
+            // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
+
+            if (pluginDepencies != null)
+            {
+                if (pluginDepencies.ApiControllerAssemblies != null)
+                {
+                    foreach (var asm in pluginDepencies.ApiControllerAssemblies)
+                    {
+                        builder.RegisterApiControllers(asm);
+                    }
+                }
+
+                if (pluginDepencies.Types != null)
+                {
+                    foreach (var type in pluginDepencies.Types)
+                    {
+                        if (type.Value == null)
+                        {
+                            builder.RegisterType(type.Key);
+                        }
+                        else
+                        {
+                            builder.RegisterType(type.Key).As(type.Value);
+                        }
+                    }
+                }
+
+                if (pluginDepencies.Factories != null)
+                {
+                    foreach (var factory in pluginDepencies.Factories)
+                    {
+                        builder.Register(ctx => factory.Value()).As(factory.Key);
+                    }
+                }
+            }
 
             return builder.Build();
         }

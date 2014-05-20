@@ -20,10 +20,11 @@ using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, objec
 namespace Owin
 {
     using Microsoft.Owin.Builder;
+    using System.Collections.Generic;
 
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
+        public static IdentityServerAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
 
@@ -40,6 +41,12 @@ namespace Owin
                 options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
+            var pluginDependencies = new PluginDependencies();
+            if (options.PluginConfiguration != null)
+            {
+                options.PluginConfiguration(app, pluginDependencies);
+            }
+
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
@@ -54,11 +61,11 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, pluginDependencies));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
-            return app;
+            return new IdentityServerAppBuilder(app);
         }
     }
 }
