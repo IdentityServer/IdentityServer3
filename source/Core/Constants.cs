@@ -110,6 +110,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string FormPost = "form_post";
             public const string Query    = "query";
             public const string Fragment = "fragment";
+            public const string Json     = "json";
         }
 
         public static readonly List<string> SupportedResponseModes = new List<string>
@@ -117,6 +118,7 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseModes.FormPost,
                                 Constants.ResponseModes.Query,
                                 Constants.ResponseModes.Fragment,
+                                Constants.ResponseModes.Json
                             };
 
         public static class DisplayModes

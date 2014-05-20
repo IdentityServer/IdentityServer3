@@ -165,6 +165,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 return this.AuthorizeImplicitFormPostResponse(response);
             }
+            else if (request.ResponseMode == Constants.ResponseModes.Json)
+            {
+                return this.AuthorizeImplicitJsonResponse(response);
+            }
 
             return this.AuthorizeImplicitFragmentResponse(response);
         }

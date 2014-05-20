@@ -129,6 +129,7 @@
     <Compile Include="Connect\Models\ConsentModel.cs" />
     <Compile Include="Connect\Models\UserConsent.cs" />
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
+    <Compile Include="Connect\Results\AuthorizeImplicitJsonResult.cs" />
     <Compile Include="Connect\Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />
     <Compile Include="Connect\Services\DefaultAssertionGrantValidator.cs" />
