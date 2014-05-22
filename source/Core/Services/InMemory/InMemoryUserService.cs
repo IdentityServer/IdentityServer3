@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user == null)
             {
-                var name = externalUser.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+                var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
                 if (name == null)
                 {
                     return Task.FromResult<ExternalAuthenticateResult>(null);
@@ -67,9 +67,10 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                     Username = name.Value,
                     Claims = claims.ToArray()
                 };
+                users.Add(user);
             }
 
-            return Task.FromResult(new ExternalAuthenticateResult(user.ProviderId, user.Subject, user.Username));
+            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, user.Subject, user.Username));
         }
 
 
@@ -81,10 +82,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 select u;
             var user = query.Single();
 
-            var claims = user.Claims;
+            var claims = new List<Claim>{
+                new Claim(Constants.ClaimTypes.Subject, user.Subject)
+            };
+
+            claims.AddRange(user.Claims);
             if (requestedClaimTypes != null)
             {
-                claims = claims.Where(x => requestedClaimTypes.Contains(x.Type));
+                claims = claims.Where(x => requestedClaimTypes.Contains(x.Type)).ToList();
             }
 
             return Task.FromResult<IEnumerable<Claim>>(claims);

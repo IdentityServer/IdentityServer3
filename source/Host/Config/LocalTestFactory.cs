@@ -42,11 +42,12 @@ namespace Thinktecture.IdentityServer.Host.Config
                     }
                 },
             };
+            var userSvc = new InMemoryUserService(users);
 
             var fact = new IdentityServerServiceFactory
             {
                 Logger = () => logger,
-                UserService = () => new InMemoryUserService(users),
+                UserService = () => userSvc,
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,
                 CoreSettings = () => settings,

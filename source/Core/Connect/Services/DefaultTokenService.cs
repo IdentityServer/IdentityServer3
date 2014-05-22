@@ -26,11 +26,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     public class DefaultTokenService : ITokenService
     {
         private IUserService _users;
-        private ICoreSettings _settings;
+        private CoreSettings _settings;
         private IClaimsProvider _claimsProvider;
         private ITokenHandleStore _tokenHandles;
 
-        public DefaultTokenService(IUserService users, ICoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
+        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
         {
             _users = users;
             _settings = settings;

@@ -16,10 +16,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
         private readonly ILogger _logger;
 
-        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, ICoreSettings settings, ILogger logger)
+        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings, ILogger logger)
         {
             _users = users;
             _scopes = scopes;

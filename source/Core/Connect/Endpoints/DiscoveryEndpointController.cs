@@ -16,10 +16,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix(".well-known")]
     public class DiscoveryEndpointController : ApiController
     {
-        private ICoreSettings _settings;
+        private CoreSettings _settings;
         private IScopeService _scopes;
 
-        public DiscoveryEndpointController(ICoreSettings settings, IScopeService scopes)
+        public DiscoveryEndpointController(CoreSettings settings, IScopeService scopes)
         {
             _settings = settings;
             _scopes = scopes;

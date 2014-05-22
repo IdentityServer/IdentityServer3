@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.WsFed
     [HostAuthentication("idsrv")]
     public class WsFederationController : ApiController
     {
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
         private ILogger _logger;
   
         private SignInValidator _validator;
@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.WsFed
         private MetadataResponseGenerator _metadataResponseGenerator;
         private ICookieService _cookies;
 
-        public WsFederationController(ICoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies)
+        public WsFederationController(CoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies)
         {
             _settings = settings;
             _logger = logger;
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.WsFed
             return new SignInResult(responseMessage);
         }
 
-        IHttpActionResult RedirectToLogin(ICoreSettings settings)
+        IHttpActionResult RedirectToLogin(CoreSettings settings)
         {
             var message = new SignInMessage();
             message.ReturnUrl = Request.RequestUri.AbsoluteUri;

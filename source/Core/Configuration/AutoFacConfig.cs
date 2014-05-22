@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             // mandatory from factory
             builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
-            builder.Register(ctx => fact.CoreSettings()).As<ICoreSettings>();
+            builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
             builder.Register(ctx => fact.Logger()).As<ILogger>();
             builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
             builder.Register(ctx => fact.UserService()).As<IUserService>();

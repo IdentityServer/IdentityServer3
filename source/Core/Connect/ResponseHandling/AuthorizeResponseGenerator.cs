@@ -18,9 +18,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly ITokenService _tokenService;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly ITokenHandleStore _tokenHandles;
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles, ICoreSettings settings)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles, CoreSettings settings)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;

@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly ILogger _logger;
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
-        private readonly ICoreSettings _core;
+        private readonly CoreSettings _core;
         private readonly IScopeService _scopes;
         private readonly IClientService _clients;
         private readonly ICustomRequestValidator _customValidator;
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(ICoreSettings core, IScopeService scopes, IClientService clients, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(CoreSettings core, IScopeService scopes, IClientService clients, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
         {
             _core = core;
             _scopes = scopes;

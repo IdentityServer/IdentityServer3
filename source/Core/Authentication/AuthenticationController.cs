@@ -26,12 +26,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         ILogger logger;
         IUserService userService;
-        ICoreSettings settings;
+        CoreSettings settings;
         AuthenticationOptions authenticationOptions;
         IExternalClaimsFilter externalClaimsFilter;
         InternalConfiguration internalConfiguration;
 
-        public AuthenticationController(ILogger logger, IUserService userService, ICoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
+        public AuthenticationController(ILogger logger, IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
         {
             this.logger = logger;
             this.userService = userService;

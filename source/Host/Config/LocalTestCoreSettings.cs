@@ -10,7 +10,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestCoreSettings : ICoreSettings
+    public class LocalTestCoreSettings : CoreSettings
     {
         private string _issuerUri;
         private string _siteName;
@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Host.Config
             }
         }
 
-        public X509Certificate2 GetSigningCertificate()
+        public override X509Certificate2 GetSigningCertificate()
         {
             if (_certificate == null)
             {
@@ -40,22 +40,22 @@ namespace Thinktecture.IdentityServer.Host.Config
             return _certificate;
         }
 
-        public string GetIssuerUri()
+        public override string GetIssuerUri()
         {
             return _issuerUri;
         }
 
-        public string GetSiteName()
+        public override string GetSiteName()
         {
             return _siteName;
         }
 
-        public string GetPublicHost()
+        public override string GetPublicHost()
         {
             return _publicHostAddress;
         }
 
-        public InternalProtectionSettings GetInternalProtectionSettings()
+        public override InternalProtectionSettings GetInternalProtectionSettings()
         {
             var settings = new InternalProtectionSettings
             {
