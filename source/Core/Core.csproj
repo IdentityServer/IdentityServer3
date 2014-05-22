@@ -191,12 +191,14 @@
     <Compile Include="Services\DebugLogger.cs" />
     <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
     <Compile Include="Services\DefaultExternalClaimsFilter.cs" />
+    <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\IExternalClaimsFilter.cs" />
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Connect\Services\ITokenService.cs" />
     <Compile Include="Services\ICoreSettings.cs" />
     <Compile Include="Services\InternalProtectionSettings.cs" />
+    <Compile Include="Services\IScopeService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Connect\Services\ITokenHandleStore.cs" />
     <Compile Include="Services\LoggerExtensions.cs" />
@@ -213,7 +215,9 @@
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\InMemory\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

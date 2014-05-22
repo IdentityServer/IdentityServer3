@@ -37,6 +37,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.Register(ctx => fact.Logger()).As<ILogger>();
             builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
             builder.Register(ctx => fact.UserService()).As<IUserService>();
+            builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
+            builder.Register(ctx => fact.ClientService()).As<IClientService>();
             builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
 
             // optional from factory

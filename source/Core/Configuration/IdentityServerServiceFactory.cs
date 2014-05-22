@@ -14,7 +14,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         // mandatory
         public Func<ILogger> Logger { get; set; }
         public Func<IUserService> UserService { get; set; }
+        public Func<IScopeService> ScopeService { get; set; }
+        public Func<IClientService> ClientService { get; set; }
         public Func<ICoreSettings> CoreSettings { get; set; }
+        
+        // internal storage
         public Func<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
         public Func<ITokenHandleStore> TokenHandleStore { get; set; }
         public Func<IConsentService> ConsentService { get; set; }

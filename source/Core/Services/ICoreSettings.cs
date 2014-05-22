@@ -13,9 +13,6 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ICoreSettings
     {
-        Task<IEnumerable<Scope>> GetScopesAsync();
-        Task<Client> FindClientByIdAsync(string clientId);
-        
         InternalProtectionSettings GetInternalProtectionSettings();
         X509Certificate2 GetSigningCertificate();
         string GetIssuerUri();

@@ -17,17 +17,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class DiscoveryEndpointController : ApiController
     {
         private ICoreSettings _settings;
+        private IScopeService _scopes;
 
-        public DiscoveryEndpointController(ICoreSettings settings)
+        public DiscoveryEndpointController(ICoreSettings settings, IScopeService scopes)
         {
             _settings = settings;
+            _scopes = scopes;
         }
 
         [Route("openid-configuration")]
         public async Task<dynamic> GetConfiguration()
         {
             var baseUrl = Request.GetBaseUrl(_settings.GetPublicHost());
-            var scopes = await _settings.GetScopesAsync();
+            var scopes = await _scopes.GetScopesAsync();
 
             return new
             {
