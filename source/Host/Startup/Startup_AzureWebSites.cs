@@ -4,7 +4,7 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.TestServices;
+using Thinktecture.IdentityServer.Host.Config;
 
 [assembly: OwinStartup("AzureWebSites", typeof(Thinktecture.IdentityServer.Host.Startup_AzureWebSites))]
 
@@ -16,7 +16,7 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    var factory = TestOptionsFactory.Create(
+                    var factory = LocalTestFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1 (WAWS)",
                         publicHostAddress: "http://idsrv3.azurewebsites.net");
