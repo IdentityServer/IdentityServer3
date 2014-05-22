@@ -20,5 +20,11 @@ namespace MvcOwinWsFederation.Controllers
 
             return View();
         }
+
+        public ActionResult SignOut()
+        {
+            Request.GetOwinContext().Authentication.SignOut();
+            return View();
+        }
     }
 }

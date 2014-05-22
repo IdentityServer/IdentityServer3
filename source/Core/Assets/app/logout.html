@@ -1,6 +1,7 @@
-﻿<div class="page-header">
+﻿<div class="page-header" ng-controller="LogoutCtrl">
     <h1>
         Logout
         <small>You are now logged out</small>
     </h1>
+    <iframe class="signout" ng-repeat="url in model.signOutUrls" src="{{url}}"></iframe>
 </div>

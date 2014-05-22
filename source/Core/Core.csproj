@@ -118,6 +118,7 @@
     <Compile Include="Configuration\IdentityServerAppBuilder.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
+    <Compile Include="Configuration\InternalConfiguration.cs" />
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\PluginDependencies.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />

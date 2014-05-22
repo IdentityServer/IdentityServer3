@@ -18,7 +18,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             this.settings = settings;
         }
 
-        [Route("connect/logout")]
+        [Route("connect/logout", Name=Constants.RouteNames.LogoutPrompt)]
         [HttpGet]
         public IHttpActionResult Logout()
         {

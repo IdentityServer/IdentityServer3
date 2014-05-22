@@ -7315,4 +7315,7 @@ body {
 .login-page .list-unstyled li {
   margin-bottom: 10px;
 }
-
+iframe.signout {
+  display: none;
+}
+/*# sourceMappingURL=app.css.map */
