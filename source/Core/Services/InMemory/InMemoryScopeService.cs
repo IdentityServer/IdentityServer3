@@ -1,22 +1,24 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryScopeService : IScopeService
     {
-        IEnumerable<Models.Scope> scopes;
+        IEnumerable<Models.Scope> _scopes;
+
         public InMemoryScopeService(IEnumerable<Models.Scope> scopes)
         {
-            this.scopes = scopes;
+            this._scopes = scopes;
         }
 
         public Task<IEnumerable<Models.Scope>> GetScopesAsync()
         {
-            return Task.FromResult(scopes);
+            return Task.FromResult(_scopes);
         }
     }
 }

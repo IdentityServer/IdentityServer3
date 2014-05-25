@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Web;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Host.Config
@@ -80,5 +75,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                 }
                 return ms.ToArray();
             }
-        }    }
+        }
+    }
 }

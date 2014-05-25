@@ -1,4 +1,8 @@
-﻿namespace Thinktecture.IdentityServer.Core.Models
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class Consent
     {

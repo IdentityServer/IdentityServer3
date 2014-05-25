@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Web;
+﻿using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
@@ -16,6 +12,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     string issuerUri, string siteName, string publicHostAddress = "")
         {
             var settings = new LocalTestCoreSettings(issuerUri, siteName, publicHostAddress);
+            
             var codeStore = new InMemoryAuthorizationCodeStore();
             var tokenStore = new InMemoryTokenHandleStore();
             var consent = new InMemoryConsentService();

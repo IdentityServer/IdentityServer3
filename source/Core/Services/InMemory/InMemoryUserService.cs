@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -7,30 +11,22 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class InMemoryUser
-    {
-        public string Subject { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Provider { get; set; }
-        public string ProviderId { get; set; }
-        public IEnumerable<Claim> Claims { get; set; }
-    }
-
     public class InMemoryUserService : IUserService
     {
-        List<InMemoryUser> users = new List<InMemoryUser>();
+        List<InMemoryUser> _users = new List<InMemoryUser>();
+
         public InMemoryUserService(IEnumerable<InMemoryUser> users)
         {
-            this.users.AddRange(users);
+            this._users.AddRange(users);
         }
 
         public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             var query =
-                from u in users
+                from u in _users
                 where u.Username == username && u.Password == password
                 select u;
+            
             var user = query.SingleOrDefault();
             if (user != null)
             {
@@ -43,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, Models.ExternalIdentity externalUser)
         {
             var query =
-                from u in users
+                from u in _users
                 where
                     u.Provider == externalUser.Provider.Name &&
                     u.ProviderId == externalUser.ProviderId
@@ -67,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                     Username = name.Value,
                     Claims = claims.ToArray()
                 };
-                users.Add(user);
+                _users.Add(user);
             }
 
             return Task.FromResult(new ExternalAuthenticateResult(user.Provider, user.Subject, user.Username));
@@ -77,7 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         public Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var query =
-                from u in users
+                from u in _users
                 where u.Subject == subject
                 select u;
             var user = query.Single();
