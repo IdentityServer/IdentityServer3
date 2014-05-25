@@ -16,11 +16,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeInteractionResponseGenerator
     {
         private SignInMessage _signIn;
-        private ICoreSettings _core;
+        private CoreSettings _core;
         
         private IConsentService _consent;
 
-        public AuthorizeInteractionResponseGenerator(ICoreSettings core, IConsentService consent)
+        public AuthorizeInteractionResponseGenerator(CoreSettings core, IConsentService consent)
         {
             _signIn = new SignInMessage();
             

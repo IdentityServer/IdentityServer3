@@ -3,10 +3,8 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
-using System;
-using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.TestServices;
+using Thinktecture.IdentityServer.Host.Config;
 using Thinktecture.IdentityServer.WsFed.Configuration;
 using Thinktecture.IdentityServer.WsFed.Services;
 
@@ -20,7 +18,7 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    var factory = TestOptionsFactory.Create(
+                    var factory = LocalTestFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
                         publicHostAddress: "http://localhost:3333/core");

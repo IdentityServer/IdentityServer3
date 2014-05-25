@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private readonly ILogger _logger;
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
 
         private readonly AuthorizeRequestValidator _validator;
         private readonly AuthorizeResponseGenerator _responseGenerator;
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
-            ICoreSettings settings)
+            CoreSettings settings)
         {
             _logger = logger;
             _settings = settings;
@@ -190,7 +190,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 });
         }
 
-        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, ICoreSettings settings)
+        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, CoreSettings settings)
         {
             message = message ?? new SignInMessage();
 

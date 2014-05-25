@@ -13,11 +13,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenResponseGenerator
     {
-        private ICoreSettings _settings;
+        private CoreSettings _settings;
         private ITokenService _tokenService;
         private ITokenHandleStore _tokenHandles;
 
-        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, ICoreSettings settings, IAuthorizationCodeStore codes)
+        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
         {
             _settings = settings;
             _tokenService = tokenService;

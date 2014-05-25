@@ -17,9 +17,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         SignInMessage _message;
         HttpRequestMessage _request;
-        private ICoreSettings _settings;
+        private CoreSettings _settings;
 
-        public LoginResult(SignInMessage message, HttpRequestMessage request, ICoreSettings settings)
+        public LoginResult(SignInMessage message, HttpRequestMessage request, CoreSettings settings)
         {
             _message = message;
             _settings = settings;

@@ -11,8 +11,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class LogoutController : ApiController
     {
         ILogger logger;
-        ICoreSettings settings;
-        public LogoutController(ILogger logger, ICoreSettings settings)
+        CoreSettings settings;
+        public LogoutController(ILogger logger, CoreSettings settings)
         {
             this.logger = logger;
             this.settings = settings;

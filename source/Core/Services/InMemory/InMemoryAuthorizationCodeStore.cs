@@ -2,17 +2,16 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
-
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 
-namespace Thinktecture.IdentityServer.TestServices
+namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class TestAuthorizationCodeStore : IAuthorizationCodeStore
+    public class InMemoryAuthorizationCodeStore : IAuthorizationCodeStore
     {
-        static ConcurrentDictionary<string, AuthorizationCode> _repository = new ConcurrentDictionary<string, AuthorizationCode>();
+        ConcurrentDictionary<string, AuthorizationCode> _repository = new ConcurrentDictionary<string, AuthorizationCode>();
 
         public Task StoreAsync(string key, AuthorizationCode value)
         {

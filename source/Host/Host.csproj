@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <EmbeddedResource Include="Config\idsrv3test.pfx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Web.AzureWebSites.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -170,6 +171,10 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Config\LocalTestClients.cs" />
+    <Compile Include="Config\LocalTestCoreSettings.cs" />
+    <Compile Include="Config\LocalTestFactory.cs" />
+    <Compile Include="Config\LocalTestScopes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\Startup_AzureWebSites.cs" />
     <Compile Include="Startup\Startup_Minimal.cs" />
@@ -183,10 +188,6 @@
     <ProjectReference Include="..\Core.EntityFramework\Core.EntityFramework.csproj">
       <Project>{f8047c14-06b6-4a21-952d-bf4ad2b2faea}</Project>
       <Name>Core.EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Core.TestServices\Core.TestServices.csproj">
-      <Project>{55eb5db3-c50c-431f-8a45-548c1436e671}</Project>
-      <Name>Core.TestServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>

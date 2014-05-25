@@ -1,55 +1,31 @@
-﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
- */
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core;
-using System;
+﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
+using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.TestServices
+namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class TestCoreSettings : ICoreSettings
+    public class LocalTestCoreSettings : CoreSettings
     {
         private string _issuerUri;
         private string _siteName;
         private X509Certificate2 _certificate;
         private string _publicHostAddress;
 
-        public TestCoreSettings(string issuerUri, string siteName, string publicHostAddress)
+        public LocalTestCoreSettings(string issuerUri, string siteName, string publicHostAddress)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
             _publicHostAddress = publicHostAddress;
 
             var assembly = this.GetType().Assembly;
-            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.TestServices.idsrv3test.pfx"))
+            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Host.Config.idsrv3test.pfx"))
             {
                 _certificate = new X509Certificate2(ReadStream(stream), "idsrv3test");
             }
         }
 
-        public Task<Client> FindClientByIdAsync(string clientId)
-        {
-            return Task.FromResult((from c in TestClients.Get()
-                                    where c.ClientId == clientId &&
-                                          c.Enabled == true
-                                    select c).SingleOrDefault());
-        }
-
-        public Task<IEnumerable<Scope>> GetScopesAsync()
-        {
-            return Task.FromResult(TestScopes.Get());
-        }
-
-        public X509Certificate2 GetSigningCertificate()
+        public override X509Certificate2 GetSigningCertificate()
         {
             if (_certificate == null)
             {
@@ -59,22 +35,22 @@ namespace Thinktecture.IdentityServer.TestServices
             return _certificate;
         }
 
-        public string GetIssuerUri()
+        public override string GetIssuerUri()
         {
             return _issuerUri;
         }
 
-        public string GetSiteName()
+        public override string GetSiteName()
         {
             return _siteName;
         }
 
-        public string GetPublicHost()
+        public override string GetPublicHost()
         {
             return _publicHostAddress;
         }
 
-        public InternalProtectionSettings GetInternalProtectionSettings()
+        public override InternalProtectionSettings GetInternalProtectionSettings()
         {
             var settings = new InternalProtectionSettings
             {

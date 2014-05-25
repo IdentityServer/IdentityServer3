@@ -19,12 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenValidator
     {
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ILogger _logger;
 
-        public TokenValidator(ICoreSettings settings, IUserService users, ITokenHandleStore tokenHandles, ILogger logger)
+        public TokenValidator(CoreSettings settings, IUserService users, ITokenHandleStore tokenHandles, ILogger logger)
         {
             _settings = settings;
             _users = users;

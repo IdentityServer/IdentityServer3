@@ -17,12 +17,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ClientValidator
     {
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
+        private readonly IClientService _clients;
         private readonly ILogger _logger;
 
-        public ClientValidator(ICoreSettings settings, ILogger logger)
+        public ClientValidator(CoreSettings settings, IClientService clients, ILogger logger)
         {
             _settings = settings;
+            _clients = clients;
             _logger = logger;
         }
 
@@ -67,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 throw new InvalidOperationException("credential is null");
             }
 
-            var client = await _settings.FindClientByIdAsync(credential.ClientId);
+            var client = await _clients.FindClientByIdAsync(credential.ClientId);
             if (client == null || client.Enabled == false)
             {
                 _logger.Error("Client not found in registry or not enabled: " + credential.ClientId);

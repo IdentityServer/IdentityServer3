@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 
-
-namespace Thinktecture.IdentityServer.TestServices
+namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class TestTokenHandleStore : ITokenHandleStore
+    public class InMemoryTokenHandleStore : ITokenHandleStore
     {
-        static ConcurrentDictionary<string, Token> _repository = new ConcurrentDictionary<string, Token>();
+        ConcurrentDictionary<string, Token> _repository = new ConcurrentDictionary<string, Token>();
 
         public Task StoreAsync(string key, Token value)
         {
