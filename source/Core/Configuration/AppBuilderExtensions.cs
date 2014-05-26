@@ -3,7 +3,6 @@
  * see license
  */
 
-using Autofac;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
@@ -15,17 +14,12 @@ using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
-using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
 namespace Owin
 {
-    using Microsoft.Owin.Builder;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public static class AppBuilderExtensions
     {
-        public static IdentityServerAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
+        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
 
@@ -39,9 +33,9 @@ namespace Owin
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
-            if (options.SocialIdentityProviderConfiguration != null)
+            if (options.AdditionalIdentityProviderConfiguration != null)
             {
-                options.SocialIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
+                options.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
             if (options.PluginConfiguration != null)
@@ -67,7 +61,7 @@ namespace Owin
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
-            return new IdentityServerAppBuilder(app);
+            return app;
         }
     }
 }

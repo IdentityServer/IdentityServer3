@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Host
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
+                        AdditionalIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
 
                     coreApp.UseIdentityServerCore(options);

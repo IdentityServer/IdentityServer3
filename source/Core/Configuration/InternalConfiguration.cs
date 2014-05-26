@@ -13,11 +13,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class InternalConfiguration
     {
-        public PluginDependencies PluginDependencies { get; set; }
+        public PluginConfiguration PluginDependencies { get; set; }
 
         public InternalConfiguration()
         {
-            PluginDependencies = new PluginDependencies();
+            PluginDependencies = new PluginConfiguration();
         }
     }
 }

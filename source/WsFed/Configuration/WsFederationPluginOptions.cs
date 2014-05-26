@@ -10,21 +10,21 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
 {
     public class WsFederationPluginOptions
     {
-        PluginDependencies _dependencies;
+        PluginConfiguration _dependencies;
 
-        public WsFederationPluginOptions(PluginDependencies dependencies)
+        public WsFederationPluginOptions(PluginConfiguration configuration)
         {
-            if (dependencies == null)
+            if (configuration == null)
             {
                 throw new ArgumentNullException("dependencies");
             }
             
-            _dependencies = dependencies;
+            _dependencies = configuration;
         }
 
         public const string WsFedCookieAuthenticationType = "WsFedSignInOut";
 
-        public PluginDependencies Dependencies
+        public PluginConfiguration Configuration
         {
             get
             {
@@ -33,6 +33,6 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
         }
 
         public Func<IRelyingPartyService> RelyingPartyService { get; set; }
-        public bool EnabledFederationMetadata { get; set; }
+        public bool EnableFederationMetadata { get; set; }
     }
 }

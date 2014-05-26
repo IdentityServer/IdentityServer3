@@ -31,16 +31,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 throw new ArgumentNullException("RelyingPartyService");
             }
 
-            options.Dependencies.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
+            options.Configuration.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
             
-            options.Dependencies.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
+            options.Configuration.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
             
-            options.Dependencies.AddType(typeof(SignInValidator));
-            options.Dependencies.AddType(typeof(SignInResponseGenerator));
-            options.Dependencies.AddType(typeof(MetadataResponseGenerator));
-            options.Dependencies.AddType(typeof(CookieMiddlewareCookieService), typeof(ICookieService));
+            options.Configuration.AddType(typeof(SignInValidator));
+            options.Configuration.AddType(typeof(SignInResponseGenerator));
+            options.Configuration.AddType(typeof(MetadataResponseGenerator));
+            options.Configuration.AddType(typeof(CookieMiddlewareCookieService), typeof(ICookieService));
 
-            options.Dependencies.AddSignOutCallbackUrl("/wsfed/signout");
+            options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;
         }

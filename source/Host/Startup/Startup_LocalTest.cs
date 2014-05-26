@@ -29,17 +29,15 @@ namespace Thinktecture.IdentityServer.Host
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders,
+                        AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         PluginConfiguration = ConfigurePlugins
                     };
 
                     coreApp.UseIdentityServerCore(options);
-                        
-
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder app, PluginDependencies dependencies)
+        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
         {
             var options = new WsFederationPluginOptions(dependencies)
             {
@@ -49,7 +47,7 @@ namespace Thinktecture.IdentityServer.Host
             app.UseWsFederationPlugin(options);
         }
 
-        public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
+        public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
             var google = new GoogleAuthenticationOptions
             {
