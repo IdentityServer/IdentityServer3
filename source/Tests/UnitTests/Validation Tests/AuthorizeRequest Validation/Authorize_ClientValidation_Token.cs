@@ -16,7 +16,7 @@ namespace UnitTests.AuthorizeRequest_Validation
     public class Authorize_ClientValidation_Token
     {
         ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
+        CoreSettings _settings = new TestSettings();
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Token")]
@@ -28,7 +28,7 @@ namespace UnitTests.AuthorizeRequest_Validation
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
-            var validator = ValidatorFactory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.AreEqual(false, protocolResult.IsError);
 

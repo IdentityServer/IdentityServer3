@@ -17,13 +17,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ClientValidator
     {
-        private readonly CoreSettings _settings;
         private readonly IClientService _clients;
         private readonly ILogger _logger;
 
-        public ClientValidator(CoreSettings settings, IClientService clients, ILogger logger)
+        public ClientValidator(IClientService clients, ILogger logger)
         {
-            _settings = settings;
             _clients = clients;
             _logger = logger;
         }

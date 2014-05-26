@@ -7,7 +7,6 @@ using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 
 namespace UnitTests.Validation_Tests.Client_Validation
@@ -15,8 +14,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
     [TestClass]
     public class Client_Validation
     {
-        ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
+        ClientValidator _validator = Factory.CreateClientValidator();
 
         const string Category = "Client validation";
 
@@ -30,8 +28,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
                 Secret = "secret"
             };
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNotNull(client);
             Assert.AreEqual("codeclient", client.ClientId);
@@ -47,8 +44,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
                 Secret = "invalid"
             };
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }
@@ -63,8 +59,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
                 Secret = "invalid"
             };
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }
@@ -79,8 +74,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
                 Secret = "invalid"
             };
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }
@@ -92,8 +86,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
         {
             var credential = new ClientCredential();
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
         }
 
         [TestMethod]
@@ -103,8 +96,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
         {
             var credential = new ClientCredential();
             
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
         }
 
         [TestMethod]
@@ -117,8 +109,7 @@ namespace UnitTests.Validation_Tests.Client_Validation
                 Secret = ""
             };
 
-            var validator = new ClientValidator(_settings, _logger);
-            var client = await validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNull(client);
         }

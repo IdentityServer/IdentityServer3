@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Plumbing;
 using UnitTests.Plumbing;
 
 namespace UnitTests.TokenRequest_Validation
@@ -16,16 +18,15 @@ namespace UnitTests.TokenRequest_Validation
     [TestClass]
     public class TokenRequestValidation_General_Invalid
     {
-        ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
+        IClientService _clients = new InMemoryClientService(TestClients.Get());
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Parameters_Null()
         {
-            var store = new TestAuthorizationCodeStore();
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var store = new InMemoryAuthorizationCodeStore();
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var result = await validator.ValidateRequestAsync(null, null);
@@ -36,8 +37,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Client_Null()
         {
-            var store = new TestAuthorizationCodeStore();
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var store = new InMemoryAuthorizationCodeStore();
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -52,8 +53,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Unknown_Grant_Type()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -64,7 +65,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -82,8 +83,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - General - Invalid")]
         public async Task Missing_Grant_Type()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -94,7 +95,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
