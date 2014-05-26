@@ -5,8 +5,6 @@ using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Tests.Plumbing;
 using UnitTests.Plumbing;
 
 namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
@@ -15,7 +13,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
     public class AccessTokenValidation
     {
         TestSettings _settings = new TestSettings();
-        IClientService _clients = new InMemoryClientService(TestClients.Get());
+        IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
         public async Task Create_and_Validate_JWT_AccessToken_Valid()
