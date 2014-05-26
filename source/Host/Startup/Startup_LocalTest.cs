@@ -37,16 +37,6 @@ namespace Thinktecture.IdentityServer.Host
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
-        {
-            var options = new WsFederationPluginOptions(dependencies)
-            {
-                RelyingPartyService = () => new TestRelyingPartyService(),
-            };
-
-            app.UseWsFederationPlugin(options);
-        }
-
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
             var google = new GoogleAuthenticationOptions
@@ -73,6 +63,16 @@ namespace Thinktecture.IdentityServer.Host
                 ConsumerSecret = "df15L2x6kNI50E4PYcHS0ImBQlcGIt6huET8gQN41VFpUCwNjM"
             };
             app.UseTwitterAuthentication(twitter);
+        }
+
+        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
+        {
+            var options = new WsFederationPluginOptions(dependencies)
+            {
+                RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+            };
+
+            app.UseWsFederationPlugin(options);
         }
     }
 }

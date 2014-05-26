@@ -18,11 +18,10 @@ namespace Thinktecture.IdentityServer.Host.Config
             var consent = new InMemoryConsentService();
             var scopes = new InMemoryScopeService(LocalTestScopes.Get());
             var clients = new InMemoryClientService(LocalTestClients.Get());
-            var logger = new TraceLogger();
 
             var users = new InMemoryUser[]
             {
-                new InMemoryUser{Subject = "alice", Username = "alice", Password = "alice", 
+                new InMemoryUser{Subject = "818727", Username = "alice", Password = "alice", 
                     Claims = new Claim[]
                     {
                         new Claim(Constants.ClaimTypes.GivenName, "Alice"),
@@ -30,7 +29,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         new Claim(Constants.ClaimTypes.Email, "AliceSmith@email.com"),
                     }
                 },
-                new InMemoryUser{Subject = "bob", Username = "bob", Password = "bob", 
+                new InMemoryUser{Subject = "88421113", Username = "bob", Password = "bob", 
                     Claims = new Claim[]
                     {
                         new Claim(Constants.ClaimTypes.GivenName, "Bob"),
@@ -43,7 +42,6 @@ namespace Thinktecture.IdentityServer.Host.Config
 
             var fact = new IdentityServerServiceFactory
             {
-                Logger = () => logger,
                 UserService = () => userSvc,
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,
