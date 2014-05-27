@@ -91,7 +91,7 @@
     <Compile Include="Results\SignOutResult.cs" />
     <Compile Include="Services\ICookieService.cs" />
     <Compile Include="Services\CookieMiddlewareCookieService.cs" />
-    <Compile Include="Services\TestRelyingPartyService.cs" />
+    <Compile Include="Services\InMemoryRelyingPartyService.cs" />
     <Compile Include="Results\SignInResult.cs" />
     <Compile Include="Services\IRelyingPartyService.cs" />
     <Compile Include="Validation\SignInValidationResult.cs" />

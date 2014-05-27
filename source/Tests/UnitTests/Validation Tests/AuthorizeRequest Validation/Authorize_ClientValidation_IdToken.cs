@@ -16,7 +16,7 @@ namespace UnitTests
     public class Authorize_ClientValidation_IdToken
     {
         ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
+        CoreSettings _settings = new TestSettings();
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - IdToken")]
@@ -29,7 +29,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
-            var validator = ValidatorFactory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.IsFalse(protocolResult.IsError);
 

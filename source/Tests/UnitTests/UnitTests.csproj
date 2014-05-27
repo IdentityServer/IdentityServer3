@@ -78,7 +78,8 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
-    <Compile Include="Plumbing\TestAuthorizationCodeStore.cs" />
+    <Compile Include="Plumbing\TestClients.cs" />
+    <Compile Include="Plumbing\TestScopes.cs" />
     <Compile Include="Plumbing\TestUserService.cs" />
     <Compile Include="Plumbing\ValidatorFactory.cs" />
     <Compile Include="Validation Tests\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />

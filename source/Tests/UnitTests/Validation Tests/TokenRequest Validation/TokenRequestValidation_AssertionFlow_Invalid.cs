@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
 using UnitTests.Plumbing;
 
@@ -17,16 +16,14 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
 
-        ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
-        IAssertionGrantValidator _assertionValidator = new TestAssertionValidator();
+        IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
-            var client = await _settings.FindClientByIdAsync("client");
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger);
+            var client = await _clients.FindClientByIdAsync("client");
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
@@ -43,10 +40,9 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Missing_Assertion()
         {
-            var client = await _settings.FindClientByIdAsync("assertionclient");
+            var client = await _clients.FindClientByIdAsync("assertionclient");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                assertionGrantValidator: _assertionValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
@@ -62,10 +58,9 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Invalid_Assertion()
         {
-            var client = await _settings.FindClientByIdAsync("assertionclient");
+            var client = await _clients.FindClientByIdAsync("assertionclient");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                assertionGrantValidator: _assertionValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "unknownAssertionType");

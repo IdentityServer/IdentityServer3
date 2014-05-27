@@ -8,8 +8,8 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 using UnitTests.Plumbing;
 
 namespace UnitTests.TokenRequest_Validation
@@ -19,17 +19,14 @@ namespace UnitTests.TokenRequest_Validation
     {
         const string Category = "TokenRequest Validation - General - Valid";
 
-        ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
-        IUserService _users = new TestUserService();
-        ICustomRequestValidator _customRequestValidator = new DefaultCustomRequestValidator();
+        IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
         [TestCategory(Category)]
         public async Task Valid_Code_Request()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -40,9 +37,8 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                authorizationCodeStore: store,
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator(
+                authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
@@ -58,10 +54,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request()
         {
-            var client = await _settings.FindClientByIdAsync("client");
+            var client = await _clients.FindClientByIdAsync("client");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -76,10 +71,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
-            var client = await _settings.FindClientByIdAsync("client_restricted");
+            var client = await _clients.FindClientByIdAsync("client_restricted");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -94,11 +88,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request()
         {
-            var client = await _settings.FindClientByIdAsync("roclient");
+            var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                userService: _users,
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -115,11 +107,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request_Restricted_Client()
         {
-            var client = await _settings.FindClientByIdAsync("roclient_restricted");
+            var client = await _clients.FindClientByIdAsync("roclient_restricted");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                userService: _users,
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -136,11 +126,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory(Category)]
         public async Task Valid_AssertionFlow_Request()
         {
-            var client = await _settings.FindClientByIdAsync("assertionclient");
+            var client = await _clients.FindClientByIdAsync("assertionclient");
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
-                assertionGrantValidator: new TestAssertionValidator(),
-                customRequestValidator: _customRequestValidator);
+            var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "assertionType");

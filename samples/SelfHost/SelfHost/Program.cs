@@ -2,7 +2,7 @@
 using Microsoft.Owin.Hosting;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.TestServices;
+using Thinktecture.IdentityServer.Host.Config;
 
 namespace SelfHost
 {
@@ -22,10 +22,10 @@ namespace SelfHost
         {
             public void Configuration(IAppBuilder appBuilder)
             {
-                IdentityServerServiceFactory factory = TestOptionsFactory.Create(
-                    "https://idsrv3.com",
-                    "Thinktecture IdentityServer v3- Selfhost", 
-                    "http://localhost:3333");
+                var factory = LocalTestFactory.Create(
+                        issuerUri: "https://idsrv3.com",
+                        siteName: "Thinktecture IdentityServer v3 - preview 1 (SelfHost)",
+                        publicHostAddress: "http://localhost:3333");
 
                 var opts = new IdentityServerCoreOptions
                 {

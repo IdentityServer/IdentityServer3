@@ -311,6 +311,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Login                   = "idsrv.authentication.login";
             public const string LoginExternal           = "idsrv.authentication.loginexternal";
             public const string LoginExternalCallback   = "idsrv.authentication.loginexternalcallback";
+            public const string LogoutPrompt            = "idsrv.authentication.logoutprompt";
             public const string Logout                  = "idsrv.authentication.logout";
             public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
         }

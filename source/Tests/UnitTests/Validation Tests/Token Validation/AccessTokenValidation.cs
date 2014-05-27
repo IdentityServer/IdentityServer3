@@ -13,6 +13,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
     public class AccessTokenValidation
     {
         TestSettings _settings = new TestSettings();
+        IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
         public async Task Create_and_Validate_JWT_AccessToken_Valid()
@@ -28,7 +29,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
                 Audience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri()),
                 Issuer = _settings.GetIssuerUri(),
                 Lifetime = 60,
-                Client = await _settings.FindClientByIdAsync("client")
+                Client = await _clients.FindClientByIdAsync("client")
             };
 
             var jwt = await tokenService.CreateSecurityTokenAsync(token);

@@ -96,6 +96,10 @@
         //};
     });
 
+    app.controller("LogoutCtrl", function ($scope) {
+        $scope.model = $scope.layout.pageModel;
+    });
+
     //app.controller("LogoutCtrl", function ($scope, authentication) {
     //    $scope.logout = function () {
     //        $scope.error = null;

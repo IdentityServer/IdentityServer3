@@ -10,6 +10,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 using UnitTests.Plumbing;
 
 namespace UnitTests.TokenRequest_Validation
@@ -17,15 +18,14 @@ namespace UnitTests.TokenRequest_Validation
     [TestClass]
     public class TokenRequestValidation_Code_Invalid
     {
-        ILogger _logger = new DebugLogger();
-        ICoreSettings _settings = new TestSettings();
+        IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_AuthorizationCode()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -36,7 +36,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -53,8 +53,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Invalid_AuthorizationCode()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -65,7 +65,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -83,8 +83,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
-            var client = await _settings.FindClientByIdAsync("implicitclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("implicitclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -95,7 +95,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -113,9 +113,9 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
-            var client1 = await _settings.FindClientByIdAsync("codeclient");
-            var client2 = await _settings.FindClientByIdAsync("codeclient_restricted");
-            var store = new TestAuthorizationCodeStore();
+            var client1 = await _clients.FindClientByIdAsync("codeclient");
+            var client2 = await _clients.FindClientByIdAsync("codeclient_restricted");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -126,7 +126,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -144,8 +144,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_RedirectUri()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -156,7 +156,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -173,8 +173,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -185,7 +185,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -203,8 +203,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Expired_AuthorizationCode()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -216,7 +216,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -234,8 +234,8 @@ namespace UnitTests.TokenRequest_Validation
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Reused_AuthorizationCode()
         {
-            var client = await _settings.FindClientByIdAsync("codeclient");
-            var store = new TestAuthorizationCodeStore();
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
 
             var code = new AuthorizationCode
             {
@@ -246,7 +246,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            var validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
 
@@ -261,7 +261,7 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsFalse(result.IsError);
 
             // request second time
-            validator = ValidatorFactory.CreateTokenValidator(_settings, _logger,
+            validator = Factory.CreateTokenValidator(
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
             

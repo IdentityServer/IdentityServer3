@@ -14,8 +14,8 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
     public class MetadataResponseGenerator
     {
         private ILogger _logger;
-        private ICoreSettings _settings;
-        public MetadataResponseGenerator(ILogger logger, ICoreSettings settings)
+        private CoreSettings _settings;
+        public MetadataResponseGenerator(ILogger logger, CoreSettings settings)
         {
             _logger = logger;
             _settings = settings;

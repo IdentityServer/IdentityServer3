@@ -5,24 +5,81 @@
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Plumbing;
 
 namespace UnitTests.Plumbing
 {
-    static class ValidatorFactory
+    static class Factory
     {
+        public static IClientService CreateClientService()
+        {
+            return new InMemoryClientService(TestClients.Get());
+        }
+
+        public static ClientValidator CreateClientValidator(
+            ILogger logger = null,
+            IClientService clients = null)
+        {
+            if (logger == null)
+            {
+                logger = new DebugLogger();
+            }
+
+            if (clients == null)
+            {
+                clients = new InMemoryClientService(TestClients.Get());
+            }
+
+            return new ClientValidator(clients, logger);
+        }
+
         public static TokenRequestValidator CreateTokenValidator(
-            ICoreSettings settings,
-            ILogger logger,
+            CoreSettings settings = null,
+            ILogger logger = null,
+            IScopeService scopes = null,
             IAuthorizationCodeStore authorizationCodeStore = null,
             IUserService userService = null,
             IAssertionGrantValidator assertionGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null)
         {
-            return new TokenRequestValidator(settings, logger, authorizationCodeStore, userService, assertionGrantValidator, customRequestValidator);
+            if (settings == null)
+            {
+                settings = new TestSettings();
+            }
+
+            if (scopes == null)
+            {
+                scopes = new InMemoryScopeService(TestScopes.Get());
+            }
+
+            if (logger == null)
+            {
+                logger = new DebugLogger();
+            }
+
+            if (userService == null)
+            {
+                userService = new TestUserService();
+            }
+
+            if (customRequestValidator == null)
+            {
+                customRequestValidator = new DefaultCustomRequestValidator();
+            }
+
+            if (assertionGrantValidator == null)
+            {
+                assertionGrantValidator = new TestAssertionValidator();
+            }
+
+            return new TokenRequestValidator(settings, logger, authorizationCodeStore, userService, scopes, assertionGrantValidator, customRequestValidator);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(
-            ICoreSettings settings = null,
+            CoreSettings settings = null,
+            IScopeService scopes = null,
+            IClientService clients = null,
             ILogger logger = null,
             IUserService users = null,
             ICustomRequestValidator customValidator = null)
@@ -30,6 +87,16 @@ namespace UnitTests.Plumbing
             if (settings == null)
             {
                 settings = new TestSettings();
+            }
+
+            if (scopes == null)
+            {
+                scopes = new InMemoryScopeService(TestScopes.Get());
+            }
+
+            if (clients == null)
+            {
+                clients = new InMemoryClientService(TestClients.Get());
             }
 
             if (logger == null)
@@ -41,13 +108,13 @@ namespace UnitTests.Plumbing
             {
                 customValidator = new DefaultCustomRequestValidator();
             }
+
             if (users == null)
             {
                 users = new TestUserService();
             }
 
-
-            return new AuthorizeRequestValidator(settings, logger, users, customValidator);
+            return new AuthorizeRequestValidator(settings, scopes, clients, logger, users, customValidator);
         }
     }
 }

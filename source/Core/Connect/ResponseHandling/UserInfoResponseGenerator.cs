@@ -15,12 +15,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class UserInfoResponseGenerator
     {
         private readonly IUserService _users;
-        private readonly ICoreSettings _settings;
+        private readonly IScopeService _scopes;
+        private readonly CoreSettings _settings;
         private readonly ILogger _logger;
 
-        public UserInfoResponseGenerator(IUserService users, ICoreSettings settings, ILogger logger)
+        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings, ILogger logger)
         {
             _users = users;
+            _scopes = scopes;
             _settings = settings;
             _logger = logger;
         }
@@ -68,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var scopeString = string.Join(" ", scopes);
             _logger.InformationFormat("Scopes in access token: {0}", scopeString);
 
-            var scopeDetails = await _settings.GetScopesAsync();
+            var scopeDetails = await _scopes.GetScopesAsync();
             var scopeClaims = new List<string>();
 
             foreach (var scope in scopes)

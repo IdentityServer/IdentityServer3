@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public NameValueCollection Raw { get; set; }
         public ClaimsPrincipal Subject { get; set; }
 
-        public ICoreSettings Settings { get; set; }
+        public CoreSettings Settings { get; set; }
         public Client Client { get; set; }
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }

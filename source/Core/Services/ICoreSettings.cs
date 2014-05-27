@@ -11,16 +11,12 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public interface ICoreSettings
+    public abstract class CoreSettings
     {
-        Task<IEnumerable<Scope>> GetScopesAsync();
-        Task<Client> FindClientByIdAsync(string clientId);
-        
-        InternalProtectionSettings GetInternalProtectionSettings();
-        X509Certificate2 GetSigningCertificate();
-        string GetIssuerUri();
-        string GetSiteName();
-        string GetPublicHost();
-        
+        public abstract InternalProtectionSettings GetInternalProtectionSettings();
+        public abstract X509Certificate2 GetSigningCertificate();
+        public abstract string GetIssuerUri();
+        public abstract string GetSiteName();
+        public abstract string GetPublicHost();
     }
 }

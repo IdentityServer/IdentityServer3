@@ -3,10 +3,8 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
-using System;
-using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.TestServices;
+using Thinktecture.IdentityServer.Host.Config;
 using Thinktecture.IdentityServer.WsFed.Configuration;
 using Thinktecture.IdentityServer.WsFed.Services;
 
@@ -20,7 +18,7 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    var factory = TestOptionsFactory.Create(
+                    var factory = LocalTestFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
                         publicHostAddress: "http://localhost:3333/core");
@@ -31,27 +29,15 @@ namespace Thinktecture.IdentityServer.Host
                     var options = new IdentityServerCoreOptions
                     {
                         Factory = factory,
-                        SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders,
+                        AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         PluginConfiguration = ConfigurePlugins
                     };
 
                     coreApp.UseIdentityServerCore(options);
-                        
-
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder app, PluginDependencies dependencies)
-        {
-            var options = new WsFederationPluginOptions(dependencies)
-            {
-                RelyingPartyService = () => new TestRelyingPartyService(),
-            };
-
-            app.UseWsFederationPlugin(options);
-        }
-
-        public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
+        public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
             var google = new GoogleAuthenticationOptions
             {
@@ -77,6 +63,16 @@ namespace Thinktecture.IdentityServer.Host
                 ConsumerSecret = "df15L2x6kNI50E4PYcHS0ImBQlcGIt6huET8gQN41VFpUCwNjM"
             };
             app.UseTwitterAuthentication(twitter);
+        }
+
+        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
+        {
+            var options = new WsFederationPluginOptions(dependencies)
+            {
+                RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+            };
+
+            app.UseWsFederationPlugin(options);
         }
     }
 }

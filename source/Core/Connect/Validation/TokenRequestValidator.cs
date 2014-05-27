@@ -16,10 +16,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenRequestValidator
     {
-        private readonly ICoreSettings _settings;
+        private readonly CoreSettings _settings;
         private readonly ILogger _logger;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
+        private readonly IScopeService _scopes;
         private readonly IAssertionGrantValidator _assertionValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
 
@@ -33,12 +34,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(ICoreSettings settings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService users, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(CoreSettings settings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
             _settings = settings;
             _logger = logger;
             _authorizationCodes = authorizationCodes;
             _users = users;
+            _scopes = scopes;
             _assertionValidator = assertionValidator;
             _customRequestValidator = customRequestValidator;
         }
@@ -310,7 +312,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return false;
             }
             
-            if (!scopeValidator.AreScopesValid(requestedScopes, await _settings.GetScopesAsync()))
+            if (!scopeValidator.AreScopesValid(requestedScopes, await _scopes.GetScopesAsync()))
             {
                 return false;
             }

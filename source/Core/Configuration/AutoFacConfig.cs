@@ -18,25 +18,38 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options, PluginDependencies pluginDepencies)
+        public static IContainer Configure(IdentityServerCoreOptions options, InternalConfiguration internalConfig)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
+            if (internalConfig == null) throw new ArgumentNullException("internalConfig");
 
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
 
             var builder = new ContainerBuilder();
 
+            builder.RegisterInstance(internalConfig).AsSelf();
+
             // mandatory from factory
             builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
-            builder.Register(ctx => fact.CoreSettings()).As<ICoreSettings>();
-            builder.Register(ctx => fact.Logger()).As<ILogger>();
+            builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
             builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
             builder.Register(ctx => fact.UserService()).As<IUserService>();
+            builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
+            builder.Register(ctx => fact.ClientService()).As<IClientService>();
             builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
 
             // optional from factory
+            if (fact.Logger != null)
+            {
+                builder.Register(ctx => fact.Logger()).As<ILogger>();
+            }
+            else
+            {
+                builder.RegisterType<TraceLogger>().As<ILogger>();
+            }
+
             if (fact.ClaimsProvider != null)
             {
                 builder.Register(ctx => fact.ClaimsProvider()).As<IClaimsProvider>();
@@ -101,6 +114,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // plugin configuration
+            var pluginDepencies = internalConfig.PluginDependencies;
             if (pluginDepencies != null)
             {
                 if (pluginDepencies.ApiControllerAssemblies != null)

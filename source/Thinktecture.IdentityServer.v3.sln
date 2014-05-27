@@ -9,11 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.EntityFramework", "Core.EntityFramework\Core.EntityFramework.csproj", "{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.TestServices", "Core.TestServices\Core.TestServices.csproj", "{55EB5DB3-C50C-431F-8A45-548C1436E671}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E6CD03EB-B9D2-44CA-B6C1-F546CFEA51DC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MembershipRebootUserService", "MembershipRebootUserService\MembershipRebootUserService.csproj", "{9EB9F5C7-49E1-440B-923F-BB842D9436D2}"
 EndProject
@@ -29,6 +25,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WsFederation", "WsFed\WsFederation.csproj", "{3E97192F-35D5-4DAC-9CAB-A2E9B166E68C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{D7EEF7F6-4F6F-4B86-AA4C-368025A16BD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,18 +53,6 @@ Global
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8047C14-06B6-4A21-952D-BF4AD2B2FAEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55EB5DB3-C50C-431F-8A45-548C1436E671}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9EB9F5C7-49E1-440B-923F-BB842D9436D2}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
 		{9EB9F5C7-49E1-440B-923F-BB842D9436D2}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
 		{9EB9F5C7-49E1-440B-923F-BB842D9436D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -85,14 +71,20 @@ Global
 		{3E97192F-35D5-4DAC-9CAB-A2E9B166E68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E97192F-35D5-4DAC-9CAB-A2E9B166E68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E97192F-35D5-4DAC-9CAB-A2E9B166E68C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA} = {E6CD03EB-B9D2-44CA-B6C1-F546CFEA51DC}
 		{9EB9F5C7-49E1-440B-923F-BB842D9436D2} = {41C085E2-3842-47DE-9A79-AE0C8AD4B93C}
 		{409B7496-B359-40EB-B92B-733F0B1F0088} = {41C085E2-3842-47DE-9A79-AE0C8AD4B93C}
 		{3E97192F-35D5-4DAC-9CAB-A2E9B166E68C} = {D7EEF7F6-4F6F-4B86-AA4C-368025A16BD1}
+		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA} = {E6CD03EB-B9D2-44CA-B6C1-F546CFEA51DC}
 	EndGlobalSection
 EndGlobal

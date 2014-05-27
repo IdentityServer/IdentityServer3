@@ -19,10 +19,10 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
     public class SignInResponseGenerator
     {
         private ILogger _logger;
-        private ICoreSettings _settings;
+        private CoreSettings _settings;
         private IUserService _users;
         
-        public SignInResponseGenerator(ILogger logger, ICoreSettings settings, IUserService users)
+        public SignInResponseGenerator(ILogger logger, CoreSettings settings, IUserService users)
         {
             _logger = logger;
             _settings = settings;

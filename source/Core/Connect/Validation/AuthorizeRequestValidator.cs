@@ -19,7 +19,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly ILogger _logger;
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
-        private readonly ICoreSettings _core;
+        private readonly CoreSettings _core;
+        private readonly IScopeService _scopes;
+        private readonly IClientService _clients;
         private readonly ICustomRequestValidator _customValidator;
         private readonly IUserService _users;
 
@@ -31,9 +33,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(ICoreSettings core, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(CoreSettings core, IScopeService scopes, IClientService clients, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
         {
             _core = core;
+            _scopes = scopes;
+            _clients = clients;
             _logger = logger;
             _users = users;
             _customValidator = customValidator;
@@ -309,7 +313,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = await _core.FindClientByIdAsync(_validatedRequest.ClientId);
+            var client = await _clients.FindClientByIdAsync(_validatedRequest.ClientId);
             if (client == null || client.Enabled == false)
             {
                 _logger.ErrorFormat("Unknown client or not enabled: {0}", _validatedRequest.ClientId);
@@ -350,7 +354,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, await _core.GetScopesAsync()))
+            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, await _scopes.GetScopesAsync()))
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
