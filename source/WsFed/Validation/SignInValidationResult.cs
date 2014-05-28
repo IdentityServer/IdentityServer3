@@ -22,6 +22,8 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
         public SignInRequestMessage SignInRequestMessage { get; set; }
         
         public string ReplyUrl { get; set; }
+        public string HomeRealm { get; set; }
+
         public ClaimsPrincipal Subject { get; set; }
     }
 }

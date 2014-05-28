@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Services;
+using Thinktecture.IdentityServer.Core;
 
 namespace Thinktecture.IdentityServer.WsFed.Validation
 {
@@ -47,6 +48,11 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
             // todo: check wreply against list of allowed reply URLs
             result.ReplyUrl = rp.ReplyUrl;
+
+            if (message.HomeRealm.IsPresent())
+            {
+                result.HomeRealm = message.HomeRealm;
+            }
 
             result.RelyingParty = rp;
             result.SignInRequestMessage = message;
