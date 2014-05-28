@@ -10,26 +10,32 @@ using System.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.ServiceModel.Security.Tokens;
 using Thinktecture.IdentityModel.Tokens;
+
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class SignInMessage
     {
-        // page, popup (todo), touch, wap
+        public string ReturnUrl { get; set; }
+        public string IdP { get; set; }
+
+        // not implemented
         public string DisplayMode { get; set; }
         public string UILocales { get; set; }
         public string LoginHint { get; set; }
-        // password, cert, 2fa
         public string AuthenticationMethod { get; set; }
-
-        public string ReturnUrl { get; set; }
-        public string LoginPromptCorrelationId { get; set; }
 
         public string ToJwt(string issuer, string audience, string key, int ttl)
         {
             var claims = new List<Claim>();
+
             if (ReturnUrl.IsPresent())
             {
                 claims.Add(new Claim("returnUrl", ReturnUrl));
+            }
+
+            if (IdP.IsPresent())
+            {
+                claims.Add(new Claim("idp", IdP));
             }
 
             var token = new JwtSecurityToken(
@@ -55,10 +61,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var principal = handler.ValidateToken(jwt, parameters);
 
-            var claim = principal.FindFirst("returnUrl");
-            if (claim != null)
+            var returnUrlClaim = principal.FindFirst("returnUrl");
+            if (returnUrlClaim != null)
             {
-                message.ReturnUrl = claim.Value;
+                message.ReturnUrl = returnUrlClaim.Value;
+            }
+
+            var idpClaim = principal.FindFirst("idp");
+            if (idpClaim != null)
+            {
+                message.ReturnUrl = idpClaim.Value;
             }
 
             return message;
