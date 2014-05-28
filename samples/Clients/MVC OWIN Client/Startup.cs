@@ -31,7 +31,7 @@ namespace MVC_OWIN_Client
                     Authority = Constants.BaseAddress,
                     Redirect_Uri = "http://localhost:2671/",
                     Response_Type = "id_token token",
-                    Scope = "openid email read",
+                    Scope = "openid email",
 
                     SignInAsAuthenticationType = "Cookies",
 
