@@ -174,7 +174,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (redirectUri != _validatedRequest.AuthorizationCode.RedirectUri.AbsoluteUri)
             {
-                _logger.ErrorFormat("Invalid redirect_uri: ", redirectUri);
+                _logger.ErrorFormat("Invalid redirect_uri: {0}", redirectUri);
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
