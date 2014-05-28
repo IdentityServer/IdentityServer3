@@ -1,6 +1,9 @@
-﻿using Sample;
+﻿using Newtonsoft.Json.Linq;
+using Sample;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Windows;
 using Thinktecture.IdentityModel.Client;
 using Thinktecture.Samples;
@@ -94,6 +97,30 @@ namespace WpfClient
                 var viewer = new IdentityTokenViewer();
                 viewer.IdToken = _response.Values["access_token"];
                 viewer.Show();
+            }
+        }
+
+        private async void CallServiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_response.Values.ContainsKey("access_token"))
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("http://localhost:2727/")
+                };
+                client.SetBearerToken(_response.AccessToken);
+
+                var response = await client.GetAsync("identity");
+                
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    Textbox1.Text = JArray.Parse(json).ToString();
+                }
+                else
+                {
+                    MessageBox.Show(response.StatusCode.ToString());
+                }
             }
         }
     }

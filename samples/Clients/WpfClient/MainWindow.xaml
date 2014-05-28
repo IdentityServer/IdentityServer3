@@ -11,5 +11,6 @@
         <Button Content="Access Token only" x:Name="AccessTokenOnlyButton" HorizontalAlignment="Left" Margin="430,10,0,0" VerticalAlignment="Top" Width="133" Click="AccessTokenOnlyButton_Click" />
         <Button Content="Show IdToken" x:Name="ShowIdTokenButton" HorizontalAlignment="Left" Margin="577,80,0,0" VerticalAlignment="Top" Width="112" Height="33" Click="ShowIdTokenButton_Click"/>
         <Button Content="Show Access Token" x:Name="ShowAccessTokenButton" HorizontalAlignment="Left" Margin="577,118,0,0" VerticalAlignment="Top" Width="112" Height="33" Click="ShowAccessTokenButton_Click" />
+        <Button Content="Call Service" x:Name="CallServiceButton" HorizontalAlignment="Left" Margin="577,197,0,0" VerticalAlignment="Top" Width="112" Height="33" Click="CallServiceButton_Click" />
     </Grid>
 </Window>
