@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Web;
 
 namespace MVC_OWIN_Client.Controllers
 {
@@ -15,6 +16,12 @@ namespace MVC_OWIN_Client.Controllers
             ViewBag.Message = "Claims";
 
             return View();
+        }
+
+        public ActionResult Signout()
+        {
+            Request.GetOwinContext().Authentication.SignOut();
+            return Redirect("/");
         }
     }
 }
