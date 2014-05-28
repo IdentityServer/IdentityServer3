@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Security.Cookies;
+﻿using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
@@ -14,6 +15,13 @@ namespace MvcFormPostClient
             app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
                     AuthenticationType = "Cookies"
+                });
+
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = "TempCookie",
+                    AuthenticationMode = AuthenticationMode.Passive
                 });
         }
     }
