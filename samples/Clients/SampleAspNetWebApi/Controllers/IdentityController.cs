@@ -11,7 +11,7 @@ namespace SampleAspNetWebApi.Controllers
         {
             var principal = User as ClaimsPrincipal;
 
-            return from c in principal.Claims
+            return from c in principal.Identities.First().Claims
                    select new 
                    {
                        c.Type,
