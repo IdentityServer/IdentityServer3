@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.WsFed
 
             if (result.IsSignInRequired)
             {
-                return RedirectToLogin(_settings);
+                return RedirectToLogin(_settings, result);
             }
             if (result.IsError)
             {
@@ -98,10 +98,15 @@ namespace Thinktecture.IdentityServer.WsFed
             return new SignInResult(responseMessage);
         }
 
-        IHttpActionResult RedirectToLogin(CoreSettings settings)
+        IHttpActionResult RedirectToLogin(CoreSettings settings, SignInValidationResult result)
         {
             var message = new SignInMessage();
             message.ReturnUrl = Request.RequestUri.AbsoluteUri;
+
+            if (result.HomeRealm.IsPresent())
+            {
+                message.IdP = result.HomeRealm;
+            }
 
             return new LoginResult(message, this.Request, settings);
         }
