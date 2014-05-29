@@ -31,7 +31,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return await ProcessAuthorizationCodeRequestAsync(request);
             }
             else if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
-                     request.GrantType == Constants.GrantTypes.Password)
+                     request.GrantType == Constants.GrantTypes.Password ||
+                     request.Assertion.IsPresent())
             {
                 return await ProcessTokenRequestAsync(request);
             }
