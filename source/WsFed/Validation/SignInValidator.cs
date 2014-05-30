@@ -26,13 +26,16 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
         {
             var result = new SignInValidationResult();
 
+            if (message.HomeRealm.IsPresent())
+            {
+                result.HomeRealm = message.HomeRealm;
+            }
+
             // todo: wfresh handling?
             if (!subject.Identity.IsAuthenticated)
             {
-                return new SignInValidationResult
-                {
-                    IsSignInRequired = true,
-                };
+                result.IsSignInRequired = true;
+                return result;
             };
 
             var rp = await _relyingParties.GetByRealmAsync(message.Realm);
@@ -48,11 +51,6 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
             // todo: check wreply against list of allowed reply URLs
             result.ReplyUrl = rp.ReplyUrl;
-
-            if (message.HomeRealm.IsPresent())
-            {
-                result.HomeRealm = message.HomeRealm;
-            }
 
             result.RelyingParty = rp;
             result.SignInRequestMessage = message;

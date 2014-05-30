@@ -50,7 +50,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (message != null)
             {
                 logger.Verbose("[AuthenticationController.LoginLocal] non-null message");
-                SaveLoginRequestMessage(message);
+                
+                var signIn = SaveLoginRequestMessage(message);
+                if (signIn.IdP.IsPresent())
+                {
+                    return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider=signIn.IdP }));
+                }
             }
             else
             {
@@ -379,7 +384,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 });
         }
 
-        private void SaveLoginRequestMessage(string message)
+        private SignInMessage SaveLoginRequestMessage(string message)
         {
             logger.Verbose("[AuthenticationController.SaveLoginRequestMessage] called");
 
@@ -399,6 +404,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     HttpOnly = true,
                     Secure = Request.RequestUri.Scheme == Uri.UriSchemeHttps
                 });
+
+            return signInMessage;
         }
 
         private SignInMessage LoadLoginRequestMessage()

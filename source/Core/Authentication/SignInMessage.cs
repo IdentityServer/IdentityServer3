@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var idpClaim = principal.FindFirst("idp");
             if (idpClaim != null)
             {
-                message.ReturnUrl = idpClaim.Value;
+                message.IdP = idpClaim.Value;
             }
 
             return message;
