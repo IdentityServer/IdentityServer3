@@ -263,7 +263,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var subject = redirectAuthResult.Identity.GetSubjectId();
             var name = redirectAuthResult.Identity.GetName();
 
-            var result = new Thinktecture.IdentityServer.Core.Models.AuthenticateResult(subject, name);
+            var result = new AuthenticateResult(subject, name);
             var method = redirectAuthResult.Identity.GetAuthenticationMethod();
             var idp = redirectAuthResult.Identity.GetIdentityProvider();
             var authTime = redirectAuthResult.Identity.GetAuthenticationTimeEpoch();
@@ -272,7 +272,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         private IHttpActionResult SignInAndRedirect(
-            Thinktecture.IdentityServer.Core.Models.AuthenticateResult authResult,
+            AuthenticateResult authResult,
             string authenticationMethod,
             string identityProvider,
             long authTime = 0)
