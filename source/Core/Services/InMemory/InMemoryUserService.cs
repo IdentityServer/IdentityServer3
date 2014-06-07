@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services.InMemory
+namespace Thinktecture.IdentityServer.Core.Models.InMemory
 {
     public class InMemoryUserService : IUserService
     {

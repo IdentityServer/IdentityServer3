@@ -10,7 +10,7 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Results;
 using Thinktecture.IdentityServer.WsFed.Services;

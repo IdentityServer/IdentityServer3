@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {

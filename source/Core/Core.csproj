@@ -197,7 +197,7 @@
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Connect\Services\ITokenService.cs" />
-    <Compile Include="Services\ICoreSettings.cs" />
+    <Compile Include="Models\CoreSettings.cs" />
     <Compile Include="Services\InMemory\InMemoryAuthorizationCodeStore.cs" />
     <Compile Include="Services\InMemory\InMemoryClientService.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentService.cs" />

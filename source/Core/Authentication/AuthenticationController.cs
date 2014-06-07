@@ -17,7 +17,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -264,7 +264,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var subject = redirectAuthResult.Identity.GetSubjectId();
             var name = redirectAuthResult.Identity.GetName();
 
-            var result = new Thinktecture.IdentityServer.Core.Services.AuthenticateResult(subject, name);
+            var result = new Thinktecture.IdentityServer.Core.Models.AuthenticateResult(subject, name);
             var method = redirectAuthResult.Identity.GetAuthenticationMethod();
             var idp = redirectAuthResult.Identity.GetIdentityProvider();
             var authTime = redirectAuthResult.Identity.GetAuthenticationTimeEpoch();
@@ -273,7 +273,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         private IHttpActionResult SignInAndRedirect(
-            Thinktecture.IdentityServer.Core.Services.AuthenticateResult authResult,
+            Thinktecture.IdentityServer.Core.Models.AuthenticateResult authResult,
             string authenticationMethod,
             string identityProvider,
             long authTime = 0)

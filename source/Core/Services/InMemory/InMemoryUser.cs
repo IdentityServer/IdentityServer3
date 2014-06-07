@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.InMemory
+namespace Thinktecture.IdentityServer.Core.Models.InMemory
 {
     public class InMemoryUser
     {

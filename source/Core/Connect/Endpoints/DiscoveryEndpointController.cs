@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {

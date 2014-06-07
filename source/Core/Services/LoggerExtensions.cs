@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public static class ILoggerExtensions
     {

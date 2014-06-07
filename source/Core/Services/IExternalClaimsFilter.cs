@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public interface IExternalClaimsFilter
     {

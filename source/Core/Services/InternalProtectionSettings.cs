@@ -3,7 +3,7 @@
  * see license
  */
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class InternalProtectionSettings
     {

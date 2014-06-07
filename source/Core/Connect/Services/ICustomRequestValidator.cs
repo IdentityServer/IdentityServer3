@@ -4,7 +4,7 @@
  */
 
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services
 {

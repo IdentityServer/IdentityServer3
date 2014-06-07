@@ -5,7 +5,7 @@
 
 using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Ef;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.MembershipReboot
 {

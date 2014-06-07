@@ -7,7 +7,7 @@ using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Models;
 using UnitTests.Plumbing;
 
 namespace UnitTests
