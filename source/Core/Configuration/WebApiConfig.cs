@@ -23,9 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
-            //var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
-            //config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
-
             return config;
         }
     }
