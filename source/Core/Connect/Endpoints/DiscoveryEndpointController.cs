@@ -26,12 +26,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         }
 
         [Route("openid-configuration")]
-        public async Task<dynamic> GetConfiguration()
+        public async Task<IHttpActionResult> GetConfiguration()
         {
             var baseUrl = Request.GetBaseUrl(_settings.GetPublicHost());
             var scopes = await _scopes.GetScopesAsync();
 
-            return new
+            return Json(new
             {
                 issuer = _settings.GetIssuerUri(),
                 jwks_uri = baseUrl + ".well-known/jwks",
@@ -45,11 +45,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 grant_types_supported = Constants.SupportedGrantTypes,
                 subject_types_support = new string[] { "pairwise", "public" },
                 id_token_signing_alg_values_supported = "RS256"
-            };
+            });
         }
 
         [Route("jwks")]
-        public dynamic GetKeyData()
+        public IHttpActionResult GetKeyData()
         {
             var cert = _settings.GetSigningCertificate();
             var cert64 = Convert.ToBase64String(cert.RawData);
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 x5c = new string[] { cert64 }
             };
 
-            return new { keys = new[] { key } };
+            return Json(new { keys = new[] { key } });
         }
     }
 }
