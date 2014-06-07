@@ -13,10 +13,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Thinktecture.IdentityServer.Core.Resources {
-    using System;
-    
-    
+namespace Thinktecture.IdentityServer.Core.Resources
+{
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

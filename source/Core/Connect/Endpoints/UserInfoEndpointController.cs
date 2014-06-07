@@ -3,13 +3,12 @@
  * see license
  */
 
-using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Results;
 using Thinktecture.IdentityServer.Core.Models;
-using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
