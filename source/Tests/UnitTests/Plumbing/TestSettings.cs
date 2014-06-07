@@ -22,9 +22,9 @@ namespace UnitTests.Plumbing
             }
         }
 
-        public override X509Certificate2 GetSigningCertificate()
+        public override X509Certificate2 SigningCertificate
         {
-            return _certificate;
+            get { return _certificate; }
         }
 
         public override string GetIssuerUri()
@@ -32,17 +32,12 @@ namespace UnitTests.Plumbing
             return "https://idsrv3.test";
         }
 
-        public override string GetSiteName()
+        public override string SiteName
         {
-            throw new NotImplementedException();
+            get { throw new NotImplementedException(); }
         }
 
         public override InternalProtectionSettings GetInternalProtectionSettings()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetPublicHost()
         {
             throw new NotImplementedException();
         }

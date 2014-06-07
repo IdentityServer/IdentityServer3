@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 
             var id = new EntityId(_settings.GetIssuerUri());
             var entity = new EntityDescriptor(id);
-            entity.SigningCredentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+            entity.SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate);
             entity.RoleDescriptors.Add(tokenServiceDescriptor);
 
             return entity;
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
         private SecurityTokenServiceDescriptor GetTokenServiceDescriptor(string wsfedEndpoint)
         {
             var tokenService = new SecurityTokenServiceDescriptor();
-            tokenService.ServiceDescription = _settings.GetSiteName();
+            tokenService.ServiceDescription = _settings.SiteName;
             tokenService.Keys.Add(GetSigningKeyDescriptor());
 
             tokenService.PassiveRequestorEndpoints.Add(new EndpointReference(wsfedEndpoint));
@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 
         private KeyDescriptor GetSigningKeyDescriptor()
         {
-            var certificate = _settings.GetSigningCertificate();
+            var certificate = _settings.SigningCertificate;
 
             var clause = new X509SecurityToken(certificate).CreateKeyIdentifierClause<X509RawDataKeyIdentifierClause>();
             var key = new KeyDescriptor(new SecurityKeyIdentifier(clause));

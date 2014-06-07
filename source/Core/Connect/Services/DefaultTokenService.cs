@@ -109,7 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 {
                     return CreateJsonWebToken(
                         token,
-                        new X509SigningCredentials(_settings.GetSigningCertificate()));
+                        new X509SigningCredentials(_settings.SigningCertificate));
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 }
                 else
                 {
-                    credentials = new X509SigningCredentials(_settings.GetSigningCertificate());
+                    credentials = new X509SigningCredentials(_settings.SigningCertificate);
                 }
 
                 return CreateJsonWebToken(token, credentials);

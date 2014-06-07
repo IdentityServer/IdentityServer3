@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Request,
                 new LayoutModel
                 {
-                    Server = settings.GetSiteName(),
+                    Server = settings.SiteName,
                     Page = "logoutprompt",
                     PageModel = new
                     {

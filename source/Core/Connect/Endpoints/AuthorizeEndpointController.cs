@@ -180,7 +180,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Request, 
                 new LayoutModel
                 {
-                    Server = _settings.GetSiteName(),
+                    Server = _settings.SiteName,
                     ErrorMessage = errorMessage,
                     Page = "consent",
                     Username = name,

@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.WsFed
         [Route("wsfed/metadata")]
         public IHttpActionResult GetMetadata()
         {
-            var ep = Request.GetBaseUrl(_settings.GetPublicHost()) + "wsfed";
+            var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
             var entity = _metadataResponseGenerator.Generate(ep);
 
             return new MetadataResult(entity);

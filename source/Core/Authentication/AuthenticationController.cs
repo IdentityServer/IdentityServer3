@@ -224,7 +224,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             ClearLoginRequestMessage();
 
-            var baseUrl = Request.GetBaseUrl(settings.GetPublicHost());
+            var baseUrl = Request.GetBaseUrl(settings.PublicHostName);
             var urls = new List<string>();
             foreach(var url in this.internalConfiguration.PluginDependencies.SignOutCallbackUrls)
             {
@@ -236,7 +236,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
-                       Server = settings.GetSiteName(),
+                       Server = settings.SiteName,
                        Page = "logout",
                        PageModel = new
                        {
@@ -353,7 +353,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Request,
                 new LayoutModel
                 {
-                    Server = settings.GetSiteName(),
+                    Server = settings.SiteName,
                     Page = "login",
                     ErrorMessage = errorMessage,
                     PageModel = new

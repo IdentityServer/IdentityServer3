@@ -25,14 +25,17 @@ namespace Thinktecture.IdentityServer.Host.Config
             }
         }
 
-        public override X509Certificate2 GetSigningCertificate()
+        public override X509Certificate2 SigningCertificate
         {
-            if (_certificate == null)
+            get
             {
-                throw new InvalidOperationException("No certificate specified.");
-            }
+                if (_certificate == null)
+                {
+                    throw new InvalidOperationException("No certificate specified.");
+                }
 
-            return _certificate;
+                return _certificate;
+            }
         }
 
         public override string GetIssuerUri()
@@ -40,14 +43,14 @@ namespace Thinktecture.IdentityServer.Host.Config
             return _issuerUri;
         }
 
-        public override string GetSiteName()
+        public override string SiteName
         {
-            return _siteName;
+            get { return _siteName; }
         }
 
-        public override string GetPublicHost()
+        public override string PublicHostName
         {
-            return _publicHostAddress;
+            get { return _publicHostAddress; }
         }
 
         public override InternalProtectionSettings GetInternalProtectionSettings()

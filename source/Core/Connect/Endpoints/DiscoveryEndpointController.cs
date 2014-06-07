@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("openid-configuration")]
         public async Task<IHttpActionResult> GetConfiguration()
         {
-            var baseUrl = Request.GetBaseUrl(_settings.GetPublicHost());
+            var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
             var scopes = await _scopes.GetScopesAsync();
 
             return Json(new
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("jwks")]
         public IHttpActionResult GetKeyData()
         {
-            var cert = _settings.GetSigningCertificate();
+            var cert = _settings.SigningCertificate;
             var cert64 = Convert.ToBase64String(cert.RawData);
             var thumbprint = Base64Url.Encode(cert.GetCertHash());
 

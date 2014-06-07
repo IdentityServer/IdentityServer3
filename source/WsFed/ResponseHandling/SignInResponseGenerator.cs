@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 AppliesToAddress = validationResult.RelyingParty.Realm,
                 Lifetime = new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(validationResult.RelyingParty.TokenLifeTime)),
                 ReplyToAddress = validationResult.ReplyUrl,
-                SigningCredentials = new X509SigningCredentials(_settings.GetSigningCertificate()),
+                SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate),
                 Subject = outgoingSubject,
                 TokenIssuerName = _settings.GetIssuerUri(),
                 TokenType = validationResult.RelyingParty.TokenType
