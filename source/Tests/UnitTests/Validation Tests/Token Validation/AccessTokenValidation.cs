@@ -26,8 +26,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
-                Audience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri()),
-                Issuer = _settings.GetIssuerUri(),
+                Audience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri),
+                Issuer = _settings.IssuerUri,
                 Lifetime = 60,
                 Client = await _clients.FindClientByIdAsync("client")
             };

@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 ReplyToAddress = validationResult.ReplyUrl,
                 SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate),
                 Subject = outgoingSubject,
-                TokenIssuerName = _settings.GetIssuerUri(),
+                TokenIssuerName = _settings.IssuerUri,
                 TokenType = validationResult.RelyingParty.TokenType
             };
 

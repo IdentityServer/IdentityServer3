@@ -38,9 +38,9 @@ namespace Thinktecture.IdentityServer.Host.Config
             }
         }
 
-        public override string GetIssuerUri()
+        public override string IssuerUri
         {
-            return _issuerUri;
+            get { return _issuerUri; }
         }
 
         public override string SiteName
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Host.Config
         {
             var settings = new InternalProtectionSettings
             {
-                Issuer = GetIssuerUri(),
+                Issuer = IssuerUri,
                 Audience = "internal",
                 SigningKey = "jKhUkbfzz4IqMTo66J6GATNgOWqA38SFNMCo/FR1Yhs=",
                 Ttl = 60

@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
                 Audience = client.ClientId,
-                Issuer = _settings.GetIssuerUri(),
+                Issuer = _settings.IssuerUri,
                 Lifetime = client.IdentityTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
                 Client = client
@@ -91,8 +91,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
-                Audience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri()),
-                Issuer = _settings.GetIssuerUri(),
+                Audience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri),
+                Issuer = _settings.IssuerUri,
                 Lifetime = client.AccessTokenLifetime,
                 Claims = claims.ToList(),
                 Client = client

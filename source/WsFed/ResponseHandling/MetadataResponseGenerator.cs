@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
         {
             var tokenServiceDescriptor = GetTokenServiceDescriptor(wsfedEndpoint);
 
-            var id = new EntityId(_settings.GetIssuerUri());
+            var id = new EntityId(_settings.IssuerUri);
             var entity = new EntityDescriptor(id);
             entity.SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate);
             entity.RoleDescriptors.Add(tokenServiceDescriptor);

@@ -27,9 +27,9 @@ namespace UnitTests.Plumbing
             get { return _certificate; }
         }
 
-        public override string GetIssuerUri()
+        public override string IssuerUri
         {
-            return "https://idsrv3.test";
+            get { return "https://idsrv3.test"; }
         }
 
         public override string SiteName

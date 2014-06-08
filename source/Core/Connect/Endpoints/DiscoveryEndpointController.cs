@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return Json(new
             {
-                issuer = _settings.GetIssuerUri(),
+                issuer = _settings.IssuerUri,
                 jwks_uri = baseUrl + ".well-known/jwks",
                 authorization_endpoint = baseUrl + "connect/authorize",
                 token_endpoint = baseUrl + "connect/token",

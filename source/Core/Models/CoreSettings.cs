@@ -13,7 +13,8 @@ namespace Thinktecture.IdentityServer.Core.Models
     public abstract class CoreSettings
     {
         public abstract InternalProtectionSettings GetInternalProtectionSettings();
-        public abstract string GetIssuerUri();
+
+        public abstract string IssuerUri { get; }
 
         public virtual X509Certificate2 SigningCertificate
         {

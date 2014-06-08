@@ -73,9 +73,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             
             var parameters = new TokenValidationParameters
             {
-                ValidIssuer = _settings.GetIssuerUri(),
+                ValidIssuer = _settings.IssuerUri,
                 SigningToken = new X509SecurityToken(_settings.SigningCertificate),
-                AllowedAudience = string.Format(Constants.AccessTokenAudience, _settings.GetIssuerUri())
+                AllowedAudience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri)
             };
 
             try
