@@ -3,9 +3,6 @@
  * see license
  */
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Thinktecture.IdentityServer.Core.Models
@@ -13,7 +10,6 @@ namespace Thinktecture.IdentityServer.Core.Models
     public abstract class CoreSettings
     {
         public abstract InternalProtectionSettings GetInternalProtectionSettings();
-
         public abstract string IssuerUri { get; }
 
         public virtual X509Certificate2 SigningCertificate
@@ -31,29 +27,29 @@ namespace Thinktecture.IdentityServer.Core.Models
             get { return string.Empty; }
         }
 
-        public virtual bool EnableDiscoveryEndpoint
+        public virtual EndpointSettings AuthorizeEndpoint
         {
-            get { return true; }
+            get { return new EndpointSettings(); }
         }
 
-        public virtual bool EnableAccessTokenValidationEndpoint
+        public virtual EndpointSettings DiscoveryEndpoint 
         {
-            get { return true; }
+            get { return new EndpointSettings(); }
         }
 
-        public virtual bool EnableIdentityTokenValidationEndpoint
+        public virtual EndpointSettings AccessTokenValidationEndpoint
         {
-            get { return true; }
+            get { return new EndpointSettings(); }
         }
 
-        public virtual IEnumerable<string> TokenEndpointAllowedOrigins
+        public virtual EndpointSettings TokenEndpoint
         {
-            get { return Enumerable.Empty<string>(); }
+            get { return new EndpointSettings(); }
         }
 
-        public virtual IEnumerable<string> UserInfoEndpointAllowedOrigins
+        public virtual EndpointSettings UserInfoEndpoint
         {
-            get { return Enumerable.Empty<string>(); }
+            get { return new EndpointSettings(); }
         }
     }
 }
