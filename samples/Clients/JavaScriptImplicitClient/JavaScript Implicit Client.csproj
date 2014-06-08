@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\crypto.js" />
     <Content Include="Scripts\jws-3.0.min.js.map">
       <DependentUpon>jws-3.0.min.js</DependentUpon>
     </Content>
@@ -93,6 +94,7 @@
     <Content Include="Scripts\jws-3.0.min.js">
       <DependentUpon>jws-3.0.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\rsa.js" />
     <Content Include="Web.config" />
     <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
