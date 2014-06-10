@@ -1,4 +1,8 @@
-﻿using Microsoft.Owin.Security.DataProtection;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.Owin.Security.DataProtection;
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class HostDataProtector : IDataProtector

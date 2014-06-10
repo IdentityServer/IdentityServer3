@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System.Text;
 using Thinktecture.IdentityModel;
 
 namespace Thinktecture.IdentityServer.Core.Configuration

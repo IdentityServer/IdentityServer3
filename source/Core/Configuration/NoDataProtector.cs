@@ -1,4 +1,8 @@
-﻿namespace Thinktecture.IdentityServer.Core.Configuration
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class NoDataProtector : IDataProtector
     {
