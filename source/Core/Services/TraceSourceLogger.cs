@@ -5,7 +5,7 @@
 
 using System.Diagnostics;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public class TraceSourceLogger : ILogger
     {

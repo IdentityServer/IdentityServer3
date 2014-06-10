@@ -5,9 +5,9 @@
 using System.IdentityModel.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.WsFed.Services;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.WsFed.Services;
 
 namespace Thinktecture.IdentityServer.WsFed.Validation
 {

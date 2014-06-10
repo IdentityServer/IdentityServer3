@@ -5,12 +5,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
-using System.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.ServiceModel.Security.Tokens;
-using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Authentication

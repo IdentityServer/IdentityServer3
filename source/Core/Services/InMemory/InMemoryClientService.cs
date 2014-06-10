@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Models.InMemory
+namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryClientService : IClientService
     {

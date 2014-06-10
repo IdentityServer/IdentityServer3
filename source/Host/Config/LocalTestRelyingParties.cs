@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IdentityModel.Claims;
-using System.Linq;
-using System.Web;
 using Thinktecture.IdentityServer.WsFed.Models;
 
 namespace Thinktecture.IdentityServer.Host.Config

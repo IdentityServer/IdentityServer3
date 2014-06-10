@@ -5,6 +5,7 @@
 
 using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
