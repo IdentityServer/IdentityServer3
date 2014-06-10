@@ -10,15 +10,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             _provider = provider;
         }
 
-        public byte[] Protect(byte[] data, string entropy = null)
+        public byte[] Protect(byte[] data, string entropy = "")
         {
-            var protector = _provider.Create(entropy ?? "");
+            var protector = _provider.Create(entropy);
             return protector.Protect(data);
         }
 
-        public byte[] Unprotect(byte[] data, string entropy = null)
+        public byte[] Unprotect(byte[] data, string entropy = "")
         {
-            var protector = _provider.Create(entropy ?? "");
+            var protector = _provider.Create(entropy);
             return protector.Unprotect(data);
         }
     }

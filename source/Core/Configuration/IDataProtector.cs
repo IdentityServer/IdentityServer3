@@ -2,7 +2,7 @@
 {
     public interface IDataProtector
     {
-        byte[] Protect(byte[] data, string entropy = null);
-        byte[] Unprotect(byte[] data, string entropy = null);
+        byte[] Protect(byte[] data, string entropy = "");
+        byte[] Unprotect(byte[] data, string entropy = "");
     }
 }

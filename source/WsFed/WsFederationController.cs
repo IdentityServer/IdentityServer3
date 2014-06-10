@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
@@ -28,11 +29,13 @@ namespace Thinktecture.IdentityServer.WsFed
         private SignInResponseGenerator _signInResponseGenerator;
         private MetadataResponseGenerator _metadataResponseGenerator;
         private ICookieService _cookies;
+        private InternalConfiguration _internalConfig;
 
-        public WsFederationController(CoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies)
+        public WsFederationController(CoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies, InternalConfiguration internalConfig)
         {
             _settings = settings;
             _logger = logger;
+            _internalConfig = internalConfig;
 
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
@@ -108,7 +111,7 @@ namespace Thinktecture.IdentityServer.WsFed
                 message.IdP = result.HomeRealm;
             }
 
-            return new LoginResult(message, this.Request, settings);
+            return new LoginResult(message, this.Request, settings, _internalConfig);
         }
     }
 }

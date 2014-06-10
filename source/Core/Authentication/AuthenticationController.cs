@@ -388,11 +388,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             logger.Verbose("[AuthenticationController.SaveLoginRequestMessage] called");
 
             var protection = settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
+            var signInMessage = SignInMessage.Unprotect(
                 message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey);
+                internalConfiguration.DataProtector);
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
@@ -421,11 +419,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             var protection = settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
+            var signInMessage = SignInMessage.Unprotect(
                 message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey);
+                internalConfiguration.DataProtector);
 
             return signInMessage;
         }
@@ -438,11 +434,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
             var protection = settings.GetInternalProtectionSettings();
-            var signInMessage = SignInMessage.FromJwt(
+            var signInMessage = SignInMessage.Unprotect(
                 message,
-                protection.Issuer,
-                protection.Audience,
-                protection.SigningKey);
+                internalConfiguration.DataProtector);
         }
     }
 }

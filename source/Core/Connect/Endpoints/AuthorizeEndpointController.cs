@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -26,16 +27,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly AuthorizeRequestValidator _validator;
         private readonly AuthorizeResponseGenerator _responseGenerator;
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
+        private readonly InternalConfiguration _internalConfiguration;
         
         public AuthorizeEndpointController(
             ILogger logger, 
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
-            CoreSettings settings)
+            CoreSettings settings,
+            InternalConfiguration internalConfiguration)
         {
             _logger = logger;
             _settings = settings;
+            _internalConfiguration = internalConfiguration;
         
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
@@ -197,7 +201,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
             
-            return new LoginResult(message, this.Request, settings);
+            return new LoginResult(message, this.Request, settings, _internalConfiguration);
         }
     }
 }
