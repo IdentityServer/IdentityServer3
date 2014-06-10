@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace Owin
 {
@@ -24,6 +25,16 @@ namespace Owin
             if (options == null) throw new ArgumentNullException("options");
 
             var internalConfig = new InternalConfiguration();
+
+            var settings = options.Factory.CoreSettings();
+            if (settings.DataProtector == null)
+            {
+                internalConfig.DataProtector = new HostDataProtector(app.GetDataProtectionProvider());
+            }
+            else
+            {
+                internalConfig.DataProtector = settings.DataProtector;
+            }
 
             // thank you Microsoft for the clean syntax
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;

@@ -4,6 +4,7 @@
  */
 
 using System.Security.Cryptography.X509Certificates;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -25,6 +26,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         public virtual string PublicHostName
         {
             get { return string.Empty; }
+        }
+
+        public virtual IDataProtector DataProtector
+        {
+            get { return null; }
         }
 
         public virtual EndpointSettings AuthorizeEndpoint

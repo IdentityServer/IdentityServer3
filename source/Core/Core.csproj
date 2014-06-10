@@ -123,10 +123,13 @@
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Configuration\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
+    <Compile Include="Configuration\HostDataProtector.cs" />
+    <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Configuration\InternalConfiguration.cs" />
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
+    <Compile Include="Configuration\NoDataProtector.cs" />
     <Compile Include="Configuration\PluginConfiguration.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
