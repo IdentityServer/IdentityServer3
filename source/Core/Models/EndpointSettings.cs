@@ -7,11 +7,9 @@ namespace Thinktecture.IdentityServer.Core.Models
     {
         public EndpointSettings()
         {
-            Enabled = true;
-            AllowedOrigins = Enumerable.Empty<string>();
+            Enabled = false;
         }
 
         public bool Enabled { get; set; }
-        public IEnumerable<string> AllowedOrigins { get; set; }
     }
 }
