@@ -38,11 +38,6 @@ namespace UnitTests.Plumbing
             get { throw new NotImplementedException(); }
         }
 
-        public override InternalProtectionSettings GetInternalProtectionSettings()
-        {
-            throw new NotImplementedException();
-        }
-
         private static byte[] ReadStream(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];

@@ -40,17 +40,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             try
             {
-                var protection = _settings.GetInternalProtectionSettings();
-                //var jwt = _message.ToJwt(
-                //    protection.Issuer,
-                //    protection.Audience,
-                //    protection.SigningKey,
-                //    protection.Ttl);
-
-                var jwt = _message.Protect(60, _internalConfig.DataProtector);
+                var sim = _message.Protect(60, _internalConfig.DataProtector);
 
                 var urlHelper = _request.GetUrlHelper();
-                var loginUrl = urlHelper.Route(Constants.RouteNames.Login, new { message = jwt });
+                var loginUrl = urlHelper.Route(Constants.RouteNames.Login, new { message = sim });
                 var uri = new Uri(_request.RequestUri, loginUrl);
 
                 response.Headers.Location = uri;

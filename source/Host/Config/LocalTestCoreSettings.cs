@@ -54,19 +54,6 @@ namespace Thinktecture.IdentityServer.Host.Config
             get { return _publicHostAddress; }
         }
 
-        public override InternalProtectionSettings GetInternalProtectionSettings()
-        {
-            var settings = new InternalProtectionSettings
-            {
-                Issuer = IssuerUri,
-                Audience = "internal",
-                SigningKey = "jKhUkbfzz4IqMTo66J6GATNgOWqA38SFNMCo/FR1Yhs=",
-                Ttl = 60
-            };
-
-            return settings;
-        }
-
         private static byte[] ReadStream(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];
