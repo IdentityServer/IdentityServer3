@@ -388,7 +388,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             logger.Verbose("[AuthenticationController.SaveLoginRequestMessage] called");
 
-            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.Unprotect(
                 message,
                 internalConfiguration.DataProtector);
@@ -419,7 +418,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 throw new Exception("LoginRequestMessage cookie is empty.");
             }
 
-            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.Unprotect(
                 message,
                 internalConfiguration.DataProtector);
@@ -434,7 +432,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
-            var protection = settings.GetInternalProtectionSettings();
             var signInMessage = SignInMessage.Unprotect(
                 message,
                 internalConfiguration.DataProtector);
