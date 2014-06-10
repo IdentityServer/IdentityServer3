@@ -25,42 +25,32 @@ namespace Thinktecture.IdentityServer.Host.Config
             }
         }
 
-        public override X509Certificate2 GetSigningCertificate()
+        public override X509Certificate2 SigningCertificate
         {
-            if (_certificate == null)
+            get
             {
-                throw new InvalidOperationException("No certificate specified.");
+                if (_certificate == null)
+                {
+                    throw new InvalidOperationException("No certificate specified.");
+                }
+
+                return _certificate;
             }
-
-            return _certificate;
         }
 
-        public override string GetIssuerUri()
+        public override string IssuerUri
         {
-            return _issuerUri;
+            get { return _issuerUri; }
         }
 
-        public override string GetSiteName()
+        public override string SiteName
         {
-            return _siteName;
+            get { return _siteName; }
         }
 
-        public override string GetPublicHost()
+        public override string PublicHostName
         {
-            return _publicHostAddress;
-        }
-
-        public override InternalProtectionSettings GetInternalProtectionSettings()
-        {
-            var settings = new InternalProtectionSettings
-            {
-                Issuer = GetIssuerUri(),
-                Audience = "internal",
-                SigningKey = "jKhUkbfzz4IqMTo66J6GATNgOWqA38SFNMCo/FR1Yhs=",
-                Ttl = 60
-            };
-
-            return settings;
+            get { return _publicHostAddress; }
         }
 
         private static byte[] ReadStream(Stream input)
