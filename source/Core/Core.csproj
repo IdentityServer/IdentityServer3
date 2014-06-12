@@ -166,6 +166,14 @@
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\ILogExtensions.cs" />
+    <Compile Include="Logging\ILogProvider.cs" />
+    <Compile Include="Logging\LoggerExecutionWrapper.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\LogProvider.cs" />
+    <Compile Include="Logging\LogProviders\Log4NetLogProvider.cs" />
+    <Compile Include="Logging\LogProviders\NLogLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\EndpointSettings.cs" />
     <Compile Include="Models\Enums.cs" />
