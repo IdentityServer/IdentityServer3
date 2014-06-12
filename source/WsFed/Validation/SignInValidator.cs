@@ -6,6 +6,7 @@ using System.IdentityModel.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Services;
 
@@ -13,12 +14,12 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 {
     public class SignInValidator
     {
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly IRelyingPartyService _relyingParties;
 
-        public SignInValidator(ILogger logger, IRelyingPartyService relyingParties)
+        public SignInValidator(IRelyingPartyService relyingParties)
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
             _relyingParties = relyingParties;
         }
 
@@ -28,6 +29,7 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
             if (message.HomeRealm.IsPresent())
             {
+                _logger.Info("Setting home realm to: " + message.HomeRealm);
                 result.HomeRealm = message.HomeRealm;
             }
 
@@ -42,6 +44,8 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
             if (rp == null || rp.Enabled == false)
             {
+                _logger.Error("Relying party not found: " + rp.Realm);
+
                 return new SignInValidationResult
                 {
                     IsError = true,
@@ -51,6 +55,7 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
             // todo: check wreply against list of allowed reply URLs
             result.ReplyUrl = rp.ReplyUrl;
+            _logger.InfoFormat("Reply URL set to: " + result.ReplyUrl);
 
             result.RelyingParty = rp;
             result.SignInRequestMessage = message;
