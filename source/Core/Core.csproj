@@ -172,6 +172,7 @@
     <Compile Include="Logging\LoggerExecutionWrapper.cs" />
     <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LogProvider.cs" />
+    <Compile Include="Logging\LogProviders\DiagnosticsTraceLogProvider.cs" />
     <Compile Include="Logging\LogProviders\Log4NetLogProvider.cs" />
     <Compile Include="Logging\LogProviders\NLogLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
