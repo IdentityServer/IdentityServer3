@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -13,16 +14,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ScopeValidator
     {
-        private ILogger _logger;
+        private ILog _logger;
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
 
-        public ScopeValidator(ILogger logger)
+        public ScopeValidator()
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
 
             RequestedScopes = new List<Scope>();
             GrantedScopes = new List<Scope>();
@@ -71,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return null;
             }
 
-            _logger.InformationFormat("scopes: {0}", scopes);
+            _logger.InfoFormat("scopes: {0}", scopes);
 
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
@@ -89,12 +90,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             if (client.ScopeRestrictions == null || client.ScopeRestrictions.Count == 0)
             {
-                _logger.Information("All scopes allowed for client");
+                _logger.Info("All scopes allowed for client");
                 return true;
             }
             else
             {
-                _logger.Information("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
+                _logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
 
                 foreach (var scope in requestedScopes)
                 {

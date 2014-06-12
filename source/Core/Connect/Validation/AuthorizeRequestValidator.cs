@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -15,7 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeRequestValidator
     {
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
         private readonly CoreSettings _core;
@@ -32,12 +33,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(CoreSettings core, IScopeService scopes, IClientService clients, ILogger logger, IUserService users, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(CoreSettings core, IScopeService scopes, IClientService clients, IUserService users, ICustomRequestValidator customValidator)
         {
+            _logger = LogProvider.GetCurrentClassLogger();
+
             _core = core;
             _scopes = scopes;
             _clients = clients;
-            _logger = logger;
             _users = users;
             _customValidator = customValidator;
 
@@ -48,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         // basic protocol validation
         public ValidationResult ValidateProtocol(NameValueCollection parameters)
         {
-            _logger.Verbose("OIDC authorize request protocol validation");
+            _logger.Info("OIDC authorize request protocol validation");
 
             if (parameters == null)
             {
@@ -68,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid();
             }
 
-            _logger.InformationFormat("client_id: {0}", clientId);
+            _logger.InfoFormat("client_id: {0}", clientId);
             _validatedRequest.ClientId = clientId;
 
             //////////////////////////////////////////////////////////
@@ -89,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid();
             }
 
-            _logger.InformationFormat("redirect_uri: {0}", redirectUri);
+            _logger.InfoFormat("redirect_uri: {0}", redirectUri);
             _validatedRequest.RedirectUri = new Uri(redirectUri);
 
             //////////////////////////////////////////////////////////
@@ -108,7 +110,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            _logger.InformationFormat("response_type: {0}", responseType);
+            _logger.InfoFormat("response_type: {0}", responseType);
             _validatedRequest.ResponseType = responseType;
 
             //////////////////////////////////////////////////////////
@@ -116,7 +118,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             if (_validatedRequest.ResponseType == Constants.ResponseTypes.Code)
             {
-                _logger.Information("Flow: code");
+                _logger.Info("Flow: code");
                 _validatedRequest.Flow = Flows.Code;
                 _validatedRequest.ResponseMode = Constants.ResponseModes.Query;
             }
@@ -124,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                      _validatedRequest.ResponseType == Constants.ResponseTypes.IdToken ||
                      _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
             {
-                _logger.Information("Flow: implicit");
+                _logger.Info("Flow: implicit");
                 _validatedRequest.Flow = Flows.Implicit;
                 _validatedRequest.ResponseMode = Constants.ResponseModes.Fragment;
             }
@@ -147,7 +149,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             _validatedRequest.RequestedScopes = scope.Split(' ').Distinct().ToList();
-            _logger.InformationFormat("scopes: {0}", scope);
+            _logger.InfoFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
             // check scope vs response type plausability
@@ -182,12 +184,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var state = parameters.Get(Constants.AuthorizeRequest.State);
             if (state.IsPresent())
             {
-                _logger.InformationFormat("State: {0}", state);
+                _logger.InfoFormat("State: {0}", state);
                 _validatedRequest.State = state;
             }
             else
             {
-                _logger.Information("No state supplied");
+                _logger.Info("No state supplied");
             }
 
             //////////////////////////////////////////////////////////
@@ -196,12 +198,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var nonce = parameters.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
-                _logger.InformationFormat("Nonce: {0}", nonce);
+                _logger.InfoFormat("Nonce: {0}", nonce);
                 _validatedRequest.Nonce = nonce;
             }
             else
             {
-                _logger.Information("No nonce supplied");
+                _logger.Info("No nonce supplied");
 
                 if (_validatedRequest.Flow == Flows.Implicit)
                 {
@@ -234,11 +236,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     }
                     
                     _validatedRequest.ResponseMode = responseMode;
-                    _logger.InformationFormat("response_mode: {0}", responseMode);
+                    _logger.InfoFormat("response_mode: {0}", responseMode);
                 }
                 else
                 {
-                    _logger.Information("Unsupported response_mode - ignored.");
+                    _logger.Info("Unsupported response_mode - ignored.");
                 }
             }
 
@@ -248,7 +250,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var prompt = parameters.Get(Constants.AuthorizeRequest.Prompt);
             if (prompt.IsPresent())
             {
-                _logger.InformationFormat("prompt: {0}", prompt);
+                _logger.InfoFormat("prompt: {0}", prompt);
 
                 if (Constants.SupportedPromptModes.Contains(prompt))
                 {
@@ -256,7 +258,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
                 else
                 {
-                    _logger.Information("Unsupported prompt mode - ignored.");
+                    _logger.Info("Unsupported prompt mode - ignored.");
                 }
             }
 
@@ -275,7 +277,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var maxAge = parameters.Get(Constants.AuthorizeRequest.MaxAge);
             if (maxAge.IsPresent())
             {
-                _logger.InformationFormat("max_age: {0}", maxAge);
+                _logger.InfoFormat("max_age: {0}", maxAge);
 
                 int seconds;
                 if (int.TryParse(maxAge, out seconds))
@@ -319,7 +321,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            _logger.InformationFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
+            _logger.InfoFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
             _validatedRequest.Client = client;
 
             //////////////////////////////////////////////////////////
@@ -343,7 +345,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             //////////////////////////////////////////////////////////
             // check scopes and scope restrictions
             //////////////////////////////////////////////////////////
-            var scopeValidator = new ScopeValidator(_logger);
+            var scopeValidator = new ScopeValidator();
 
             if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
             {

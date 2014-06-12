@@ -4,6 +4,7 @@
  */
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Assets;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -11,11 +12,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class LogoutController : ApiController
     {
-        ILogger logger;
+        ILog logger;
         CoreSettings settings;
-        public LogoutController(ILogger logger, CoreSettings settings)
+
+        public LogoutController(CoreSettings settings)
         {
-            this.logger = logger;
+            this.logger = LogProvider.GetCurrentClassLogger();
             this.settings = settings;
         }
 
@@ -23,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpGet]
         public IHttpActionResult Logout()
         {
-            logger.Start("[LogoutController.Logout] called");
+            logger.Info("[LogoutController.Logout] called");
 
             return new EmbeddedHtmlResult(
                 Request,

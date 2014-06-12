@@ -16,7 +16,6 @@ namespace UnitTests
     [TestClass]
     public class Authorize_ClientValidation_IdToken
     {
-        ILogger _logger = new DebugLogger();
         CoreSettings _settings = new TestSettings();
 
         [TestMethod]

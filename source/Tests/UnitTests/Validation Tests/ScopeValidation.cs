@@ -15,7 +15,6 @@ namespace UnitTests.Validation_Tests
     {
         const string Category = "Scope Validation";
 
-        ILogger _logger = new DebugLogger();
         List<Scope> _allScopes = new List<Scope>
             {
                 new Scope
@@ -60,7 +59,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("");
 
             Assert.IsNull(scopes);
@@ -70,7 +69,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Parse_Scopes_with_Sorting()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope3 scope2 scope1");
             
             Assert.AreEqual(scopes.Count, 3);
@@ -84,7 +83,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Parse_Scopes_with_Extra_Spaces()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("   scope3     scope2     scope1   ");
 
             Assert.AreEqual(scopes.Count, 3);
@@ -98,7 +97,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Parse_Scopes_with_Duplicate_Scope()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope2 scope1 scope2");
 
             Assert.AreEqual(scopes.Count, 2);
@@ -111,7 +110,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void All_Scopes_Valid()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
@@ -123,7 +122,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Invalid_Scope()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2 unknown");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
@@ -135,7 +134,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void All_Scopes_Allowed_For_Unrestricted_Client()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2");
 
             var result = validator.AreScopesAllowed(_unrestrictedClient, scopes);
@@ -147,7 +146,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void All_Scopes_Allowed_For_Restricted_Client()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid resource1");
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
@@ -159,7 +158,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Restricted_Scopes()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2");
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
@@ -171,7 +170,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Contains_Resource_and_Identity_Scopes()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
@@ -185,7 +184,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Contains_Resource_Scopes_Only()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("resource1 resource2");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
@@ -199,7 +198,7 @@ namespace UnitTests.Validation_Tests
         [TestCategory(Category)]
         public void Contains_Identity_Scopes_Only()
         {
-            var validator = new ScopeValidator(_logger);
+            var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email");
 
             var result = validator.AreScopesValid(scopes, _allScopes);

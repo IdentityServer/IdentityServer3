@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -14,15 +15,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect/token")]
     public class TokenEndpointController : ApiController
     {
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
         private readonly ClientValidator _clientValidator;
         
-        public TokenEndpointController(TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, ILogger logger)
+        public TokenEndpointController(TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
 
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
@@ -37,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            _logger.Start("OIDC token endpoint.");
+            _logger.Info("OIDC token endpoint.");
 
             // validate client credentials and client
             var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);

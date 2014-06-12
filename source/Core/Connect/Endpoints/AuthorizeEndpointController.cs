@@ -13,6 +13,7 @@ using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -22,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication("idsrv")]
     public class AuthorizeEndpointController : ApiController
     {
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly CoreSettings _settings;
 
         private readonly AuthorizeRequestValidator _validator;
@@ -31,14 +32,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly InternalConfiguration _internalConfiguration;
         
         public AuthorizeEndpointController(
-            ILogger logger, 
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
             CoreSettings settings,
             InternalConfiguration internalConfiguration)
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
+
             _settings = settings;
             _internalConfiguration = internalConfiguration;
         
@@ -55,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            _logger.Start("OIDC authorize endpoint.");
+            _logger.Info("Starting OIDC authorize request.");
             
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters
