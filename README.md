@@ -111,3 +111,12 @@ To support social logins, you can simply add existing OWIN/Katana middleware to 
         app.UseFacebookAuthentication(fb);
     }
     
+IdentityServer is built using the following great open source projects:
+
+- ASP.NET Web API
+- Autofac
+- Json.Net
+- Thinktecture IdentityModel
+- ILMerge
+- DH.Logging
+- Katana
