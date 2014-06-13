@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             CoreSettings settings,
             InternalConfiguration internalConfiguration)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
+            _logger = LogProvider.GetLogger("OIDC authorize endpoint");
 
             _settings = settings;
             _internalConfiguration = internalConfiguration;
