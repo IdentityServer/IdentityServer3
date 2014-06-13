@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Results;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -16,21 +17,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class UserInfoEndpointController : ApiController
     {
         private readonly UserInfoResponseGenerator _generator;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly TokenValidator _tokenValidator;
 
-        public UserInfoEndpointController(TokenValidator tokenValidator, UserInfoResponseGenerator generator, ILogger logger)
+        public UserInfoEndpointController(TokenValidator tokenValidator, UserInfoResponseGenerator generator)
         {
             _tokenValidator = tokenValidator;
             _generator = generator;
 
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            _logger.Start("OIDC userinfo endpoint.");
+            _logger.Info("Startting OIDC userinfo request.");
 
             var authorizationHeader = request.Headers.Authorization;
 

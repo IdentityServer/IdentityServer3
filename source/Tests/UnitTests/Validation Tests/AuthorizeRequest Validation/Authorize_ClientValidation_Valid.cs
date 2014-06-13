@@ -15,7 +15,6 @@ namespace UnitTests
     [TestClass]
     public class Authorize_ClientValidation_Valid
     {
-        ILogger _logger = new DebugLogger();
         CoreSettings _settings = new TestSettings();
 
         [TestMethod]

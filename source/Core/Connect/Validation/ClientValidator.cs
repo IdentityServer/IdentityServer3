@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -18,12 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class ClientValidator
     {
         private readonly IClientService _clients;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
-        public ClientValidator(IClientService clients, ILogger logger)
+        public ClientValidator(IClientService clients)
         {
             _clients = clients;
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return null;
             }
 
-            _logger.InformationFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
+            _logger.InfoFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
             return client;
         }
 
@@ -89,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (header == null ||
                 !header.Scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase))
             {
-                _logger.Information("No Basic Authentication header found");
+                _logger.Info("No Basic Authentication header found");
 
                 return new ClientCredential
                 {
@@ -158,7 +159,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             if (body == null)
             {
-                _logger.Warning("Post body is null.");
+                _logger.Warn("Post body is null.");
 
                 return new ClientCredential
                 {
@@ -171,7 +172,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (id.IsPresent() && secret.IsPresent())
             {
-                _logger.Information("Client credentials in POST body found.");
+                _logger.Info("Client credentials in POST body found.");
 
                 return new ClientCredential
                 {
@@ -184,7 +185,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            _logger.Information("No client credentials in POST body found.");
+            _logger.Info("No client credentials in POST body found.");
             return new ClientCredential
             {
                 IsPresent = false

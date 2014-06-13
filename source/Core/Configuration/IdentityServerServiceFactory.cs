@@ -24,7 +24,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Func<IConsentService> ConsentService { get; set; }
         
         // optional
-        public Func<ILogger> Logger { get; set; }
         public Func<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
         public Func<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Func<IClaimsProvider> ClaimsProvider { get; set; }

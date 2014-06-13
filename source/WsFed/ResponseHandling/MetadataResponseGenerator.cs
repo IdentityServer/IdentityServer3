@@ -7,6 +7,7 @@ using System.IdentityModel.Metadata;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Constants;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -14,11 +15,12 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 {
     public class MetadataResponseGenerator
     {
-        private ILogger _logger;
+        private ILog _logger;
         private CoreSettings _settings;
-        public MetadataResponseGenerator(ILogger logger, CoreSettings settings)
+
+        public MetadataResponseGenerator(CoreSettings settings)
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
             _settings = settings;
         }
 
