@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
 
             var jwt = await tokenService.CreateSecurityTokenAsync(token);
 
-            var validator = new TokenValidator(_settings, null, null, new DebugLogger());
+            var validator = new TokenValidator(_settings, null, null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             Assert.IsFalse(result.IsError);

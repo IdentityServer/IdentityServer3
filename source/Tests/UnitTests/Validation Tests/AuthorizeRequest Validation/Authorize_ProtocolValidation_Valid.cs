@@ -13,8 +13,6 @@ namespace UnitTests
     [TestClass]
     public class Authorize_ProtocolValidation_Valid
     {
-        ILogger _logger = new DebugLogger();
-
         [TestMethod]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_Code_Request()

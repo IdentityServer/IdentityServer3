@@ -15,8 +15,6 @@ namespace UnitTests
     [TestClass]
     public class Authorize_ProtocolValidation_Invalid
     {
-        ILogger _logger = new DebugLogger();
-
         [TestMethod]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         [ExpectedException(typeof(ArgumentNullException))]

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -16,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class TokenRequestValidator
     {
         private readonly CoreSettings _settings;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
@@ -33,10 +34,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(CoreSettings settings, ILogger logger, IAuthorizationCodeStore authorizationCodes, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(CoreSettings settings, IAuthorizationCodeStore authorizationCodes, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
+            _logger = LogProvider.GetCurrentClassLogger();
+
             _settings = settings;
-            _logger = logger;
             _authorizationCodes = authorizationCodes;
             _users = users;
             _scopes = scopes;
@@ -72,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            _logger.InformationFormat("Grant type: {0}", grantType);
+            _logger.InfoFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
             switch (grantType)
@@ -136,7 +138,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             else
             {
-                _logger.InformationFormat("Authorization code found: {0}", code);
+                _logger.InfoFormat("Authorization code found: {0}", code);
             }
 
             await _authorizationCodes.RemoveAsync(code);
@@ -298,7 +300,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
-            var scopeValidator = new ScopeValidator(_logger);
+            var scopeValidator = new ScopeValidator();
             var requestedScopes = scopeValidator.ParseScopes(parameters.Get(Constants.TokenRequest.Scope));
 
             if (requestedScopes == null)

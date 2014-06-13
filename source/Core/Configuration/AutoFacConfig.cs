@@ -38,15 +38,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
 
             // optional from factory
-            if (fact.Logger != null)
-            {
-                builder.Register(ctx => fact.Logger()).As<ILogger>();
-            }
-            else
-            {
-                builder.RegisterType<TraceLogger>().As<ILogger>();
-            }
-
             if (fact.ClaimsProvider != null)
             {
                 builder.Register(ctx => fact.ClaimsProvider()).As<IClaimsProvider>();

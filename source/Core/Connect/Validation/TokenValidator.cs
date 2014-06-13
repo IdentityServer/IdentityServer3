@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -23,14 +24,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly CoreSettings _settings;
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
-        public TokenValidator(CoreSettings settings, IUserService users, ITokenHandleStore tokenHandles, ILogger logger)
+        public TokenValidator(CoreSettings settings, IUserService users, ITokenHandleStore tokenHandles)
         {
             _settings = settings;
             _users = users;
             _tokenHandles = tokenHandles;
-            _logger = logger;
+
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
@@ -44,12 +46,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (token.Contains("."))
             {
-                _logger.VerboseFormat("Validating a JWT access token: {0}", token);
+                _logger.InfoFormat("Validating a JWT access token: {0}", token);
                 result = await ValidateJwtAccessTokenAsync(token);
             }
             else
             {
-                _logger.VerboseFormat("Validating a reference access token: {0}", token);
+                _logger.InfoFormat("Validating a reference access token: {0}", token);
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
@@ -122,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
             }
 
-            _logger.Information("Validation successful");
+            _logger.Info("Validation successful");
 
             return new TokenValidationResult
             {

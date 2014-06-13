@@ -10,6 +10,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
@@ -23,7 +24,7 @@ namespace Thinktecture.IdentityServer.WsFed
     public class WsFederationController : ApiController
     {
         private readonly CoreSettings _settings;
-        private ILogger _logger;
+        private ILog _logger;
   
         private SignInValidator _validator;
         private SignInResponseGenerator _signInResponseGenerator;
@@ -31,21 +32,24 @@ namespace Thinktecture.IdentityServer.WsFed
         private ICookieService _cookies;
         private InternalConfiguration _internalConfig;
 
-        public WsFederationController(CoreSettings settings, IUserService users, ILogger logger, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies, InternalConfiguration internalConfig)
+        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies, InternalConfiguration internalConfig)
         {
             _settings = settings;
-            _logger = logger;
             _internalConfig = internalConfig;
 
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
             _metadataResponseGenerator = metadataResponseGenerator;
             _cookies = cookies;
+
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route("wsfed")]
         public async Task<IHttpActionResult> Get()
         {
+            _logger.Info("Start: WsFederation request: " + Request.RequestUri.AbsoluteUri);
+
             WSFederationMessage message;
             if (WSFederationMessage.TryCreateFromUri(Request.RequestUri, out message))
             {
@@ -69,6 +73,8 @@ namespace Thinktecture.IdentityServer.WsFed
         [HttpGet]
         public async Task<IHttpActionResult> SignOutCallback()
         {
+            _logger.Info("WsFederation signout request");
+
             var urls = await _cookies.GetValuesAndDeleteCookieAsync();
             return new SignOutResult(urls);
         }
@@ -76,6 +82,8 @@ namespace Thinktecture.IdentityServer.WsFed
         [Route("wsfed/metadata")]
         public IHttpActionResult GetMetadata()
         {
+            _logger.Info("WsFederation metadata request");
+
             var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
             var entity = _metadataResponseGenerator.Generate(ep);
 
@@ -84,6 +92,8 @@ namespace Thinktecture.IdentityServer.WsFed
 
         private async Task<IHttpActionResult> ProcessSignInAsync(SignInRequestMessage msg)
         {
+            _logger.Info("WsFederation signin request");
+
             var result = await _validator.ValidateAsync(msg, User as ClaimsPrincipal);
 
             if (result.IsSignInRequired)

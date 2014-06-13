@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Plumbing
@@ -16,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
     {
         public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
-            var logger = context.Request.GetAutofacScope().Resolve<ILogger>();
+            var logger = LogProvider.GetCurrentClassLogger();
             logger.ErrorFormat("Unhandled exception: {0}", context.Exception);
 
             return Task.FromResult<object>(null);

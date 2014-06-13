@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -16,14 +17,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
         private readonly CoreSettings _settings;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
-        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings, ILogger logger)
+        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings)
         {
             _users = users;
             _scopes = scopes;
             _settings = settings;
-            _logger = logger;
+            
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
@@ -31,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var profileData = new Dictionary<string, object>();
             
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
-            _logger.InformationFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
+            _logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
             var profileClaims = await _users.GetProfileDataAsync(subject, requestedClaimTypes);
             
@@ -41,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 {
                     if (profileData.ContainsKey(claim.Type))
                     {
-                        _logger.Warning("Duplicate claim type detected: " + claim.Type);
+                        _logger.Warn("Duplicate claim type detected: " + claim.Type);
                     }
                     else
                     {
@@ -49,11 +51,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     }
                 }
 
-                _logger.InformationFormat("Profile service returned to the following claim types: {0}", profileClaims.Select(c => c.Type).ToSpaceSeparatedString());
+                _logger.InfoFormat("Profile service returned to the following claim types: {0}", profileClaims.Select(c => c.Type).ToSpaceSeparatedString());
             }
             else
             {
-                _logger.InformationFormat("Profile service returned no claims (null)");
+                _logger.InfoFormat("Profile service returned no claims (null)");
             }
 
             return profileData;
@@ -67,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             var scopeString = string.Join(" ", scopes);
-            _logger.InformationFormat("Scopes in access token: {0}", scopeString);
+            _logger.InfoFormat("Scopes in access token: {0}", scopeString);
 
             var scopeDetails = await _scopes.GetScopesAsync();
             var scopeClaims = new List<string>();

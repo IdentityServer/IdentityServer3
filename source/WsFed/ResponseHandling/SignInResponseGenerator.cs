@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFed.Validation;
@@ -19,13 +20,13 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 {
     public class SignInResponseGenerator
     {
-        private ILogger _logger;
+        private ILog _logger;
         private CoreSettings _settings;
         private IUserService _users;
         
-        public SignInResponseGenerator(ILogger logger, CoreSettings settings, IUserService users)
+        public SignInResponseGenerator(CoreSettings settings, IUserService users)
         {
-            _logger = logger;
+            _logger = LogProvider.GetCurrentClassLogger();
             _settings = settings;
             _users = users;
         }
