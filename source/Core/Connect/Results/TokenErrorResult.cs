@@ -9,6 +9,7 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
@@ -30,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             var dto = new ErrorDto
             {
-                error = _error 
+                Error = _error 
             };
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -43,7 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         internal class ErrorDto
         {
-            public string error { get; set; }
+			[JsonProperty("error")]
+            public string Error { get; set; }
         }    
     }
 }
