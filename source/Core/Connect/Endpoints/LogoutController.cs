@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public LogoutController(CoreSettings settings)
         {
-            this.logger = LogProvider.GetCurrentClassLogger();
+            this.logger = LogProvider.GetLogger("OIDC end_session endpoint");
             this.settings = settings;
         }
 
@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpGet]
         public IHttpActionResult Logout()
         {
-            logger.Info("[LogoutController.Logout] called");
+            logger.Info("Logout called");
 
             return new EmbeddedHtmlResult(
                 Request,

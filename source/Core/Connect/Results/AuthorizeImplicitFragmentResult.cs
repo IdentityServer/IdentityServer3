@@ -11,16 +11,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeImplicitFragmentResult : IHttpActionResult
     {
         private readonly AuthorizeResponse _response;
+        private readonly ILog _logger;
 
         public AuthorizeImplicitFragmentResult(AuthorizeResponse response)
         {
             _response = response;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -58,6 +61,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
             url = string.Format("{0}#{1}", url, query.ToQueryString());
             responseMessage.Headers.Location = new Uri(url);
+            _logger.Info("Redirecting to: " + url);
+            
             return responseMessage;
         }
     }

@@ -25,13 +25,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _tokenValidator = tokenValidator;
             _generator = generator;
 
-            _logger = LogProvider.GetCurrentClassLogger();
+            _logger = LogProvider.GetLogger("OIDC userinfo endpoint");
         }
 
         [Route]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            _logger.Info("Startting OIDC userinfo request.");
+            _logger.Info("Start");
 
             var authorizationHeader = request.Headers.Authorization;
 
@@ -57,6 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             var payload = await _generator.ProcessAsync(subject, scopes);
 
+            _logger.Info("Done");
             return new UserInfoResult(payload);
         }
 

@@ -10,16 +10,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeCodeResult : IHttpActionResult
     {
         private readonly AuthorizeResponse _response;
+        private readonly ILog _logger;
 
         public AuthorizeCodeResult(AuthorizeResponse response)
         {
             _response = response;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -39,6 +42,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             }
 
             responseMessage.Headers.Location = new Uri(url);
+            _logger.Info("Redirecting to: " + url);
+
             return responseMessage;
         }
     }

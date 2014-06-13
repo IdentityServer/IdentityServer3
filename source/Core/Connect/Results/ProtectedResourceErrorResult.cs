@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
@@ -16,11 +17,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
     {
         private readonly string _error;
         private readonly string _errorDescription;
+        private readonly ILog _logger;
 
         public ProtectedResourceErrorResult(string error, string errorDescription = null)
         {
             _error = error;
             _errorDescription = errorDescription;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -40,6 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             var header = new AuthenticationHeaderValue("Bearer", parameter);
             var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
+            _logger.Info("Returning error: " + _error);
             return response;
         }
     }

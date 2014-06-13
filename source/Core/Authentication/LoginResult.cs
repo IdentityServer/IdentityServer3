@@ -3,6 +3,7 @@
  * see license
  */
 
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -10,16 +11,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class LoginResult : IHttpActionResult
     {
-        SignInMessage _message;
-        HttpRequestMessage _request;
-        private CoreSettings _settings;
-        private InternalConfiguration _internalConfig;
+        private readonly SignInMessage _message;
+        private readonly HttpRequestMessage _request;
+        private readonly CoreSettings _settings;
+        private readonly InternalConfiguration _internalConfig;
+        private readonly ILog _logger;
 
         public LoginResult(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
         {
@@ -27,6 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             _settings = settings;
             _request = request;
             _internalConfig = internalConfig;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -54,7 +58,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 throw;
             }
 
+            _logger.Info("Redirecting to login page:\n " + CreateLoggerMessage());
             return response;
+        }
+
+        private string CreateLoggerMessage()
+        {
+            return JsonConvert.SerializeObject(_message, Formatting.Indented);
         }
     }
 }

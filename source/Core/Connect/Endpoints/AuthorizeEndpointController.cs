@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            _logger.Info("Starting OIDC authorize request.");
+            _logger.Info("Start");
             
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters

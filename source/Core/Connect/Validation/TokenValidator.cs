@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _users = users;
             _tokenHandles = tokenHandles;
 
-            _logger = LogProvider.GetCurrentClassLogger();
+            _logger = LogProvider.GetLogger("TokenValidator");
         }
 
         public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
