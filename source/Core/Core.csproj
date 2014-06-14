@@ -211,8 +211,10 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
+    <Compile Include="Services\CookieMiddlewareCookieService.cs" />
     <Compile Include="Services\DefaultExternalClaimsFilter.cs" />
     <Compile Include="Services\IClientService.cs" />
+    <Compile Include="Services\ITrackingCookieService.cs" />
     <Compile Include="Services\IExternalClaimsFilter.cs" />
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Connect\Services\ITokenService.cs" />

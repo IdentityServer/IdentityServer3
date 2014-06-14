@@ -95,6 +95,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
 
+            // general services
+            builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
+
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
             builder.RegisterInstance(authenticationOptions).AsSelf();

@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
-                    AuthenticationType = WsFederationPluginOptions.WsFedCookieAuthenticationType,
+                    AuthenticationType = WsFederationPluginOptions.CookieName,
                     AuthenticationMode = AuthenticationMode.Passive
                 });
 
@@ -37,8 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             options.Configuration.AddType(typeof(SignInValidator));
             options.Configuration.AddType(typeof(SignInResponseGenerator));
             options.Configuration.AddType(typeof(MetadataResponseGenerator));
-            options.Configuration.AddType(typeof(CookieMiddlewareCookieService), typeof(ICookieService));
-
+            
             options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;

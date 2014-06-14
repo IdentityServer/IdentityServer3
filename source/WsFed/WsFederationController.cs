@@ -13,6 +13,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.WsFed.Configuration;
 using Thinktecture.IdentityServer.WsFed.ResponseHandling;
 using Thinktecture.IdentityServer.WsFed.Results;
 using Thinktecture.IdentityServer.WsFed.Services;
@@ -29,10 +30,10 @@ namespace Thinktecture.IdentityServer.WsFed
         private SignInValidator _validator;
         private SignInResponseGenerator _signInResponseGenerator;
         private MetadataResponseGenerator _metadataResponseGenerator;
-        private ICookieService _cookies;
+        private ITrackingCookieService _cookies;
         private InternalConfiguration _internalConfig;
 
-        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ICookieService cookies, InternalConfiguration internalConfig)
+        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig)
         {
             _settings = settings;
             _internalConfig = internalConfig;
@@ -78,7 +79,7 @@ namespace Thinktecture.IdentityServer.WsFed
         {
             _logger.Info("WsFederation signout callback");
 
-            var urls = await _cookies.GetValuesAndDeleteCookieAsync();
+            var urls = await _cookies.GetValuesAndDeleteCookieAsync(WsFederationPluginOptions.CookieName);
             return new SignOutResult(urls);
         }
 
@@ -107,7 +108,7 @@ namespace Thinktecture.IdentityServer.WsFed
             }
 
             var responseMessage = await _signInResponseGenerator.GenerateResponseAsync(result);
-            await _cookies.AddValueAsync(result.ReplyUrl);
+            await _cookies.AddValueAsync(WsFederationPluginOptions.CookieName, result.ReplyUrl);
 
             return new SignInResult(responseMessage);
         }

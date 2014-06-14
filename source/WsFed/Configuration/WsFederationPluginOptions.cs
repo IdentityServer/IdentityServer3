@@ -7,6 +7,7 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
     public class WsFederationPluginOptions
     {
         PluginConfiguration _dependencies;
+        public const string CookieName = "WsFedSignInOut";
 
         public WsFederationPluginOptions(PluginConfiguration configuration)
         {
@@ -18,7 +19,7 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
             _dependencies = configuration;
         }
 
-        public const string WsFedCookieAuthenticationType = "WsFedSignInOut";
+        
 
         public PluginConfiguration Configuration
         {
