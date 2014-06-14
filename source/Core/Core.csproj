@@ -226,7 +226,6 @@
     <Compile Include="Services\InMemory\InMemoryTokenHandleStore.cs" />
     <Compile Include="Services\InMemory\InMemoryUser.cs" />
     <Compile Include="Services\InMemory\InMemoryUserService.cs" />
-    <Compile Include="Services\InternalProtectionSettings.cs" />
     <Compile Include="Services\IScopeService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Connect\Services\ITokenHandleStore.cs" />
