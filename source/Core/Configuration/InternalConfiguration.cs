@@ -7,12 +7,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class InternalConfiguration
     {
-        public PluginConfiguration PluginDependencies { get; set; }
+        public PluginConfiguration PluginConfiguration { get; set; }
         public IDataProtector DataProtector { get; set; }
 
         public InternalConfiguration()
         {
-            PluginDependencies = new PluginConfiguration();
+            PluginConfiguration = new PluginConfiguration();
         }
     }
 }

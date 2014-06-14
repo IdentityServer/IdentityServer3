@@ -51,7 +51,7 @@ namespace Owin
 
             if (options.PluginConfiguration != null)
             {
-                options.PluginConfiguration(app, internalConfig.PluginDependencies);
+                options.PluginConfiguration(app, internalConfig.PluginConfiguration);
             }
 
             app.UseFileServer(new FileServerOptions

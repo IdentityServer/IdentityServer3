@@ -230,7 +230,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var baseUrl = Request.GetBaseUrl(settings.PublicHostName);
             var urls = new List<string>();
-            foreach(var url in this.internalConfiguration.PluginDependencies.SignOutCallbackUrls)
+            foreach(var url in this.internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
             {
                 var tmp = url;
                 if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
