@@ -8,15 +8,18 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.WsFed.Results
 {
     public class SignInResult : IHttpActionResult
     {
-        SignInResponseMessage _message;
+        private readonly SignInResponseMessage _message;
+        private readonly ILog _logger;
 
         public SignInResult(SignInResponseMessage message)
         {
+            _logger = LogProvider.GetCurrentClassLogger();
             _message = message;
         }
 
@@ -29,7 +32,8 @@ namespace Thinktecture.IdentityServer.WsFed.Results
         {
             var response = new HttpResponseMessage();
             response.Content = new StringContent(_message.WriteFormPost(), Encoding.UTF8, "text/html");
-            
+
+            _logger.Debug("Returning WS-Federation signin response");
             return response;
         }
     }

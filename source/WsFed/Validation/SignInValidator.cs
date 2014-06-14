@@ -25,6 +25,7 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
 
         public async Task<SignInValidationResult> ValidateAsync(SignInRequestMessage message, ClaimsPrincipal subject)
         {
+            _logger.Info("Validating WS-Federation signin request");
             var result = new SignInValidationResult();
 
             if (message.HomeRealm.IsPresent())
@@ -53,7 +54,8 @@ namespace Thinktecture.IdentityServer.WsFed.Validation
                 };
             }
 
-            // todo: check wreply against list of allowed reply URLs
+            _logger.InfoFormat("Relying party registration found: {0} / {1}", rp.Realm, rp.Name);
+
             result.ReplyUrl = rp.ReplyUrl;
             _logger.InfoFormat("Reply URL set to: " + result.ReplyUrl);
 

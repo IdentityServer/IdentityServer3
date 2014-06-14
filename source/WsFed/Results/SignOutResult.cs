@@ -8,15 +8,18 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.WsFed.Results
 {
     public class SignOutResult : IHttpActionResult
     {
-        IEnumerable<string> _urls;
+        private readonly IEnumerable<string> _urls;
+        private readonly ILog _logger;
 
         public SignOutResult(IEnumerable<string> urls)
         {
+            _logger = LogProvider.GetCurrentClassLogger();
             _urls = urls;
 
             if (_urls == null)
@@ -41,6 +44,8 @@ namespace Thinktecture.IdentityServer.WsFed.Results
             }
 
             var content = new StringContent(sb.ToString(), Encoding.UTF8, "text/html");
+
+            _logger.Debug("Returning WS-Federation signout response");
             return new HttpResponseMessage { Content = content };
         }
     }

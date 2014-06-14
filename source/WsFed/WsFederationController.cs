@@ -48,7 +48,8 @@ namespace Thinktecture.IdentityServer.WsFed
         [Route("wsfed")]
         public async Task<IHttpActionResult> Get()
         {
-            _logger.Info("Start: WsFederation request: " + Request.RequestUri.AbsoluteUri);
+            _logger.Info("Start WsFederation request");
+            _logger.Debug(Request.RequestUri.AbsoluteUri);
 
             WSFederationMessage message;
             if (WSFederationMessage.TryCreateFromUri(Request.RequestUri, out message))
@@ -56,12 +57,14 @@ namespace Thinktecture.IdentityServer.WsFed
                 var signin = message as SignInRequestMessage;
                 if (signin != null)
                 {
+                    _logger.Info("WsFederation signin request");
                     return await ProcessSignInAsync(signin);
                 }
 
                 var signout = message as SignOutRequestMessage;
                 if (signout != null)
                 {
+                    _logger.Info("WsFederation signout request");
                     return RedirectToRoute(Constants.RouteNames.LogoutPrompt, null);
                 }
             }
@@ -73,7 +76,7 @@ namespace Thinktecture.IdentityServer.WsFed
         [HttpGet]
         public async Task<IHttpActionResult> SignOutCallback()
         {
-            _logger.Info("WsFederation signout request");
+            _logger.Info("WsFederation signout callback");
 
             var urls = await _cookies.GetValuesAndDeleteCookieAsync();
             return new SignOutResult(urls);
@@ -92,8 +95,6 @@ namespace Thinktecture.IdentityServer.WsFed
 
         private async Task<IHttpActionResult> ProcessSignInAsync(SignInRequestMessage msg)
         {
-            _logger.Info("WsFederation signin request");
-
             var result = await _validator.ValidateAsync(msg, User as ClaimsPrincipal);
 
             if (result.IsSignInRequired)

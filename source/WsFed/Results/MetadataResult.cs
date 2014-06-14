@@ -6,22 +6,26 @@ using System.IdentityModel.Metadata;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.WsFed.Results
 {
     public class MetadataResult : IHttpActionResult
     {
-        private EntityDescriptor _entity;
+        private readonly EntityDescriptor _entity;
+        private readonly ILog _logger;
 
         public MetadataResult(EntityDescriptor entity)
         {
             _entity = entity;
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
-        public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(Execute());
         }
@@ -34,6 +38,8 @@ namespace Thinktecture.IdentityServer.WsFed.Results
             ser.WriteMetadata(XmlWriter.Create(new StringWriter(sb), new XmlWriterSettings { OmitXmlDeclaration = true }), _entity);
 
             var content = new StringContent(sb.ToString(), Encoding.UTF8, "application/xml");
+
+            _logger.Debug("Returning WS-Federation metadata response");
             return new HttpResponseMessage { Content = content };
         }
     }
