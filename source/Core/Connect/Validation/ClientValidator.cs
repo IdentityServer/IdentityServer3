@@ -29,6 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
         {
+            _logger.Info("Start client validation");
+
             // validate client credentials on the wire
             var credential = ValidateHttpRequest(header, parameters);
 
@@ -55,6 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (credentials.IsPresent || credentials.IsMalformed)
             {
+                _logger.Debug("Client credential is Basic Authentication");
                 return credentials;
             }
 
@@ -172,7 +175,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (id.IsPresent() && secret.IsPresent())
             {
-                _logger.Info("Client credentials in POST body found.");
+                _logger.Debug("Client credentials in POST body found.");
 
                 return new ClientCredential
                 {
@@ -185,7 +188,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            _logger.Info("No client credentials in POST body found.");
+            _logger.Debug("No client credentials in POST body found.");
             return new ClientCredential
             {
                 IsPresent = false

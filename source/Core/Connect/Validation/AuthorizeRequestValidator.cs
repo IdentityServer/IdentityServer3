@@ -391,6 +391,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _logger.Error("Error in custom validation: " + customResult.Error);
             }
 
+            _logger.Info("Client validation successful");
             return customResult;
         }
 

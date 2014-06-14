@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            _logger.Info("OIDC token endpoint.");
+            _logger.Info("Start token request");
 
             // validate client credentials and client
             var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);

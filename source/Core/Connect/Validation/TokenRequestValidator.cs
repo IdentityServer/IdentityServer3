@@ -48,6 +48,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
+            _logger.Info("Starting request validation");
+
             _validatedRequest = new ValidatedTokenRequest();
 
             if (client == null)
@@ -179,6 +181,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
+            _logger.Info("Successful validation of authorization_code request");
             return Valid();
         }
 
@@ -208,6 +211,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
+            _logger.Info("Successful validation of client_credentials request");
             return Valid();
         }
 
@@ -258,6 +262,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            _logger.Info("Successful validation of password request");
             return Valid();
         }
 
@@ -295,6 +300,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             _validatedRequest.Subject = principal;
+
+            _logger.Info("Successful validation of assertion request");
             return Valid();
         }
 
