@@ -73,6 +73,7 @@ namespace Thinktecture.IdentityServer.Host
             var options = new WsFederationPluginOptions(dependencies)
             {
                 RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+                EnableFederationMetadata = false
             };
 
             app.UseWsFederationPlugin(options);

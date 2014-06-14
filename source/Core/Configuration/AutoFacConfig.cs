@@ -106,20 +106,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             // plugin configuration
-            var pluginDepencies = internalConfig.PluginDependencies;
-            if (pluginDepencies != null)
+            var pluginConfiguration = internalConfig.PluginConfiguration;
+            if (pluginConfiguration != null)
             {
-                if (pluginDepencies.ApiControllerAssemblies != null)
+                if (pluginConfiguration.ApiControllerAssemblies != null)
                 {
-                    foreach (var asm in pluginDepencies.ApiControllerAssemblies)
+                    foreach (var asm in pluginConfiguration.ApiControllerAssemblies)
                     {
                         builder.RegisterApiControllers(asm);
                     }
                 }
 
-                if (pluginDepencies.Types != null)
+                if (pluginConfiguration.Types != null)
                 {
-                    foreach (var type in pluginDepencies.Types)
+                    foreach (var type in pluginConfiguration.Types)
                     {
                         if (type.Value == null)
                         {
@@ -132,11 +132,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     }
                 }
 
-                if (pluginDepencies.Factories != null)
+                if (pluginConfiguration.Factories != null)
                 {
-                    foreach (var factory in pluginDepencies.Factories)
+                    foreach (var factory in pluginConfiguration.Factories)
                     {
                         builder.Register(ctx => factory.Value()).As(factory.Key);
+                    }
+                }
+
+                if (pluginConfiguration.Instances != null)
+                {
+                    foreach (var instance in pluginConfiguration.Instances)
+                    {
+                        builder.RegisterInstance(instance).AsSelf();
                     }
                 }
             }

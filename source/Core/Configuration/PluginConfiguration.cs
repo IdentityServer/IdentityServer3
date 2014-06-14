@@ -13,6 +13,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Dictionary<Type, Type> Types { get; set; }
         public Dictionary<Type, Func<object>> Factories { get; set; }
         public List<Assembly> ApiControllerAssemblies { get; set; }
+        public List<object> Instances { get; set; }
         public List<string> SignOutCallbackUrls { get; set; }
 
         public PluginConfiguration()
@@ -21,6 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             Factories = new Dictionary<Type, Func<object>>();
             ApiControllerAssemblies = new List<Assembly>();
             SignOutCallbackUrls = new List<string>();
+            Instances = new List<object>();
         }
 
         public void AddType(Type implementation, Type implementedInterface = null)
@@ -41,6 +43,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public void AddSignOutCallbackUrl(string url)
         {
             SignOutCallbackUrls.Add(url);
+        }
+
+        public void AddInstance(object instance)
+        {
+            Instances.Add(instance);
         }
     }
 }

@@ -37,7 +37,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             options.Configuration.AddType(typeof(SignInValidator));
             options.Configuration.AddType(typeof(SignInResponseGenerator));
             options.Configuration.AddType(typeof(MetadataResponseGenerator));
-            
+
+            options.Configuration.AddInstance(options);
+
             options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;

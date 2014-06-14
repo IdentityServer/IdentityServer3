@@ -17,9 +17,8 @@ namespace Thinktecture.IdentityServer.WsFed.Configuration
             }
             
             _dependencies = configuration;
+            EnableFederationMetadata = true;
         }
-
-        
 
         public PluginConfiguration Configuration
         {
