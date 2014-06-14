@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         // basic protocol validation
         public ValidationResult ValidateProtocol(NameValueCollection parameters)
         {
-            _logger.Info("OIDC authorize request protocol validation");
+            _logger.Info("Start protocol validation");
 
             if (parameters == null)
             {
@@ -301,11 +301,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             // todo: parse amr, acr
 
+            _logger.Info("Protocol validation successful");
             return Valid();
         }
 
         public async Task<ValidationResult> ValidateClientAsync()
         {
+            _logger.Info("Start client validation");
+
             if (_validatedRequest.ClientId.IsMissing())
             {
                 throw new InvalidOperationException("ClientId is empty. Validate protocol first.");
@@ -381,7 +384,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            return await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest, _users);
+            var customResult = await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest, _users);
+
+            if (customResult.IsError)
+            {
+                _logger.Error("Error in custom validation: " + customResult.Error);
+            }
+
+            return customResult;
         }
 
         private ValidationResult Invalid(ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)

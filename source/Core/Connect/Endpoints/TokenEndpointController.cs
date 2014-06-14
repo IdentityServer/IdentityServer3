@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         
         public TokenEndpointController(TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
-            _logger = LogProvider.GetLogger("OIDC token endpoint");
+            _logger = LogProvider.GetCurrentClassLogger();
 
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;

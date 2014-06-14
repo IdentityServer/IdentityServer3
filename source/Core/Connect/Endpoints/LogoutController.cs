@@ -12,26 +12,26 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class LogoutController : ApiController
     {
-        ILog logger;
-        CoreSettings settings;
+        ILog _logger;
+        CoreSettings _settings;
 
         public LogoutController(CoreSettings settings)
         {
-            this.logger = LogProvider.GetLogger("OIDC end_session endpoint");
-            this.settings = settings;
+            _logger = LogProvider.GetCurrentClassLogger();
+            _settings = settings;
         }
 
         [Route("connect/logout", Name=Constants.RouteNames.LogoutPrompt)]
         [HttpGet]
         public IHttpActionResult Logout()
         {
-            logger.Info("Logout called");
+            _logger.Info("Logout called");
 
             return new EmbeddedHtmlResult(
                 Request,
                 new LayoutModel
                 {
-                    Server = settings.SiteName,
+                    Server = _settings.SiteName,
                     Page = "logoutprompt",
                     PageModel = new
                     {

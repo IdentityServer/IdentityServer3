@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public AccessTokenValidationController(TokenValidator validator)
         {
             _validator = validator;
-            _logger = LogProvider.GetLogger("OIDC access token validation endpoint");
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route]

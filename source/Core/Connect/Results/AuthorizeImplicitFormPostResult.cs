@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 Content = content
             };
 
-            _logger.Info("Posting: " + form);
+            _logger.Info("Posting to " + _response.RedirectUri.AbsoluteUri);
             return message;
         }
     }

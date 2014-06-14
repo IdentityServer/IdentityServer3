@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -19,13 +20,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [EnableCors("*", "*", "GET")]
     public class DiscoveryEndpointController : ApiController
     {
-        private CoreSettings _settings;
-        private IScopeService _scopes;
+        private readonly CoreSettings _settings;
+        private readonly IScopeService _scopes;
+        private readonly ILog _logger;
 
         public DiscoveryEndpointController(CoreSettings settings, IScopeService scopes)
         {
             _settings = settings;
             _scopes = scopes;
+
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route("openid-configuration")]

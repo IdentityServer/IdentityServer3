@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _tokenValidator = tokenValidator;
             _generator = generator;
 
-            _logger = LogProvider.GetLogger("OIDC userinfo endpoint");
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route]

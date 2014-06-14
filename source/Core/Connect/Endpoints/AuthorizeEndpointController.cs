@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             CoreSettings settings,
             InternalConfiguration internalConfiguration)
         {
-            _logger = LogProvider.GetLogger("OIDC authorize endpoint");
+            _logger = LogProvider.GetCurrentClassLogger();
 
             _settings = settings;
             _internalConfiguration = internalConfiguration;
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            _logger.Info("Start");
+            _logger.Info("Start authorize request");
             
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters
@@ -117,6 +117,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (interaction.IsConsent)
             {
+                _logger.Info("Showing consent screen");
                 return CreateConsentResult(request, request.Raw, interaction.ConsentError);
             }
 
@@ -127,6 +128,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpPost]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
+            _logger.Info("Resuming from consent, restarting validation");
             return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
         }
 
