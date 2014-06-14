@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             try
             {
-                var sim = _message.Protect(60, _internalConfig.DataProtector);
+                var sim = _message.Protect(600, _internalConfig.DataProtector);
 
                 var urlHelper = _request.GetUrlHelper();
                 var loginUrl = urlHelper.Route(Constants.RouteNames.Login, new { message = sim });
