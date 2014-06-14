@@ -7,25 +7,31 @@ using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenResponseGenerator
     {
-        private CoreSettings _settings;
-        private ITokenService _tokenService;
-        private ITokenHandleStore _tokenHandles;
+        private readonly CoreSettings _settings;
+        private readonly ITokenService _tokenService;
+        private readonly ITokenHandleStore _tokenHandles;
+        private readonly ILog _logger;
 
         public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
         {
             _settings = settings;
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
+            
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
         {
+            _logger.Info("Creating token response");
+
             if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {
                 return await ProcessAuthorizationCodeRequestAsync(request);

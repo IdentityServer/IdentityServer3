@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            _logger.Info("Start");
+            _logger.Info("Start userinfo request");
 
             var authorizationHeader = request.Headers.Authorization;
 
@@ -56,8 +56,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var scopes = result.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
             var payload = await _generator.ProcessAsync(subject, scopes);
-
-            _logger.Info("Done");
             return new UserInfoResult(payload);
         }
 

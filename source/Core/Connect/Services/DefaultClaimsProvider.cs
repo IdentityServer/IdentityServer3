@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -14,8 +15,17 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
+        protected readonly ILog _logger;
+
+        public DefaultClaimsProvider()
+        {
+            _logger = LogProvider.GetCurrentClassLogger();
+        }
+
         public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, CoreSettings settings, bool includeAllIdentityClaims, IUserService users, NameValueCollection request)
         {
+            _logger.Debug("Getting claims for identity token");
+
             List<Claim> outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
             var additionalClaims = new List<string>();
 
@@ -48,6 +58,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, CoreSettings settings, IUserService users, NameValueCollection request)
         {
+            _logger.Debug("Getting claims for access token");
+
             var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.ClientId, client.ClientId),

@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route]
         public async Task<IHttpActionResult> Get()
         {
-            _logger.Info("Start");
+            _logger.Info("Start access token validation request");
 
             var parameters = Request.RequestUri.ParseQueryString();
 

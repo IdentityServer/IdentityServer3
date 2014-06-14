@@ -30,6 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
         {
+            _logger.Info("Creating userinfo response");
             var profileData = new Dictionary<string, object>();
             
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);

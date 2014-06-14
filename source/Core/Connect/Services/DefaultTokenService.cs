@@ -17,6 +17,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
@@ -25,10 +26,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 {
     public class DefaultTokenService : ITokenService
     {
-        private IUserService _users;
-        private CoreSettings _settings;
-        private IClaimsProvider _claimsProvider;
-        private ITokenHandleStore _tokenHandles;
+        private readonly IUserService _users;
+        private readonly CoreSettings _settings;
+        private readonly IClaimsProvider _claimsProvider;
+        private readonly ITokenHandleStore _tokenHandles;
+        private readonly ILog _logger;
 
         public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
         {
@@ -36,10 +38,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
+            
+            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public virtual async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
         {
+            _logger.Debug("Creating identity token");
+
             // host provided claims
             var claims = new List<Claim>();
             
@@ -82,6 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
         public virtual async Task<Token> CreateAccessTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
         {
+            _logger.Debug("Creating access token");
+
             var claims = await _claimsProvider.GetAccessTokenClaimsAsync(
                 subject,
                 client,
@@ -108,12 +116,16 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             {
                 if (token.Client.AccessTokenType == AccessTokenType.JWT)
                 {
+                    _logger.Debug("Creating JWT access token");
+
                     return CreateJsonWebToken(
                         token,
                         new X509SigningCredentials(_settings.SigningCertificate));
                 }
                 else
                 {
+                    _logger.Debug("Creating reference access token");
+
                     var handle = Guid.NewGuid().ToString("N");
                     await _tokenHandles.StoreAsync(handle, token);
 
@@ -123,6 +135,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (token.Type == Constants.TokenTypes.IdentityToken)
             {
+                _logger.Debug("Creating JWT identity token");
+
                 SigningCredentials credentials;
                 if (token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
                 {
