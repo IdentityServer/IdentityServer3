@@ -33,6 +33,8 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 
         public async Task<SignInResponseMessage> GenerateResponseAsync(SignInValidationResult validationResult)
         {
+            _logger.Info("Creating WS-Federation signin response");
+
             // create subject
             var outgoingSubject = await CreateSubjectAsync(validationResult);
 
@@ -78,7 +80,6 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 }
             }
 
-            // todo: do complete mapping
             if (validationResult.Subject.GetAuthenticationMethod() == Constants.AuthenticationMethods.Password)
             {
                 mappedClaims.Add(new Claim(ClaimTypes.AuthenticationMethod, AuthenticationMethods.Password));
@@ -101,6 +102,11 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 TokenType = validationResult.RelyingParty.TokenType
             };
 
+            if (validationResult.RelyingParty.EncryptingCertificate != null)
+            {
+                descriptor.EncryptingCredentials = new X509EncryptingCredentials(validationResult.RelyingParty.EncryptingCertificate);
+            }
+
             return CreateSupportedSecurityTokenHandler().CreateToken(descriptor);
         }
 
@@ -114,6 +120,5 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
                 new JwtSecurityTokenHandler()
             });
         }
-
     }
 }
