@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace UnitTests.Plumbing
 {
     class TestAssertionValidator : IAssertionGrantValidator
     {
-        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
+        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request, IUserService users)
         {
             if (request.GrantType == "assertionType" && request.Assertion == "assertion")
             {

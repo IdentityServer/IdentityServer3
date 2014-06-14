@@ -292,7 +292,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // validate assertion
             /////////////////////////////////////////////
-            var principal = await _assertionValidator.ValidateAsync(_validatedRequest);
+            var principal = await _assertionValidator.ValidateAsync(_validatedRequest, _users);
             if (principal == null)
             {
                 _logger.Error("Invalid assertion.");
