@@ -90,6 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             try
             {
                 var id = handler.ValidateToken(jwt, parameters);
+                _logger.Info("JWT access token validatio successful");
 
                 return Task.FromResult(new TokenValidationResult
                 {
@@ -106,8 +107,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     Error = Constants.ProtectedResourceErrors.InvalidToken
                 });                
             }
-
-            _logger.Info("JWT access token validatio successful");
         }
 
         protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
