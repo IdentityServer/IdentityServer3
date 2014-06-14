@@ -31,5 +31,10 @@ namespace UnitTests.Plumbing
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> IsActive(string subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

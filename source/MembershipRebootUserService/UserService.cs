@@ -259,5 +259,10 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 }
             }
         }
+
+        public Task<bool> IsActive(string subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

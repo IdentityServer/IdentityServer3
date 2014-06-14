@@ -325,5 +325,10 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
         {
             return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
         }
+
+        public Task<bool> IsActive(string subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

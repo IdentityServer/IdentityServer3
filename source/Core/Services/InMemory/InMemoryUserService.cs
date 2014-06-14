@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var query =
                 from u in _users
@@ -89,6 +89,25 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             }
 
             return Task.FromResult<IEnumerable<Claim>>(claims);
+        }
+
+
+        public Task<bool> IsActive(string subject)
+        {
+            var query =
+                from u in _users
+                where
+                    u.Subject == subject
+                select u;
+
+            var user = query.SingleOrDefault();
+
+            if (user == null)
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(user.Enabled);
         }
     }
 }
