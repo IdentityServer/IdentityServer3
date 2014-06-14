@@ -3,6 +3,7 @@
  * see license
  */
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Thinktecture.IdentityServer.WsFed.Models
 {
@@ -15,6 +16,7 @@ namespace Thinktecture.IdentityServer.WsFed.Models
         public string ReplyUrl { get; set; }
         public string TokenType { get; set; }
         public int TokenLifeTime { get; set; }
+        public X509Certificate2 EncryptingCertificate { get; set; }
         public Dictionary<string, string> ClaimMappings { get; set; }
     }
 }
