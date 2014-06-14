@@ -1,4 +1,8 @@
-﻿namespace Thinktecture.IdentityServer.Core.Logging
+﻿/*
+ * Copyright (c) Damian Hickey.  All rights reserved.
+ * see license
+ */
+namespace Thinktecture.IdentityServer.Core.Logging
 {
 	using System;
 
