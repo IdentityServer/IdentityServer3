@@ -146,12 +146,14 @@
     <Compile Include="Connect\Results\UserInfoResult.cs" />
     <Compile Include="Connect\Services\DefaultAssertionGrantValidator.cs" />
     <Compile Include="Connect\Services\DefaultCustomRequestValidator.cs" />
+    <Compile Include="Connect\Services\DefaultCustomTokenValidator.cs" />
     <Compile Include="Connect\Services\DefaultTokenService.cs" />
     <Compile Include="Connect\Services\HashingTransientDataRepository.cs" />
     <Compile Include="Connect\Services\DefaultClaimsProvider.cs" />
     <Compile Include="Connect\Services\IAssertionGrantValidator.cs" />
     <Compile Include="Connect\Services\IClaimsProvider.cs" />
     <Compile Include="Connect\Services\ICustomRequestValidator.cs" />
+    <Compile Include="Connect\Services\ICustomTokenValidator.cs" />
     <Compile Include="Connect\Services\ITransientDataRepository.cs" />
     <Compile Include="Connect\Validation\ClientValidator.cs" />
     <Compile Include="Connect\Validation\ScopeValidator.cs" />

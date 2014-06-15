@@ -24,13 +24,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly CoreSettings _settings;
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
+        private readonly ICustomTokenValidator _customValidator;
         private readonly ILog _logger;
+        private readonly IClientService _clients;
 
-        public TokenValidator(CoreSettings settings, IUserService users, ITokenHandleStore tokenHandles)
+        public TokenValidator(CoreSettings settings, IUserService users, IClientService clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
             _settings = settings;
             _users = users;
+            _clients = clients;
             _tokenHandles = tokenHandles;
+            _customValidator = customValidator;
 
             _logger = LogProvider.GetCurrentClassLogger();
         }
@@ -70,7 +74,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
             }
 
-            return result;
+            var customResult = await _customValidator.ValidateAccessTokenAsync(result, _settings, _clients, _users);
+            return customResult;
         }
 
         protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
@@ -94,7 +99,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 return Task.FromResult(new TokenValidationResult
                 {
-                    Claims = id.Claims
+                    Claims = id.Claims,
+                    Jwt = jwt
                 });
             }
             catch (Exception ex)
@@ -135,7 +141,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return new TokenValidationResult
             {
-                Claims = ReferenceTokenToClaims(token)
+                Claims = ReferenceTokenToClaims(token),
+                ReferenceToken = token
             };
         }
 

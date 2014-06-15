@@ -83,6 +83,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultExternalClaimsFilter>().As<IExternalClaimsFilter>();
             }
 
+            if (fact.CustomTokenValidator != null)
+            {
+                builder.Register(ctx => fact.CustomTokenValidator()).As<ICustomTokenValidator>();
+            }
+            else
+            {
+                builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
+            }
+
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();

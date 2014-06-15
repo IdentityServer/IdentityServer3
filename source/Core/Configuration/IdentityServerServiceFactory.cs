@@ -29,6 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Func<IClaimsProvider> ClaimsProvider { get; set; }
         public Func<ITokenService> TokenService { get; set; }
         public Func<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
+        public Func<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
         internal void Validate()
         {
