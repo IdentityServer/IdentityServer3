@@ -114,12 +114,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             catch (Exception ex)
             {
                 _logger.ErrorException("JWT token validation error", ex);
-
-                return Task.FromResult(new TokenValidationResult
-                {
-                    IsError = true,
-                    Error = Constants.ProtectedResourceErrors.InvalidToken
-                });                
+                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
             }
         }
 
