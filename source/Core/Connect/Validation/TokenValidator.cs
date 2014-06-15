@@ -2,6 +2,7 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
+
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Selectors;
@@ -74,7 +75,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
             }
 
+            _logger.Debug("Calling custom token validator");
             var customResult = await _customValidator.ValidateAccessTokenAsync(result, _settings, _clients, _users);
+
+            if (customResult.IsError)
+            {
+                _logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+            }
+            
             return customResult;
         }
 

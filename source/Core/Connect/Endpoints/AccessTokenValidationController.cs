@@ -2,6 +2,8 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
+
+using Newtonsoft.Json;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -44,8 +46,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return BadRequest(result.Error);
             }
 
-            _logger.Info("Done.");
-            return Ok(result.Claims.Select(c => new { c.Type, c.Value }));
+            var response = result.Claims.Select(c => new { c.Type, c.Value });
+            _logger.Debug(JsonConvert.SerializeObject(response, Formatting.Indented));
+
+            _logger.Info("Returning access token claims");
+            return Json(response);
         }
     }
 }
