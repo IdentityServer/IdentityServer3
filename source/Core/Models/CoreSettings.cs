@@ -54,7 +54,12 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public virtual EndpointSettings AccessTokenValidationEndpoint
         {
-            get { return new EndpointSettings { Enabled = false }; }
+            get { return new EndpointSettings { Enabled = true }; }
+        }
+
+        public virtual EndpointSettings EndSessionEndpoint
+        {
+            get { return new EndpointSettings { Enabled = true }; }
         }
     }
 }

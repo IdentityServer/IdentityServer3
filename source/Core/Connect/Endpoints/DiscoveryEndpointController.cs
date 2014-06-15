@@ -35,6 +35,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("openid-configuration")]
         public async Task<IHttpActionResult> GetConfiguration()
         {
+            _logger.Info("Start discovery request");
+
+            if (!_settings.DiscoveryEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
+
             var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
             var scopes = await _scopes.GetScopesAsync();
 
@@ -58,6 +66,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("jwks")]
         public IHttpActionResult GetKeyData()
         {
+            _logger.Info("Start key discovery request");
+
+            if (!_settings.DiscoveryEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
+
             var cert = _settings.SigningCertificate;
             var cert64 = Convert.ToBase64String(cert.RawData);
             var thumbprint = Base64Url.Encode(cert.GetCertHash());

@@ -24,7 +24,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpGet]
         public IHttpActionResult Logout()
         {
-            _logger.Info("Logout called");
+            _logger.Info("End session request");
+
+            if (!_settings.EndSessionEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
 
             return new EmbeddedHtmlResult(
                 Request,

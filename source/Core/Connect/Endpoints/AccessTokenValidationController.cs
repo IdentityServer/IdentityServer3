@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -17,10 +18,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly TokenValidator _validator;
         private readonly ILog _logger;
+        private readonly CoreSettings _settings;
 
-        public AccessTokenValidationController(TokenValidator validator)
+        public AccessTokenValidationController(TokenValidator validator, CoreSettings settings)
         {
             _validator = validator;
+            _settings = settings;
             _logger = LogProvider.GetCurrentClassLogger();
         }
 
@@ -28,6 +31,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public async Task<IHttpActionResult> Get()
         {
             _logger.Info("Start access token validation request");
+
+            if (!_settings.AccessTokenValidationEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
 
             var parameters = Request.RequestUri.ParseQueryString();
 

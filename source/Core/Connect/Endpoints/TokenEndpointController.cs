@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -19,25 +20,33 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
         private readonly ClientValidator _clientValidator;
+        private readonly CoreSettings _settings;
         
-        public TokenEndpointController(TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
+        public TokenEndpointController(CoreSettings settings, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
             _logger = LogProvider.GetCurrentClassLogger();
 
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
             _generator = generator;
+            _settings = settings;
         }
 
         [Route]
         public async Task<IHttpActionResult> Post()
         {
+            _logger.Info("Start token request");
+
             return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
         }
 
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            _logger.Info("Start token request");
+            if (!_settings.TokenEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
 
             // validate client credentials and client
             var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);

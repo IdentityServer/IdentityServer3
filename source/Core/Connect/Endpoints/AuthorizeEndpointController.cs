@@ -50,12 +50,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("authorize", Name="authorize")]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
+            _logger.Info("Start authorize request");
+
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
         protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
-        {
-            _logger.Info("Start authorize request");
+        {   
+            if (!_settings.AuthorizeEndpoint.Enabled)
+            {
+                _logger.Warn("Endpoint is disabled. Aborting");
+                return NotFound();
+            }
             
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters
