@@ -2,6 +2,9 @@
  * Copyright (c) Damian Hickey.  All rights reserved.
  * see license
  */
+
+using System.Runtime.CompilerServices;
+
 namespace Thinktecture.IdentityServer.Core.Logging
 {
 	using System;
@@ -11,6 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 	{
 		private static ILogProvider currentLogProvider;
 
+        [MethodImplAttribute(MethodImplOptions.NoInlining)]
 		public static ILog GetCurrentClassLogger()
 		{
 			var stackFrame = new StackFrame(1, false);
