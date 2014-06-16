@@ -18,7 +18,6 @@ namespace Thinktecture.IdentityServer.Host.Config
             var consent = new InMemoryConsentService();
             var scopes = new InMemoryScopeService(LocalTestScopes.Get());
             var clients = new InMemoryClientService(LocalTestClients.Get());
-            var logger = new TraceLogger();
 
             var users = new InMemoryUser[]
             {
@@ -43,7 +42,6 @@ namespace Thinktecture.IdentityServer.Host.Config
 
             var fact = new IdentityServerServiceFactory
             {
-                Logger = () => logger,
                 UserService = () => userSvc,
                 AuthorizationCodeStore = () => codeStore,
                 TokenHandleStore = () => tokenStore,
