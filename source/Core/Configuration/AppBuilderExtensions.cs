@@ -29,7 +29,13 @@ namespace Owin
             var settings = options.Factory.CoreSettings();
             if (settings.DataProtector == null)
             {
-                internalConfig.DataProtector = new HostDataProtector(app.GetDataProtectionProvider());
+                var provider = app.GetDataProtectionProvider();
+                if (provider == null)
+                {
+                    provider = new DpapiDataProtectionProvider("idsrv3");
+                }
+
+                internalConfig.DataProtector = new HostDataProtector(provider);
             }
             else
             {
