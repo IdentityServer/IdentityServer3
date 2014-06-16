@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
     public class DiagnosticsTraceLogger : ILog
     {
-        string _name;
+        readonly string _name;
 
         public DiagnosticsTraceLogger()
         {
