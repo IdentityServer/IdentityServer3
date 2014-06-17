@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
             var method = stackFrame.GetMethod();
             if (method == null || method.DeclaringType == null)
             {
-                return GetLogger(string.Empty);
+                return GetLogger("unknown");
             }
 
             return GetLogger(method.DeclaringType);
