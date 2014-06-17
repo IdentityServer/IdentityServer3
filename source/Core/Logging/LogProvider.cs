@@ -11,11 +11,17 @@ namespace Thinktecture.IdentityServer.Core.Logging
 	{
 		private static ILogProvider currentLogProvider;
 
-		public static ILog GetCurrentClassLogger()
-		{
-			var stackFrame = new StackFrame(1, false);
-			return GetLogger(stackFrame.GetMethod().DeclaringType);
-		}
+        public static ILog GetCurrentClassLogger()
+        {
+            var stackFrame = new StackFrame(1, false);
+            var method = stackFrame.GetMethod();
+            if (method == null || method.DeclaringType == null)
+            {
+                return GetLogger(string.Empty);
+            }
+
+            return GetLogger(method.DeclaringType);
+        }
 
 		public static ILog GetLogger(Type type)
 		{
