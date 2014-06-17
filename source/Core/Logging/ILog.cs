@@ -4,12 +4,12 @@
  */
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-	using System;
+    using System;
 
-	public interface ILog
-	{
-		void Log(LogLevel logLevel, Func<string> messageFunc);
+    public interface ILog
+    {
+        void Log(LogLevel logLevel, Func<string> messageFunc);
 
-		void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception;
-	}
+        void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception;
+    }
 }
