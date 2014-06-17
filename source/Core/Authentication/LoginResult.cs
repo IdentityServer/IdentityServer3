@@ -18,11 +18,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class LoginResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly SignInMessage _message;
         private readonly HttpRequestMessage _request;
         private readonly CoreSettings _settings;
         private readonly InternalConfiguration _internalConfig;
-        private readonly ILog _logger;
 
         public LoginResult(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
         {
@@ -30,7 +30,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             _settings = settings;
             _request = request;
             _internalConfig = internalConfig;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -58,8 +57,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 throw;
             }
 
-            _logger.Info("Redirecting to login page");
-            _logger.Debug(JsonConvert.SerializeObject(_message, Formatting.Indented));
+            Logger.Info("Redirecting to login page");
+            Logger.Debug(JsonConvert.SerializeObject(_message, Formatting.Indented));
             return response;
         }
     }

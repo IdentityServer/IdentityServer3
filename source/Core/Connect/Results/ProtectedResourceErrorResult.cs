@@ -15,15 +15,14 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class ProtectedResourceErrorResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly string _error;
         private readonly string _errorDescription;
-        private readonly ILog _logger;
 
         public ProtectedResourceErrorResult(string error, string errorDescription = null)
         {
             _error = error;
             _errorDescription = errorDescription;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -43,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             var header = new AuthenticationHeaderValue("Bearer", parameter);
             var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
-            _logger.Info("Returning error: " + _error);
+            Logger.Info("Returning error: " + _error);
             return response;
         }
     }

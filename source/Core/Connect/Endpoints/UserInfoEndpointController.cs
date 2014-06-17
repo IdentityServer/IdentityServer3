@@ -16,8 +16,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect/userinfo")]
     public class UserInfoEndpointController : ApiController
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly UserInfoResponseGenerator _generator;
-        private readonly ILog _logger;
         private readonly TokenValidator _tokenValidator;
         private readonly CoreSettings _settings;
 
@@ -26,18 +26,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _tokenValidator = tokenValidator;
             _generator = generator;
             _settings = settings;
-
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            _logger.Info("Start userinfo request");
+            Logger.Info("Start userinfo request");
 
             if (!_settings.UserInfoEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 

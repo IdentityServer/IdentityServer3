@@ -15,7 +15,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect/token")]
     public class TokenEndpointController : ApiController
     {
-        private readonly ILog _logger;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
@@ -24,8 +24,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         
         public TokenEndpointController(CoreSettings settings, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
-
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
             _generator = generator;
@@ -35,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route]
         public async Task<IHttpActionResult> Post()
         {
-            _logger.Info("Start token request");
+            Logger.Info("Start token request");
 
             return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
         }
@@ -44,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             if (!_settings.TokenEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 

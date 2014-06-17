@@ -4,8 +4,8 @@
  */
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-	public interface ILogProvider
-	{
-		ILog GetLogger(string name);
-	}
+    public interface ILogProvider
+    {
+        ILog GetLogger(string name);
+    }
 }

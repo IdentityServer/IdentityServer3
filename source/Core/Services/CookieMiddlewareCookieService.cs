@@ -13,13 +13,12 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class CookieMiddlewareTrackingCookieService : ITrackingCookieService
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IOwinContext _context;
-        private readonly ILog _logger;
 
         public CookieMiddlewareTrackingCookieService(IOwinContext context)
         {
             _context = context;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task AddValueAsync(string name, string value)
@@ -29,11 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Services
             var duplicateUrl = urls.FirstOrDefault(s => s == value);
             if (duplicateUrl != null)
             {
-                _logger.DebugFormat("{0} already exists in {1} cookie", value, name);
+                Logger.DebugFormat("{0} already exists in {1} cookie", value, name);
                 return;
             }
 
-            _logger.DebugFormat("Adding {0} to {1} cookie", value, name);
+            Logger.DebugFormat("Adding {0} to {1} cookie", value, name);
             urls.Add(value);
 
             var claims = new List<Claim>(from u in urls select new Claim("url", u));
@@ -46,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         {
             var urls = await GetValuesAsync(name);
 
-            _logger.DebugFormat("Removing cookie {0}", name);
+            Logger.DebugFormat("Removing cookie {0}", name);
             _context.Authentication.SignOut(name);
 
             return urls;
@@ -54,12 +53,12 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         async Task<List<string>> GetValuesAsync(string name)
         {
-            _logger.DebugFormat("Retrieving values of cookie {0}", name);
+            Logger.DebugFormat("Retrieving values of cookie {0}", name);
             var result = await _context.Authentication.AuthenticateAsync(name);
             
             if (result == null || result.Identity == null)
             {
-                _logger.DebugFormat("Cookie {0} does not exist", name);
+                Logger.DebugFormat("Cookie {0} does not exist", name);
                 return new List<string>();
             }
 

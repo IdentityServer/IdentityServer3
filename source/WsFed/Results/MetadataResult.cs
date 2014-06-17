@@ -16,13 +16,12 @@ namespace Thinktecture.IdentityServer.WsFed.Results
 {
     public class MetadataResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly EntityDescriptor _entity;
-        private readonly ILog _logger;
 
         public MetadataResult(EntityDescriptor entity)
         {
             _entity = entity;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -30,7 +29,7 @@ namespace Thinktecture.IdentityServer.WsFed.Results
             return Task.FromResult(Execute());
         }
 
-        HttpResponseMessage Execute()
+        private HttpResponseMessage Execute()
         {
             var ser = new MetadataSerializer();
             var sb = new StringBuilder(512);
@@ -39,7 +38,7 @@ namespace Thinktecture.IdentityServer.WsFed.Results
 
             var content = new StringContent(sb.ToString(), Encoding.UTF8, "application/xml");
 
-            _logger.Debug("Returning WS-Federation metadata response");
+            Logger.Debug("Returning WS-Federation metadata response");
             return new HttpResponseMessage { Content = content };
         }
     }
