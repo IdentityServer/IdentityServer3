@@ -16,13 +16,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeErrorResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly AuthorizeError _error;
-        private readonly ILog _logger;
 
         public AuthorizeErrorResult(AuthorizeError error)
         {
             _error = error;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -63,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 }
 
                 responseMessage.Headers.Location = new Uri(url);
-                _logger.Info("Redirecting to: " + url);
+                Logger.Info("Redirecting to: " + url);
 
                 return responseMessage;
             }

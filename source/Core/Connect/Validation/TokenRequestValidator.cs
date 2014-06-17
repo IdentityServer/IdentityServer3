@@ -16,8 +16,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenRequestValidator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
-        private readonly ILog _logger;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
@@ -36,8 +36,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public TokenRequestValidator(CoreSettings settings, IAuthorizationCodeStore authorizationCodes, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
-
             _settings = settings;
             _authorizationCodes = authorizationCodes;
             _users = users;
@@ -48,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
-            _logger.Info("Starting request validation");
+            Logger.Info("Starting request validation");
 
             _validatedRequest = new ValidatedTokenRequest();
 
@@ -72,11 +70,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var grantType = parameters.Get(Constants.TokenRequest.GrantType);
             if (grantType.IsMissing())
             {
-                _logger.Error("Grant type is missing.");
+                Logger.Error("Grant type is missing.");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            _logger.InfoFormat("Grant type: {0}", grantType);
+            Logger.InfoFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
             switch (grantType)
@@ -94,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return await RunValidationAsync(ValidateAssertionRequestAsync, parameters);
             }
 
-            _logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
+            Logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
             return Invalid(Constants.TokenErrors.UnsupportedGrantType);
         }
 
@@ -118,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.Code)
             {
-                _logger.Error("Client not authorized for code flow");
+                Logger.Error("Client not authorized for code flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -128,19 +126,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var code = parameters.Get(Constants.TokenRequest.Code);
             if (code.IsMissing())
             {
-                _logger.Error("Authorization code is missing.");
+                Logger.Error("Authorization code is missing.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
             var authZcode = await _authorizationCodes.GetAsync(code);
             if (authZcode == null)
             {
-                _logger.ErrorFormat("Invalid authorization code: ", code);
+                Logger.ErrorFormat("Invalid authorization code: ", code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
             else
             {
-                _logger.InfoFormat("Authorization code found: {0}", code);
+                Logger.InfoFormat("Authorization code found: {0}", code);
             }
 
             await _authorizationCodes.RemoveAsync(code);
@@ -150,7 +148,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (authZcode.Client.ClientId!= _validatedRequest.Client.ClientId)
             {
-                _logger.ErrorFormat("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId);
+                Logger.ErrorFormat("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -159,7 +157,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (authZcode.CreationTime.HasExpired(_validatedRequest.Client.AuthorizationCodeLifetime))
             {
-                _logger.Error("Authorization code is expired");
+                Logger.Error("Authorization code is expired");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -171,17 +169,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var redirectUri = parameters.Get(Constants.TokenRequest.RedirectUri);
             if (redirectUri.IsMissing())
             {
-                _logger.Error("Redirect URI is missing.");
+                Logger.Error("Redirect URI is missing.");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
             if (redirectUri != _validatedRequest.AuthorizationCode.RedirectUri.AbsoluteUri)
             {
-                _logger.ErrorFormat("Invalid redirect_uri: {0}", redirectUri);
+                Logger.ErrorFormat("Invalid redirect_uri: {0}", redirectUri);
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
-            _logger.Info("Successful validation of authorization_code request");
+            Logger.Info("Successful validation of authorization_code request");
             return Valid();
         }
 
@@ -192,7 +190,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
             {
-                _logger.Error("Client not authorized for client credentials flow");
+                Logger.Error("Client not authorized for client credentials flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -201,17 +199,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (! (await ValidateRequestedScopesAsync(parameters)))
             {
-                _logger.Error("Invalid scopes.");
+                Logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
             if (_validatedRequest.ValidatedScopes.ContainsOpenIdScopes)
             {
-                _logger.Error("Client cannot request OpenID scopes in client credentials flow");
+                Logger.Error("Client cannot request OpenID scopes in client credentials flow");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
-            _logger.Info("Successful validation of client_credentials request");
+            Logger.Info("Successful validation of client_credentials request");
             return Valid();
         }
 
@@ -222,7 +220,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ResourceOwner)
             {
-                _logger.Error("Client not authorized for resource owner flow");
+                Logger.Error("Client not authorized for resource owner flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -231,7 +229,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (! (await ValidateRequestedScopesAsync(parameters)))
             {
-                _logger.Error("Invalid scopes.");
+                Logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
@@ -262,7 +260,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            _logger.Info("Successful validation of password request");
+            Logger.Info("Successful validation of password request");
             return Valid();
         }
 
@@ -276,7 +274,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.Assertion)
             {
-                _logger.Error("Client not authorized for assertion flow");
+                Logger.Error("Client not authorized for assertion flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -285,7 +283,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             if (!(await ValidateRequestedScopesAsync(parameters)))
             {
-                _logger.Error("Invalid scopes.");
+                Logger.Error("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
@@ -295,13 +293,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var principal = await _assertionValidator.ValidateAsync(_validatedRequest, _users);
             if (principal == null)
             {
-                _logger.Error("Invalid assertion.");
+                Logger.Error("Invalid assertion.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
             _validatedRequest.Subject = principal;
 
-            _logger.Info("Successful validation of assertion request");
+            Logger.Info("Successful validation of assertion request");
             return Valid();
         }
 

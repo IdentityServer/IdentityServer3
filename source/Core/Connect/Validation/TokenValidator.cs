@@ -22,11 +22,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenValidator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ICustomTokenValidator _customValidator;
-        private readonly ILog _logger;
         private readonly IClientService _clients;
 
         public TokenValidator(CoreSettings settings, IUserService users, IClientService clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
@@ -36,8 +36,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _clients = clients;
             _tokenHandles = tokenHandles;
             _customValidator = customValidator;
-
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
@@ -47,19 +45,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
         {
-            _logger.Info("Start access token validation");
-            _logger.Debug("Token: " + token);
+            Logger.Info("Start access token validation");
+            Logger.Debug("Token: " + token);
 
             var result = new TokenValidationResult();
 
             if (token.Contains("."))
             {
-                _logger.InfoFormat("Validating a JWT access token");
+                Logger.InfoFormat("Validating a JWT access token");
                 result = await ValidateJwtAccessTokenAsync(token);
             }
             else
             {
-                _logger.InfoFormat("Validating a reference access token");
+                Logger.InfoFormat("Validating a reference access token");
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
@@ -68,19 +66,19 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
                 if (scope == null)
                 {
-                    _logger.InfoFormat("Checking for expected scope {0} failed", expectedScope);
+                    Logger.InfoFormat("Checking for expected scope {0} failed", expectedScope);
                     return Invalid(Constants.ProtectedResourceErrors.InsufficientScope);
                 }
 
-                _logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
+                Logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
             }
 
-            _logger.Debug("Calling custom token validator");
+            Logger.Debug("Calling custom token validator");
             var customResult = await _customValidator.ValidateAccessTokenAsync(result, _settings, _clients, _users);
 
             if (customResult.IsError)
             {
-                _logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+                Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
             }
             
             return customResult;
@@ -103,7 +101,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             try
             {
                 var id = handler.ValidateToken(jwt, parameters);
-                _logger.Info("JWT access token validatio successful");
+                Logger.Info("JWT access token validatio successful");
 
                 return Task.FromResult(new TokenValidationResult
                 {
@@ -113,7 +111,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             catch (Exception ex)
             {
-                _logger.ErrorException("JWT token validation error", ex);
+                Logger.ErrorException("JWT token validation error", ex);
                 return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
             }
         }
@@ -124,23 +122,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (token == null)
             {
-                _logger.Error("Token handle not found");
+                Logger.Error("Token handle not found");
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             if (token.Type != Constants.TokenTypes.AccessToken)
             {
-                _logger.ErrorFormat("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type);
+                Logger.ErrorFormat("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type);
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             if (DateTime.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
             {
-                _logger.Error("Token expired.");
+                Logger.Error("Token expired.");
                 return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
             }
 
-            _logger.Info("Reference access token validation successful");
+            Logger.Info("Reference access token validation successful");
 
             return new TokenValidationResult
             {

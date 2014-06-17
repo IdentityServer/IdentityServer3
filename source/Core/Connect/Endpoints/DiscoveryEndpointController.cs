@@ -20,26 +20,24 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [EnableCors("*", "*", "GET")]
     public class DiscoveryEndpointController : ApiController
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
         private readonly IScopeService _scopes;
-        private readonly ILog _logger;
 
         public DiscoveryEndpointController(CoreSettings settings, IScopeService scopes)
         {
             _settings = settings;
             _scopes = scopes;
-
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         [Route("openid-configuration")]
         public async Task<IHttpActionResult> GetConfiguration()
         {
-            _logger.Info("Start discovery request");
+            Logger.Info("Start discovery request");
 
             if (!_settings.DiscoveryEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 
@@ -66,11 +64,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("jwks")]
         public IHttpActionResult GetKeyData()
         {
-            _logger.Info("Start key discovery request");
+            Logger.Info("Start key discovery request");
 
             if (!_settings.DiscoveryEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 

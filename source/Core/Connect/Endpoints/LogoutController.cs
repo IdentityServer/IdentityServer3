@@ -11,12 +11,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class LogoutController : ApiController
     {
-        ILog _logger;
-        CoreSettings _settings;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly CoreSettings _settings;
 
         public LogoutController(CoreSettings settings)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
             _settings = settings;
         }
 
@@ -24,11 +23,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpGet]
         public IHttpActionResult Logout()
         {
-            _logger.Info("End session request");
+            Logger.Info("End session request");
 
             if (!_settings.EndSessionEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 

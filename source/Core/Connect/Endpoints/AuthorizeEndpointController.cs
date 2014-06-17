@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication("idsrv")]
     public class AuthorizeEndpointController : ApiController
     {
-        private readonly ILog _logger;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
 
         private readonly AuthorizeRequestValidator _validator;
@@ -37,8 +37,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             CoreSettings settings,
             InternalConfiguration internalConfiguration)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
-
             _settings = settings;
             _internalConfiguration = internalConfiguration;
         
@@ -50,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [Route("authorize", Name="authorize")]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
-            _logger.Info("Start authorize request");
+            Logger.Info("Start authorize request");
 
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
@@ -59,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {   
             if (!_settings.AuthorizeEndpoint.Enabled)
             {
-                _logger.Warn("Endpoint is disabled. Aborting");
+                Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
             
@@ -122,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (interaction.IsConsent)
             {
-                _logger.Info("Showing consent screen");
+                Logger.Info("Showing consent screen");
                 return CreateConsentResult(request, request.Raw, interaction.ConsentError);
             }
 
@@ -133,7 +131,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         [HttpPost]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
-            _logger.Info("Resuming from consent, restarting validation");
+            Logger.Info("Resuming from consent, restarting validation");
             return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
         }
 
@@ -158,7 +156,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return await CreateCodeFlowAuthorizeResponseAsync(request);
             }
 
-            _logger.Error("Unsupported flow. Aborting.");
+            Logger.Error("Unsupported flow. Aborting.");
             throw new InvalidOperationException("Unsupported flow");
         }
 

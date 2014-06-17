@@ -18,25 +18,24 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ClientValidator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IClientService _clients;
-        private readonly ILog _logger;
 
         public ClientValidator(IClientService clients)
         {
             _clients = clients;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task<Client> ValidateClientAsync(NameValueCollection parameters, AuthenticationHeaderValue header)
         {
-            _logger.Info("Start client validation");
+            Logger.Info("Start client validation");
 
             // validate client credentials on the wire
             var credential = ValidateHttpRequest(header, parameters);
 
             if (credential.IsMalformed || !credential.IsPresent)
             {
-                _logger.Error("No or malformed client credential found.");
+                Logger.Error("No or malformed client credential found.");
                 return null;
             }
 
@@ -44,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var client = await ValidateClientCredentialsAsync(credential);
             if (client == null)
             {
-                _logger.Error("Invalid client credentials. Aborting.");
+                Logger.Error("Invalid client credentials. Aborting.");
                 return null;
             }
 
@@ -57,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (credentials.IsPresent || credentials.IsMalformed)
             {
-                _logger.Debug("Client credential is Basic Authentication");
+                Logger.Debug("Client credential is Basic Authentication");
                 return credentials;
             }
 
@@ -74,17 +73,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var client = await _clients.FindClientByIdAsync(credential.ClientId);
             if (client == null || client.Enabled == false)
             {
-                _logger.Error("Client not found in registry or not enabled: " + credential.ClientId);
+                Logger.Error("Client not found in registry or not enabled: " + credential.ClientId);
                 return null;
             }
 
             if (!ObfuscatingComparer.IsEqual(client.ClientSecret, credential.Secret))
             {
-                _logger.Error("Invalid client secret: " + client.ClientId);
+                Logger.Error("Invalid client secret: " + client.ClientId);
                 return null;
             }
 
-            _logger.InfoFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
+            Logger.InfoFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
             return client;
         }
 
@@ -93,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (header == null ||
                 !header.Scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase))
             {
-                _logger.Info("No Basic Authentication header found");
+                Logger.Info("No Basic Authentication header found");
 
                 return new ClientCredential
                 {
@@ -162,7 +161,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             if (body == null)
             {
-                _logger.Warn("Post body is null.");
+                Logger.Warn("Post body is null.");
 
                 return new ClientCredential
                 {
@@ -175,7 +174,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (id.IsPresent() && secret.IsPresent())
             {
-                _logger.Debug("Client credentials in POST body found.");
+                Logger.Debug("Client credentials in POST body found.");
 
                 return new ClientCredential
                 {
@@ -188,7 +187,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            _logger.Debug("No client credentials in POST body found.");
+            Logger.Debug("No client credentials in POST body found.");
             return new ClientCredential
             {
                 IsPresent = false

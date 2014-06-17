@@ -25,34 +25,32 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     [ErrorPageFilter]
     public class AuthenticationController : ApiController
     {
-        ILog logger;
-        IUserService userService;
-        CoreSettings settings;
-        AuthenticationOptions authenticationOptions;
-        IExternalClaimsFilter externalClaimsFilter;
-        InternalConfiguration internalConfiguration;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly IUserService _userService;
+        private readonly CoreSettings _settings;
+        private readonly AuthenticationOptions _authenticationOptions;
+        private readonly IExternalClaimsFilter _externalClaimsFilter;
+        private readonly InternalConfiguration _internalConfiguration;
 
         public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
         {
-            this.logger = LogProvider.GetCurrentClassLogger(); 
-            
-            this.userService = userService;
-            this.settings = settings;
-            this.externalClaimsFilter = externalClaimsFilter;
-            this.authenticationOptions = authenticationOptions;
-            this.internalConfiguration = internalConfiguration;
+            _userService = userService;
+            _settings = settings;
+            _externalClaimsFilter = externalClaimsFilter;
+            _authenticationOptions = authenticationOptions;
+            _internalConfiguration = internalConfiguration;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
         [HttpGet]
         public IHttpActionResult Login([FromUri] string message = null)
         {
-            logger.Info("Authentication process started");
-            logger.Debug("[AuthenticationController.Login] called");
+            Logger.Info("Authentication process started");
+            Logger.Debug("[AuthenticationController.Login] called");
 
             if (message != null)
             {
-                logger.Debug("[AuthenticationController.LoginLocal] non-null message");
+                Logger.Debug("[AuthenticationController.LoginLocal] non-null message");
                 
                 var signIn = SaveLoginRequestMessage(message);
                 if (signIn.IdP.IsPresent())
@@ -62,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
             else
             {
-                logger.Debug("[AuthenticationController.LoginLocal] null message");
+                Logger.Debug("[AuthenticationController.LoginLocal] null message");
                 VerifyLoginRequestMessage();
             }
 
@@ -73,30 +71,30 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpPost]
         public async Task<IHttpActionResult> LoginLocal(LoginCredentials model)
         {
-            logger.Debug("[AuthenticationController.LoginLocal] called");
+            Logger.Debug("[AuthenticationController.LoginLocal] called");
 
             if (model == null)
             {
-                logger.InfoFormat("[AuthenticationController.LoginLocal] no model");
+                Logger.InfoFormat("[AuthenticationController.LoginLocal] no model");
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
             if (!ModelState.IsValid)
             {
-                logger.Warn("[AuthenticationController.LoginLocal] model not valid");
+                Logger.Warn("[AuthenticationController.LoginLocal] model not valid");
                 return RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
-            var authResult = await userService.AuthenticateLocalAsync(model.Username, model.Password);
+            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password);
             if (authResult == null)
             {
-                logger.Info("[AuthenticationController.LoginLocal] authenticate returned null");
+                Logger.Info("[AuthenticationController.LoginLocal] authenticate returned null");
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
 
             if (authResult.IsError)
             {
-                logger.Info("[AuthenticationController.LoginLocal] authenticate returned an error message");
+                Logger.Info("[AuthenticationController.LoginLocal] authenticate returned an error message");
                 return RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
@@ -110,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public IHttpActionResult LoginExternal(string provider)
         {
-            logger.Debug("[AuthenticationController.LoginExternal] called");
+            Logger.Debug("[AuthenticationController.LoginExternal] called");
 
             VerifyLoginRequestMessage();
 
@@ -127,7 +125,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> LoginExternalCallback()
         {
-            logger.Debug("[AuthenticationController.LoginExternalCallback] called");
+            Logger.Debug("[AuthenticationController.LoginExternalCallback] called");
 
             var ctx = Request.GetOwinContext();
 
@@ -140,14 +138,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
             }
 
-            logger.InfoFormat("[AuthenticationController.LoginExternalCallback] current subject: {0}", currentSubject ?? "-anonymous-");
+            Logger.InfoFormat("[AuthenticationController.LoginExternalCallback] current subject: {0}", currentSubject ?? "-anonymous-");
 
             var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
             if (externalAuthResult == null ||
                 externalAuthResult.Identity == null ||
                 !externalAuthResult.Identity.Claims.Any())
             {
-                logger.InfoFormat("[AuthenticationController.LoginExternalCallback] no external identity -- exiting to login page");
+                Logger.InfoFormat("[AuthenticationController.LoginExternalCallback] no external identity -- exiting to login page");
                 return RedirectToRoute(Constants.RouteNames.Login, null);
             }
 
@@ -155,20 +153,20 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var externalIdentity = GetExternalIdentity(claims);
             if (externalIdentity == null)
             {
-                logger.Info("[AuthenticationController.LoginExternalCallback] null external identity");
+                Logger.Info("[AuthenticationController.LoginExternalCallback] null external identity");
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
-            var authResult = await userService.AuthenticateExternalAsync(currentSubject, externalIdentity);
+            var authResult = await _userService.AuthenticateExternalAsync(currentSubject, externalIdentity);
             if (authResult == null)
             {
-                logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned null");
+                Logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned null");
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
             if (authResult.IsError)
             {
-                logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned error message");
+                Logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned error message");
                 return RenderLoginPage(authResult.ErrorMessage);
             }
 
@@ -199,9 +197,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             claims = claims.Except(new Claim[] { subClaim });
 
             var idp = new IdentityProvider { Name = subClaim.Issuer };
-            if (this.externalClaimsFilter != null)
+            if (_externalClaimsFilter != null)
             {
-                claims = externalClaimsFilter.Filter(idp, claims);
+                claims = _externalClaimsFilter.Filter(idp, claims);
             }
 
             claims = claims ?? Enumerable.Empty<Claim>();
@@ -218,7 +216,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet, HttpPost]
         public IHttpActionResult Logout()
         {
-            logger.Debug("[AuthenticationController.Logout] called");
+            Logger.Debug("[AuthenticationController.Logout] called");
 
             var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut(
@@ -228,9 +226,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             ClearLoginRequestMessage();
 
-            var baseUrl = Request.GetBaseUrl(settings.PublicHostName);
+            var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
             var urls = new List<string>();
-            foreach(var url in this.internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
+            foreach(var url in _internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
             {
                 var tmp = url;
                 if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
@@ -240,7 +238,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
-                       Server = settings.SiteName,
+                       Server = _settings.SiteName,
                        Page = "logout",
                        PageModel = new
                        {
@@ -253,14 +251,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public async Task<IHttpActionResult> ResumeLoginFromRedirect()
         {
-            logger.Debug("[AuthenticationController.ResumeLoginFromRedirect] called");
+            Logger.Debug("[AuthenticationController.ResumeLoginFromRedirect] called");
 
             var ctx = Request.GetOwinContext();
             var redirectAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
             if (redirectAuthResult == null ||
                 redirectAuthResult.Identity == null)
             {
-                logger.InfoFormat("[AuthenticationController.ResumeLoginFromRedirect] no redirect identity - exiting to login page");
+                Logger.InfoFormat("[AuthenticationController.ResumeLoginFromRedirect] no redirect identity - exiting to login page");
                 return RedirectToRoute(Constants.RouteNames.Login, null);
             }
 
@@ -281,7 +279,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             string identityProvider,
             long authTime = 0)
         {
-            logger.Debug("[AuthenticationController.SignInAndRedirect] called");
+            Logger.Debug("[AuthenticationController.SignInAndRedirect] called");
 
             if (authResult == null) throw new ArgumentNullException("authResult");
             if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
@@ -323,41 +321,38 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (authResult.IsPartialSignIn)
             {
-                logger.Info("[AuthenticationController.SignInAndRedirect] partial login requested, redirecting to requested url");
+                Logger.Info("[AuthenticationController.SignInAndRedirect] partial login requested, redirecting to requested url");
 
                 var uri = new Uri(ctx.Request.Uri, authResult.PartialSignInRedirectPath.Value);
                 return Redirect(uri);
             }
-            else
-            {
-                logger.Info("[AuthenticationController.SignInAndRedirect] normal login requested, redirecting back to authorization");
+            Logger.Info("[AuthenticationController.SignInAndRedirect] normal login requested, redirecting back to authorization");
 
-                // TODO -- manage this state better if we're doing redirect to custom page
-                // would rather the redirect URL from request message put into cookie
-                // and named with a nonce, then the resume url + nonce set as claim
-                // in principal above so page being redirected to can know what url to return to
-                ClearLoginRequestMessage();
+            // TODO -- manage this state better if we're doing redirect to custom page
+            // would rather the redirect URL from request message put into cookie
+            // and named with a nonce, then the resume url + nonce set as claim
+            // in principal above so page being redirected to can know what url to return to
+            ClearLoginRequestMessage();
 
-                return Redirect(signInMessage.ReturnUrl);
-            }
+            return Redirect(signInMessage.ReturnUrl);
         }
 
         private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
         {
-            logger.Debug("[AuthenticationController.RenderLoginPage] called");
+            Logger.Debug("[AuthenticationController.RenderLoginPage] called");
 
             var ctx = Request.GetOwinContext();
             var providers =
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
                 select new { name = p.Caption, url = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType }) };
 
-            var links = this.authenticationOptions.LoginPageLinks;
+            var links = _authenticationOptions.LoginPageLinks;
 
             return new EmbeddedHtmlResult(
                 Request,
                 new LayoutModel
                 {
-                    Server = settings.SiteName,
+                    Server = _settings.SiteName,
                     Page = "login",
                     ErrorMessage = errorMessage,
                     PageModel = new
@@ -373,7 +368,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         const string LoginRequestMessageCookieName = "idsrv.login.message";
         private void ClearLoginRequestMessage()
         {
-            logger.Debug("[AuthenticationController.ClearLoginRequestMessage] called");
+            Logger.Debug("[AuthenticationController.ClearLoginRequestMessage] called");
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
@@ -389,11 +384,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private SignInMessage SaveLoginRequestMessage(string message)
         {
-            logger.Debug("[AuthenticationController.SaveLoginRequestMessage] called");
+            Logger.Debug("[AuthenticationController.SaveLoginRequestMessage] called");
 
             var signInMessage = SignInMessage.Unprotect(
                 message,
-                internalConfiguration.DataProtector);
+                _internalConfiguration.DataProtector);
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
@@ -410,34 +405,34 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private SignInMessage LoadLoginRequestMessage()
         {
-            logger.Debug("[AuthenticationController.LoadLoginRequestMessage] called");
+            Logger.Debug("[AuthenticationController.LoadLoginRequestMessage] called");
 
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
             if (message.IsMissing())
             {
-                logger.Error("LoginRequestMessage cookie is empty.");
+                Logger.Error("LoginRequestMessage cookie is empty.");
                 throw new Exception("LoginRequestMessage cookie is empty.");
             }
 
             var signInMessage = SignInMessage.Unprotect(
                 message,
-                internalConfiguration.DataProtector);
+                _internalConfiguration.DataProtector);
 
             return signInMessage;
         }
 
         private void VerifyLoginRequestMessage()
         {
-            logger.Debug("[AuthenticationController.VerifyLoginRequestMessage] called");
+            Logger.Debug("[AuthenticationController.VerifyLoginRequestMessage] called");
 
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
             var signInMessage = SignInMessage.Unprotect(
                 message,
-                internalConfiguration.DataProtector);
+                _internalConfiguration.DataProtector);
         }
     }
 }

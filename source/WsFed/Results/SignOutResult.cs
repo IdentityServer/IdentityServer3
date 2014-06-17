@@ -14,18 +14,12 @@ namespace Thinktecture.IdentityServer.WsFed.Results
 {
     public class SignOutResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IEnumerable<string> _urls;
-        private readonly ILog _logger;
 
         public SignOutResult(IEnumerable<string> urls)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
-            _urls = urls;
-
-            if (_urls == null)
-            {
-                _urls = Enumerable.Empty<string>();
-            }
+            _urls = urls ?? Enumerable.Empty<string>();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
@@ -35,7 +29,7 @@ namespace Thinktecture.IdentityServer.WsFed.Results
 
         HttpResponseMessage Execute()
         {
-            var format = "<iframe style=\"visibility: hidden; width: 1px; height: 1px\" src=\"{0}?wa=wsignoutcleanup1.0\"></iframe>";
+            const string format = "<iframe style=\"visibility: hidden; width: 1px; height: 1px\" src=\"{0}?wa=wsignoutcleanup1.0\"></iframe>";
             var sb = new StringBuilder(128);
 
             foreach (var url in _urls)
@@ -45,7 +39,7 @@ namespace Thinktecture.IdentityServer.WsFed.Results
 
             var content = new StringContent(sb.ToString(), Encoding.UTF8, "text/html");
 
-            _logger.Debug("Returning WS-Federation signout response");
+            Logger.Debug("Returning WS-Federation signout response");
             return new HttpResponseMessage { Content = content };
         }
     }

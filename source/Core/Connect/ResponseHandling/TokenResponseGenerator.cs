@@ -14,23 +14,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class TokenResponseGenerator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
         private readonly ITokenService _tokenService;
         private readonly ITokenHandleStore _tokenHandles;
-        private readonly ILog _logger;
 
         public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
         {
             _settings = settings;
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
-            
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
         {
-            _logger.Info("Creating token response");
+            Logger.Info("Creating token response");
 
             if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {

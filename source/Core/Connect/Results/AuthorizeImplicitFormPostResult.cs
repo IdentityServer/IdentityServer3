@@ -17,13 +17,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class AuthorizeImplicitFormPostResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly AuthorizeResponse _response;
-        private readonly ILog _logger;
 
         public AuthorizeImplicitFormPostResult(AuthorizeResponse response)
         {
             _response = response;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -71,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 Content = content
             };
 
-            _logger.Info("Posting to " + _response.RedirectUri.AbsoluteUri);
+            Logger.Info("Posting to " + _response.RedirectUri.AbsoluteUri);
             return message;
         }
     }

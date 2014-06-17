@@ -13,7 +13,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class ScopeValidator
     {
-        private ILog _logger;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
@@ -22,8 +22,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public ScopeValidator()
         {
-            _logger = LogProvider.GetCurrentClassLogger();
-
             RequestedScopes = new List<Scope>();
             GrantedScopes = new List<Scope>();
         }
@@ -43,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 if (scopeDetail == null)
                 {
-                    _logger.ErrorFormat("Invalid scope: {0}", requestedScope);
+                    Logger.ErrorFormat("Invalid scope: {0}", requestedScope);
                     return false;
                 }
 
@@ -71,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return null;
             }
 
-            _logger.InfoFormat("scopes: {0}", scopes);
+            Logger.InfoFormat("scopes: {0}", scopes);
 
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
@@ -89,18 +87,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             if (client.ScopeRestrictions == null || client.ScopeRestrictions.Count == 0)
             {
-                _logger.Info("All scopes allowed for client");
+                Logger.Info("All scopes allowed for client");
                 return true;
             }
             else
             {
-                _logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
+                Logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
 
                 foreach (var scope in requestedScopes)
                 {
                     if (!client.ScopeRestrictions.Contains(scope))
                     {
-                        _logger.ErrorFormat("Requested scope not allowed: {0}", scope);
+                        Logger.ErrorFormat("Requested scope not allowed: {0}", scope);
                         return false;
                     }
                 }
@@ -116,7 +114,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // must include identity scopes, but no resource scopes
                 if (!ContainsOpenIdScopes || ContainsResourceScopes)
                 {
-                    _logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
+                    Logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
 
                     return false;
                     //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
@@ -128,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // must include identity scopes
                 if (!ContainsOpenIdScopes)
                 {
-                    _logger.Error("Requests for id_token response type must include identity scopes");
+                    Logger.Error("Requests for id_token response type must include identity scopes");
 
                     return false;
                     //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
@@ -139,7 +137,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // must include resource scopes, but no identity scopes
                 if (ContainsOpenIdScopes || !ContainsResourceScopes)
                 {
-                    _logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
+                    Logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
 
                     return false;
                     //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);

@@ -15,13 +15,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     public class TokenErrorResult : IHttpActionResult
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly string _error;
-        private readonly ILog _logger;
 
         public TokenErrorResult(string error)
         {
             _error = error;
-            _logger = LogProvider.GetCurrentClassLogger();
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -41,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 Content = new ObjectContent<ErrorDto>(dto, new JsonMediaTypeFormatter())
             };
 
-            _logger.Info("Returning error: " + _error);
+            Logger.Info("Returning error: " + _error);
             return response;
         }
 

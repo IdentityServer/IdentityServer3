@@ -12,10 +12,11 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
 {
     class IdentityServerExceptionLogger : IExceptionLogger
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
-            var logger = LogProvider.GetCurrentClassLogger();
-            logger.ErrorFormat("Unhandled exception: {0}", context.Exception);
+            Logger.ErrorFormat("Unhandled exception: {0}", context.Exception);
 
             return Task.FromResult<object>(null);
         }

@@ -20,20 +20,19 @@ namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
 {
     public class SignInResponseGenerator
     {
-        private ILog _logger;
-        private CoreSettings _settings;
-        private IUserService _users;
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly CoreSettings _settings;
+        private readonly IUserService _users;
         
         public SignInResponseGenerator(CoreSettings settings, IUserService users)
         {
-            _logger = LogProvider.GetCurrentClassLogger();
             _settings = settings;
             _users = users;
         }
 
         public async Task<SignInResponseMessage> GenerateResponseAsync(SignInValidationResult validationResult)
         {
-            _logger.Info("Creating WS-Federation signin response");
+            Logger.Info("Creating WS-Federation signin response");
 
             // create subject
             var outgoingSubject = await CreateSubjectAsync(validationResult);
