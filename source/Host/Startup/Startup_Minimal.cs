@@ -3,7 +3,7 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Host.Config;
 
-[assembly: OwinStartup("Minimal", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
+[assembly: OwinStartup("Minimal", typeof(Thinktecture.IdentityServer.Host.Sample.Startup_Minimal))]
 
 namespace Thinktecture.IdentityServer.Host.Sample
 {
