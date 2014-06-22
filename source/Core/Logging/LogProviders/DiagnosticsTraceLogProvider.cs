@@ -21,17 +21,21 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public DiagnosticsTraceLogger(string name)
         {
-            _name = string.Format("[{0}]: ", name);
+            _name = string.Format("[{0}]", name);
         }
 
         public void Log(LogLevel logLevel, Func<string> messageFunc)
         {
-            Trace.WriteLine(_name + messageFunc(), logLevel.ToString());
+            var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow.ToString(), messageFunc());
+
+            Trace.WriteLine(message, logLevel.ToString());
         }
 
         public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
         {
-            Trace.WriteLine(_name + messageFunc() + ": " + exception.ToString(), logLevel.ToString());
+            var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow.ToString(), messageFunc(), exception.ToString());
+
+            Trace.WriteLine(message, logLevel.ToString());
         }
     }
 }
