@@ -5,7 +5,7 @@ namespace Owin
 {
     public static class SelfContainedTokenValidationExtensions
     {
-        public static IAppBuilder UseIdentitiyServerSelfContainedTokens(this IAppBuilder app, SelfContainedTokenValidationOptions options)
+        public static IAppBuilder UseIdentitiyServerSelfContainedToken(this IAppBuilder app, SelfContainedTokenValidationOptions options)
         {
             var audience = options.IssuerName;
 
@@ -22,11 +22,11 @@ namespace Owin
 
                     AllowedAudiences = new[] { audience },
                     IssuerSecurityTokenProviders = new[] 
-                    {
-                        new X509CertificateSecurityTokenProvider(
-                            options.IssuerName,
-                            options.SigningCertificate)
-                    }
+                        {
+                            new X509CertificateSecurityTokenProvider(
+                                options.IssuerName,
+                                options.SigningCertificate)
+                        }
                 });
 
             return app;

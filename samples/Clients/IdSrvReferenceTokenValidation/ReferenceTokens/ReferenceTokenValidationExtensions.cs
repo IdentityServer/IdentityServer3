@@ -5,7 +5,7 @@ namespace Owin
 {
     public static class ReferenceTokenValidationExtensions
     {
-        public static IAppBuilder UseIdentitiyServerReferenceTokens(this IAppBuilder app, ReferenceTokenValidationOptions options)
+        public static IAppBuilder UseIdentitiyServerReferenceToken(this IAppBuilder app, ReferenceTokenValidationOptions options)
         {
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
                 {
