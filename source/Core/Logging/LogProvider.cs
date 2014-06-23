@@ -6,11 +6,13 @@ namespace Thinktecture.IdentityServer.Core.Logging
 {
 	using System;
 	using System.Diagnostics;
+    using System.Runtime.CompilerServices;
 
 	public static class LogProvider
 	{
 		private static ILogProvider currentLogProvider;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static ILog GetCurrentClassLogger()
         {
             var stackFrame = new StackFrame(1, false);
