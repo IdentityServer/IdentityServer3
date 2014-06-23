@@ -1,5 +1,5 @@
-﻿using IdSrvReferenceTokenValidation;
-using Microsoft.Owin.Security.OAuth;
+﻿using Microsoft.Owin.Security.OAuth;
+using Thinktecture.IdentityServer.v3.AccessTokenValidation;
 
 namespace Owin
 {
@@ -9,7 +9,7 @@ namespace Owin
         {
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
                 {
-                    AccessTokenProvider = new IdSrvReferenceTokenProvider(options.TokenValidationEndpoint)
+                    AccessTokenProvider = new ReferenceTokenProvider(options.TokenValidationEndpoint, options.AuthenticationType)
                 });
 
             return app;

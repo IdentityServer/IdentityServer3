@@ -7,17 +7,19 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace IdSrvReferenceTokenValidation
+namespace Thinktecture.IdentityServer.v3.AccessTokenValidation
 {
-    public class IdSrvReferenceTokenProvider : AuthenticationTokenProvider
+    public class ReferenceTokenProvider : AuthenticationTokenProvider
     {
         private HttpClient _client;
         private string _tokenValidationEndpoint;
+        private string _authenticationType;
 
-        public IdSrvReferenceTokenProvider(string tokenValidationEndpoint)
+        public ReferenceTokenProvider(string tokenValidationEndpoint, string authenticationType)
         {
             _tokenValidationEndpoint = tokenValidationEndpoint + "?token={0}";
             _client = new HttpClient();
+            _authenticationType = authenticationType;
         }
 
         public override async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
@@ -38,7 +40,7 @@ namespace IdSrvReferenceTokenValidation
                 claims.Add(new Claim(item["Type"].ToString(), item["Value"].ToString()));
             }
 
-            context.SetTicket(new AuthenticationTicket(new ClaimsIdentity(claims, "idsrv"), new AuthenticationProperties()));
+            context.SetTicket(new AuthenticationTicket(new ClaimsIdentity(claims, _authenticationType), new AuthenticationProperties()));
         }
     }
 }

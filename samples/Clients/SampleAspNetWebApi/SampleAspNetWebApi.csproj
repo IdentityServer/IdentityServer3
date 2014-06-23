@@ -130,9 +130,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IdSrvReferenceTokenValidation\IdSrvReferenceTokenValidation.csproj">
+    <ProjectReference Include="..\IdSrvReferenceTokenValidation\IdSrvAccessTokenTokenValidation.csproj">
       <Project>{d8783fa3-4371-4848-bc87-b11dd8e02287}</Project>
-      <Name>IdSrvReferenceTokenValidation</Name>
+      <Name>IdSrvAccessTokenTokenValidation</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

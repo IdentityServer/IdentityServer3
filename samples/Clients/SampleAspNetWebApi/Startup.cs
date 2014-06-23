@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using Thinktecture.IdentityModel;
 using System.IdentityModel.Tokens;
+using System.Linq;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Tokens;
-using IdSrvReferenceTokenValidation;
+using Thinktecture.IdentityServer.v3.AccessTokenValidation;
 
 [assembly: OwinStartup(typeof(SampleAspNetWebApi.Startup))]
 
