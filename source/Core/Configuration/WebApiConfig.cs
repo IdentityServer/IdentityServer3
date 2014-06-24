@@ -15,8 +15,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             var config = new HttpConfiguration();
 
-            config.EnableCors();
-
             config.MapHttpAttributeRoutes();
             config.SuppressDefaultHostAuthentication();
 

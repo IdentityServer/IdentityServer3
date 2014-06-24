@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
@@ -21,6 +22,9 @@ namespace Thinktecture.IdentityServer.Host
 
             app.Map("/core", coreApp =>
                 {
+                    // allow cross origin calls
+                    coreApp.UseCors(CorsOptions.AllowAll);
+
                     var factory = LocalTestFactory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",

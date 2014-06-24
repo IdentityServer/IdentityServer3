@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -17,7 +16,6 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     [RoutePrefix(".well-known")]
-    [EnableCors("*", "*", "GET")]
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
