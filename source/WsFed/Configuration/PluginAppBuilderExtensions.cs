@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                         AuthenticationMode = AuthenticationMode.Passive
                     });
 
-                    app.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options.Factory, internalConfig));
+                    app.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options, internalConfig));
                     Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
                     app.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
                 });
@@ -39,13 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             //options.Configuration.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
             
-            //options.Configuration.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
             
-            //options.Configuration.AddType(typeof(SignInValidator));
-            //options.Configuration.AddType(typeof(SignInResponseGenerator));
-            //options.Configuration.AddType(typeof(MetadataResponseGenerator));
-
-            //options.Configuration.AddInstance(options);
 
             //options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 

@@ -7,6 +7,7 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host.Config;
+using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.Services;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
@@ -32,13 +33,22 @@ namespace Thinktecture.IdentityServer.Host
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
 
-                    var options = new IdentityServerCoreOptions
+                    var idsrvOptions = new IdentityServerCoreOptions
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                     };
 
-                    coreApp.UseIdentityServerCore(options);
+                    var wsfedOptions = new WsFederationPluginOptions
+                    {
+                        Factory = factory,
+                        RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+                        EnableFederationMetadata = true
+                    };
+
+                    coreApp
+                        .UseIdentityServerCore(idsrvOptions)
+                        .UseWsFederationPlugin(wsfedOptions);
                 });
         }
 
