@@ -124,7 +124,6 @@
     <Compile Include="Configuration\InternalConfiguration.cs" />
     <Compile Include="Configuration\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\NoDataProtector.cs" />
-    <Compile Include="Configuration\PluginConfiguration.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />

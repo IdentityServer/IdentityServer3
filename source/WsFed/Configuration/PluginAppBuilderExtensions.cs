@@ -7,11 +7,8 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
-using Thinktecture.IdentityServer.WsFed;
-using Thinktecture.IdentityServer.WsFed.Configuration;
-using Thinktecture.IdentityServer.WsFed.ResponseHandling;
-using Thinktecture.IdentityServer.WsFed.Services;
-using Thinktecture.IdentityServer.WsFed.Validation;
+using Thinktecture.IdentityServer.WsFederation.Configuration;
+using WsFederationConfiguration = Thinktecture.IdentityServer.WsFederation.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -19,28 +16,38 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         public static IAppBuilder UseWsFederationPlugin(this IAppBuilder app, WsFederationPluginOptions options)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            if (options == null) throw new ArgumentNullException("options");
+            options.Validate();
+
+            // todo
+            var internalConfig = new InternalConfiguration();
+
+            app.Map("/wsfed", wsfedApp =>
                 {
-                    AuthenticationType = WsFederationPluginOptions.CookieName,
-                    AuthenticationMode = AuthenticationMode.Passive
+                    wsfedApp.UseCookieAuthentication(new CookieAuthenticationOptions
+                    {
+                        AuthenticationType = WsFederationPluginOptions.CookieName,
+                        AuthenticationMode = AuthenticationMode.Passive
+                    });
+
+                    app.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options.Factory, internalConfig));
+                    Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
+                    app.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
                 });
 
-            if (options.RelyingPartyService == null)
-            {
-                throw new ArgumentNullException("RelyingPartyService");
-            }
-
-            options.Configuration.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
             
-            options.Configuration.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
+
+            //options.Configuration.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
             
-            options.Configuration.AddType(typeof(SignInValidator));
-            options.Configuration.AddType(typeof(SignInResponseGenerator));
-            options.Configuration.AddType(typeof(MetadataResponseGenerator));
+            //options.Configuration.AddTypeFactory(typeof(IRelyingPartyService), options.RelyingPartyService);
+            
+            //options.Configuration.AddType(typeof(SignInValidator));
+            //options.Configuration.AddType(typeof(SignInResponseGenerator));
+            //options.Configuration.AddType(typeof(MetadataResponseGenerator));
 
-            options.Configuration.AddInstance(options);
+            //options.Configuration.AddInstance(options);
 
-            options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
+            //options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;
         }

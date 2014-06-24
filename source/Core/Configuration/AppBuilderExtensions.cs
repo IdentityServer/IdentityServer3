@@ -55,11 +55,6 @@ namespace Owin
                 options.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
-            if (options.PluginConfiguration != null)
-            {
-                options.PluginConfiguration(app, internalConfig.PluginConfiguration);
-            }
-
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),

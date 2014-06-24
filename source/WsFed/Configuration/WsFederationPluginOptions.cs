@@ -1,34 +1,34 @@
 ﻿using System;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.WsFed.Services;
+using Thinktecture.IdentityServer.WsFederation.Services;
 
-namespace Thinktecture.IdentityServer.WsFed.Configuration
+namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
     public class WsFederationPluginOptions
     {
-        PluginConfiguration _dependencies;
-        public const string CookieName = "WsFedSignInOut";
+        public const string CookieName = "WsFedTracking";
 
-        public WsFederationPluginOptions(PluginConfiguration configuration)
+        public WsFederationPluginOptions()
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException("dependencies");
-            }
-            
-            _dependencies = configuration;
             EnableFederationMetadata = true;
         }
 
-        public PluginConfiguration Configuration
-        {
-            get
-            {
-                return _dependencies;
-            }
-        }
+        public IdentityServerServiceFactory Factory { get; set; }
 
         public Func<IRelyingPartyService> RelyingPartyService { get; set; }
         public bool EnableFederationMetadata { get; set; }
+
+        public void Validate()
+        {
+            if (RelyingPartyService == null)
+            {
+                throw new ArgumentNullException("RelyingPartyService");
+            }
+
+            if (Factory == null)
+            {
+                throw new ArgumentNullException("Factory");
+            }
+        }
     }
 }

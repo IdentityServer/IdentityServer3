@@ -7,8 +7,7 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host.Config;
-using Thinktecture.IdentityServer.WsFed.Configuration;
-using Thinktecture.IdentityServer.WsFed.Services;
+using Thinktecture.IdentityServer.WsFederation.Services;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
 
@@ -37,7 +36,6 @@ namespace Thinktecture.IdentityServer.Host
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        PluginConfiguration = ConfigurePlugins
                     };
 
                     coreApp.UseIdentityServerCore(options);
@@ -72,15 +70,15 @@ namespace Thinktecture.IdentityServer.Host
             app.UseTwitterAuthentication(twitter);
         }
 
-        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
-        {
-            var options = new WsFederationPluginOptions(dependencies)
-            {
-                RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-                EnableFederationMetadata = true
-            };
+        //private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
+        //{
+        //    var options = new WsFederationPluginOptions(dependencies)
+        //    {
+        //        RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+        //        EnableFederationMetadata = true
+        //    };
 
-            app.UseWsFederationPlugin(options);
-        }
+        //    app.UseWsFederationPlugin(options);
+        //}
     }
 }

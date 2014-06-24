@@ -13,12 +13,12 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.WsFed.Configuration;
-using Thinktecture.IdentityServer.WsFed.ResponseHandling;
-using Thinktecture.IdentityServer.WsFed.Results;
-using Thinktecture.IdentityServer.WsFed.Validation;
+using Thinktecture.IdentityServer.WsFederation.Configuration;
+using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
+using Thinktecture.IdentityServer.WsFederation.Results;
+using Thinktecture.IdentityServer.WsFederation.Validation;
 
-namespace Thinktecture.IdentityServer.WsFed
+namespace Thinktecture.IdentityServer.WsFederation
 {
     [HostAuthentication("idsrv")]
     public class WsFederationController : ApiController

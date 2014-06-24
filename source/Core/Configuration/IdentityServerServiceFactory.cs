@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Func<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
         public Func<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
-        internal void Validate()
+        public void Validate()
         {
             if (UserService == null) throw new InvalidOperationException("UserService not configured");
             if (CoreSettings == null) throw new InvalidOperationException("CoreSettings not configured");
