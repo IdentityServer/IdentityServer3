@@ -24,6 +24,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly CoreSettings _settings;
         private readonly InternalConfiguration _internalConfig;
 
+        public static string GetRedirectUrl(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
+        {
+            var result = new LoginResult(message, request, settings, internalConfig);
+            var response = result.Execute();
+
+            return response.Headers.Location.AbsoluteUri;
+        }
+
         public LoginResult(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
         {
             _message = message;
