@@ -114,50 +114,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
-            // plugin configuration
-            var pluginConfiguration = internalConfig.PluginConfiguration;
-            if (pluginConfiguration != null)
-            {
-                if (pluginConfiguration.ApiControllerAssemblies != null)
-                {
-                    foreach (var asm in pluginConfiguration.ApiControllerAssemblies)
-                    {
-                        builder.RegisterApiControllers(asm);
-                    }
-                }
-
-                if (pluginConfiguration.Types != null)
-                {
-                    foreach (var type in pluginConfiguration.Types)
-                    {
-                        if (type.Value == null)
-                        {
-                            builder.RegisterType(type.Key);
-                        }
-                        else
-                        {
-                            builder.RegisterType(type.Key).As(type.Value);
-                        }
-                    }
-                }
-
-                if (pluginConfiguration.Factories != null)
-                {
-                    foreach (var factory in pluginConfiguration.Factories)
-                    {
-                        builder.Register(ctx => factory.Value()).As(factory.Key);
-                    }
-                }
-
-                if (pluginConfiguration.Instances != null)
-                {
-                    foreach (var instance in pluginConfiguration.Instances)
-                    {
-                        builder.RegisterInstance(instance).AsSelf();
-                    }
-                }
-            }
-
             return builder.Build();
         }
     }

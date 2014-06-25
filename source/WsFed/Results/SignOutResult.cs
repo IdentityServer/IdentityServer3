@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.WsFed.Results
+namespace Thinktecture.IdentityServer.WsFederation.Results
 {
     public class SignOutResult : IHttpActionResult
     {

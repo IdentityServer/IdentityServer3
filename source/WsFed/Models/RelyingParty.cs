@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Thinktecture.IdentityServer.WsFed.Models
+namespace Thinktecture.IdentityServer.WsFederation.Models
 {
     public class RelyingParty
     {

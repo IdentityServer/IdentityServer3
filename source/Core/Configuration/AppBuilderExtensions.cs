@@ -50,14 +50,14 @@ namespace Owin
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
+            if (options.ConfigurePlugins != null)
+            {
+                options.ConfigurePlugins(app, options);
+            }
+
             if (options.AdditionalIdentityProviderConfiguration != null)
             {
                 options.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
-            }
-
-            if (options.PluginConfiguration != null)
-            {
-                options.PluginConfiguration(app, internalConfig.PluginConfiguration);
             }
 
             app.UseFileServer(new FileServerOptions

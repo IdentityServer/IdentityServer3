@@ -10,7 +10,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Plumbing
 {
-    class IdentityServerExceptionLogger : IExceptionLogger
+    public class IdentityServerExceptionLogger : IExceptionLogger
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

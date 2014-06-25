@@ -14,9 +14,9 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.WsFed.Validation;
+using Thinktecture.IdentityServer.WsFederation.Validation;
 
-namespace Thinktecture.IdentityServer.WsFed.ResponseHandling
+namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
 {
     public class SignInResponseGenerator
     {

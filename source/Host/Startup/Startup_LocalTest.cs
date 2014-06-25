@@ -7,8 +7,8 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host.Config;
-using Thinktecture.IdentityServer.WsFed.Configuration;
-using Thinktecture.IdentityServer.WsFed.Services;
+using Thinktecture.IdentityServer.WsFederation.Configuration;
+using Thinktecture.IdentityServer.WsFederation.Services;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
 
@@ -33,15 +33,36 @@ namespace Thinktecture.IdentityServer.Host
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
 
-                    var options = new IdentityServerCoreOptions
+                    var idsrvOptions = new IdentityServerCoreOptions
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        PluginConfiguration = ConfigurePlugins
+                        ConfigurePlugins = ConfigurePlugins
                     };
 
-                    coreApp.UseIdentityServerCore(options);
+                    coreApp.UseIdentityServerCore(idsrvOptions);
+                        
                 });
+        }
+
+        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerCoreOptions coreOptions)
+        {
+            var wsfedOptions = new WsFederationPluginOptions
+            {
+                // todo - also signoutcleanup is broken right now
+                LoginPageUrl = "http://localhost:3333/core/login",
+                LogoutPageUrl = "http://localhost:3333/core/connect/logout",
+
+                Factory = new WsFederationServiceFactory
+                {
+                    UserService = coreOptions.Factory.UserService,
+                    CoreSettings = coreOptions.Factory.CoreSettings,
+                    RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+                    WsFederationSettings = () => new LocalTestWsFederationSettings()
+                },
+            };
+
+            pluginApp.UseWsFederationPlugin(wsfedOptions);
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
@@ -72,15 +93,15 @@ namespace Thinktecture.IdentityServer.Host
             app.UseTwitterAuthentication(twitter);
         }
 
-        private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
-        {
-            var options = new WsFederationPluginOptions(dependencies)
-            {
-                RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-                EnableFederationMetadata = true
-            };
+        //private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
+        //{
+        //    var options = new WsFederationPluginOptions(dependencies)
+        //    {
+        //        RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+        //        EnableFederationMetadata = true
+        //    };
 
-            app.UseWsFederationPlugin(options);
-        }
+        //    app.UseWsFederationPlugin(options);
+        //}
     }
 }

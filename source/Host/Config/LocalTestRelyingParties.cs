@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Claims;
-using Thinktecture.IdentityServer.WsFed.Models;
+using Thinktecture.IdentityServer.WsFederation.Models;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {

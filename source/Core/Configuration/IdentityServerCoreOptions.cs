@@ -14,6 +14,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions AuthenticationOptions { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
-        public Action<IAppBuilder, PluginConfiguration> PluginConfiguration { get; set; }
+        public Action<IAppBuilder, IdentityServerCoreOptions> ConfigurePlugins { get; set; }
     }
 }

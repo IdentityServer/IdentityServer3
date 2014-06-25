@@ -12,7 +12,7 @@ using System.Web.Http;
 using System.Xml;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.WsFed.Results
+namespace Thinktecture.IdentityServer.WsFederation.Results
 {
     public class MetadataResult : IHttpActionResult
     {
