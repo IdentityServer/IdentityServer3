@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     });
 
                     wsfedApp.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options, internalConfig));
-                    //Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(wsfedApp);
+                    Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(wsfedApp);
                     wsfedApp.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
                 });
 

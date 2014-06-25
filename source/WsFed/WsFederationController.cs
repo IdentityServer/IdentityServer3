@@ -65,7 +65,9 @@ namespace Thinktecture.IdentityServer.WsFederation
                 if (signout != null)
                 {
                     Logger.Info("WsFederation signout request");
-                    return RedirectToRoute(Constants.RouteNames.LogoutPrompt, null);
+
+                    // todo
+                    return Redirect(_wsfedOptions.LogoutPageUrl);
                 }
             }
 
@@ -87,11 +89,11 @@ namespace Thinktecture.IdentityServer.WsFederation
         {
             Logger.Info("WS-Federation metadata request");
 
-            //if (_wsfedOptions.EnableFederationMetadata == false)
-            //{
-            //    Logger.Warn("Endpoint is disabled. Aborting.");
-            //    return NotFound();
-            //}
+            if (_wsfedOptions.Factory.WsFederationSettings().MetadataEndpoint.Enabled == false)
+            {
+                Logger.Warn("Endpoint is disabled. Aborting.");
+                return NotFound();
+            }
 
             var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
             var entity = _metadataResponseGenerator.Generate(ep);
@@ -130,8 +132,6 @@ namespace Thinktecture.IdentityServer.WsFederation
 
             var url = LoginResult.GetRedirectUrl(message, this.Request, settings, _internalConfig);
             return Redirect(url);
-            
-            //return new LoginResult(message, this.Request, settings, _internalConfig);
         }
     }
 }

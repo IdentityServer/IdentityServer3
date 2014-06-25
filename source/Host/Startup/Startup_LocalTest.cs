@@ -49,7 +49,9 @@ namespace Thinktecture.IdentityServer.Host
         {
             var wsfedOptions = new WsFederationPluginOptions
             {
+                // todo - also signoutcleanup is broken right now
                 LoginPageUrl = "http://localhost:3333/core/login",
+                LogoutPageUrl = "http://localhost:3333/core/connect/logout",
 
                 Factory = new WsFederationServiceFactory
                 {
