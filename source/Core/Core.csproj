@@ -119,6 +119,7 @@
     <Compile Include="Configuration\AutofacScope.cs" />
     <Compile Include="Configuration\CoreSettings.cs" />
     <Compile Include="Configuration\EndpointSettings.cs" />
+    <Compile Include="Configuration\FuncDataProtector.cs" />
     <Compile Include="Configuration\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
