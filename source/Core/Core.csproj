@@ -117,6 +117,8 @@
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Configuration\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\AutofacScope.cs" />
+    <Compile Include="Configuration\CoreSettings.cs" />
+    <Compile Include="Configuration\EndpointSettings.cs" />
     <Compile Include="Configuration\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
@@ -171,7 +173,6 @@
     <Compile Include="Logging\LogProviders\Log4NetLogProvider.cs" />
     <Compile Include="Logging\LogProviders\NLogLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
-    <Compile Include="Models\EndpointSettings.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
     <Compile Include="Models\IdentityProvider.cs" />
@@ -213,7 +214,6 @@
     <Compile Include="Services\IExternalClaimsFilter.cs" />
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Connect\Services\ITokenService.cs" />
-    <Compile Include="Models\CoreSettings.cs" />
     <Compile Include="Services\InMemory\InMemoryAuthorizationCodeStore.cs" />
     <Compile Include="Services\InMemory\InMemoryClientService.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentService.cs" />

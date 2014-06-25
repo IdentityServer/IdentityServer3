@@ -7,7 +7,6 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
 using Thinktecture.IdentityServer.WsFederation.Services;

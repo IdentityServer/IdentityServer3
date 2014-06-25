@@ -3,7 +3,7 @@
  * see license
  */
 
-using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {

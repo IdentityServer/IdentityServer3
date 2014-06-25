@@ -1,6 +1,5 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
+﻿using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Services

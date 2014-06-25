@@ -8,8 +8,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -17,15 +17,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeInteractionResponseGenerator
     {
         private SignInMessage _signIn;
-        private CoreSettings _core;
+        private CoreSettings _settings;
         
         private IConsentService _consent;
 
-        public AuthorizeInteractionResponseGenerator(CoreSettings core, IConsentService consent)
+        public AuthorizeInteractionResponseGenerator(CoreSettings settings, IConsentService consent)
         {
             _signIn = new SignInMessage();
             
-            _core = core;
+            _settings = settings;
             _consent = consent;
         }
 

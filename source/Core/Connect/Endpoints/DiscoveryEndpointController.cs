@@ -8,9 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect

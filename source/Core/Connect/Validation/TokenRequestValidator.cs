@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;

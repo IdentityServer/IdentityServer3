@@ -7,7 +7,7 @@ using System.IdentityModel.Metadata;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Constants;
-using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
 {

@@ -4,9 +4,8 @@
  */
 
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public abstract class CoreSettings
     {
