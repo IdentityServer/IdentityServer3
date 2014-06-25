@@ -49,13 +49,15 @@ namespace Thinktecture.IdentityServer.Host
         {
             var wsfedOptions = new WsFederationPluginOptions
             {
+                LoginPageUrl = "http://localhost:3333/core/login",
+
                 Factory = new WsFederationServiceFactory
                 {
                     UserService = coreOptions.Factory.UserService,
                     CoreSettings = coreOptions.Factory.CoreSettings,
                     RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
                     WsFederationSettings = () => new LocalTestWsFederationSettings()
-                }
+                },
             };
 
             pluginApp.UseWsFederationPlugin(wsfedOptions);

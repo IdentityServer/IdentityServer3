@@ -47,12 +47,13 @@ namespace Owin
             JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
-
-            // wire in plugins
-            options.ConfigurePlugins(app, options);
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
+
+            if (options.ConfigurePlugins != null)
+            {
+                options.ConfigurePlugins(app, options);
+            }
 
             if (options.AdditionalIdentityProviderConfiguration != null)
             {

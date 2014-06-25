@@ -22,8 +22,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             var internalConfig = new InternalConfiguration();
 
-            // todo hack!
-            internalConfig.LoginPageUrl = "http://localhost:3333/core/login";
+            // todo hacky!
+            internalConfig.LoginPageUrl = options.LoginPageUrl;
 
             var settings = options.Factory.CoreSettings();
             if (settings.DataProtector == null)
@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 internalConfig.DataProtector = settings.DataProtector;
             }
 
-            app.Map("/wsfed", wsfedApp =>
+            app.Map(options.MapPath, wsfedApp =>
                 {
                     wsfedApp.UseCookieAuthentication(new CookieAuthenticationOptions
                     {
