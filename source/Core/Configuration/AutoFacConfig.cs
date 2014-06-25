@@ -12,7 +12,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public static class AutofacConfig
+    internal static class AutofacConfig
     {
         public static IContainer Configure(IdentityServerCoreOptions options, InternalConfiguration internalConfig)
         {

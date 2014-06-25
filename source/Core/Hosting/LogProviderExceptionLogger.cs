@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class IdentityServerExceptionLogger : IExceptionLogger
+    public class LogProviderExceptionLogger : IExceptionLogger
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

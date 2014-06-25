@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
     public class AutofacContainerMiddleware
     {

@@ -14,7 +14,7 @@ using Thinktecture.IdentityServer.WsFederation.Validation;
 
 namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
-    public static class AutofacConfig
+    internal static class AutofacConfig
     {
         public static IContainer Configure(WsFederationPluginOptions options, InternalConfiguration internalConfig)
         {

@@ -9,7 +9,7 @@ using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using System;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
-using WsFederationConfiguration = Thinktecture.IdentityServer.WsFederation.Configuration;
+using Thinktecture.IdentityServer.WsFederation.Hosting;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -49,9 +49,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                         AuthenticationMode = AuthenticationMode.Passive
                     });
 
-                    wsfedApp.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options, internalConfig));
+                    wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
                     Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(wsfedApp);
-                    wsfedApp.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
+                    wsfedApp.UseWebApi(WebApiConfig.Configure());
                 });
 
             // todo

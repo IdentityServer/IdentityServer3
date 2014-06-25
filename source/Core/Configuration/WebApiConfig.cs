@@ -5,11 +5,11 @@
 
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
-using Thinktecture.IdentityServer.Core.Plumbing;
+using Thinktecture.IdentityServer.Core.Hosting;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public static class WebApiConfig
+    internal static class WebApiConfig
     {
         public static HttpConfiguration Configure(IdentityServerCoreOptions options)
         {
@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             config.SuppressDefaultHostAuthentication();
 
             config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
-            config.Services.Add(typeof(IExceptionLogger), new IdentityServerExceptionLogger());
+            config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
