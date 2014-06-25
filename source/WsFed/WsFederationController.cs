@@ -31,16 +31,17 @@ namespace Thinktecture.IdentityServer.WsFederation
         private readonly MetadataResponseGenerator _metadataResponseGenerator;
         private readonly ITrackingCookieService _cookies;
         private readonly InternalConfiguration _internalConfig;
-  
-        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationPluginOptions wsFedOptions)
+
+        public WsFederationController(/*CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationPluginOptions wsFedOptions */)
         {
-            _settings = settings;
-            _internalConfig = internalConfig;
+            //_settings = settings;
+            
+            /*_internalConfig = internalConfig;
             _wsfedOptions = wsFedOptions;
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
             _metadataResponseGenerator = metadataResponseGenerator;
-            _cookies = cookies;
+            _cookies = cookies; */
         }
 
         [Route("wsfed")]
