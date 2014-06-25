@@ -60,6 +60,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return credentials;
             }
 
+            if (credentials.IsMalformed)
+            {
+                Logger.Warn("Basic Authentication credential is malformed");
+                return credentials;
+            }
+
             return ParsePostBody(body);
         }
 
