@@ -37,23 +37,28 @@ namespace Thinktecture.IdentityServer.Host
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
+                        ConfigurePlugins = ConfigurePlugins
                     };
 
-                    var wsfedOptions = new WsFederationPluginOptions
-                    {
-                        Factory = new WsFederationServiceFactory
-                        {
-                            UserService = idsrvOptions.Factory.UserService,
-                            CoreSettings = idsrvOptions.Factory.CoreSettings,
-                            RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-                            WsFederationSettings = () => new LocalTestWsFederationSettings()
-                        }
-                    };
-
-                    coreApp
-                        .UseWsFederationPlugin(wsfedOptions)
-                        .UseIdentityServerCore(idsrvOptions);
+                    coreApp.UseIdentityServerCore(idsrvOptions);
+                        
                 });
+        }
+
+        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerCoreOptions coreOptions)
+        {
+            var wsfedOptions = new WsFederationPluginOptions
+            {
+                Factory = new WsFederationServiceFactory
+                {
+                    UserService = coreOptions.Factory.UserService,
+                    CoreSettings = coreOptions.Factory.CoreSettings,
+                    RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+                    WsFederationSettings = () => new LocalTestWsFederationSettings()
+                }
+            };
+
+            pluginApp.UseWsFederationPlugin(wsfedOptions);
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)

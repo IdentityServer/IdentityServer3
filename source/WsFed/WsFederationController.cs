@@ -21,6 +21,7 @@ using Thinktecture.IdentityServer.WsFederation.Validation;
 namespace Thinktecture.IdentityServer.WsFederation
 {
     [HostAuthentication("idsrv")]
+    [RoutePrefix("")]
     public class WsFederationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -44,7 +45,7 @@ namespace Thinktecture.IdentityServer.WsFederation
             _cookies = cookies;
         }
 
-        [Route("wsfed")]
+        [Route("")]
         public async Task<IHttpActionResult> Get()
         {
             Logger.Info("Start WS-Federation request");
@@ -71,7 +72,7 @@ namespace Thinktecture.IdentityServer.WsFederation
             return BadRequest("Invalid WS-Federation request");
         }
 
-        [Route("wsfed/signout")]
+        [Route("signout")]
         [HttpGet]
         public async Task<IHttpActionResult> SignOutCallback()
         {
@@ -81,7 +82,7 @@ namespace Thinktecture.IdentityServer.WsFederation
             return new SignOutResult(urls);
         }
 
-        [Route("wsfed/metadata")]
+        [Route("metadata")]
         public IHttpActionResult GetMetadata()
         {
             Logger.Info("WS-Federation metadata request");
@@ -127,7 +128,10 @@ namespace Thinktecture.IdentityServer.WsFederation
                 message.IdP = result.HomeRealm;
             }
 
-            return new LoginResult(message, this.Request, settings, _internalConfig);
+            var url = LoginResult.GetRedirectUrl(message, this.Request, settings, _internalConfig);
+            return Redirect(url);
+            
+            //return new LoginResult(message, this.Request, settings, _internalConfig);
         }
     }
 }

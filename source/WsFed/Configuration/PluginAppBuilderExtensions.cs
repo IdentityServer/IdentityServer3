@@ -5,6 +5,7 @@
 
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using System;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
@@ -19,8 +20,26 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (options == null) throw new ArgumentNullException("options");
             options.Validate();
 
-            // todo
             var internalConfig = new InternalConfiguration();
+
+            // todo hack!
+            internalConfig.LoginPageUrl = "http://localhost:3333/core/login";
+
+            var settings = options.Factory.CoreSettings();
+            if (settings.DataProtector == null)
+            {
+                var provider = app.GetDataProtectionProvider();
+                if (provider == null)
+                {
+                    provider = new DpapiDataProtectionProvider("idsrv3");
+                }
+
+                internalConfig.DataProtector = new HostDataProtector(provider);
+            }
+            else
+            {
+                internalConfig.DataProtector = settings.DataProtector;
+            }
 
             app.Map("/wsfed", wsfedApp =>
                 {
@@ -35,12 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     wsfedApp.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
                 });
 
-            
-
-            //options.Configuration.AddApiControllerAssembly(typeof(WsFederationController).Assembly);
-            
-            
-
+            // todo
             //options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;

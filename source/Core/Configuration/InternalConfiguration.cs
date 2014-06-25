@@ -8,5 +8,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public class InternalConfiguration
     {
         public IDataProtector DataProtector { get; set; }
+        public string LoginPageUrl { get; set; }
     }
 }
