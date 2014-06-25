@@ -187,6 +187,7 @@
     <Compile Include="Config\LocalTestFactory.cs" />
     <Compile Include="Config\LocalTestRelyingParties.cs" />
     <Compile Include="Config\LocalTestScopes.cs" />
+    <Compile Include="Config\LocalTestWsFederationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\Startup_AzureWebSites.cs" />
     <Compile Include="Startup\Startup_Minimal.cs" />

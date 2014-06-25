@@ -30,9 +30,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                         AuthenticationMode = AuthenticationMode.Passive
                     });
 
-                    app.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options, internalConfig));
-                    Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
-                    app.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
+                    wsfedApp.Use<AutofacContainerMiddleware>(WsFederationConfiguration.AutofacConfig.Configure(options, internalConfig));
+                    //Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(wsfedApp);
+                    wsfedApp.UseWebApi(WsFederationConfiguration.WebApiConfig.Configure());
                 });
 
             

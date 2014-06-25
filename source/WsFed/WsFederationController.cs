@@ -24,6 +24,7 @@ namespace Thinktecture.IdentityServer.WsFederation
     public class WsFederationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly CoreSettings _settings;
         private readonly WsFederationPluginOptions _wsfedOptions;
         private readonly SignInValidator _validator;
@@ -32,16 +33,15 @@ namespace Thinktecture.IdentityServer.WsFederation
         private readonly ITrackingCookieService _cookies;
         private readonly InternalConfiguration _internalConfig;
 
-        public WsFederationController(/*CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationPluginOptions wsFedOptions */)
+        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationPluginOptions wsFedOptions)
         {
-            //_settings = settings;
-            
-            /*_internalConfig = internalConfig;
+            _settings = settings;
+            _internalConfig = internalConfig;
             _wsfedOptions = wsFedOptions;
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
             _metadataResponseGenerator = metadataResponseGenerator;
-            _cookies = cookies; */
+            _cookies = cookies;
         }
 
         [Route("wsfed")]
@@ -86,11 +86,11 @@ namespace Thinktecture.IdentityServer.WsFederation
         {
             Logger.Info("WS-Federation metadata request");
 
-            if (_wsfedOptions.EnableFederationMetadata == false)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting.");
-                return NotFound();
-            }
+            //if (_wsfedOptions.EnableFederationMetadata == false)
+            //{
+            //    Logger.Warn("Endpoint is disabled. Aborting.");
+            //    return NotFound();
+            //}
 
             var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
             var entity = _metadataResponseGenerator.Generate(ep);

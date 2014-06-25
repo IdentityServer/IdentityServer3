@@ -41,14 +41,18 @@ namespace Thinktecture.IdentityServer.Host
 
                     var wsfedOptions = new WsFederationPluginOptions
                     {
-                        Factory = factory,
-                        RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-                        EnableFederationMetadata = true
+                        Factory = new WsFederationServiceFactory
+                        {
+                            UserService = idsrvOptions.Factory.UserService,
+                            CoreSettings = idsrvOptions.Factory.CoreSettings,
+                            RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
+                            WsFederationSettings = () => new LocalTestWsFederationSettings()
+                        }
                     };
 
                     coreApp
-                        .UseIdentityServerCore(idsrvOptions)
-                        .UseWsFederationPlugin(wsfedOptions);
+                        .UseWsFederationPlugin(wsfedOptions)
+                        .UseIdentityServerCore(idsrvOptions);
                 });
         }
 
