@@ -26,6 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             internalConfig.LoginPageUrl = options.LoginPageUrl;
 
             var settings = options.Factory.CoreSettings();
+            // todo - need a better solution for data protection
             if (settings.DataProtector == null)
             {
                 var provider = app.GetDataProtectionProvider();
@@ -34,7 +35,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     provider = new DpapiDataProtectionProvider("idsrv3");
                 }
 
-                internalConfig.DataProtector = new HostDataProtector(provider);
+                var funcProtector = new FuncDataProtector(
+                    (data, entropy) =>
+                    {
+                        var protector = provider.Create(entropy);
+                        return protector.Protect(data);
+                    },
+                    (data, entropy) =>
+                    {
+                        var protector = provider.Create(entropy);
+                        return protector.Unprotect(data);
+                    });
+
+                internalConfig.DataProtector = funcProtector;
             }
             else
             {
@@ -50,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     });
 
                     wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
-                    Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(wsfedApp);
+                    Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
                     wsfedApp.UseWebApi(WebApiConfig.Configure());
                 });
 
