@@ -52,6 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
 
+            //if (request.ValidatedScopes.RequestedScopes.Contains(Constants.StandardScopes.OfflineAccess))
+            //{
+
+            //}
+
             if (request.AuthorizationCode.IsOpenId)
             {
                 var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);

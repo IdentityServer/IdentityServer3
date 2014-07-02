@@ -37,4 +37,16 @@ namespace Thinktecture.IdentityServer.Core.Models
         JWT,
         Reference
     }
+
+    public enum TokenUsage
+    {
+        ReUse,
+        OneTimeOnly
+    }
+
+    public enum TokenExpiration
+    {
+        Sliding,
+        Absolute
+    }
 }

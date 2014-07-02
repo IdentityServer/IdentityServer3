@@ -210,6 +210,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
+            if (_validatedRequest.ValidatedScopes.ContainsOfflineAccessScope)
+            {
+                Logger.Error("Client cannot request a refresh token in client credentials flow");
+                return Invalid(Constants.TokenErrors.InvalidScope);
+            }
+
             Logger.Info("Successful validation of client_credentials request");
             return Valid();
         }

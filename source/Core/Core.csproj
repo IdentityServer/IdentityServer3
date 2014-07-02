@@ -115,6 +115,7 @@
     <Compile Include="Configuration\AppBuilderExtensions.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
+    <Compile Include="Connect\Models\RefreshToken.cs" />
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\CoreSettings.cs" />
