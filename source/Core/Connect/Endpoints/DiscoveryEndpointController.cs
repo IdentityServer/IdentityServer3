@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -70,20 +71,37 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return NotFound();
             }
 
-            var cert = _settings.SigningCertificate;
-            var cert64 = Convert.ToBase64String(cert.RawData);
-            var thumbprint = Base64Url.Encode(cert.GetCertHash());
-
-            var key = new
+            var webKeys = new List<JsonWebKeyDto>();
+            foreach (var pubKey in _settings.PublicKeysForMetadata)
             {
-                kty = "RSA",
-                use = "sig",
-                kid = thumbprint,
-                x5t = thumbprint,
-                x5c = new string[] { cert64 }
-            };
+                if (pubKey != null)
+                {
+                    var cert64 = Convert.ToBase64String(pubKey.RawData);
+                    var thumbprint = Base64Url.Encode(pubKey.GetCertHash());
 
-            return Json(new { keys = new[] { key } });
+                    var webKey = new JsonWebKeyDto
+                    {
+                        kty = "RSA",
+                        use = "sig",
+                        kid = thumbprint,
+                        x5t = thumbprint,
+                        x5c = new string[] { cert64 }
+                    };
+
+                    webKeys.Add(webKey);
+                }
+            }
+
+            return Json(new { keys = webKeys });
+        }
+
+        private class JsonWebKeyDto
+        {
+            public string kty { get; set; }
+            public string use { get; set; }
+            public string kid { get; set; }
+            public string x5t { get; set; }
+            public string[] x5c { get; set; }
         }
     }
 }
