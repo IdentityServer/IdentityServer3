@@ -18,13 +18,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private SignInMessage _signIn;
         private CoreSettings _settings;
-        
+
         private IConsentService _consent;
 
         public AuthorizeInteractionResponseGenerator(CoreSettings settings, IConsentService consent)
         {
             _signIn = new SignInMessage();
-            
+
             _settings = settings;
             _consent = consent;
         }
@@ -95,14 +95,31 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     };
                 }
             }
-    
+
             return new InteractionResponse();
         }
 
         public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent)
         {
-            if (request.PromptMode == Constants.PromptModes.Consent ||
-                await _consent.RequiresConsentAsync(request.Client, request.Subject, request.RequestedScopes))
+            var consentRequired = await _consent.RequiresConsentAsync(request.Client, request.Subject, request.RequestedScopes);
+
+            if (consentRequired && request.PromptMode == Constants.PromptModes.None)
+            {
+                return new InteractionResponse
+                {
+                    IsError = true,
+                    Error = new AuthorizeError
+                    {
+                        ErrorType = ErrorTypes.Client,
+                        Error = Constants.AuthorizeErrors.InteractionRequired,
+                        ResponseMode = request.ResponseMode,
+                        ErrorUri = request.RedirectUri,
+                        State = request.State
+                    }
+                };
+            }
+
+            if (request.PromptMode == Constants.PromptModes.Consent || consentRequired)
             {
                 var response = new InteractionResponse();
 
