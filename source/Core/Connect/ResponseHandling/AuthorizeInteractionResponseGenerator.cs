@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         Error = new AuthorizeError
                         {
                             ErrorType = ErrorTypes.Client,
-                            Error = Constants.AuthorizeErrors.InteractionRequired,
+                            Error = Constants.AuthorizeErrors.LoginRequired,
                             ResponseMode = request.ResponseMode,
                             ErrorUri = request.RedirectUri,
                             State = request.State
