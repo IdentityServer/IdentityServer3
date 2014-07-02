@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                 return NotFound();
             }
 
-            var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
+            var ep = Request.GetBaseUrl(_settings.PublicHostName);
             var entity = _metadataResponseGenerator.Generate(ep);
 
             return new MetadataResult(entity);
