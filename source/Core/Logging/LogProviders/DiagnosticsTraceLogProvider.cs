@@ -27,15 +27,38 @@ namespace Thinktecture.IdentityServer.Core.Logging
         public void Log(LogLevel logLevel, Func<string> messageFunc)
         {
             var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow.ToString(), messageFunc());
-
-            Trace.WriteLine(message, logLevel.ToString());
+            TraceMsg(logLevel, message);
         }
 
         public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
         {
             var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow.ToString(), messageFunc(), exception.ToString());
+            TraceMsg(logLevel, message);
+        }
 
-            Trace.WriteLine(message, logLevel.ToString());
+        private static void TraceMsg(LogLevel logLevel, string message)
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Trace:
+                case LogLevel.Debug:
+                    Trace.WriteLine(message, logLevel.ToString());
+                    break;
+                case LogLevel.Info:
+                    Trace.TraceInformation(message);
+                    break;
+                case LogLevel.Warn:
+                    Trace.TraceWarning(message);
+                    break;
+                case LogLevel.Error:
+                    Trace.TraceError(message);
+                    break;
+                case LogLevel.Fatal:
+                    Trace.TraceError(string.Format("FATAL : {0}", message));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
