@@ -4,20 +4,19 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     [RoutePrefix(".well-known")]
-    [EnableCors("*", "*", "GET")]
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -35,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start discovery request");
 
-            if (!_settings.DiscoveryEndpoint.Enabled)
+            if (!_settings.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
@@ -66,26 +65,43 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start key discovery request");
 
-            if (!_settings.DiscoveryEndpoint.Enabled)
+            if (!_settings.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 
-            var cert = _settings.SigningCertificate;
-            var cert64 = Convert.ToBase64String(cert.RawData);
-            var thumbprint = Base64Url.Encode(cert.GetCertHash());
-
-            var key = new
+            var webKeys = new List<JsonWebKeyDto>();
+            foreach (var pubKey in _settings.PublicKeysForMetadata)
             {
-                kty = "RSA",
-                use = "sig",
-                kid = thumbprint,
-                x5t = thumbprint,
-                x5c = new string[] { cert64 }
-            };
+                if (pubKey != null)
+                {
+                    var cert64 = Convert.ToBase64String(pubKey.RawData);
+                    var thumbprint = Base64Url.Encode(pubKey.GetCertHash());
 
-            return Json(new { keys = new[] { key } });
+                    var webKey = new JsonWebKeyDto
+                    {
+                        kty = "RSA",
+                        use = "sig",
+                        kid = thumbprint,
+                        x5t = thumbprint,
+                        x5c = new string[] { cert64 }
+                    };
+
+                    webKeys.Add(webKey);
+                }
+            }
+
+            return Json(new { keys = webKeys });
+        }
+
+        private class JsonWebKeyDto
+        {
+            public string kty { get; set; }
+            public string use { get; set; }
+            public string kid { get; set; }
+            public string x5t { get; set; }
+            public string[] x5c { get; set; }
         }
     }
 }

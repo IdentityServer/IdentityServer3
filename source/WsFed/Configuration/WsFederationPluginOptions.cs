@@ -1,34 +1,37 @@
 ﻿using System;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.WsFed.Services;
 
-namespace Thinktecture.IdentityServer.WsFed.Configuration
+namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
     public class WsFederationPluginOptions
     {
-        PluginConfiguration _dependencies;
-        public const string CookieName = "WsFedSignInOut";
+        public const string CookieName = "WsFedTracking";
 
-        public WsFederationPluginOptions(PluginConfiguration configuration)
+        public WsFederationServiceFactory Factory { get; set; }
+        public string MapPath { get; set; }
+        public string LoginPageUrl { get; set; }
+        public string LogoutPageUrl { get; set; }
+
+        public WsFederationPluginOptions()
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException("dependencies");
-            }
-            
-            _dependencies = configuration;
-            EnableFederationMetadata = true;
+            MapPath = "/wsfed";
         }
 
-        public PluginConfiguration Configuration
+        public void Validate()
         {
-            get
+            if (Factory == null)
             {
-                return _dependencies;
+                throw new ArgumentNullException("Factory");
+            }
+
+            if (string.IsNullOrWhiteSpace(LoginPageUrl))
+            {
+                throw new ArgumentException("LoginPageUrl is not set");
+            }
+
+            if (string.IsNullOrWhiteSpace(LogoutPageUrl))
+            {
+                throw new ArgumentException("LogoutPageUrl is not set");
             }
         }
-
-        public Func<IRelyingPartyService> RelyingPartyService { get; set; }
-        public bool EnableFederationMetadata { get; set; }
     }
 }

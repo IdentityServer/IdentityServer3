@@ -8,12 +8,13 @@ using Autofac.Integration.WebApi;
 using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public static class AutofacConfig
+    internal static class AutofacConfig
     {
         public static IContainer Configure(IdentityServerCoreOptions options, InternalConfiguration internalConfig)
         {
@@ -29,15 +30,42 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
-            builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
             builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
-            builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
             builder.Register(ctx => fact.UserService()).As<IUserService>();
             builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
             builder.Register(ctx => fact.ClientService()).As<IClientService>();
-            builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
-
+            
             // optional from factory
+            if (fact.AuthorizationCodeStore != null)
+            {
+                builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
+            }
+            else
+            {
+                var inmemCodeStore = new InMemoryAuthorizationCodeStore();
+                builder.RegisterInstance(inmemCodeStore).As<IAuthorizationCodeStore>();
+            }
+
+            if (fact.TokenHandleStore != null)
+            {
+                builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
+            }
+            else
+            {
+                var inmemTokenHandleStore = new InMemoryTokenHandleStore();
+                builder.RegisterInstance(inmemTokenHandleStore).As<ITokenHandleStore>();
+            }
+
+            if (fact.ConsentService != null)
+            {
+                builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
+            }
+            else
+            {
+                var inmemConsentService = new InMemoryConsentService();
+                builder.RegisterInstance(inmemConsentService).As<IConsentService>();
+            }
+
             if (fact.ClaimsProvider != null)
             {
                 builder.Register(ctx => fact.ClaimsProvider()).As<IClaimsProvider>();
@@ -113,50 +141,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
-
-            // plugin configuration
-            var pluginConfiguration = internalConfig.PluginConfiguration;
-            if (pluginConfiguration != null)
-            {
-                if (pluginConfiguration.ApiControllerAssemblies != null)
-                {
-                    foreach (var asm in pluginConfiguration.ApiControllerAssemblies)
-                    {
-                        builder.RegisterApiControllers(asm);
-                    }
-                }
-
-                if (pluginConfiguration.Types != null)
-                {
-                    foreach (var type in pluginConfiguration.Types)
-                    {
-                        if (type.Value == null)
-                        {
-                            builder.RegisterType(type.Key);
-                        }
-                        else
-                        {
-                            builder.RegisterType(type.Key).As(type.Value);
-                        }
-                    }
-                }
-
-                if (pluginConfiguration.Factories != null)
-                {
-                    foreach (var factory in pluginConfiguration.Factories)
-                    {
-                        builder.Register(ctx => factory.Value()).As(factory.Key);
-                    }
-                }
-
-                if (pluginConfiguration.Instances != null)
-                {
-                    foreach (var instance in pluginConfiguration.Instances)
-                    {
-                        builder.RegisterInstance(instance).AsSelf();
-                    }
-                }
-            }
 
             return builder.Build();
         }

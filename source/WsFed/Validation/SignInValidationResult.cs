@@ -5,9 +5,9 @@
 using System.IdentityModel.Services;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Authentication;
-using Thinktecture.IdentityServer.WsFed.Models;
+using Thinktecture.IdentityServer.WsFederation.Models;
 
-namespace Thinktecture.IdentityServer.WsFed.Validation
+namespace Thinktecture.IdentityServer.WsFederation.Validation
 {
     public class SignInValidationResult
     {

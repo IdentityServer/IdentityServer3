@@ -3,10 +3,10 @@
  * see license
  */
 
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public abstract class CoreSettings
     {
@@ -15,6 +15,22 @@ namespace Thinktecture.IdentityServer.Core.Models
         public virtual X509Certificate2 SigningCertificate
         {
             get { return null; } 
+        }
+
+        public virtual IEnumerable<X509Certificate2> PublicKeysForMetadata
+        {
+            get 
+            {
+                var keys = new List<X509Certificate2>();
+                var primary = SigningCertificate;
+
+                if (primary != null)
+                {
+                    keys.Add(primary);
+                }
+
+                return keys;
+            }
         }
 
         public virtual string SiteName
@@ -34,32 +50,32 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public virtual EndpointSettings AuthorizeEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings TokenEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings UserInfoEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings DiscoveryEndpoint 
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings AccessTokenValidationEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings EndSessionEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
     }
 }

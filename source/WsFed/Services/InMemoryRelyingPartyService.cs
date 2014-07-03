@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.WsFed.Models;
+using Thinktecture.IdentityServer.WsFederation.Models;
 
-namespace Thinktecture.IdentityServer.WsFed.Services
+namespace Thinktecture.IdentityServer.WsFederation.Services
 {
     public class InMemoryRelyingPartyService : IRelyingPartyService
     {

@@ -54,9 +54,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             var credentials = ParseBasicAuthenticationScheme(header);
 
-            if (credentials.IsPresent || credentials.IsMalformed)
+            if (credentials.IsPresent && !credentials.IsMalformed)
             {
                 Logger.Debug("Client credential is Basic Authentication");
+                return credentials;
+            }
+
+            if (credentials.IsMalformed)
+            {
+                Logger.Warn("Basic Authentication credential is malformed");
                 return credentials;
             }
 

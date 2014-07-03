@@ -228,12 +228,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
             var urls = new List<string>();
-            foreach(var url in _internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
-            {
-                var tmp = url;
-                if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
-                urls.Add(baseUrl + tmp);
-            }
+            //foreach(var url in _internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
+            //{
+            //    var tmp = url;
+            //    if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
+            //    urls.Add(baseUrl + tmp);
+            //}
 
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel

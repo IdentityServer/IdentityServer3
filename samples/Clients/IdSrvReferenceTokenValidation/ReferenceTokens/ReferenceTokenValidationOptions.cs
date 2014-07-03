@@ -1,13 +1,12 @@
 ﻿using Microsoft.Owin.Security;
 
-namespace IdSrvReferenceTokenValidation
+namespace Thinktecture.IdentityServer.v3.AccessTokenValidation
 {
     public class ReferenceTokenValidationOptions : AuthenticationOptions
     {
-        public ReferenceTokenValidationOptions() : base("IdSrv")
+        public ReferenceTokenValidationOptions() : base("IdSrvReferenceToken")
         { }
         
         public string TokenValidationEndpoint { get; set; }
-        public string RequiredScope { get; set; }
     }
 }

@@ -46,16 +46,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.identitymodel.services" />
+    <Reference Include="System.Web" />
     <Reference Include="Thinktecture.IdentityServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Thinktecture.IdentityServer.v3.1.0.0-alpha-20140617\lib\net45\Thinktecture.IdentityServer.dll</HintPath>
+      <HintPath>..\packages\Thinktecture.IdentityServer.v3.1.0.0-alpha-20140626-1\lib\net45\Thinktecture.IdentityServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Thinktecture.IdentityServer.WsFederation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Thinktecture.IdentityServer.v3.WsFederation.1.0.0-alpha-20140626-1\lib\net45\Thinktecture.IdentityServer.WsFederation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\LocalTestClients.cs" />
     <Compile Include="Config\LocalTestCoreSettings.cs" />
     <Compile Include="Config\LocalTestFactory.cs" />
+    <Compile Include="Config\LocalTestRelyingParties.cs" />
     <Compile Include="Config\LocalTestScopes.cs" />
+    <Compile Include="Config\LocalTestWsFederationSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

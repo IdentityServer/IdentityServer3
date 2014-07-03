@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    class IdentityServerExceptionLogger : IExceptionLogger
+    public class LogProviderExceptionLogger : IExceptionLogger
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
-            Logger.ErrorFormat("Unhandled exception: {0}", context.Exception);
+            Logger.ErrorException("Unhandled exception", context.Exception);
 
             return Task.FromResult<object>(null);
         }

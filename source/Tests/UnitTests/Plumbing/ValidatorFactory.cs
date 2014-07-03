@@ -1,10 +1,10 @@
-﻿/*
+﻿using Thinktecture.IdentityServer.Core.Configuration;
+/*
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Plumbing;

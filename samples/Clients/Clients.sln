@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{22C083F3-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleAspNetWebApi", "SampleAspNetWebApi\SampleAspNetWebApi.csproj", "{C8CD1733-783A-4655-814B-9CF7FD7FDFE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdSrvReferenceTokenValidation", "IdSrvReferenceTokenValidation\IdSrvReferenceTokenValidation.csproj", "{D8783FA3-4371-4848-BC87-B11DD8E02287}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdSrvAccessTokenTokenValidation", "IdSrvReferenceTokenValidation\IdSrvAccessTokenTokenValidation.csproj", "{D8783FA3-4371-4848-BC87-B11DD8E02287}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC OWIN WS-Federation", "MvcOwinWsFederation\MVC OWIN WS-Federation.csproj", "{A40486A5-0BEB-4CB0-9390-4A0D998CE3E1}"
 EndProject
