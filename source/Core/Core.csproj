@@ -305,7 +305,7 @@
     <Content Include="Assets\app\app.css">
       <DependentUpon>app.less</DependentUpon>
     </Content>
-    <Content Include="Assets\app\app.js" />
+    <None Include="Assets\app\app.js" />
     <EmbeddedResource Include="Assets\app\consent.html" />
     <EmbeddedResource Include="Assets\app\layout.html" />
     <EmbeddedResource Include="Assets\app\login.html" />
@@ -315,30 +315,30 @@
     <EmbeddedResource Include="Assets\app\logout.html" />
     <EmbeddedResource Include="Assets\app\error.html" />
     <EmbeddedResource Include="Assets\app\logoutprompt.html" />
-    <Content Include="Assets\libs\angular\angular.1.2.13.js" />
-    <Content Include="Assets\libs\angular\angular.1.2.13.min.js" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.min.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Assets\libs\bootstrap\custom.css" />
-    <Content Include="Assets\libs\bootstrap\custom.min.css" />
+    <None Include="Assets\libs\angular\angular.1.2.13.js" />
+    <None Include="Assets\libs\angular\angular.1.2.13.min.js" />
+    <None Include="Assets\libs\bootstrap\css\bootstrap-theme.css" />
+    <None Include="Assets\libs\bootstrap\css\bootstrap-theme.min.css" />
+    <None Include="Assets\libs\bootstrap\css\bootstrap.css" />
+    <None Include="Assets\libs\bootstrap\css\bootstrap.min.css" />
+    <None Include="Assets\libs\bootstrap\custom.css" />
+    <None Include="Assets\libs\bootstrap\custom.min.css" />
     <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Assets\libs\bootstrap\js\bootstrap.js" />
-    <Content Include="Assets\libs\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Assets\libs\bootstrap\less\bootstrap.css" />
-    <Content Include="Assets\libs\bootstrap\less\bootstrap.min.css" />
-    <Content Include="Assets\libs\jquery\jquery-1.11.0.js" />
-    <Content Include="Assets\libs\jquery\jquery-1.11.0.min.js" />
+    <None Include="Assets\libs\bootstrap\js\bootstrap.js" />
+    <None Include="Assets\libs\bootstrap\js\bootstrap.min.js" />
+    <None Include="Assets\libs\bootstrap\less\bootstrap.css" />
+    <None Include="Assets\libs\bootstrap\less\bootstrap.min.css" />
+    <None Include="Assets\libs\jquery\jquery-1.11.0.js" />
+    <None Include="Assets\libs\jquery\jquery-1.11.0.min.js" />
     <EmbeddedResource Include="Assets\scripts.js">
       <DependentUpon>scripts.js.bundle</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Assets\scripts.min.js">
+    <EmbeddedResource Include="Assets\scripts.min.js">
       <DependentUpon>scripts.js</DependentUpon>
-    </Content>
-    <Content Include="Assets\styles.css">
+    </EmbeddedResource>
+    <None Include="Assets\styles.css">
       <DependentUpon>styles.css.bundle</DependentUpon>
-    </Content>
+    </None>
     <EmbeddedResource Include="Assets\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </EmbeddedResource>
