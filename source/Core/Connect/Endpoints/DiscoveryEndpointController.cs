@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start discovery request");
 
-            if (!_settings.DiscoveryEndpoint.Enabled)
+            if (!_settings.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start key discovery request");
 
-            if (!_settings.DiscoveryEndpoint.Enabled)
+            if (!_settings.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

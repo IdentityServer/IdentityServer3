@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start access token validation request");
 
-            if (!_settings.AccessTokenValidationEndpoint.Enabled)
+            if (!_settings.AccessTokenValidationEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

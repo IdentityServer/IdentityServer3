@@ -50,32 +50,32 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         public virtual EndpointSettings AuthorizeEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings TokenEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings UserInfoEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings DiscoveryEndpoint 
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings AccessTokenValidationEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
 
         public virtual EndpointSettings EndSessionEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return EndpointSettings.Enabled; }
         }
     }
 }
