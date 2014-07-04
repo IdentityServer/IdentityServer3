@@ -148,7 +148,9 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 var acct = this.userAccountService.GetByLinkedAccount(externalUser.Provider.Name, externalUser.ProviderId);
                 if (acct == null)
                 {
-                    return await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
+                    var result = await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
+                    result.CreatedExternalUser = true;
+                    return result;
                 }
                 else
                 {

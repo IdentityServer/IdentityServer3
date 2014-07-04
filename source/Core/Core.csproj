@@ -177,6 +177,8 @@
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
     <Compile Include="Models\IdentityProvider.cs" />
+    <Compile Include="Notifications\ExternalUserCreatedNotification.cs" />
+    <Compile Include="Notifications\IdentityServerNotifications.cs" />
     <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
     <Compile Include="Plumbing\ClaimMap.cs" />

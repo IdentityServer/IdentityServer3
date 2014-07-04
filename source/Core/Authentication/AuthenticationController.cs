@@ -16,6 +16,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Notifications;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
@@ -31,14 +32,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly InternalConfiguration _internalConfiguration;
+        private readonly IdentityServerNotifications _notifications;
 
-        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
+        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration, IdentityServerNotifications notifications)
         {
             _userService = userService;
             _settings = settings;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
             _internalConfiguration = internalConfiguration;
+            _notifications = notifications;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -163,12 +166,19 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned null");
                 return RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
-
+           
             if (authResult.IsError)
             {
                 Logger.Info("[AuthenticationController.LoginExternalCallback] authenticate external returned error message");
                 return RenderLoginPage(authResult.ErrorMessage);
             }
+
+            if (authResult.CreatedExternalUser)
+            {
+                await _notifications.ExternalUserCreated(new ExternalUserCreatedNotification { Subject = authResult.Subject, RedirectClaims = authResult.RedirectClaims });
+            }
+                
+
 
             return SignInAndRedirect(
                 authResult,

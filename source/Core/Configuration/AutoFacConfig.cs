@@ -9,6 +9,7 @@ using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Hosting;
+using Thinktecture.IdentityServer.Core.Notifications;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 
@@ -138,6 +139,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
             builder.RegisterInstance(authenticationOptions).AsSelf();
+
+            // for notifications
+            var notifications = options.Notifications ?? new IdentityServerNotifications();
+            builder.RegisterInstance(notifications).AsSelf();
 
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
