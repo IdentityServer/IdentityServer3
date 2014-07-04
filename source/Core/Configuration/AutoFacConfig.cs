@@ -16,7 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     internal static class AutofacConfig
     {
-        public static IContainer Configure(IdentityServerCoreOptions options, InternalConfiguration internalConfig)
+        public static IContainer Configure(IdentityServerOptions options, InternalConfiguration internalConfig)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");

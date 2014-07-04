@@ -11,7 +11,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     internal static class WebApiConfig
     {
-        public static HttpConfiguration Configure(IdentityServerCoreOptions options)
+        public static HttpConfiguration Configure()
         {
             var config = new HttpConfiguration();
 

@@ -19,13 +19,13 @@ namespace Thinktecture.IdentityServer.Host
                         siteName: "Thinktecture IdentityServer v3 - preview 1 (WAWS)",
                         publicHostAddress: "http://idsrv3.azurewebsites.net");
 
-                    var options = new IdentityServerCoreOptions
+                    var options = new IdentityServerOptions
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureSocialIdentityProviders
                     };
 
-                    coreApp.UseIdentityServerCore(options);
+                    coreApp.UseIdentityServer(options);
                 });
         }
 
