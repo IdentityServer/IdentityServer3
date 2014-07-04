@@ -18,12 +18,12 @@ namespace Thinktecture.IdentityServer.Host.Sample
                         siteName:          "Thinktecture IdentityServer v3 - preview 1",
                         publicHostAddress: "http://localhost:3333");
                     
-                    var opts = new IdentityServerCoreOptions
+                    var opts = new IdentityServerOptions
                     {
                         Factory = factory,
                     };
 
-                    coreApp.UseIdentityServerCore(opts);
+                    coreApp.UseIdentityServer(opts);
                 });
         }
     }

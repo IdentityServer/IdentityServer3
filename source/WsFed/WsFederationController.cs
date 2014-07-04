@@ -88,13 +88,13 @@ namespace Thinktecture.IdentityServer.WsFederation
         {
             Logger.Info("WS-Federation metadata request");
 
-            if (_wsfedOptions.Factory.WsFederationSettings().MetadataEndpoint.Enabled == false)
+            if (_wsfedOptions.Factory.WsFederationSettings().MetadataEndpoint.IsEnabled == false)
             {
                 Logger.Warn("Endpoint is disabled. Aborting.");
                 return NotFound();
             }
 
-            var ep = Request.GetBaseUrl(_settings.PublicHostName) + "wsfed";
+            var ep = Request.GetBaseUrl(_settings.PublicHostName);
             var entity = _metadataResponseGenerator.Generate(ep);
 
             return new MetadataResult(entity);

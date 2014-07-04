@@ -21,7 +21,7 @@ namespace Owin
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseIdentityServerCore(this IAppBuilder app, IdentityServerCoreOptions options)
+        public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
 
@@ -77,7 +77,7 @@ namespace Owin
 
             app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
-            app.UseWebApi(WebApiConfig.Configure(options));
+            app.UseWebApi(WebApiConfig.Configure());
 
             return app;
         }

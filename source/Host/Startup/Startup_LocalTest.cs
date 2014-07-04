@@ -33,19 +33,19 @@ namespace Thinktecture.IdentityServer.Host
                     //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
                     //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
 
-                    var idsrvOptions = new IdentityServerCoreOptions
+                    var idsrvOptions = new IdentityServerOptions
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         ConfigurePlugins = ConfigurePlugins
                     };
 
-                    coreApp.UseIdentityServerCore(idsrvOptions);
+                    coreApp.UseIdentityServer(idsrvOptions);
                         
                 });
         }
 
-        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerCoreOptions coreOptions)
+        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerOptions options)
         {
             var wsfedOptions = new WsFederationPluginOptions
             {
@@ -55,8 +55,8 @@ namespace Thinktecture.IdentityServer.Host
 
                 Factory = new WsFederationServiceFactory
                 {
-                    UserService = coreOptions.Factory.UserService,
-                    CoreSettings = coreOptions.Factory.CoreSettings,
+                    UserService = options.Factory.UserService,
+                    CoreSettings = options.Factory.CoreSettings,
                     RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
                     WsFederationSettings = () => new LocalTestWsFederationSettings()
                 },
@@ -92,16 +92,5 @@ namespace Thinktecture.IdentityServer.Host
             };
             app.UseTwitterAuthentication(twitter);
         }
-
-        //private void ConfigurePlugins(IAppBuilder app, PluginConfiguration dependencies)
-        //{
-        //    var options = new WsFederationPluginOptions(dependencies)
-        //    {
-        //        RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-        //        EnableFederationMetadata = true
-        //    };
-
-        //    app.UseWsFederationPlugin(options);
-        //}
     }
 }
