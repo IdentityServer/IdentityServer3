@@ -182,12 +182,12 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Config\LocalTestClients.cs" />
-    <Compile Include="Config\LocalTestCoreSettings.cs" />
-    <Compile Include="Config\LocalTestFactory.cs" />
-    <Compile Include="Config\LocalTestRelyingParties.cs" />
-    <Compile Include="Config\LocalTestScopes.cs" />
-    <Compile Include="Config\LocalTestWsFederationSettings.cs" />
+    <Compile Include="Config\Clients.cs" />
+    <Compile Include="Config\Settings.cs" />
+    <Compile Include="Config\Factory.cs" />
+    <Compile Include="Config\RelyingParties.cs" />
+    <Compile Include="Config\Scopes.cs" />
+    <Compile Include="Config\WsFedSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\Startup_AzureWebSites.cs" />
     <Compile Include="Startup\Startup_Minimal.cs" />

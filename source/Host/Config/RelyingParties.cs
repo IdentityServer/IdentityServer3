@@ -4,7 +4,7 @@ using Thinktecture.IdentityServer.WsFederation.Models;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestRelyingParties
+    public class RelyingParties
     {
         public static IEnumerable<RelyingParty> Get()
         {

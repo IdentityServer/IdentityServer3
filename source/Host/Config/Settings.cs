@@ -5,14 +5,14 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestCoreSettings : CoreSettings
+    public class Settings : CoreSettings
     {
         private string _issuerUri;
         private string _siteName;
         private X509Certificate2 _certificate;
         private string _publicHostAddress;
 
-        public LocalTestCoreSettings(string issuerUri, string siteName, string publicHostAddress)
+        public Settings(string issuerUri, string siteName, string publicHostAddress)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
