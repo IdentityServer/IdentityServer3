@@ -22,9 +22,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         
         // mandatory (for authorization code, reference tokens and consent)
         // but with default in memory implementation
+        public Func<IConsentService> ConsentService { get; set; }
         public Func<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
         public Func<ITokenHandleStore> TokenHandleStore { get; set; }
-        public Func<IConsentService> ConsentService { get; set; }
+        public Func<IRefreshTokenStore> RefreshTokenStore { get; set; }
         
         // optional
         public Func<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
@@ -44,6 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (AuthorizationCodeStore == null) Logger.Warn("AuthorizationCodeStore not configured - falling back to InMemory");
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentService == null) Logger.Warn("ConsentService not configured - falling back to InMemory");
+            if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
         }
     }
 }
