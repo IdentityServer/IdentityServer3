@@ -14,7 +14,7 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    var factory = LocalTestFactory.Create(
+                    var factory = Factory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1 (WAWS)",
                         publicHostAddress: "http://idsrv3.azurewebsites.net");

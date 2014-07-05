@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Host
                     // allow cross origin calls
                     coreApp.UseCors(CorsOptions.AllowAll);
 
-                    var factory = LocalTestFactory.Create(
+                    var factory = Factory.Create(
                         issuerUri: "https://idsrv3.com",
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
                         publicHostAddress: "http://localhost:3333/core");

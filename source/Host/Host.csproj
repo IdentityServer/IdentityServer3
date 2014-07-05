@@ -184,7 +184,7 @@
     </Compile>
     <Compile Include="Config\Clients.cs" />
     <Compile Include="Config\Settings.cs" />
-    <Compile Include="Config\LocalTestFactory.cs" />
+    <Compile Include="Config\Factory.cs" />
     <Compile Include="Config\RelyingParties.cs" />
     <Compile Include="Config\Scopes.cs" />
     <Compile Include="Config\WsFedSettings.cs" />

@@ -5,7 +5,7 @@ using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestFactory
+    public class Factory
     {
         public static IdentityServerServiceFactory Create(
                     string issuerUri, string siteName, string publicHostAddress = "")
