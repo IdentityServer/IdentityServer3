@@ -11,7 +11,7 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
     {
         public virtual EndpointSettings MetadataEndpoint
         {
-            get { return new EndpointSettings { Enabled = true }; }
+            get { return new EndpointSettings { IsEnabled = true }; }
         }
     }
 }

@@ -7,11 +7,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class EndpointSettings
     {
-        public EndpointSettings()
+        public static EndpointSettings Disabled
         {
-            Enabled = false;
+            get { return new EndpointSettings { IsEnabled = false }; }
         }
 
-        public bool Enabled { get; set; }
+        public static EndpointSettings Enabled
+        {
+            get { return new EndpointSettings { IsEnabled = true }; }
+        }
+
+        public EndpointSettings()
+        {
+            IsEnabled = false;
+        }
+
+        public bool IsEnabled { get; set; }
     }
 }

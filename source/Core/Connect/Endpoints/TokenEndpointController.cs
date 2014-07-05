@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            if (!_settings.TokenEndpoint.Enabled)
+            if (!_settings.TokenEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

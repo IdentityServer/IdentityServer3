@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start userinfo request");
 
-            if (!_settings.UserInfoEndpoint.Enabled)
+            if (!_settings.UserInfoEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

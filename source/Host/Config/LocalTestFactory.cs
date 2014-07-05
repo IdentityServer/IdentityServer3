@@ -10,14 +10,6 @@ namespace Thinktecture.IdentityServer.Host.Config
         public static IdentityServerServiceFactory Create(
                     string issuerUri, string siteName, string publicHostAddress = "")
         {
-            var settings = new LocalTestCoreSettings(issuerUri, siteName, publicHostAddress);
-            
-            var codeStore = new InMemoryAuthorizationCodeStore();
-            var tokenStore = new InMemoryTokenHandleStore();
-            var consent = new InMemoryConsentService();
-            var scopes = new InMemoryScopeService(LocalTestScopes.Get());
-            var clients = new InMemoryClientService(LocalTestClients.Get());
-
             var users = new InMemoryUser[]
             {
                 new InMemoryUser{Subject = "818727", Username = "alice", Password = "alice", 
@@ -37,15 +29,16 @@ namespace Thinktecture.IdentityServer.Host.Config
                     }
                 },
             };
+
+            var settings = new LocalTestCoreSettings(issuerUri, siteName, publicHostAddress);
+            var scopes = new InMemoryScopeService(LocalTestScopes.Get());
+            var clients = new InMemoryClientService(LocalTestClients.Get());
             var userSvc = new InMemoryUserService(users);
 
             var fact = new IdentityServerServiceFactory
             {
                 UserService = () => userSvc,
-                AuthorizationCodeStore = () => codeStore,
-                TokenHandleStore = () => tokenStore,
                 CoreSettings = () => settings,
-                ConsentService = () => consent,
                 ScopeService = () => scopes,
                 ClientService = () => clients
             };
