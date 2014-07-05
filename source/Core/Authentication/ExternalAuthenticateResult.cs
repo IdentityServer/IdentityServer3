@@ -30,5 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         public string Provider { get; private set; }
+
+        public bool CreatedExternalUser { get; set; }
     }
 }

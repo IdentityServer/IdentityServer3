@@ -197,7 +197,9 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             var user = await userManager.FindAsync(new UserLoginInfo(externalUser.Provider.Name, externalUser.ProviderId));
             if (user == null)
             {
-                return await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
+                var result = await ProcessNewExternalAccountAsync(externalUser.Provider.Name, externalUser.ProviderId, externalUser.Claims);
+                result.CreatedExternalUser = true;
+                return result;
             }
             else
             {
