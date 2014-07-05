@@ -2,7 +2,7 @@
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestWsFederationSettings : WsFederationSettings
+    public class WsFedSettings : WsFederationSettings
     {
     }
 }

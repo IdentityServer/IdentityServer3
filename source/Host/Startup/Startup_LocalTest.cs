@@ -57,8 +57,8 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     UserService = options.Factory.UserService,
                     CoreSettings = options.Factory.CoreSettings,
-                    RelyingPartyService = () => new InMemoryRelyingPartyService(LocalTestRelyingParties.Get()),
-                    WsFederationSettings = () => new LocalTestWsFederationSettings()
+                    RelyingPartyService = () => new InMemoryRelyingPartyService(RelyingParties.Get()),
+                    WsFederationSettings = () => new WsFedSettings()
                 },
             };
 

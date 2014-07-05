@@ -30,9 +30,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                 },
             };
 
-            var settings = new LocalTestCoreSettings(issuerUri, siteName, publicHostAddress);
-            var scopes = new InMemoryScopeService(LocalTestScopes.Get());
-            var clients = new InMemoryClientService(LocalTestClients.Get());
+            var settings = new Settings(issuerUri, siteName, publicHostAddress);
+            var scopes = new InMemoryScopeService(Scopes.Get());
+            var clients = new InMemoryClientService(Clients.Get());
             var userSvc = new InMemoryUserService(users);
 
             var fact = new IdentityServerServiceFactory
