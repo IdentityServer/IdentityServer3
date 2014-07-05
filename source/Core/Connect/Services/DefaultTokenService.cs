@@ -28,6 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     public class DefaultTokenService : ITokenService
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IUserService _users;
         private readonly CoreSettings _settings;
         private readonly IClaimsProvider _claimsProvider;
@@ -111,8 +112,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             return token;
         }
 
-        public async Task<string> CreateRefreshTokenAsync(Client client, Token accessToken)
+        public virtual async Task<string> CreateRefreshTokenAsync(Client client, Token accessToken)
         {
+            Logger.Debug("Creating refresh token");
+
             var refreshToken = new RefreshToken
             {
                 ClientId = client.ClientId,
