@@ -43,5 +43,25 @@ namespace Thinktecture.IdentityServer.Core.Models
         public SubjectTypes SubjectType { get; set; }
         public Uri SectorIdentifierUri { get; set; }
         public ApplicationTypes ApplicationType { get; set; }
+
+        // sensible defaults
+        public Client()
+        {
+            Flow = Flows.Implicit;
+            ScopeRestrictions = new List<string>();
+            
+            // one hour
+            IdentityTokenLifetime = 3600;
+            AccessTokenLifetime = 3600;
+
+            // one day
+            RefreshTokenLifetime = 86400;
+
+            RefreshTokenUsage = TokenUsage.OneTimeOnly;
+            RefreshTokenExpiration = TokenExpiration.Absolute;
+
+            IdentityTokenSigningKeyType = SigningKeyTypes.Default;
+            AccessTokenType = Models.AccessTokenType.JWT;
+        }
     }
 }
