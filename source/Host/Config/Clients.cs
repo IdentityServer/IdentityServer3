@@ -126,11 +126,13 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ScopeRestrictions = new List<string>
                     { 
                         "read",
-                        "write"
+                        "write",
+                        "offline_access"
                     },
 
                     AccessTokenType = AccessTokenType.JWT,
-                    AccessTokenLifetime = 360,
+                    AccessTokenLifetime = 3600,
+                    RefreshTokenLifetime = 86400
                 }
             };
         }
