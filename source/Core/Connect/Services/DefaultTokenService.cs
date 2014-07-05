@@ -32,13 +32,15 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         private readonly CoreSettings _settings;
         private readonly IClaimsProvider _claimsProvider;
         private readonly ITokenHandleStore _tokenHandles;
+        private readonly IRefreshTokenStore _refreshTokens;
 
-        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles)
+        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens)
         {
             _users = users;
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
+            _refreshTokens = refreshTokens;
         }
 
         public virtual async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
@@ -107,6 +109,22 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             };
 
             return token;
+        }
+
+        public async Task<string> CreateRefreshTokenAsync(Client client, Token accessToken)
+        {
+            var refreshToken = new RefreshToken
+            {
+                ClientId = client.ClientId,
+                CreationTime = DateTime.UtcNow,
+                LifeTime = client.RefreshTokenLifetime,
+                AccessToken = accessToken
+            };
+
+            var handle = Guid.NewGuid().ToString("N");
+            await _refreshTokens.StoreAsync(handle, refreshToken);
+
+            return handle;
         }
 
         public virtual async Task<string> CreateSecurityTokenAsync(Token token)

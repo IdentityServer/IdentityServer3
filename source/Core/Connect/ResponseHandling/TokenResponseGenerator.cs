@@ -19,14 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly CoreSettings _settings;
         private readonly ITokenService _tokenService;
         private readonly ITokenHandleStore _tokenHandles;
-        private readonly IRefreshTokenStore _refreshTokens;
 
-        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes, IRefreshTokenStore refreshTokens)
+        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
         {
             _settings = settings;
             _tokenService = tokenService;
             _tokenHandles = tokenHandles;
-            _refreshTokens = refreshTokens;
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
@@ -112,27 +110,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             string refreshToken = "";
             if (request.ValidatedScopes.ContainsOfflineAccessScope)
             {
-                refreshToken = await CreateRefreshTokenAsync(request, accessToken);
+                refreshToken = await _tokenService.CreateRefreshTokenAsync(request.Client, accessToken);
             }
 
             var securityToken = await _tokenService.CreateSecurityTokenAsync(accessToken);
             return Tuple.Create(securityToken, refreshToken);
-        }
-
-        private async Task<string> CreateRefreshTokenAsync(ValidatedTokenRequest request, Token accessToken)
-        {
-            var refreshToken = new RefreshToken
-            {
-                ClientId = request.Client.ClientId,
-                CreationTime = DateTime.UtcNow,
-                LifeTime = request.Client.RefreshTokenLifetime,
-                AccessToken = accessToken
-            };
-
-            var handle = Guid.NewGuid().ToString("N");
-            await _refreshTokens.StoreAsync(handle, refreshToken);
-
-            return handle;
         }
     }
 }

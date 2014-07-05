@@ -16,6 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
     {
         Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null);
         Task<Token> CreateAccessTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request);
+        Task<string> CreateRefreshTokenAsync(Client client, Token accessToken);
 
         Task<string> CreateSecurityTokenAsync(Token token);
     }
