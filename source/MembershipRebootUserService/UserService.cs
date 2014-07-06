@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.MembershipReboot
                 }
             }
 
-            return null;
+            return Task.FromResult<AuthenticateResult>(null);
         }
 
         public virtual async Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, ExternalIdentity externalUser)
