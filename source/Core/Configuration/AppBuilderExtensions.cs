@@ -24,11 +24,10 @@ namespace Owin
         public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
-
+            
             var internalConfig = new InternalConfiguration();
 
-            var settings = options.Factory.CoreSettings();
-            if (settings.DataProtector == null)
+            if (options.DataProtector == null)
             {
                 var provider = app.GetDataProtectionProvider();
                 if (provider == null)
@@ -40,7 +39,7 @@ namespace Owin
             }
             else
             {
-                internalConfig.DataProtector = settings.DataProtector;
+                internalConfig.DataProtector = options.DataProtector;
             }
 
             // thank you Microsoft for the clean syntax

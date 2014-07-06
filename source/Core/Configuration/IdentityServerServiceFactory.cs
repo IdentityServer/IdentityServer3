@@ -4,6 +4,8 @@
  */
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
@@ -14,26 +16,41 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        // keep list of any additional dependencies the 
+        // hosting application might need. these will be
+        // added to the DI container
+        List<Registration> registrations = new List<Registration>();
+        public IEnumerable<Registration> Registrations
+        {
+            get { return registrations; }
+        }
+
+        public void Register<T>(Registration<T> r)
+            where T : class
+        {
+            registrations.Add(r);
+        }
+
         // mandatory (external)
-        public Func<IUserService> UserService { get; set; }
-        public Func<IScopeService> ScopeService { get; set; }
-        public Func<IClientService> ClientService { get; set; }
-        public Func<CoreSettings> CoreSettings { get; set; }
+        public Registration<IUserService> UserService { get; set; }
+        public Registration<IScopeService> ScopeService { get; set; }
+        public Registration<IClientService> ClientService { get; set; }
+        public Registration<CoreSettings> CoreSettings { get; set; }
         
         // mandatory (for authorization code, reference tokens and consent)
         // but with default in memory implementation
-        public Func<IConsentService> ConsentService { get; set; }
-        public Func<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
-        public Func<ITokenHandleStore> TokenHandleStore { get; set; }
-        public Func<IRefreshTokenStore> RefreshTokenStore { get; set; }
+        public Registration<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
+        public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
+        public Registration<IConsentService> ConsentService { get; set; }
+        public Registration<IRefreshTokenStore> RefreshTokenStore { get; set; }
         
         // optional
-        public Func<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
-        public Func<ICustomRequestValidator> CustomRequestValidator { get; set; }
-        public Func<IClaimsProvider> ClaimsProvider { get; set; }
-        public Func<ITokenService> TokenService { get; set; }
-        public Func<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
-        public Func<ICustomTokenValidator> CustomTokenValidator { get; set; }
+        public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
+        public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
+        public Registration<IClaimsProvider> ClaimsProvider { get; set; }
+        public Registration<ITokenService> TokenService { get; set; }
+        public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
+        public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
         public void Validate()
         {

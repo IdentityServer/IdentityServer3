@@ -116,6 +116,7 @@
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Connect\Models\RefreshToken.cs" />
+    <Compile Include="Configuration\Registration.cs" />
     <Compile Include="Connect\Services\IRefreshTokenStore.cs" />
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />

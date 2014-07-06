@@ -43,11 +43,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             get { return string.Empty; }
         }
 
-        public virtual IDataProtector DataProtector
-        {
-            get { return null; }
-        }
-
         public virtual EndpointSettings AuthorizeEndpoint
         {
             get { return EndpointSettings.Enabled; }

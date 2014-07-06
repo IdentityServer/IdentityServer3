@@ -12,6 +12,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         public IdentityServerServiceFactory Factory { get; set; }
         public AuthenticationOptions AuthenticationOptions { get; set; }
+        public virtual IDataProtector DataProtector { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
         public Action<IAppBuilder, IdentityServerOptions> ConfigurePlugins { get; set; }
