@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string IdTokenHint  = "id_token_hint";
             public const string LoginHint    = "login_hint";
             public const string AcrValues    = "acr_values";
+            public const string IdP          = "idp";
         }
 
         public static class TokenRequest
