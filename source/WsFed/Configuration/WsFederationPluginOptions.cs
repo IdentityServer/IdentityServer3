@@ -1,4 +1,5 @@
 ﻿using System;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
@@ -7,6 +8,8 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
         public const string CookieName = "WsFedTracking";
 
         public WsFederationServiceFactory Factory { get; set; }
+        public IDataProtector DataProtector { get; set; }
+
         public string MapPath { get; set; }
         public string LoginPageUrl { get; set; }
         public string LogoutPageUrl { get; set; }

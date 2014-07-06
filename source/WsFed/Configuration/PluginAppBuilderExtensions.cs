@@ -25,9 +25,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // todo hacky!
             internalConfig.LoginPageUrl = options.LoginPageUrl;
 
-            var settings = options.Factory.CoreSettings();
             // todo - need a better solution for data protection
-            if (settings.DataProtector == null)
+            if (options.DataProtector == null)
             {
                 var provider = app.GetDataProtectionProvider();
                 if (provider == null)
@@ -51,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             }
             else
             {
-                internalConfig.DataProtector = settings.DataProtector;
+                internalConfig.DataProtector = options.DataProtector;
             }
 
             app.Map(options.MapPath, wsfedApp =>

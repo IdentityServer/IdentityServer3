@@ -33,23 +33,23 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         // mandatory (external)
         public Registration<IUserService> UserService { get; set; }
-        public Func<IScopeService> ScopeService { get; set; }
-        public Func<IClientService> ClientService { get; set; }
-        public Func<CoreSettings> CoreSettings { get; set; }
+        public Registration<IScopeService> ScopeService { get; set; }
+        public Registration<IClientService> ClientService { get; set; }
+        public Registration<CoreSettings> CoreSettings { get; set; }
         
         // mandatory (for authorization code, reference tokens and consent)
         // but with default in memory implementation
-        public Func<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
-        public Func<ITokenHandleStore> TokenHandleStore { get; set; }
-        public Func<IConsentService> ConsentService { get; set; }
+        public Registration<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
+        public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
+        public Registration<IConsentService> ConsentService { get; set; }
         
         // optional
-        public Func<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
-        public Func<ICustomRequestValidator> CustomRequestValidator { get; set; }
-        public Func<IClaimsProvider> ClaimsProvider { get; set; }
-        public Func<ITokenService> TokenService { get; set; }
-        public Func<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
-        public Func<ICustomTokenValidator> CustomTokenValidator { get; set; }
+        public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
+        public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
+        public Registration<IClaimsProvider> ClaimsProvider { get; set; }
+        public Registration<ITokenService> TokenService { get; set; }
+        public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
+        public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
         public void Validate()
         {

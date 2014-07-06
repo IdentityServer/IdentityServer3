@@ -31,23 +31,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             // mandatory from factory
             builder.Register(fact.UserService);
-            //if (fact.UserService.Type != null)
-            //{
-            //    builder.RegisterType(fact.UserService.Type).As<IUserService>();
-            //}
-            //else
-            //{
-            //    builder.Register(ctx => fact.UserService.TypeFactory()).As<IUserService>();
-            //}
-            
-            builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
-            builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
-            builder.Register(ctx => fact.ClientService()).As<IClientService>();
+            builder.Register(fact.ScopeService);
+            builder.Register(fact.ClientService);
+            builder.Register(fact.CoreSettings);
             
             // optional from factory
             if (fact.AuthorizationCodeStore != null)
             {
-                builder.Register(ctx => fact.AuthorizationCodeStore()).As<IAuthorizationCodeStore>();
+                builder.Register(fact.AuthorizationCodeStore);
             }
             else
             {
@@ -57,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.TokenHandleStore != null)
             {
-                builder.Register(ctx => fact.TokenHandleStore()).As<ITokenHandleStore>();
+                builder.Register(fact.TokenHandleStore);
             }
             else
             {
@@ -67,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.ConsentService != null)
             {
-                builder.Register(ctx => fact.ConsentService()).As<IConsentService>();
+                builder.Register(fact.ConsentService);
             }
             else
             {
@@ -77,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.ClaimsProvider != null)
             {
-                builder.Register(ctx => fact.ClaimsProvider()).As<IClaimsProvider>();
+                builder.Register(fact.ClaimsProvider);
             }
             else
             {
@@ -86,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.TokenService != null)
             {
-                builder.Register(ctx => fact.TokenService()).As<ITokenService>();
+                builder.Register(fact.TokenService);
             }
             else
             {
@@ -95,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.CustomRequestValidator != null)
             {
-                builder.Register(ctx => fact.CustomRequestValidator()).As<ICustomRequestValidator>();
+                builder.Register(fact.CustomRequestValidator);
             }
             else
             {
@@ -104,7 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.AssertionGrantValidator != null)
             {
-                builder.Register(ctx => fact.AssertionGrantValidator()).As<IAssertionGrantValidator>();
+                builder.Register(fact.AssertionGrantValidator);
             }
             else
             {
@@ -113,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.ExternalClaimsFilter != null)
             {
-                builder.Register(ctx => fact.ExternalClaimsFilter()).As<IExternalClaimsFilter>();
+                builder.Register(fact.ExternalClaimsFilter);
             }
             else
             {
@@ -122,7 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (fact.CustomTokenValidator != null)
             {
-                builder.Register(ctx => fact.CustomTokenValidator()).As<ICustomTokenValidator>();
+                builder.Register(fact.CustomTokenValidator);
             }
             else
             {
