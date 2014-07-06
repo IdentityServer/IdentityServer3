@@ -4,6 +4,8 @@
  */
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
@@ -14,8 +16,23 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        // keep list of any additional dependencies the 
+        // hosting application might need. these will be
+        // added to the DI container
+        List<Registration> registrations = new List<Registration>();
+        public IEnumerable<Registration> Registrations
+        {
+            get { return registrations; }
+        }
+
+        public void Register<T>(Registration<T> r)
+            where T : class
+        {
+            registrations.Add(r);
+        }
+
         // mandatory (external)
-        public Registration UserService { get; set; }
+        public Registration<IUserService> UserService { get; set; }
         public Func<IScopeService> ScopeService { get; set; }
         public Func<IClientService> ClientService { get; set; }
         public Func<CoreSettings> CoreSettings { get; set; }

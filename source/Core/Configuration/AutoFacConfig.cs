@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
-            builder.Register<IUserService>(fact.UserService);
+            builder.Register(fact.UserService);
             //if (fact.UserService.Type != null)
             //{
             //    builder.RegisterType(fact.UserService.Type).As<IUserService>();
@@ -151,18 +151,24 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // add any additional dependencies from hosting application
+            foreach(var registration in fact.Registrations)
+            {
+                builder.Register(registration);
+            }
+
             return builder.Build();
         }
 
-        private static void Register<T>(this ContainerBuilder builder, Registration registration)
+        private static void Register(this ContainerBuilder builder, Registration registration)
         {
-            if (registration.Type != null)
+            if (registration.ImplementationType != null)
             {
-                builder.RegisterType(registration.Type).As<T>();
+                builder.RegisterType(registration.ImplementationType).As(registration.InterfaceType);
             }
-            else if (registration.TypeFactory != null)
+            else if (registration.ImplementationFactory != null)
             {
-                builder.Register(ctx => registration.TypeFactory()).As<T>();
+                builder.Register(ctx => registration.ImplementationFactory()).As(registration.InterfaceType);
             }
             else
             {
