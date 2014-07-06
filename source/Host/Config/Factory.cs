@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
             var fact = new IdentityServerServiceFactory
             {
-                UserService = () => userSvc,
+                UserService = Registration.RegisterFactory(() => userSvc),
                 CoreSettings = () => settings,
                 ScopeService = () => scopes,
                 ClientService = () => clients

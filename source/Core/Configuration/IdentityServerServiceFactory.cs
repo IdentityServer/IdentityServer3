@@ -15,7 +15,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         // mandatory (external)
-        public Func<IUserService> UserService { get; set; }
+        public Registration UserService { get; set; }
         public Func<IScopeService> ScopeService { get; set; }
         public Func<IClientService> ClientService { get; set; }
         public Func<CoreSettings> CoreSettings { get; set; }

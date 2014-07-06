@@ -30,8 +30,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
+            if (fact.UserService.Type != null)
+            {
+                builder.RegisterType(fact.UserService.Type).As<IUserService>();
+            }
+            else
+            {
+                builder.Register(ctx => fact.UserService.TypeFactory()).As<IUserService>();
+            }
+            
             builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
-            builder.Register(ctx => fact.UserService()).As<IUserService>();
             builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
             builder.Register(ctx => fact.ClientService()).As<IClientService>();
             
