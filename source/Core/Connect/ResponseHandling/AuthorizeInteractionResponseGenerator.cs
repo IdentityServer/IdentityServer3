@@ -43,6 +43,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _signIn.UILocales = request.UiLocales;
             }
 
+            // pass through IdP to signin service
+            if (request.IdP.IsPresent())
+            {
+                _signIn.IdP = request.IdP;
+            }
+
             if (request.PromptMode == Constants.PromptModes.Login)
             {
                 // remove prompt so when we redirect back in from login page

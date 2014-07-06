@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string DisplayMode { get; set; }
         public string PromptMode { get; set; }
         public int? MaxAge { get; set; }
-
+        public string IdP { get; set; }
         public bool AccessTokenRequested
         {
             get
