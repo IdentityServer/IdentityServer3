@@ -30,14 +30,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
-            if (fact.UserService.Type != null)
-            {
-                builder.RegisterType(fact.UserService.Type).As<IUserService>();
-            }
-            else
-            {
-                builder.Register(ctx => fact.UserService.TypeFactory()).As<IUserService>();
-            }
+            builder.Register<IUserService>(fact.UserService);
+            //if (fact.UserService.Type != null)
+            //{
+            //    builder.RegisterType(fact.UserService.Type).As<IUserService>();
+            //}
+            //else
+            //{
+            //    builder.Register(ctx => fact.UserService.TypeFactory()).As<IUserService>();
+            //}
             
             builder.Register(ctx => fact.CoreSettings()).As<CoreSettings>();
             builder.Register(ctx => fact.ScopeService()).As<IScopeService>();
@@ -151,6 +152,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             return builder.Build();
+        }
+
+        private static void Register<T>(this ContainerBuilder builder, Registration registration)
+        {
+            if (registration.Type != null)
+            {
+                builder.RegisterType(registration.Type).As<T>();
+            }
+            else if (registration.TypeFactory != null)
+            {
+                builder.Register(ctx => registration.TypeFactory()).As<T>();
+            }
+            else
+            {
+                // todo: error
+            }
         }
     }
 }
