@@ -44,11 +44,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                 ClientService = Registration.RegisterFactory<IClientService>(() => clients)
             };
 
-            //fact.Register(Registration.RegisterType<IFoo>(typeof(Foo)));
-            //fact.Register(Registration.RegisterFactory<IBar>(() => new Bar()));
-            //var q = new Quux();
-            //fact.Register(Registration.RegisterFactory<Quux>(() => q));
-
             return fact;
         }
     }
