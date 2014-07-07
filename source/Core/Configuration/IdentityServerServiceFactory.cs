@@ -48,6 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }
         public Registration<ITokenService> TokenService { get; set; }
+        public Registration<ITokenSigningService> TokenSigningService { get; set; }
         public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
         public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
