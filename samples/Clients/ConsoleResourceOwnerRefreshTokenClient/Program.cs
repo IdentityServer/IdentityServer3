@@ -10,23 +10,35 @@ namespace ConsoleResourceOwnerClient
 {
     class Program
     {
+        static OAuth2Client _oauth2;
+
         static void Main(string[] args)
         {
+            _oauth2 = new OAuth2Client(
+                new Uri(Constants.TokenEndpoint),
+                "roclient",
+                "secret");
+
             var response = RequestToken();
             ShowResponse(response);
 
             Console.ReadLine();
+
+            response = RefreshToken(response.RefreshToken);
+            ShowResponse(response);
+
             CallService(response.AccessToken);
         }
 
         static TokenResponse RequestToken()
         {
-            var client = new OAuth2Client(
-                new Uri(Constants.TokenEndpoint),
-                "roclient",
-                "secret");
+            return _oauth2.RequestResourceOwnerPasswordAsync
+                ("bob", "bob", "read write offline_access").Result;
+        }
 
-            return client.RequestResourceOwnerPasswordAsync("bob", "bob", "read write offline_access").Result;
+        private static TokenResponse RefreshToken(string refreshToken)
+        {
+            return _oauth2.RequestRefreshTokenAsync(refreshToken).Result;
         }
 
         static void CallService(string token)
