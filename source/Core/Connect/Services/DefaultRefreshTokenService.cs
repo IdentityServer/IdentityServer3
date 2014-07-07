@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -24,12 +21,22 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         {
             Logger.Debug("Creating refresh token");
 
+            int lifetime;
+            if (client.RefreshTokenExpiration == TokenExpiration.Absolute)
+            {
+                lifetime = client.AbsoluteRefreshTokenLifetime;
+            }
+            else
+            {
+                lifetime = client.SlidingRefreshTokenLifetime;
+            }
+
             var refreshToken = new RefreshToken
             {
                 Handle = Guid.NewGuid().ToString("N"),
                 ClientId = client.ClientId,
                 CreationTime = DateTime.UtcNow,
-                LifeTime = client.RefreshTokenLifetime,
+                LifeTime = lifetime,
                 AccessToken = accessToken
             };
 
@@ -51,7 +58,18 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (client.RefreshTokenExpiration == TokenExpiration.Sliding)
             {
-                refreshToken.LifeTime = refreshToken.CreationTime.GetLifetimeInSeconds() + client.RefreshTokenLifetime;
+                // todo: make sure we don't exceed absolute exp
+                // cap it at absolute exp
+
+                var currentLifetime = refreshToken.CreationTime.GetLifetimeInSeconds();
+                var newLifetime = currentLifetime + client.SlidingRefreshTokenLifetime;
+    
+                if (newLifetime > client.AbsoluteRefreshTokenLifetime)
+                {
+                    newLifetime = client.AbsoluteRefreshTokenLifetime;
+                }
+
+                refreshToken.LifeTime = newLifetime;
                 needsUpdate = true;
             }
 

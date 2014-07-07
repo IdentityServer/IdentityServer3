@@ -132,7 +132,8 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     AccessTokenType = AccessTokenType.JWT,
                     AccessTokenLifetime = 3600,
-                    RefreshTokenLifetime = 86400,
+                    AbsoluteRefreshTokenLifetime = 86400,
+                    SlidingRefreshTokenLifetime = 43200,
 
                     RefreshTokenUsage = TokenUsage.ReUse,
                     RefreshTokenExpiration = TokenExpiration.Absolute

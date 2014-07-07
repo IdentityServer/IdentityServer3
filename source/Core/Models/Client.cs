@@ -31,9 +31,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         public int AuthorizationCodeLifetime { get; set; }
 
         // refresh token specific
-        public int RefreshTokenLifetime { get; set; }
+        public int AbsoluteRefreshTokenLifetime { get; set; }
+        public int SlidingRefreshTokenLifetime { get; set; }
         public TokenUsage RefreshTokenUsage { get; set; }
         public TokenExpiration RefreshTokenExpiration { get; set; }
+        public bool RefreshClaimsOnRefreshToken { get; set; }
 
         public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
         public AccessTokenType AccessTokenType { get; set; }
@@ -55,7 +57,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             AccessTokenLifetime = 3600;
 
             // one day
-            RefreshTokenLifetime = 86400;
+            AbsoluteRefreshTokenLifetime = 86400;
+
+            // 12 hours
+            SlidingRefreshTokenLifetime = 43200;
 
             RefreshTokenUsage = TokenUsage.OneTimeOnly;
             RefreshTokenExpiration = TokenExpiration.Absolute;
