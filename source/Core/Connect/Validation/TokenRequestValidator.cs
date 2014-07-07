@@ -317,6 +317,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            _validatedRequest.RefreshToken = refreshToken;
+
             Logger.Info("Successful validation of refresh token request");
             return Valid();
         }
