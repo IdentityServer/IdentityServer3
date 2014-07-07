@@ -101,6 +101,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
             logger.Log(LogLevel.Warn, () => string.Format(CultureInfo.InvariantCulture, message), ex);
         }
 
+        [DebuggerStepThrough]
         private static void GuardAgainstNullLogger(ILog logger)
         {
             if(logger == null)
