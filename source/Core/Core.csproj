@@ -123,7 +123,7 @@
     <Compile Include="Configuration\FuncDataProtector.cs" />
     <Compile Include="Configuration\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
-    <Compile Include="Configuration\IdentityServerCoreOptions.cs" />
+    <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Configuration\InternalConfiguration.cs" />
     <Compile Include="Hosting\KatanaDependencyResolver.cs" />
