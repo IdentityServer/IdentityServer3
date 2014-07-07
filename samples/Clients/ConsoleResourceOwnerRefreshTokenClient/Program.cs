@@ -27,6 +27,7 @@ namespace ConsoleResourceOwnerClient
             response = RefreshToken(response.RefreshToken);
             ShowResponse(response);
 
+            Console.ReadLine();
             CallService(response.AccessToken);
         }
 
