@@ -33,13 +33,16 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
         private readonly CoreSettings _settings;
         private readonly IClaimsProvider _claimsProvider;
         private readonly ITokenHandleStore _tokenHandles;
+        private readonly ITokenSigningService _signingService;
 
-        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens)
+
+        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
         {
             _users = users;
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
+            _signingService = signingService;
         }
 
         public virtual async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
@@ -118,9 +121,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
                 {
                     Logger.Debug("Creating JWT access token");
 
-                    return CreateJsonWebToken(
-                        token,
-                        new X509SigningCredentials(_settings.SigningCertificate));
+                    return await _signingService.SignTokenAsync(token);
                 }
                 else
                 {
@@ -137,33 +138,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
             {
                 Logger.Debug("Creating JWT identity token");
 
-                SigningCredentials credentials;
-                if (token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-                {
-                    credentials = new HmacSigningCredentials(token.Client.ClientSecret);
-                }
-                else
-                {
-                    credentials = new X509SigningCredentials(_settings.SigningCertificate);
-                }
-
-                return CreateJsonWebToken(token, credentials);
+                return await _signingService.SignTokenAsync(token);
             }
 
             throw new InvalidOperationException("Invalid token type.");
-        }
-
-        protected virtual string CreateJsonWebToken(Token token, SigningCredentials credentials)
-        {
-            var jwt = new JwtSecurityToken(
-                token.Issuer,
-                token.Audience,
-                token.Claims,
-                new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddSeconds(token.Lifetime)),
-                credentials);
-
-            var handler = new JwtSecurityTokenHandler();
-            return handler.WriteToken(jwt);
         }
 
         protected virtual string HashAccessToken(string accessTokenToHash)

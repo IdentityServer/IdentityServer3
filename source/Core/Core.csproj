@@ -120,6 +120,8 @@
     <Compile Include="Connect\Services\DefaultRefreshTokenService.cs" />
     <Compile Include="Connect\Services\IRefreshTokenService.cs" />
     <Compile Include="Connect\Services\IRefreshTokenStore.cs" />
+    <Compile Include="Connect\Services\DefaultTokenSigningService.cs" />
+    <Compile Include="Connect\Services\ITokenSigningService.cs" />
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\CoreSettings.cs" />
