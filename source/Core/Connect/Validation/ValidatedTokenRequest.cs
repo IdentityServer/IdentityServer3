@@ -21,10 +21,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public Client Client { get; set; }
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }
-        public RefreshToken RefreshToken { get; set; }
         public IEnumerable<string> Scopes { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
         public string UserName { get; set; }
         public string Assertion { get; set; }
+
+        public RefreshToken RefreshToken { get; set; }
+        public string RefreshTokenHandle { get; set; }
     }
 }

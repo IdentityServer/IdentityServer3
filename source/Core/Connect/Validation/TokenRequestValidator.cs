@@ -285,6 +285,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
+            _validatedRequest.RefreshTokenHandle = refreshTokenHandle;
+
             /////////////////////////////////////////////
             // check if refresh token is valid
             /////////////////////////////////////////////

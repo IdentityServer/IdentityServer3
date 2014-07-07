@@ -9,6 +9,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -19,11 +20,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly CoreSettings _settings;
         private readonly ITokenService _tokenService;
         private readonly ITokenHandleStore _tokenHandles;
+        private readonly IRefreshTokenService _refreshTokenService;
 
-        public TokenResponseGenerator(ITokenService tokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
+        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
         {
             _settings = settings;
             _tokenService = tokenService;
+            _refreshTokenService = refreshTokenService;
             _tokenHandles = tokenHandles;
         }
 
@@ -40,6 +43,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
                      request.Assertion.IsPresent())
             {
                 return await ProcessTokenRequestAsync(request);
+            }
+            else if (request.GrantType == Constants.GrantTypes.RefreshToken)
+            {
+                return await ProcessRefreshTokenRequestAsync(request);
             }
 
             throw new InvalidOperationException("Unknown grant type.");
@@ -95,6 +102,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return response;
         }
 
+        private async Task<TokenResponse> ProcessRefreshTokenRequestAsync(ValidatedTokenRequest request)
+        {
+            var oldAccessToken = request.RefreshToken.AccessToken;
+            oldAccessToken.CreationTime = DateTime.UtcNow;
+            oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
+
+            var newAccessToken = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+            var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshToken, request.Client);
+
+            return new TokenResponse
+                {
+                    AccessToken = newAccessToken,
+                    AccessTokenLifetime = request.Client.AccessTokenLifetime,
+                    RefreshToken = handle
+                };
+        }
+
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
@@ -110,7 +134,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             string refreshToken = "";
             if (request.ValidatedScopes.ContainsOfflineAccessScope)
             {
-                refreshToken = await _tokenService.CreateRefreshTokenAsync(request.Client, accessToken);
+                refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(accessToken, request.Client);
             }
 
             var securityToken = await _tokenService.CreateSecurityTokenAsync(accessToken);

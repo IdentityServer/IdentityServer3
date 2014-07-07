@@ -94,6 +94,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultTokenService>().As<ITokenService>();
             }
 
+            if (fact.RefreshTokenService != null)
+            {
+                builder.Register(fact.RefreshTokenService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultRefreshTokenService>().As<IRefreshTokenService>();
+            }
+
             if (fact.CustomRequestValidator != null)
             {
                 builder.Register(fact.CustomRequestValidator);
