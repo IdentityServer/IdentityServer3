@@ -26,9 +26,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             };
         }
 
-        internal abstract Type InterfaceType { get; }
-        internal abstract Type ImplementationType { get; }
-        internal abstract Func<object> ImplementationFactory { get; }
+        public abstract Type InterfaceType { get; }
+        public abstract Type ImplementationType { get; }
+        public abstract Func<object> ImplementationFactory { get; }
     }
 
     public class Registration<T> : Registration
@@ -37,17 +37,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Type Type { get; set; }
         public Func<T> TypeFactory { get; set; }
 
-        internal override Type InterfaceType
+        public override Type InterfaceType
         {
             get { return typeof(T); }
         }
 
-        internal override Type ImplementationType
+        public override Type ImplementationType
         {
             get { return Type; }
         }
 
-        internal override Func<object> ImplementationFactory
+        public override Func<object> ImplementationFactory
         {
             get { return TypeFactory; }
         }

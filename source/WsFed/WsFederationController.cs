@@ -26,22 +26,24 @@ namespace Thinktecture.IdentityServer.WsFederation
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly CoreSettings _settings;
-        private readonly WsFederationPluginOptions _wsfedOptions;
         private readonly SignInValidator _validator;
         private readonly SignInResponseGenerator _signInResponseGenerator;
         private readonly MetadataResponseGenerator _metadataResponseGenerator;
         private readonly ITrackingCookieService _cookies;
         private readonly InternalConfiguration _internalConfig;
+        private readonly WsFederationSettings _wsFedSettings;
+        private readonly WsFederationPluginOptions _wsFedOptions;
 
-        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationPluginOptions wsFedOptions)
+        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationSettings wsFedSettings, WsFederationPluginOptions wsFedOptions)
         {
             _settings = settings;
             _internalConfig = internalConfig;
-            _wsfedOptions = wsFedOptions;
+            _wsFedSettings = wsFedSettings;
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
             _metadataResponseGenerator = metadataResponseGenerator;
             _cookies = cookies;
+            _wsFedOptions = wsFedOptions;
         }
 
         [Route("")]
@@ -66,7 +68,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                     Logger.Info("WsFederation signout request");
 
                     // todo
-                    return Redirect(_wsfedOptions.LogoutPageUrl);
+                    return Redirect(_wsFedOptions.LogoutPageUrl);
                 }
             }
 
@@ -88,7 +90,7 @@ namespace Thinktecture.IdentityServer.WsFederation
         {
             Logger.Info("WS-Federation metadata request");
 
-            if (_wsfedOptions.Factory.WsFederationSettings().MetadataEndpoint.IsEnabled == false)
+            if (_wsFedSettings.MetadataEndpoint.IsEnabled == false)
             {
                 Logger.Warn("Endpoint is disabled. Aborting.");
                 return NotFound();

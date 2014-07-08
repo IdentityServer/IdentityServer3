@@ -28,9 +28,16 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             var builder = new ContainerBuilder();
 
             // mandatory from factory
-            builder.Register(ctx => factory.CoreSettings()).As<CoreSettings>();
-            builder.Register(ctx => factory.UserService()).As<IUserService>();
-            builder.Register(ctx => factory.RelyingPartyService()).As<IRelyingPartyService>();
+            builder.Register(factory.CoreSettings);
+            builder.Register(factory.UserService);
+            builder.Register(factory.RelyingPartyService);
+            builder.Register(factory.WsFederationSettings);
+
+            builder.RegisterInstance(options);
+
+            //builder.Register(ctx => factory.CoreSettings()).As<CoreSettings>();
+            //builder.Register(ctx => factory.UserService()).As<IUserService>();
+            //builder.Register(ctx => factory.RelyingPartyService()).As<IRelyingPartyService>();
             
             // validators
             builder.RegisterType<SignInValidator>().AsSelf();
@@ -48,6 +55,22 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             builder.RegisterApiControllers(typeof(WsFederationController).Assembly);
 
             return builder.Build();
+        }
+
+        private static void Register(this ContainerBuilder builder, Registration registration)
+        {
+            if (registration.ImplementationType != null)
+            {
+                builder.RegisterType(registration.ImplementationType).As(registration.InterfaceType);
+            }
+            else if (registration.ImplementationFactory != null)
+            {
+                builder.Register(ctx => registration.ImplementationFactory()).As(registration.InterfaceType);
+            }
+            else
+            {
+                // todo: error
+            }
         }
     }
 }

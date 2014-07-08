@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Host
                     {
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        //ConfigurePlugins = ConfigurePlugins
+                        ConfigurePlugins = ConfigurePlugins
                     };
 
                     coreApp.UseIdentityServer(idsrvOptions);
@@ -46,25 +46,25 @@ namespace Thinktecture.IdentityServer.Host
                 });
         }
 
-        //private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerOptions options)
-        //{
-        //    var wsfedOptions = new WsFederationPluginOptions
-        //    {
-        //        // todo - also signoutcleanup is broken right now
-        //        LoginPageUrl = "http://localhost:3333/core/login",
-        //        LogoutPageUrl = "http://localhost:3333/core/connect/logout",
+        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerOptions options)
+        {
+            var wsFedOptions = new WsFederationPluginOptions
+            {
+                // todo - also signoutcleanup is broken right now
+                LoginPageUrl = "http://localhost:3333/core/login",
+                LogoutPageUrl = "http://localhost:3333/core/connect/logout",
 
-        //        Factory = new WsFederationServiceFactory
-        //        {
-        //            UserService = options.Factory.UserService,
-        //            CoreSettings = options.Factory.CoreSettings,
-        //            RelyingPartyService = () => new InMemoryRelyingPartyService(RelyingParties.Get()),
-        //            WsFederationSettings = () => new WsFedSettings()
-        //        },
-        //    };
+                Factory = new WsFederationServiceFactory
+                {
+                    UserService = options.Factory.UserService,
+                    CoreSettings = options.Factory.CoreSettings,
+                    RelyingPartyService = Registration.RegisterFactory<IRelyingPartyService>(() => new InMemoryRelyingPartyService(RelyingParties.Get())),
+                    WsFederationSettings = Registration.RegisterFactory<WsFederationSettings>(() => new WsFedSettings())
+                },
+            };
 
-        //    pluginApp.UseWsFederationPlugin(wsfedOptions);
-        //}
+            pluginApp.UseWsFederationPlugin(wsFedOptions);
+        }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
