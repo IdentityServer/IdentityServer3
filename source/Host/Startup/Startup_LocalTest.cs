@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Host.Config;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.Services;
@@ -30,8 +31,8 @@ namespace Thinktecture.IdentityServer.Host
                         siteName: "Thinktecture IdentityServer v3 - preview 1",
                         publicHostAddress: "http://localhost:3333/core");
 
-                    //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
-                    //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
+                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
+                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
 
                     var idsrvOptions = new IdentityServerOptions
                     {

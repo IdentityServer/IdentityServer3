@@ -189,7 +189,6 @@
     <Compile Include="Config\Scopes.cs" />
     <Compile Include="Config\WsFedSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup\Startup_AzureWebSites.cs" />
     <Compile Include="Startup\Startup_Minimal.cs" />
     <Compile Include="Startup\Startup_LocalTest.cs" />
   </ItemGroup>
@@ -215,9 +214,7 @@
       <Name>WsFederation</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureWebSites|AnyCPU'">
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>

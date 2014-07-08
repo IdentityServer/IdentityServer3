@@ -3,9 +3,9 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Host.Config;
 
-[assembly: OwinStartup("Minimal", typeof(Thinktecture.IdentityServer.Host.Sample.Startup_Minimal))]
+[assembly: OwinStartup("Minimal", typeof(Thinktecture.IdentityServer.Host.Startup_Minimal))]
 
-namespace Thinktecture.IdentityServer.Host.Sample
+namespace Thinktecture.IdentityServer.Host
 {
     public class Startup_Minimal
     {
