@@ -339,3 +339,9 @@ ngModel:fe,ngList:he,ngChange:ge,required:Oc,ngRequired:Oc,ngValue:je}).directiv
 
 })();
 
+(function () {
+    var json = document.getElementById("layoutModelJson").textContent;
+    var model = JSON.parse(json);
+    angular.module("app").constant("LayoutModel", model);
+})();
+

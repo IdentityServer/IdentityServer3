@@ -26,9 +26,9 @@
         <ng-include src="'{rootUrl}/' + layout.pageUrl"></ng-include>
     </div>
 
-    <script src="{rootUrl}/assets/scripts.js"></script>
-    <script>
-        angular.module("app").constant("LayoutModel", {layoutModel});
+    <script id="layoutModelJson" type="application/json">
+        {layoutModel}
     </script>
+    <script src="{rootUrl}/assets/scripts.js"></script>
 </body>
 </html>

@@ -117,3 +117,9 @@
     });
 
 })();
+
+(function () {
+    var json = document.getElementById("layoutModelJson").textContent;
+    var model = JSON.parse(json);
+    angular.module("app").constant("LayoutModel", model);
+})();
