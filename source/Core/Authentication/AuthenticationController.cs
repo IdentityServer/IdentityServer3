@@ -3,6 +3,7 @@
  * see license
  */
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,22 +46,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpGet]
         public IHttpActionResult Login([FromUri] string message = null)
         {
-            Logger.Info("Authentication process started");
-            Logger.Debug("[AuthenticationController.Login] called");
+            Logger.Info("Login page requested");
 
             if (message != null)
             {
-                Logger.Debug("[AuthenticationController.LoginLocal] non-null message");
-                
                 var signIn = SaveLoginRequestMessage(message);
+                Logger.Debug("SignInMessage passed to login: " + JsonConvert.SerializeObject(signIn, Formatting.Indented));
+
                 if (signIn.IdP.IsPresent())
                 {
+                    Logger.Info("Identity provider requested, redirecting to: " + signIn.IdP);
                     return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider=signIn.IdP }));
                 }
             }
             else
             {
-                Logger.Debug("[AuthenticationController.LoginLocal] null message");
+                Logger.Debug("No SignInMessage passed to login; verifying message in cookie");
                 VerifyLoginRequestMessage();
             }
 
@@ -71,30 +72,30 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         [HttpPost]
         public async Task<IHttpActionResult> LoginLocal(LoginCredentials model)
         {
-            Logger.Debug("[AuthenticationController.LoginLocal] called");
+            Logger.Info("Login page submitted");
 
             if (model == null)
             {
-                Logger.InfoFormat("[AuthenticationController.LoginLocal] no model");
+                Logger.Warn("no data submitted");
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
             if (!ModelState.IsValid)
             {
-                Logger.Warn("[AuthenticationController.LoginLocal] model not valid");
+                Logger.Warn("validation error: username or password missing");
                 return RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
             var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password);
             if (authResult == null)
             {
-                Logger.Info("[AuthenticationController.LoginLocal] authenticate returned null");
+                Logger.Warn("user service indicated incorrect username or password for username: " + model.Username);
                 return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
 
             if (authResult.IsError)
             {
-                Logger.Info("[AuthenticationController.LoginLocal] authenticate returned an error message");
+                Logger.Warn("user service returned an error message: " + authResult.ErrorMessage);
                 return RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
@@ -279,8 +280,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             string identityProvider,
             long authTime = 0)
         {
-            Logger.Debug("[AuthenticationController.SignInAndRedirect] called");
-
             if (authResult == null) throw new ArgumentNullException("authResult");
             if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
             if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
@@ -321,12 +320,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (authResult.IsPartialSignIn)
             {
-                Logger.Info("[AuthenticationController.SignInAndRedirect] partial login requested, redirecting to requested url");
+                Logger.Info("partial signin requested -- name: " + authResult.Name + ", subject: " + authResult.Subject);
+                Logger.Info("redirecting to " + authResult.PartialSignInRedirectPath.Value);
 
                 var uri = new Uri(ctx.Request.Uri, authResult.PartialSignInRedirectPath.Value);
                 return Redirect(uri);
             }
-            Logger.Info("[AuthenticationController.SignInAndRedirect] normal login requested, redirecting back to authorization");
+
+            Logger.Info("normal signin requested -- name: " + authResult.Name + ", subject: " + authResult.Subject);
+            Logger.Info("redirecting back to authorization endpoint");
 
             // TODO -- manage this state better if we're doing redirect to custom page
             // would rather the redirect URL from request message put into cookie
@@ -384,8 +386,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private SignInMessage SaveLoginRequestMessage(string message)
         {
-            Logger.Debug("[AuthenticationController.SaveLoginRequestMessage] called");
-
             var signInMessage = SignInMessage.Unprotect(
                 message,
                 _internalConfiguration.DataProtector);
@@ -425,8 +425,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private void VerifyLoginRequestMessage()
         {
-            Logger.Debug("[AuthenticationController.VerifyLoginRequestMessage] called");
-
             var ctx = Request.GetOwinContext();
             var message = ctx.Request.Cookies[LoginRequestMessageCookieName];
 
