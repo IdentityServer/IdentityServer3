@@ -23,14 +23,22 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public Flows Flow { get; set; }
         public List<Uri> RedirectUris { get; set; }
+        public List<string> ScopeRestrictions { get; set; }
         
         // in seconds
         public int IdentityTokenLifetime { get; set; }
         public int AccessTokenLifetime { get; set; }
-        public int RefreshTokenLifetime { get; set; }
         public int AuthorizationCodeLifetime { get; set; }
 
-        public List<string> ScopeRestrictions { get; set; }
+        // refresh token specific
+        public int AbsoluteRefreshTokenLifetime { get; set; }
+        public int SlidingRefreshTokenLifetime { get; set; }
+        public TokenUsage RefreshTokenUsage { get; set; }
+        public TokenExpiration RefreshTokenExpiration { get; set; }
+        
+        // todo
+        //public bool RefreshClaimsOnRefreshToken { get; set; }
+
         public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
         public AccessTokenType AccessTokenType { get; set; }
 
@@ -39,5 +47,31 @@ namespace Thinktecture.IdentityServer.Core.Models
         public SubjectTypes SubjectType { get; set; }
         public Uri SectorIdentifierUri { get; set; }
         public ApplicationTypes ApplicationType { get; set; }
+
+        // sensible defaults
+        public Client()
+        {
+            Flow = Flows.Implicit;
+            ScopeRestrictions = new List<string>();
+            
+            // 5 minutes
+            AuthorizationCodeLifetime = 300;
+
+            // one hour
+            IdentityTokenLifetime = 3600;
+            AccessTokenLifetime = 3600;
+
+            // 30 days
+            AbsoluteRefreshTokenLifetime = 2592000;
+
+            // 3 days
+            SlidingRefreshTokenLifetime = 259200;
+
+            RefreshTokenUsage = TokenUsage.OneTimeOnly;
+            RefreshTokenExpiration = TokenExpiration.Absolute;
+
+            IdentityTokenSigningKeyType = SigningKeyTypes.Default;
+            AccessTokenType = Models.AccessTokenType.JWT;
+        }
     }
 }

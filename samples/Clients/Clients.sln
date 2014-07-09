@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdSrvAccessTokenTokenValida
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC OWIN WS-Federation", "MvcOwinWsFederation\MVC OWIN WS-Federation.csproj", "{A40486A5-0BEB-4CB0-9390-4A0D998CE3E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console Resource Owner Flow with Refresh Token", "ConsoleResourceOwnerRefreshTokenClient\Console Resource Owner Flow with Refresh Token.csproj", "{9BF9BAF9-75F3-47BA-9B47-A95023764D82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{A40486A5-0BEB-4CB0-9390-4A0D998CE3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A40486A5-0BEB-4CB0-9390-4A0D998CE3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A40486A5-0BEB-4CB0-9390-4A0D998CE3E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BF9BAF9-75F3-47BA-9B47-A95023764D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BF9BAF9-75F3-47BA-9B47-A95023764D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BF9BAF9-75F3-47BA-9B47-A95023764D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BF9BAF9-75F3-47BA-9B47-A95023764D82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

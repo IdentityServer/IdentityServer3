@@ -42,6 +42,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string ClientSecret = "client_secret";
             public const string Assertion    = "assertion";
             public const string Code         = "code";
+            public const string RefreshToken = "refresh_token";
             public const string Scope        = "scope";
             public const string UserName     = "username";
             public const string Password     = "password";

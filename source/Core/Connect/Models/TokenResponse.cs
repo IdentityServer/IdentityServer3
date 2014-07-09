@@ -10,5 +10,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public string IdentityToken { get; set; }
         public string AccessToken { get; set; }
         public int AccessTokenLifetime { get; set; }
+        public string RefreshToken { get; set; }
     }
 }
