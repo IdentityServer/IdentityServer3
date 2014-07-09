@@ -5,6 +5,7 @@
 
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFederation.Services;
 
@@ -12,6 +13,8 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
     public class WsFederationServiceFactory
     {
+        private static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         // mandatory (external)
         public Registration<IUserService> UserService { get; set; }
         public Registration<CoreSettings> CoreSettings { get; set; }
@@ -20,10 +23,16 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
 
         public void Validate()
         {
-            if (UserService == null) throw new InvalidOperationException("UserService not configured");
-            if (WsFederationSettings == null) throw new InvalidOperationException("WsFederationSettings not configured");
-            if (CoreSettings == null) throw new InvalidOperationException("CoreSettings not configured");
-            if (RelyingPartyService == null) throw new InvalidOperationException("RelyingPartyService not configured");
+            if (UserService == null) LogAndStop("UserService not configured");
+            if (WsFederationSettings == null) LogAndStop("WsFederationSettings not configured");
+            if (CoreSettings == null) LogAndStop("CoreSettings not configured");
+            if (RelyingPartyService == null) LogAndStop("RelyingPartyService not configured");
+        }
+
+        private void LogAndStop(string message)
+        {
+            Logger.Error(message);
+            throw new InvalidOperationException(message);
         }
     }
 }

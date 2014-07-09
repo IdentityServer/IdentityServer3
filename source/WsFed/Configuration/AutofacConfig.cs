@@ -7,6 +7,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFederation.Hosting;
 using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
@@ -17,6 +18,8 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
     internal static class AutofacConfig
     {
+        static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public static IContainer Configure(WsFederationPluginOptions options, InternalConfiguration internalConfig)
         {
             if (internalConfig == null) throw new ArgumentNullException("internalConfig");
@@ -33,12 +36,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             builder.Register(factory.RelyingPartyService);
             builder.Register(factory.WsFederationSettings);
 
-            builder.RegisterInstance(options);
-
-            //builder.Register(ctx => factory.CoreSettings()).As<CoreSettings>();
-            //builder.Register(ctx => factory.UserService()).As<IUserService>();
-            //builder.Register(ctx => factory.RelyingPartyService()).As<IRelyingPartyService>();
-            
             // validators
             builder.RegisterType<SignInValidator>().AsSelf();
 
@@ -69,7 +66,9 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             }
             else
             {
-                // todo: error
+                var message = "No type or factory found on registration " + registration.GetType().FullName;
+                Logger.Error(message);
+                throw new InvalidOperationException(message);
             }
         }
     }
