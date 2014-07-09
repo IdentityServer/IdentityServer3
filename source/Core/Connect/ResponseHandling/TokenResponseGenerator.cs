@@ -10,6 +10,7 @@ using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -122,17 +123,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
+            bool createRefreshToken = false;
+
             if (request.AuthorizationCode != null)
             {
+                createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
                 accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
             }
             else
             {
+                createRefreshToken = request.ValidatedScopes.ContainsOfflineAccessScope;
                 accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
             }
 
             string refreshToken = "";
-            if (request.ValidatedScopes.ContainsOfflineAccessScope)
+            if (createRefreshToken)
             {
                 refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(accessToken, request.Client);
             }

@@ -54,15 +54,18 @@ namespace Thinktecture.IdentityServer.Core.Models
             Flow = Flows.Implicit;
             ScopeRestrictions = new List<string>();
             
+            // 5 minutes
+            AuthorizationCodeLifetime = 300;
+
             // one hour
             IdentityTokenLifetime = 3600;
             AccessTokenLifetime = 3600;
 
-            // one day
-            AbsoluteRefreshTokenLifetime = 86400;
+            // 30 days
+            AbsoluteRefreshTokenLifetime = 2592000;
 
-            // 12 hours
-            SlidingRefreshTokenLifetime = 43200;
+            // 3 days
+            SlidingRefreshTokenLifetime = 259200;
 
             RefreshTokenUsage = TokenUsage.OneTimeOnly;
             RefreshTokenExpiration = TokenExpiration.Absolute;
