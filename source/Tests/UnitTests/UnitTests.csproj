@@ -66,6 +66,9 @@
     <Reference Include="Microsoft.Owin.Testing">
       <HintPath>..\..\packages\Microsoft.Owin.Testing.2.1.0\lib\net45\Microsoft.Owin.Testing.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -108,6 +111,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Authentication\AuthenticationControllerTests.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
     <Compile Include="Plumbing\TestClients.cs" />

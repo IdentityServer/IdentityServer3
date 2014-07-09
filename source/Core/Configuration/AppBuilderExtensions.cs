@@ -46,9 +46,9 @@ namespace Owin
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
             JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PrimaryAuthenticationType, CookieName = Constants.PrimaryAuthenticationType });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, CookieName = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, CookieName = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
             if (options.ConfigurePlugins != null)
             {

@@ -8,6 +8,10 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Thinktecture.IdentityServer.Core.Assets;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Thinktecture.IdentityServer.Core.Resources;
+using Moq;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication
 {
@@ -20,29 +24,36 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             match = Regex.Match(match.Value, "{(.)*}");
             return JsonConvert.DeserializeObject<LayoutModel>(match.Value);
         }
+        LayoutModel GetLayoutModel(HttpResponseMessage resp)
+        {
+            var html = resp.Content.ReadAsStringAsync().Result;
+            return GetLayoutModel(html);
+        }
 
         void AssertPage(HttpResponseMessage resp, string name)
         {
             Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
             Assert.AreEqual("text/html", resp.Content.Headers.ContentType.MediaType);
-            var html = resp.Content.ReadAsStringAsync().Result;
-            var layout = GetLayoutModel(html);
+            var layout = GetLayoutModel(resp);
             Assert.AreEqual(name, layout.Page);
         }
 
         private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
         {
-            msg = msg ?? new SignInMessage();
+            msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
+            
             var val = msg.Protect(60000, protector);
             var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
-            var setCookies = resp.Headers.GetValues("Set-Cookie");
-            Assert.AreEqual(1, setCookies.Count());
-            var cookie = setCookies.First();
-            Assert.IsNotNull(cookie);
-            StringAssert.Contains(cookie, "idsrv.login.message");
-            client.DefaultRequestHeaders.Add("Cookie", cookie);
+            resp.AssertCookie(AuthenticationController.LoginRequestMessageCookieName);
+            
+            foreach(var c in resp.GetCookies())
+            {
+                client.DefaultRequestHeaders.Add("Cookie", c.ToString());
+            }
+
             return resp;
         }
+
 
         [TestMethod]
         public void GetLogin_WithSignInMessage_ReturnsLoginPage()
@@ -89,6 +100,64 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
             Assert.IsTrue(resp2.Headers.Location.AbsoluteUri.StartsWith("https://www.google.com"));
+        }
+
+        [TestMethod]
+        public void PostLogin_ValidCredentials_IssuesAuthenticationCookie()
+        {
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            resp.AssertCookie(Constants.PrimaryAuthenticationType);
+        }
+
+        [TestMethod]
+        public void PostLogin_ValidCredentials_RedirectsBackToAuthorization()
+        {
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.AreEqual(resp.Headers.Location, Url("authorize"));
+        }
+
+        [TestMethod]
+        public void PostLogin_NoModel_ShowErrorPage()
+        {
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, (LoginCredentials)null);
+            AssertPage(resp, "login");
+            var model = GetLayoutModel(resp);
+            Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+        }
+
+        [TestMethod]
+        public void PostLogin_InvalidUsername_ShowErrorPage()
+        {
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "bad", Password = "alice" });
+            AssertPage(resp, "login");
+            var model = GetLayoutModel(resp);
+            Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+        }
+        [TestMethod]
+        public void PostLogin_InvalidPassword_ShowErrorPage()
+        {
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "bad" });
+            AssertPage(resp, "login");
+            var model = GetLayoutModel(resp);
+            Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+        }
+        [TestMethod]
+        public void PostLogin_UserServiceReturnsError_ShowErrorPage()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("bad stuff")));
+                
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            AssertPage(resp, "login");
+            var model = GetLayoutModel(resp);
+            Assert.AreEqual(model.ErrorMessage, "bad stuff");
         }
     }
 }

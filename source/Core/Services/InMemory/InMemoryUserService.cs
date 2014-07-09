@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             this._users.AddRange(users);
         }
 
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             var query =
                 from u in _users
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, Models.ExternalIdentity externalUser)
+        public virtual Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, Models.ExternalIdentity externalUser)
         {
             var query =
                 from u in _users
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var query =
                 from u in _users
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public Task<bool> IsActive(string subject)
+        public virtual Task<bool> IsActive(string subject)
         {
             var query =
                 from u in _users

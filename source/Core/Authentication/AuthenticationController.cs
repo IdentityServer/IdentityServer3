@@ -367,7 +367,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 });
         }
 
-        const string LoginRequestMessageCookieName = "idsrv.login.message";
+        public const string LoginRequestMessageCookieName = "idsrv.login.message";
         private void ClearLoginRequestMessage()
         {
             Logger.Debug("[AuthenticationController.ClearLoginRequestMessage] called");

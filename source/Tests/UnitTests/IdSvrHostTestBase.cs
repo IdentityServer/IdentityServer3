@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Owin;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -17,6 +20,9 @@ namespace Thinktecture.IdentityServer.Tests
         protected TestServer server;
         protected HttpClient client;
         protected Thinktecture.IdentityServer.Core.Configuration.IDataProtector protector;
+
+        protected Mock<InMemoryUserService> mockUserService;
+
 
         [TestInitialize]
         public void Init()
@@ -30,6 +36,10 @@ namespace Thinktecture.IdentityServer.Tests
                          issuerUri: "https://idsrv3.com",
                          siteName: "Thinktecture IdentityServer v3 - test",
                          publicHostAddress: "http://localhost:3333");
+
+                mockUserService = new Mock<InMemoryUserService>(Thinktecture.IdentityServer.Tests.TestFactory.Users.Get());
+                mockUserService.CallBase = true;
+                factory.UserService = Registration.RegisterFactory<IUserService>(() => mockUserService.Object);
 
                 var opts = new IdentityServerOptions
                 {
@@ -53,10 +63,9 @@ namespace Thinktecture.IdentityServer.Tests
             app.UseGoogleAuthentication(google);
         }
 
-
         protected string Url(string path)
         {
-            return "http://localhost:3333/" + path;
+            return "https://localhost:3333/" + path;
         }
         protected HttpResponseMessage Get(string path)
         {
