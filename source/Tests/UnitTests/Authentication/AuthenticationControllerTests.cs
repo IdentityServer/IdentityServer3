@@ -45,12 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var val = msg.Protect(60000, protector);
             var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
             resp.AssertCookie(AuthenticationController.LoginRequestMessageCookieName);
-            
-            foreach(var c in resp.GetCookies())
-            {
-                client.DefaultRequestHeaders.Add("Cookie", c.ToString());
-            }
-
+            client.SetCookies(resp.GetCookies());
             return resp;
         }
 
@@ -100,6 +95,16 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
             Assert.IsTrue(resp2.Headers.Location.AbsoluteUri.StartsWith("https://www.google.com"));
+        }
+        [TestMethod]
+        public void GetExternalLogin_InalidProvider_ReturnsUnauthorized()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Foo";
+            var resp1 = GetLoginPage(msg);
+
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            Assert.AreEqual(HttpStatusCode.Unauthorized, resp2.StatusCode);
         }
 
         [TestMethod]
@@ -152,12 +157,114 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new AuthenticateResult("bad stuff")));
-                
+
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
             AssertPage(resp, "login");
             var model = GetLayoutModel(resp);
             Assert.AreEqual(model.ErrorMessage, "bad stuff");
+        }
+        [TestMethod]
+        public void PostLogin_UserServiceReturnsNull_ShowErrorPage()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult((AuthenticateResult)null));
+
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            AssertPage(resp, "login");
+            var model = GetLayoutModel(resp);
+            Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+        }
+        [TestMethod]
+        public void PostLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            resp.AssertCookie(Constants.PartialSignInAuthenticationType);
+        }
+        [TestMethod]
+        public void PostLogin_UserServiceReturnsParialLogin_IssuesRedirect()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            client.SetCookies(resp1.GetCookies());
+            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+            resp2.AssertCookie(Constants.PrimaryAuthenticationType);
+        }
+        [TestMethod]
+        public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            client.SetCookies(resp1.GetCookies());
+            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+            Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
+            Assert.AreEqual(Url("authorize"), resp2.Headers.Location.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void ResumeLoginFromRedirect_WithoutPartialCookie_RedirectsToLogin()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+            Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
+            Assert.AreEqual(Url(Constants.RoutePaths.Login), resp2.Headers.Location.AbsoluteUri);
+        }
+        [TestMethod]
+        public void ResumeLoginFromRedirect_WithoutSignInMessageCookie_ShowsErrorPage()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            GetLoginPage();
+            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            client.DefaultRequestHeaders.Remove("Cookie");
+            client.SetCookies(resp1.GetCookies());
+            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+            AssertPage(resp2, "error");
+        }
+
+        [TestMethod]
+        public void Logout_ShowsLogoutPage()
+        {
+            var resp = Get(Constants.RoutePaths.Logout);
+            AssertPage(resp, "logout");
+        }
+
+        [TestMethod]
+        public void Logout_RemovesCookies()
+        {
+            var resp = Get(Constants.RoutePaths.Logout);
+            var cookies = resp.Headers.GetValues("Set-Cookie");
+            Assert.AreEqual(4, cookies.Count());
+            // GetCookies will not return values for cookies that are expired/revoked
+            Assert.AreEqual(0, resp.GetCookies().Count());
         }
     }
 }

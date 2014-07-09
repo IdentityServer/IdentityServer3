@@ -11,6 +11,14 @@ namespace Thinktecture.IdentityServer.Tests
 {
     static class Extensions
     {
+        public static void SetCookies(this HttpClient client, IEnumerable<CookieState> cookies)
+        {
+            foreach (var c in cookies)
+            {
+                client.DefaultRequestHeaders.Add("Cookie", c.ToString());
+            }
+        }
+
         public static IEnumerable<CookieState> GetCookies(this HttpResponseMessage resp)
         {
             IEnumerable<string> values;

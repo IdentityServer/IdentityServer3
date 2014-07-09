@@ -111,6 +111,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Authentication\AuthenticationControllerTests.cs" />
+    <Compile Include="Authentication\AuthenticateResultTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
