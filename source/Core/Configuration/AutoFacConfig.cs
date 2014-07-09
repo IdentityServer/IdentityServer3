@@ -9,6 +9,7 @@ using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Hosting;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 
@@ -16,6 +17,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     internal static class AutofacConfig
     {
+        static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public static IContainer Configure(IdentityServerOptions options, InternalConfiguration internalConfig)
         {
             if (options == null) throw new ArgumentNullException("options");
@@ -56,6 +59,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterInstance(inmemTokenHandleStore).As<ITokenHandleStore>();
             }
 
+            if (fact.RefreshTokenStore != null)
+            {
+                builder.Register(fact.RefreshTokenStore);
+            }
+            else
+            {
+                var inmemRefreshTokenStore = new InMemoryRefreshTokenStore();
+                builder.RegisterInstance(inmemRefreshTokenStore).As<IRefreshTokenStore>();
+            }
+
             if (fact.ConsentService != null)
             {
                 builder.Register(fact.ConsentService);
@@ -82,6 +95,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultTokenService>().As<ITokenService>();
+            }
+
+            if (fact.RefreshTokenService != null)
+            {
+                builder.Register(fact.RefreshTokenService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultRefreshTokenService>().As<IRefreshTokenService>();
             }
 
             if (fact.TokenSigningService != null)
@@ -172,7 +194,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             }
             else
             {
-                // todo: error
+                var message = "No type or factory found on registration " + registration.GetType().FullName; 
+                Logger.Error(message);
+                throw new InvalidOperationException(message);
             }
         }
     }

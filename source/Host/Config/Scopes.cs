@@ -72,8 +72,8 @@ namespace Thinktecture.IdentityServer.Host.Config
                 },
                 new Scope
                 {
-                    Name = "forbidden",
-                    DisplayName = "Forbidden scope",
+                    Name = Constants.StandardScopes.OfflineAccess,
+                    DisplayName = "Offline access",
                     Emphasize = true
                 }
              };

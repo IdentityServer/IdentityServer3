@@ -39,6 +39,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
+                        Constants.StandardScopes.OfflineAccess,
                         "read",
                         "write"
                     },
@@ -126,11 +127,17 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ScopeRestrictions = new List<string>
                     { 
                         "read",
-                        "write"
+                        "write",
+                        "offline_access"
                     },
 
                     AccessTokenType = AccessTokenType.JWT,
-                    AccessTokenLifetime = 360,
+                    AccessTokenLifetime = 3600,
+                    AbsoluteRefreshTokenLifetime = 86400,
+                    SlidingRefreshTokenLifetime = 43200,
+
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    RefreshTokenExpiration = TokenExpiration.Sliding
                 }
             };
         }
