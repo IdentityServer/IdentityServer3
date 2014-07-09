@@ -24,10 +24,12 @@ namespace Thinktecture.IdentityServer.Core.Services
             int lifetime;
             if (client.RefreshTokenExpiration == TokenExpiration.Absolute)
             {
+                Logger.Debug("Setting an absolute lifetime: " + client.AbsoluteRefreshTokenLifetime);
                 lifetime = client.AbsoluteRefreshTokenLifetime;
             }
             else
             {
+                Logger.Debug("Setting a sliding lifetime: " + client.SlidingRefreshTokenLifetime);
                 lifetime = client.SlidingRefreshTokenLifetime;
             }
 
@@ -46,11 +48,15 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         public async Task<string> UpdateRefreshTokenAsync(RefreshToken refreshToken, Client client)
         {
+            Logger.Debug("Updating refresh token");
+
             bool needsUpdate = false;
             string oldHandle = refreshToken.Handle;
 
             if (client.RefreshTokenUsage == TokenUsage.OneTimeOnly)
             {
+                Logger.Debug("Token usage is one-time only. Generating new handle");
+
                 // generate new handle
                 refreshToken.Handle = Guid.NewGuid().ToString("N");
                 needsUpdate = true;
@@ -58,14 +64,20 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             if (client.RefreshTokenExpiration == TokenExpiration.Sliding)
             {
+                Logger.Debug("Refresh token expiration is sliding - extending lifetime");
+
                 // make sure we don't exceed absolute exp
                 // cap it at absolute exp
                 var currentLifetime = refreshToken.CreationTime.GetLifetimeInSeconds();
+                Logger.Debug("Current lifetime: " + currentLifetime.ToString());
+
                 var newLifetime = currentLifetime + client.SlidingRefreshTokenLifetime;
-    
+                Logger.Debug("New lifetime: " + newLifetime.ToString());
+
                 if (newLifetime > client.AbsoluteRefreshTokenLifetime)
                 {
                     newLifetime = client.AbsoluteRefreshTokenLifetime;
+                    Logger.Debug("New lifetime exceeds absolute lifetime, capping it to " + newLifetime.ToString());
                 }
 
                 refreshToken.LifeTime = newLifetime;
@@ -80,9 +92,11 @@ namespace Thinktecture.IdentityServer.Core.Services
                 // create new one
                 await _store.StoreAsync(refreshToken.Handle, refreshToken);
 
+                Logger.Debug("Updated refresh token in store");
                 return refreshToken.Handle;
             }
 
+            Logger.Debug("No updates to refresh token done");
             return oldHandle;
         }
     }
