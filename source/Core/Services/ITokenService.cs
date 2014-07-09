@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ITokenService
     {

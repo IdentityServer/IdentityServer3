@@ -4,13 +4,12 @@
  */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
-using System.Linq;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -55,6 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<TokenResponse> ProcessAuthorizationCodeRequestAsync(ValidatedTokenRequest request)
         {
+            Logger.Info("Processing authorization code request");
+
             //////////////////////////
             // access token
             /////////////////////////
@@ -88,6 +89,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<TokenResponse> ProcessTokenRequestAsync(ValidatedTokenRequest request)
         {
+            Logger.Info("Processing token request");
+
             var accessToken = await CreateAccessTokenAsync(request);
             var response = new TokenResponse
             {
@@ -105,6 +108,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<TokenResponse> ProcessRefreshTokenRequestAsync(ValidatedTokenRequest request)
         {
+            Logger.Info("Processing refresh token request");
+
             var oldAccessToken = request.RefreshToken.AccessToken;
             oldAccessToken.CreationTime = DateTime.UtcNow;
             oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;

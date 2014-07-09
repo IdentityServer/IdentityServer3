@@ -117,11 +117,11 @@
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Connect\Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
-    <Compile Include="Connect\Services\DefaultRefreshTokenService.cs" />
-    <Compile Include="Connect\Services\IRefreshTokenService.cs" />
-    <Compile Include="Connect\Services\IRefreshTokenStore.cs" />
-    <Compile Include="Connect\Services\DefaultTokenSigningService.cs" />
-    <Compile Include="Connect\Services\ITokenSigningService.cs" />
+    <Compile Include="Services\Default\DefaultRefreshTokenService.cs" />
+    <Compile Include="Services\IRefreshTokenService.cs" />
+    <Compile Include="Services\IRefreshTokenStore.cs" />
+    <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
+    <Compile Include="Services\ITokenSigningService.cs" />
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\CoreSettings.cs" />
@@ -147,17 +147,16 @@
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Connect\Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Connect\Results\UserInfoResult.cs" />
-    <Compile Include="Connect\Services\DefaultAssertionGrantValidator.cs" />
-    <Compile Include="Connect\Services\DefaultCustomRequestValidator.cs" />
-    <Compile Include="Connect\Services\DefaultCustomTokenValidator.cs" />
-    <Compile Include="Connect\Services\DefaultTokenService.cs" />
-    <Compile Include="Connect\Services\HashingTransientDataRepository.cs" />
-    <Compile Include="Connect\Services\DefaultClaimsProvider.cs" />
-    <Compile Include="Connect\Services\IAssertionGrantValidator.cs" />
-    <Compile Include="Connect\Services\IClaimsProvider.cs" />
-    <Compile Include="Connect\Services\ICustomRequestValidator.cs" />
-    <Compile Include="Connect\Services\ICustomTokenValidator.cs" />
-    <Compile Include="Connect\Services\ITransientDataRepository.cs" />
+    <Compile Include="Services\Default\DefaultAssertionGrantValidator.cs" />
+    <Compile Include="Services\Default\DefaultCustomRequestValidator.cs" />
+    <Compile Include="Services\Default\DefaultCustomTokenValidator.cs" />
+    <Compile Include="Services\Default\DefaultTokenService.cs" />
+    <Compile Include="Services\Default\DefaultClaimsProvider.cs" />
+    <Compile Include="Services\IAssertionGrantValidator.cs" />
+    <Compile Include="Services\IClaimsProvider.cs" />
+    <Compile Include="Services\ICustomRequestValidator.cs" />
+    <Compile Include="Services\ICustomTokenValidator.cs" />
+    <Compile Include="Services\ITransientDataRepository.cs" />
     <Compile Include="Connect\Validation\ClientValidator.cs" />
     <Compile Include="Connect\Validation\ScopeValidator.cs" />
     <Compile Include="Connect\Validation\TokenValidationResult.cs" />
@@ -213,15 +212,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
-    <Compile Include="Connect\Services\IAuthorizationCodeStore.cs" />
+    <Compile Include="Services\IAuthorizationCodeStore.cs" />
     <Compile Include="Hosting\CookieMiddlewareCookieService.cs" />
-    <Compile Include="Services\DefaultExternalClaimsFilter.cs" />
+    <Compile Include="Services\Default\DefaultExternalClaimsFilter.cs" />
     <Compile Include="Services\IClientService.cs" />
     <Compile Include="Services\InMemory\InMemoryRefreshTokenStore.cs" />
     <Compile Include="Services\ITrackingCookieService.cs" />
     <Compile Include="Services\IExternalClaimsFilter.cs" />
     <Compile Include="Services\IConsentService.cs" />
-    <Compile Include="Connect\Services\ITokenService.cs" />
+    <Compile Include="Services\ITokenService.cs" />
     <Compile Include="Services\InMemory\InMemoryAuthorizationCodeStore.cs" />
     <Compile Include="Services\InMemory\InMemoryClientService.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentService.cs" />
@@ -231,7 +230,7 @@
     <Compile Include="Services\InMemory\InMemoryUserService.cs" />
     <Compile Include="Services\IScopeService.cs" />
     <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Connect\Services\ITokenHandleStore.cs" />
+    <Compile Include="Services\ITokenHandleStore.cs" />
     <Compile Include="Models\Scope.cs" />
     <Compile Include="Models\ScopeClaim.cs" />
     <Compile Include="Connect\Models\Token.cs" />

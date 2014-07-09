@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Connect.Services;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -368,7 +367,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsResourceScopes)
+            if (scopeValidator.ContainsResourceScopes ||
+                _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken ||
+                _validatedRequest.ResponseType == Constants.ResponseTypes.Token)
             {
                 _validatedRequest.IsResourceRequest = true;
             }

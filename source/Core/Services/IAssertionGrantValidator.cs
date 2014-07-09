@@ -5,9 +5,9 @@
 
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Connect;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IAssertionGrantValidator
     {

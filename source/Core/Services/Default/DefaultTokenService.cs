@@ -6,8 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IdentityModel.Protocols.WSTrust;
-using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,15 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultTokenService : ITokenService
     {

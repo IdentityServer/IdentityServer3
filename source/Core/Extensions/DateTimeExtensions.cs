@@ -19,7 +19,6 @@ namespace Thinktecture.IdentityServer.Core
         [DebuggerStepThrough]
         public static int GetLifetimeInSeconds(this DateTime creationTime)
         {
-            // todo: double?
             return ((int)(DateTime.UtcNow- creationTime).TotalSeconds);
         }
     }

@@ -122,9 +122,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 if (!ContainsOpenIdScopes || ContainsResourceScopes)
                 {
                     Logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
-
                     return false;
-                    //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
                 }
 
             }
@@ -134,9 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 if (!ContainsOpenIdScopes)
                 {
                     Logger.Error("Requests for id_token response type must include identity scopes");
-
                     return false;
-                    //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
                 }
             }
             else if (responseType == Constants.ResponseTypes.Token)
@@ -145,9 +141,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 if (ContainsOpenIdScopes || !ContainsResourceScopes)
                 {
                     Logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
-
                     return false;
-                    //return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
                 }
             }
 

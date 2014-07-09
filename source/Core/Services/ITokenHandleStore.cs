@@ -5,9 +5,9 @@
 
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
-    public interface IAuthorizationCodeStore : ITransientDataRepository<AuthorizationCode>
+    public interface ITokenHandleStore : ITransientDataRepository<Token>
     {
     }
 }
