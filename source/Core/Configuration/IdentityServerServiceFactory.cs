@@ -54,14 +54,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         public void Validate()
         {
-            if (UserService == null) throw new InvalidOperationException("UserService not configured");
-            if (CoreSettings == null) throw new InvalidOperationException("CoreSettings not configured");
-            if (ScopeService == null) throw new InvalidOperationException("ScopeService not configured.");
-            if (ClientService == null) throw new InvalidOperationException("ClientService not configured.");
+            if (UserService == null) LogAndStop("UserService not configured");
+            if (CoreSettings == null) LogAndStop("CoreSettings not configured");
+            if (ScopeService == null) LogAndStop("ScopeService not configured.");
+            if (ClientService == null) LogAndStop("ClientService not configured.");
 
             if (AuthorizationCodeStore == null) Logger.Warn("AuthorizationCodeStore not configured - falling back to InMemory");
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentService == null) Logger.Warn("ConsentService not configured - falling back to InMemory");
+        }
+
+        private void LogAndStop(string message)
+        {
+            Logger.Error(message);
+            throw new InvalidOperationException(message);
         }
     }
 }
