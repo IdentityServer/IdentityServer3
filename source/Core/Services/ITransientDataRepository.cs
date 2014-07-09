@@ -5,7 +5,7 @@
 
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ITransientDataRepository<T>
     {

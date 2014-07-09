@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Services
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ITokenSigningService
     {
