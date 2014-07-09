@@ -368,7 +368,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsResourceScopes)
+            if (scopeValidator.ContainsResourceScopes ||
+                _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken ||
+                _validatedRequest.ResponseType == Constants.ResponseTypes.Token)
             {
                 _validatedRequest.IsResourceRequest = true;
             }
