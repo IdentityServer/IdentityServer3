@@ -317,7 +317,20 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            /////////////////////////////////////////////
+            // check if client still has offline_access scope
+            /////////////////////////////////////////////
+            if (_validatedRequest.Client.ScopeRestrictions != null || _validatedRequest.Client.ScopeRestrictions.Count != 0)
+            {
+                if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OfflineAccess))
+                {
+                    Logger.Error("Client does not have access to offline_access scope anymore");
+                    return Invalid(Constants.TokenErrors.InvalidGrant);
+                }
+            }
+
             _validatedRequest.RefreshToken = refreshToken;
+            Logger.Info("Refresh token request: " + refreshTokenHandle);
 
             Logger.Info("Successful validation of refresh token request");
             return Valid();

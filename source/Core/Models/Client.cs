@@ -35,7 +35,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         public int SlidingRefreshTokenLifetime { get; set; }
         public TokenUsage RefreshTokenUsage { get; set; }
         public TokenExpiration RefreshTokenExpiration { get; set; }
-        public bool RefreshClaimsOnRefreshToken { get; set; }
+        
+        // todo
+        //public bool RefreshClaimsOnRefreshToken { get; set; }
 
         public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
         public AccessTokenType AccessTokenType { get; set; }

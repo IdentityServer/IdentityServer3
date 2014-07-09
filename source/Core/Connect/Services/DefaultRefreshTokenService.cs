@@ -58,9 +58,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Services
 
             if (client.RefreshTokenExpiration == TokenExpiration.Sliding)
             {
-                // todo: make sure we don't exceed absolute exp
+                // make sure we don't exceed absolute exp
                 // cap it at absolute exp
-
                 var currentLifetime = refreshToken.CreationTime.GetLifetimeInSeconds();
                 var newLifetime = currentLifetime + client.SlidingRefreshTokenLifetime;
     

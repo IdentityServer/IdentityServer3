@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core
         public static int GetLifetimeInSeconds(this DateTime creationTime)
         {
             // todo: double?
-            return ((int)(creationTime - DateTime.UtcNow).TotalSeconds);
+            return ((int)(DateTime.UtcNow- creationTime).TotalSeconds);
         }
     }
 }

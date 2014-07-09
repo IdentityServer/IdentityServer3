@@ -24,11 +24,14 @@ namespace ConsoleResourceOwnerClient
 
             Console.ReadLine();
 
-            response = RefreshToken(response.RefreshToken);
-            ShowResponse(response);
+            while (true)
+            {
+                response = RefreshToken(response.RefreshToken);
+                ShowResponse(response);
 
-            Console.ReadLine();
-            CallService(response.AccessToken);
+                Console.ReadLine();
+                CallService(response.AccessToken);
+            }
         }
 
         static TokenResponse RequestToken()

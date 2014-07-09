@@ -104,8 +104,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<TokenResponse> ProcessRefreshTokenRequestAsync(ValidatedTokenRequest request)
         {
-            // todo: does client still have offline_access
-
             var oldAccessToken = request.RefreshToken.AccessToken;
             oldAccessToken.CreationTime = DateTime.UtcNow;
             oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;

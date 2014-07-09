@@ -135,8 +135,8 @@ namespace Thinktecture.IdentityServer.Host.Config
                     AbsoluteRefreshTokenLifetime = 86400,
                     SlidingRefreshTokenLifetime = 43200,
 
-                    RefreshTokenUsage = TokenUsage.ReUse,
-                    RefreshTokenExpiration = TokenExpiration.Absolute
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    RefreshTokenExpiration = TokenExpiration.Sliding
                 }
             };
         }
