@@ -33,6 +33,7 @@ namespace UnitTests.Plumbing
             CoreSettings settings = null,
             IScopeService scopes = null,
             IAuthorizationCodeStore authorizationCodeStore = null,
+            IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
             IAssertionGrantValidator assertionGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null)
@@ -62,7 +63,12 @@ namespace UnitTests.Plumbing
                 assertionGrantValidator = new TestAssertionValidator();
             }
 
-            return new TokenRequestValidator(settings, authorizationCodeStore, userService, scopes, assertionGrantValidator, customRequestValidator);
+            if (refreshTokens == null)
+            {
+                refreshTokens = new InMemoryRefreshTokenStore();
+            }
+
+            return new TokenRequestValidator(settings, authorizationCodeStore, refreshTokens, userService, scopes, assertionGrantValidator, customRequestValidator);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(

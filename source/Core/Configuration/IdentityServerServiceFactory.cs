@@ -37,17 +37,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Registration<IClientService> ClientService { get; set; }
         public Registration<CoreSettings> CoreSettings { get; set; }
         
-        // mandatory (for authorization code, reference tokens and consent)
+        // mandatory (for authorization code, reference & refresh tokens and consent)
         // but with default in memory implementation
         public Registration<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
         public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
         public Registration<IConsentService> ConsentService { get; set; }
+        public Registration<IRefreshTokenStore> RefreshTokenStore { get; set; }
         
         // optional
         public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }
         public Registration<ITokenService> TokenService { get; set; }
+        public Registration<IRefreshTokenService> RefreshTokenService { get; set; }
         public Registration<ITokenSigningService> TokenSigningService { get; set; }
         public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
         public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
@@ -62,6 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (AuthorizationCodeStore == null) Logger.Warn("AuthorizationCodeStore not configured - falling back to InMemory");
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentService == null) Logger.Warn("ConsentService not configured - falling back to InMemory");
+            if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
         }
 
         private void LogAndStop(string message)

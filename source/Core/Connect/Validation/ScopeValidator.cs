@@ -17,9 +17,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
+        public bool ContainsOfflineAccessScope { get; set; }
+
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
-
+        
         public ScopeValidator()
         {
             RequestedScopes = new List<Scope>();
@@ -55,6 +57,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
 
                 GrantedScopes.Add(scopeDetail);
+            }
+
+            if (requestedScopes.Contains(Constants.StandardScopes.OfflineAccess))
+            {
+                ContainsOfflineAccessScope = true;
             }
             
             RequestedScopes.AddRange(GrantedScopes);

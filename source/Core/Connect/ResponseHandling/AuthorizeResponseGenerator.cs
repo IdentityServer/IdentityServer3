@@ -40,7 +40,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 RedirectUri = request.RedirectUri,
 
                 WasConsentShown = request.WasConsentShown,
-                RefreshTokenLifetime = request.Client.RefreshTokenLifetime
             };
 
             // store id token and access token and return authorization code

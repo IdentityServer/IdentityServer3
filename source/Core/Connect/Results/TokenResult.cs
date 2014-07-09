@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
             {
                 id_token = _response.IdentityToken,
                 access_token = _response.AccessToken,
+                refresh_token = _response.RefreshToken,
                 expires_in = _response.AccessTokenLifetime,
                 token_type = Constants.TokenTypes.Bearer
             };
@@ -58,6 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
             public string access_token { get; set; }
             public int expires_in { get; set; }
             public string token_type { get; set; }
+            public string refresh_token { get; set; }
         }    
     }
 }

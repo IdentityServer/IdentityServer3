@@ -22,7 +22,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public Uri RedirectUri { get; set; }
 
         public bool WasConsentShown { get; set; }
-        public int RefreshTokenLifetime { get; set; }
 
         public AuthorizationCode()
         {

@@ -59,6 +59,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterInstance(inmemTokenHandleStore).As<ITokenHandleStore>();
             }
 
+            if (fact.RefreshTokenStore != null)
+            {
+                builder.Register(fact.RefreshTokenStore);
+            }
+            else
+            {
+                var inmemRefreshTokenStore = new InMemoryRefreshTokenStore();
+                builder.RegisterInstance(inmemRefreshTokenStore).As<IRefreshTokenStore>();
+            }
+
             if (fact.ConsentService != null)
             {
                 builder.Register(fact.ConsentService);
@@ -85,6 +95,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultTokenService>().As<ITokenService>();
+            }
+
+            if (fact.RefreshTokenService != null)
+            {
+                builder.Register(fact.RefreshTokenService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultRefreshTokenService>().As<IRefreshTokenService>();
             }
 
             if (fact.TokenSigningService != null)
