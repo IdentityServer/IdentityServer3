@@ -113,12 +113,12 @@
                 $scope.response.raw = JSON.stringify(response, null, 2);
 
                 if (response.id_token) {
-                    var jws = new KJUR.jws.JWS();
                     signingCertificate.then(function (cert) {
                         try {
-                            result = jws.verifyJWSByPemX509Cert(response.id_token, cert);
+                            var jws_id = new KJUR.jws.JWS();
+                            result = jws_id.verifyJWSByPemX509Cert(response.id_token, cert);
                             if (result == 1) {
-                                $scope.response.id_token_json = JSON.stringify(JSON.parse(jws.parsedJWS.payloadS), null, 2);
+                                $scope.response.id_token_json = JSON.stringify(JSON.parse(jws_id.parsedJWS.payloadS), null, 2);
                             } else {
                                 $scope.response.id_token_json = "JWS signature is *Invalid*.";
                             }
