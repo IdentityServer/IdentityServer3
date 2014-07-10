@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -16,8 +15,15 @@ namespace Thinktecture.IdentityServer.Core.Services
     public class DefaultClaimsProvider : IClaimsProvider
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
+        private readonly IUserService _users;
 
-        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, CoreSettings settings, bool includeAllIdentityClaims, IUserService users, NameValueCollection request)
+        public DefaultClaimsProvider(IUserService users)
+        {
+            _users = users;
+        }
+
+        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request)
         {
             Logger.Debug("Getting claims for identity token");
 
@@ -41,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = await users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
+                var claims = await _users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -51,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             return outputClaims;
         }
 
-        public virtual Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, CoreSettings settings, IUserService users, NameValueCollection request)
+        public virtual Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
         {
             Logger.Debug("Getting claims for access token");
 

@@ -31,7 +31,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ITokenSigningService _signingService;
 
-
         public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
         {
             _users = users;
@@ -68,9 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 subject,
                 client,
                 scopes,
-                _settings,
                 includeAllIdentityClaims,
-                _users,
                 request));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
@@ -93,8 +90,6 @@ namespace Thinktecture.IdentityServer.Core.Services
                 subject,
                 client,
                 scopes,
-                _settings,
-                _users,
                 request);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
