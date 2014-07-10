@@ -111,7 +111,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // run custom validation
-            return await _customRequestValidator.ValidateTokenRequestAsync(_validatedRequest, _users);
+            return await _customRequestValidator.ValidateTokenRequestAsync(_validatedRequest);
         }
 
         private async Task<ValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
