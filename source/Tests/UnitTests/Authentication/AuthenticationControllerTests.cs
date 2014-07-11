@@ -13,6 +13,7 @@ using Thinktecture.IdentityServer.Core.Resources;
 using Moq;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication
 {
@@ -237,6 +238,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             GetLoginPage();
             var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
             client.SetCookies(resp1.GetCookies());
+            
             var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
             Assert.AreEqual(Url("authorize"), resp2.Headers.Location.AbsoluteUri);
@@ -287,21 +289,20 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void LoginExternalCallback_WithoutExternalCookie_RedirectsToLoginPage()
+        public void LoginExternalCallback_WithoutExternalCookie_RendersLoginPageWithError()
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
             var resp1 = GetLoginPage(msg);
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            Assert.AreEqual(HttpStatusCode.Found, resp3.StatusCode);
-            Assert.AreEqual(Url(Constants.RoutePaths.Login), resp3.Headers.Location.AbsoluteUri);
-            var resp4 = client.GetAsync(resp3.Headers.Location.AbsoluteUri).Result;
-            AssertPage(resp4, "login");
+            AssertPage(resp3, "login");
+            var model = GetLayoutModel(resp3);
+            Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
 
         [TestMethod]
-        public void LoginExternalCallback_WithNoClaims_RedirectsToLoginPage()
+        public void LoginExternalCallback_WithNoClaims_RendersLoginPageWithError()
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
@@ -312,8 +313,9 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             client.SetCookies(resp2.GetCookies());
 
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            var resp4 = client.GetAsync(resp3.Headers.Location.AbsoluteUri).Result;
-            AssertPage(resp4, "login");
+            AssertPage(resp3, "login");
+            var model = GetLayoutModel(resp3);
+            Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
         
         [TestMethod]
@@ -351,7 +353,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void LoginExternalCallback_WithValidnameIDClaim_IssuesAuthenticationCookie()
+        public void LoginExternalCallback_WithValidNameIDClaim_IssuesAuthenticationCookie()
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
@@ -383,6 +385,89 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
             Assert.AreEqual(HttpStatusCode.Found, resp3.StatusCode);
             Assert.AreEqual(Url("authorize"), resp3.Headers.Location.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void LoginExternalCallback_UserServiceReturnsError_ShowsError()
+        {
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<string>(), It.IsAny<ExternalIdentity>()))
+                .Returns(Task.FromResult(new ExternalAuthenticateResult("foo bad")));
+            
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
+            AssertPage(resp3, "login");
+            var model = GetLayoutModel(resp3);
+            Assert.AreEqual("foo bad", model.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void LoginExternalCallback_UserServiceReturnsNull_ShowError()
+        {
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<string>(), It.IsAny<ExternalIdentity>()))
+                .Returns(Task.FromResult((ExternalAuthenticateResult)null));
+
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
+            AssertPage(resp3, "login");
+            var model = GetLayoutModel(resp3);
+            Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void LoginExternalCallback_UserIsAnonymous_NoSubjectIsPassedToUserService()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            Get(Constants.RoutePaths.LoginExternalCallback);
+
+            mockUserService.Verify(x => x.AuthenticateExternalAsync(null, It.IsAny<ExternalIdentity>()));
+        }
+
+        [TestMethod]
+        public void LoginExternalCallback_UserIsAlreadyLoggedIn_SubjectIsPassedToUserService()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+
+            var userSub = new Claim(Constants.ClaimTypes.Subject, "818727", ClaimValueTypes.String, Constants.BuiltInIdentityProvider);
+            SignInIdentity = new ClaimsIdentity(new Claim[] { userSub }, Constants.PrimaryAuthenticationType);
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            Get(Constants.RoutePaths.LoginExternalCallback);
+
+            mockUserService.Verify(x => x.AuthenticateExternalAsync("818727", It.IsAny<ExternalIdentity>()));
         }
     }
 }
