@@ -130,15 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
 
-            string currentSubject = null;
-            var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.PrimaryAuthenticationType);
-            if (currentAuth != null &&
-                currentAuth.Identity != null &&
-                currentAuth.Identity.IsAuthenticated)
-            {
-                currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
-            }
-
+            string currentSubject = await GetSubjectFromPrimaryAuthenticationType(ctx);
             Logger.InfoFormat("[AuthenticationController.LoginExternalCallback] current subject: {0}", currentSubject ?? "-anonymous-");
 
             var externalAuthResult = await ctx.Authentication.AuthenticateAsync(Constants.ExternalAuthenticationType);
@@ -177,12 +169,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 authResult.Provider);
         }
 
+        private static async Task<string> GetSubjectFromPrimaryAuthenticationType(Microsoft.Owin.IOwinContext ctx)
+        {
+            string currentSubject = null;
+            var currentAuth = await ctx.Authentication.AuthenticateAsync(Constants.PrimaryAuthenticationType);
+            if (currentAuth != null &&
+                currentAuth.Identity != null &&
+                currentAuth.Identity.IsAuthenticated)
+            {
+                currentSubject = currentAuth.Identity.Claims.GetValue(Constants.ClaimTypes.Subject);
+            }
+            return currentSubject;
+        }
+
         ExternalIdentity GetExternalIdentity(IEnumerable<Claim> claims)
         {
-            if (claims == null || !claims.Any())
-            {
-                return null;
-            }
+            if (claims == null) throw new ArgumentNullException("claims");
 
             var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
             if (subClaim == null)

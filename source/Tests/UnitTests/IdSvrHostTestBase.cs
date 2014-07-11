@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Testing;
+﻿using Microsoft.Owin;
+using Microsoft.Owin.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Owin;
@@ -37,7 +38,7 @@ namespace Thinktecture.IdentityServer.Tests
                          siteName: "Thinktecture IdentityServer v3 - test",
                          publicHostAddress: "http://localhost:3333");
 
-                mockUserService = new Mock<InMemoryUserService>(Thinktecture.IdentityServer.Tests.TestFactory.Users.Get());
+                mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;
                 factory.UserService = Registration.RegisterFactory<IUserService>(() => mockUserService.Object);
 
@@ -55,12 +56,26 @@ namespace Thinktecture.IdentityServer.Tests
 
         public virtual void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
+            app.Use(async (ctx, next) =>
+            {
+                Preprocess(ctx);
+                await next();
+                Postprocess(ctx);
+            });
+
             var google = new Microsoft.Owin.Security.Google.GoogleAuthenticationOptions
             {
                 AuthenticationType = "Google",
                 SignInAsAuthenticationType = signInAsType
             };
             app.UseGoogleAuthentication(google);
+        }
+
+        protected virtual void Preprocess(IOwinContext ctx)
+        {
+        }
+        protected virtual void Postprocess(IOwinContext ctx)
+        {
         }
 
         protected string Url(string path)
