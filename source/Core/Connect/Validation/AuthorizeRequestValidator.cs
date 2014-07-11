@@ -384,7 +384,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            var customResult = await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest, _users);
+            var customResult = await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest);
 
             if (customResult.IsError)
             {
