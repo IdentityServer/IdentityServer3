@@ -24,13 +24,20 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected Mock<InMemoryUserService> mockUserService;
 
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void Init()
         {
             LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
+            // white space between unit tests
+            LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            LogProvider.GetLogger("").Debug("UNIT TEST: " + TestContext.TestName);
+            LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            
             server = TestServer.Create(app =>
             {
+
                 protector = new NoDataProtector();
 
                 var factory = TestFactory.Create(

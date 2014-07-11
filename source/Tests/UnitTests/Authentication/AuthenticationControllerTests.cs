@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             
             var val = msg.Protect(60000, protector);
             var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
-            resp.AssertCookie(AuthenticationController.LoginRequestMessageCookieName);
+            resp.AssertCookie(AuthenticationController.SignInMessageCookieName);
             client.SetCookies(resp.GetCookies());
             return resp;
         }
