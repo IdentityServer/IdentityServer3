@@ -11,8 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
