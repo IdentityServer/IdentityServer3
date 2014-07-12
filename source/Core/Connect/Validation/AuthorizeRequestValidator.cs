@@ -270,6 +270,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             //////////////////////////////////////////////////////////
+            // idp must be supported
+            //////////////////////////////////////////////////////////
+            var idp = parameters.Get(Constants.AuthorizeRequest.IdP);
+            if (idp.IsPresent())
+            {
+                Logger.InfoFormat("idp: {0}", idp);
+                //TODO: Check that this idp is supported
+                
+                _validatedRequest.IdP = idp;
+            }
+
+            //////////////////////////////////////////////////////////
             // check max_age
             //////////////////////////////////////////////////////////
             var maxAge = parameters.Get(Constants.AuthorizeRequest.MaxAge);
