@@ -298,6 +298,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
+            //////////////////////////////////////////////////////////
+            // check login_hint
+            //////////////////////////////////////////////////////////
+            var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
+            if (loginHint.IsPresent())
+            {
+                Logger.InfoFormat("login_hint: {0}", loginHint);
+                _validatedRequest.LoginHint = loginHint;
+            }
+
             // todo: parse amr, acr
 
             Logger.Info("Protocol validation successful");
