@@ -44,6 +44,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _signIn.UILocales = request.UiLocales;
             }
 
+            // check login_hint - we only support idp: right now
+            if (request.LoginHint.IsPresent())
+            {
+                if (request.LoginHint.StartsWith("idp:"))
+                {
+                    _signIn.IdP = request.LoginHint.Substring(4);
+                }
+            }
+
             if (request.PromptMode == Constants.PromptModes.Login)
             {
                 // remove prompt so when we redirect back in from login page
