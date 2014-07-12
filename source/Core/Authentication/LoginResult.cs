@@ -76,7 +76,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             Logger.Info("Redirecting to login page");
-            Logger.Debug(JsonConvert.SerializeObject(_message, Formatting.Indented));
             return response;
         }
     }

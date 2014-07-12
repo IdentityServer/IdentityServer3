@@ -6,11 +6,14 @@
 using Newtonsoft.Json;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class SignInMessage
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public string ReturnUrl { get; set; }
         public string IdP { get; set; }
         public string DisplayMode { get; set; }
@@ -28,10 +31,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var settings = new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
             };
 
             var json = JsonConvert.SerializeObject(this, settings);
+            Logger.DebugFormat("Protecting signin message: {0}", json);
+
             return protector.Protect(json, "signinmessage");
         }
 
@@ -39,7 +45,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var settings = new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore
             };
 
             var json = protector.Unprotect(data, "signinmessage");
