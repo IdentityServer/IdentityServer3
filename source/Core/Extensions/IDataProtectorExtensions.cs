@@ -4,8 +4,9 @@
  */
 using System.Text;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class IDataProtectorExtensions
     {

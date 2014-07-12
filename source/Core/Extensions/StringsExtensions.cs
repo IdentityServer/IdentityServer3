@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Thinktecture.IdentityServer.Core
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class StringExtensions
     {

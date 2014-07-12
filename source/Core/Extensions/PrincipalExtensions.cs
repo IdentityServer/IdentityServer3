@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Thinktecture.IdentityModel.Extensions;
 
-namespace Thinktecture.IdentityServer.Core
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class PrincipalExtensions
     {

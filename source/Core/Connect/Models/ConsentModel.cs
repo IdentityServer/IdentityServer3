@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {

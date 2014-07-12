@@ -6,7 +6,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Thinktecture.IdentityServer.Core
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class DateTimeExtensions
     {
