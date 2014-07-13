@@ -258,20 +258,6 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void ResumeLoginFromRedirect_WithoutSignInMessageCookie_ShowsErrorPage()
-        {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
-
-            GetLoginPage();
-            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
-            client.DefaultRequestHeaders.Remove("Cookie");
-            client.SetCookies(resp1.GetCookies());
-            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
-            AssertPage(resp2, "error");
-        }
-
-        [TestMethod]
         public void Logout_ShowsLogoutPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);

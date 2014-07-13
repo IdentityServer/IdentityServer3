@@ -163,8 +163,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderLoginPage(authResult.ErrorMessage);
             }
 
-            return SignInAndRedirect(
-                authResult,
+            return SignInAndRedirect(authResult,
                 Constants.AuthenticationMethods.External,
                 authResult.Provider);
         }
@@ -190,7 +189,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var idp = user.GetIdentityProvider();
             var authTime = user.GetAuthenticationTimeEpoch();
 
-            return SignInAndRedirect(result, method, idp, authTime);
+            var authorizationReturnUrl = user.Claims.GetValue(Constants.ClaimTypes.AuthorizationReturnUrl);
+            
+            SignIn(result, method, idp, authTime);
+
+            Logger.InfoFormat("redirecting to: {0}", authorizationReturnUrl);
+            return Redirect(authorizationReturnUrl);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
@@ -200,12 +204,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout requested for subject: {0}", sub);
 
-            var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(
-                Constants.PrimaryAuthenticationType,
-                Constants.ExternalAuthenticationType,
-                Constants.PartialSignInAuthenticationType);
-
+            ClearAuthenticationCookies();
             ClearSignInMessage();
 
             return RenderLogoutPage();
@@ -265,29 +264,50 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             string identityProvider,
             long authTime = 0)
         {
-            if (authResult == null) throw new ArgumentNullException("authResult");
-            if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
-            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
+            SignIn(authResult, authenticationMethod, identityProvider, authTime);
 
-            var ctx = Request.GetOwinContext();
-            
-            var signInMessage = LoadSignInMessage();
-            Uri redirect = null;
+            var redirectUrl = GetRedirectUrl(authResult);
+            Logger.InfoFormat("redirecting to: {0}", redirectUrl);
+            return Redirect(redirectUrl);
+        }
+
+        private void SignIn(
+            AuthenticateResult authResult,
+            string authenticationMethod,
+            string identityProvider,
+            long authTime)
+        {
+            IssueAuthenticationCookie(authResult, authenticationMethod, identityProvider, authTime);
+            ClearSignInMessage();
+        }
+
+        private Uri GetRedirectUrl(AuthenticateResult authResult)
+        {
+            if (authResult == null) throw new ArgumentNullException("authResult");
+
             if (authResult.IsPartialSignIn)
             {
-                redirect = new Uri(ctx.Request.Uri, authResult.PartialSignInRedirectPath.Value);
+                return new Uri(Request.RequestUri, authResult.PartialSignInRedirectPath.Value);
             }
             else
             {
-                redirect = new Uri(signInMessage.ReturnUrl);
-
-                // TODO -- manage this state better if we're doing redirect to custom page
-                // would rather the redirect URL from request message put into cookie
-                // and named with a nonce, then the resume url + nonce set as claim
-                // in principal above so page being redirected to can know what url to return to
-                ClearSignInMessage();
+                var signInMessage = LoadSignInMessage(); 
+                return new Uri(signInMessage.ReturnUrl);
             }
+        }
 
+        private void IssueAuthenticationCookie(
+            AuthenticateResult authResult, 
+            string authenticationMethod, 
+            string identityProvider, 
+            long authTime)
+        {
+            if (authResult == null) throw new ArgumentNullException("authResult");
+            if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
+            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
+            
+            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.Subject, authResult.Name, authResult.IsPartialSignIn ? " (partial login)" : "");
+            
             var issuer = authResult.IsPartialSignIn ?
                 Constants.PartialSignInAuthenticationType :
                 Constants.PrimaryAuthenticationType;
@@ -303,28 +323,35 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var id = principal.Identities.First();
             if (authResult.IsPartialSignIn)
             {
-                // TODO: put original return URL into cookie with a GUID ID
-                // and put the ID as route param for the resume URL. then
-                // we can always call ClearLoginRequestMessage()
-                var resumeLoginUrl = Url.Route(Constants.RouteNames.ResumeLoginFromRedirect, null);
+                // add claim so partial redirect can return here to continue login
+                var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, null);
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
+
+                // store original authorization url as claim
+                // so once we result we can return to authorization page
+                var signInMessage = LoadSignInMessage();
+                var authorizationUrl = signInMessage.ReturnUrl;
+                var authorizationUrlClaim = new Claim(Constants.ClaimTypes.AuthorizationReturnUrl, authorizationUrl);
+                id.AddClaim(authorizationUrlClaim);
 
                 // allow redircting code to add claims for target page
                 id.AddClaims(authResult.RedirectClaims);
             }
 
+            ClearAuthenticationCookies();
+
+            var ctx = Request.GetOwinContext();
+            ctx.Authentication.SignIn(id);
+        }
+
+        private void ClearAuthenticationCookies()
+        {
+            var ctx = Request.GetOwinContext();
             ctx.Authentication.SignOut(
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType,
                 Constants.PartialSignInAuthenticationType);
-
-            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.Subject, authResult.Name, authResult.IsPartialSignIn?" (partial login)":"");
-            ctx.Authentication.SignIn(id);
-
-            Logger.InfoFormat("redirecting to: {0}", redirect.AbsoluteUri);
-            
-            return Redirect(redirect.AbsoluteUri);
         }
 
         private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
@@ -404,6 +431,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private SignInMessage SaveSignInMessage(string message)
         {
+            if (message == null) throw new ArgumentNullException("message");
+
             var signInMessage = SignInMessage.Unprotect(
                 message,
                 _internalConfiguration.DataProtector);
