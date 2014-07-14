@@ -4,7 +4,7 @@ using Thinktecture.IdentityServer.WsFederation.Models;
 
 namespace SelfHost.Config
 {
-    public class LocalTestRelyingParties
+    public class RelyingParties
     {
         public static IEnumerable<RelyingParty> Get()
         {
@@ -13,6 +13,7 @@ namespace SelfHost.Config
                 new RelyingParty
                 {
                     Realm = "urn:testrp",
+                    Name = "Test RP",
                     Enabled = true,
                     ReplyUrl = "https://web.local/idsrvrp/",
                     TokenType = Thinktecture.IdentityModel.Constants.TokenTypes.Saml2TokenProfile11,

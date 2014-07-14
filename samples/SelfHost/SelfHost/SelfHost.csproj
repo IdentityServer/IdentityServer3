@@ -55,16 +55,16 @@
     </Reference>
     <Reference Include="Thinktecture.IdentityServer.WsFederation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Thinktecture.IdentityServer.v3.WsFederation.1.0.0-alpha-20140702\lib\net45\Thinktecture.IdentityServer.WsFederation.dll</HintPath>
+      <HintPath>..\packages\Thinktecture.IdentityServer.v3.WsFederation.1.0.0-alpha-20140714\lib\net45\Thinktecture.IdentityServer.WsFederation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Clients.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="Config\Factory.cs" />
-    <Compile Include="Config\LocalTestRelyingParties.cs" />
+    <Compile Include="Config\RelyingParties.cs" />
     <Compile Include="Config\Scopes.cs" />
-    <Compile Include="Config\LocalTestWsFederationSettings.cs" />
+    <Compile Include="Config\WsFedSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

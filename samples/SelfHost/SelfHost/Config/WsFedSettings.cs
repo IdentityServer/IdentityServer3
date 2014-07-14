@@ -2,7 +2,7 @@
 
 namespace SelfHost.Config
 {
-    public class LocalTestWsFederationSettings : WsFederationSettings
+    public class WsFedSettings : WsFederationSettings
     {
     }
 }
