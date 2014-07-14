@@ -5,7 +5,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestScopes
+    public class Scopes
     {
         public static IEnumerable<Scope> Get()
         {

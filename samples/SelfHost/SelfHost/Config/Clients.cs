@@ -5,7 +5,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Host.Config
 {
-    public class LocalTestClients
+    public class Clients
     {
         public static List<Client> Get()
         {
