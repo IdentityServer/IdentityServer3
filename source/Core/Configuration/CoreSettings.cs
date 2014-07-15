@@ -12,6 +12,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         public abstract string IssuerUri { get; }
 
+        public virtual Dictionary<string, string> Properties { get; set; }
+
         public virtual X509Certificate2 SigningCertificate
         {
             get { return null; } 
