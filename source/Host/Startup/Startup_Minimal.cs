@@ -11,6 +11,8 @@ namespace Thinktecture.IdentityServer.Host
     {
         public void Configuration(IAppBuilder app)
         {
+            // uncomment to enable HSTS headers for the host
+            // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
             //app.UseHsts();
 
             app.Map("/core", coreApp =>
