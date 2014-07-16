@@ -11,6 +11,7 @@ using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
@@ -21,6 +22,8 @@ namespace Thinktecture.IdentityServer.WsFederation
 {
     [HostAuthentication("idsrv")]
     [RoutePrefix("")]
+    [NoCache]
+    [SecurityHeaders(EnableCsp=false)]
     public class WsFederationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

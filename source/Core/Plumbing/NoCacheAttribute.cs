@@ -22,6 +22,8 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
                 cc.Private = true;
                 cc.MaxAge = TimeSpan.Zero;
                 actionExecutedContext.Response.Headers.CacheControl = cc;
+
+                actionExecutedContext.Response.Headers.Add("Pragma", "no-cache");
             }
         }
     }

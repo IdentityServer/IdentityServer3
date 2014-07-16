@@ -11,6 +11,7 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     [SecurityHeaders]
+    [NoCache]
     public class LogoutController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

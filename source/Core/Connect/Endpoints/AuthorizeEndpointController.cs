@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [RoutePrefix("connect")]
     [HostAuthentication("idsrv")]
     [SecurityHeaders]
+    [NoCache]
     public class AuthorizeEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
