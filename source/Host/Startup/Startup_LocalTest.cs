@@ -19,6 +19,8 @@ namespace Thinktecture.IdentityServer.Host
     {
         public void Configuration(IAppBuilder app)
         {
+            //app.UseHsts();
+
             LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
 
             app.Map("/core", coreApp =>

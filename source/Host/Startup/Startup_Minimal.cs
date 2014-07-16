@@ -11,6 +11,8 @@ namespace Thinktecture.IdentityServer.Host
     {
         public void Configuration(IAppBuilder app)
         {
+            //app.UseHsts();
+
             app.Map("/core", coreApp =>
                 {
                     var factory = Factory.Create(
