@@ -40,11 +40,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             get { return "Thinktecture IdentityServer v3"; }
         }
 
-        public virtual string PublicHostName
-        {
-            get { return string.Empty; }
-        }
-
         public virtual EndpointSettings AuthorizeEndpoint
         {
             get { return EndpointSettings.Enabled; }

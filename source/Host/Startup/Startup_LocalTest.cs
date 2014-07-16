@@ -32,14 +32,14 @@ namespace Thinktecture.IdentityServer.Host
 
                     var factory = Factory.Create(
                         issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1",
-                        publicHostAddress: "http://localhost:3333/core");
+                        siteName: "Thinktecture IdentityServer v3 - preview 1");
 
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
 
                     var idsrvOptions = new IdentityServerOptions
                     {
+                        PublicHostName = "http://localhost:3333",
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         ConfigurePlugins = ConfigurePlugins
@@ -54,10 +54,6 @@ namespace Thinktecture.IdentityServer.Host
         {
             var wsFedOptions = new WsFederationPluginOptions
             {
-                // todo - also signoutcleanup is broken right now
-                LoginPageUrl = "http://localhost:3333/core/login",
-                LogoutPageUrl = "http://localhost:3333/core/connect/logout",
-
                 Factory = new WsFederationServiceFactory
                 {
                     UserService = options.Factory.UserService,
@@ -67,6 +63,9 @@ namespace Thinktecture.IdentityServer.Host
                 },
             };
 
+            // /core/wsfed
+            // ~/../login
+            // ~/../logout
             pluginApp.UseWsFederationPlugin(wsFedOptions);
         }
 

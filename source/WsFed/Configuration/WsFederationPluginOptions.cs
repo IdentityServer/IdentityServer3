@@ -11,8 +11,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
         public IDataProtector DataProtector { get; set; }
 
         public string MapPath { get; set; }
-        public string LoginPageUrl { get; set; }
-        public string LogoutPageUrl { get; set; }
 
         public WsFederationPluginOptions()
         {
@@ -24,16 +22,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             if (Factory == null)
             {
                 throw new ArgumentNullException("Factory");
-            }
-
-            if (string.IsNullOrWhiteSpace(LoginPageUrl))
-            {
-                throw new ArgumentException("LoginPageUrl is not set");
-            }
-
-            if (string.IsNullOrWhiteSpace(LogoutPageUrl))
-            {
-                throw new ArgumentException("LogoutPageUrl is not set");
             }
         }
     }

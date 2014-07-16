@@ -318,15 +318,20 @@ namespace Thinktecture.IdentityServer.Core
             public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
             public const string CspReport               = "idsrv.csp.report";
         }
-        
+
         public static class RoutePaths
         {
-            public const string Login                   = "login";
-            public const string LoginExternal           = "external";
-            public const string LoginExternalCallback   = "callback";
-            public const string Logout                  = "logout";
+            public const string Login = "login";
+            public const string LoginExternal = "external";
+            public const string LoginExternalCallback = "callback";
+            public const string Logout = "logout";
             public const string ResumeLoginFromRedirect = "resume";
-            public const string CspReport               = "csp/report";
+            public const string CspReport = "csp/report";
+        }
+        
+        public static class OwinEnvironment
+        {
+            public const string IdentityServerBaseUrl = "IdentityServerBaseUrl";
         }
     }
 }

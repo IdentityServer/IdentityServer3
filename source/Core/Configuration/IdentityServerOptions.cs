@@ -10,6 +10,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class IdentityServerOptions
     {
+        public string PublicHostName { get; set; }
         public IdentityServerServiceFactory Factory { get; set; }
         public AuthenticationOptions AuthenticationOptions { get; set; }
         public virtual IDataProtector DataProtector { get; set; }

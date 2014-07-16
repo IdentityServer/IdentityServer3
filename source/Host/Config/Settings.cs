@@ -10,13 +10,11 @@ namespace Thinktecture.IdentityServer.Host.Config
         private string _issuerUri;
         private string _siteName;
         private X509Certificate2 _certificate;
-        private string _publicHostAddress;
 
-        public Settings(string issuerUri, string siteName, string publicHostAddress)
+        public Settings(string issuerUri, string siteName)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
-            _publicHostAddress = publicHostAddress;
 
             var assembly = this.GetType().Assembly;
             using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Host.Config.idsrv3test.pfx"))
@@ -46,11 +44,6 @@ namespace Thinktecture.IdentityServer.Host.Config
         public override string SiteName
         {
             get { return _siteName; }
-        }
-
-        public override string PublicHostName
-        {
-            get { return _publicHostAddress; }
         }
 
         private static byte[] ReadStream(Stream input)

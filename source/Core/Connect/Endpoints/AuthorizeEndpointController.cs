@@ -211,8 +211,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var path = Url.Route("authorize", null) + "?" + parameters.ToQueryString();
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
-            
-            return new LoginResult(message, Request, _internalConfiguration);
+
+            return new LoginResult(message, Request.GetOwinContext().Environment, _internalConfiguration);
         }
     }
 }

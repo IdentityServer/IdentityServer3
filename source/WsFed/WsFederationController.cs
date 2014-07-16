@@ -17,6 +17,7 @@ using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
 using Thinktecture.IdentityServer.WsFederation.Results;
 using Thinktecture.IdentityServer.WsFederation.Validation;
+using System.Net.Http;
 
 namespace Thinktecture.IdentityServer.WsFederation
 {
@@ -70,8 +71,8 @@ namespace Thinktecture.IdentityServer.WsFederation
                 {
                     Logger.Info("WsFederation signout request");
 
-                    // todo
-                    return Redirect(_wsFedOptions.LogoutPageUrl);
+                    var url = this.Request.GetOwinContext().Environment.GetIdentityServerLogoutUrl();
+                    return Redirect(url);
                 }
             }
 
@@ -99,7 +100,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                 return NotFound();
             }
 
-            var ep = Request.GetBaseUrl(_settings.PublicHostName);
+            var ep = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl() + this._wsFedOptions.MapPath;
             var entity = _metadataResponseGenerator.Generate(ep);
 
             return new MetadataResult(entity);
@@ -134,7 +135,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                 message.IdP = result.HomeRealm;
             }
 
-            var url = LoginResult.GetRedirectUrl(message, this.Request, settings, _internalConfig);
+            var url = LoginResult.GetRedirectUrl(message, this.Request.GetOwinContext().Environment, _internalConfig);
             return Redirect(url);
         }
     }

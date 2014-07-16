@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -20,24 +21,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly SignInMessage _message;
-        private readonly HttpRequestMessage _request;
+        private readonly IDictionary<string, object> _env;
         private readonly InternalConfiguration _internalConfig;
-        private string _loginPageUrl;
 
-        public static string GetRedirectUrl(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
+        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, InternalConfiguration internalConfig)
         {
-            var result = new LoginResult(message, request, internalConfig, internalConfig.LoginPageUrl);
+            var result = new LoginResult(message, env, internalConfig);
             var response = result.Execute();
 
             return response.Headers.Location.AbsoluteUri;
         }
 
-        public LoginResult(SignInMessage message, HttpRequestMessage request, InternalConfiguration internalConfig, string loginPageUrl = "")
+        public LoginResult(SignInMessage message, IDictionary<string, object> env, InternalConfiguration internalConfig)
         {
             _message = message;
-            _request = request;
+            _env = env;
             _internalConfig = internalConfig;
-            _loginPageUrl = loginPageUrl;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -52,19 +51,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             try
             {
                 var sim = _message.Protect(600, _internalConfig.DataProtector);
+                var url = _env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
+                url += "?message=" + sim;
 
-                if (_loginPageUrl.IsMissing())
-                {
-                    var urlHelper = _request.GetUrlHelper();
-                    _loginPageUrl = urlHelper.Route(Constants.RouteNames.Login, new { message = sim });
-                }
-                else
-                {
-                    _loginPageUrl += "?message=" + sim;
-                }
-
-                var uri = new Uri(_request.RequestUri, _loginPageUrl);
-
+                var uri = new Uri(url);
                 response.Headers.Location = uri;
             }
             catch
