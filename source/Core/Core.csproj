@@ -112,7 +112,8 @@
     <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
     <Compile Include="Authentication\LoginCredentials.cs" />
     <Compile Include="Authentication\ResultExtensions.cs" />
-    <Compile Include="Configuration\AppBuilderExtensions.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\UseHstsExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\UseIdentityServerExtension.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Connect\Models\RefreshToken.cs" />
