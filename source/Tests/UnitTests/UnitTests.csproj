@@ -112,6 +112,7 @@
     </Compile>
     <Compile Include="Authentication\AuthenticationControllerTests.cs" />
     <Compile Include="Authentication\AuthenticateResultTests.cs" />
+    <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
