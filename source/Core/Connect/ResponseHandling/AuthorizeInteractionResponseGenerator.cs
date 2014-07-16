@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly SignInMessage _signIn;
         private readonly IConsentService _consent;
 
-        public AuthorizeInteractionResponseGenerator(CoreSettings settings, IConsentService consent)
+        public AuthorizeInteractionResponseGenerator(IConsentService consent)
         {
             _signIn = new SignInMessage();
             _consent = consent;
