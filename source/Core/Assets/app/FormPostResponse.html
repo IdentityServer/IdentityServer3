@@ -1,9 +1,10 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html>
 <head><title>Submit this form</title></head>
-
-<body onload="javascript:document.forms[0].submit()">
+<body>
     <form method="post" action="{{redirect_uri}}">
         {{fields}}
     </form>
+    <script src="{rootUrl}/assets/app.FormPostResponse.js"></script>
 </body>
 </html>

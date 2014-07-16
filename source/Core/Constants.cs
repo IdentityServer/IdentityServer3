@@ -316,6 +316,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string LogoutPrompt            = "idsrv.authentication.logoutprompt";
             public const string Logout                  = "idsrv.authentication.logout";
             public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
+            public const string CspReport               = "idsrv.csp.report";
         }
         
         public static class RoutePaths
@@ -325,6 +326,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string LoginExternalCallback   = "callback";
             public const string Logout                  = "logout";
             public const string ResumeLoginFromRedirect = "resume";
+            public const string CspReport               = "csp/report";
         }
     }
 }

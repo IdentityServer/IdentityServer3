@@ -19,10 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
     public class AuthorizeImplicitFormPostResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly HttpRequestMessage _request;
         private readonly AuthorizeResponse _response;
 
-        public AuthorizeImplicitFormPostResult(AuthorizeResponse response)
+        public AuthorizeImplicitFormPostResult(HttpRequestMessage request, AuthorizeResponse response)
         {
+            _request = request;
             _response = response;
         }
 
@@ -33,15 +35,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         private HttpResponseMessage Execute()
         {
-            string form;
-            using (var stream = this.GetType().Assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Core.Connect.FormPostResponse.html"))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    form = reader.ReadToEnd();
-                }
-            }
-
+            var root = _request.GetRequestContext().VirtualPathRoot;
+            string form = Assets.AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.FormPostResponse.html", new { rootUrl=root });
             form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
 
             var sb = new StringBuilder(128);

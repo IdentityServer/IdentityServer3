@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public static IHttpActionResult AuthorizeImplicitFormPostResponse(this ApiController controller, Uri redirectUri, string identityToken, string state)
         {
-            return new AuthorizeImplicitFormPostResult(new AuthorizeResponse
+            return new AuthorizeImplicitFormPostResult(controller.Request, new AuthorizeResponse
             {
                 RedirectUri = redirectUri,
                 IdentityToken = identityToken,
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public static IHttpActionResult AuthorizeImplicitFormPostResponse(this ApiController controller, AuthorizeResponse response)
         {
-            return new AuthorizeImplicitFormPostResult(response);
+            return new AuthorizeImplicitFormPostResult(controller.Request, response);
         }
 
         public static IHttpActionResult TokenResponse(this ApiController controller, TokenResponse response)

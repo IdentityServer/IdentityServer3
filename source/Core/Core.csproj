@@ -117,6 +117,9 @@
     <Compile Include="Configuration\AutofacConfig.cs" />
     <Compile Include="Connect\Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
+    <Compile Include="Plumbing\CspReportController.cs" />
+    <Compile Include="Plumbing\NoCacheAttribute.cs" />
+    <Compile Include="Plumbing\SecurityHeadersAttribute.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenStore.cs" />
@@ -304,10 +307,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Connect\FormPostResponse.html" />
+    <EmbeddedResource Include="Assets\app\FormPostResponse.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\app\app.less" />
+    <EmbeddedResource Include="Assets\app\FormPostResponse.js" />
     <Content Include="Assets\app\app.css">
       <DependentUpon>app.less</DependentUpon>
     </Content>

@@ -6,9 +6,11 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
+    [SecurityHeaders]
     public class LogoutController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

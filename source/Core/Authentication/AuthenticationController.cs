@@ -24,6 +24,7 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     [ErrorPageFilter]
+    [SecurityHeaders]
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
