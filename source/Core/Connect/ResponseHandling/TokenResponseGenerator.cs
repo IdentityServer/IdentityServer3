@@ -18,17 +18,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly CoreSettings _settings;
         private readonly ITokenService _tokenService;
-        private readonly ITokenHandleStore _tokenHandles;
         private readonly IRefreshTokenService _refreshTokenService;
 
-        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, ITokenHandleStore tokenHandles, CoreSettings settings, IAuthorizationCodeStore codes)
+        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService)
         {
-            _settings = settings;
             _tokenService = tokenService;
             _refreshTokenService = refreshTokenService;
-            _tokenHandles = tokenHandles;
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
@@ -39,13 +35,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 return await ProcessAuthorizationCodeRequestAsync(request);
             }
-            else if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
+            
+            if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
                      request.GrantType == Constants.GrantTypes.Password ||
                      request.Assertion.IsPresent())
             {
                 return await ProcessTokenRequestAsync(request);
             }
-            else if (request.GrantType == Constants.GrantTypes.RefreshToken)
+            
+            if (request.GrantType == Constants.GrantTypes.RefreshToken)
             {
                 return await ProcessRefreshTokenRequestAsync(request);
             }
@@ -129,7 +127,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
-            bool createRefreshToken = false;
+            bool createRefreshToken;
 
             if (request.AuthorizationCode != null)
             {

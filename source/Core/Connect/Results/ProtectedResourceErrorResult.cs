@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
@@ -42,6 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
             var header = new AuthenticationHeaderValue("Bearer", parameter);
             var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            response.Headers.WwwAuthenticate.Add(header);
 
             Logger.Info("Returning error: " + _error);
             return response;

@@ -209,7 +209,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
             
-            return new LoginResult(message, this.Request, settings, _internalConfiguration);
+            return new LoginResult(message, Request, _internalConfiguration);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryConsentService : IConsentService
     {
-        private ConcurrentBag<Consent> _consents = new ConcurrentBag<Consent>();
+        private readonly ConcurrentBag<Consent> _consents = new ConcurrentBag<Consent>();
         
         public Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
         {

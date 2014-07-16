@@ -17,16 +17,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeInteractionResponseGenerator
     {
-        private SignInMessage _signIn;
-        private CoreSettings _settings;
-
-        private IConsentService _consent;
+        private readonly SignInMessage _signIn;
+        private readonly IConsentService _consent;
 
         public AuthorizeInteractionResponseGenerator(CoreSettings settings, IConsentService consent)
         {
             _signIn = new SignInMessage();
-
-            _settings = settings;
             _consent = consent;
         }
 
@@ -41,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // pass through ui locales to signin service
             if (request.UiLocales.IsPresent())
             {
-                _signIn.UILocales = request.UiLocales;
+                _signIn.UiLocales = request.UiLocales;
             }
 
             // check login_hint - we only support idp: right now

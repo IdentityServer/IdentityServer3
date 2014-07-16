@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
                 grant_types_supported = Constants.SupportedGrantTypes,
-                subject_types_support = new string[] { "pairwise", "public" },
+                subject_types_support = new[] { "pairwise", "public" },
                 id_token_signing_alg_values_supported = "RS256"
             });
         }
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         use = "sig",
                         kid = thumbprint,
                         x5t = thumbprint,
-                        x5c = new string[] { cert64 }
+                        x5c = new[] { cert64 }
                     };
 
                     webKeys.Add(webKey);

@@ -7,7 +7,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class HostDataProtector : IDataProtector
     {
-        private IDataProtectionProvider _provider;
+        private readonly IDataProtectionProvider _provider;
 
         public HostDataProtector(IDataProtectionProvider provider)
         {

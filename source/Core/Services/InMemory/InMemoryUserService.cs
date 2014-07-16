@@ -13,11 +13,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryUserService : IUserService
     {
-        List<InMemoryUser> _users = new List<InMemoryUser>();
+        readonly List<InMemoryUser> _users = new List<InMemoryUser>();
 
         public InMemoryUserService(IEnumerable<InMemoryUser> users)
         {
-            this._users.AddRange(users);
+            _users.AddRange(users);
         }
 
         public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)

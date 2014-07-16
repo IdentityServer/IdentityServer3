@@ -4,19 +4,20 @@
  */
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryScopeService : IScopeService
     {
-        IEnumerable<Models.Scope> _scopes;
+        readonly IEnumerable<Scope> _scopes;
 
-        public InMemoryScopeService(IEnumerable<Models.Scope> scopes)
+        public InMemoryScopeService(IEnumerable<Scope> scopes)
         {
-            this._scopes = scopes;
+            _scopes = scopes;
         }
 
-        public Task<IEnumerable<Models.Scope>> GetScopesAsync()
+        public Task<IEnumerable<Scope>> GetScopesAsync()
         {
             return Task.FromResult(_scopes);
         }

@@ -12,21 +12,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class IdentityServerServiceFactory
     {
-        static ILog Logger = LogProvider.GetCurrentClassLogger();
+        static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         // keep list of any additional dependencies the 
         // hosting application might need. these will be
         // added to the DI container
-        List<Registration> registrations = new List<Registration>();
+        List<Registration> _registrations = new List<Registration>();
         public IEnumerable<Registration> Registrations
         {
-            get { return registrations; }
+            get { return _registrations; }
         }
 
         public void Register<T>(Registration<T> r)
             where T : class
         {
-            registrations.Add(r);
+            _registrations.Add(r);
         }
 
         // mandatory (external)

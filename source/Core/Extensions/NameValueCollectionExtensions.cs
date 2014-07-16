@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 return String.Empty;
             }
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             bool first = true;
             foreach (string name in collection)
             {

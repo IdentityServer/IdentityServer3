@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
-        
+
         public ScopeValidator()
         {
             RequestedScopes = new List<Scope>();
@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public void SetConsentedScopes(IEnumerable<string> consentedScopes)
         {
             consentedScopes = consentedScopes ?? Enumerable.Empty<string>();
-            
+
             GrantedScopes.RemoveAll(scope => !scope.Required && !consentedScopes.Contains(scope.Name));
         }
 
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 ContainsOfflineAccessScope = true;
             }
-            
+
             RequestedScopes.AddRange(GrantedScopes);
 
             return true;
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-            
+
             if (parsedScopes.Count > 0)
             {
                 parsedScopes.Sort();
@@ -98,17 +98,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Logger.Info("All scopes allowed for client");
                 return true;
             }
-            else
-            {
-                Logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
 
-                foreach (var scope in requestedScopes)
+            Logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
+
+            foreach (var scope in requestedScopes)
+            {
+                if (!client.ScopeRestrictions.Contains(scope))
                 {
-                    if (!client.ScopeRestrictions.Contains(scope))
-                    {
-                        Logger.ErrorFormat("Requested scope not allowed: {0}", scope);
-                        return false;
-                    }
+                    Logger.ErrorFormat("Requested scope not allowed: {0}", scope);
+                    return false;
                 }
             }
 

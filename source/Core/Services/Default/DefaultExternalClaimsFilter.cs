@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
         {
-            return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
+            return Plumbing.ClaimMap.Map(incomingClaims);
         }
 
         protected virtual IEnumerable<Claim> TransformSocialClaims(IdentityProvider provider, IEnumerable<Claim> claims)

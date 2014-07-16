@@ -6,7 +6,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryRefreshTokenStore : IRefreshTokenStore
     {
-        ConcurrentDictionary<string, RefreshToken> _repository = new ConcurrentDictionary<string, RefreshToken>();
+        readonly ConcurrentDictionary<string, RefreshToken> _repository = new ConcurrentDictionary<string, RefreshToken>();
 
         public Task StoreAsync(string key, RefreshToken value)
         {

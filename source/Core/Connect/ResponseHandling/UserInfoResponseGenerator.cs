@@ -18,13 +18,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
-        private readonly CoreSettings _settings;
 
         public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings)
         {
             _users = users;
             _scopes = scopes;
-            _settings = settings;
         }
 
         public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
@@ -63,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(IEnumerable<string> scopes)
         {
-            if (scopes == null || scopes.Count() == 0)
+            if (scopes == null || !scopes.Any())
             {
                 return Enumerable.Empty<string>();
             }

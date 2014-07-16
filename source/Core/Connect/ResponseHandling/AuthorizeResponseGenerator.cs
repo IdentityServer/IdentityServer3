@@ -6,7 +6,6 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Services;
@@ -17,15 +16,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly ITokenService _tokenService;
         private readonly IAuthorizationCodeStore _authorizationCodes;
-        private readonly ITokenHandleStore _tokenHandles;
-        private readonly CoreSettings _settings;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, ITokenHandleStore tokenHandles, CoreSettings settings)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;
-            _tokenHandles = tokenHandles;
-            _settings = settings;
         }
 
         public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal subject)

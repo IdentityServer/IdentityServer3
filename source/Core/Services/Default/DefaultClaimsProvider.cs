@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         {
             Logger.Debug("Getting claims for identity token");
 
-            List<Claim> outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
+            var outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
             var additionalClaims = new List<string>();
 
             // fetch all identity claims that need to go into the id token

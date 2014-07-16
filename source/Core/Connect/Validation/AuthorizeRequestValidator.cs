@@ -20,11 +20,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
-        private readonly CoreSettings _core;
+        private readonly CoreSettings _settings;
         private readonly IScopeService _scopes;
         private readonly IClientService _clients;
         private readonly ICustomRequestValidator _customValidator;
-        private readonly IUserService _users;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -34,16 +33,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(CoreSettings core, IScopeService scopes, IClientService clients, IUserService users, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(CoreSettings settings, IScopeService scopes, IClientService clients, ICustomRequestValidator customValidator)
         {
-            _core = core;
+            _settings = settings;
             _scopes = scopes;
             _clients = clients;
-            _users = users;
             _customValidator = customValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest();
-            _validatedRequest.CoreSettings = _core;
+            _validatedRequest.CoreSettings = _settings;
         }
 
         // basic protocol validation

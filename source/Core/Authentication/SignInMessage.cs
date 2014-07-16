@@ -18,7 +18,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public string ReturnUrl { get; set; }
         public string IdP { get; set; }
         public string DisplayMode { get; set; }
-        public string UILocales { get; set; }
+        public string UiLocales { get; set; }
 
         // internal use
         public DateTime ValidTo { get; set; }
@@ -44,12 +44,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         public static SignInMessage Unprotect(string data, IDataProtector protector)
         {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
-
             var json = protector.Unprotect(data, "signinmessage");
             var message = JsonConvert.DeserializeObject<SignInMessage>(json);
 

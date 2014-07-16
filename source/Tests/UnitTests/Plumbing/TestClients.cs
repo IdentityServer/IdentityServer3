@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                         ClientId = "client",
                         ClientSecret = "secret",
                         Flow = Flows.ClientCredentials,
-                        AccessTokenType = AccessTokenType.JWT
+                        AccessTokenType = AccessTokenType.Jwt
                     },
                     new Client
                     {

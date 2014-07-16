@@ -41,8 +41,10 @@ namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
                 token_type = Constants.TokenTypes.Bearer
             };
 
-            var formatter = new JsonMediaTypeFormatter();
-            formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
+            var formatter = new JsonMediaTypeFormatter
+            {
+                SerializerSettings = {DefaultValueHandling = DefaultValueHandling.Ignore}
+            };
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {

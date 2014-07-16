@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
 
             var sb = new StringBuilder(128);
-            var inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />\n";
+            const string inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />\n";
 
             if (_response.IdentityToken.IsPresent())
             {

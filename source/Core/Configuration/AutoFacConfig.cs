@@ -16,7 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     internal static class AutofacConfig
     {
-        static ILog Logger = LogProvider.GetCurrentClassLogger();
+        static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public static IContainer Configure(IdentityServerOptions options, InternalConfiguration internalConfig)
         {

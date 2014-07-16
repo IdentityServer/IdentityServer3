@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
             IdentityTokenSigningKeyType = SigningKeyTypes.Default;
-            AccessTokenType = Models.AccessTokenType.JWT;
+            AccessTokenType = AccessTokenType.Jwt;
         }
     }
 }

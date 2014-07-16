@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,
@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         "write"
                     },
 
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 360,
                 },
                 new Client
@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         "offline_access"
                     },
 
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 3600,
                     AbsoluteRefreshTokenLifetime = 86400,
                     SlidingRefreshTokenLifetime = 43200,

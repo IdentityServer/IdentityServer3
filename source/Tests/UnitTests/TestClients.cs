@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     SubjectType = SubjectTypes.Global,
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 360,
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests
                         "write"
                     },
 
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 360,
                 },
                 new Client
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests
                         "write"
                     },
 
-                    AccessTokenType = AccessTokenType.JWT,
+                    AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 360,
                 }
             };

@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 error = _error 
             };
 
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
                 Content = new ObjectContent<ErrorDto>(dto, new JsonMediaTypeFormatter())
             };

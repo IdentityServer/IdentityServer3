@@ -13,27 +13,27 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 {
     public class AutofacScope : IDependencyScope
     {
-        ILifetimeScope scope;
+        private readonly ILifetimeScope _scope;
 
         public AutofacScope(ILifetimeScope scope)
         {
-            this.scope = scope;
+            _scope = scope;
         }
 
-        public object GetService(System.Type serviceType)
+        public object GetService(Type serviceType)
         {
-            return scope.ResolveOptional(serviceType);
+            return _scope.ResolveOptional(serviceType);
         }
 
-        public System.Collections.Generic.IEnumerable<object> GetServices(System.Type serviceType)
+        public IEnumerable<object> GetServices(Type serviceType)
         {
-            if (!scope.IsRegistered(serviceType))
+            if (!_scope.IsRegistered(serviceType))
             {
                 return Enumerable.Empty<object>();
             }
 
             Type type = typeof(IEnumerable<>).MakeGenericType(new Type[] { serviceType });
-            return (IEnumerable<object>)scope.Resolve(type);
+            return (IEnumerable<object>)_scope.Resolve(type);
         }
 
         public void Dispose()

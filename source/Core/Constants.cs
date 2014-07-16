@@ -91,18 +91,18 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedResponseTypes = new List<string> 
                             { 
-                                Constants.ResponseTypes.Code,
-                                Constants.ResponseTypes.Token,
-                                Constants.ResponseTypes.IdToken,
-                                Constants.ResponseTypes.IdTokenToken
+                                ResponseTypes.Code,
+                                ResponseTypes.Token,
+                                ResponseTypes.IdToken,
+                                ResponseTypes.IdTokenToken
                             };
 
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
-                                Constants.GrantTypes.AuthorizationCode,
-                                Constants.GrantTypes.ClientCredentials,
-                                Constants.GrantTypes.Password,
-                                Constants.GrantTypes.Implicit
+                                GrantTypes.AuthorizationCode,
+                                GrantTypes.ClientCredentials,
+                                GrantTypes.Password,
+                                GrantTypes.Implicit
                             };
 
 
@@ -197,7 +197,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new Dictionary<string, IEnumerable<string>>
         {
-            { StandardScopes.Profile, new string[]
+            { StandardScopes.Profile, new[]
                             { 
                                 ClaimTypes.Name,
                                 ClaimTypes.FamilyName,
@@ -214,23 +214,23 @@ namespace Thinktecture.IdentityServer.Core
                                 ClaimTypes.Locale,
                                 ClaimTypes.UpdatedAt 
                             }},
-            { StandardScopes.Email, new string[]
+            { StandardScopes.Email, new[]
                             { 
                                 ClaimTypes.Email,
                                 ClaimTypes.EmailVerified 
                             }},
-            { StandardScopes.Address, new string[]
+            { StandardScopes.Address, new[]
                             {
                                 ClaimTypes.Address
                             }},
-            { StandardScopes.Phone, new string[]
+            { StandardScopes.Phone, new[]
                             {
                                 ClaimTypes.PhoneNumber,
                                 ClaimTypes.PhoneNumberVerified
                             }},
-            { StandardScopes.OpenId, new string[]
+            { StandardScopes.OpenId, new[]
                             {
-                                ClaimTypes.Subject,
+                                ClaimTypes.Subject
                             }},
         };
 

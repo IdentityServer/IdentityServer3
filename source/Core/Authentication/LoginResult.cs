@@ -21,22 +21,20 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private readonly SignInMessage _message;
         private readonly HttpRequestMessage _request;
-        private readonly CoreSettings _settings;
         private readonly InternalConfiguration _internalConfig;
         private string _loginPageUrl;
 
         public static string GetRedirectUrl(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig)
         {
-            var result = new LoginResult(message, request, settings, internalConfig, internalConfig.LoginPageUrl);
+            var result = new LoginResult(message, request, internalConfig, internalConfig.LoginPageUrl);
             var response = result.Execute();
 
             return response.Headers.Location.AbsoluteUri;
         }
 
-        public LoginResult(SignInMessage message, HttpRequestMessage request, CoreSettings settings, InternalConfiguration internalConfig, string loginPageUrl = "")
+        public LoginResult(SignInMessage message, HttpRequestMessage request, InternalConfiguration internalConfig, string loginPageUrl = "")
         {
             _message = message;
-            _settings = settings;
             _request = request;
             _internalConfig = internalConfig;
             _loginPageUrl = loginPageUrl;
@@ -49,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private HttpResponseMessage Execute()
         {
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Redirect);
+            var response = new HttpResponseMessage(HttpStatusCode.Redirect);
 
             try
             {

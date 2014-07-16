@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult<HttpResponseMessage>(Execute());
+            return Task.FromResult(Execute());
         }
 
         private HttpResponseMessage Execute()
@@ -42,7 +42,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                     Content = new StringContent(_error.Error)
                 };
             }
-            else if (_error.ErrorType == ErrorTypes.Client)
+            
+            if (_error.ErrorType == ErrorTypes.Client)
             {
                 string character;
                 if (_error.ResponseMode == Constants.ResponseModes.Query ||

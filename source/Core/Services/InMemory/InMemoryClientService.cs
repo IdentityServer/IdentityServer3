@@ -5,22 +5,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryClientService : IClientService
     {
-        IEnumerable<Models.Client> _clients;
+        readonly IEnumerable<Client> _clients;
 
-        public InMemoryClientService(IEnumerable<Models.Client> clients)
+        public InMemoryClientService(IEnumerable<Client> clients)
         {
-            this._clients = clients;
+            _clients = clients;
         }
 
-        public Task<Models.Client> FindClientByIdAsync(string clientId)
+        public Task<Client> FindClientByIdAsync(string clientId)
         {
             var query =
-                from client in this._clients
+                from client in _clients
                 where client.ClientId == clientId && client.Enabled
                 select client;
             

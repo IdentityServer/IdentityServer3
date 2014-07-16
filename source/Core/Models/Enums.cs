@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     public enum SubjectTypes
     {
         Global,
-        PPID
+        Ppid
     };
 
     public enum ApplicationTypes
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 
     public enum AccessTokenType
     {
-        JWT,
+        Jwt,
         Reference
     }
 

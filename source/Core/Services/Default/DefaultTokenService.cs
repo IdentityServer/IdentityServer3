@@ -26,15 +26,13 @@ namespace Thinktecture.IdentityServer.Core.Services
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IUserService _users;
         private readonly CoreSettings _settings;
         private readonly IClaimsProvider _claimsProvider;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ITokenSigningService _signingService;
 
-        public DefaultTokenService(IUserService users, CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
+        public DefaultTokenService(CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
         {
-            _users = users;
             _settings = settings;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
@@ -109,7 +107,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
-                if (token.Client.AccessTokenType == AccessTokenType.JWT)
+                if (token.Client.AccessTokenType == AccessTokenType.Jwt)
                 {
                     Logger.Debug("Creating JWT access token");
 

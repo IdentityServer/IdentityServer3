@@ -98,12 +98,7 @@ namespace UnitTests.Plumbing
                 customValidator = new DefaultCustomRequestValidator();
             }
 
-            if (users == null)
-            {
-                users = new TestUserService();
-            }
-
-            return new AuthorizeRequestValidator(settings, scopes, clients, users, customValidator);
+            return new AuthorizeRequestValidator(settings, scopes, clients, customValidator);
         }
     }
 }

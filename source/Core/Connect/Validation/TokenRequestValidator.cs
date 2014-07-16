@@ -142,11 +142,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Logger.ErrorFormat("Invalid authorization code: ", code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
-            else
-            {
-                Logger.InfoFormat("Authorization code found: {0}", code);
-            }
-
+            
+            Logger.InfoFormat("Authorization code found: {0}", code);
             await _authorizationCodes.RemoveAsync(code);
 
             /////////////////////////////////////////////

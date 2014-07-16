@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.Info("Start access token validation");
             Logger.Debug("Token: " + token);
 
-            var result = new TokenValidationResult();
+            TokenValidationResult result;
 
             if (token.Contains("."))
             {
