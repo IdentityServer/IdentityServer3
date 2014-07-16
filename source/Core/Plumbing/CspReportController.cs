@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Logging;
 using System.Net;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Plumbing
 {
@@ -14,9 +15,20 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        CoreSettings settings;
+        public CspReportController(CoreSettings settings)
+        {
+            this.settings = settings;
+        }
+
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
+            if (!settings.CspReportEndpoint.IsEnabled)
+            {
+                return NotFound();
+            }
+
             var json = await Request.Content.ReadAsStringAsync();
             Logger.Error(json);
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));

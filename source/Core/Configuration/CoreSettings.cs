@@ -74,5 +74,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             get { return EndpointSettings.Enabled; }
         }
+
+        public virtual EndpointSettings CspReportEndpoint
+        {
+            get { return EndpointSettings.Disabled; }
+        }
     }
 }

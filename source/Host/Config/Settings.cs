@@ -66,5 +66,13 @@ namespace Thinktecture.IdentityServer.Host.Config
                 return ms.ToArray();
             }
         }
+
+        public override EndpointSettings CspReportEndpoint
+        {
+            get
+            {
+                return EndpointSettings.Enabled;
+            }
+        }
     }
 }
