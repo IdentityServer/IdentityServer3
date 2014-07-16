@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -18,10 +19,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
     public class AuthorizeErrorResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
+        private readonly HttpRequestMessage _request;
         private readonly AuthorizeError _error;
 
-        public AuthorizeErrorResult(AuthorizeError error)
+        public AuthorizeErrorResult(HttpRequestMessage request, AuthorizeError error)
         {
+            _request = request;
             _error = error;
         }
 
@@ -36,11 +40,13 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
             if (_error.ErrorType == ErrorTypes.User)
             {
-                // todo: return error page
-                return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                {
-                    Content = new StringContent(_error.Error)
-                };
+                var response = EmbeddedHtmlResult.GetResponseMessage(_request,
+                    new LayoutModel
+                    {
+                        Page = "error",
+                        ErrorMessage = _error.Error
+                    });
+                return response;
             }
             
             if (_error.ErrorType == ErrorTypes.Client)
