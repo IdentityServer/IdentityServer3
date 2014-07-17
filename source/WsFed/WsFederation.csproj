@@ -100,6 +100,8 @@
     <Compile Include="Hosting\CookieMiddlewareCookieService.cs" />
     <Compile Include="Hosting\LogProviderExceptionLogger.cs" />
     <Compile Include="Hosting\KatanaDependencyResolver.cs" />
+    <Compile Include="Hosting\NoCacheAttribute.cs" />
+    <Compile Include="Hosting\SecurityHeadersAttribute.cs" />
     <Compile Include="Models\RelyingParty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseHandling\MetadataResponseGenerator.cs" />

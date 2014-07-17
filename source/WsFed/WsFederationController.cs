@@ -11,13 +11,13 @@ using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.ResponseHandling;
 using Thinktecture.IdentityServer.WsFederation.Results;
 using Thinktecture.IdentityServer.WsFederation.Validation;
 using System.Net.Http;
+using Thinktecture.IdentityServer.WsFederation.Hosting;
 
 namespace Thinktecture.IdentityServer.WsFederation
 {

@@ -9,7 +9,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 using System.Net;
 using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
     public class CspReportController : ApiController
     {

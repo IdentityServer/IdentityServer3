@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class NoCacheAttribute : ActionFilterAttribute
+    class NoCacheAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {

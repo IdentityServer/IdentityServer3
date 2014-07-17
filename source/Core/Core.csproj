@@ -120,9 +120,9 @@
     <Compile Include="Connect\Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
-    <Compile Include="Plumbing\CspReportController.cs" />
-    <Compile Include="Plumbing\NoCacheAttribute.cs" />
-    <Compile Include="Plumbing\SecurityHeadersAttribute.cs" />
+    <Compile Include="Hosting\CspReportController.cs" />
+    <Compile Include="Hosting\NoCacheAttribute.cs" />
+    <Compile Include="Hosting\SecurityHeadersAttribute.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenStore.cs" />
@@ -190,7 +190,7 @@
     <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
     <Compile Include="Plumbing\ClaimMap.cs" />
-    <Compile Include="Plumbing\ErrorPageFilterAttribute.cs" />
+    <Compile Include="Hosting\ErrorPageFilterAttribute.cs" />
     <Compile Include="Hosting\LogProviderExceptionLogger.cs" />
     <Compile Include="Plumbing\IdentityServerPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

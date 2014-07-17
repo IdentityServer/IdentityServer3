@@ -6,9 +6,9 @@
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Assets;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class ErrorPageFilterAttribute : ExceptionFilterAttribute
+    internal class ErrorPageFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {

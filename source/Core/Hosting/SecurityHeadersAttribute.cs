@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class SecurityHeadersAttribute : ActionFilterAttribute
+    class SecurityHeadersAttribute : ActionFilterAttribute
     {
         public SecurityHeadersAttribute()
         {
