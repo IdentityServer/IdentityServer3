@@ -34,14 +34,12 @@ namespace Thinktecture.IdentityServer.WsFederation
         private readonly SignInResponseGenerator _signInResponseGenerator;
         private readonly MetadataResponseGenerator _metadataResponseGenerator;
         private readonly ITrackingCookieService _cookies;
-        private readonly InternalConfiguration _internalConfig;
         private readonly WsFederationSettings _wsFedSettings;
         private readonly WsFederationPluginOptions _wsFedOptions;
 
-        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, InternalConfiguration internalConfig, WsFederationSettings wsFedSettings, WsFederationPluginOptions wsFedOptions)
+        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, WsFederationSettings wsFedSettings, WsFederationPluginOptions wsFedOptions)
         {
             _settings = settings;
-            _internalConfig = internalConfig;
             _wsFedSettings = wsFedSettings;
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
@@ -135,7 +133,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                 message.IdP = result.HomeRealm;
             }
 
-            var url = LoginResult.GetRedirectUrl(message, this.Request.GetOwinContext().Environment, _internalConfig);
+            var url = LoginResult.GetRedirectUrl(message, this.Request.GetOwinContext().Environment, _wsFedOptions.DataProtector);
             return Redirect(url);
         }
     }

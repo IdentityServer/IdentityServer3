@@ -18,11 +18,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public static IContainer Configure(IdentityServerOptions options, InternalConfiguration internalConfig)
+        public static IContainer Configure(IdentityServerOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
-            if (internalConfig == null) throw new ArgumentNullException("internalConfig");
 
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
@@ -30,7 +29,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var builder = new ContainerBuilder();
 
             builder.RegisterInstance(options).AsSelf();
-            builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
             builder.Register(fact.UserService);

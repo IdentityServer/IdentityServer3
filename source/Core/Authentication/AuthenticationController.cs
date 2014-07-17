@@ -33,16 +33,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly CoreSettings _settings;
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
-        private readonly InternalConfiguration _internalConfiguration;
         private readonly IdentityServerOptions _options;
 
-        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration, IdentityServerOptions idSvrOptions)
+        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
         {
             _userService = userService;
             _settings = settings;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
-            _internalConfiguration = internalConfiguration;
             _options = idSvrOptions;
         }
 
@@ -465,7 +463,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var signInMessage = SignInMessage.Unprotect(
                 message,
-                _internalConfiguration.DataProtector);
+                _options.DataProtector);
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
@@ -493,7 +491,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var signInMessage = SignInMessage.Unprotect(
                 message,
-                _internalConfiguration.DataProtector);
+                _options.DataProtector);
 
             return signInMessage;
         }
@@ -513,7 +511,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 SignInMessage.Unprotect(
                     message,
-                    _internalConfiguration.DataProtector);
+                    _options.DataProtector);
             }
             catch 
             {

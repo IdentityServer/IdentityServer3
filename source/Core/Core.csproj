@@ -137,7 +137,6 @@
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
-    <Compile Include="Configuration\InternalConfiguration.cs" />
     <Compile Include="Hosting\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\NoDataProtector.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />

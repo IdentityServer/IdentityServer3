@@ -26,7 +26,7 @@ namespace Owin
         {
             if (options == null) throw new ArgumentNullException("options");
             
-            var internalConfig = new InternalConfiguration();
+            //var internalConfig = new InternalConfiguration();
 
             if (options.DataProtector == null)
             {
@@ -36,11 +36,7 @@ namespace Owin
                     provider = new DpapiDataProtectionProvider("idsrv3");
                 }
 
-                internalConfig.DataProtector = new HostDataProtector(provider);
-            }
-            else
-            {
-                internalConfig.DataProtector = options.DataProtector;
+                options.DataProtector = new HostDataProtector(provider);
             }
 
             // thank you Microsoft for the clean syntax
@@ -83,7 +79,7 @@ namespace Owin
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
 
             app.UseWebApi(WebApiConfig.Configure());

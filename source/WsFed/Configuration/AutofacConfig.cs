@@ -20,9 +20,8 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
     {
         static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public static IContainer Configure(WsFederationPluginOptions options, InternalConfiguration internalConfig)
+        public static IContainer Configure(WsFederationPluginOptions options)
         {
-            if (internalConfig == null) throw new ArgumentNullException("internalConfig");
             if (options == null) throw new ArgumentNullException("options");
 
             var factory = options.Factory;
@@ -46,7 +45,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             // general services
             builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
             builder.RegisterInstance(options).AsSelf();
-            builder.RegisterInstance(internalConfig).AsSelf();
 
             // load core controller
             builder.RegisterApiControllers(typeof(WsFederationController).Assembly);

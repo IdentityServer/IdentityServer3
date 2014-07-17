@@ -32,17 +32,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly AuthorizeRequestValidator _validator;
         private readonly AuthorizeResponseGenerator _responseGenerator;
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
-        private readonly InternalConfiguration _internalConfiguration;
+        private readonly IdentityServerOptions _options;
         
         public AuthorizeEndpointController(
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
             CoreSettings settings,
-            InternalConfiguration internalConfiguration)
+            IdentityServerOptions options)
         {
             _settings = settings;
-            _internalConfiguration = internalConfiguration;
+            _options = options;
         
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
@@ -212,7 +212,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
 
-            return new LoginResult(message, Request.GetOwinContext().Environment, _internalConfiguration);
+            return new LoginResult(message, Request.GetOwinContext().Environment, _options.DataProtector);
         }
     }
 }

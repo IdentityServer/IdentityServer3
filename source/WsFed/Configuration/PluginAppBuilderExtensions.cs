@@ -20,9 +20,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (options == null) throw new ArgumentNullException("options");
             options.Validate();
 
-            var internalConfig = new InternalConfiguration();
-
-            // todo - need a better solution for data protection
             if (options.DataProtector == null)
             {
                 var provider = app.GetDataProtectionProvider();
@@ -43,11 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                         return protector.Unprotect(data);
                     });
 
-                internalConfig.DataProtector = funcProtector;
-            }
-            else
-            {
-                internalConfig.DataProtector = options.DataProtector;
+                options.DataProtector = funcProtector;
             }
 
             app.Map(options.MapPath, wsfedApp =>
@@ -58,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                         AuthenticationMode = AuthenticationMode.Passive
                     });
 
-                    wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
+                    wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
                     Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
                     wsfedApp.UseWebApi(WebApiConfig.Configure());
                 });
