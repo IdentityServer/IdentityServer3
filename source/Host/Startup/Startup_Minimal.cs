@@ -13,16 +13,10 @@ namespace Thinktecture.IdentityServer.Host
         {
             app.Map("/core", coreApp =>
                 {
-                    var settings = new Settings(
-                        issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1");
+                    var factory = Factory.Create(
+                            issuerUri: "https://idsrv3.com",
+                            siteName:  "Thinktecture IdentityServer v3 - preview 1");
 
-                    var factory = InMemoryFactory.Create(
-                        settings,
-                        Users.Get(),
-                        Clients.Get(),
-                        Scopes.Get());
-                    
                     var opts = new IdentityServerOptions
                     {
                         Factory = factory,

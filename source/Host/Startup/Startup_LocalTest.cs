@@ -29,15 +29,9 @@ namespace Thinktecture.IdentityServer.Host
                     // allow cross origin calls
                     coreApp.UseCors(CorsOptions.AllowAll);
 
-                    var settings = new Settings(
-                        issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1");
-
-                    var factory = InMemoryFactory.Create(
-                        settings,
-                        Users.Get(),
-                        Clients.Get(),
-                        Scopes.Get());
+                    var factory = Factory.Create(
+                            issuerUri: "https://idsrv3.com",
+                            siteName: "Thinktecture IdentityServer v3 - preview 1");
 
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
