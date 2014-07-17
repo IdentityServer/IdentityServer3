@@ -14,11 +14,11 @@ namespace SelfHost
         {
             var factory = Factory.Create(
                     issuerUri: "https://idsrv3.com",
-                    siteName: "Thinktecture IdentityServer v3 - preview 1 (SelfHost)",
-                    publicHostAddress: "http://localhost:3333");
+                    siteName: "Thinktecture IdentityServer v3 - preview 1 (SelfHost)");
 
             var options = new IdentityServerOptions
             {
+                PublicHostName = "http://localhost:3333",
                 Factory = factory,
                 ConfigurePlugins = ConfigurePlugins
             };
@@ -30,10 +30,6 @@ namespace SelfHost
         {
             var wsFedOptions = new WsFederationPluginOptions
             {
-                // todo - also signoutcleanup is broken right now
-                LoginPageUrl = "http://localhost:3333/core/login",
-                LogoutPageUrl = "http://localhost:3333/core/connect/logout",
-
                 Factory = new WsFederationServiceFactory
                 {
                     UserService = options.Factory.UserService,
