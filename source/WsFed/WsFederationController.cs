@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.WsFederation.Hosting;
 
 namespace Thinktecture.IdentityServer.WsFederation
 {
-    [HostAuthentication("idsrv")]
+    [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [RoutePrefix("")]
     [NoCache]
     [SecurityHeaders(EnableCsp=false)]
