@@ -15,7 +15,7 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix("connect/userinfo")]
+    [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
     public class UserInfoEndpointController : ApiController
     {

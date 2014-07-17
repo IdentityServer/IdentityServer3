@@ -13,7 +13,7 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix("connect/token")]
+    [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
     [NoCache]
     public class TokenEndpointController : ApiController
     {

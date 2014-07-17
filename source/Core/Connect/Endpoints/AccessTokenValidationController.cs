@@ -15,7 +15,7 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix("connect/accessTokenValidation")]
+    [RoutePrefix(Constants.RoutePaths.Oidc.AccessTokenValidation)]
     [NoCache]
     public class AccessTokenValidationController : ApiController
     {

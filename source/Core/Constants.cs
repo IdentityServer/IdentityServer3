@@ -324,6 +324,8 @@ namespace Thinktecture.IdentityServer.Core
             
             public static class Oidc
             {
+                public const string Authorize = "idsrv.oidc.authorize";
+                public const string SwitchUser = "idsrv.oidc.switch";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
             }
@@ -340,8 +342,16 @@ namespace Thinktecture.IdentityServer.Core
 
             public static class Oidc
             {
-                public const string EndSession = "connect/logout";
-                public const string EndSessionCallback = "connect/logoutcallback";
+                public const string Authorize = "connect/authorize";
+                public const string Consent = "connect/consent";
+                public const string SwitchUser = "connect/switch";
+                public const string DiscoveryConfiguration = ".well-known/openid-configuration";
+                public const string DiscoveryWebKeys = ".well-known/jwks";
+                public const string Token = "connect/token";
+                public const string UserInfo = "connect/userinfo";
+                public const string AccessTokenValidation = "connect/accessTokenValidation";
+                public const string EndSession = "connect/endsession";
+                public const string EndSessionCallback = "connect/endsessioncallback";
             }
         }
         

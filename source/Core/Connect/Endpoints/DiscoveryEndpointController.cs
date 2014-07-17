@@ -16,7 +16,6 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix(".well-known")]
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -29,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _scopes = scopes;
         }
 
-        [Route("openid-configuration")]
+        [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
         public async Task<IHttpActionResult> GetConfiguration()
         {
             Logger.Info("Start discovery request");
@@ -46,11 +45,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Json(new
             {
                 issuer = _settings.IssuerUri,
-                jwks_uri = baseUrl + ".well-known/jwks",
-                authorization_endpoint = baseUrl + "connect/authorize",
-                token_endpoint = baseUrl + "connect/token",
-                userinfo_endpoint = baseUrl + "connect/userinfo",
-                end_session_endpoint = baseUrl + "connect/logout",
+                jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys,
+                authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize,
+                token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token,
+                userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo,
+                end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession,
                 scopes_supported = scopes.Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
@@ -60,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             });
         }
 
-        [Route("jwks")]
+        [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
         public IHttpActionResult GetKeyData()
         {
             Logger.Info("Start key discovery request");

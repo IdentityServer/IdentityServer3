@@ -20,8 +20,7 @@ using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    [RoutePrefix("connect")]
-    [HostAuthentication("idsrv")]
+    [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
     [NoCache]
     public class AuthorizeEndpointController : ApiController
@@ -49,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validator = validator;
         }
 
-        [Route("authorize", Name="authorize")]
+        [Route(Constants.RoutePaths.Oidc.Authorize, Name = Constants.RouteNames.Oidc.Authorize)]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
             Logger.Info("Start authorize request");
@@ -131,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return await CreateAuthorizeResponseAsync(request);
         }
 
-        [Route("consent")]
+        [Route(Constants.RoutePaths.Oidc.Consent)]
         [HttpPost]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
@@ -139,7 +138,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
         }
 
-        [Route("switch", Name="switch")]
+        [Route(Constants.RoutePaths.Oidc.SwitchUser, Name=Constants.RouteNames.Oidc.SwitchUser)]
         [HttpGet]
         public async Task<IHttpActionResult> LoginAsDifferentUser()
         {
@@ -199,7 +198,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     ErrorMessage = errorMessage,
                     Page = "consent",
                     Username = name,
-                    SwitchUrl = Url.Route("switch", null) + "?" + requestParameters.ToQueryString(),
+                    SwitchUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null) + "?" + requestParameters.ToQueryString(),
                     PageModel = consentModel
                 });
         }
@@ -208,7 +207,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             message = message ?? new SignInMessage();
 
-            var path = Url.Route("authorize", null) + "?" + parameters.ToQueryString();
+            var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null) + "?" + parameters.ToQueryString();
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
 
