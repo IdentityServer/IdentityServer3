@@ -20,44 +20,42 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (options == null) throw new ArgumentNullException("options");
             options.Validate();
 
-            if (options.DataProtector == null)
-            {
-                var provider = app.GetDataProtectionProvider();
-                if (provider == null)
-                {
-                    provider = new DpapiDataProtectionProvider("idsrv3");
-                }
+            //if (options.DataProtector == null)
+            //{
+            //    var provider = app.GetDataProtectionProvider();
+            //    if (provider == null)
+            //    {
+            //        provider = new DpapiDataProtectionProvider("idsrv3");
+            //    }
 
-                var funcProtector = new FuncDataProtector(
-                    (data, entropy) =>
-                    {
-                        var protector = provider.Create(entropy);
-                        return protector.Protect(data);
-                    },
-                    (data, entropy) =>
-                    {
-                        var protector = provider.Create(entropy);
-                        return protector.Unprotect(data);
-                    });
+            //    var funcProtector = new FuncDataProtector(
+            //        (data, entropy) =>
+            //        {
+            //            var protector = provider.Create(entropy);
+            //            return protector.Protect(data);
+            //        },
+            //        (data, entropy) =>
+            //        {
+            //            var protector = provider.Create(entropy);
+            //            return protector.Unprotect(data);
+            //        });
 
-                options.DataProtector = funcProtector;
-            }
+            //    options.DataProtector = funcProtector;
+            //}
 
             app.Map(options.MapPath, wsfedApp =>
                 {
                     wsfedApp.UseCookieAuthentication(new CookieAuthenticationOptions
                     {
                         AuthenticationType = WsFederationPluginOptions.CookieName,
-                        AuthenticationMode = AuthenticationMode.Passive
+                        AuthenticationMode = AuthenticationMode.Passive,
+                        CookieName = WsFederationPluginOptions.CookieName
                     });
 
                     wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
                     Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
                     wsfedApp.UseWebApi(WebApiConfig.Configure());
                 });
-
-            // todo
-            //options.Configuration.AddSignOutCallbackUrl("/wsfed/signout");
 
             return app;
         }

@@ -59,11 +59,10 @@ namespace Thinktecture.IdentityServer.Host
                     RelyingPartyService = Registration.RegisterFactory<IRelyingPartyService>(() => new InMemoryRelyingPartyService(RelyingParties.Get())),
                     WsFederationSettings = Registration.RegisterFactory<WsFederationSettings>(() => new WsFedSettings())
                 },
+                DataProtector = options.DataProtector
             };
 
-            // /core/wsfed
-            // ~/../login
-            // ~/../logout
+            options.ProtocolLogoutUrls.Add(wsFedOptions.LogoutUrl);
             pluginApp.UseWsFederationPlugin(wsFedOptions);
         }
 

@@ -5,8 +5,15 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
 {
     public class WsFederationPluginOptions
     {
-        public const string CookieName = "WsFedTracking";
+        public const string CookieName = "IdSvr.WsFedTracking";
 
+        public string LogoutUrl
+        {
+            get
+            {
+                return MapPath + "/signout";
+            }
+        }
         public WsFederationServiceFactory Factory { get; set; }
         public IDataProtector DataProtector { get; set; }
 
