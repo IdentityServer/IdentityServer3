@@ -4,12 +4,11 @@
 
 ## Overview ##
 
-IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server (check the [wiki](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/wiki) for more info).
+IdentityServer v3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server.
 
-[OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html)
+[OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
-[OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
-
+Also check out my introduction talk to OpenID Connect, OAuth2 and IdentityServer from NDC - [here](https://vimeo.com/97344501)
 
 **Endpoints:**
 
@@ -20,7 +19,7 @@ IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider 
 * **/.well-known/openid-configuration** - OpenID Connect discovery endpoint
 
 ## Getting started ##
-We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples folder to exercise the various flows.
+We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples repository to exercise the various flows.
 
 IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).
 
@@ -45,7 +44,7 @@ public void Configuration(IAppBuilder appBuilder)
 }
 ```
 
-You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tree/master/samples/Certificates) folder in the repository.
+You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the repository.
 
 The host project shows other configuration options
 * support for MembershipReboot and ASP.NET Identity based user stores
