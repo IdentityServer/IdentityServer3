@@ -13,20 +13,20 @@ namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
 {
     public class MetadataResponseGenerator
     {
-        private CoreSettings _settings;
+        private IdentityServerOptions _options;
 
-        public MetadataResponseGenerator(CoreSettings settings)
+        public MetadataResponseGenerator(IdentityServerOptions options)
         {
-            _settings = settings;
+            _options = options;
         }
 
         public EntityDescriptor Generate(string wsfedEndpoint)
         {
             var tokenServiceDescriptor = GetTokenServiceDescriptor(wsfedEndpoint);
 
-            var id = new EntityId(_settings.IssuerUri);
+            var id = new EntityId(_options.IssuerUri);
             var entity = new EntityDescriptor(id);
-            entity.SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate);
+            entity.SigningCredentials = new X509SigningCredentials(_options.SigningCertificate);
             entity.RoleDescriptors.Add(tokenServiceDescriptor);
 
             return entity;
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
         private SecurityTokenServiceDescriptor GetTokenServiceDescriptor(string wsfedEndpoint)
         {
             var tokenService = new SecurityTokenServiceDescriptor();
-            tokenService.ServiceDescription = _settings.SiteName;
+            tokenService.ServiceDescription = _options.SiteName;
             tokenService.Keys.Add(GetSigningKeyDescriptor());
 
             tokenService.PassiveRequestorEndpoints.Add(new EndpointReference(wsfedEndpoint));
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
 
         private KeyDescriptor GetSigningKeyDescriptor()
         {
-            var certificate = _settings.SigningCertificate;
+            var certificate = _options.SigningCertificate;
 
             var clause = new X509SecurityToken(certificate).CreateKeyIdentifierClause<X509RawDataKeyIdentifierClause>();
             var key = new KeyDescriptor(new SecurityKeyIdentifier(clause));

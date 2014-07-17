@@ -26,7 +26,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly CoreSettings _settings;
 
         private readonly AuthorizeRequestValidator _validator;
         private readonly AuthorizeResponseGenerator _responseGenerator;
@@ -37,10 +36,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             AuthorizeRequestValidator validator, 
             AuthorizeResponseGenerator responseGenerator, 
             AuthorizeInteractionResponseGenerator interactionGenerator, 
-            CoreSettings settings,
             IdentityServerOptions options)
         {
-            _settings = settings;
             _options = options;
         
             _responseGenerator = responseGenerator;
@@ -58,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {   
-            if (!_settings.AuthorizeEndpoint.IsEnabled)
+            if (!_options.AuthorizeEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
@@ -88,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             if (interaction.IsLogin)
             {
-                return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _settings);
+                return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _options);
             }
 
             // user must be authenticated at this point
@@ -194,7 +191,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Request, 
                 new LayoutModel
                 {
-                    Server = _settings.SiteName,
+                    Server = _options.SiteName,
                     ErrorMessage = errorMessage,
                     Page = "consent",
                     Username = name,
@@ -203,7 +200,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 });
         }
 
-        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, CoreSettings settings)
+        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, IdentityServerOptions options)
         {
             message = message ?? new SignInMessage();
 

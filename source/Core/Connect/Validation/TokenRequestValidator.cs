@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
@@ -37,9 +37,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(CoreSettings settings, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
-            _settings = settings;
+            _options = options;
             _authorizationCodes = authorizationCodes;
             _refreshTokens = refreshTokens;
             _users = users;
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             _validatedRequest.Raw = parameters;
             _validatedRequest.Client = client;
-            _validatedRequest.Settings = _settings;
+            _validatedRequest.Options = _options;
 
             /////////////////////////////////////////////
             // check grant type

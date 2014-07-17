@@ -21,12 +21,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly TokenValidator _validator;
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
 
-        public AccessTokenValidationController(TokenValidator validator, CoreSettings settings)
+        public AccessTokenValidationController(TokenValidator validator, IdentityServerOptions options)
         {
             _validator = validator;
-            _settings = settings;
+            _options = options;
         }
 
         [Route]
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start access token validation request");
 
-            if (!_settings.AccessTokenValidationEndpoint.IsEnabled)
+            if (!_options.AccessTokenValidationEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

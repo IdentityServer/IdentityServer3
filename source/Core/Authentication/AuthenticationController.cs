@@ -31,15 +31,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IUserService _userService;
-        private readonly CoreSettings _settings;
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly IdentityServerOptions _options;
 
-        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
+        public AuthenticationController(IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
         {
             _userService = userService;
-            _settings = settings;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
             _options = idSvrOptions;
@@ -389,7 +387,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Request,
                 new LayoutModel
                 {
-                    Server = _settings.SiteName,
+                    Server = _options.SiteName,
                     Page = "login",
                     ErrorMessage = errorMessage,
                     PageModel = new
@@ -408,7 +406,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Request,
                 new LayoutModel
                 {
-                    Server = _settings.SiteName,
+                    Server = _options.SiteName,
                     Page = "logoutprompt",
                     PageModel = new
                     {
@@ -434,7 +432,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel
                    {
-                       Server = _settings.SiteName,
+                       Server = _options.SiteName,
                        Page = "logout",
                        PageModel = new
                        {

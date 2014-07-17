@@ -29,15 +29,17 @@ namespace Thinktecture.IdentityServer.Host
                     // allow cross origin calls
                     coreApp.UseCors(CorsOptions.AllowAll);
 
-                    var factory = Factory.Create(
-                            issuerUri: "https://idsrv3.com",
-                            siteName: "Thinktecture IdentityServer v3 - preview 1");
-
+                    var factory = Factory.Create();
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
 
                     var idsrvOptions = new IdentityServerOptions
                     {
+                        IssuerUri = "https://idsrv3.com",
+                        SiteName = "Thinktecture IdentityServer v3 - preview 1",
+                        SigningCertificate = Cert.Load(),
+                        CspReportEndpoint = EndpointSettings.Enabled,
+                        AccessTokenValidationEndpoint = EndpointSettings.Enabled,
                         PublicHostName = "http://localhost:3333",
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
@@ -52,17 +54,15 @@ namespace Thinktecture.IdentityServer.Host
         {
             var wsFedOptions = new WsFederationPluginOptions
             {
+                Options = options,
                 Factory = new WsFederationServiceFactory
                 {
                     UserService = options.Factory.UserService,
-                    CoreSettings = options.Factory.CoreSettings,
                     RelyingPartyService = Registration.RegisterFactory<IRelyingPartyService>(() => new InMemoryRelyingPartyService(RelyingParties.Get())),
                     WsFederationSettings = Registration.RegisterFactory<WsFederationSettings>(() => new WsFedSettings())
-                },
-                DataProtector = options.DataProtector
+                }
             };
-
-            options.ProtocolLogoutUrls.Add(wsFedOptions.LogoutUrl);
+            
             pluginApp.UseWsFederationPlugin(wsFedOptions);
         }
 

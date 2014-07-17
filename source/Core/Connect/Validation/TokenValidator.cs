@@ -23,15 +23,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class TokenValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ICustomTokenValidator _customValidator;
         private readonly IClientService _clients;
 
-        public TokenValidator(CoreSettings settings, IUserService users, IClientService clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
+        public TokenValidator(IdentityServerOptions options, IUserService users, IClientService clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
-            _settings = settings;
+            _options = options;
             _users = users;
             _clients = clients;
             _tokenHandles = tokenHandles;
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             Logger.Debug("Calling custom token validator");
-            var customResult = await _customValidator.ValidateAccessTokenAsync(result, _settings, _clients, _users);
+            var customResult = await _customValidator.ValidateAccessTokenAsync(result);
 
             if (customResult.IsError)
             {
@@ -93,9 +93,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             
             var parameters = new TokenValidationParameters
             {
-                ValidIssuer = _settings.IssuerUri,
-                SigningToken = new X509SecurityToken(_settings.SigningCertificate),
-                AllowedAudience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri)
+                ValidIssuer = _options.IssuerUri,
+                SigningToken = new X509SecurityToken(_options.SigningCertificate),
+                AllowedAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
             };
 
             try

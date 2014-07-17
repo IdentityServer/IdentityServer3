@@ -8,7 +8,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public static class InMemoryFactory
     {
         public static IdentityServerServiceFactory Create(
-            CoreSettings settings,
             IEnumerable<InMemoryUser> users,
             IEnumerable<Client> clients,
             IEnumerable<Scope> scopes)
@@ -20,7 +19,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var factory = new IdentityServerServiceFactory
             {
                 UserService = Registration.RegisterFactory<IUserService>(() => userService),
-                CoreSettings = Registration.RegisterFactory<CoreSettings>(() => settings),
                 ScopeService = Registration.RegisterFactory<IScopeService>(() => scopeService),
                 ClientService = Registration.RegisterFactory<IClientService>(() => clientService)
             };

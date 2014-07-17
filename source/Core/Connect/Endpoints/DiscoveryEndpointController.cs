@@ -19,12 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly IScopeService _scopes;
 
-        public DiscoveryEndpointController(CoreSettings settings, IScopeService scopes)
+        public DiscoveryEndpointController(IdentityServerOptions options, IScopeService scopes)
         {
-            _settings = settings;
+            _options = options;
             _scopes = scopes;
         }
 
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start discovery request");
 
-            if (!_settings.DiscoveryEndpoint.IsEnabled)
+            if (!_options.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return Json(new
             {
-                issuer = _settings.IssuerUri,
+                issuer = _options.IssuerUri,
                 jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys,
                 authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize,
                 token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token,
@@ -64,14 +64,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Start key discovery request");
 
-            if (!_settings.DiscoveryEndpoint.IsEnabled)
+            if (!_options.DiscoveryEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
             }
 
             var webKeys = new List<JsonWebKeyDto>();
-            foreach (var pubKey in _settings.PublicKeysForMetadata)
+            foreach (var pubKey in _options.PublicKeysForMetadata)
             {
                 if (pubKey != null)
                 {

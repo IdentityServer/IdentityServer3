@@ -26,14 +26,14 @@ namespace Thinktecture.IdentityServer.Core.Services
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly IClaimsProvider _claimsProvider;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ITokenSigningService _signingService;
 
-        public DefaultTokenService(CoreSettings settings, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
+        public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
         {
-            _settings = settings;
+            _options = options;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
             _signingService = signingService;
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
                 Audience = client.ClientId,
-                Issuer = _settings.IssuerUri,
+                Issuer = _options.IssuerUri,
                 Lifetime = client.IdentityTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
                 Client = client
@@ -93,8 +93,8 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
-                Audience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri),
-                Issuer = _settings.IssuerUri,
+                Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri),
+                Issuer = _options.IssuerUri,
                 Lifetime = client.AccessTokenLifetime,
                 Claims = claims.ToList(),
                 Client = client

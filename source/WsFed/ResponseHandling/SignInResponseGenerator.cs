@@ -22,12 +22,12 @@ namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
     public class SignInResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly IUserService _users;
         
-        public SignInResponseGenerator(CoreSettings settings, IUserService users)
+        public SignInResponseGenerator(IdentityServerOptions options, IUserService users)
         {
-            _settings = settings;
+            _options = options;
             _users = users;
         }
 
@@ -96,9 +96,9 @@ namespace Thinktecture.IdentityServer.WsFederation.ResponseHandling
                 AppliesToAddress = validationResult.RelyingParty.Realm,
                 Lifetime = new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(validationResult.RelyingParty.TokenLifeTime)),
                 ReplyToAddress = validationResult.ReplyUrl,
-                SigningCredentials = new X509SigningCredentials(_settings.SigningCertificate),
+                SigningCredentials = new X509SigningCredentials(_options.SigningCertificate),
                 Subject = outgoingSubject,
-                TokenIssuerName = _settings.IssuerUri,
+                TokenIssuerName = _options.IssuerUri,
                 TokenType = validationResult.RelyingParty.TokenType
             };
 

@@ -30,7 +30,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             var builder = new ContainerBuilder();
 
             // mandatory from factory
-            builder.Register(factory.CoreSettings);
             builder.Register(factory.UserService);
             builder.Register(factory.RelyingPartyService);
             builder.Register(factory.WsFederationSettings);
@@ -45,6 +44,7 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             // general services
             builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
             builder.RegisterInstance(options).AsSelf();
+            builder.RegisterInstance(options.Options).AsSelf();
 
             // load core controller
             builder.RegisterApiControllers(typeof(WsFederationController).Assembly);

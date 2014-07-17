@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.WsFederation
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
         private readonly SignInValidator _validator;
         private readonly SignInResponseGenerator _signInResponseGenerator;
         private readonly MetadataResponseGenerator _metadataResponseGenerator;
@@ -37,9 +37,9 @@ namespace Thinktecture.IdentityServer.WsFederation
         private readonly WsFederationSettings _wsFedSettings;
         private readonly WsFederationPluginOptions _wsFedOptions;
 
-        public WsFederationController(CoreSettings settings, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, WsFederationSettings wsFedSettings, WsFederationPluginOptions wsFedOptions)
+        public WsFederationController(IdentityServerOptions options, IUserService users, SignInValidator validator, SignInResponseGenerator signInResponseGenerator, MetadataResponseGenerator metadataResponseGenerator, ITrackingCookieService cookies, WsFederationSettings wsFedSettings, WsFederationPluginOptions wsFedOptions)
         {
-            _settings = settings;
+            _options = options;
             _wsFedSettings = wsFedSettings;
             _validator = validator;
             _signInResponseGenerator = signInResponseGenerator;
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.WsFederation
 
             if (result.IsSignInRequired)
             {
-                return RedirectToLogin(_settings, result);
+                return RedirectToLogin(result);
             }
             if (result.IsError)
             {
@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.WsFederation
             return new SignInResult(responseMessage);
         }
 
-        IHttpActionResult RedirectToLogin(CoreSettings settings, SignInValidationResult result)
+        IHttpActionResult RedirectToLogin(SignInValidationResult result)
         {
             var message = new SignInMessage();
             message.ReturnUrl = Request.RequestUri.AbsoluteUri;

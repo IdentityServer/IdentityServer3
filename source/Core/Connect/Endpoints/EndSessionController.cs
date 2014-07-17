@@ -15,11 +15,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly CoreSettings _settings;
+        private readonly IdentityServerOptions _options;
 
-        public EndSessionController(CoreSettings settings)
+        public EndSessionController(IdentityServerOptions options)
         {
-            _settings = settings;
+            _options = options;
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("End session request");
 
-            if (!_settings.EndSessionEndpoint.IsEnabled)
+            if (!_options.EndSessionEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

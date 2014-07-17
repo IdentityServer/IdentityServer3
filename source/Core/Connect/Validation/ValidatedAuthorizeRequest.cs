@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public CoreSettings CoreSettings { get; set; }
+        public IdentityServerOptions IdentityServerOptions { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
 
         public string ClientId { get; set; }

@@ -15,9 +15,10 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
     {
         private static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        
+
         // mandatory (external)
         public Registration<IUserService> UserService { get; set; }
-        public Registration<CoreSettings> CoreSettings { get; set; }
         public Registration<WsFederationSettings> WsFederationSettings { get; set; }
         public Registration<IRelyingPartyService> RelyingPartyService { get; set; }
 
@@ -25,7 +26,6 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
         {
             if (UserService == null) LogAndStop("UserService not configured");
             if (WsFederationSettings == null) LogAndStop("WsFederationSettings not configured");
-            if (CoreSettings == null) LogAndStop("CoreSettings not configured");
             if (RelyingPartyService == null) LogAndStop("RelyingPartyService not configured");
         }
 

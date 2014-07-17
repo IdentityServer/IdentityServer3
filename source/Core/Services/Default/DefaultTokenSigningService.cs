@@ -12,11 +12,11 @@ namespace Thinktecture.IdentityServer.Core.Services
     // todo: logging
     public class DefaultTokenSigningService : ITokenSigningService
     {
-        private readonly CoreSettings _settings;
-        
-        public DefaultTokenSigningService(CoreSettings settings)
+        private readonly IdentityServerOptions _options;
+
+        public DefaultTokenSigningService(IdentityServerOptions options)
         {
-            _settings = settings;
+            _options = options;
         }
 
         public Task<string> SignTokenAsync(Token token)
@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                (token.Type == Constants.TokenTypes.IdentityToken && 
                 token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default))
             {
-                return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_settings.SigningCertificate)));
+                return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
             }
             else
             {

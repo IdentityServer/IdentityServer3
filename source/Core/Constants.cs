@@ -345,10 +345,16 @@ namespace Thinktecture.IdentityServer.Core
                 public const string Authorize = "connect/authorize";
                 public const string Consent = "connect/consent";
                 public const string SwitchUser = "connect/switch";
+                
+                // cors
                 public const string DiscoveryConfiguration = ".well-known/openid-configuration";
+                // cors
                 public const string DiscoveryWebKeys = ".well-known/jwks";
+                // cors
                 public const string Token = "connect/token";
+                // cors
                 public const string UserInfo = "connect/userinfo";
+
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";

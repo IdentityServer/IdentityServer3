@@ -22,14 +22,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
         private readonly ClientValidator _clientValidator;
-        private readonly CoreSettings _settings;
-        
-        public TokenEndpointController(CoreSettings settings, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
+        private readonly IdentityServerOptions _options;
+
+        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
             _generator = generator;
-            _settings = settings;
+            _options = options;
         }
 
         [Route]
@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            if (!_settings.TokenEndpoint.IsEnabled)
+            if (!_options.TokenEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

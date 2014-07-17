@@ -5,8 +5,10 @@ using Moq;
 using Owin;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -38,28 +40,24 @@ namespace Thinktecture.IdentityServer.Tests
             
             server = TestServer.Create(app =>
             {
-                protector = new NoDataProtector();
-
-                var factory = TestFactory.Create(
-                         issuerUri: "https://idsrv3.com",
-                         siteName: "Thinktecture IdentityServer v3 - test");
+                var factory = TestFactory.Create();
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;
                 factory.UserService = Registration.RegisterFactory<IUserService>(() => mockUserService.Object);
 
-                options = new IdentityServerOptions
-                {
-                    DataProtector = protector,
-                    Factory = factory,
-                    AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders
-                };
-
+                options = TestIdentityServerOptions.Create();
+                options.Factory = factory;
+                options.AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders;
+                
+                protector = options.DataProtector;
+                
                 app.UseIdentityServer(options);
             });
 
             client = server.HttpClient;
         }
+
 
         public virtual void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {

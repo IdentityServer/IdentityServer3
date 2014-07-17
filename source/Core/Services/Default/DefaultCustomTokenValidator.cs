@@ -11,12 +11,12 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
-        public Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result, CoreSettings settings, IClientService clients, IUserService users)
+        public Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
         {
             return Task.FromResult(result);
         }
 
-        public Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result, CoreSettings settings, IClientService clients, IUserService users)
+        public Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
             throw new NotImplementedException();
         }

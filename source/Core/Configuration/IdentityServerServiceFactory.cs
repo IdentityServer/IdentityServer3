@@ -33,7 +33,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Registration<IUserService> UserService { get; set; }
         public Registration<IScopeService> ScopeService { get; set; }
         public Registration<IClientService> ClientService { get; set; }
-        public Registration<CoreSettings> CoreSettings { get; set; }
         
         // mandatory (for authorization code, reference & refresh tokens and consent)
         // but with default in memory implementation
@@ -55,7 +54,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");
-            if (CoreSettings == null) LogAndStop("CoreSettings not configured");
             if (ScopeService == null) LogAndStop("ScopeService not configured.");
             if (ClientService == null) LogAndStop("ClientService not configured.");
 

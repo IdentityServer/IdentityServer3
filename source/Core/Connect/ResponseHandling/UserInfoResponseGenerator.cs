@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IUserService _users;
         private readonly IScopeService _scopes;
 
-        public UserInfoResponseGenerator(IUserService users, IScopeService scopes, CoreSettings settings)
+        public UserInfoResponseGenerator(IUserService users, IScopeService scopes)
         {
             _users = users;
             _scopes = scopes;

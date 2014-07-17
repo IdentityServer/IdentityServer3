@@ -34,7 +34,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.Register(fact.UserService);
             builder.Register(fact.ScopeService);
             builder.Register(fact.ClientService);
-            builder.Register(fact.CoreSettings);
             
             // optional from factory
             if (fact.AuthorizationCodeStore != null)

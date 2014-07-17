@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Tests;
 using UnitTests.Plumbing;
 
 namespace UnitTests.AuthorizeRequest_Validation
@@ -15,7 +16,7 @@ namespace UnitTests.AuthorizeRequest_Validation
     [TestClass]
     public class Authorize_ClientValidation_Token
     {
-        CoreSettings _settings = new TestSettings();
+        IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Client Validation - Token")]

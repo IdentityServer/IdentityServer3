@@ -30,7 +30,7 @@ namespace UnitTests.Plumbing
         }
 
         public static TokenRequestValidator CreateTokenValidator(
-            CoreSettings settings = null,
+            IdentityServerOptions options = null,
             IScopeService scopes = null,
             IAuthorizationCodeStore authorizationCodeStore = null,
             IRefreshTokenStore refreshTokens = null,
@@ -38,9 +38,9 @@ namespace UnitTests.Plumbing
             IAssertionGrantValidator assertionGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null)
         {
-            if (settings == null)
+            if (options == null)
             {
-                settings = new TestSettings();
+                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)
@@ -68,19 +68,19 @@ namespace UnitTests.Plumbing
                 refreshTokens = new InMemoryRefreshTokenStore();
             }
 
-            return new TokenRequestValidator(settings, authorizationCodeStore, refreshTokens, userService, scopes, assertionGrantValidator, customRequestValidator);
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, assertionGrantValidator, customRequestValidator);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(
-            CoreSettings settings = null,
+            IdentityServerOptions options = null,
             IScopeService scopes = null,
             IClientService clients = null,
             IUserService users = null,
             ICustomRequestValidator customValidator = null)
         {
-            if (settings == null)
+            if (options == null)
             {
-                settings = new TestSettings();
+                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)
@@ -98,7 +98,7 @@ namespace UnitTests.Plumbing
                 customValidator = new DefaultCustomRequestValidator();
             }
 
-            return new AuthorizeRequestValidator(settings, scopes, clients, customValidator);
+            return new AuthorizeRequestValidator(options, scopes, clients, customValidator);
         }
     }
 }

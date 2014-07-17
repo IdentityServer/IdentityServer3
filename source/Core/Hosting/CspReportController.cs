@@ -15,16 +15,16 @@ namespace Thinktecture.IdentityServer.Core.Hosting
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        CoreSettings settings;
-        public CspReportController(CoreSettings settings)
+        IdentityServerOptions options;
+        public CspReportController(IdentityServerOptions options)
         {
-            this.settings = settings;
+            this.options = options;
         }
 
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
-            if (!settings.CspReportEndpoint.IsEnabled)
+            if (!options.CspReportEndpoint.IsEnabled)
             {
                 return NotFound();
             }

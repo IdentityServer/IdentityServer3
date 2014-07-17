@@ -10,7 +10,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ICustomTokenValidator
     {
-        Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result, CoreSettings settings, IClientService clients, IUserService users);
-        Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result, CoreSettings settings, IClientService clients, IUserService users);
+        Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result);
+        Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result);
     }
 }
