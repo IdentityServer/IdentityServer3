@@ -116,6 +116,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\UseIdentityServerExtension.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
+    <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Connect\Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
