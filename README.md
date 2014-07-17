@@ -8,15 +8,7 @@ IdentityServer v3 is a .NET-based open source implementation of an OpenID Connec
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
-Also check out my [introduction talk to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) from NDC.
-
-**Endpoints:**
-
-* **/connect/authorize** - OpenID Connect/OAuth2 code and implicit client support
-* **/connect/token** - OpenID Connect/OAuth2 code, password, client credentials and assertion grant support
-* **/connect/userinfo** - OpenID Connect userinfo endpoint
-* **/connect/logout** - client initiated logout (aka end session endpoint)
-* **/.well-known/openid-configuration** - OpenID Connect discovery endpoint
+Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC Oslo.
 
 ## Getting started ##
 We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples repository to exercise the various flows.
