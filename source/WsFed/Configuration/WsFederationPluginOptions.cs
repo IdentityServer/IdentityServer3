@@ -30,6 +30,10 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             {
                 throw new ArgumentNullException("Factory");
             }
+            if (DataProtector == null)
+            {
+                throw new ArgumentNullException("DataProtector");
+            }
         }
     }
 }
