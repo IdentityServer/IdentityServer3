@@ -22,9 +22,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             var internalConfig = new InternalConfiguration();
 
-            // todo hacky!
-            internalConfig.LoginPageUrl = options.LoginPageUrl;
-
             // todo - need a better solution for data protection
             if (options.DataProtector == null)
             {

@@ -16,6 +16,7 @@ using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Hosting;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
 {
@@ -50,6 +51,14 @@ namespace Owin
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.ExternalAuthenticationType, CookieName = Constants.ExternalAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
             app.UseCookieAuthentication(new CookieAuthenticationOptions { AuthenticationType = Constants.PartialSignInAuthenticationType, CookieName = Constants.PartialSignInAuthenticationType, AuthenticationMode = AuthenticationMode.Passive });
 
+            app.Use(async (ctx, next) =>
+            {
+                var baseUrl = ctx.Environment.GetBaseUrl(options.PublicHostName);
+                ctx.Environment.SetIdentityServerBaseUrl(baseUrl);
+
+                await next();
+            });
+
             if (options.ConfigurePlugins != null)
             {
                 options.ConfigurePlugins(app, options);
@@ -76,6 +85,7 @@ namespace Owin
 
             app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options, internalConfig));
             Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
+
             app.UseWebApi(WebApiConfig.Configure());
 
             return app;

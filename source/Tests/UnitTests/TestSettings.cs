@@ -52,11 +52,6 @@ namespace Thinktecture.IdentityServer.Tests
             get { return _siteName; }
         }
 
-        public override string PublicHostName
-        {
-            get { return _publicHostAddress; }
-        }
-
         private static byte[] ReadStream(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];

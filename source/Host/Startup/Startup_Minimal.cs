@@ -19,12 +19,12 @@ namespace Thinktecture.IdentityServer.Host
                 {
                     var factory = Factory.Create(
                         issuerUri:         "https://idsrv3.com",
-                        siteName:          "Thinktecture IdentityServer v3 - preview 1",
-                        publicHostAddress: "http://localhost:3333");
+                        siteName:          "Thinktecture IdentityServer v3 - preview 1");
                     
                     var opts = new IdentityServerOptions
                     {
                         Factory = factory,
+                        PublicHostName = "http://localhost:3333"
                     };
 
                     coreApp.UseIdentityServer(opts);

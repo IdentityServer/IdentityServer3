@@ -9,7 +9,7 @@ namespace Thinktecture.IdentityServer.Host.Config
     public class Factory
     {
         public static IdentityServerServiceFactory Create(
-                    string issuerUri, string siteName, string publicHostAddress = "")
+                    string issuerUri, string siteName)
         {
             var users = new InMemoryUser[]
             {
@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                 },
             };
 
-            var settings = new Settings(issuerUri, siteName, publicHostAddress);
+            var settings = new Settings(issuerUri, siteName);
             var scopes = new InMemoryScopeService(Scopes.Get());
             var clients = new InMemoryClientService(Clients.Get());
             var userSvc = new InMemoryUserService(users);

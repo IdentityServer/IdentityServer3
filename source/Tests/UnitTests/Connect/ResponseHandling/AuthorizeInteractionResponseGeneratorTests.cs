@@ -34,18 +34,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             }
         }
         [TestMethod]
-        public void ProcessConsentAsync_NullConsent_Throws()
+        public void ProcessConsentAsync_AllowsNullConsent()
         {
-            try
-            {
-                var result = subject.ProcessConsentAsync(new ValidatedAuthorizeRequest(), null).Result;
-                Assert.Fail();
-            }
-            catch (AggregateException ex)
-            {
-                ArgumentNullException ex2 = (ArgumentNullException)ex.InnerException;
-                StringAssert.Contains(ex2.ParamName, "consent");
-            }
+            var result = subject.ProcessConsentAsync(new ValidatedAuthorizeRequest(), null).Result;
         }
 
     }

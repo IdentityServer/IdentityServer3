@@ -393,8 +393,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private IHttpActionResult RenderLogoutPage()
         {
-            var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
+            var baseUrl = Request.GetOwinEnvironment().GetIdentityServerBaseUrl();
             var urls = new List<string>();
+
+            // ~/connect/logout
+
             //foreach(var url in _internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
             //{
             //    var tmp = url;
@@ -479,7 +482,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 Logger.Error("signin message cookie is empty");
                 throw new Exception("SignInMessage cookie is empty.");
-            } 
+            }
             
             try
             {

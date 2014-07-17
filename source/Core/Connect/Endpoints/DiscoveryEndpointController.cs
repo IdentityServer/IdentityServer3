@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return NotFound();
             }
 
-            var baseUrl = Request.GetBaseUrl(_settings.PublicHostName);
+            var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync();
 
             return Json(new
