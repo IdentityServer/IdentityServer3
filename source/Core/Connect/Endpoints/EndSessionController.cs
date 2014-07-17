@@ -12,17 +12,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     [SecurityHeaders]
     [NoCache]
-    public class LogoutController : ApiController
+    public class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly CoreSettings _settings;
 
-        public LogoutController(CoreSettings settings)
+        public EndSessionController(CoreSettings settings)
         {
             _settings = settings;
         }
 
-        [Route("connect/logout", Name=Constants.RouteNames.LogoutPrompt)]
+        [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
         [HttpGet]
         public IHttpActionResult Logout()
         {
@@ -34,17 +34,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return NotFound();
             }
 
-            return new EmbeddedHtmlResult(
-                Request,
-                new LayoutModel
-                {
-                    Server = _settings.SiteName,
-                    Page = "logoutprompt",
-                    PageModel = new
-                    {
-                        url = Url.Route(Constants.RouteNames.Logout, null)
-                    }
-                });
+            return Redirect(Url.Link(Constants.RouteNames.LogoutPrompt, null));
+        }
+
+        [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
+        [HttpGet]
+        public IHttpActionResult LogoutCallback()
+        {
+            Logger.Info("End session callback requested");
+
+            return Ok();
         }
     }
 }

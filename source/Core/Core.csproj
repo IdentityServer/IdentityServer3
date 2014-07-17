@@ -142,7 +142,7 @@
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
-    <Compile Include="Connect\Endpoints\LogoutController.cs" />
+    <Compile Include="Connect\Endpoints\EndSessionController.cs" />
     <Compile Include="Connect\Endpoints\UserInfoEndpointController.cs" />
     <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\ConsentError.cs" />

@@ -310,13 +310,23 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RouteNames
         {
-            public const string Login                   = "idsrv.authentication.login";
-            public const string LoginExternal           = "idsrv.authentication.loginexternal";
-            public const string LoginExternalCallback   = "idsrv.authentication.loginexternalcallback";
-            public const string LogoutPrompt            = "idsrv.authentication.logoutprompt";
-            public const string Logout                  = "idsrv.authentication.logout";
-            public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
-            public const string CspReport               = "idsrv.csp.report";
+            // TODO:brock
+            //public static class Authentication
+            //{
+                public const string Login = "idsrv.authentication.login";
+                public const string LoginExternal = "idsrv.authentication.loginexternal";
+                public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
+                public const string LogoutPrompt = "idsrv.authentication.logoutprompt";
+                public const string Logout = "idsrv.authentication.logout";
+                public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
+                public const string CspReport = "idsrv.csp.report";
+            //}
+            
+            public static class Oidc
+            {
+                public const string EndSession = "idsrv.oidc.endsession";
+                public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
+            }
         }
 
         public static class RoutePaths
@@ -327,6 +337,12 @@ namespace Thinktecture.IdentityServer.Core
             public const string Logout = "logout";
             public const string ResumeLoginFromRedirect = "resume";
             public const string CspReport = "csp/report";
+
+            public static class Oidc
+            {
+                public const string EndSession = "connect/logout";
+                public const string EndSessionCallback = "connect/logoutcallback";
+            }
         }
         
         public static class OwinEnvironment

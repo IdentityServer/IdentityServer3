@@ -26,7 +26,9 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
             if (actionExecutedContext != null &&
                 actionExecutedContext.Response != null &&
                 actionExecutedContext.Response.IsSuccessStatusCode &&
-                "text/html".Equals(actionExecutedContext.Response.Content.Headers.ContentType.MediaType, StringComparison.OrdinalIgnoreCase))
+                (actionExecutedContext.Response.Content == null ||
+                 "text/html".Equals(actionExecutedContext.Response.Content.Headers.ContentType.MediaType, StringComparison.OrdinalIgnoreCase))
+            )
             {
                 if (EnableCto)
                 {

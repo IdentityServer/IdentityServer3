@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new InteractionResponse();
         }
 
-        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent)
+        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent = null)
         {
             if (request == null) throw new ArgumentNullException("request");
 

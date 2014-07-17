@@ -317,21 +317,13 @@ ngModel:fe,ngList:he,ngChange:ge,required:Oc,ngRequired:Oc,ngValue:je}).directiv
         //};
     });
 
-    app.controller("LogoutCtrl", function ($scope) {
+    app.controller("LogoutPromptCtrl", function ($scope) {
         $scope.model = $scope.layout.pageModel;
     });
 
-    //app.controller("LogoutCtrl", function ($scope, authentication) {
-    //    $scope.logout = function () {
-    //        $scope.error = null;
-    //        authentication.signout().then(function () {
-    //            $scope.success = true;
-    //            $scope.global.user = null;
-    //        }, function (error) {
-    //            $scope.error = error;
-    //        })
-    //    };
-    //});
+    app.controller("LogoutCtrl", function ($scope) {
+        $scope.model = $scope.layout.pageModel;
+    });
 
     app.controller("ConsentCtrl", function ($scope) {
         $scope.model = $scope.layout.pageModel;

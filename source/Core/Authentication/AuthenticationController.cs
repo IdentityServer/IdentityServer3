@@ -34,14 +34,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly InternalConfiguration _internalConfiguration;
+        private readonly IdentityServerOptions _options;
 
-        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration)
+        public AuthenticationController(IUserService userService, CoreSettings settings, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, InternalConfiguration internalConfiguration, IdentityServerOptions idSvrOptions)
         {
             _userService = userService;
             _settings = settings;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
             _internalConfiguration = internalConfiguration;
+            _options = idSvrOptions;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -199,8 +201,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return Redirect(authorizationReturnUrl);
         }
 
+        [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
+        [HttpGet]
+        public async Task<IHttpActionResult> LogoutPrompt()
+        {
+            var sub = await GetSubjectFromPrimaryAuthenticationType();
+            Logger.InfoFormat("Logout prompt for subject: {0}", sub);
+
+            return RenderLogoutPromptPage();
+        }
+        
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
-        [HttpGet, HttpPost]
+        [HttpPost]
         public async Task<IHttpActionResult> Logout()
         {
             var sub = await GetSubjectFromPrimaryAuthenticationType();
@@ -209,7 +221,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             ClearAuthenticationCookies();
             ClearSignInMessage();
 
-            return RenderLogoutPage();
+            return RenderLoggedOutPage();
         }
 
         private async Task<string> GetSubjectFromPrimaryAuthenticationType()
@@ -391,21 +403,34 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 });
         }
 
-        private IHttpActionResult RenderLogoutPage()
+        private IHttpActionResult RenderLogoutPromptPage()
+        {
+            return new EmbeddedHtmlResult(
+                Request,
+                new LayoutModel
+                {
+                    Server = _settings.SiteName,
+                    Page = "logoutprompt",
+                    PageModel = new
+                    {
+                        url = Url.Route(Constants.RouteNames.Logout, null)
+                    }
+                });
+        }
+
+        private IHttpActionResult RenderLoggedOutPage()
         {
             var baseUrl = Request.GetOwinEnvironment().GetIdentityServerBaseUrl();
             var urls = new List<string>();
 
-            // ~/connect/logout
+            foreach (var url in _options.ProtocolLogoutUrls)
+            {
+                var tmp = url;
+                if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
+                urls.Add(baseUrl + tmp);
+            }
 
-            //foreach(var url in _internalConfiguration.PluginConfiguration.SignOutCallbackUrls)
-            //{
-            //    var tmp = url;
-            //    if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
-            //    urls.Add(baseUrl + tmp);
-            //}
-
-            Logger.Info("rendering logout page");
+            Logger.Info("rendering logged out page");
 
             return new EmbeddedHtmlResult(Request,
                    new LayoutModel

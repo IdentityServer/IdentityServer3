@@ -39,5 +39,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var result = subject.ProcessConsentAsync(new ValidatedAuthorizeRequest(), null).Result;
         }
 
+
     }
 }

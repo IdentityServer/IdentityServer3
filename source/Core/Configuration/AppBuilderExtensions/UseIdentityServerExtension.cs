@@ -88,6 +88,8 @@ namespace Owin
 
             app.UseWebApi(WebApiConfig.Configure());
 
+            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
+
             return app;
         }
     }

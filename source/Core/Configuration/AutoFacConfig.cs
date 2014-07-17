@@ -29,6 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             var builder = new ContainerBuilder();
 
+            builder.RegisterInstance(options).AsSelf();
             builder.RegisterInstance(internalConfig).AsSelf();
 
             // mandatory from factory
