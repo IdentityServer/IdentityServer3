@@ -8,7 +8,7 @@ IdentityServer v3 is a .NET-based open source implementation of an OpenID Connec
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
-Also check out my introduction talk to OpenID Connect, OAuth2 and IdentityServer from NDC - [here](https://vimeo.com/97344501)
+Also check out my [introduction talk to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) from NDC.
 
 **Endpoints:**
 
