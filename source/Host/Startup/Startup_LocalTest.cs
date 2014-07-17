@@ -6,7 +6,6 @@ using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Host.Config;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.Services;
@@ -19,11 +18,11 @@ namespace Thinktecture.IdentityServer.Host
     {
         public void Configuration(IAppBuilder app)
         {
+            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
+
             // uncomment to enable HSTS headers for the host
             // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
             //app.UseHsts();
-
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
 
             app.Map("/core", coreApp =>
                 {
@@ -31,8 +30,8 @@ namespace Thinktecture.IdentityServer.Host
                     coreApp.UseCors(CorsOptions.AllowAll);
 
                     var factory = Factory.Create(
-                        issuerUri: "https://idsrv3.com",
-                        siteName: "Thinktecture IdentityServer v3 - preview 1");
+                            issuerUri: "https://idsrv3.com",
+                            siteName: "Thinktecture IdentityServer v3 - preview 1");
 
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
                     //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
@@ -46,7 +45,6 @@ namespace Thinktecture.IdentityServer.Host
                     };
 
                     coreApp.UseIdentityServer(idsrvOptions);
-
                 });
         }
 

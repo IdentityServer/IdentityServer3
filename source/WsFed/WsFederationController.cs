@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.WsFederation
                 return NotFound();
             }
 
-            var ep = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl() + this._wsFedOptions.MapPath;
+            var ep = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl() + _wsFedOptions.MapPath.Substring(1);
             var entity = _metadataResponseGenerator.Generate(ep);
 
             return new MetadataResult(entity);

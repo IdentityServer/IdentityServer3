@@ -22,95 +22,32 @@ IdSrv3 is a .NET-based open source implementation of an OpenID Connect provider 
 ## Getting started ##
 We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples folder to exercise the various flows.
 
-IdSrv3 is designed as an OWIN/Katana component. The following configuration gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).
+IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).
 
-	public void Configuration(IAppBuilder app)
-	{
-	    app.Map("/core", coreApp =>
-	        {
-	            var factory = TestOptionsFactory.Create(
-	                issuerUri:         "https://idsrv3.com",
-	                siteName:          "Thinktecture IdentityServer v3 - preview 1",
-	                publicHostAddress: "http://localhost:3333");
-	                    
-	            var options = new IdentityServerCoreOptions
-	            {
-	                Factory = factory,
-	            };
-	
-	            coreApp.UseIdentityServerCore(options);
-	        });
-	}
+```csharp
+app.Map("/core", coreApp =>
+    {
+        var factory = Factory.Create(
+            issuerUri: "https://idsrv3.com",
+            siteName:  "Thinktecture IdentityServer v3 - preview 1");
+                    
+        var opts = new IdentityServerOptions
+        {
+            Factory = factory,
+            PublicHostName = "http://localhost:3333"
+        };
+
+        coreApp.UseIdentityServer(opts);
+    });
+```
 
 You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tree/master/samples/Certificates) folder in the repository.
 
-If you want to plugin a real user storage system, we provide out of the box support for MembershipReboot and ASP.NET identity - simply uncomment the UserService assignment.
+The host project shows other configuration options
+* support for MembershipReboot and ASP.NET Identity based user stores
+* support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
+* support for WS-Federation
 
-	public void Configuration(IAppBuilder app)
-    {
-        app.Map("/core", coreApp =>
-            {
-                var factory = TestOptionsFactory.Create(
-                    issuerUri: "https://idsrv3.com",
-                    siteName: "Thinktecture IdentityServer v3 - preview 1",
-                    publicHostAddress: "http://localhost:3333");
-
-                //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
-                //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
-
-                var options = new IdentityServerCoreOptions
-                {
-                    Factory = factory,
-                };
-
-                coreApp.UseIdentityServerCore(options);
-            });
-    }
-
-To support social logins, you can simply add existing OWIN/Katana middleware to the IdSrv3 configuration:
-
-	public void Configuration(IAppBuilder app)
-    {
-        app.Map("/core", coreApp =>
-            {
-                var factory = TestOptionsFactory.Create(
-                    issuerUri: "https://idsrv3.com",
-                    siteName: "Thinktecture IdentityServer v3 - preview 1",
-                    certificateName: "CN=idsrv3test",
-                    publicHostAddress: "http://localhost:3333");
-
-                //factory.UserService = Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory;
-                //factory.UserService = Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory;
-
-                var options = new IdentityServerCoreOptions
-                {
-                    Factory = factory,
-                    SocialIdentityProviderConfiguration = ConfigureSocialIdentityProviders
-                };
-
-                coreApp.UseIdentityServerCore(options);
-            });
-    }
-
-    public static void ConfigureSocialIdentityProviders(IAppBuilder app, string signInAsType)
-    {
-        var google = new GoogleAuthenticationOptions
-        {
-            AuthenticationType = "Google",
-            SignInAsAuthenticationType = signInAsType
-        };
-        app.UseGoogleAuthentication(google);
-
-        var fb = new FacebookAuthenticationOptions
-        {
-            AuthenticationType = "Facebook",
-            SignInAsAuthenticationType = signInAsType,
-            AppId = "67...8",
-            AppSecret = "9....3"
-        };
-        app.UseFacebookAuthentication(fb);
-    }
-    
 IdentityServer is built using the following great open source projects:
 
 - ASP.NET Web API
