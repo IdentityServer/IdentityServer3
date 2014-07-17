@@ -14,13 +14,11 @@ namespace Thinktecture.IdentityServer.Tests
         private string _issuerUri;
         private string _siteName;
         private X509Certificate2 _certificate;
-        private string _publicHostAddress;
 
-        public TestSettings(string issuerUri, string siteName, string publicHostAddress)
+        public TestSettings(string issuerUri, string siteName)
         {
             _issuerUri = issuerUri;
             _siteName = siteName;
-            _publicHostAddress = publicHostAddress;
 
             var assembly = this.GetType().Assembly;
             using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Tests.idsrv3test.pfx"))

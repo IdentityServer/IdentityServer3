@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected Thinktecture.IdentityServer.Core.Configuration.IDataProtector protector;
 
         protected Mock<InMemoryUserService> mockUserService;
+        protected IdentityServerOptions options;
 
         public TestContext TestContext { get; set; }
 
@@ -37,27 +38,26 @@ namespace Thinktecture.IdentityServer.Tests
             
             server = TestServer.Create(app =>
             {
-
                 protector = new NoDataProtector();
 
                 var factory = TestFactory.Create(
                          issuerUri: "https://idsrv3.com",
-                         siteName: "Thinktecture IdentityServer v3 - test",
-                         publicHostAddress: "http://localhost:3333");
+                         siteName: "Thinktecture IdentityServer v3 - test");
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;
                 factory.UserService = Registration.RegisterFactory<IUserService>(() => mockUserService.Object);
 
-                var opts = new IdentityServerOptions
+                options = new IdentityServerOptions
                 {
                     DataProtector = protector,
                     Factory = factory,
                     AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders
                 };
 
-                app.UseIdentityServer(opts);
+                app.UseIdentityServer(options);
             });
+
             client = server.HttpClient;
         }
 
@@ -87,6 +87,7 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected string Url(string path)
         {
+            if (path.StartsWith("/")) path = path.Substring(1);
             return "https://localhost:3333/" + path;
         }
         protected HttpResponseMessage Get(string path)

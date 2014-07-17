@@ -14,6 +14,7 @@ using Moq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Models;
+using Newtonsoft.Json.Linq;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication
 {
@@ -258,20 +259,33 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void Logout_ShowsLogoutPage()
+        public void Logout_ShowsLogoutPromptPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);
-            AssertPage(resp, "logout");
+            AssertPage(resp, "logoutprompt");
         }
 
         [TestMethod]
-        public void Logout_RemovesCookies()
+        public void PostToLogout_RemovesCookies()
         {
-            var resp = Get(Constants.RoutePaths.Logout);
+            var resp = Post(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
             Assert.AreEqual(4, cookies.Count());
             // GetCookies will not return values for cookies that are expired/revoked
             Assert.AreEqual(0, resp.GetCookies().Count());
+        }
+        
+        [TestMethod]
+        public void PostToLogout_EmitsLogoutUrlsForProtocolIframes()
+        {
+            this.options.ProtocolLogoutUrls.Add("/foo/signout");
+            var resp = Post(Constants.RoutePaths.Logout, (string)null);
+            var model = GetLayoutModel(resp);
+            dynamic pageModel = model.PageModel;
+            var signOutUrls = ((JArray)(pageModel.signOutUrls)).Select(x => x.ToString()).ToArray();
+            Assert.AreEqual(2, signOutUrls.Length);
+            CollectionAssert.Contains(signOutUrls, Url(Constants.RoutePaths.Oidc.EndSessionCallback));
+            CollectionAssert.Contains(signOutUrls, Url("/foo/signout"));
         }
 
         [TestMethod]

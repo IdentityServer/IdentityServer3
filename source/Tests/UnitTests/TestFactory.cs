@@ -14,10 +14,9 @@ namespace Thinktecture.IdentityServer.Tests
 {
     public class TestFactory
     {
-        public static IdentityServerServiceFactory Create(
-                    string issuerUri, string siteName, string publicHostAddress = "")
+        public static IdentityServerServiceFactory Create(string issuerUri, string siteName)
         {
-            var settings = new TestSettings(issuerUri, siteName, publicHostAddress);
+            var settings = new TestSettings(issuerUri, siteName);
             var scopes = new InMemoryScopeService(TestScopes.Get());
             var clients = new InMemoryClientService(TestClients.Get());
             
