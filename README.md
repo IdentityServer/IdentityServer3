@@ -25,20 +25,25 @@ We currently don't provide a setup tool or a UI. This release is meant to test d
 IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication (username must always equal password).
 
 ```csharp
-app.Map("/core", coreApp =>
-    {
-        var factory = Factory.Create(
-            issuerUri: "https://idsrv3.com",
-            siteName:  "Thinktecture IdentityServer v3 - preview 1");
-                    
-        var opts = new IdentityServerOptions
-        {
-            Factory = factory,
-            PublicHostName = "http://localhost:3333"
-        };
+public void Configuration(IAppBuilder appBuilder)
+{
+    var factory = InMemoryFactory.Create(
+        users:   Users.Get(), 
+        clients: Clients.Get(), 
+        scopes:  Scopes.Get());
 
-        coreApp.UseIdentityServer(opts);
-    });
+    var options = new IdentityServerOptions
+    {
+        IssuerUri = "https://idsrv3.com",
+        SiteName = "Thinktecture IdentityServer v3 - preview 1 (SelfHost)",
+        PublicHostName = "http://localhost:3333",
+
+        SigningCertificate = Certificate.Get(),
+        Factory = factory,
+    };
+
+    appBuilder.UseIdentityServer(options);
+}
 ```
 
 You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/tree/master/samples/Certificates) folder in the repository.
