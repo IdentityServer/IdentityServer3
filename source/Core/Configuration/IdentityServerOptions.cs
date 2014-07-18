@@ -7,6 +7,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
@@ -25,6 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.AccessTokenValidationEndpoint = EndpointSettings.Disabled;
             this.EndSessionEndpoint = EndpointSettings.Enabled;
             this.CspReportEndpoint = EndpointSettings.Disabled;
+
+            this.CorsPolicy = new CorsPolicy();
         }
 
         internal void Validate()
@@ -48,6 +51,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         public List<string> ProtocolLogoutUrls { get; set; }
 
+        public CorsPolicy CorsPolicy { get; set; }
+        
         public EndpointSettings AuthorizeEndpoint { get; set; }
         public EndpointSettings TokenEndpoint { get; set; }
         public EndpointSettings UserInfoEndpoint { get; set; }
