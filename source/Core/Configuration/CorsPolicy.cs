@@ -18,7 +18,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         public static readonly CorsPolicy AllowAll = new CorsPolicy()
         {
-            PolicyCallback = uri => Task.FromResult(true)
+            PolicyCallback = origin => Task.FromResult(true)
         };
     }
 }
