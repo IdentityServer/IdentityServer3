@@ -17,6 +17,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Microsoft.Owin.Infrastructure;
 
 namespace Owin
 {
@@ -24,24 +25,23 @@ namespace Owin
     {
         public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
         {
+            if (app == null) throw new ArgumentNullException("app");
             if (options == null) throw new ArgumentNullException("options");
-            
-            //var internalConfig = new InternalConfiguration();
+
+            // turn off weird claim mappings for JWTs
+            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
+            JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
             if (options.DataProtector == null)
             {
                 var provider = app.GetDataProtectionProvider();
                 if (provider == null)
                 {
-                    provider = new DpapiDataProtectionProvider("idsrv3");
+                    provider = new DpapiDataProtectionProvider(Constants.PrimaryAuthenticationType);
                 }
 
                 options.DataProtector = new HostDataProtector(provider);
             }
-
-            // thank you Microsoft for the clean syntax
-            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
-            JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
             app.UseCors(options.CorsPolicy);
 
@@ -67,6 +67,8 @@ namespace Owin
                 options.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
             }
 
+            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
+
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
@@ -82,12 +84,9 @@ namespace Owin
             app.UseStageMarker(PipelineStage.MapHandler);
 
             app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
-            Microsoft.Owin.Infrastructure.SignatureConversions.AddConversions(app);
+            SignatureConversions.AddConversions(app);
 
             app.UseWebApi(WebApiConfig.Configure());
-
-            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
-
             return app;
         }
     }
