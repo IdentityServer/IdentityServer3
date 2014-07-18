@@ -359,6 +359,13 @@ namespace Thinktecture.IdentityServer.Core
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";
             }
+            
+            public static readonly string[] CorsPaths = new string[]{
+                RoutePaths.Oidc.DiscoveryConfiguration,
+                RoutePaths.Oidc.DiscoveryWebKeys,
+                RoutePaths.Oidc.Token,
+                RoutePaths.Oidc.UserInfo,
+            };
         }
         
         public static class OwinEnvironment
