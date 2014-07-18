@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin
@@ -16,7 +17,7 @@ namespace Owin
             {
                 app.UseCors(new Microsoft.Owin.Cors.CorsOptions
                 {
-                    PolicyProvider = new CorsPolicyProvider(policy)
+                    PolicyProvider = new CorsPolicyProvider(policy, Constants.RoutePaths.CorsPaths)
                 });
             }
         }

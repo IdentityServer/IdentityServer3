@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Cors;
+﻿using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +10,67 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     class CorsPolicyProvider : ICorsPolicyProvider
     {
-        CorsPolicy policy;
-        public CorsPolicyProvider(CorsPolicy policy)
+        readonly CorsPolicy policy;
+        readonly string[] paths;
+
+        public CorsPolicyProvider(CorsPolicy policy, string[] allowedPaths)
         {
             if (policy == null) throw new ArgumentNullException("policy");
+            if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");
+
             this.policy = policy;
+            this.paths = allowedPaths.Select(path => Normalize(path)).ToArray();
         }
 
         public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(Microsoft.Owin.IOwinRequest request)
         {
-            var origin = request.Headers["Origin"];
-            if (origin != null)
+            if (IsPathAllowed(request))
             {
-                if (policy.AllowedOrigins.Contains(origin))
+                var origin = request.Headers["Origin"];
+                if (origin != null)
                 {
-                    return Allow(origin);
-                }
-
-                if (policy.PolicyCallback != null)
-                {
-                    if (await policy.PolicyCallback(origin))
+                    if (policy.AllowedOrigins.Contains(origin))
                     {
                         return Allow(origin);
+                    }
+
+                    if (policy.PolicyCallback != null)
+                    {
+                        if (await policy.PolicyCallback(origin))
+                        {
+                            return Allow(origin);
+                        }
                     }
                 }
             }
             return null;
+        }
+
+        private bool IsPathAllowed(IOwinRequest request)
+        {
+            var requestPath = Normalize(request.Path.Value);
+            return paths.Any(path => requestPath == path);
+        }
+
+        private string Normalize(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path) || path == "/")
+            {
+                path = "/";
+            }
+            else
+            {
+                if (!path.StartsWith("/"))
+                {
+                    path = "/" + path;
+                }
+                if (path.EndsWith("/"))
+                {
+                    path = path.Substring(0, path.Length - 1);
+                }
+            }
+            
+            return path;
         }
 
         System.Web.Cors.CorsPolicy Allow(string origin)
