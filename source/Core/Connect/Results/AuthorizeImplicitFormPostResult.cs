@@ -52,7 +52,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 sb.AppendFormat(inputFieldFormat, "token", _response.AccessToken);
                 sb.AppendFormat(inputFieldFormat, "expires_in", _response.AccessTokenLifetime);
             }
-            
+
+            if (_response.RefreshToken.IsPresent())
+            {
+                sb.AppendFormat(inputFieldFormat, "refresh_token", _response.RefreshToken);
+            }
+
             if (_response.State.IsPresent())
             {
                 sb.AppendFormat(inputFieldFormat, "state", _response.State);

@@ -15,11 +15,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class AuthorizeResponseGenerator
     {
         private readonly ITokenService _tokenService;
+        private readonly IRefreshTokenService _refreshTokenService;
         private readonly IAuthorizationCodeStore _authorizationCodes;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, IAuthorizationCodeStore authorizationCodes)
         {
             _tokenService = tokenService;
+            _refreshTokenService = refreshTokenService;
             _authorizationCodes = authorizationCodes;
         }
 
@@ -53,6 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
+            string refreshToken = null;
 
             if (request.IsResourceRequest)
             {
@@ -60,6 +63,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 accessTokenLifetime = accessToken.Lifetime;
 
                 accessTokenValue = await _tokenService.CreateSecurityTokenAsync(accessToken);
+
+                var createRefreshToken = request.ValidatedScopes.ContainsOfflineAccessScope;
+
+                if (createRefreshToken)
+                {
+                    refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(accessToken, request.Client);
+                }
             }
 
             string jwt = null;
@@ -74,6 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 RedirectUri = request.RedirectUri,
                 AccessToken = accessTokenValue,
                 AccessTokenLifetime = accessTokenLifetime,
+                RefreshToken = refreshToken,
                 IdentityToken = jwt,
                 State = request.State,
                 Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString()

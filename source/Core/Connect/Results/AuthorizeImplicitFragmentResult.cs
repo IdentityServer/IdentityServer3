@@ -49,6 +49,11 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
                 query.Add("expires_in", _response.AccessTokenLifetime.ToString());
             }
 
+            if (_response.RefreshToken.IsPresent())
+            {
+                query.Add("refresh_token", _response.RefreshToken);
+            }
+
             if (_response.Scope.IsPresent())
             {
                 query.Add("scope", _response.Scope);
