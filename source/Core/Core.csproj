@@ -119,7 +119,11 @@
     <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
     <Compile Include="Authentication\LoginCredentials.cs" />
     <Compile Include="Authentication\ResultExtensions.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureDataProtectorExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerBaseUrlExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureCookieAuthenticationExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\UseCorsExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\UseEmbeddedFileServerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\UseHstsExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\UseIdentityServerExtension.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
