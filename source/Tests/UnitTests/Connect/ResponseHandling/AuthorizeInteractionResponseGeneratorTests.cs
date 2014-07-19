@@ -61,7 +61,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [TestMethod]
         public void ProcessConsentAsync_AllowsNullConsent()
         {
-            var result = subject.ProcessConsentAsync(new ValidatedAuthorizeRequest(), null).Result;
+            var request = new ValidatedAuthorizeRequest()
+            {
+                ResponseMode = Constants.ResponseModes.Fragment,
+                State = "12345",
+                RedirectUri = new Uri("https://client.com/callback"),
+                PromptMode = Constants.PromptModes.Consent
+            }; 
+            var result = subject.ProcessConsentAsync(request, null).Result;
         }
 
         [TestMethod]
@@ -81,33 +88,35 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 var result = subject.ProcessConsentAsync(request).Result;
                 Assert.Fail();
             }
-            catch (ArgumentException ex)
+            catch (AggregateException ex)
             {
-                StringAssert.Contains(ex.Message, "PromptMode");
+                var ex2 = ex.InnerException;
+                StringAssert.Contains(ex2.Message, "PromptMode");
             }
         }
-        //[TestMethod]
-        //public void ProcessConsentAsync_PromptModeIsLogin_Throws()
-        //{
-        //    RequiresConsent(true);
-        //    var request = new ValidatedAuthorizeRequest()
-        //    {
-        //        ResponseMode = Constants.ResponseModes.Fragment,
-        //        State = "12345",
-        //        RedirectUri = new Uri("https://client.com/callback"),
-        //        PromptMode = Constants.PromptModes.Login
-        //    };
+        [TestMethod]
+        public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
+        {
+            RequiresConsent(true);
+            var request = new ValidatedAuthorizeRequest()
+            {
+                ResponseMode = Constants.ResponseModes.Fragment,
+                State = "12345",
+                RedirectUri = new Uri("https://client.com/callback"),
+                PromptMode = Constants.PromptModes.SelectAccount
+            };
 
-        //    try
-        //    {
-        //        var result = subject.ProcessConsentAsync(request).Result;
-        //        Assert.Fail();
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        StringAssert.Contains(ex.Message, "PromptMode");
-        //    }
-        //}
+            try
+            {
+                var result = subject.ProcessConsentAsync(request).Result;
+                Assert.Fail();
+            }
+            catch (AggregateException ex)
+            {
+                var ex2 = ex.InnerException;
+                StringAssert.Contains(ex2.Message, "PromptMode");
+            }
+        }
 
         [TestMethod]
         public void ProcessConsentAsync_RequiresConsentButPromptModeIsNone_ReturnsError()
