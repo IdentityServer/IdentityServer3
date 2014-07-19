@@ -20,6 +20,8 @@ namespace Owin
             if (app == null) throw new ArgumentNullException("app");
             if (options == null) throw new ArgumentNullException("options");
 
+            options.Validate();
+
             // turn off weird claim mappings for JWTs
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
             JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
