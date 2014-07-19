@@ -77,15 +77,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            var interaction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
+            var loginInteraction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
 
-            if (interaction.IsError)
+            if (loginInteraction.IsError)
             {
-                return this.AuthorizeError(interaction.Error);
+                return this.AuthorizeError(loginInteraction.Error);
             }
-            if (interaction.IsLogin)
+            if (loginInteraction.IsLogin)
             {
-                return this.RedirectToLogin(interaction.SignInMessage, request.Raw, _options);
+                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw, _options);
             }
 
             // user must be authenticated at this point
@@ -111,17 +111,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            interaction = await _interactionGenerator.ProcessConsentAsync(request, consent);
-            
-            if (interaction.IsError)
+            var consentInteraction = await _interactionGenerator.ProcessConsentAsync(request, consent);
+
+            if (consentInteraction.IsError)
             {
-                return this.AuthorizeError(interaction.Error);
+                return this.AuthorizeError(consentInteraction.Error);
             }
 
-            if (interaction.IsConsent)
+            if (consentInteraction.IsConsent)
             {
                 Logger.Info("Showing consent screen");
-                return CreateConsentResult(request, request.Raw, interaction.ConsentError);
+                return CreateConsentResult(request, request.Raw, consentInteraction.ConsentError);
             }
 
             return await CreateAuthorizeResponseAsync(request);

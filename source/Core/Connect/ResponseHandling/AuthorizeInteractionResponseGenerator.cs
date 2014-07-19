@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _consent = consent;
         }
 
-        public InteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public LoginInteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
@@ -54,9 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // remove prompt so when we redirect back in from login page
                 // we won't think we need to force a prompt again
                 request.Raw.Remove(Constants.AuthorizeRequest.Prompt);
-                return new InteractionResponse
+                return new LoginInteractionResponse
                 {
-                    IsLogin = true,
                     SignInMessage = _signIn
                 };
             }
@@ -67,9 +66,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)
                 {
-                    return new InteractionResponse
+                    return new LoginInteractionResponse
                     {
-                        IsError = true,
                         Error = new AuthorizeError
                         {
                             ErrorType = ErrorTypes.Client,
@@ -81,9 +79,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     };
                 }
 
-                return new InteractionResponse
+                return new LoginInteractionResponse
                 {
-                    IsLogin = true,
                     SignInMessage = _signIn
                 };
             }
@@ -94,28 +91,32 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 var authTime = user.GetAuthenticationTime();
                 if (DateTime.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
                 {
-                    return new InteractionResponse
+                    return new LoginInteractionResponse
                     {
-                        IsLogin = true,
                         SignInMessage = _signIn
                     };
                 }
             }
 
-            return new InteractionResponse();
+            return new LoginInteractionResponse();
         }
 
-        public async Task<InteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent = null)
+        public async Task<ConsentInteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent = null)
         {
             if (request == null) throw new ArgumentNullException("request");
+            
+            if (request.PromptMode != Constants.PromptModes.None &&
+                request.PromptMode != Constants.PromptModes.Consent)
+            {
+                throw new ArgumentException("Invalid PromptMode");
+            }
 
             var consentRequired = await _consent.RequiresConsentAsync(request.Client, request.Subject, request.RequestedScopes);
 
             if (consentRequired && request.PromptMode == Constants.PromptModes.None)
             {
-                return new InteractionResponse
+                return new ConsentInteractionResponse
                 {
-                    IsError = true,
                     Error = new AuthorizeError
                     {
                         ErrorType = ErrorTypes.Client,
@@ -129,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (request.PromptMode == Constants.PromptModes.Consent || consentRequired)
             {
-                var response = new InteractionResponse();
+                var response = new ConsentInteractionResponse();
 
                 // did user provide consent
                 if (consent == null)
@@ -146,7 +147,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     {
                         // no need to show consent screen again
                         // build access denied error to return to client
-                        response.IsError = true;
                         response.Error = new AuthorizeError { 
                             ErrorType = ErrorTypes.Client,
                             Error = Constants.AuthorizeErrors.AccessDenied,
@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return response;
             }
 
-            return new InteractionResponse();
+            return new ConsentInteractionResponse();
         }
     }
 }

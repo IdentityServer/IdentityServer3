@@ -7,14 +7,21 @@ using Thinktecture.IdentityServer.Core.Authentication;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
-    public class InteractionResponse
+    public abstract class InteractionResponse
     {
-        public bool IsError { get; set; }
-        public bool IsLogin { get; set; }
-        public bool IsConsent { get; set; }
-
+        public bool IsError { get { return Error != null; } }
         public AuthorizeError Error { get; set; }
-        public string ConsentError { get; set; }
+    }
+
+    public class LoginInteractionResponse : InteractionResponse
+    {
+        public bool IsLogin { get { return SignInMessage != null; } }
         public SignInMessage SignInMessage { get; set; }
+    }
+    
+    public class ConsentInteractionResponse : InteractionResponse
+    {
+        public bool IsConsent { get; set; }
+        public string ConsentError { get; set; }
     }
 }
