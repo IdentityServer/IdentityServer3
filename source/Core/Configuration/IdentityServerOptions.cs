@@ -44,7 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public string PublicHostName { get; set; }
         public IdentityServerServiceFactory Factory { get; set; }
         public AuthenticationOptions AuthenticationOptions { get; set; }
-        public virtual IDataProtector DataProtector { get; set; }
+        public IDataProtector DataProtector { get; set; }
+        public string CookiePrefix { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
         public Action<IAppBuilder, IdentityServerOptions> ConfigurePlugins { get; set; }
