@@ -326,9 +326,16 @@ namespace Thinktecture.IdentityServer.AspNetIdentity
             return Thinktecture.IdentityServer.Core.Plumbing.ClaimMap.Map(incomingClaims);
         }
 
-        public Task<bool> IsActive(string subject)
+        public async Task<bool> IsActive(string subject)
         {
-            throw new NotImplementedException();
+            TKey key = ConvertSubjectToKey(subject);
+            var acct = await userManager.FindByIdAsync(key);
+            if (acct == null)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
