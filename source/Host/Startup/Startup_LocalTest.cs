@@ -7,8 +7,6 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Host.Config;
-using Thinktecture.IdentityServer.WsFederation.Configuration;
-using Thinktecture.IdentityServer.WsFederation.Services;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
 
@@ -40,27 +38,10 @@ namespace Thinktecture.IdentityServer.Host
                         PublicHostName = "http://localhost:3333",
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        ConfigurePlugins = ConfigurePlugins,
                         CorsPolicy = CorsPolicy.AllowAll
                     };
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
-        }
-
-        private void ConfigurePlugins(IAppBuilder pluginApp, IdentityServerOptions options)
-        {
-            var wsFedOptions = new WsFederationPluginOptions
-            {
-                IdentityServerOptions = options,
-                Factory = new WsFederationServiceFactory
-                {
-                    UserService = options.Factory.UserService,
-                    RelyingPartyService = Registration.RegisterFactory<IRelyingPartyService>(() => new InMemoryRelyingPartyService(RelyingParties.Get())),
-                    WsFederationSettings = Registration.RegisterFactory<WsFederationSettings>(() => new WsFedSettings())
-                }
-            };
-            
-            pluginApp.UseWsFederationPlugin(wsFedOptions);
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
