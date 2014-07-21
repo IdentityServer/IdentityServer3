@@ -7,14 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{C41ECC23-BB27-4BDD-990E-4908B872F12C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E6CD03EB-B9D2-44CA-B6C1-F546CFEA51DC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2D32A6C0-8EEC-45E7-9CD2-BD122FA9E7F6}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Tests\UnitTests\Core.Tests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,8 +42,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA} = {E6CD03EB-B9D2-44CA-B6C1-F546CFEA51DC}
 	EndGlobalSection
 EndGlobal
