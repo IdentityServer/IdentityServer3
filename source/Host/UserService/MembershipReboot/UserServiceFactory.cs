@@ -6,8 +6,9 @@
 using BrockAllen.MembershipReboot;
 using BrockAllen.MembershipReboot.Ef;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.MembershipReboot;
 
-namespace Thinktecture.IdentityServer.MembershipReboot
+namespace Thinktecture.IdentityServer.Host.UserService.MembershipReboot
 {
     public class UserServiceFactory
     {

@@ -262,7 +262,13 @@ namespace Thinktecture.IdentityServer.MembershipReboot
 
         public Task<bool> IsActive(string subject)
         {
-            throw new NotImplementedException();
+            var acct = userAccountService.GetByID(subject.ToGuid());
+            if (acct == null)
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(!acct.IsAccountClosed && acct.IsLoginAllowed);
         }
     }
 }

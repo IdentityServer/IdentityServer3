@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Thinktecture.IdentityServer.AspNetIdentity
+namespace Thinktecture.IdentityServer.Host.UserService.AspNetIdentity
 {
     public class CustomDbContext : IdentityDbContext<CustomUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {

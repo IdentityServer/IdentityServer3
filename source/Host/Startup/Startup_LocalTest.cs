@@ -5,6 +5,7 @@ using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Host.Config;
 using Thinktecture.IdentityServer.WsFederation.Configuration;
 using Thinktecture.IdentityServer.WsFederation.Services;
@@ -26,8 +27,8 @@ namespace Thinktecture.IdentityServer.Host
             app.Map("/core", coreApp =>
                 {
                     var factory = Factory.Create();
-                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.MembershipReboot.UserServiceFactory.Factory);
-                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.AspNetIdentity.UserServiceFactory.Factory);
+                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.Host.UserService.MembershipReboot.UserServiceFactory.Factory);
+                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.Host.UserService.AspNetIdentity.UserServiceFactory.Factory);
 
                     var idsrvOptions = new IdentityServerOptions
                     {

@@ -4,9 +4,10 @@
  */
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Thinktecture.IdentityServer.AspNetIdentity;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.AspNetIdentity
+namespace Thinktecture.IdentityServer.Host.UserService.AspNetIdentity
 {
     public class UserServiceFactory
     {
