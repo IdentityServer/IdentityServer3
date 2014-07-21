@@ -173,22 +173,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup\Startup_Minimal.cs" />
     <Compile Include="Startup\Startup_LocalTest.cs" />
-    <Compile Include="UserService\AspNetIdentity\Custom.cs" />
-    <Compile Include="UserService\AspNetIdentity\UserServiceFactory.cs" />
-    <Compile Include="UserService\MembershipReboot\UserServiceFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AspNetIdentityUserService\AspNetIdentityUserService.csproj">
-      <Project>{409b7496-b359-40eb-b92b-733f0b1f0088}</Project>
-      <Name>AspNetIdentityUserService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{fb9e026e-bab3-498a-a954-b93b05c146a5}</Project>
       <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MembershipRebootUserService\MembershipRebootUserService.csproj">
-      <Project>{9eb9f5c7-49e1-440b-923f-bb842d9436d2}</Project>
-      <Name>MembershipRebootUserService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

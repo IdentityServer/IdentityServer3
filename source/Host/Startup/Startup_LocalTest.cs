@@ -25,8 +25,6 @@ namespace Thinktecture.IdentityServer.Host
             app.Map("/core", coreApp =>
                 {
                     var factory = Factory.Create();
-                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.Host.UserService.MembershipReboot.UserServiceFactory.Factory);
-                    //factory.UserService = Registration.RegisterFactory<IUserService>(Thinktecture.IdentityServer.Host.UserService.AspNetIdentity.UserServiceFactory.Factory);
 
                     var idsrvOptions = new IdentityServerOptions
                     {
