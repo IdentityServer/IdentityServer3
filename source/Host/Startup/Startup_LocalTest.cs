@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Host
         {
             var wsFedOptions = new WsFederationPluginOptions
             {
-                Options = options,
+                IdentityServerOptions = options,
                 Factory = new WsFederationServiceFactory
                 {
                     UserService = options.Factory.UserService,

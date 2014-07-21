@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             // general services
             builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
             builder.RegisterInstance(options).AsSelf();
-            builder.RegisterInstance(options.Options).AsSelf();
+            builder.RegisterInstance(options.IdentityServerOptions).AsSelf();
 
             // load core controller
             builder.RegisterApiControllers(typeof(WsFederationController).Assembly);

@@ -15,14 +15,14 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             }
         }
         
-        public IdentityServerOptions Options { get; set; }
+        public IdentityServerOptions IdentityServerOptions { get; set; }
         public WsFederationServiceFactory Factory { get; set; }
         
         public IDataProtector DataProtector
         {
             get
             {
-                return Options.DataProtector;
+                return IdentityServerOptions.DataProtector;
             }
         }
 
@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.WsFederation.Configuration
             {
                 throw new ArgumentNullException("DataProtector not configured");
             }
-            if (Options == null)
+            if (IdentityServerOptions == null)
             {
                 throw new ArgumentNullException("Options not configured");
             }

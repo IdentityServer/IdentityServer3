@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (options == null) throw new ArgumentNullException("options");
             options.Validate();
 
-            options.Options.ProtocolLogoutUrls.Add(options.LogoutUrl);
+            options.IdentityServerOptions.ProtocolLogoutUrls.Add(options.LogoutUrl);
 
             app.Map(options.MapPath, wsfedApp =>
                 {
@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                     {
                         AuthenticationType = WsFederationPluginOptions.CookieName,
                         AuthenticationMode = AuthenticationMode.Passive,
-                        CookieName = options.Options.CookiePrefix + WsFederationPluginOptions.CookieName
+                        CookieName = options.IdentityServerOptions.CookiePrefix + WsFederationPluginOptions.CookieName
                     });
 
                     wsfedApp.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
