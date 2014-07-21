@@ -11,6 +11,7 @@ using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -104,8 +105,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public async Task<ConsentInteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent = null)
         {
             if (request == null) throw new ArgumentNullException("request");
-            
-            if (request.PromptMode != Constants.PromptModes.None &&
+
+            if (request.PromptMode != null && 
+                request.PromptMode != Constants.PromptModes.None &&
                 request.PromptMode != Constants.PromptModes.Consent)
             {
                 throw new ArgumentException("Invalid PromptMode");
@@ -165,10 +167,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                             // they said yes, but didn't pick any scopes
                             // show consent again and provide error message
                             response.IsConsent = true;
-                            response.ConsentError = "Must select at least one permission.";
+                            response.ConsentError = Messages.MustSelectAtLeastOnePermission;
                         }
-                        
-                        if (request.Client.AllowRememberConsent)
+                        else if (request.Client.AllowRememberConsent)
                         {
                             // remember consent
                             var scopes = Enumerable.Empty<string>();

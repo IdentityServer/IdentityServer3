@@ -120,6 +120,9 @@
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>Invalid Username or Password</value>
   </data>
+  <data name="MustSelectAtLeastOnePermission" xml:space="preserve">
+    <value>Must select at least one permission.</value>
+  </data>
   <data name="NoMatchingExternalAccount" xml:space="preserve">
     <value>Invalid Account</value>
   </data>

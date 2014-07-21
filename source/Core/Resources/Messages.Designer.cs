@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Thinktecture.IdentityServer.Core.Resources
-{
-
-
+namespace Thinktecture.IdentityServer.Core.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -66,6 +66,15 @@ namespace Thinktecture.IdentityServer.Core.Resources
         public static string InvalidUsernameOrPassword {
             get {
                 return ResourceManager.GetString("InvalidUsernameOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must select at least one permission..
+        /// </summary>
+        public static string MustSelectAtLeastOnePermission {
+            get {
+                return ResourceManager.GetString("MustSelectAtLeastOnePermission", resourceCulture);
             }
         }
         
