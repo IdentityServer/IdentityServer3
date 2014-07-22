@@ -218,6 +218,42 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
+        public void PostToLogin_CookieOptionsIsPersistentIsFalse_DoesNotIssuePersistentCookie()
+        {
+            this.options.CookieOptions.IsPersistent = false;
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.GetRawCookies();
+            var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
+            Assert.IsFalse(cookie.Contains("expires="));
+        }
+
+        [TestMethod]
+        public void PostToLogin_CookieOptionsIsPersistentIsTrue_IssuesPersistentCookie()
+        {
+            this.options.CookieOptions.IsPersistent = true;
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.GetRawCookies();
+            var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
+            Assert.IsTrue(cookie.Contains("expires="));
+        }
+
+        [TestMethod]
+        public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+            
+            this.options.CookieOptions.IsPersistent = true;
+            GetLoginPage();
+            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.GetRawCookies();
+            var cookie = cookies.Single(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "="));
+            Assert.IsFalse(cookie.Contains("expires="));
+        }
+
+        [TestMethod]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))

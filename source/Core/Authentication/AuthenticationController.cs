@@ -331,6 +331,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 issuer,
                 authTime);
 
+            var props = new Microsoft.Owin.Security.AuthenticationProperties();
+
             var id = principal.Identities.First();
             if (authResult.IsPartialSignIn)
             {
@@ -349,11 +351,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 // allow redircting code to add claims for target page
                 id.AddClaims(authResult.RedirectClaims);
             }
+            else if (this._options.CookieOptions.IsPersistent)
+            {
+                props.IsPersistent = true;
+            }
 
             ClearAuthenticationCookies();
 
             var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignIn(id);
+            ctx.Authentication.SignIn(props, id);
         }
 
         private void ClearAuthenticationCookies()

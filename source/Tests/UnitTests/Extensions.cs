@@ -38,6 +38,16 @@ namespace Thinktecture.IdentityServer.Tests
             return Enumerable.Empty<CookieState>();
         }
 
+        public static IEnumerable<string> GetRawCookies(this HttpResponseMessage resp)
+        {
+            IEnumerable<string> values;
+            if (resp.Headers.TryGetValues("Set-Cookie", out values))
+            {
+                return values;
+            }
+            return Enumerable.Empty<string>();
+        }
+
         public static void AssertCookie(this HttpResponseMessage resp, string name)
         {
             var cookies = resp.GetCookies();
