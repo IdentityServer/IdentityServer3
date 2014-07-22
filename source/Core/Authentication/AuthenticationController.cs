@@ -446,7 +446,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                _options.CookiePrefix + SignInMessageCookieName,
+                _options.CookieOptions.Prefix + SignInMessageCookieName,
                 ".",
                 new Microsoft.Owin.CookieOptions
                 {
@@ -466,7 +466,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                _options.CookiePrefix + SignInMessageCookieName,
+                _options.CookieOptions.Prefix + SignInMessageCookieName,
                 message,
                 new Microsoft.Owin.CookieOptions
                 {
@@ -480,7 +480,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private SignInMessage LoadSignInMessage()
         {
             var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies[_options.CookiePrefix + SignInMessageCookieName];
+            var message = ctx.Request.Cookies[_options.CookieOptions.Prefix + SignInMessageCookieName];
 
             if (message.IsMissing())
             {
@@ -498,7 +498,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private void VerifySignInMessage()
         {
             var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies[_options.CookiePrefix + SignInMessageCookieName];
+            var message = ctx.Request.Cookies[_options.CookieOptions.Prefix + SignInMessageCookieName];
 
             if (message.IsMissing())
             {

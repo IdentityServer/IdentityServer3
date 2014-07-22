@@ -13,28 +13,33 @@ namespace Owin
 {
     static class UseCookieAuthenticationExtension
     {
-        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, IdentityServerOptions options)
+        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, CookieOptions options)
         {
-            if (options.CookiePrefix != null && options.CookiePrefix.Length > 0)
+            if (options == null) throw new ArgumentNullException("options");
+
+            if (options.Prefix != null && options.Prefix.Length > 0)
             {
-                options.CookiePrefix += ".";
+                options.Prefix += ".";
             }
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.PrimaryAuthenticationType,
-                CookieName = options.CookiePrefix + Constants.PrimaryAuthenticationType,
+                CookieName = options.Prefix + Constants.PrimaryAuthenticationType,
+                ExpireTimeSpan = options.ExpireTimeSpan,
             });
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.ExternalAuthenticationType,
-                CookieName = options.CookiePrefix + Constants.ExternalAuthenticationType,
-                AuthenticationMode = AuthenticationMode.Passive
+                CookieName = options.Prefix + Constants.ExternalAuthenticationType,
+                AuthenticationMode = AuthenticationMode.Passive,
+                ExpireTimeSpan = Constants.ExternalCookieTimeSpan
             });
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.PartialSignInAuthenticationType,
-                CookieName = options.CookiePrefix + Constants.PartialSignInAuthenticationType,
-                AuthenticationMode = AuthenticationMode.Passive
+                CookieName = options.Prefix + Constants.PartialSignInAuthenticationType,
+                AuthenticationMode = AuthenticationMode.Passive,
+                ExpireTimeSpan = options.ExpireTimeSpan
             });
             return app;
         }

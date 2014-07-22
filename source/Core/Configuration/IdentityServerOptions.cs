@@ -16,7 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         public IdentityServerOptions()
         {
-            SiteName = "Thinktecture IdentityServer v3";
+            SiteName = Constants.IdentityServerName;
 
             this.ProtocolLogoutUrls = new List<string>();
             this.AuthorizeEndpoint = EndpointSettings.Enabled;
@@ -28,6 +28,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CspReportEndpoint = EndpointSettings.Disabled;
 
             this.CorsPolicy = new CorsPolicy();
+            this.CookieOptions = new CookieOptions
+            {
+                ExpireTimeSpan = Constants.DefaultCookieTimeSpan
+            };
         }
 
         internal void Validate()
@@ -35,6 +39,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (IssuerUri.IsMissing())
             {
                 throw new ArgumentException("IssuerUri Is Missing");
+            }
+
+            if (CookieOptions == null)
+            {
+                throw new ArgumentException("CookieOptions is missing");
             }
         }
 
@@ -45,7 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public IdentityServerServiceFactory Factory { get; set; }
         public AuthenticationOptions AuthenticationOptions { get; set; }
         public IDataProtector DataProtector { get; set; }
-        public string CookiePrefix { get; set; }
+
+        public CookieOptions CookieOptions { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
         public Action<IAppBuilder, IdentityServerOptions> ConfigurePlugins { get; set; }

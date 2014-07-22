@@ -128,6 +128,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\UseIdentityServerExtension.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\AutofacConfig.cs" />
+    <Compile Include="Configuration\CookieOptions.cs" />
     <Compile Include="Configuration\CorsPolicy.cs" />
     <Compile Include="Configuration\CorsPolicyProvider.cs" />
     <Compile Include="Configuration\InMemoryFactory.cs" />

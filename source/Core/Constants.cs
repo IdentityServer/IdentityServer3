@@ -3,18 +3,24 @@
  * see license
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants
     {
-        public const string PrimaryAuthenticationType       = "idsrv";
-        public const string ExternalAuthenticationType      = "idsrv.external";
+        public const string IdentityServerName = "Thinktecture IdentityServer v3";
+        
+        public const string PrimaryAuthenticationType = "idsrv";
+        public const string ExternalAuthenticationType = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         public const string BuiltInIdentityProvider         = "idsrv";
 
         public const string AccessTokenAudience             = "{0}/resources";
+
+        public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
+        public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
 
         public static class AuthorizeRequest
         {
