@@ -2,10 +2,10 @@
     <h1>Logout</h1>
 </div>
 
-<div class="row" ng-controller="LogoutPromptCtrl">
+<div class="row">
     <div class="col-md-6 col-sm-6">
-        <p>Would you like to logout of Thinktecture IdentityServer?</p>
-        <form name="form" method="post" action="{{model.url}}">
+        <p>Would you like to logout of {{model.siteName}}?</p>
+        <form name="form" method="post" action="{{model.logoutUrl}}">
             <fieldset>
                 <div class="form-group">
                     <button class="btn btn-primary">Yes</button>

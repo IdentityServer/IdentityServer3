@@ -1,9 +1,11 @@
-﻿using Microsoft.Owin;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Autofac;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -38,6 +40,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void SetIdentityServerBaseUrl(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerBaseUrl] = value;
+        }
+
+        public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
+        {
+            return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
+        }
+        public static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
+        {
+            new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
         }
     }
 }

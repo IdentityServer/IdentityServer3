@@ -13,23 +13,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     public static class ResultExtensions
     {
-        public static IHttpActionResult AuthorizeError(this ApiController controller, AuthorizeError error)
-        {
-            return new AuthorizeErrorResult(controller.Request, error);
-        }
-
-        public static IHttpActionResult AuthorizeError(this ApiController controller, ErrorTypes errorType, string error, string responseMode, Uri errorUri, string state)
-        {
-            return new AuthorizeErrorResult(controller.Request, new AuthorizeError
-                {
-                    ErrorType = errorType,
-                    Error = error,
-                    ResponseMode = responseMode,
-                    ErrorUri = errorUri,
-                    State = state
-                });
-        }
-
         public static IHttpActionResult AuthorizeCodeResponse(this ApiController controller, Uri redirectUri, string code, string state)
         {
             return new AuthorizeCodeResult(new AuthorizeResponse

@@ -9,43 +9,28 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Assets
+namespace Thinktecture.IdentityServer.Core.Views.Embedded.Assets
 {
-    public class LayoutModel
-    {
-        public string Server { get; set; }
-        public string Username { get; set; }
-        public string SuccessMessage { get; set; }
-        public string ErrorMessage { get; set; }
-        public string SwitchUrl { get; set; }
-        public string Page { get; set; }
-        public string PageUrl 
-        { 
-            get
-            {
-                if (String.IsNullOrWhiteSpace(Page)) return null;
-                return "assets/app." + Page + ".html";
-            } 
-        }
-        public object PageModel { get; set; }
-    }
-
     class AssetManager
     {
-        public static string GetLayoutHtml(LayoutModel model, string rootUrl)
+        public static string GetLayoutHtml(CommonViewModel model, string page)
         {
             if (model == null) throw new ArgumentNullException("model");
+            if (page == null) throw new ArgumentNullException("page");
 
-            if (rootUrl == null) rootUrl = "";
-            if (rootUrl.EndsWith("/")) rootUrl = rootUrl.Substring(0, rootUrl.Length - 1);
+            var applicationPath = new Uri(model.SiteUrl).AbsolutePath;
+            if (applicationPath.EndsWith("/")) applicationPath = applicationPath.Substring(0, applicationPath.Length - 1);
 
-            model.Server = model.Server ?? "Thinktecture IdentityServer";
+            var pageUrl = "assets/app." + page + ".html";
+
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, new Newtonsoft.Json.JsonSerializerSettings() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() });
-            return LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.layout.html",
+
+            return LoadResourceString("Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.layout.html",
                 new {
-                    server = model.Server,
-                    rootUrl,
-                    layoutModel = json, 
+                    siteName = model.SiteName,
+                    applicationPath,
+                    pageUrl,
+                    model = json,
                 });
         }
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -40,6 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
         public Registration<IConsentService> ConsentService { get; set; }
         public Registration<IRefreshTokenStore> RefreshTokenStore { get; set; }
+        public Registration<IViewService> ViewService { get; set; }
         
         // optional
         public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
@@ -61,6 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentService == null) Logger.Warn("ConsentService not configured - falling back to InMemory");
             if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
+            if (ViewService == null) Logger.Info("ViewService not configured - falling back to EmbeddedAssets");
         }
 
         private void LogAndStop(string message)

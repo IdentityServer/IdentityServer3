@@ -3,19 +3,7 @@
  * see license
  */
 
-using Microsoft.Owin;
-using Microsoft.Owin.Extensions;
-using Microsoft.Owin.FileSystems;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.DataProtection;
-using Microsoft.Owin.StaticFiles;
 using System;
-using System.IdentityModel.Tokens;
-using Thinktecture.IdentityModel.Tokens;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Hosting;
 
 namespace Owin
 {

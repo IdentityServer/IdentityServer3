@@ -3,13 +3,13 @@
  * see license
  */
 
+using Microsoft.Owin.Infrastructure;
 using System;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Hosting;
-using Microsoft.Owin.Infrastructure;
 
 namespace Owin
 {

@@ -112,13 +112,24 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Assets\AssetManager.cs" />
-    <Compile Include="Assets\EmbeddedHtmlResult.cs" />
+    <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
+    <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
+    <Compile Include="Views\ActionResults\LoginActionResult.cs" />
+    <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
+    <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
+    <Compile Include="Views\ViewModels\ConsentScopeViewModel.cs" />
+    <Compile Include="Views\ViewModels\ConsentViewModel.cs" />
+    <Compile Include="Views\ViewModels\ErrorViewModel.cs" />
+    <Compile Include="Views\ViewModels\CommonViewModel.cs" />
+    <Compile Include="Views\ActionResults\LogoutActionResult.cs" />
+    <Compile Include="Views\ActionResults\LoggedOutActionResult.cs" />
+    <Compile Include="Views\ActionResults\ConsentActionResult.cs" />
+    <Compile Include="Views\ActionResults\HtmlStreamActionResult.cs" />
     <Compile Include="Authentication\LoginCredentials.cs" />
-    <Compile Include="Authentication\ResultExtensions.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureDataProtectorExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerBaseUrlExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureCookieAuthenticationExtension.cs" />
@@ -138,7 +149,9 @@
     <Compile Include="Hosting\CspReportController.cs" />
     <Compile Include="Hosting\NoCacheAttribute.cs" />
     <Compile Include="Hosting\SecurityHeadersAttribute.cs" />
+    <Compile Include="Views\ViewModels\LoginViewModel.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenService.cs" />
+    <Compile Include="Views\Embedded\EmbeddedAssetsViewService.cs" />
     <Compile Include="Services\IRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenStore.cs" />
     <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
@@ -161,7 +174,6 @@
     <Compile Include="Connect\Models\AuthorizationCode.cs" />
     <Compile Include="Connect\Models\ConsentError.cs" />
     <Compile Include="Connect\Models\ClientCredential.cs" />
-    <Compile Include="Connect\Models\ConsentModel.cs" />
     <Compile Include="Connect\Models\UserConsent.cs" />
     <Compile Include="Connect\ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Connect\Results\ProtectedResourceErrorResult.cs" />
@@ -260,6 +272,7 @@
     <Compile Include="Connect\Validation\ValidationResult.cs" />
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
+    <Compile Include="Views\IViewService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -271,101 +284,101 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
-    <None Include="Assets\libs\bootstrap\custom.less" />
-    <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <None Include="Assets\libs\bootstrap\less\alerts.less" />
-    <None Include="Assets\libs\bootstrap\less\badges.less" />
-    <None Include="Assets\libs\bootstrap\less\bootstrap.less" />
-    <None Include="Assets\libs\bootstrap\less\breadcrumbs.less" />
-    <None Include="Assets\libs\bootstrap\less\button-groups.less" />
-    <None Include="Assets\libs\bootstrap\less\buttons.less" />
-    <None Include="Assets\libs\bootstrap\less\carousel.less" />
-    <None Include="Assets\libs\bootstrap\less\close.less" />
-    <None Include="Assets\libs\bootstrap\less\code.less" />
-    <None Include="Assets\libs\bootstrap\less\component-animations.less" />
-    <None Include="Assets\libs\bootstrap\less\dropdowns.less" />
-    <None Include="Assets\libs\bootstrap\less\forms.less" />
-    <None Include="Assets\libs\bootstrap\less\glyphicons.less" />
-    <None Include="Assets\libs\bootstrap\less\grid.less" />
-    <None Include="Assets\libs\bootstrap\less\input-groups.less" />
-    <None Include="Assets\libs\bootstrap\less\jumbotron.less" />
-    <None Include="Assets\libs\bootstrap\less\labels.less" />
-    <None Include="Assets\libs\bootstrap\less\list-group.less" />
-    <None Include="Assets\libs\bootstrap\less\media.less" />
-    <None Include="Assets\libs\bootstrap\less\mixins.less" />
-    <None Include="Assets\libs\bootstrap\less\modals.less" />
-    <None Include="Assets\libs\bootstrap\less\navbar.less" />
-    <None Include="Assets\libs\bootstrap\less\navs.less" />
-    <None Include="Assets\libs\bootstrap\less\normalize.less" />
-    <None Include="Assets\libs\bootstrap\less\pager.less" />
-    <None Include="Assets\libs\bootstrap\less\pagination.less" />
-    <None Include="Assets\libs\bootstrap\less\panels.less" />
-    <None Include="Assets\libs\bootstrap\less\popovers.less" />
-    <None Include="Assets\libs\bootstrap\less\print.less" />
-    <None Include="Assets\libs\bootstrap\less\progress-bars.less" />
-    <None Include="Assets\libs\bootstrap\less\responsive-utilities.less" />
-    <None Include="Assets\libs\bootstrap\less\scaffolding.less" />
-    <None Include="Assets\libs\bootstrap\less\tables.less" />
-    <None Include="Assets\libs\bootstrap\less\theme.less" />
-    <None Include="Assets\libs\bootstrap\less\thumbnails.less" />
-    <None Include="Assets\libs\bootstrap\less\tooltip.less" />
-    <None Include="Assets\libs\bootstrap\less\type.less" />
-    <None Include="Assets\libs\bootstrap\less\utilities.less" />
-    <None Include="Assets\libs\bootstrap\less\variables.less" />
-    <None Include="Assets\libs\bootstrap\less\wells.less" />
-    <None Include="Assets\scripts.js.bundle" />
-    <None Include="Assets\scripts.min.js.map">
+    <None Include="Views\Embedded\Assets\libs\bootstrap\custom.less" />
+    <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\alerts.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\badges.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\bootstrap.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\breadcrumbs.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\button-groups.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\buttons.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\carousel.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\close.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\code.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\component-animations.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\dropdowns.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\forms.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\glyphicons.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\grid.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\input-groups.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\jumbotron.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\labels.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\list-group.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\media.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\mixins.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\modals.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\navbar.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\navs.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\normalize.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\pager.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\pagination.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\panels.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\popovers.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\print.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\progress-bars.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\responsive-utilities.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\scaffolding.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\tables.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\theme.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\thumbnails.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\tooltip.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\type.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\utilities.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\variables.less" />
+    <None Include="Views\Embedded\Assets\libs\bootstrap\less\wells.less" />
+    <None Include="Views\Embedded\Assets\scripts.js.bundle" />
+    <None Include="Views\Embedded\Assets\scripts.min.js.map">
       <DependentUpon>scripts.min.js</DependentUpon>
     </None>
-    <None Include="Assets\styles.css.bundle" />
+    <None Include="Views\Embedded\Assets\styles.css.bundle" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assets\app\FormPostResponse.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\FormPostResponse.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\app\app.less" />
-    <EmbeddedResource Include="Assets\app\FormPostResponse.js" />
-    <Content Include="Assets\app\app.css">
+    <None Include="Views\Embedded\Assets\app\app.less" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\FormPostResponse.js" />
+    <Content Include="Views\Embedded\Assets\app\app.css">
       <DependentUpon>app.less</DependentUpon>
     </Content>
-    <Content Include="Assets\app\app.js" />
-    <EmbeddedResource Include="Assets\app\consent.html" />
-    <EmbeddedResource Include="Assets\app\layout.html" />
-    <EmbeddedResource Include="Assets\app\login.html" />
-    <Content Include="Assets\app\app.min.css">
+    <Content Include="Views\Embedded\Assets\app\app.js" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\consent.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\layout.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\login.html" />
+    <Content Include="Views\Embedded\Assets\app\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
-    <EmbeddedResource Include="Assets\app\logout.html" />
-    <EmbeddedResource Include="Assets\app\error.html" />
-    <EmbeddedResource Include="Assets\app\logoutprompt.html" />
-    <Content Include="Assets\libs\angular\angular.1.2.13.js" />
-    <Content Include="Assets\libs\angular\angular.1.2.13.min.js" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap-theme.min.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap.css" />
-    <Content Include="Assets\libs\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Assets\libs\bootstrap\custom.css" />
-    <Content Include="Assets\libs\bootstrap\custom.min.css" />
-    <EmbeddedResource Include="Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Assets\libs\bootstrap\js\bootstrap.js" />
-    <Content Include="Assets\libs\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Assets\libs\bootstrap\less\bootstrap.css" />
-    <Content Include="Assets\libs\bootstrap\less\bootstrap.min.css" />
-    <Content Include="Assets\libs\jquery\jquery-1.11.0.js" />
-    <Content Include="Assets\libs\jquery\jquery-1.11.0.min.js" />
-    <EmbeddedResource Include="Assets\scripts.js">
+    <EmbeddedResource Include="Views\Embedded\Assets\app\loggedOut.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\error.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\logout.html" />
+    <Content Include="Views\Embedded\Assets\libs\angular\angular.1.2.13.js" />
+    <Content Include="Views\Embedded\Assets\libs\angular\angular.1.2.13.min.js" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\css\bootstrap.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\custom.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\custom.min.css" />
+    <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\js\bootstrap.js" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\less\bootstrap.css" />
+    <Content Include="Views\Embedded\Assets\libs\bootstrap\less\bootstrap.min.css" />
+    <Content Include="Views\Embedded\Assets\libs\jquery\jquery-1.11.0.js" />
+    <Content Include="Views\Embedded\Assets\libs\jquery\jquery-1.11.0.min.js" />
+    <EmbeddedResource Include="Views\Embedded\Assets\scripts.js">
       <DependentUpon>scripts.js.bundle</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Assets\scripts.min.js">
+    <Content Include="Views\Embedded\Assets\scripts.min.js">
       <DependentUpon>scripts.js</DependentUpon>
     </Content>
-    <Content Include="Assets\styles.css">
+    <Content Include="Views\Embedded\Assets\styles.css">
       <DependentUpon>styles.css.bundle</DependentUpon>
     </Content>
-    <EmbeddedResource Include="Assets\styles.min.css">
+    <EmbeddedResource Include="Views\Embedded\Assets\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

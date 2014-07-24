@@ -11,6 +11,8 @@ using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Core.Views;
+using Thinktecture.IdentityServer.Core.Views.Embedded;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -146,6 +148,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
+            }
+
+            if (fact.ViewService != null)
+            {
+                builder.Register(fact.ViewService);
+            }
+            else
+            {
+                builder.RegisterType<EmbeddedAssetsViewService>().As<IViewService>();
             }
 
             // validators

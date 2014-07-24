@@ -331,6 +331,7 @@ namespace Thinktecture.IdentityServer.Core
             public static class Oidc
             {
                 public const string Authorize = "idsrv.oidc.authorize";
+                public const string Consent = "idsrv.oidc.consent";
                 public const string SwitchUser = "idsrv.oidc.switch";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
@@ -370,7 +371,8 @@ namespace Thinktecture.IdentityServer.Core
         
         public static class OwinEnvironment
         {
-            public const string IdentityServerBaseUrl = "IdentityServerBaseUrl";
+            public const string IdentityServerBaseUrl   = "idsrv:IdentityServerBaseUrl";
+            public const string AutofacScope            = "idsrv:AutofacScope";
         }
     }
 }
