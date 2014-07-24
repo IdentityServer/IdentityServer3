@@ -1,4 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 

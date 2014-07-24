@@ -3,7 +3,6 @@
  * see license
  */
 
-
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
     // TODO : brock cleanup

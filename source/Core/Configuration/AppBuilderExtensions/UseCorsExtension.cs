@@ -1,4 +1,8 @@
-﻿using Thinktecture.IdentityServer.Core;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin

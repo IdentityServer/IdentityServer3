@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.Web.Http.Filters;
 
 namespace Thinktecture.IdentityServer.Core.Hosting

@@ -1,4 +1,8 @@
-﻿using Microsoft.Owin;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using System;
 using System.Linq;

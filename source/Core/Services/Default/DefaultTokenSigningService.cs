@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using System;
 using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;

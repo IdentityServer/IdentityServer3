@@ -3,7 +3,6 @@
  * see license
  */
 
-
 namespace Thinktecture.IdentityServer.Core.Views
 {
     public class LogoutViewModel : CommonViewModel

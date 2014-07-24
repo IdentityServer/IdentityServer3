@@ -1,4 +1,8 @@
-﻿using Microsoft.Owin.Security;
+﻿/*
+ * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
+ * see license
+ */
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using System;
 using Thinktecture.IdentityServer.Core;
