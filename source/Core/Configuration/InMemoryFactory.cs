@@ -8,20 +8,29 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public static class InMemoryFactory
     {
         public static IdentityServerServiceFactory Create(
-            IEnumerable<InMemoryUser> users,
-            IEnumerable<Client> clients,
-            IEnumerable<Scope> scopes)
+            IEnumerable<InMemoryUser> users = null,
+            IEnumerable<Client> clients = null,
+            IEnumerable<Scope> scopes = null)
         {
-            var userService = new InMemoryUserService(users);
-            var scopeService = new InMemoryScopeService(scopes);
-            var clientService = new InMemoryClientService(clients);
-
-            var factory = new IdentityServerServiceFactory
+            var factory = new IdentityServerServiceFactory();
+            
+            if (users != null)
             {
-                UserService = Registration.RegisterFactory<IUserService>(() => userService),
-                ScopeService = Registration.RegisterFactory<IScopeService>(() => scopeService),
-                ClientService = Registration.RegisterFactory<IClientService>(() => clientService)
-            };
+                var userService = new InMemoryUserService(users);
+                factory.UserService = Registration.RegisterFactory<IUserService>(() => userService);
+            }
+
+            if (clients != null)
+            {
+                var clientService = new InMemoryClientService(clients);
+                factory.ClientService = Registration.RegisterFactory<IClientService>(() => clientService);
+            }
+
+            if (scopes != null)
+            {
+                var scopeService = new InMemoryScopeService(scopes);
+                factory.ScopeService = Registration.RegisterFactory<IScopeService>(() => scopeService);
+            }
 
             return factory;
         }
