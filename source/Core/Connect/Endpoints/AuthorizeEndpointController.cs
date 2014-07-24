@@ -202,8 +202,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
                 ClientLogoUrl = validatedRequest.Client.LogoUri.AbsoluteUri,
-                IdentityScopes = GetIdentityScopes(validatedRequest),
-                ApplicationScopes = GetApplicationScopes(validatedRequest),
+                IdentityScopes = validatedRequest.GetIdentityScopes(),
+                ApplicationScopes = validatedRequest.GetApplicationScopes(),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null) + "?" + requestParameters.ToQueryString(),
@@ -211,46 +211,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null) + "?" + requestParameters.ToQueryString()
             };
             return new ConsentActionResult(_viewService, env, consentModel);
-        }
-
-        IEnumerable<ConsentScopeViewModel> GetIdentityScopes(ValidatedAuthorizeRequest validatedRequest)
-        {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;
-            var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
-
-            var idScopes =
-                from s in requestedScopes
-                where s.IsOpenIdScope
-                select new ConsentScopeViewModel
-                {
-                    Selected = consentedScopeNames.Contains(s.Name),
-                    Name = s.Name,
-                    DisplayName = s.DisplayName,
-                    Description = s.Description,
-                    Emphasize = s.Emphasize,
-                    Required = s.Required
-                };
-            return idScopes;
-        }
-
-        IEnumerable<ConsentScopeViewModel> GetApplicationScopes(ValidatedAuthorizeRequest validatedRequest)
-        {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes;
-            var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
-
-            var idScopes =
-                from s in requestedScopes
-                where !s.IsOpenIdScope
-                select new ConsentScopeViewModel
-                {
-                    Selected = consentedScopeNames.Contains(s.Name),
-                    Name = s.Name,
-                    DisplayName = s.DisplayName,
-                    Description = s.Description,
-                    Emphasize = s.Emphasize,
-                    Required = s.Required
-                };
-            return idScopes;
         }
 
         IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, IdentityServerOptions options)
