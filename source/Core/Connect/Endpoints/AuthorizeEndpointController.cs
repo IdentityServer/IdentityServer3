@@ -128,7 +128,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (consentInteraction.IsConsent)
             {
                 Logger.Info("Showing consent screen");
-                return CreateConsentResult(request, request.Raw, consentInteraction.ConsentError);
+                return CreateConsentResult(request, consent, request.Raw, consentInteraction.ConsentError);
             }
 
             return await CreateAuthorizeResponseAsync(request);
@@ -188,6 +188,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private IHttpActionResult CreateConsentResult(
             ValidatedAuthorizeRequest validatedRequest,
+            UserConsent consent,
             NameValueCollection requestParameters,
             string errorMessage)
         {
@@ -204,6 +205,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 IdentityScopes = GetIdentityScopes(validatedRequest),
                 ApplicationScopes = GetApplicationScopes(validatedRequest),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
+                RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null) + "?" + requestParameters.ToQueryString(),
                 LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null) + "?" + requestParameters.ToQueryString()
