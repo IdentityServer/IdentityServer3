@@ -3,13 +3,9 @@
  * see license
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Views.Embedded.Assets;
 
 namespace Thinktecture.IdentityServer.Core.Views.Embedded

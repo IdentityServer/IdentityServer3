@@ -6,10 +6,9 @@
 using Autofac;
 using System.Net.Http;
 using System.Web.Http.Filters;
-using Thinktecture.IdentityServer.Core.Authentication;
-using Thinktecture.IdentityServer.Core.Views;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {

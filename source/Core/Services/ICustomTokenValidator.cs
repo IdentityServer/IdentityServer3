@@ -3,7 +3,6 @@
  * see license
  */
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect;
 
 namespace Thinktecture.IdentityServer.Core.Services

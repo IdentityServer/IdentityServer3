@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Microsoft.Owin.Security.DataProtection;
+﻿using Microsoft.Owin.Security.DataProtection;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin
 {

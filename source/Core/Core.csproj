@@ -113,22 +113,22 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
-    <Compile Include="Views\ErrorActionResult.cs" />
+    <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
-    <Compile Include="Views\LoginActionResult.cs" />
-    <Compile Include="Views\LoggedOutViewModel.cs" />
-    <Compile Include="Views\LogoutViewModel.cs" />
-    <Compile Include="Views\ConsentScopeViewModel.cs" />
-    <Compile Include="Views\ConsentViewModel.cs" />
-    <Compile Include="Views\ErrorViewModel.cs" />
-    <Compile Include="Views\CommonViewModel.cs" />
-    <Compile Include="Views\LogoutActionResult.cs" />
-    <Compile Include="Views\LoggedOutActionResult.cs" />
-    <Compile Include="Views\ConsentActionResult.cs" />
-    <Compile Include="Views\HtmlStreamActionResult.cs" />
+    <Compile Include="Views\ActionResults\LoginActionResult.cs" />
+    <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
+    <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
+    <Compile Include="Views\ViewModels\ConsentScopeViewModel.cs" />
+    <Compile Include="Views\ViewModels\ConsentViewModel.cs" />
+    <Compile Include="Views\ViewModels\ErrorViewModel.cs" />
+    <Compile Include="Views\ViewModels\CommonViewModel.cs" />
+    <Compile Include="Views\ActionResults\LogoutActionResult.cs" />
+    <Compile Include="Views\ActionResults\LoggedOutActionResult.cs" />
+    <Compile Include="Views\ActionResults\ConsentActionResult.cs" />
+    <Compile Include="Views\ActionResults\HtmlStreamActionResult.cs" />
     <Compile Include="Authentication\LoginCredentials.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureDataProtectorExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerBaseUrlExtension.cs" />
@@ -149,7 +149,7 @@
     <Compile Include="Hosting\CspReportController.cs" />
     <Compile Include="Hosting\NoCacheAttribute.cs" />
     <Compile Include="Hosting\SecurityHeadersAttribute.cs" />
-    <Compile Include="Views\LoginViewModel.cs" />
+    <Compile Include="Views\ViewModels\LoginViewModel.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenService.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewService.cs" />
     <Compile Include="Services\IRefreshTokenService.cs" />

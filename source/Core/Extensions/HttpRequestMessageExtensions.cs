@@ -4,7 +4,6 @@
  */
 
 using Autofac;
-using System;
 using System.Net.Http;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
