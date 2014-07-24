@@ -12,7 +12,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Assets;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Hosting;
@@ -21,6 +20,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
@@ -30,13 +30,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly IViewService _viewService;
         private readonly IUserService _userService;
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly IdentityServerOptions _options;
 
-        public AuthenticationController(IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
+        public AuthenticationController(IViewService viewService, IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
         {
+            _viewService = viewService;
             _userService = userService;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
@@ -45,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
         [HttpGet]
-        public IHttpActionResult Login([FromUri] string message = null)
+        public async Task<IHttpActionResult> Login([FromUri] string message = null)
         {
             Logger.Info("Login page requested");
 
@@ -66,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 VerifySignInMessage();
             }
 
-            return RenderLoginPage();
+            return await RenderLoginPage();
         }
 
         [Route(Constants.RoutePaths.Login)]
@@ -78,26 +80,26 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (model == null)
             {
                 Logger.Error("no data submitted");
-                return RenderLoginPage(Messages.InvalidUsernameOrPassword);
+                return await RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
             if (!ModelState.IsValid)
             {
                 Logger.Warn("validation error: username or password missing");
-                return RenderLoginPage(ModelState.GetError(), model.Username);
+                return await RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
             var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password);
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
-                return RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
+                return await RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
             }
 
             if (authResult.IsError)
             {
                 Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
-                return RenderLoginPage(authResult.ErrorMessage, model.Username);
+                return await RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
             return SignInAndRedirect(
@@ -133,14 +135,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (user == null)
             {
                 Logger.Error("no identity from external identity provider");
-                return RenderLoginPage(Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
             var externalIdentity = MapToExternalIdentity(user.Claims);
             if (externalIdentity == null)
             {
                 Logger.Error("no subject or unique identifier claims from external identity provider");
-                return RenderLoginPage(Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
             string currentSubject = await GetSubjectFromPrimaryAuthenticationType();
@@ -155,13 +157,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
-                return RenderLoginPage(Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
             if (authResult.IsError)
             {
                 Logger.WarnFormat("user service returned error message: {0}", authResult.ErrorMessage);
-                return RenderLoginPage(authResult.ErrorMessage);
+                return await RenderLoginPage(authResult.ErrorMessage);
             }
 
             return SignInAndRedirect(authResult,
@@ -205,7 +207,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            return RenderLogoutPromptPage();
+            return await RenderLogoutPromptPage();
         }
         
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
@@ -227,6 +229,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (user != null)
             {
                 return user.Claims.GetValue(Constants.ClaimTypes.Subject);
+            }
+            return null;
+        }
+        
+        private async Task<string> GetNameFromPrimaryAuthenticationType()
+        {
+            var user = await GetIdentityFromPrimaryAuthenticationType();
+            if (user != null)
+            {
+                return user.Claims.GetValue(Constants.ClaimTypes.Name);
             }
             return null;
         }
@@ -371,14 +383,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PartialSignInAuthenticationType);
         }
 
-        private IHttpActionResult RenderLoginPage(string errorMessage = null, string username = null)
+        private async Task<IHttpActionResult> RenderLoginPage(string errorMessage = null, string username = null)
         {
             var ctx = Request.GetOwinContext();
             var providers =
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                select new { name = p.Caption, url = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType }) };
-
-            var links = _authenticationOptions.LoginPageLinks;
+                select new LoginPageLink{ Text = p.Caption, Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType }) };
 
             if (errorMessage != null)
             {
@@ -389,41 +399,38 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("rendering login page");
             }
 
-            return new EmbeddedHtmlResult(
-                Request,
-                new LayoutModel
-                {
-                    Server = _options.SiteName,
-                    Page = "login",
-                    ErrorMessage = errorMessage,
-                    PageModel = new
-                    {
-                        url = Url.Route(Constants.RouteNames.Login, null),
-                        username = username,
-                        providers = providers.ToArray(),
-                        links = links
-                    }
-                });
+            var loginModel = new LoginViewModel
+            {
+                SiteName = _options.SiteName,
+                SiteUrl = ctx.Environment.GetIdentityServerBaseUrl(),
+                CurrentUser = await GetNameFromPrimaryAuthenticationType(), 
+                ExternalProviders = providers,
+                AdditionalLinks = _authenticationOptions.LoginPageLinks,
+                ErrorMessage = errorMessage,
+                LoginUrl = Url.Route(Constants.RouteNames.Login, null),
+                Username = username
+            };
+
+            return new LoginActionResult(_viewService, ctx.Environment, loginModel);
         }
 
-        private IHttpActionResult RenderLogoutPromptPage()
+        private async Task<IHttpActionResult> RenderLogoutPromptPage()
         {
-            return new EmbeddedHtmlResult(
-                Request,
-                new LayoutModel
-                {
-                    Server = _options.SiteName,
-                    Page = "logoutprompt",
-                    PageModel = new
-                    {
-                        url = Url.Route(Constants.RouteNames.Logout, null)
-                    }
-                });
+            var env = Request.GetOwinEnvironment();
+            var logoutModel = new LogoutViewModel
+            {
+                SiteName = _options.SiteName,
+                SiteUrl = env.GetIdentityServerBaseUrl(),
+                CurrentUser = await GetNameFromPrimaryAuthenticationType(),
+                LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
+            };
+            return new LogoutActionResult(_viewService, env, logoutModel);
         }
 
         private IHttpActionResult RenderLoggedOutPage()
         {
-            var baseUrl = Request.GetOwinEnvironment().GetIdentityServerBaseUrl();
+            var env = Request.GetOwinEnvironment();
+            var baseUrl = env.GetIdentityServerBaseUrl();
             var urls = new List<string>();
 
             foreach (var url in _options.ProtocolLogoutUrls)
@@ -435,16 +442,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             Logger.Info("rendering logged out page");
 
-            return new EmbeddedHtmlResult(Request,
-                   new LayoutModel
-                   {
-                       Server = _options.SiteName,
-                       Page = "logout",
-                       PageModel = new
-                       {
-                           signOutUrls = urls.ToArray()
-                       }
-                   });
+            var loggedOutModel = new LoggedOutViewModel
+            {
+                SiteName = _options.SiteName,
+                SiteUrl = baseUrl,
+                IFrameUrls = urls,
+            };
+            return new LoggedOutActionResult(_viewService, env, loggedOutModel);
         }
 
         public const string SignInMessageCookieName = "idsrv.signin.message";

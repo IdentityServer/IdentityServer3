@@ -1,8 +1,8 @@
-﻿<div ng-controller="ConsentCtrl">
+﻿<div>
     <div class="row page-header">
         <div class="col-sm-10">
             <h1>
-                {{model.client}}
+                {{model.clientName}}
                 <small>is requesting your permission</small>
             </h1>
         </div>
@@ -10,11 +10,11 @@
 
     <div class="row">
         <div class="col-sm-8">
-            <div ng-show="layout.errorMessage" class="alert alert-danger">
+            <div ng-show="model.errorMessage" class="alert alert-danger">
                 <strong>Error:</strong>
-                {{layout.errorMessage}}
+                {{model.errorMessage}}
             </div>
-            <form name="form" method="post" action="{{model.postUrl}}" class="consent-form">
+            <form name="form" method="post" action="{{model.consentUrl}}" class="consent-form">
 
                 <div>Uncheck the permissions you do not wish to grant.</div>
 
@@ -71,7 +71,7 @@
                     <button name="button" value="no" class="btn">No, Do Not Allow</button>
                     <a class="pull-right btn btn-default" target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">
                         <span class="glyphicon glyphicon-info-sign"></span>
-                        <strong>{{model.client}}</strong>
+                        <strong>{{model.clientName}}</strong>
                     </a>
                 </div>
             </form>

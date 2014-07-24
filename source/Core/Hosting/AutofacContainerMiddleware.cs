@@ -7,6 +7,7 @@ using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
@@ -33,7 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             }))
             {
                 // this makes scope available for downstream frameworks
-                context.Set<ILifetimeScope>("idsrv:AutofacScope", scope);
+                env.SetLifetimeScope(scope);
+                
                 await _next(env);
             }
         }

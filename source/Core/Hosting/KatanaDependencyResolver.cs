@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Hosting;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
@@ -15,8 +16,7 @@ namespace Thinktecture.IdentityServer.Core.Hosting
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var owin = request.GetOwinContext();
-            var scope = owin.Get<ILifetimeScope>("idsrv:AutofacScope");
+            var scope = request.GetOwinEnvironment().GetLifetimeScope();
             if (scope != null)
             {
                 request.Properties[HttpPropertyKeys.DependencyScope] = new AutofacScope(scope);

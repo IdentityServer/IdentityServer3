@@ -13,10 +13,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static ILifetimeScope GetAutofacScope(this HttpRequestMessage request)
         {
-            var owinContext = request.GetOwinContext();
-            var scope = owinContext.Get<ILifetimeScope>("idsrv:AutofacScope");
-
-            return scope;
+            return request.GetOwinEnvironment().GetLifetimeScope();
         }
 
         public static string GetIdentityServerBaseUrl(this HttpRequestMessage request)

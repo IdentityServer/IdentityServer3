@@ -18,14 +18,14 @@ namespace Owin
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Assets")
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Views.Embedded.Assets")
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets/libs/fonts"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Assets.libs.bootstrap.fonts")
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Views.Embedded.Assets.libs.bootstrap.fonts")
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 

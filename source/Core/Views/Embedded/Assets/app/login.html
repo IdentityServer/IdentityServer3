@@ -2,11 +2,11 @@
     <h1>Login</h1>
 </div>
 
-<div class="row login-page" ng-controller="LoginCtrl">
+<div class="row login-page">
     <div class="col-md-6 col-sm-6">
-        <div ng-show="layout.errorMessage" class="alert alert-danger">
+        <div ng-show="model.errorMessage" class="alert alert-danger">
             <strong>Error:</strong>
-            {{layout.errorMessage}}
+            {{model.errorMessage}}
         </div>
 
         <div class="panel panel-default">
@@ -14,7 +14,7 @@
                 <h3 class="panel-title">Local Login</h3>
             </div>
             <div class="panel-body">
-                <form name="form" method="post" action="{{model.url}}">
+                <form name="form" method="post" action="{{model.loginUrl}}">
                     <fieldset>
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -32,20 +32,20 @@
                 </form>
             </div>
             <ul class="list-unstyled">
-                <li ng-repeat="link in model.links"><a ng-href="{{link.href}}">{{link.text}}</a></li>
+                <li ng-repeat="link in model.additionalLinks"><a ng-href="{{link.href}}">{{link.text}}</a></li>
             </ul>
         </div>
     </div>
 
-    <div class="col-md-6 col-sm-6" ng-show="model.providers">
+    <div class="col-md-6 col-sm-6" ng-show="model.externalProviders">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">External Login</h3>
             </div>
             <div class="panel-body">
                 <ul class="list-inline">
-                    <li ng-repeat="provider in model.providers">
-                        <a class="btn btn-default" href="{{provider.url}}">{{provider.name}}</a>
+                    <li ng-repeat="provider in model.externalProviders">
+                        <a class="btn btn-default" href="{{provider.href}}">{{provider.text}}</a>
                     </li>
                 </ul>
             </div>
