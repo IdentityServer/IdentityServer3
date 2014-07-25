@@ -3,7 +3,8 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{siteName}</title>
-    <link href="{applicationPath}/assets/styles.min.css" rel="stylesheet" />
+    <link href="{applicationPath}/assets/styles.min.css" rel="stylesheet">
+    {additionalStylesheets}
 </head>
 <body lang="en">
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -28,5 +29,6 @@
 
     <script id='modelJson' type='application/json'>{model}</script>
     <script src="{applicationPath}/assets/scripts.js"></script>
+    {additionalScripts}
 </body>
 </html>

@@ -6,10 +6,12 @@ namespace Thinktecture.IdentityServer.Host.Config
     {
         public static IdentityServerServiceFactory Create()
         {
-            return InMemoryFactory.Create(
+            var factory = InMemoryFactory.Create(
                 Users.Get(),
                 Clients.Get(),
                 Scopes.Get());
+
+            return factory;
         }
     }
 }
