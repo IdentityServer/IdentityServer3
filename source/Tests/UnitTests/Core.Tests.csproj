@@ -122,6 +122,7 @@
     <Compile Include="Authentication\AuthenticationControllerTests.cs" />
     <Compile Include="Authentication\AuthenticateResultTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
+    <Compile Include="Configuration\RegistrationTests.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />

@@ -11,6 +11,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public static Registration<T> RegisterType<T>(Type type)
             where T: class
         {
+            if (type == null) throw new ArgumentNullException("type");
+
             return new Registration<T>
             {
                 Type = type
@@ -20,10 +22,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public static Registration<T> RegisterFactory<T>(Func<T> typeFunc)
             where T : class
         {
+            if (typeFunc == null) throw new ArgumentNullException("typeFunc");
+
             return new Registration<T>
             {
                 TypeFactory = typeFunc
             };
+        }
+        
+        public static Registration<T> RegisterSingleton<T>(T instance)
+            where T : class
+        {
+            if (instance == null) throw new ArgumentNullException("instance");
+            return RegisterFactory<T>(() => instance);
         }
 
         public abstract Type InterfaceType { get; }
