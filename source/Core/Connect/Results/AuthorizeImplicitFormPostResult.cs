@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
         {
             // TODO : cleanup using embedded assets helpers
             var root = _request.GetRequestContext().VirtualPathRoot;
-            string form = AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Assets.app.FormPostResponse.html", new { rootUrl=root });
+            string form = AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.FormPostResponse.html", new { rootUrl = root });
             form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
 
             var sb = new StringBuilder(128);
