@@ -43,6 +43,7 @@ The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v
 * support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
 * support for WS-Federation
 
+## Credits ##
 IdentityServer is built using the following great open source projects:
 
 - ASP.NET Web API
@@ -52,3 +53,5 @@ IdentityServer is built using the following great open source projects:
 - ILMerge
 - DH.Logging
 - Katana
+
+thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
