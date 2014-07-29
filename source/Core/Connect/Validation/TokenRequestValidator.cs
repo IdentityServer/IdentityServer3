@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -180,6 +181,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 Logger.ErrorFormat("Invalid redirect_uri: {0}", redirectUri);
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
+            }
+
+            /////////////////////////////////////////////
+            // validate scopes are present
+            /////////////////////////////////////////////
+            if (_validatedRequest.AuthorizationCode.RequestedScopes == null ||
+                !_validatedRequest.AuthorizationCode.RequestedScopes.Any())
+            {
+                Logger.Error("Authorization code has no associated scopes.");
+                return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
             Logger.Info("Successful validation of authorization_code request");
