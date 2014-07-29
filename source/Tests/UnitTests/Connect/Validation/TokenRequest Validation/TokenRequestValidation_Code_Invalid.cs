@@ -4,10 +4,12 @@
  */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using UnitTests.Plumbing;
@@ -17,6 +19,8 @@ namespace UnitTests.TokenRequest_Validation
     [TestClass]
     public class TokenRequestValidation_Code_Invalid
     {
+        const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
+
         IClientService _clients = Factory.CreateClientService();
 
         [TestMethod]
@@ -76,6 +80,36 @@ namespace UnitTests.TokenRequest_Validation
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task No_Scopes_for_AuthorizationCode()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                IsOpenId = true,
+                RedirectUri = new Uri("https://server/cb"),
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(result.Error, Constants.TokenErrors.InvalidRequest);
         }
 
         [TestMethod]
@@ -241,6 +275,13 @@ namespace UnitTests.TokenRequest_Validation
                 Client = client,
                 IsOpenId = true,
                 RedirectUri = new Uri("https://server/cb"),
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
             };
 
             await store.StoreAsync("valid", code);
