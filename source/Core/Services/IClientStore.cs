@@ -7,7 +7,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public interface IClientService
+    public interface IClientStore
     {
         Task<Client> FindClientByIdAsync(string clientId);
     }

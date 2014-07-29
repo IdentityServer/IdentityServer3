@@ -8,7 +8,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public interface IScopeService
+    public interface IScopeStore
     {
         Task<IEnumerable<Scope>> GetScopesAsync();
     }

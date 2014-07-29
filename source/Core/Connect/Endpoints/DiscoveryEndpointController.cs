@@ -20,9 +20,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;
-        private readonly IScopeService _scopes;
+        private readonly IScopeStore _scopes;
 
-        public DiscoveryEndpointController(IdentityServerOptions options, IScopeService scopes)
+        public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes)
         {
             _options = options;
             _scopes = scopes;

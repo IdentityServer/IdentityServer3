@@ -21,8 +21,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
         private readonly IdentityServerOptions _options;
-        private readonly IScopeService _scopes;
-        private readonly IClientService _clients;
+        private readonly IScopeStore _scopes;
+        private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
 
         public ValidatedAuthorizeRequest ValidatedRequest
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeService scopes, IClientService clients, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator)
         {
             _options = options;
             _scopes = scopes;

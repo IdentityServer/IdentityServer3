@@ -13,7 +13,7 @@
 //    public class AccessTokenValidation
 //    {
 //        TestSettings _settings = new TestSettings();
-//        IClientService _clients = Factory.CreateClientService();
+//        IClientStore _clients = Factory.CreateClientStore();
 
 //        [TestMethod]
 //        public async Task Create_and_Validate_JWT_AccessToken_Valid()

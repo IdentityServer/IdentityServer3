@@ -17,7 +17,7 @@ namespace UnitTests.TokenRequest_Validation
     [TestClass]
     public class TokenRequestValidation_Code_Invalid
     {
-        IClientService _clients = Factory.CreateClientService();
+        IClientStore _clients = Factory.CreateClientStore();
 
         [TestMethod]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]

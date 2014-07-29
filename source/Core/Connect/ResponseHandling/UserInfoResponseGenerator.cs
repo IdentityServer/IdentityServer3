@@ -16,9 +16,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IUserService _users;
-        private readonly IScopeService _scopes;
+        private readonly IScopeStore _scopes;
 
-        public UserInfoResponseGenerator(IUserService users, IScopeService scopes)
+        public UserInfoResponseGenerator(IUserService users, IScopeStore scopes)
         {
             _users = users;
             _scopes = scopes;

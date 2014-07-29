@@ -18,7 +18,7 @@ namespace UnitTests.TokenRequest_Validation
     [TestClass]
     public class TokenRequestValidation_General_Invalid
     {
-        IClientService _clients = new InMemoryClientService(TestClients.Get());
+        IClientStore _clients = new InMemoryClientStore(TestClients.Get());
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

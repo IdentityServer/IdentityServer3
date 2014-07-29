@@ -32,8 +32,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         // mandatory (external)
         public Registration<IUserService> UserService { get; set; }
-        public Registration<IScopeService> ScopeService { get; set; }
-        public Registration<IClientService> ClientService { get; set; }
+        public Registration<IScopeStore> ScopeStore { get; set; }
+        public Registration<IClientStore> ClientStore { get; set; }
         
         // mandatory (for authorization code, reference & refresh tokens and consent)
         // but with default in memory implementation
@@ -56,8 +56,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");
-            if (ScopeService == null) LogAndStop("ScopeService not configured.");
-            if (ClientService == null) LogAndStop("ClientService not configured.");
+            if (ScopeStore == null) LogAndStop("ScopeStore not configured.");
+            if (ClientStore == null) LogAndStop("ClientStore not configured.");
 
             if (AuthorizationCodeStore == null) Logger.Warn("AuthorizationCodeStore not configured - falling back to InMemory");
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");

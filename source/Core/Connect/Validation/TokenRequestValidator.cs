@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IdentityServerOptions _options;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
-        private readonly IScopeService _scopes;
+        private readonly IScopeStore _scopes;
         private readonly IAssertionGrantValidator _assertionValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeService scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;

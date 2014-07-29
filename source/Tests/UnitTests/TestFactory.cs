@@ -16,13 +16,13 @@ namespace Thinktecture.IdentityServer.Tests
     {
         public static IdentityServerServiceFactory Create()
         {
-            var scopes = new InMemoryScopeService(TestScopes.Get());
-            var clients = new InMemoryClientService(TestClients.Get());
+            var scopes = new InMemoryScopeStore(TestScopes.Get());
+            var clients = new InMemoryClientStore(TestClients.Get());
             
             var fact = new IdentityServerServiceFactory
             {
-                ScopeService = Registration.RegisterFactory<IScopeService>(() => scopes),
-                ClientService = Registration.RegisterFactory<IClientService>(() => clients)
+                ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopes),
+                ClientStore = Registration.RegisterFactory<IClientStore>(() => clients)
             };
 
             return fact;

@@ -34,8 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             // mandatory from factory
             builder.Register(fact.UserService);
-            builder.Register(fact.ScopeService);
-            builder.Register(fact.ClientService);
+            builder.Register(fact.ScopeStore);
+            builder.Register(fact.ClientStore);
             
             // optional from factory
             if (fact.AuthorizationCodeStore != null)

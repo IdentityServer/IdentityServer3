@@ -8,11 +8,11 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class InMemoryScopeService : IScopeService
+    public class InMemoryScopeStore : IScopeStore
     {
         readonly IEnumerable<Scope> _scopes;
 
-        public InMemoryScopeService(IEnumerable<Scope> scopes)
+        public InMemoryScopeStore(IEnumerable<Scope> scopes)
         {
             _scopes = scopes;
         }

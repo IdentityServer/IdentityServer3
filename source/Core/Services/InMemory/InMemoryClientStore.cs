@@ -9,11 +9,11 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class InMemoryClientService : IClientService
+    public class InMemoryClientStore : IClientStore
     {
         readonly IEnumerable<Client> _clients;
 
-        public InMemoryClientService(IEnumerable<Client> clients)
+        public InMemoryClientStore(IEnumerable<Client> clients)
         {
             _clients = clients;
         }

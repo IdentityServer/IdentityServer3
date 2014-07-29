@@ -27,9 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ICustomTokenValidator _customValidator;
-        private readonly IClientService _clients;
+        private readonly IClientStore _clients;
 
-        public TokenValidator(IdentityServerOptions options, IUserService users, IClientService clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
+        public TokenValidator(IdentityServerOptions options, IUserService users, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
             _options = options;
             _users = users;

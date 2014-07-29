@@ -20,9 +20,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class ClientValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly IClientService _clients;
+        private readonly IClientStore _clients;
 
-        public ClientValidator(IClientService clients)
+        public ClientValidator(IClientStore clients)
         {
             _clients = clients;
         }

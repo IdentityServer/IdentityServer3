@@ -19,7 +19,7 @@ namespace UnitTests.TokenRequest_Validation
     {
         const string Category = "TokenRequest Validation - General - Valid";
 
-        IClientService _clients = Factory.CreateClientService();
+        IClientStore _clients = Factory.CreateClientStore();
 
         [TestMethod]
         [TestCategory(Category)]

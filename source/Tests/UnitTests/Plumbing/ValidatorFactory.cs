@@ -13,17 +13,17 @@ namespace UnitTests.Plumbing
 {
     static class Factory
     {
-        public static IClientService CreateClientService()
+        public static IClientStore CreateClientStore()
         {
-            return new InMemoryClientService(TestClients.Get());
+            return new InMemoryClientStore(TestClients.Get());
         }
 
         public static ClientValidator CreateClientValidator(
-            IClientService clients = null)
+            IClientStore clients = null)
         {
             if (clients == null)
             {
-                clients = new InMemoryClientService(TestClients.Get());
+                clients = new InMemoryClientStore(TestClients.Get());
             }
 
             return new ClientValidator(clients);
@@ -31,7 +31,7 @@ namespace UnitTests.Plumbing
 
         public static TokenRequestValidator CreateTokenValidator(
             IdentityServerOptions options = null,
-            IScopeService scopes = null,
+            IScopeStore scopes = null,
             IAuthorizationCodeStore authorizationCodeStore = null,
             IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
@@ -45,7 +45,7 @@ namespace UnitTests.Plumbing
 
             if (scopes == null)
             {
-                scopes = new InMemoryScopeService(TestScopes.Get());
+                scopes = new InMemoryScopeStore(TestScopes.Get());
             }
 
             if (userService == null)
@@ -73,8 +73,8 @@ namespace UnitTests.Plumbing
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(
             IdentityServerOptions options = null,
-            IScopeService scopes = null,
-            IClientService clients = null,
+            IScopeStore scopes = null,
+            IClientStore clients = null,
             IUserService users = null,
             ICustomRequestValidator customValidator = null)
         {
@@ -85,12 +85,12 @@ namespace UnitTests.Plumbing
 
             if (scopes == null)
             {
-                scopes = new InMemoryScopeService(TestScopes.Get());
+                scopes = new InMemoryScopeStore(TestScopes.Get());
             }
 
             if (clients == null)
             {
-                clients = new InMemoryClientService(TestClients.Get());
+                clients = new InMemoryClientStore(TestClients.Get());
             }
 
             if (customValidator == null)

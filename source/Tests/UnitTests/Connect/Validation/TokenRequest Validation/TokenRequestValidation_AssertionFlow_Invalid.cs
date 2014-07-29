@@ -16,7 +16,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
 
-        IClientService _clients = Factory.CreateClientService();
+        IClientStore _clients = Factory.CreateClientStore();
 
         [TestMethod]
         [TestCategory(Category)]

@@ -26,17 +26,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (clients != null)
             {
-                var clientService = new InMemoryClientService(clients);
-                factory.ClientService = Registration.RegisterFactory<IClientService>(() => clientService);
+                var clientStore = new InMemoryClientStore(clients);
+                factory.ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore);
             }
 
             if (scopes != null)
             {
-                var scopeService = new InMemoryScopeService(scopes);
-                factory.ScopeService = Registration.RegisterFactory<IScopeService>(() => scopeService);
+                var scopeStore = new InMemoryScopeStore(scopes);
+                factory.ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore);
             }
 
             return factory;
         }
+
+        public static IScopeStore scopeStore { get; set; }
     }
 }
