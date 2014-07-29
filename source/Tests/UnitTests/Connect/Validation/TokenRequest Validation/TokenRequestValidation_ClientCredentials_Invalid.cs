@@ -135,5 +135,22 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Resource_and_Refresh_Token()
+        {
+            var client = await _clients.FindClientByIdAsync("client");
+            var validator = Factory.CreateTokenValidator();
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
+            parameters.Add(Constants.TokenRequest.Scope, "resource offline_access");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+        }
     }
 }

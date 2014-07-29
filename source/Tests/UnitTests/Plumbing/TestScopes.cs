@@ -37,6 +37,12 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                     Description = "resource scope",
                     IsOpenIdScope = false
                 },
+                new Scope
+                {
+                    Name = "offline_access",
+                    Description = "scope for refresh tokens",
+                    IsOpenIdScope = false
+                },
              };
         }
     }

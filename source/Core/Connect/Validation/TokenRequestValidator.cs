@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -182,6 +183,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
+            /////////////////////////////////////////////
+            // validate scopes are present
+            /////////////////////////////////////////////
+            if (_validatedRequest.AuthorizationCode.RequestedScopes == null ||
+                !_validatedRequest.AuthorizationCode.RequestedScopes.Any())
+            {
+                Logger.Error("Authorization code has no associated scopes.");
+                return Invalid(Constants.TokenErrors.InvalidRequest);
+            }
+
             Logger.Info("Successful validation of authorization_code request");
             return Valid();
         }
@@ -317,7 +328,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client still has offline_access scope
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.ScopeRestrictions != null || _validatedRequest.Client.ScopeRestrictions.Count != 0)
+            if (_validatedRequest.Client.ScopeRestrictions != null && _validatedRequest.Client.ScopeRestrictions.Count != 0)
             {
                 if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OfflineAccess))
                 {

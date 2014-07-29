@@ -107,6 +107,20 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                     },
                     new Client
                     {
+                        ClientName = "Resource Owner Client (restricted)",
+                        Enabled = true,
+                        ClientId = "roclient_restricted_refresh",
+                        ClientSecret = "secret",
+                        Flow = Flows.ResourceOwner,
+
+                        ScopeRestrictions = new List<string>
+                        {
+                            "resource",
+                            "offline_access"
+                        },       
+                    },
+                    new Client
+                    {
                         ClientName = "Assertion Flow Client",
                         Enabled = true,
                         ClientId = "assertionclient",
