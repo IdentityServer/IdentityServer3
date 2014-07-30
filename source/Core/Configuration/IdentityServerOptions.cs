@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public CookieOptions CookieOptions { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
-        public Action<IAppBuilder, IdentityServerOptions> ConfigurePlugins { get; set; }
+        public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }
 
         public List<string> ProtocolLogoutUrls { get; set; }
 

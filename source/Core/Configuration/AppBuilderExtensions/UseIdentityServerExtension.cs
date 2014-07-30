@@ -33,9 +33,9 @@ namespace Owin
             app.UseCors(options.CorsPolicy);
             app.ConfigureCookieAuthentication(options.CookieOptions);
             
-            if (options.ConfigurePlugins != null)
+            if (options.PluginConfiguration != null)
             {
-                options.ConfigurePlugins(app, options);
+                options.PluginConfiguration(app, options);
             }
 
             if (options.AdditionalIdentityProviderConfiguration != null)
