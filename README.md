@@ -36,11 +36,12 @@ public void Configuration(IAppBuilder appBuilder)
 }
 ```
 
-You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the repository.
+You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the samples repository.
 
 The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/) shows other configuration options
 * support for MembershipReboot and ASP.NET Identity based user stores
 * support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
+* support for EntityFramework based persistence of configuration
 * support for WS-Federation
 
 ## Credits ##
