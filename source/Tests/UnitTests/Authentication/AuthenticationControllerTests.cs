@@ -1,19 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
-using System.Net;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using Thinktecture.IdentityServer.Core.Resources;
-using Moq;
-using System.Threading.Tasks;
-using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Models;
-using Newtonsoft.Json.Linq;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication

@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {

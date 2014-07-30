@@ -11,7 +11,6 @@ using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Views;
 using Thinktecture.IdentityServer.Core.Views.Embedded;
 
 namespace Thinktecture.IdentityServer.Core.Configuration

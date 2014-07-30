@@ -5,7 +5,6 @@ using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Host.Config;
 
 [assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
