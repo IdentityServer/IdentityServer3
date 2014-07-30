@@ -1,30 +1,6 @@
 ﻿Refresh tokens
 ----------------------
 
-- Client Credential flow client trying to request refresh token (done)
-
-
-
-Validation initial request:
-
-- successful RO flow (done)
-- successful Code flow (done)
-
-- client without offline_access
-- client_credentials client
-- implicit flow client
-
-
-validation refresh token request:
-
-- valid RT request (w/ scope restrictions) (done)
-- non existant RT (done)
-- expired RT (done)
-- wrong client binding (done)
-
-- client does not have offline_access anymore (done)
-
-
 response generation tests:
 
 - timeouts (sliding vs absolute)
