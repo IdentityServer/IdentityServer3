@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Views.Embedded.Assets;
 
 namespace Thinktecture.IdentityServer.Core.Views.Embedded

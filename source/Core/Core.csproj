@@ -273,7 +273,7 @@
     <Compile Include="Connect\Validation\ValidationResult.cs" />
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
-    <Compile Include="Views\IViewService.cs" />
+    <Compile Include="Services\IViewService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

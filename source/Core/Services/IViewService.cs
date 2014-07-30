@@ -6,8 +6,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Views;
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IViewService
     {

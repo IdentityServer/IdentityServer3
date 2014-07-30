@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Views
 {
