@@ -18,11 +18,11 @@ Validation initial request:
 validation refresh token request:
 
 - valid RT request (w/ scope restrictions) (done)
-- non existant RT
-- expired RT
-- wrong client binding
+- non existant RT (done)
+- expired RT (done)
+- wrong client binding (done)
 
-- client does not have offline_access anymore
+- client does not have offline_access anymore (done)
 
 
 response generation tests:

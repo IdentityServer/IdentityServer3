@@ -124,6 +124,7 @@
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
     <Compile Include="Configuration\RegistrationTests.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests.cs" />
+    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
