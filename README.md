@@ -1,17 +1,17 @@
 # Thinktecture IdentityServer v3 #
 
-**current status: preview 1**
+**Current status: Beta 1**
 
 ## Overview ##
 
-IdentityServer v3 is a .NET-based open source implementation of an OpenID Connect provider and OAuth2 authorization server.
+IdentityServer v3 is a .NET-based open source implementation of an OpenID Connect and OAuth2 security token service.
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
 Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC Oslo.
 
 ## Getting started ##
-We currently don't provide a setup tool or a UI. This release is meant to test drive the authorization/token engine. But it is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples repository to exercise the various flows.
+We currently don't provide a setup tool or a UI, but IdentityServer is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the samples repository to exercise the various flows.
 
 IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication.
 
