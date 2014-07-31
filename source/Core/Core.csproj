@@ -112,6 +112,7 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />

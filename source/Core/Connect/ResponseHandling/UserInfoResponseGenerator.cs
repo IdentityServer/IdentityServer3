@@ -36,18 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             
             if (profileClaims != null)
             {
-                foreach (var claim in profileClaims)
-                {
-                    if (profileData.ContainsKey(claim.Type))
-                    {
-                        Logger.Warn("Duplicate claim type detected: " + claim.Type);
-                    }
-                    else
-                    {
-                        profileData.Add(claim.Type, claim.Value);
-                    }
-                }
-
+                profileData = profileClaims.ToClaimsDictionary();
                 Logger.InfoFormat("Profile service returned to the following claim types: {0}", profileClaims.Select(c => c.Type).ToSpaceSeparatedString());
             }
             else
