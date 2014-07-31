@@ -27,10 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CspReportEndpoint = EndpointSettings.Disabled;
 
             this.CorsPolicy = new CorsPolicy();
-            this.CookieOptions = new CookieOptions
-            {
-                ExpireTimeSpan = Constants.DefaultCookieTimeSpan
-            };
+            this.CookieOptions = new CookieOptions();
         }
 
         internal void Validate()

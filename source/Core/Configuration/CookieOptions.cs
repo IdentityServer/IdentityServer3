@@ -8,8 +8,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class CookieOptions
     {
+        public CookieOptions()
+        {
+            ExpireTimeSpan = Constants.DefaultCookieTimeSpan;
+            SlidingExpiration = true;
+        }
+
         public string Prefix { get; set; }
         public TimeSpan ExpireTimeSpan { get; set; }
         public bool IsPersistent { get; set; }
+        public bool SlidingExpiration { get; set; }
     }
 }

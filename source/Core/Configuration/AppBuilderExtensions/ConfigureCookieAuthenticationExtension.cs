@@ -25,20 +25,23 @@ namespace Owin
                 AuthenticationType = Constants.PrimaryAuthenticationType,
                 CookieName = options.Prefix + Constants.PrimaryAuthenticationType,
                 ExpireTimeSpan = options.ExpireTimeSpan,
+                SlidingExpiration = options.SlidingExpiration
             });
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.ExternalAuthenticationType,
                 CookieName = options.Prefix + Constants.ExternalAuthenticationType,
                 AuthenticationMode = AuthenticationMode.Passive,
-                ExpireTimeSpan = Constants.ExternalCookieTimeSpan
+                ExpireTimeSpan = Constants.ExternalCookieTimeSpan,
+                SlidingExpiration = false
             });
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.PartialSignInAuthenticationType,
                 CookieName = options.Prefix + Constants.PartialSignInAuthenticationType,
                 AuthenticationMode = AuthenticationMode.Passive,
-                ExpireTimeSpan = options.ExpireTimeSpan
+                ExpireTimeSpan = options.ExpireTimeSpan,
+                SlidingExpiration = options.SlidingExpiration
             });
             return app;
         }
