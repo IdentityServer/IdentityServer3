@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 var origin = request.Headers["Origin"];
                 if (origin != null)
                 {
-                    if (policy.AllowedOrigins.Contains(origin))
+                    if (policy.AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))
                     {
                         return Allow(origin);
                     }
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         private bool IsPathAllowed(IOwinRequest request)
         {
             var requestPath = Normalize(request.Path.Value);
-            return paths.Any(path => requestPath == path);
+            return paths.Any(path => requestPath.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
         private string Normalize(string path)
