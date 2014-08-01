@@ -114,6 +114,8 @@
     </Compile>
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Services\IConsentStore.cs" />
+    <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
@@ -256,7 +258,7 @@
     <Compile Include="Services\ITokenService.cs" />
     <Compile Include="Services\InMemory\InMemoryAuthorizationCodeStore.cs" />
     <Compile Include="Services\InMemory\InMemoryClientStore.cs" />
-    <Compile Include="Services\InMemory\InMemoryConsentService.cs" />
+    <Compile Include="Services\Default\DefaultConsentService.cs" />
     <Compile Include="Services\InMemory\InMemoryScopeStore.cs" />
     <Compile Include="Services\InMemory\InMemoryTokenHandleStore.cs" />
     <Compile Include="Services\InMemory\InMemoryUser.cs" />

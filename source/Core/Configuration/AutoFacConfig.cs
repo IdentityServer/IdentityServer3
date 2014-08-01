@@ -67,14 +67,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterInstance(inmemRefreshTokenStore).As<IRefreshTokenStore>();
             }
 
-            if (fact.ConsentService != null)
+            if (fact.ConsentStore != null)
             {
-                builder.Register(fact.ConsentService);
+                builder.Register(fact.ConsentStore);
             }
             else
             {
-                var inmemConsentService = new InMemoryConsentService();
-                builder.RegisterInstance(inmemConsentService).As<IConsentService>();
+                var inmemConsentStore = new InMemoryConsentStore();
+                builder.RegisterInstance(inmemConsentStore).As<IConsentStore>();
             }
 
             if (fact.ClaimsProvider != null)
@@ -147,6 +147,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
+            }
+            
+            if (fact.ConsentService != null)
+            {
+                builder.Register(fact.ConsentService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultConsentService>().As<IConsentService>();
             }
 
             if (fact.ViewService != null)

@@ -38,11 +38,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         // but with default in memory implementation
         public Registration<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
         public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
-        public Registration<IConsentService> ConsentService { get; set; }
+        public Registration<IConsentStore> ConsentStore { get; set; }
         public Registration<IRefreshTokenStore> RefreshTokenStore { get; set; }
         public Registration<IViewService> ViewService { get; set; }
         
         // optional
+        public Registration<IConsentService> ConsentService { get; set; }
         public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }

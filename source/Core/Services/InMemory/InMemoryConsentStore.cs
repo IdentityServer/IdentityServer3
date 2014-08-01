@@ -12,23 +12,18 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
-    public class InMemoryConsentService : IConsentService
+    public class InMemoryConsentStore : IConsentStore
     {
         private readonly ConcurrentBag<Consent> _consents = new ConcurrentBag<Consent>();
         
-        public Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+        public Task<bool> RequiresConsentAsync(string client, string subject, IEnumerable<string> scopes)
         {
-            if (!client.RequireConsent)
-            {
-                return Task.FromResult(false);
-            }
-
             var orderedScopes = string.Join(" ", scopes.OrderBy(s => s).ToArray());
 
             var query = from c in _consents
-                        where c.ClientId == client.ClientId &&
+                        where c.ClientId == client &&
                               c.Scopes == orderedScopes &&
-                              c.Subject == user.GetSubjectId()
+                              c.Subject == subject
                         select c;
 
             var hit = query.FirstOrDefault();
@@ -36,19 +31,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(hit == null);
         }
 
-        public Task UpdateConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+        public Task UpdateConsentAsync(string client, string subject, IEnumerable<string> scopes)
         {
-            if (client.AllowRememberConsent)
-            {
-                var consent = new Consent
-                {
-                    ClientId = client.ClientId,
-                    Subject = user.GetSubjectId(),
-                    Scopes = string.Join(" ", scopes.OrderBy(s => s).ToArray())
-                };
-
-                _consents.Add(consent);
-            }
+            var orderedScopes = string.Join(" ", scopes.OrderBy(s => s).ToArray());
+            
+            _consents.Add(new Consent { ClientId = client, Subject = subject, Scopes = orderedScopes });
 
             return Task.FromResult(0);
         }
