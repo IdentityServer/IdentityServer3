@@ -3,6 +3,7 @@
  * see license
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,10 +18,12 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
 
         public EmbeddedAssetsViewService()
         {
+            config = new EmbeddedAssetsViewServiceConfiguration();
         }
 
         public EmbeddedAssetsViewService(EmbeddedAssetsViewServiceConfiguration config)
         {
+            if (config == null) throw new ArgumentNullException("config");
             this.config = config;
         }
 
@@ -51,15 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
 
         protected virtual Task<System.IO.Stream> Render(CommonViewModel model, string page)
         {
-            string html;
-            if (config != null)
-            {
-                html = AssetManager.GetLayoutHtml(model, page, config.Stylesheets, config.Scripts);
-            }
-            else
-            {
-                html = AssetManager.GetLayoutHtml(model, page);
-            }
+            string html = AssetManager.GetLayoutHtml(model, page, config.Stylesheets, config.Scripts);
             return Task.FromResult(StringToStream(html));
         }
 

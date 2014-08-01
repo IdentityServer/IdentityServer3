@@ -17,6 +17,9 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
         public EmbeddedAssetsViewServiceConfiguration()
         {
             Stylesheets = new HashSet<string>();
+            // adding default CSS here so hosting application can choose to remove it
+            Stylesheets.Add("~/assets/styles.min.css");
+            
             Scripts = new HashSet<string>();
         }
         

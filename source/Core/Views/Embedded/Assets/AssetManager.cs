@@ -44,8 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded.Assets
                     applicationPath,
                     pageUrl,
                     model = json,
-                    additionalStylesheets,
-                    additionalScripts
+                    stylesheets = additionalStylesheets,
+                    scripts = additionalScripts
                 });
         }
 
@@ -62,6 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded.Assets
                     path = basePath + path.Substring(1);
                 }
                 sb.AppendFormat(tagFormat, path);
+                sb.AppendLine();
             }
             return sb.ToString();
         }
