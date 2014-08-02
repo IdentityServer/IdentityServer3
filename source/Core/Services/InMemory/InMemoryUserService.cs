@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 _users.Add(user);
             }
 
-            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, GetDisplayName(user), user.Username));
+            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, user.Subject, GetDisplayName(user)));
         }
 
 
