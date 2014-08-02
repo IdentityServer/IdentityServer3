@@ -20,6 +20,17 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             _users.AddRange(users);
         }
 
+        protected virtual string GetDisplayName(InMemoryUser user)
+        {
+            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+            if (nameClaim != null)
+            {
+                return nameClaim.Value;
+            }
+
+            return user.Username;
+        }
+
         public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
         {
             var query =
@@ -30,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user != null)
             {
-                return Task.FromResult(new AuthenticateResult(user.Subject, user.Username));
+                return Task.FromResult(new AuthenticateResult(user.Subject, GetDisplayName(user)));
             }
 
             return Task.FromResult<AuthenticateResult>(null);
@@ -66,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 _users.Add(user);
             }
 
-            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, user.Subject, user.Username));
+            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, GetDisplayName(user), user.Username));
         }
 
 
@@ -79,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.Single();
 
             var claims = new List<Claim>{
-                new Claim(Constants.ClaimTypes.Subject, user.Subject)
+                new Claim(Constants.ClaimTypes.Subject, user.Subject),
             };
 
             claims.AddRange(user.Claims);
