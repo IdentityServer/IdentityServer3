@@ -198,7 +198,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 CurrentUser = User.GetName(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
-                ClientLogoUrl = validatedRequest.Client.LogoUri.AbsoluteUri,
+                ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri.AbsoluteUri : null,
                 IdentityScopes = validatedRequest.GetIdentityScopes(),
                 ApplicationScopes = validatedRequest.GetApplicationScopes(),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
