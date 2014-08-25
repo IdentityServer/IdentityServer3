@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Microsoft.Owin;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -47,6 +48,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public string IssuerUri { get; set; }
 
         public string PublicHostName { get; set; }
+        public Func<IOwinContext, string> GetPublicHostName { get; set; }
+        
         public IdentityServerServiceFactory Factory { get; set; }
         public AuthenticationOptions AuthenticationOptions { get; set; }
         public IDataProtector DataProtector { get; set; }

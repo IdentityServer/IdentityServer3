@@ -29,7 +29,7 @@ namespace Owin
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
             
-            app.ConfigureIdentityServerBaseUrl(options.PublicHostName);
+            app.ConfigureIdentityServerBaseUrl(options.GetPublicHostName ?? (context => options.PublicHostName));
             app.UseCors(options.CorsPolicy);
             app.ConfigureCookieAuthentication(options.CookieOptions);
             

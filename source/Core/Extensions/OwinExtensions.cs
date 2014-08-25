@@ -2,6 +2,7 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
+
 using Autofac;
 using Microsoft.Owin;
 using System;
@@ -11,11 +12,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class OwinExtensions
     {
-        public static string GetBaseUrl(this IDictionary<string, object> env, string host = null)
+        public static string GetBaseUrl(this IDictionary<string, object> env, Func<IOwinContext, string> getHost = null)
         {
             var ctx = new OwinContext(env);
             var request = ctx.Request;
-            
+            var host = getHost != null ? getHost(ctx) : null;
+
             if (host.IsMissing())
             {
                 host = "https://" + request.Host.Value;
