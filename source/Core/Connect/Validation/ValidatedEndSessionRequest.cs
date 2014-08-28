@@ -12,14 +12,14 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-  public class ValidatedEndSessionRequest
-  {
-    public NameValueCollection Raw { get; set; }
-    public string IdTokenHint { get; set; }
-    public Uri PostLogoutRedirectUri { get; set; }
-    public string State { get; set; }
+    public class ValidatedEndSessionRequest
+    {
+        public NameValueCollection Raw { get; set; }
+        public string IdTokenHint { get; set; }
+        public Uri PostLogoutRedirectUri { get; set; }
+        public string State { get; set; }
 
-    // Parsed Id Token
-    public IEnumerable<Claim> Claims { get; set; }
-  }
+        // Parsed Id Token
+        public IEnumerable<Claim> Claims { get; set; }
+    }
 }

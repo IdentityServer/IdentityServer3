@@ -15,20 +15,20 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-  public class EndSessionResponseGenerator
-  {
-    public EndSessionResponse ProcessRequest(ValidatedEndSessionRequest request, ClaimsPrincipal subject)
+    public class EndSessionResponseGenerator
     {
-      if (request.PostLogoutRedirectUri != null)
-      {
-        if (!subject.Identity.IsAuthenticated)
-          return new EndSessionResponse { RedirectUri = request.PostLogoutRedirectUri };
+        public EndSessionResponse ProcessRequest(ValidatedEndSessionRequest request, ClaimsPrincipal subject)
+        {
+            if (request.PostLogoutRedirectUri != null)
+            {
+                if (!subject.Identity.IsAuthenticated)
+                    return new EndSessionResponse { RedirectUri = request.PostLogoutRedirectUri };
 
-        var subjectClaim = request.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
-        if (subjectClaim != null && subject.HasClaim(Constants.ClaimTypes.Subject, subjectClaim.Value))
-          return new EndSessionResponse { LogoutMessage = new LogOutMessage { ReturnUrl = request.PostLogoutRedirectUri.AbsoluteUri } };
-      }
-      return new EndSessionResponse();
+                var subjectClaim = request.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
+                if (subjectClaim != null && subject.HasClaim(Constants.ClaimTypes.Subject, subjectClaim.Value))
+                    return new EndSessionResponse { LogoutMessage = new LogOutMessage { ReturnUrl = request.PostLogoutRedirectUri.AbsoluteUri } };
+            }
+            return new EndSessionResponse();
+        }
     }
-  }
 }
