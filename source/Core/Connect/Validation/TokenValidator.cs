@@ -20,136 +20,180 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    public class TokenValidator
+  public class TokenValidator
+  {
+    private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+    private readonly IdentityServerOptions _options;
+    private readonly IUserService _users;
+    private readonly ITokenHandleStore _tokenHandles;
+    private readonly ICustomTokenValidator _customValidator;
+    private readonly IClientStore _clients;
+
+    public TokenValidator(IdentityServerOptions options, IUserService users, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly IdentityServerOptions _options;
-        private readonly IUserService _users;
-        private readonly ITokenHandleStore _tokenHandles;
-        private readonly ICustomTokenValidator _customValidator;
-        private readonly IClientStore _clients;
+      _options = options;
+      _users = users;
+      _clients = clients;
+      _tokenHandles = tokenHandles;
+      _customValidator = customValidator;
+    }
 
-        public TokenValidator(IdentityServerOptions options, IUserService users, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
+    public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
+    {
+      Logger.Info("Start identity token validation");
+      Logger.Debug("Token: " + token);
+
+      Logger.InfoFormat("Validating a JWT identity token");
+      TokenValidationResult result = await ValidateJwtIdentityTokenAsync(token);
+
+      Logger.Debug("Calling custom token validator");
+      var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
+
+      if (customResult.IsError)
+        Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+
+      return customResult;
+    }
+
+    public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
+    {
+      Logger.Info("Start access token validation");
+      Logger.Debug("Token: " + token);
+
+      TokenValidationResult result;
+
+      if (token.Contains("."))
+      {
+        Logger.InfoFormat("Validating a JWT access token");
+        result = await ValidateJwtAccessTokenAsync(token);
+      }
+      else
+      {
+        Logger.InfoFormat("Validating a reference access token");
+        result = await ValidateReferenceAccessTokenAsync(token);
+      }
+
+      if (expectedScope.IsPresent())
+      {
+        var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
+        if (scope == null)
         {
-            _options = options;
-            _users = users;
-            _clients = clients;
-            _tokenHandles = tokenHandles;
-            _customValidator = customValidator;
+          Logger.InfoFormat("Checking for expected scope {0} failed", expectedScope);
+          return Invalid(Constants.ProtectedResourceErrors.InsufficientScope);
         }
 
-        public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
+        Logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
+      }
+
+      Logger.Debug("Calling custom token validator");
+      var customResult = await _customValidator.ValidateAccessTokenAsync(result);
+
+      if (customResult.IsError)
+      {
+        Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+      }
+
+      return customResult;
+    }
+
+    protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
+    {
+      var handler = new JwtSecurityTokenHandler();
+      handler.Configuration = new SecurityTokenHandlerConfiguration();
+      handler.Configuration.CertificateValidationMode = X509CertificateValidationMode.None;
+      handler.Configuration.CertificateValidator = X509CertificateValidator.None;
+
+      var parameters = new TokenValidationParameters
+      {
+        ValidIssuer = _options.IssuerUri,
+        IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
+        ValidAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
+      };
+
+      try
+      {
+        SecurityToken token;
+        var id = handler.ValidateToken(jwt, parameters, out token);
+        Logger.Info("JWT access token validation successful");
+
+        return Task.FromResult(new TokenValidationResult
         {
-            throw new NotImplementedException();
-        }
+          Claims = id.Claims,
+          Jwt = jwt
+        });
+      }
+      catch (Exception ex)
+      {
+        Logger.ErrorException("JWT token validation error", ex);
+        return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+      }
+    }
 
-        public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
+    protected virtual Task<TokenValidationResult> ValidateJwtIdentityTokenAsync(string jwt)
+    {
+      var handler = new JwtSecurityTokenHandler();
+      handler.Configuration = new SecurityTokenHandlerConfiguration();
+
+      var parameters = new TokenValidationParameters
+      {
+        ValidIssuer = _options.IssuerUri,
+        IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
+        ValidateAudience = false
+      };
+
+      try
+      {
+        SecurityToken token;
+        var id = handler.ValidateToken(jwt, parameters, out token);
+        Logger.Info("JWT identity token validation successful");
+
+        return Task.FromResult(new TokenValidationResult
         {
-            Logger.Info("Start access token validation");
-            Logger.Debug("Token: " + token);
+          Claims = id.Claims,
+          Jwt = jwt
+        });
+      }
+      catch (Exception ex)
+      {
+        Logger.ErrorException("JWT token validation error", ex);
+        return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+      }
+    }
 
-            TokenValidationResult result;
+    protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
+    {
+      var token = await _tokenHandles.GetAsync(tokenHandle);
 
-            if (token.Contains("."))
-            {
-                Logger.InfoFormat("Validating a JWT access token");
-                result = await ValidateJwtAccessTokenAsync(token);
-            }
-            else
-            {
-                Logger.InfoFormat("Validating a reference access token");
-                result = await ValidateReferenceAccessTokenAsync(token);
-            }
+      if (token == null)
+      {
+        Logger.Error("Token handle not found");
+        return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+      }
 
-            if (expectedScope.IsPresent())
-            {
-                var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
-                if (scope == null)
-                {
-                    Logger.InfoFormat("Checking for expected scope {0} failed", expectedScope);
-                    return Invalid(Constants.ProtectedResourceErrors.InsufficientScope);
-                }
+      if (token.Type != Constants.TokenTypes.AccessToken)
+      {
+        Logger.ErrorFormat("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type);
+        return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+      }
 
-                Logger.InfoFormat("Checking for expected scope {0} succeeded", expectedScope);
-            }
+      if (DateTime.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
+      {
+        Logger.Error("Token expired.");
+        return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
+      }
 
-            Logger.Debug("Calling custom token validator");
-            var customResult = await _customValidator.ValidateAccessTokenAsync(result);
+      Logger.Info("Reference access token validation successful");
 
-            if (customResult.IsError)
-            {
-                Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
-            }
-            
-            return customResult;
-        }
+      return new TokenValidationResult
+      {
+        Claims = ReferenceTokenToClaims(token),
+        ReferenceToken = token
+      };
+    }
 
-        protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            handler.Configuration = new SecurityTokenHandlerConfiguration();
-            handler.Configuration.CertificateValidationMode = X509CertificateValidationMode.None;
-            handler.Configuration.CertificateValidator = X509CertificateValidator.None;
-            
-            var parameters = new TokenValidationParameters
-            {
-                ValidIssuer = _options.IssuerUri,
-                SigningToken = new X509SecurityToken(_options.SigningCertificate),
-                AllowedAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
-            };
-
-            try
-            {
-                var id = handler.ValidateToken(jwt, parameters);
-                Logger.Info("JWT access token validatio successful");
-
-                return Task.FromResult(new TokenValidationResult
-                {
-                    Claims = id.Claims,
-                    Jwt = jwt
-                });
-            }
-            catch (Exception ex)
-            {
-                Logger.ErrorException("JWT token validation error", ex);
-                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
-            }
-        }
-
-        protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
-        {
-            var token = await _tokenHandles.GetAsync(tokenHandle);
-
-            if (token == null)
-            {
-                Logger.Error("Token handle not found");
-                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
-            }
-
-            if (token.Type != Constants.TokenTypes.AccessToken)
-            {
-                Logger.ErrorFormat("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type);
-                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
-            }
-
-            if (DateTime.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
-            {
-                Logger.Error("Token expired.");
-                return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
-            }
-
-            Logger.Info("Reference access token validation successful");
-
-            return new TokenValidationResult
-            {
-                Claims = ReferenceTokenToClaims(token),
-                ReferenceToken = token
-            };
-        }
-
-        protected virtual IEnumerable<Claim> ReferenceTokenToClaims(Token token)
-        {
-            var claims = new List<Claim>
+    protected virtual IEnumerable<Claim> ReferenceTokenToClaims(Token token)
+    {
+      var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.Audience, token.Audience),
                 new Claim(Constants.ClaimTypes.Issuer, token.Issuer),
@@ -157,18 +201,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 new Claim(Constants.ClaimTypes.Expiration, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString())
             };
 
-            claims.AddRange(token.Claims);
+      claims.AddRange(token.Claims);
 
-            return claims;
-        }
-
-        protected virtual TokenValidationResult Invalid(string error)
-        {
-            return new TokenValidationResult
-            {
-                IsError = true,
-                Error = error
-            };
-        }
+      return claims;
     }
+
+    protected virtual TokenValidationResult Invalid(string error)
+    {
+      return new TokenValidationResult
+      {
+        IsError = true,
+        Error = error
+      };
+    }
+  }
 }
