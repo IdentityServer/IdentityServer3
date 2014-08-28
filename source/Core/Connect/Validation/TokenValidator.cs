@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
             }
-
+            
             return customResult;
         }
 
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             handler.Configuration = new SecurityTokenHandlerConfiguration();
             handler.Configuration.CertificateValidationMode = X509CertificateValidationMode.None;
             handler.Configuration.CertificateValidator = X509CertificateValidator.None;
-
+            
             var parameters = new TokenValidationParameters
             {
                 ValidIssuer = _options.IssuerUri,
@@ -143,8 +143,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             try
             {
-                SecurityToken token;
-                var id = handler.ValidateToken(jwt, parameters, out token);
+                SecurityToken jwtToken;
+                var id = handler.ValidateToken(jwt, parameters, out jwtToken);
                 Logger.Info("JWT identity token validation successful");
 
                 return Task.FromResult(new TokenValidationResult

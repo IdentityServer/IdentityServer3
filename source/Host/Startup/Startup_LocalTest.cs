@@ -43,12 +43,12 @@ namespace Thinktecture.IdentityServer.Host
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
-            var google = new GoogleAuthenticationOptions
-            {
-                AuthenticationType = "Google",
-                SignInAsAuthenticationType = signInAsType
-            };
-            app.UseGoogleAuthentication(google);
+            //var google = new GoogleAuthenticationOptions
+            //{
+            //    AuthenticationType = "Google",
+            //    SignInAsAuthenticationType = signInAsType
+            //};
+            //app.UseGoogleAuthentication(google);
 
             var fb = new FacebookAuthenticationOptions
             {
