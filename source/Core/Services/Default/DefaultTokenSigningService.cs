@@ -49,7 +49,8 @@ namespace Thinktecture.IdentityServer.Core.Services
                 token.Issuer,
                 token.Audience,
                 token.Claims,
-                new Lifetime(DateTime.UtcNow, DateTime.UtcNow.AddSeconds(token.Lifetime)),
+                DateTime.UtcNow, 
+                DateTime.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
             var handler = new JwtSecurityTokenHandler();

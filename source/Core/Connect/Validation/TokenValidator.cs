@@ -94,13 +94,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var parameters = new TokenValidationParameters
             {
                 ValidIssuer = _options.IssuerUri,
-                SigningToken = new X509SecurityToken(_options.SigningCertificate),
-                AllowedAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
+                IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
+                ValidAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
             };
 
             try
             {
-                var id = handler.ValidateToken(jwt, parameters);
+                SecurityToken jwtToken;
+                var id = handler.ValidateToken(jwt, parameters, out jwtToken);
                 Logger.Info("JWT access token validatio successful");
 
                 return Task.FromResult(new TokenValidationResult
