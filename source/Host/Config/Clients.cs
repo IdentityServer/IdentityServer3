@@ -89,7 +89,8 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
                         "read",
-                        "write"
+                        "write",
+                        "idmgr"
                     },
 
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
