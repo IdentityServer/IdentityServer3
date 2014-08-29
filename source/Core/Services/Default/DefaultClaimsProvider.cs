@@ -88,7 +88,6 @@ namespace Thinktecture.IdentityServer.Core.Services
                 subject.FindFirst(Constants.ClaimTypes.AuthenticationMethod),
                 subject.FindFirst(Constants.ClaimTypes.AuthenticationTime),
                 subject.FindFirst(Constants.ClaimTypes.IdentityProvider),
-                subject.FindFirst(Constants.ClaimTypes.Name)
             };
 
             return claims;
