@@ -11,9 +11,13 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Description { get; set; }
         public bool AlwaysIncludeInIdToken { get; set; }
 
+        public ScopeClaim()
+        { }
+
         public ScopeClaim(string name)
         {
             Name = name;
+            Description = string.Empty;
             AlwaysIncludeInIdToken = false;
         }
     }
