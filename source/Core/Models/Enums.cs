@@ -5,6 +5,12 @@
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    public enum ScopeType
+    {
+        Identity,
+        Resource
+    }
+
     public enum Flows
     {
         Code,

@@ -19,22 +19,22 @@ namespace UnitTests.Validation_Tests
                 new Scope
                 {
                     Name = "openid",
-                    IsOpenIdScope = true
+                    Type = ScopeType.Identity
                 },
                 new Scope
                 {
                     Name = "email",
-                    IsOpenIdScope = true
+                    Type = ScopeType.Identity
                 },
                 new Scope
                 {
                     Name = "resource1",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
                 },
                 new Scope
                 {
                     Name = "resource2",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
                 },
             };
 

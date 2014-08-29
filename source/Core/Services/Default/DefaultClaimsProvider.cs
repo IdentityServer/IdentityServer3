@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
             {
-                if (scope.IsOpenIdScope)
+                if (scope.Type == ScopeType.Identity)
                 {
                     foreach (var scopeClaim in scope.Claims)
                     {

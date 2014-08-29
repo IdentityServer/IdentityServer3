@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return false;
                 }
 
-                if (scopeDetail.IsOpenIdScope)
+                if (scopeDetail.Type == ScopeType.Identity)
                 {
                     ContainsOpenIdScopes = true;
                 }

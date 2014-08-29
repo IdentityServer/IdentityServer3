@@ -20,14 +20,14 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         Name = "read",
                         DisplayName = "Read data",
-                        IsOpenIdScope = false,
+                        Type = ScopeType.Resource,
                         Emphasize = false,
                     },
                     new Scope
                     {
                         Name = "write",
                         DisplayName = "Write data",
-                        IsOpenIdScope = false,
+                        Type = ScopeType.Resource,
                         Emphasize = true,
                     }
                 };
