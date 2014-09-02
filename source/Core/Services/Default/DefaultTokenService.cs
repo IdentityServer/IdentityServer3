@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri),
                 Issuer = _options.IssuerUri,
                 Lifetime = client.AccessTokenLifetime,
-                Claims = claims.ToList(),
+                Claims = claims.Distinct(new ClaimComparer()).ToList(),
                 Client = client
             };
 
