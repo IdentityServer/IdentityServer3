@@ -15,7 +15,8 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Description { get; set; }
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
-        public bool IsOpenIdScope { get; set; }
+
+        public ScopeType Type { get; set; }
         public IEnumerable<ScopeClaim> Claims { get; set; }
 
         public static IEnumerable<Scope> StandardScopes
@@ -42,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                     Name = Constants.StandardScopes.OpenId,
                     DisplayName = "Your user identifier",
                     Required = true,
-                    IsOpenIdScope = true,
+                    Type = ScopeType.Identity,
                     Claims = new List<ScopeClaim>
                         {
                             new ScopeClaim
@@ -65,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                      Name = Constants.StandardScopes.Profile,
                      DisplayName = "User profile",
                      Description = "Your user profile information (first name, last name, etc.).",
-                     IsOpenIdScope = true,
+                     Type = ScopeType.Identity,
                      Emphasize = true,
                      Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x => new ScopeClaim { Name = x, Description = x }))
                  };
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                 {
                     Name = Constants.StandardScopes.Email,
                     DisplayName = "Your email address",
-                    IsOpenIdScope = true,
+                    Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = new List<ScopeClaim>
                     {
@@ -107,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                 {
                     Name = Constants.StandardScopes.Phone,
                     DisplayName = "Your phone number",
-                    IsOpenIdScope = true,
+                    Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = new List<ScopeClaim>
                     {
@@ -134,7 +135,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                 {
                     Name = Constants.StandardScopes.Address,
                     DisplayName = "Your postal address",
-                    IsOpenIdScope = true,
+                    Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = new List<ScopeClaim>
                     {
@@ -156,6 +157,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                 {
                     Name = Constants.StandardScopes.OfflineAccess,
                     DisplayName = "Offline access",
+                    Type = ScopeType.Resource,
                     Emphasize = true
                 };
             }

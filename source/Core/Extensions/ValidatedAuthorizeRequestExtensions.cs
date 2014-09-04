@@ -15,14 +15,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static IEnumerable<ConsentScopeViewModel> GetIdentityScopes(this ValidatedAuthorizeRequest validatedRequest)
         {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x => x.IsOpenIdScope);
+            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x => x.Type == ScopeType.Identity);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
             return requestedScopes.ToConsentScopeViewModel(consentedScopeNames);
         }
 
         public static IEnumerable<ConsentScopeViewModel> GetApplicationScopes(this ValidatedAuthorizeRequest validatedRequest)
         {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=>!x.IsOpenIdScope);
+            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=> x.Type == ScopeType.Resource);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
             return requestedScopes.ToConsentScopeViewModel(consentedScopeNames);
         }

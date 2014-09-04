@@ -11,37 +11,21 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
         {
             return new Scope[]
             {
-                new Scope
-                 {
-                    Name = Constants.StandardScopes.OpenId, 
-                    Description = "User identifier",
-                    IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.OpenId].Select(x=>new ScopeClaim{Name = x}))
-                },
-                 new Scope
-                 {
-                    Name = Constants.StandardScopes.Profile, 
-                    Description = "User profile",
-                    IsOpenIdScope = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x}))
-                },
+                Scope.OpenId,
+                Scope.Profile,
+                Scope.OfflineAccess,
+
                 new Scope
                 {
                     Name = "resource",
                     Description = "resource scope",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
                 },
                 new Scope
                 {
                     Name = "resource2",
                     Description = "resource scope",
-                    IsOpenIdScope = false
-                },
-                new Scope
-                {
-                    Name = "offline_access",
-                    Description = "scope for refresh tokens",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
                 },
              };
         }
