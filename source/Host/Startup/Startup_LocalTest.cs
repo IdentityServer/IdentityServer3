@@ -32,7 +32,13 @@ namespace Thinktecture.IdentityServer.Host
                         SigningCertificate = Cert.Load(),
                         CspReportEndpoint = EndpointSettings.Enabled,
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
-                        PublicHostName = "http://localhost:3333",
+
+                        // GetPublicHostName provides a means to generate the public host name
+                        // at time of request using IOwinContext; or, use PublicHostName if the
+                        // name is statically known
+                        //PublicHostName = "http://localhost:3333",
+                        GetPublicHostName = context => "http://" + context.Request.Host.Value,
+
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         CorsPolicy = CorsPolicy.AllowAll
