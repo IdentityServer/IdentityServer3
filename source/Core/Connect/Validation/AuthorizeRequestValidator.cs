@@ -138,14 +138,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client);
             }
 
-            scope = scope.Trim();
-
             if (scope.Contains(Constants.StandardScopes.OpenId))
             {
                 _validatedRequest.IsOpenIdRequest = true;
             }
 
-            _validatedRequest.RequestedScopes = scope.Split(' ').Distinct().ToList();
+            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
             Logger.InfoFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
@@ -306,7 +304,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _validatedRequest.LoginHint = loginHint;
             }
 
-            // todo: parse amr, acr
+            //////////////////////////////////////////////////////////
+            // check acr_values
+            //////////////////////////////////////////////////////////
+            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            if (acrValues.IsPresent())
+            {
+                Logger.InfoFormat("acr_values: {0}", acrValues);
+                _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+            }
 
             Logger.Info("Protocol validation successful");
             return Valid();

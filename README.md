@@ -44,6 +44,14 @@ The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v
 * support for EntityFramework based persistence of configuration
 * support for WS-Federation
 
+## Related repositories ##
+* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
+* [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
+* [ASP.Net Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
+* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
+* [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
+
+
 ## Credits ##
 IdentityServer is built using the following great open source projects:
 

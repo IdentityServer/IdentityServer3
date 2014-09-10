@@ -61,6 +61,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
+            if (result.IsError)
+            {
+                return result;
+            }
+
             if (expectedScope.IsPresent())
             {
                 var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);

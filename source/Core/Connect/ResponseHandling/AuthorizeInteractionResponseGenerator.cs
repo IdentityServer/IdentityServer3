@@ -49,6 +49,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
+            // pass through acr values
+            if (request.AuthenticationContextReferenceClasses.Any())
+            {
+                _signIn.AcrValues = request.AuthenticationContextReferenceClasses;
+            }
+
             if (request.PromptMode == Constants.PromptModes.Login)
             {
                 // remove prompt so when we redirect back in from login page
