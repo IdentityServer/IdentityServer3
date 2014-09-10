@@ -40,6 +40,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.OfflineAccess,
+                        "idmgr",
                         "read",
                         "write"
                     },
