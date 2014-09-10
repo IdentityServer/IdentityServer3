@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Linq;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -14,7 +17,9 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 return d;
             }
 
-            foreach (var claim in claims)
+            var distinctClaims = claims.Distinct(new ClaimComparer());
+
+            foreach (var claim in distinctClaims)
             {
                 if (!d.ContainsKey(claim.Type))
                 {
@@ -24,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 {
                     var value = d[claim.Type];
 
-                    var list = value as HashSet<object>;
+                    var list = value as List<object>;
                     if (list != null)
                     {
                         list.Add(claim.Value);
@@ -32,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     else
                     {
                         d.Remove(claim.Type);
-                        d.Add(claim.Type, new HashSet<object> { value, claim.Value });
+                        d.Add(claim.Type, new List<object> { value, claim.Value });
                     }
                 }
             }
