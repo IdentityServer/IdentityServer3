@@ -18,6 +18,17 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     new Scope
                     {
+                        Name = "roles",
+                        DisplayName = "Roles",
+                        Type = ScopeType.Identity,
+                        Claims = new[]
+                        {
+                            new ScopeClaim("role")
+                        }
+                    },
+
+                    new Scope
+                    {
                         Name = "read",
                         DisplayName = "Read data",
                         Type = ScopeType.Resource,
