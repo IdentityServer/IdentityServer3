@@ -24,7 +24,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Type = ScopeType.Identity,
                         Claims = new[]
                         {
-                            new ScopeClaim("role")
+                            new ScopeClaim(Constants.ClaimTypes.Role)
+                            {
+                                AlwaysIncludeInIdToken = true
+                            }
                         }
                     },
 
@@ -48,10 +51,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                         DisplayName = "IdentityManager",
                         Type = ScopeType.Resource,
                         Emphasize = true,
-                        Claims = new List<ScopeClaim>
+                        Claims = new[]
                         {
-                            new ScopeClaim("name"),
-                            new ScopeClaim("role")
+                            new ScopeClaim(Constants.ClaimTypes.Name),
+                            new ScopeClaim(Constants.ClaimTypes.Role)
                         }
                     }
                 };
