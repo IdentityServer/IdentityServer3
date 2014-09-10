@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return requestedScopes.ToConsentScopeViewModel(consentedScopeNames);
         }
 
-        public static IEnumerable<ConsentScopeViewModel> GetApplicationScopes(this ValidatedAuthorizeRequest validatedRequest)
+        public static IEnumerable<ConsentScopeViewModel> GetResourceScopes(this ValidatedAuthorizeRequest validatedRequest)
         {
             var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=> x.Type == ScopeType.Resource);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
