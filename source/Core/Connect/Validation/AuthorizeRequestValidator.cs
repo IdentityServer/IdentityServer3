@@ -138,14 +138,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client);
             }
 
-            scope = scope.Trim();
-
             if (scope.Contains(Constants.StandardScopes.OpenId))
             {
                 _validatedRequest.IsOpenIdRequest = true;
             }
 
-            _validatedRequest.RequestedScopes = scope.Split(' ').Distinct().ToList();
+            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
             Logger.InfoFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////

@@ -3,9 +3,11 @@
  * see license
  */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -22,6 +24,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             return sb.ToString().Trim();
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<string> FromSpaceSeparatedString(this string input)
+        {
+            input = input.Trim();
+            return input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
 
         [DebuggerStepThrough]
