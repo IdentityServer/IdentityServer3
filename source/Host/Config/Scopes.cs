@@ -20,6 +20,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         Name = "roles",
                         DisplayName = "Roles",
+                        Description = "Your organizational roles",
                         Type = ScopeType.Identity,
                         Claims = new[]
                         {
