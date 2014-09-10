@@ -34,8 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public bool IsResourceRequest { get; set; }
         
         public string Nonce { get; set; }
-        public List<string> AuthenticationContextClasses { get; set; }
-        public List<string> AuthenticationMethods { get; set; }
+        public List<string> AuthenticationContextReferenceClasses { get; set; }
         public string DisplayMode { get; set; }
         public string PromptMode { get; set; }
         public int? MaxAge { get; set; }
@@ -53,8 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public ValidatedAuthorizeRequest()
         {
             RequestedScopes = new List<string>();
-            AuthenticationContextClasses = new List<string>();
-            AuthenticationMethods = new List<string>();
+            AuthenticationContextReferenceClasses = new List<string>();
         }
     }
 }

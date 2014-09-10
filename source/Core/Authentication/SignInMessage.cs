@@ -5,6 +5,7 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -19,13 +20,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public string IdP { get; set; }
         public string DisplayMode { get; set; }
         public string UiLocales { get; set; }
+        public IEnumerable<string> AcrValues { get; set; }
 
         // internal use
         public DateTime ValidTo { get; set; }
 
-        //public string LoginHint { get; set; }
-        //public string AuthenticationMethod { get; set; }
-
+        
         public string Protect(int ttl, IDataProtector protector)
         {
             ValidTo = DateTime.UtcNow.AddSeconds(ttl);
