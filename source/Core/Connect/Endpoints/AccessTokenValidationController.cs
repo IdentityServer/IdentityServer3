@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return BadRequest(result.Error);
             }
 
-            var response = result.Claims.Select(c => new { c.Type, c.Value });
+            var response = result.Claims.ToClaimsDictionary();
             Logger.Debug(JsonConvert.SerializeObject(response, Formatting.Indented));
 
             Logger.Info("Returning access token claims");
