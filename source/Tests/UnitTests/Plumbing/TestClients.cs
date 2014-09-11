@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                         Enabled = true,
                         ClientId = "assertionclient",
                         ClientSecret = "secret",
-                        Flow = Flows.Assertion,
+                        Flow = Flows.Custom,
                     },
                     new Client
                     {
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                         Enabled = false,
                         ClientId = "disabled",
                         ClientSecret = "invalid",
-                        Flow = Flows.Assertion,
+                        Flow = Flows.Custom,
                     }
             };
         }

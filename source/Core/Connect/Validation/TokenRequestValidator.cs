@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
         private readonly IScopeStore _scopes;
-        private readonly IAssertionGrantValidator _assertionValidator;
+        private readonly ICustomGrantValidator _customGrantValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
 
@@ -38,14 +38,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, IAssertionGrantValidator assertionValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
             _refreshTokens = refreshTokens;
             _users = users;
             _scopes = scopes;
-            _assertionValidator = assertionValidator;
+            _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
         }
 
@@ -82,6 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.InfoFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
+            // standard grant types
             switch (grantType)
             {
                 case Constants.GrantTypes.AuthorizationCode:
@@ -94,13 +95,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return await RunValidationAsync(ValidateRefreshTokenRequestAsync, parameters);
             }
 
-            if (parameters.Get(Constants.TokenRequest.Assertion).IsPresent())
+            // custom grant type
+            var result = await RunValidationAsync(ValidateCustomGrantRequestAsync, parameters);
+
+            if (result.IsError)
             {
-                return await RunValidationAsync(ValidateAssertionRequestAsync, parameters);
+                if (result.Error.IsPresent())
+                {
+                    return result;
+                }
+
+                Logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            Logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
-            return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+            return result;
         }
 
         async Task<ValidationResult> RunValidationAsync(Func<NameValueCollection, Task<ValidationResult>> validationFunc, NameValueCollection parameters)
@@ -344,18 +353,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return Valid();
         }
 
-        private async Task<ValidationResult> ValidateAssertionRequestAsync(NameValueCollection parameters)
+        private async Task<ValidationResult> ValidateCustomGrantRequestAsync(NameValueCollection parameters)
         {
-            var assertion = parameters.Get(Constants.TokenRequest.Assertion);
-            _validatedRequest.Assertion = assertion;
-
             /////////////////////////////////////////////
-            // check if client is authorized for grant type
+            // check if client is authorized for custom grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.Assertion)
+            if (_validatedRequest.Client.Flow != Flows.Custom)
             {
-                Logger.Error("Client not authorized for assertion flow");
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                Logger.Error("Client not registered for custom grant type");
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
             /////////////////////////////////////////////
@@ -368,18 +374,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             /////////////////////////////////////////////
-            // validate assertion
+            // validate custom grant type
             /////////////////////////////////////////////
-            var principal = await _assertionValidator.ValidateAsync(_validatedRequest, _users);
+            var principal = await _customGrantValidator.ValidateAsync(_validatedRequest);
             if (principal == null)
             {
-                Logger.Error("Invalid assertion.");
+                Logger.Error("Invalid grant.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
             _validatedRequest.Subject = principal;
 
-            Logger.Info("Successful validation of assertion request");
+            Logger.Info("Successful validation of custom grant request");
             return Valid();
         }
 

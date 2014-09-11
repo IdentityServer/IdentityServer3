@@ -17,7 +17,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         Implicit,
         ClientCredentials,
         ResourceOwner,
-        Assertion
+        Custom
     }
 
     public enum SubjectTypes
