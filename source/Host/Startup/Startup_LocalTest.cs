@@ -43,10 +43,12 @@ namespace Thinktecture.IdentityServer.Host
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
-            var google = new GoogleAuthenticationOptions
+            var google = new GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "Google",
-                SignInAsAuthenticationType = signInAsType
+                SignInAsAuthenticationType = signInAsType,
+                ClientId = "767400843187-8boio83mb57ruogr9af9ut09fkg56b27.apps.googleusercontent.com",
+                ClientSecret = "5fWcBT0udKY7_b6E3gEiJlze"
             };
             app.UseGoogleAuthentication(google);
 
