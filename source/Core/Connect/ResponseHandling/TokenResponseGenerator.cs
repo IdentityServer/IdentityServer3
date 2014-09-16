@@ -34,18 +34,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 return await ProcessAuthorizationCodeRequestAsync(request);
             }
-            
-            if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
-                     request.GrantType == Constants.GrantTypes.Password ||
-                     request.Assertion.IsPresent())
-            {
-                return await ProcessTokenRequestAsync(request);
-            }
-            
+
             if (request.GrantType == Constants.GrantTypes.RefreshToken)
             {
                 return await ProcessRefreshTokenRequestAsync(request);
             }
+
+            return await ProcessTokenRequestAsync(request);
 
             throw new InvalidOperationException("Unknown grant type.");
         }
@@ -63,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 AccessToken = accessToken.Item1,
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
-            
+
             //////////////////////////
             // refresh token
             /////////////////////////
@@ -78,7 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (request.AuthorizationCode.IsOpenId)
             {
                 var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
-                var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);    
+                var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
                 response.IdentityToken = jwt;
             }
 

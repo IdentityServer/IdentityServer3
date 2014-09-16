@@ -26,26 +26,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
-            parameters.Add(Constants.TokenRequest.Assertion, "assertion");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
-
-            var result = await validator.ValidateRequestAsync(parameters, client);
-
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
-        }
-
-        [TestMethod]
-        [TestCategory(Category)]
-        public async Task Missing_Assertion()
-        {
-            var client = await _clients.FindClientByIdAsync("assertionclient");
-
-            var validator = Factory.CreateTokenValidator();
-
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
+            parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = await validator.ValidateRequestAsync(parameters, client);
@@ -63,8 +44,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "unknownAssertionType");
-            parameters.Add(Constants.TokenRequest.Assertion, "unknownAssertion");
+            parameters.Add(Constants.TokenRequest.GrantType, "unknownGrantType");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = await validator.ValidateRequestAsync(parameters, client);

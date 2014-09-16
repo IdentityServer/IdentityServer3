@@ -35,7 +35,7 @@ namespace UnitTests.Plumbing
             IAuthorizationCodeStore authorizationCodeStore = null,
             IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
-            IAssertionGrantValidator assertionGrantValidator = null,
+            ICustomGrantValidator customGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null)
         {
             if (options == null)
@@ -58,9 +58,9 @@ namespace UnitTests.Plumbing
                 customRequestValidator = new DefaultCustomRequestValidator();
             }
 
-            if (assertionGrantValidator == null)
+            if (customGrantValidator == null)
             {
-                assertionGrantValidator = new TestAssertionValidator();
+                customGrantValidator = new TestAssertionValidator();
             }
 
             if (refreshTokens == null)
@@ -68,7 +68,7 @@ namespace UnitTests.Plumbing
                 refreshTokens = new InMemoryRefreshTokenStore();
             }
 
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, assertionGrantValidator, customRequestValidator);
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(

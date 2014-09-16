@@ -122,13 +122,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultCustomRequestValidator>().As<ICustomRequestValidator>();
             }
 
-            if (fact.AssertionGrantValidator != null)
+            if (fact.CustomGrantValidator != null)
             {
-                builder.Register(fact.AssertionGrantValidator);
+                builder.Register(fact.CustomGrantValidator);
             }
             else
             {
-                builder.RegisterType<DefaultAssertionGrantValidator>().As<IAssertionGrantValidator>();
+                builder.RegisterType<DefaultCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
             if (fact.ExternalClaimsFilter != null)

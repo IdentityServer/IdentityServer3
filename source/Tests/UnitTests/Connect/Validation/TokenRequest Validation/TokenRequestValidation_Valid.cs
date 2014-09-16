@@ -190,15 +190,14 @@ namespace UnitTests.TokenRequest_Validation
 
         [TestMethod]
         [TestCategory(Category)]
-        public async Task Valid_AssertionFlow_Request()
+        public async Task Valid_CustomGrant_Request()
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
 
             var validator = Factory.CreateTokenValidator();
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "assertionType");
-            parameters.Add(Constants.TokenRequest.Assertion, "assertion");
+            parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = await validator.ValidateRequestAsync(parameters, client);

@@ -10,13 +10,13 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace UnitTests.Plumbing
 {
-    class TestAssertionValidator : IAssertionGrantValidator
+    class TestAssertionValidator : ICustomGrantValidator
     {
-        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request, IUserService users)
+        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
         {
-            if (request.GrantType == "assertionType" && request.Assertion == "assertion")
+            if (request.GrantType == "customGrant")
             {
-                return Task.FromResult(Principal.Create("Assertion", new Claim("sub", "bob")));
+                return Task.FromResult(Principal.Create("CustomGrant", new Claim("sub", "bob")));
             };
 
             return Task.FromResult<ClaimsPrincipal>(null);

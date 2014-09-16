@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         
         // optional
         public Registration<IConsentService> ConsentService { get; set; }
-        public Registration<IAssertionGrantValidator> AssertionGrantValidator { get; set; }
+        public Registration<ICustomGrantValidator> CustomGrantValidator { get; set; }
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }
         public Registration<ITokenService> TokenService { get; set; }

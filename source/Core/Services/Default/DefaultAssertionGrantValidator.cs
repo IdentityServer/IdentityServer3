@@ -9,9 +9,9 @@ using Thinktecture.IdentityServer.Core.Connect;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public class DefaultAssertionGrantValidator : IAssertionGrantValidator
+    public class DefaultCustomGrantValidator : ICustomGrantValidator
     {
-        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request, IUserService users)
+        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
         {
             return Task.FromResult<ClaimsPrincipal>(null);
         }
