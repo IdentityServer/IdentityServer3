@@ -38,9 +38,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customValidator = customValidator;
         }
 
-        public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
+        public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
         {
-            throw new NotImplementedException();
+            Logger.Info("Start identity token validation");
+            Logger.Debug("Token: " + token);
+
+            Logger.InfoFormat("Validating a JWT identity token");
+            TokenValidationResult result = await ValidateJwtIdentityTokenAsync(token);
+
+            Logger.Debug("Calling custom token validator");
+            var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
+
+            if (customResult.IsError)
+                Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+
+            return customResult;
         }
 
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
@@ -100,9 +112,40 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             try
             {
+                SecurityToken token;
+                var id = handler.ValidateToken(jwt, parameters, out token);
+                Logger.Info("JWT access token validation successful");
+
+                return Task.FromResult(new TokenValidationResult
+                {
+                    Claims = id.Claims,
+                    Jwt = jwt
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorException("JWT token validation error", ex);
+                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+            }
+        }
+
+        protected virtual Task<TokenValidationResult> ValidateJwtIdentityTokenAsync(string jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            handler.Configuration = new SecurityTokenHandlerConfiguration();
+
+            var parameters = new TokenValidationParameters
+            {
+                ValidIssuer = _options.IssuerUri,
+                IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
+                ValidateAudience = false
+            };
+
+            try
+            {
                 SecurityToken jwtToken;
                 var id = handler.ValidateToken(jwt, parameters, out jwtToken);
-                Logger.Info("JWT access token validatio successful");
+                Logger.Info("JWT identity token validation successful");
 
                 return Task.FromResult(new TokenValidationResult
                 {

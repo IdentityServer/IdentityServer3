@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.Register(fact.UserService);
             builder.Register(fact.ScopeStore);
             builder.Register(fact.ClientStore);
-            
+
             // optional from factory
             if (fact.AuthorizationCodeStore != null)
             {
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             {
                 builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
             }
-            
+
             if (fact.ConsentService != null)
             {
                 builder.Register(fact.ConsentService);
@@ -172,12 +172,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeRequestValidator>();
             builder.RegisterType<ClientValidator>();
             builder.RegisterType<TokenValidator>();
+            builder.RegisterType<EndSessionRequestValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
+            builder.RegisterType<EndSessionResponseGenerator>();
 
             // general services
             builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
@@ -190,7 +192,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             // add any additional dependencies from hosting application
-            foreach(var registration in fact.Registrations)
+            foreach (var registration in fact.Registrations)
             {
                 builder.Register(registration);
             }
@@ -210,7 +212,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             }
             else
             {
-                var message = "No type or factory found on registration " + registration.GetType().FullName; 
+                var message = "No type or factory found on registration " + registration.GetType().FullName;
                 Logger.Error(message);
                 throw new InvalidOperationException(message);
             }

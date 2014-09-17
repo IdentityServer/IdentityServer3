@@ -24,20 +24,26 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class AuthorizeRequest
         {
-            public const string Scope        = "scope";
-            public const string ResponseType = "response_type";
-            public const string ClientId     = "client_id";
-            public const string RedirectUri  = "redirect_uri";
-            public const string State        = "state";
-            public const string ResponseMode = "response_mode";
-            public const string Nonce        = "nonce";
-            public const string Display      = "display";
-            public const string Prompt       = "prompt";
-            public const string MaxAge       = "max_age";
-            public const string UiLocales    = "ui_locales";
-            public const string IdTokenHint  = "id_token_hint";
-            public const string LoginHint    = "login_hint";
-            public const string AcrValues    = "acr_values";
+          public const string Scope = "scope";
+          public const string ResponseType = "response_type";
+          public const string ClientId = "client_id";
+          public const string RedirectUri = "redirect_uri";
+          public const string State = "state";
+          public const string ResponseMode = "response_mode";
+          public const string Nonce = "nonce";
+          public const string Display = "display";
+          public const string Prompt = "prompt";
+          public const string MaxAge = "max_age";
+          public const string UiLocales = "ui_locales";
+          public const string IdTokenHint = "id_token_hint";
+          public const string LoginHint = "login_hint";
+          public const string AcrValues = "acr_values";
+        }
+        public static class EndSessionRequest
+        {
+          public const string PostLogoutRedirectUri = "post_logout_redirect_uri";
+          public const string State = "state";
+          public const string IdTokenHint = "id_token_hint";
         }
 
         public static class TokenRequest
@@ -198,6 +204,11 @@ namespace Thinktecture.IdentityServer.Core
             public const string ExpiredToken      = "expired_token";
             public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
+        }
+        public static class EndSessionErrors
+        {
+          public const string InvalidRequest = "invalid_request";
+          public const string InvalidClient = "invalid_client";
         }
         
 

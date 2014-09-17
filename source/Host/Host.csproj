@@ -123,7 +123,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <EmbeddedResource Include="Config\idsrv3test.pfx" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Web.AzureWebSites.config">

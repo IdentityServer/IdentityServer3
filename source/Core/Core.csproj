@@ -113,6 +113,12 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Authentication\LogoutResult.cs" />
+    <Compile Include="Authentication\LogOutMessage.cs" />
+    <Compile Include="Connect\Models\EndSessionResponse.cs" />
+    <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
+    <Compile Include="Connect\Validation\EndSessionRequestValidator.cs" />
+    <Compile Include="Connect\Validation\ValidatedEndSessionRequest.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
     <Compile Include="Services\IConsentStore.cs" />
@@ -337,7 +343,9 @@
       <DependentUpon>scripts.min.js</DependentUpon>
     </None>
     <None Include="Views\Embedded\Assets\styles.css.bundle" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Embedded\Assets\app\FormPostResponse.html" />
