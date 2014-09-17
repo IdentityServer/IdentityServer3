@@ -14,11 +14,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         public ScopeClaim()
         { }
 
-        public ScopeClaim(string name)
+        public ScopeClaim(string name, bool alwaysInclude = false)
         {
             Name = name;
             Description = string.Empty;
-            AlwaysIncludeInIdToken = false;
+            AlwaysIncludeInIdToken = alwaysInclude;
         }
     }
 }

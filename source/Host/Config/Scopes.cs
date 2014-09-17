@@ -10,6 +10,10 @@ namespace Thinktecture.IdentityServer.Host.Config
         {
             return new[]
                 {
+                    ////////////////////////
+                    // identity scopes
+                    ////////////////////////
+
                     Scope.OpenId,
                     Scope.Profile,
                     Scope.Email,
@@ -21,14 +25,16 @@ namespace Thinktecture.IdentityServer.Host.Config
                         DisplayName = "Roles",
                         Description = "Your organizational roles",
                         Type = ScopeType.Identity,
+
                         Claims = new[]
                         {
-                            new ScopeClaim(Constants.ClaimTypes.Role)
-                            {
-                                AlwaysIncludeInIdToken = true
-                            }
+                            new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
                         }
                     },
+
+                    ////////////////////////
+                    // resource scopes
+                    ////////////////////////
 
                     new Scope
                     {
@@ -50,6 +56,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         DisplayName = "IdentityManager",
                         Type = ScopeType.Resource,
                         Emphasize = true,
+                        
                         Claims = new[]
                         {
                             new ScopeClaim(Constants.ClaimTypes.Name),

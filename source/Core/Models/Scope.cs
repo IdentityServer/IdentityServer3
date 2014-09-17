@@ -45,14 +45,9 @@ namespace Thinktecture.IdentityServer.Core.Models
                     Required = true,
                     Type = ScopeType.Identity,
                     Claims = new List<ScopeClaim>
-                        {
-                            new ScopeClaim
-                            {
-                                AlwaysIncludeInIdToken = true,
-                                Name = Constants.ClaimTypes.Subject,
-                                Description = "subject identifier"
-                            }
-                        }
+                    {
+                        new ScopeClaim(Constants.ClaimTypes.Subject, alwaysInclude: true)
+                    }
                 };
             }
         }
@@ -68,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                      Description = "Your user profile information (first name, last name, etc.).",
                      Type = ScopeType.Identity,
                      Emphasize = true,
-                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x => new ScopeClaim { Name = x, Description = x }))
+                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim)))
                  };
             }
         }
@@ -83,19 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                     DisplayName = "Your email address",
                     Type = ScopeType.Identity,
                     Emphasize = true,
-                    Claims = new List<ScopeClaim>
-                    {
-                        new ScopeClaim
-                        {
-                            Name = Constants.ClaimTypes.Email,
-                            Description = "email address",
-                        },
-                        new ScopeClaim
-                        {
-                            Name = Constants.ClaimTypes.EmailVerified,
-                            Description = "email is verified",
-                        }
-                    }
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim)))
                 };
             }
         }
@@ -110,19 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                     DisplayName = "Your phone number",
                     Type = ScopeType.Identity,
                     Emphasize = true,
-                    Claims = new List<ScopeClaim>
-                    {
-                        new ScopeClaim
-                        {
-                            Name = Constants.ClaimTypes.PhoneNumber,
-                            Description = "phone number",
-                        },
-                        new ScopeClaim
-                        {
-                            Name = Constants.ClaimTypes.PhoneNumberVerified,
-                            Description = "phone number is verified",
-                        }
-                    }
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim)))
                 };
             }
         }
@@ -137,14 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                     DisplayName = "Your postal address",
                     Type = ScopeType.Identity,
                     Emphasize = true,
-                    Claims = new List<ScopeClaim>
-                    {
-                        new ScopeClaim
-                        {
-                            Name = Constants.ClaimTypes.Address,
-                            Description = "Your postal address",
-                        }
-                    }
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim)))
                 };
             }
         }
