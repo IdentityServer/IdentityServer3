@@ -64,15 +64,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 {
                     return Task.FromResult<ExternalAuthenticateResult>(null);
                 }
-                var claims = externalUser.Claims.Except(new Claim[] { name });
-
+                
                 user = new InMemoryUser
                 {
                     Subject = Guid.NewGuid().ToString("N"),
                     Provider = externalUser.Provider.Name,
                     ProviderId = externalUser.ProviderId,
                     Username = name.Value,
-                    Claims = claims.ToArray()
+                    Claims = externalUser.Claims
                 };
                 _users.Add(user);
             }
