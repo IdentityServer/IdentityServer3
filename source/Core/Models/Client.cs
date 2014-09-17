@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public Flows Flow { get; set; }
         public List<Uri> RedirectUris { get; set; }
+        public List<Uri> PostLogoutRedirectUris { get; set; }
         public List<string> ScopeRestrictions { get; set; }
         
         // in seconds
@@ -53,6 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Flow = Flows.Implicit;
             ScopeRestrictions = new List<string>();
+            RedirectUris = new List<Uri>();
+            PostLogoutRedirectUris = new List<Uri>();
             
             // 5 minutes
             AuthorizationCodeLifetime = 300;
