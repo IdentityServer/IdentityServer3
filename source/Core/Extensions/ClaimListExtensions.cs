@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Linq;
-using Thinktecture.IdentityServer.Core.Extensions;
+using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
