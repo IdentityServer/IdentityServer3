@@ -226,12 +226,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         {
                             Logger.Error("Invalid response_type for response_mode");
                             return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
-                    
                         }
+
+                        // should fail when unsupported/illegal response mode is requested?
+                        _validatedRequest.ResponseMode = Constants.ResponseModes.FormPost;
                     }
                     
-                    _validatedRequest.ResponseMode = responseMode;
-                    Logger.InfoFormat("response_mode: {0}", responseMode);
+                    Logger.InfoFormat("response_mode: {0}", _validatedRequest.ResponseMode);
                 }
                 else
                 {
