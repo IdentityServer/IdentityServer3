@@ -424,7 +424,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void LoginExternalCallback_UserServiceReturnsError_ShowsError()
         {
-            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<string>(), It.IsAny<ExternalIdentity>()))
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
                 .Returns(Task.FromResult(new ExternalAuthenticateResult("foo bad")));
             
             var msg = new SignInMessage();
@@ -446,7 +446,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void LoginExternalCallback_UserServiceReturnsNull_ShowError()
         {
-            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<string>(), It.IsAny<ExternalIdentity>()))
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
                 .Returns(Task.FromResult((ExternalAuthenticateResult)null));
 
             var msg = new SignInMessage();
@@ -480,28 +480,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
 
             Get(Constants.RoutePaths.LoginExternalCallback);
 
-            mockUserService.Verify(x => x.AuthenticateExternalAsync(null, It.IsAny<ExternalIdentity>()));
-        }
-
-        [TestMethod]
-        public void LoginExternalCallback_UserIsAlreadyLoggedIn_SubjectIsPassedToUserService()
-        {
-            var msg = new SignInMessage();
-            msg.IdP = "Google";
-            msg.ReturnUrl = Url("authorize");
-
-            var userSub = new Claim(Constants.ClaimTypes.Subject, "818727", ClaimValueTypes.String, Constants.BuiltInIdentityProvider);
-            SignInIdentity = new ClaimsIdentity(new Claim[] { userSub }, Constants.PrimaryAuthenticationType);
-            var resp1 = GetLoginPage(msg);
-
-            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
-            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
-            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            client.SetCookies(resp2.GetCookies());
-
-            Get(Constants.RoutePaths.LoginExternalCallback);
-
-            mockUserService.Verify(x => x.AuthenticateExternalAsync("818727", It.IsAny<ExternalIdentity>()));
+            mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()));
         }
     }
 }

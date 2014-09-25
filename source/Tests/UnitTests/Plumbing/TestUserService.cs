@@ -27,7 +27,7 @@ namespace UnitTests.Plumbing
             throw new NotImplementedException();
         }
 
-        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
+        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
         {
             throw new NotImplementedException();
         }

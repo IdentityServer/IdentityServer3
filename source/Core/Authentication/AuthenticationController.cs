@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
             
-            var authResult = await _userService.AuthenticateExternalAsync(currentSubject, externalIdentity);
+            var authResult = await _userService.AuthenticateExternalAsync(externalIdentity);
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");

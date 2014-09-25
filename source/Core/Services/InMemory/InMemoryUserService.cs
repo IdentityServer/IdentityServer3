@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public virtual Task<ExternalAuthenticateResult> AuthenticateExternalAsync(string subject, Models.ExternalIdentity externalUser)
+        public virtual Task<ExternalAuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
         {
             var query =
                 from u in _users
