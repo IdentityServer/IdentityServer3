@@ -33,7 +33,6 @@ namespace Thinktecture.IdentityServer.Host
                         SigningCertificate = Cert.Load(),
                         CspReportEndpoint = EndpointSettings.Enabled,
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
-                        PublicHostName = "http://localhost:3333",
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         CorsPolicy = CorsPolicy.AllowAll

@@ -18,7 +18,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             
             if (host.IsMissing())
             {
-                host = "https://" + request.Host.Value;
+                host = request.Uri.Scheme + "://" + request.Host.Value;
             }
 
             var baseUrl = new Uri(new Uri(host), ctx.Request.PathBase.Value).AbsoluteUri;
