@@ -13,7 +13,7 @@ namespace Thinktecture.IdentityServer.Host.Config
             {
                 new Client
                 {
-                    ClientName = "Code Flow Clients",
+                    ClientName = "Code Flow Client Demo",
                     Enabled = true,
                     ClientId = "codeclient",
                     ClientSecret = "secret",
@@ -51,13 +51,13 @@ namespace Thinktecture.IdentityServer.Host.Config
                     AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 360,
+                    AccessTokenLifetime = 3600,
                     AuthorizationCodeLifetime = 120
                 },
 
                 new Client
                 {
-                    ClientName = "Implicit Clients",
+                    ClientName = "Implicit Client Demo",
                     Enabled = true,
                     ClientId = "implicitclient",
                     ClientSecret = "secret",
@@ -71,6 +71,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                     
                     RedirectUris = new List<Uri>
                     {
+                        // OAuthJS client
+                        new Uri("http://localhost:23453/callback.html"),
+                        new Uri("http://localhost:23453/frame.html"),
+
                         // WPF client
                         new Uri("oob://localhost/wpfclient"),
                         
@@ -100,7 +104,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 360,
+                    AccessTokenLifetime = 3600,
                 },
                 new Client
                 {
@@ -117,7 +121,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     },
 
                     AccessTokenType = AccessTokenType.Jwt,
-                    AccessTokenLifetime = 360,
+                    AccessTokenLifetime = 3600,
                 },
                 new Client
                 {
