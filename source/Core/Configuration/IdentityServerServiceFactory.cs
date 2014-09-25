@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             if (AuthorizationCodeStore == null) Logger.Warn("AuthorizationCodeStore not configured - falling back to InMemory");
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
-            if (ConsentService == null) Logger.Warn("ConsentService not configured - falling back to InMemory");
+            if (ConsentStore == null) Logger.Warn("ConsentStore not configured - falling back to InMemory");
             if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
             if (ViewService == null) Logger.Info("ViewService not configured - falling back to EmbeddedAssets");
         }
