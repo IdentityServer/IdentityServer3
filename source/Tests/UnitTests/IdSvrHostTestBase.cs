@@ -61,10 +61,12 @@ namespace Thinktecture.IdentityServer.Tests
                 Postprocess(ctx);
             });
 
-            var google = new Microsoft.Owin.Security.Google.GoogleAuthenticationOptions
+            var google = new Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "Google",
-                SignInAsAuthenticationType = signInAsType
+                SignInAsAuthenticationType = signInAsType,
+                ClientId = "foo",
+                ClientSecret = "bar"
             };
             app.UseGoogleAuthentication(google);
         }

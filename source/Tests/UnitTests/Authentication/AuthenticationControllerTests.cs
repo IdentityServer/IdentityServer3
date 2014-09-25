@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
-            Assert.IsTrue(resp2.Headers.Location.AbsoluteUri.StartsWith("https://www.google.com"));
+            Assert.IsTrue(resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
         }
 
         [TestMethod]
