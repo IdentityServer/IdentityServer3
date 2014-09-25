@@ -19,6 +19,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         public ScopeType Type { get; set; }
         public IEnumerable<ScopeClaim> Claims { get; set; }
 
+        public Scope()
+        {
+            Type = ScopeType.Resource;
+            Claims = new ScopeClaim[] { };
+        }
+
         public static IEnumerable<Scope> StandardScopes
         {
             get
