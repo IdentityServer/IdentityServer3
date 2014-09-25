@@ -26,6 +26,11 @@ namespace Owin
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
             JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
+            if (options.RequireSsl)
+            {
+                app.Use<RequireSslMiddleware>();
+            }
+
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
             

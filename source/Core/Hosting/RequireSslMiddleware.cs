@@ -23,6 +23,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
                 context.Response.StatusCode = 403;
                 context.Response.ReasonPhrase = "SSL is required.";
 
+                await context.Response.WriteAsync("SSL is required.");
+
                 return;
             }
 

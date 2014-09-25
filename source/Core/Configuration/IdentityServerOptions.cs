@@ -26,6 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.EndSessionEndpoint = EndpointSettings.Enabled;
             this.CspReportEndpoint = EndpointSettings.Disabled;
 
+            this.RequireSsl = true;
+
             this.CorsPolicy = new CorsPolicy();
             this.CookieOptions = new CookieOptions();
         }
@@ -52,6 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public IDataProtector DataProtector { get; set; }
 
         public CookieOptions CookieOptions { get; set; }
+        public bool RequireSsl { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }

@@ -29,6 +29,7 @@ namespace Thinktecture.IdentityServer.Host
                     {
                         IssuerUri = "https://idsrv3.com",
                         SiteName = "Thinktecture IdentityServer v3 - preview 1",
+                        RequireSsl = false,
                         SigningCertificate = Cert.Load(),
                         CspReportEndpoint = EndpointSettings.Enabled,
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
