@@ -10,12 +10,12 @@ Please start a discussion on the [core repo issue tracker](https://github.com/th
 ## Bugs and feature requests?
 Please log a new issue in the appropriate GitHub repo. Here are some of the most common repos:
 
-* [WS-Federation plugin]()
-* [EntityFramework support]()
-* [ASP. NET Identity support]()
-* [MembershipReboot support]()
-* [AccessToken validation]()
-* [Samples]()
+* [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
+* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
+* [ASP. NET Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
+* [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
+* [AccessToken validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
+* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
 
 ## Other discussions
 https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3
@@ -37,7 +37,7 @@ You will need to sign a [Contributor License Agreement](https://cla.msopentech.c
 
 Make sure you can build the code. Familiarize yourself with the project workflow and our coding conventions. If you don't know what a pull request is read this article: https://help.github.com/articles/using-pull-requests.
 
-Before submitting a feature or substantial code contribution please discuss it with the team and ensure it follows the product roadmap. You might also read these two blogs posts on contributing code: [Open Source Contribution Etiquette](http://tirania.org/blog/archive/2010/Dec-31.html) by Miguel de Icaza and [Don't "Push" Your Pull Requests](http://www.igvita.com/2011/12/19/dont-push-your-pull-requests/) by Ilya Grigorik. Note that all code submissions will be rigorously reviewed and tested by the ASP.NET and Entity Framework teams, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
+Before submitting a feature or substantial code contribution please discuss it with the team and ensure it follows the product roadmap. You might also read these two blogs posts on contributing code: [Open Source Contribution Etiquette](http://tirania.org/blog/archive/2010/Dec-31.html) by Miguel de Icaza and [Don't "Push" Your Pull Requests](http://www.igvita.com/2011/12/19/dont-push-your-pull-requests/) by Ilya Grigorik. Note that only contributions that meet a high bar for both quality and design/roadmap appropriateness will be merged into the source.
 
 Here's a few things you should always do when making changes to the code base:
 
