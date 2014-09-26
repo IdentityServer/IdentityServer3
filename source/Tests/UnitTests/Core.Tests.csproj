@@ -130,6 +130,7 @@
     <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
+    <Compile Include="NoDataProtector.cs" />
     <Compile Include="Plumbing\TestAssertionValidator.cs" />
     <Compile Include="Plumbing\TestClients.cs" />
     <Compile Include="Plumbing\TestScopes.cs" />

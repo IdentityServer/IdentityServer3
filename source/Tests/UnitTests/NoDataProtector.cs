@@ -2,7 +2,9 @@
  * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
  * see license
  */
-namespace Thinktecture.IdentityServer.Core.Configuration
+using Thinktecture.IdentityServer.Core.Configuration;
+
+namespace Thinktecture.IdentityServer.Tests
 {
     public class NoDataProtector : IDataProtector
     {
