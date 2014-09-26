@@ -36,6 +36,12 @@ namespace UnitTests.Validation_Tests
                     Name = "resource2",
                     Type = ScopeType.Resource
                 },
+                new Scope
+                {
+                    Name = "disabled",
+                    Enabled = false,
+                    Type = ScopeType.Resource
+                },
             };
 
         Client _unrestrictedClient = new Client
@@ -44,15 +50,16 @@ namespace UnitTests.Validation_Tests
             };
 
         Client _restrictedClient = new Client
-        {
-            ClientId = "restricted",
-            
-            ScopeRestrictions = new List<string>
             {
-                "openid",
-                "resource1"
-            }
-        };
+                ClientId = "restricted",
+            
+                ScopeRestrictions = new List<string>
+                {
+                    "openid",
+                    "resource1",
+                    "disabled"
+                }
+            };
 
         [TestMethod]
         [TestCategory(Category)]
@@ -123,6 +130,18 @@ namespace UnitTests.Validation_Tests
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2 unknown");
+
+            var result = validator.AreScopesValid(scopes, _allScopes);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Disabled_Scope()
+        {
+            var validator = new ScopeValidator();
+            var scopes = validator.ParseScopes("openid email resource1 resource2 disabled");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 

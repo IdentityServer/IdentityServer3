@@ -48,6 +48,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return false;
                 }
 
+                if (scopeDetail.Enabled == false)
+                {
+                    Logger.ErrorFormat("Scope disabled: {0}", requestedScope);
+                    return false;
+                }
+
                 if (scopeDetail.Type == ScopeType.Identity)
                 {
                     ContainsOpenIdScopes = true;

@@ -10,6 +10,8 @@ namespace Thinktecture.IdentityServer.Core.Models
 {
     public class Scope
     {
+        public bool Enabled { get; set; }
+
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }
@@ -23,6 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Type = ScopeType.Resource;
             Claims = new ScopeClaim[] { };
+            Enabled = true;
         }
 
         public static IEnumerable<Scope> StandardScopes
