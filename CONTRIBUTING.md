@@ -8,8 +8,9 @@ Please start a discussion on the [core repo issue tracker](https://github.com/th
 
 
 ## Bugs and feature requests?
-Please log a new issue in the appropriate GitHub repo. Here are some of the most common repos:
+Please log a new issue in the appropriate GitHub repo:
 
+* [Core](https://github.com/thinktecture/Thinktecture.IdentityServer.v3)
 * [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
 * [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
 * [ASP. NET Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
