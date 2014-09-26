@@ -16,10 +16,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -44,7 +47,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
             Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var profileClaims = await _users.GetProfileDataAsync(subject, requestedClaimTypes);
+            var principal = Principal.Create("foo", new Claim("sub", subject));
+            var profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes);
             
             if (profileClaims != null)
             {

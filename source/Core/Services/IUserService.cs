@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     {
         Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password);
         Task<ExternalAuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser);
-        Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null);
+        Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
         Task<bool> IsActive(string subject);
     }
 }

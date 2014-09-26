@@ -20,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
@@ -92,11 +93,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(string subject, IEnumerable<string> requestedClaimTypes = null)
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var query =
                 from u in _users
-                where u.Subject == subject
+                where u.Subject == subject.GetSubjectId()
                 select u;
             var user = query.Single();
 

@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         public string Subject { get; private set; }
         public string Name { get; private set; }
-
+        
         public PathString PartialSignInRedirectPath { get; private set; }
         public bool IsPartialSignIn
         {
