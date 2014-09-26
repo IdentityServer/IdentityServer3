@@ -166,7 +166,6 @@
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\EndpointSettings.cs" />
-    <Compile Include="Configuration\FuncDataProtector.cs" />
     <Compile Include="Configuration\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
