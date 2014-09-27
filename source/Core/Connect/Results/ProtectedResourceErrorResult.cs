@@ -44,6 +44,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         private HttpResponseMessage Execute()
         {
+            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            if (Constants.ProtectedResourceErrorStatusCodes.ContainsKey(_error))
+            {
+                response.StatusCode = Constants.ProtectedResourceErrorStatusCodes[_error];
+            }
+
             var parameter = string.Format("error=\"{0}\"", _error);
             if (_errorDescription.IsPresent())
             {
@@ -52,7 +58,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             }
 
             var header = new AuthenticationHeaderValue("Bearer", parameter);
-            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
             response.Headers.WwwAuthenticate.Add(header);
 
             Logger.Info("Returning error: " + _error);
