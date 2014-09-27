@@ -34,20 +34,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly SignInMessage _message;
         private readonly IDictionary<string, object> _env;
         private readonly IDataProtector _protector;
+        private readonly int _messageExpiration;
 
-        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IDataProtector protector)
-        {
-            var result = new LoginResult(message, env, protector);
-            var response = result.Execute();
-
-            return response.Headers.Location.AbsoluteUri;
-        }
-
-        public LoginResult(SignInMessage message, IDictionary<string, object> env, IDataProtector protector)
+        public LoginResult(SignInMessage message, IDictionary<string, object> env, IDataProtector protector, int messageExpiration)
         {
             _message = message;
             _env = env;
             _protector = protector;
+
+            if (messageExpiration <= 0) messageExpiration = Constants.DefaultSignInMessageExpiration;
+            _messageExpiration = messageExpiration;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -61,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             try
             {
-                var sim = _message.Protect(600, _protector);
+                var sim = _message.Protect(_messageExpiration, _protector);
                 var url = _env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
                 url += "?message=" + sim;
 

@@ -42,6 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             this.CorsPolicy = new CorsPolicy();
             this.CookieOptions = new CookieOptions();
+            this.SignInMessageExpiration = Constants.DefaultSignInMessageExpiration;
         }
 
         internal void Validate()
@@ -67,6 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         public CookieOptions CookieOptions { get; set; }
         public bool RequireSsl { get; set; }
+        public int SignInMessageExpiration { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }

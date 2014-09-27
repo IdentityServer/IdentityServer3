@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Host
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        CorsPolicy = CorsPolicy.AllowAll
+                        CorsPolicy = CorsPolicy.AllowAll,
                     };
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
