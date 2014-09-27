@@ -37,8 +37,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         // internal use
         public DateTime ValidTo { get; set; }
+        public bool IsExpired
+        {
+            get
+            {
+                return DateTime.UtcNow > ValidTo;
+            }
+        }
 
-        
         public string Protect(int ttl, IDataProtector protector)
         {
             ValidTo = DateTime.UtcNow.AddSeconds(ttl);
@@ -59,12 +65,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var json = protector.Unprotect(data, "signinmessage");
             var message = JsonConvert.DeserializeObject<SignInMessage>(json);
-
-            if (DateTime.UtcNow > message.ValidTo)
-            {
-                throw new Exception("SignInMessage expired.");
-            }
-
             return message;
         }
     }

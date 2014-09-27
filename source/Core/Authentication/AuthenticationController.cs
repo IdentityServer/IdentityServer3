@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -461,6 +462,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 message,
                 _options.DataProtector);
 
+            CheckExpired(signInMessage);
+
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
                 _options.CookieOptions.Prefix + SignInMessageCookieName,
@@ -485,34 +488,33 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 throw new Exception("SignInMessage cookie is empty.");
             }
 
-            var signInMessage = SignInMessage.Unprotect(
-                message,
-                _options.DataProtector);
-
-            return signInMessage;
+            try
+            {
+                return SignInMessage.Unprotect(
+                    message,
+                    _options.DataProtector);
+            }
+            catch
+            {
+                Logger.Error("signin message failed to validate");
+                throw;
+            }
         }
 
         private void VerifySignInMessage()
         {
-            var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies[_options.CookieOptions.Prefix + SignInMessageCookieName];
+            LoadSignInMessage();
+        }
 
-            if (message.IsMissing())
+        private void CheckExpired(SignInMessage signInMessage)
+        {
+            if (signInMessage.IsExpired)
             {
-                Logger.Error("signin message cookie is empty");
-                throw new Exception("SignInMessage cookie is empty.");
-            }
-            
-            try
-            {
-                SignInMessage.Unprotect(
-                    message,
-                    _options.DataProtector);
-            }
-            catch 
-            {
-                Logger.Error("signin message failed to validate");
-                throw;
+                Logger.Error("signin message is expired; redirecting back to authorization endpoint");
+
+                var response = Request.CreateResponse(HttpStatusCode.Redirect);
+                response.Headers.Location = new Uri(signInMessage.ReturnUrl);
+                throw new HttpResponseException(response);
             }
         }
     }
