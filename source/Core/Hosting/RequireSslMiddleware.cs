@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class RequireSslMiddleware
+    class RequireSslMiddleware
     {
         readonly Func<IDictionary<string, object>, Task> _next;
 

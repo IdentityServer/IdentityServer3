@@ -63,6 +63,7 @@ namespace Owin
                 SlidingExpiration = options.SlidingExpiration,
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PartialSignInAuthenticationType))
             });
+
             return app;
         }
     }

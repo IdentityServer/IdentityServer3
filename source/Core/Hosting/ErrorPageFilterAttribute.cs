@@ -24,7 +24,7 @@ using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    internal class ErrorPageFilterAttribute : ExceptionFilterAttribute
+    class ErrorPageFilterAttribute : ExceptionFilterAttribute
     {
         public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
         {

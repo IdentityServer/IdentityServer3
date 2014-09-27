@@ -248,7 +248,6 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\IAuthorizationCodeStore.cs" />
-    <Compile Include="Hosting\CookieMiddlewareCookieService.cs" />
     <Compile Include="Services\Default\DefaultExternalClaimsFilter.cs" />
     <Compile Include="Services\IClientStore.cs" />
     <Compile Include="Services\InMemory\InMemoryRefreshTokenStore.cs" />

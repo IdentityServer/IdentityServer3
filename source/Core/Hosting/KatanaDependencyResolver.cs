@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
-    public class KatanaDependencyResolver : DelegatingHandler
+    class KatanaDependencyResolver : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
