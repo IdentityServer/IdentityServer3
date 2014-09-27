@@ -123,7 +123,6 @@
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
-    <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />

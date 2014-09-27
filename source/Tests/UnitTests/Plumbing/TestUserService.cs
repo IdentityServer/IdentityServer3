@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace UnitTests.Plumbing
@@ -17,7 +18,9 @@ namespace UnitTests.Plumbing
         {
             if (username == password)
             {
-                return Task.FromResult(new AuthenticateResult(username, username));
+
+                var p = IdentityServerPrincipal.Create(username, username, "password", "idsvr");
+                return Task.FromResult(new AuthenticateResult(p));
             }
 
             return Task.FromResult<AuthenticateResult>(null);
@@ -28,7 +31,7 @@ namespace UnitTests.Plumbing
             throw new NotImplementedException();
         }
 
-        public Task<ExternalAuthenticateResult> AuthenticateExternalAsync(Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
         {
             throw new NotImplementedException();
         }

@@ -26,14 +26,14 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
     {
         public static ClaimsPrincipal Create(
             string subject,
-            string name, 
-            string authenticationMethod, 
-            string idp, 
+            string displayName, 
+            string authenticationMethod = Constants.AuthenticationMethods.Password, 
+            string idp = Constants.BuiltInIdentityProvider, 
             string authenticationType = Constants.PrimaryAuthenticationType,
             long authenticationTime = 0)
         {
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
+            if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentNullException("name");
             if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
             if (String.IsNullOrWhiteSpace(idp)) throw new ArgumentNullException("idp");
             if (String.IsNullOrWhiteSpace(authenticationType)) throw new ArgumentNullException("authenticationType");
@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
             var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.Subject, subject),
-                new Claim(Constants.ClaimTypes.Name, name),
+                new Claim(Constants.ClaimTypes.Name, displayName),
                 new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
                 new Claim(Constants.ClaimTypes.IdentityProvider, idp),
                 new Claim(Constants.ClaimTypes.AuthenticationTime, authenticationTime.ToString(), ClaimValueTypes.Integer)
@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
             return new ClaimsPrincipal(id);
         }
 
-        public static ClaimsPrincipal CreateFromPrincipal(ClaimsPrincipal principal)
+        public static ClaimsPrincipal CreateFromPrincipal(ClaimsPrincipal principal, string authenticationType)
         {
             // we require the following claims
             var subject = principal.FindFirst(Constants.ClaimTypes.Subject);
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
             var idp = principal.FindFirst(Constants.ClaimTypes.IdentityProvider);
             if (idp == null) throw new InvalidOperationException("idp claim is missing");
 
-            var id = new ClaimsIdentity(principal.Claims, Constants.PrimaryAuthenticationType);
+            var id = new ClaimsIdentity(principal.Claims, authenticationType);
             return new ClaimsPrincipal(id);
         }
     }

@@ -21,6 +21,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
@@ -54,13 +55,15 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user != null)
             {
-                return Task.FromResult(new AuthenticateResult(user.Subject, GetDisplayName(user)));
+                var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
+                var result = new AuthenticateResult(p);
+                return Task.FromResult(result);
             }
 
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public virtual Task<ExternalAuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
         {
             var query =
                 from u in _users
@@ -75,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
                 if (name == null)
                 {
-                    return Task.FromResult<ExternalAuthenticateResult>(null);
+                    return Task.FromResult<AuthenticateResult>(null);
                 }
                 
                 user = new InMemoryUser
@@ -89,7 +92,9 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 _users.Add(user);
             }
 
-            return Task.FromResult(new ExternalAuthenticateResult(user.Provider, user.Subject, GetDisplayName(user)));
+            var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.External, user.Provider);
+            var result = new AuthenticateResult(p);
+            return Task.FromResult(result);
         }
 
 
