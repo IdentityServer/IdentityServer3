@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         public ExternalAuthenticateResult(string provider, string subject, string name)
-            : base(subject, name)
+            : base(subject, name, "external", provider)
         {
             if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
 
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         public ExternalAuthenticateResult(string redirectPath, string provider, string subject, string name)
-            : base(redirectPath, subject, name)
+            : base(redirectPath, subject, name, "external", provider)
         {
             if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
 

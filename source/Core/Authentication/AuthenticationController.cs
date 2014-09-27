@@ -113,10 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
-            return SignInAndRedirect(
-                 authResult,
-                 Constants.AuthenticationMethods.Password,
-                 Constants.BuiltInIdentityProvider);
+            return SignInAndRedirect(authResult);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
@@ -177,9 +174,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(authResult.ErrorMessage);
             }
 
-            return SignInAndRedirect(authResult,
-                Constants.AuthenticationMethods.External,
-                authResult.Provider);
+            return SignInAndRedirect(authResult);
         }
 
         [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name = Constants.RouteNames.ResumeLoginFromRedirect)]
@@ -205,7 +200,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var authorizationReturnUrl = user.Claims.GetValue(Constants.ClaimTypes.AuthorizationReturnUrl);
             
-            SignIn(result, method, idp, authTime);
+            SignIn(result);
 
             Logger.InfoFormat("redirecting to: {0}", authorizationReturnUrl);
             return Redirect(authorizationReturnUrl);
@@ -292,26 +287,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return externalId;
         }
 
-        private IHttpActionResult SignInAndRedirect(
-            AuthenticateResult authResult,
-            string authenticationMethod,
-            string identityProvider,
-            long authTime = 0)
+        private IHttpActionResult SignInAndRedirect(AuthenticateResult authResult)
         {
-            SignIn(authResult, authenticationMethod, identityProvider, authTime);
+            SignIn(authResult);
 
             var redirectUrl = GetRedirectUrl(authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
         }
 
-        private void SignIn(
-            AuthenticateResult authResult,
-            string authenticationMethod,
-            string identityProvider,
-            long authTime)
+        private void SignIn(AuthenticateResult authResult)
         {
-            IssueAuthenticationCookie(authResult, authenticationMethod, identityProvider, authTime);
+            IssueAuthenticationCookie(authResult);
             ClearSignInMessage();
         }
 
@@ -331,32 +318,19 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         private void IssueAuthenticationCookie(
-            AuthenticateResult authResult, 
-            string authenticationMethod, 
-            string identityProvider, 
-            long authTime)
+            AuthenticateResult authResult)
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
-            if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
-            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
             
-            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.Subject, authResult.Name, authResult.IsPartialSignIn ? " (partial login)" : "");
+            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.User.GetSubjectId(), authResult.User.GetName(), authResult.IsPartialSignIn ? " (partial login)" : "");
             
             var issuer = authResult.IsPartialSignIn ?
                 Constants.PartialSignInAuthenticationType :
                 Constants.PrimaryAuthenticationType;
 
-            var principal = IdentityServerPrincipal.Create(
-                authResult.Subject,
-                authResult.Name,
-                authenticationMethod,
-                identityProvider,
-                issuer,
-                authTime);
-
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
-            var id = principal.Identities.First();
+            var id = authResult.User.Identities.First();
             if (authResult.IsPartialSignIn)
             {
                 // add claim so partial redirect can return here to continue login

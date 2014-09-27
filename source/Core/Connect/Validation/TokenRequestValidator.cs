@@ -288,12 +288,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (authnResult != null)
             {
                 _validatedRequest.UserName = userName;
-
-                _validatedRequest.Subject = IdentityServerPrincipal.Create(
-                    authnResult.Subject,
-                    authnResult.Name,
-                    Constants.AuthenticationMethods.Password,
-                    Constants.BuiltInIdentityProvider);
+                _validatedRequest.Subject = authnResult.User;
             }
             else
             {
