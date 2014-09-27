@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return customResult;
         }
 
-        protected virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, bool validateLifetime = true)
+        public virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience = null, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler();
             handler.Configuration = new SecurityTokenHandlerConfiguration();
@@ -126,9 +126,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 ValidIssuer = _options.IssuerUri,
                 IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
-                ValidAudience = audience,
                 ValidateLifetime = validateLifetime
             };
+
+            if (audience.IsPresent())
+            {
+                parameters.ValidAudience = audience;
+            }
+            else
+            {
+                parameters.ValidateAudience = false;
+            }
 
             try
             {
