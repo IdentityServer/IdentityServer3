@@ -49,9 +49,24 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customValidator = customValidator;
         }
 
-        public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
+        public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(string token, string clientId, bool validateLifetime = true)
         {
-            throw new NotImplementedException();
+            var result = await ValidateJwtAsync(token, clientId, validateLifetime);
+
+            if (result.IsError)
+            {
+                return result;
+            }
+
+            Logger.Debug("Calling custom token validator");
+            var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
+
+            if (customResult.IsError)
+            {
+                Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+            }
+
+            return customResult;
         }
 
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
@@ -64,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (token.Contains("."))
             {
                 Logger.InfoFormat("Validating a JWT access token");
-                result = await ValidateJwtAccessTokenAsync(token);
+                result = await ValidateJwtAsync(token, string.Format(Constants.AccessTokenAudience, _options.IssuerUri));
             }
             else
             {
@@ -100,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return customResult;
         }
 
-        protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
+        protected virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler();
             handler.Configuration = new SecurityTokenHandlerConfiguration();
@@ -111,14 +126,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 ValidIssuer = _options.IssuerUri,
                 IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
-                ValidAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
+                ValidAudience = audience,
+                ValidateLifetime = validateLifetime
             };
 
             try
             {
                 SecurityToken jwtToken;
                 var id = handler.ValidateToken(jwt, parameters, out jwtToken);
-                Logger.Info("JWT access token validatio successful");
+                Logger.Info("JWT access token validation successful");
 
                 return Task.FromResult(new TokenValidationResult
                 {

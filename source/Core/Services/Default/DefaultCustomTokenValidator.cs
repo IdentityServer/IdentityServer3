@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         public Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(result);
         }
     }
 }
