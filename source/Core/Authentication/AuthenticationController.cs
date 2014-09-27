@@ -306,17 +306,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private IHttpActionResult SignInAndRedirect(AuthenticateResult authResult)
         {
-            SignIn(authResult);
+            IssueAuthenticationCookie(authResult);
 
             var redirectUrl = GetRedirectUrl(authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
-        }
-
-        private void SignIn(AuthenticateResult authResult)
-        {
-            IssueAuthenticationCookie(authResult);
-            ClearSignInMessage();
         }
 
         private Uri GetRedirectUrl(AuthenticateResult authResult)
@@ -334,8 +328,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
         }
 
-        private void IssueAuthenticationCookie(
-            AuthenticateResult authResult)
+        private void IssueAuthenticationCookie(AuthenticateResult authResult)
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
             
@@ -351,7 +344,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
             }
-            else if (this._options.CookieOptions.IsPersistent)
+            else
+            {
+                ClearSignInMessage();
+            }
+
+            if (!authResult.IsPartialSignIn && this._options.CookieOptions.IsPersistent)
             {
                 props.IsPersistent = true;
             }
