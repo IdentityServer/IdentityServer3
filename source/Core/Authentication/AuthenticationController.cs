@@ -396,6 +396,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 AdditionalLinks = _authenticationOptions.LoginPageLinks,
                 ErrorMessage = errorMessage,
                 LoginUrl = Url.Route(Constants.RouteNames.Login, null),
+                LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
                 Username = username
             };
 
