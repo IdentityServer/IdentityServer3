@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Thinktecture.IdentityServer.Core
 {
@@ -210,8 +211,15 @@ namespace Thinktecture.IdentityServer.Core
             public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
         }
-        
 
+        public static Dictionary<string, HttpStatusCode> ProtectedResourceErrorStatusCodes = new Dictionary<string, HttpStatusCode>
+        {
+            { ProtectedResourceErrors.InvalidToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.ExpiredToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.InvalidRequest,    HttpStatusCode.BadRequest },
+            { ProtectedResourceErrors.InsufficientScope, HttpStatusCode.Forbidden },
+        };
+        
         public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new Dictionary<string, IEnumerable<string>>
         {
             { StandardScopes.Profile, new[]
