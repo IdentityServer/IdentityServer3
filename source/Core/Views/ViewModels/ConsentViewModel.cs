@@ -29,6 +29,6 @@ namespace Thinktecture.IdentityServer.Core.Views
         public bool AllowRememberConsent { get; set; }
         public bool RememberConsent { get; set; }
         public IEnumerable<ConsentScopeViewModel> IdentityScopes { get; set; }
-        public IEnumerable<ConsentScopeViewModel> ApplicationScopes { get; set; }
+        public IEnumerable<ConsentScopeViewModel> ResourceScopes { get; set; }
     }
 }

@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 ClientUrl = validatedRequest.Client.ClientUri,
                 ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri.AbsoluteUri : null,
                 IdentityScopes = validatedRequest.GetIdentityScopes(),
-                ApplicationScopes = validatedRequest.GetResourceScopes(),
+                ResourceScopes = validatedRequest.GetResourceScopes(),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null) + "?" + requestParameters.ToQueryString(),
