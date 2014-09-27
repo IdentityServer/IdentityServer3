@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
 using Thinktecture.IdentityModel.Extensions;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -33,17 +34,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         [DebuggerStepThrough]
         public static long GetAuthenticationTimeEpoch(this IPrincipal principal)
         {
-            var cp = principal as ClaimsPrincipal;
-            var value = cp.FindFirst(Constants.ClaimTypes.AuthenticationTime).Value;
-
-            return long.Parse(value);
+            return principal.Identity.GetAuthenticationTimeEpoch();
         }
         
         [DebuggerStepThrough]
         public static long GetAuthenticationTimeEpoch(this IIdentity identity)
         {
-            var cp = identity as ClaimsIdentity;
-            var value = cp.FindFirst(Constants.ClaimTypes.AuthenticationTime).Value;
+            var id = identity as ClaimsIdentity;
+            var value = id.FindFirst(Constants.ClaimTypes.AuthenticationTime).Value;
 
             return long.Parse(value);
         }

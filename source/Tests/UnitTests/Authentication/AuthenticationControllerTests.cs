@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Views;
 
@@ -197,7 +198,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
@@ -208,7 +209,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesRedirect()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
@@ -242,7 +243,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
             
             this.options.CookieOptions.IsPersistent = true;
             GetLoginPage();
@@ -256,7 +257,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
             var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
@@ -269,7 +270,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
             var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
@@ -284,7 +285,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void ResumeLoginFromRedirect_WithoutPartialCookie_RedirectsToLogin()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
             var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
@@ -425,7 +426,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void LoginExternalCallback_UserServiceReturnsError_ShowsError()
         {
             mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
-                .Returns(Task.FromResult(new ExternalAuthenticateResult("foo bad")));
+                .Returns(Task.FromResult(new AuthenticateResult("foo bad")));
             
             var msg = new SignInMessage();
             msg.IdP = "Google";
@@ -447,7 +448,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void LoginExternalCallback_UserServiceReturnsNull_ShowError()
         {
             mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
-                .Returns(Task.FromResult((ExternalAuthenticateResult)null));
+                .Returns(Task.FromResult((AuthenticateResult)null));
 
             var msg = new SignInMessage();
             msg.IdP = "Google";

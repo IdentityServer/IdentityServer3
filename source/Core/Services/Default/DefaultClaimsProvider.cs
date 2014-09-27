@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = await _users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
+                var claims = await _users.GetProfileDataAsync(subject, additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
                 if (additionalClaims.Count > 0)
                 {
-                    var claims = await _users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims.Distinct());
+                    var claims = await _users.GetProfileDataAsync(subject, additionalClaims.Distinct());
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);

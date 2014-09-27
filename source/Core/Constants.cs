@@ -318,6 +318,9 @@ namespace Thinktecture.IdentityServer.Core
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
             public const string PartialLoginReturnUrl = "partial_login_return_url";
+
+            // claim type to identify external user from external provider
+            public const string ExternalProviderUserId = "external_provider_user_id";
         }
 
         public static class AuthenticationMethods

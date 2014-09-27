@@ -16,55 +16,62 @@
 
 using Microsoft.Owin;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Plumbing;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class AuthenticateResult
     {
-        protected AuthenticateResult()
-        {
-            this.RedirectClaims = new HashSet<Claim>();
-        }
-
+        public ClaimsPrincipal User { get; private set; }
+        public string ErrorMessage { get; private set; }
+        
+        public PathString PartialSignInRedirectPath { get; private set; }
+        
         public AuthenticateResult(string errorMessage)
-            : this()
         {
-            if (String.IsNullOrWhiteSpace(errorMessage)) throw new ArgumentNullException("errorMessage");
-
-            this.ErrorMessage = errorMessage;
+            if (errorMessage.IsMissing()) throw new ArgumentNullException("errorMessage");
+            ErrorMessage = errorMessage;
         }
 
-        public AuthenticateResult(string subject, string name)
-            : this()
+        public AuthenticateResult(ClaimsPrincipal user)
         {
-            if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
-            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
-
-            this.Subject = subject;
-            this.Name = name;
+            if (user == null) throw new ArgumentNullException("user");
+            User = IdentityServerPrincipal.CreateFromPrincipal(user,  Constants.PrimaryAuthenticationType);
         }
 
-        // TODO: maybe this should be a PathString?
-        public AuthenticateResult(string redirectPath, string subject, string name)
-            : this(subject, name)
+        public AuthenticateResult(string redirectPath, ClaimsPrincipal user)
         {
-            if (String.IsNullOrWhiteSpace(redirectPath)) throw new ArgumentNullException("redirectPath");
+            if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (user == null) throw new ArgumentNullException("user");
 
             this.PartialSignInRedirectPath = new PathString(redirectPath);
+            User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PartialSignInAuthenticationType);
         }
 
-        public string ErrorMessage { get; private set; }
+        public AuthenticateResult(string redirectPath, ExternalIdentity externalId)
+        {
+            if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (externalId == null) throw new ArgumentNullException("externalId");
+
+            this.PartialSignInRedirectPath = new PathString(redirectPath);
+
+            var id = new ClaimsIdentity(externalId.Claims, Constants.PartialSignInAuthenticationType);
+            // we're keeping the external provider info for the partial signin so we can re-execute AuthenticateExternalAsync
+            // once the user is re-directed back into identityserver from the external redirect
+            id.AddClaim(new Claim(Constants.ClaimTypes.ExternalProviderUserId, externalId.ProviderId, ClaimValueTypes.String, externalId.Provider.Name));
+            User = new ClaimsPrincipal(id);
+        }
+
         public bool IsError
         {
-            get { return !String.IsNullOrWhiteSpace(this.ErrorMessage); }
+            get { return ErrorMessage.IsPresent(); }
         }
 
-        public string Subject { get; private set; }
-        public string Name { get; private set; }
-
-        public PathString PartialSignInRedirectPath { get; private set; }
         public bool IsPartialSignIn
         {
             get
@@ -72,6 +79,5 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return PartialSignInRedirectPath.HasValue;
             }
         }
-        public ICollection<Claim> RedirectClaims { get; private set; }
     }
 }

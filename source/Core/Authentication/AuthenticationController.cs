@@ -113,10 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(authResult.ErrorMessage, model.Username);
             }
 
-            return SignInAndRedirect(
-                 authResult,
-                 Constants.AuthenticationMethods.Password,
-                 Constants.BuiltInIdentityProvider);
+            return SignInAndRedirect(authResult);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
@@ -156,12 +153,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(Messages.NoMatchingExternalAccount);
             }
 
-            string currentSubject = await GetSubjectFromPrimaryAuthenticationType();
-            if (!String.IsNullOrWhiteSpace(currentSubject))
-            {
-                Logger.DebugFormat("user is already logged in as: {0}", currentSubject);
-            }
-
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
             
             var authResult = await _userService.AuthenticateExternalAsync(externalIdentity);
@@ -177,9 +168,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(authResult.ErrorMessage);
             }
 
-            return SignInAndRedirect(authResult,
-                Constants.AuthenticationMethods.External,
-                authResult.Provider);
+            return SignInAndRedirect(authResult);
         }
 
         [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name = Constants.RouteNames.ResumeLoginFromRedirect)]
@@ -195,20 +184,42 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RedirectToRoute(Constants.RouteNames.Login, null);
             }
 
-            var subject = user.GetSubjectId();
-            var name = user.GetName();
-            var result = new AuthenticateResult(subject, name);
-            
-            var method = user.GetAuthenticationMethod();
-            var idp = user.GetIdentityProvider();
-            var authTime = user.GetAuthenticationTimeEpoch();
+            AuthenticateResult result = null;
+            var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
+            if (externalProviderClaim == null)
+            {
+                // the user/subject was known, so pass thru
+                result = new AuthenticateResult(new ClaimsPrincipal(user));
+            }
+            else
+            {
+                // the user was not known, we need to re-execute AuthenticateExternalAsync
+                // to obtain a subject to proceed
+                var provider = externalProviderClaim.Issuer;
+                var providerId = externalProviderClaim.Value;
+                var externalId = new ExternalIdentity()
+                {
+                    Provider = new IdentityProvider{ Name = provider },
+                    ProviderId = providerId,
+                    Claims = user.Claims
+                };
 
-            var authorizationReturnUrl = user.Claims.GetValue(Constants.ClaimTypes.AuthorizationReturnUrl);
-            
-            SignIn(result, method, idp, authTime);
+                result = await _userService.AuthenticateExternalAsync(externalId);
 
-            Logger.InfoFormat("redirecting to: {0}", authorizationReturnUrl);
-            return Redirect(authorizationReturnUrl);
+                if (result == null)
+                {
+                    Logger.Warn("user service failed to authenticate external identity");
+                    return await RenderLoginPage(Messages.NoMatchingExternalAccount);
+                }
+
+                if (result.IsError)
+                {
+                    Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
+                    return await RenderLoginPage(result.ErrorMessage);
+                }
+            }
+
+            return SignInAndRedirect(result);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
@@ -292,26 +303,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return externalId;
         }
 
-        private IHttpActionResult SignInAndRedirect(
-            AuthenticateResult authResult,
-            string authenticationMethod,
-            string identityProvider,
-            long authTime = 0)
+        private IHttpActionResult SignInAndRedirect(AuthenticateResult authResult)
         {
-            SignIn(authResult, authenticationMethod, identityProvider, authTime);
+            SignIn(authResult);
 
             var redirectUrl = GetRedirectUrl(authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
         }
 
-        private void SignIn(
-            AuthenticateResult authResult,
-            string authenticationMethod,
-            string identityProvider,
-            long authTime)
+        private void SignIn(AuthenticateResult authResult)
         {
-            IssueAuthenticationCookie(authResult, authenticationMethod, identityProvider, authTime);
+            IssueAuthenticationCookie(authResult);
             ClearSignInMessage();
         }
 
@@ -331,48 +334,21 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         }
 
         private void IssueAuthenticationCookie(
-            AuthenticateResult authResult, 
-            string authenticationMethod, 
-            string identityProvider, 
-            long authTime)
+            AuthenticateResult authResult)
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
-            if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
-            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
             
-            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.Subject, authResult.Name, authResult.IsPartialSignIn ? " (partial login)" : "");
+            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.User.GetSubjectId(), authResult.User.GetName(), authResult.IsPartialSignIn ? " (partial login)" : "");
             
-            var issuer = authResult.IsPartialSignIn ?
-                Constants.PartialSignInAuthenticationType :
-                Constants.PrimaryAuthenticationType;
-
-            var principal = IdentityServerPrincipal.Create(
-                authResult.Subject,
-                authResult.Name,
-                authenticationMethod,
-                identityProvider,
-                issuer,
-                authTime);
-
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
-            var id = principal.Identities.First();
+            var id = authResult.User.Identities.First();
             if (authResult.IsPartialSignIn)
             {
                 // add claim so partial redirect can return here to continue login
                 var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, null);
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
-
-                // store original authorization url as claim
-                // so once we result we can return to authorization page
-                var signInMessage = LoadSignInMessage();
-                var authorizationUrl = signInMessage.ReturnUrl;
-                var authorizationUrlClaim = new Claim(Constants.ClaimTypes.AuthorizationReturnUrl, authorizationUrl);
-                id.AddClaim(authorizationUrlClaim);
-
-                // allow redircting code to add claims for target page
-                id.AddClaims(authResult.RedirectClaims);
             }
             else if (this._options.CookieOptions.IsPersistent)
             {
