@@ -188,7 +188,7 @@
     <Compile Include="Services\Default\DefaultCustomTokenValidator.cs" />
     <Compile Include="Services\Default\DefaultTokenService.cs" />
     <Compile Include="Services\Default\DefaultClaimsProvider.cs" />
-    <Compile Include="Services\IAssertionGrantValidator.cs" />
+    <Compile Include="Services\ICustomGrantValidator.cs" />
     <Compile Include="Services\IClaimsProvider.cs" />
     <Compile Include="Services\ICustomRequestValidator.cs" />
     <Compile Include="Services\ICustomTokenValidator.cs" />
