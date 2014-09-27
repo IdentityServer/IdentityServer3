@@ -229,7 +229,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
 
-            return new LoginResult(message, Request.GetOwinContext().Environment, _options.DataProtector, _options.SignInMessageExpiration);
+            return new LoginResult(message, Request.GetOwinContext().Environment, _options.DataProtector, _options.AuthenticationOptions.SignInMessageExpiration);
         }
 
         IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, string responseMode, Uri errorUri, string state)

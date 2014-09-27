@@ -20,7 +20,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class AuthenticationOptions
     {
+        public AuthenticationOptions()
+        {
+            this.SignInMessageExpiration = Constants.DefaultSignInMessageExpiration;
+        }
+
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
+        public int SignInMessageExpiration { get; set; }
     }
 
     public class LoginPageLink
