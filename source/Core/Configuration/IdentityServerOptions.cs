@@ -34,6 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.UserInfoEndpoint = EndpointSettings.Enabled;
             this.DiscoveryEndpoint = EndpointSettings.Enabled;
             this.AccessTokenValidationEndpoint = EndpointSettings.Disabled;
+            this.IdentityTokenValidationEndpoint = EndpointSettings.Enabled;
             this.EndSessionEndpoint = EndpointSettings.Enabled;
             this.CspReportEndpoint = EndpointSettings.Disabled;
 
@@ -79,6 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public EndpointSettings UserInfoEndpoint { get; set; }
         public EndpointSettings DiscoveryEndpoint { get; set; }
         public EndpointSettings AccessTokenValidationEndpoint { get; set; }
+        public EndpointSettings IdentityTokenValidationEndpoint { get; set; }
         public EndpointSettings EndSessionEndpoint { get; set; }
         public EndpointSettings CspReportEndpoint { get; set; }
 

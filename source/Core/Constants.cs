@@ -377,6 +377,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string Token = "connect/token";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
+                public const string IdentityTokenValidation = "connect/identityTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";
             }

@@ -114,6 +114,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
+    <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
