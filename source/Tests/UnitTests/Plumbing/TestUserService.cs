@@ -14,7 +14,7 @@ namespace UnitTests.Plumbing
 {
     class TestUserService : IUserService
     {
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
             if (username == password)
             {
@@ -36,7 +36,7 @@ namespace UnitTests.Plumbing
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsActive(string subject)
+        public Task<bool> IsActive(ClaimsPrincipal subject)
         {
             throw new NotImplementedException();
         }

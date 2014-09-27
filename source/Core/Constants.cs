@@ -170,6 +170,12 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.PromptModes.SelectAccount,
                             };
 
+        public static class LoginHints
+        {
+            public const string HomeRealm = "idp:";
+            public const string Tenant = "tenant:";
+        }
+
         public static class AuthorizeErrors
         {
             // OAuth2 errors

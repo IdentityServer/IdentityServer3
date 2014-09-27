@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(ModelState.GetError(), model.Username);
             }
 
-            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password);
+            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, LoadSignInMessage());
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);

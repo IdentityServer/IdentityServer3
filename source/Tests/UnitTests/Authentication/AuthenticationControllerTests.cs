@@ -2,6 +2,7 @@
 using Moq;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -171,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_UserServiceReturnsError_ShowErrorPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("bad stuff")));
 
             GetLoginPage();
@@ -184,7 +185,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_UserServiceReturnsNull_ShowErrorPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult((AuthenticateResult)null));
 
             GetLoginPage();
@@ -197,7 +198,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
@@ -208,7 +209,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesRedirect()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
@@ -242,7 +243,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
             
             this.options.CookieOptions.IsPersistent = true;
@@ -256,7 +257,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
@@ -269,7 +270,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
@@ -284,7 +285,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void ResumeLoginFromRedirect_WithoutPartialCookie_RedirectsToLogin()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();

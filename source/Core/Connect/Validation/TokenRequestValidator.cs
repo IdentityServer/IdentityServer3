@@ -284,16 +284,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var authnResult = await _users.AuthenticateLocalAsync(userName, password);
-            if (authnResult != null)
-            {
-                _validatedRequest.UserName = userName;
-                _validatedRequest.Subject = authnResult.User;
-            }
-            else
+            var authnResult = await _users.AuthenticateLocalAsync(userName, password, null);
+            if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
+            
+            _validatedRequest.UserName = userName;
+            _validatedRequest.Subject = authnResult.User;
 
             Logger.Info("Successful validation of password request");
             return Valid();

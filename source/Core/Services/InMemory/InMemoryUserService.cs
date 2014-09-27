@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return user.Username;
         }
 
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password)
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
             var query =
                 from u in _users
@@ -120,12 +120,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public virtual Task<bool> IsActive(string subject)
+        public virtual Task<bool> IsActive(ClaimsPrincipal subject)
         {
+            if (subject == null) throw new ArgumentNullException("subject");
+
             var query =
                 from u in _users
                 where
-                    u.Subject == subject
+                    u.Subject == subject.GetSubjectId()
                 select u;
 
             var user = query.SingleOrDefault();

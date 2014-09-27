@@ -39,6 +39,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public LoginInteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
+            // let the login page know the client requesting authorization
+            _signIn.ClientId = request.ClientId;
+
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
             {
@@ -54,9 +57,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // check login_hint - we only support idp: right now
             if (request.LoginHint.IsPresent())
             {
-                if (request.LoginHint.StartsWith("idp:"))
+                if (request.LoginHint.StartsWith(Constants.LoginHints.HomeRealm))
                 {
-                    _signIn.IdP = request.LoginHint.Substring(4);
+                    _signIn.IdP = request.LoginHint.Substring(Constants.LoginHints.HomeRealm.Length);
+                }
+                if (request.LoginHint.StartsWith(Constants.LoginHints.Tenant))
+                {
+                    _signIn.Tenant = request.LoginHint.Substring(Constants.LoginHints.Tenant.Length);
                 }
             }
 

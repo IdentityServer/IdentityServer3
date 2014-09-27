@@ -28,7 +28,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public string ReturnUrl { get; set; }
+        public string ClientId { get; set; }
         public string IdP { get; set; }
+        public string Tenant { get; set; }
         public string DisplayMode { get; set; }
         public string UiLocales { get; set; }
         public IEnumerable<string> AcrValues { get; set; }
