@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Plumbing
 {
@@ -49,6 +50,28 @@ namespace Thinktecture.IdentityServer.Core.Plumbing
             };
 
             var id = new ClaimsIdentity(claims, authenticationType);
+            return new ClaimsPrincipal(id);
+        }
+
+        public static ClaimsPrincipal CreateFromPrincipal(ClaimsPrincipal principal)
+        {
+            // we require the following claims
+            var subject = principal.FindFirst(Constants.ClaimTypes.Subject);
+            if (subject == null) throw new InvalidOperationException("sub claim is missing");
+            
+            var name = principal.FindFirst(Constants.ClaimTypes.Name);
+            if (name == null) throw new InvalidOperationException("name claim is missing");
+
+            var authenticationMethod = principal.FindFirst(Constants.ClaimTypes.AuthenticationMethod);
+            if (authenticationMethod == null) throw new InvalidOperationException("amr claim is missing");
+
+            var authenticationTime = principal.FindFirst(Constants.ClaimTypes.AuthenticationTime);
+            if (authenticationTime == null) throw new InvalidOperationException("auth_time claim is missing");
+
+            var idp = principal.FindFirst(Constants.ClaimTypes.IdentityProvider);
+            if (idp == null) throw new InvalidOperationException("idp claim is missing");
+
+            var id = new ClaimsIdentity(principal.Claims, Constants.PrimaryAuthenticationType);
             return new ClaimsPrincipal(id);
         }
     }

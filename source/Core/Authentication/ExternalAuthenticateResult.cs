@@ -15,32 +15,45 @@
  */
 
 using System;
+using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class ExternalAuthenticateResult : AuthenticateResult
     {
+        public string Provider { get; private set; }
+
         public ExternalAuthenticateResult(string errorMessage)
             : base(errorMessage)
-        {
-        }
+        { }
 
         public ExternalAuthenticateResult(string provider, string subject, string name)
             : base(subject, name, "external", provider)
         {
-            if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
+            if (provider.IsMissing()) throw new ArgumentNullException("provider");
+            this.Provider = provider;
+        }
 
+        public ExternalAuthenticateResult(string provider, ClaimsPrincipal user)
+            : base(user)
+        {
+            if (provider.IsMissing()) throw new ArgumentNullException("provider");
             this.Provider = provider;
         }
 
         public ExternalAuthenticateResult(string redirectPath, string provider, string subject, string name)
             : base(redirectPath, subject, name, "external", provider)
         {
-            if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
-
+            if (provider.IsMissing()) throw new ArgumentNullException("provider");
             this.Provider = provider;
         }
 
-        public string Provider { get; private set; }
+        public ExternalAuthenticateResult(string redirectPath, string provider, ClaimsPrincipal user)
+            : base(redirectPath, user)
+        {
+            if (provider.IsMissing()) throw new ArgumentNullException("provider");
+            this.Provider = provider;
+        }
     }
 }

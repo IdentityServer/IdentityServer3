@@ -39,9 +39,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public AuthenticateResult(string errorMessage)
             : this()
         {
-            if (String.IsNullOrWhiteSpace(errorMessage)) throw new ArgumentNullException("errorMessage");
-
-            this.ErrorMessage = errorMessage;
+            if (errorMessage.IsMissing()) throw new ArgumentNullException("errorMessage");
+            ErrorMessage = errorMessage;
         }
 
         public AuthenticateResult(string subject, string name)
@@ -57,11 +56,20 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.BuiltInIdentityProvider);
         }
 
+        public AuthenticateResult(ClaimsPrincipal user)
+            : this()
+        {
+            if (user == null) throw new ArgumentNullException("user");
+            User = IdentityServerPrincipal.CreateFromPrincipal(user);
+        }
+
         public AuthenticateResult(string subject, string name, string authenticationMethod, string identityProvider)
             : this()
         {
             if (subject.IsMissing()) throw new ArgumentNullException("subject");
             if (name.IsMissing()) throw new ArgumentNullException("name");
+            if (authenticationMethod.IsMissing()) throw new ArgumentNullException("authenticationMethod");
+            if (identityProvider.IsMissing()) throw new ArgumentNullException("identityProvider");
 
             User = IdentityServerPrincipal.Create(
                 subject,
@@ -75,6 +83,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
             this.PartialSignInRedirectPath = new PathString(redirectPath);
+        }
+
+        public AuthenticateResult(string redirectPath, ClaimsPrincipal user)
+            : this()
+        {
+            if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (user == null) throw new ArgumentNullException("user");
+
+            this.PartialSignInRedirectPath = new PathString(redirectPath);
+
+            User = IdentityServerPrincipal.CreateFromPrincipal(user);
         }
 
         public AuthenticateResult(string redirectPath, string subject, string name, string authenticationMethod, string identityProvider)
