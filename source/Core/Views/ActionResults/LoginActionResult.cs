@@ -16,18 +16,20 @@
 
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Views
 {
     class LoginActionResult : HtmlStreamActionResult
     {
-        public LoginActionResult(IViewService viewSvc, IDictionary<string, object> env, LoginViewModel model)
-            : base(async () => await viewSvc.Login(env, model))
+        public LoginActionResult(IViewService viewSvc, IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
+            : base(async () => await viewSvc.Login(env, model, message))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
             if (env == null) throw new ArgumentNullException("env");
             if (model == null) throw new ArgumentNullException("model");
+            if (message == null) throw new ArgumentNullException("message");
         }
     }
 

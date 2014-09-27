@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Views.Embedded.Assets;
 
@@ -38,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
             this.config = config;
         }
 
-        public virtual Task<System.IO.Stream> Login(IDictionary<string, object> env, LoginViewModel model)
+        public virtual Task<System.IO.Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
         {
             return Render(model, "login");
         }

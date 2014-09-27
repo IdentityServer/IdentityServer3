@@ -17,13 +17,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IViewService
     {
-        Task<Stream> Login(IDictionary<string, object> env, LoginViewModel model);
+        Task<Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message);
         Task<Stream> Logout(IDictionary<string, object> env, LogoutViewModel model);
         Task<Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model);
         Task<Stream> Consent(IDictionary<string, object> env, ConsentViewModel model);

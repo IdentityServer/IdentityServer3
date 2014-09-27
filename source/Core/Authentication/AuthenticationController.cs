@@ -62,9 +62,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             Logger.Info("Login page requested");
 
+            SignInMessage signIn = null;
             if (message != null)
             {
-                var signIn = SaveSignInMessage(message);
+                signIn = SaveSignInMessage(message);
                 Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signIn, Formatting.Indented));
 
                 if (signIn.IdP.IsPresent())
@@ -76,10 +77,10 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             else
             {
                 Logger.Debug("no signin message passed to login -- verifying message in cookie");
-                VerifySignInMessage();
+                signIn = LoadSignInMessage();
             }
 
-            return await RenderLoginPage();
+            return await RenderLoginPage(message:signIn);
         }
 
         [Route(Constants.RoutePaths.Login)]
@@ -370,7 +371,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PartialSignInAuthenticationType);
         }
 
-        private async Task<IHttpActionResult> RenderLoginPage(string errorMessage = null, string username = null)
+        private async Task<IHttpActionResult> RenderLoginPage(string errorMessage = null, string username = null, SignInMessage message = null)
         {
             var ctx = Request.GetOwinContext();
             var providers =
@@ -398,7 +399,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Username = username
             };
 
-            return new LoginActionResult(_viewService, ctx.Environment, loginModel);
+            return new LoginActionResult(_viewService, ctx.Environment, loginModel, message ?? LoadSignInMessage());
         }
 
         private async Task<IHttpActionResult> RenderLogoutPromptPage()
