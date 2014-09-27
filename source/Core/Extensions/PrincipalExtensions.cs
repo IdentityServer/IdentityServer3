@@ -49,64 +49,64 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         [DebuggerStepThrough]
         public static string GetSubjectId(this IPrincipal principal)
         {
-            var cp = principal as ClaimsPrincipal;
-            var value = cp.FindFirst(Constants.ClaimTypes.Subject).Value;
-
-            return value;
+            return principal.Identity.GetSubjectId();
         }
         
         [DebuggerStepThrough]
         public static string GetSubjectId(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var value = id.FindFirst(Constants.ClaimTypes.Subject).Value;
+            var claim = id.FindFirst(Constants.ClaimTypes.Subject);
 
-            return value;
+            if (claim == null) throw new InvalidOperationException("sub claim is missing");
+            return claim.Value;
         }
 
         [DebuggerStepThrough]
         public static string GetName(this IPrincipal principal)
         {
-            var cp = principal as ClaimsPrincipal;
-            var value = cp.FindFirst(Constants.ClaimTypes.Name).Value;
-
-            return value;
+            return principal.Identity.GetName();
         }
         
         [DebuggerStepThrough]
         public static string GetName(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var value = id.FindFirst(Constants.ClaimTypes.Name).Value;
+            var claim = id.FindFirst(Constants.ClaimTypes.Name);
 
-            return value;
+            if (claim == null) throw new InvalidOperationException("name claim is missing");
+            return claim.Value;
         }
 
         [DebuggerStepThrough]
         public static string GetAuthenticationMethod(this IPrincipal principal)
         {
-            var cp = principal as ClaimsPrincipal;
-            var value = cp.FindFirst(Constants.ClaimTypes.AuthenticationMethod).Value;
-
-            return value;
+            return principal.Identity.GetAuthenticationMethod();
         }
 
         [DebuggerStepThrough]
         public static string GetAuthenticationMethod(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var value = id.FindFirst(Constants.ClaimTypes.AuthenticationMethod).Value;
+            var claim = id.FindFirst(Constants.ClaimTypes.AuthenticationMethod);
 
-            return value;
+            if (claim == null) throw new InvalidOperationException("amr claim is missing");
+            return claim.Value;
+        }
+
+        public static string GetIdentityProvicer(this IPrincipal principal)
+        {
+            return principal.Identity.GetIdentityProvider();
         }
 
         [DebuggerStepThrough]
         public static string GetIdentityProvider(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var value = id.FindFirst(Constants.ClaimTypes.IdentityProvider).Value;
+            var claim = id.FindFirst(Constants.ClaimTypes.IdentityProvider);
 
-            return value;
+            if (claim == null) throw new InvalidOperationException("idp claim is missing");
+            return claim.Value;
         }
     }
 }
