@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public ClaimsPrincipal User { get; private set; }
         public string ErrorMessage { get; private set; }
         
-        public PathString PartialSignInRedirectPath { get; private set; }
+        public string PartialSignInRedirectPath { get; private set; }
         
         public AuthenticateResult(string errorMessage)
         {
@@ -47,18 +47,26 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public AuthenticateResult(string redirectPath, ClaimsPrincipal user)
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
+            {
+                throw new ArgumentException("redirectPath must start with / or ~/");
+            }
             if (user == null) throw new ArgumentNullException("user");
 
-            this.PartialSignInRedirectPath = new PathString(redirectPath);
+            this.PartialSignInRedirectPath = redirectPath;
             User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PartialSignInAuthenticationType);
         }
 
         public AuthenticateResult(string redirectPath, ExternalIdentity externalId)
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
+            {
+                throw new ArgumentException("redirectPath must start with / or ~/");
+            }
             if (externalId == null) throw new ArgumentNullException("externalId");
 
-            this.PartialSignInRedirectPath = new PathString(redirectPath);
+            this.PartialSignInRedirectPath = redirectPath;
 
             var id = new ClaimsIdentity(externalId.Claims, Constants.PartialSignInAuthenticationType);
             // we're keeping the external provider info for the partial signin so we can re-execute AuthenticateExternalAsync
@@ -76,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             get
             {
-                return PartialSignInRedirectPath.HasValue;
+                return !String.IsNullOrWhiteSpace(PartialSignInRedirectPath);
             }
         }
     }

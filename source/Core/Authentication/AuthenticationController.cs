@@ -320,7 +320,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (authResult.IsPartialSignIn)
             {
-                return new Uri(Request.RequestUri, authResult.PartialSignInRedirectPath.Value);
+                var url = authResult.PartialSignInRedirectPath;
+                if (url.StartsWith("~/"))
+                {
+                    url = url.Substring(2);
+                    url = Request.GetIdentityServerBaseUrl() + url;
+                }
+                return new Uri(Request.RequestUri, url);
             }
             else
             {
