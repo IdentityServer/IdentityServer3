@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Plumbing;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {

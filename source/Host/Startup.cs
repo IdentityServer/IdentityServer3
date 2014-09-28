@@ -5,9 +5,10 @@ using Microsoft.Owin.Security.Twitter;
 using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Host;
 using Thinktecture.IdentityServer.Host.Config;
 
-[assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
+[assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
 
 namespace Thinktecture.IdentityServer.Host
 {
@@ -28,7 +29,7 @@ namespace Thinktecture.IdentityServer.Host
                     var idsrvOptions = new IdentityServerOptions
                     {
                         IssuerUri = "https://idsrv3.com",
-                        SiteName = "Thinktecture IdentityServer v3 - preview 1",
+                        SiteName = "Thinktecture IdentityServer v3 - beta 2",
                         RequireSsl = false,
                         SigningCertificate = Cert.Load(),
                         CspOptions = new CspOptions {
@@ -41,6 +42,9 @@ namespace Thinktecture.IdentityServer.Host
                     };
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
+
+            // only for showing the getting started index page
+            app.UseStaticFiles();
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
