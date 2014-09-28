@@ -36,13 +36,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.AccessTokenValidationEndpoint = EndpointSettings.Disabled;
             this.IdentityTokenValidationEndpoint = EndpointSettings.Enabled;
             this.EndSessionEndpoint = EndpointSettings.Enabled;
-            this.CspReportEndpoint = EndpointSettings.Disabled;
 
             this.RequireSsl = true;
 
             this.CorsPolicy = new CorsPolicy();
             this.CookieOptions = new CookieOptions();
             this.AuthenticationOptions = new AuthenticationOptions();
+            this.CspOptions = new CspOptions();
         }
 
         internal void Validate()
@@ -83,7 +83,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public EndpointSettings AccessTokenValidationEndpoint { get; set; }
         public EndpointSettings IdentityTokenValidationEndpoint { get; set; }
         public EndpointSettings EndSessionEndpoint { get; set; }
-        public EndpointSettings CspReportEndpoint { get; set; }
+
+        public CspOptions CspOptions { get; set; }
 
         public X509Certificate2 SigningCertificate { get; set; }
         public X509Certificate2 SecondarySigningCertificate { get; set; }

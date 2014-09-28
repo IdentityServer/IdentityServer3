@@ -31,7 +31,9 @@ namespace Thinktecture.IdentityServer.Host
                         SiteName = "Thinktecture IdentityServer v3 - preview 1",
                         RequireSsl = false,
                         SigningCertificate = Cert.Load(),
-                        CspReportEndpoint = EndpointSettings.Enabled,
+                        CspOptions = new CspOptions {
+                            ReportEndpoint = EndpointSettings.Enabled,
+                        },
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,

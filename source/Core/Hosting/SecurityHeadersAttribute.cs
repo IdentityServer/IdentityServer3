@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+using Autofac;
 using System;
+using System.Net.Http;
 using System.Web.Http.Filters;
+using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
@@ -54,8 +58,20 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 
                 if (EnableCsp)
                 {
-                    var cspReportUrl = actionExecutedContext.ActionContext.RequestContext.Url.Link(Constants.RouteNames.CspReport, null);
-                    actionExecutedContext.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src *; report-uri " + cspReportUrl);
+                    var ctx = actionExecutedContext.Request.GetOwinContext();
+                    var scope = ctx.Environment.GetLifetimeScope();
+                    var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
+                    if (options.CspOptions.Enabled)
+                    {
+                        var value = "default-src 'self'; script-src 'self' {0}; style-src 'self' 'unsafe-inline' {1}; img-src *;";
+                        value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
+                        if (options.CspOptions.ReportEndpoint.IsEnabled)
+                        {
+                            var cspReportUrl = actionExecutedContext.ActionContext.RequestContext.Url.Link(Constants.RouteNames.CspReport, null);
+                            value += " report-uri " + cspReportUrl;
+                        }
+                        actionExecutedContext.Response.Headers.Add("Content-Security-Policy", value);
+                    }
                 }
             }
         }

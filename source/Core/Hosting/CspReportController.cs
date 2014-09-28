@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Hosting
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
-            if (!options.CspReportEndpoint.IsEnabled)
+            if (!options.CspOptions.ReportEndpoint.IsEnabled)
             {
                 return NotFound();
             }
