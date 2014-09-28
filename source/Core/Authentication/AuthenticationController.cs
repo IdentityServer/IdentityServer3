@@ -392,13 +392,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("rendering login page");
             }
 
+            var loginPageLinks = PrepareLoginPageLinks(_authenticationOptions.LoginPageLinks);
+
             var loginModel = new LoginViewModel
             {
                 SiteName = _options.SiteName,
                 SiteUrl = ctx.Environment.GetIdentityServerBaseUrl(),
                 CurrentUser = await GetNameFromPrimaryAuthenticationType(), 
                 ExternalProviders = providers,
-                AdditionalLinks = _authenticationOptions.LoginPageLinks,
+                AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
                 LoginUrl = Url.Route(Constants.RouteNames.Login, null),
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
@@ -406,6 +408,27 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             };
 
             return new LoginActionResult(_viewService, ctx.Environment, loginModel, message ?? LoadSignInMessage());
+        }
+
+        private IEnumerable<LoginPageLink> PrepareLoginPageLinks(IEnumerable<LoginPageLink> links)
+        {
+            if (links == null || !links.Any()) return null;
+
+            var result = new List<LoginPageLink>();
+            foreach(var link in links)
+            {
+                var url = link.Href;
+                if (url.StartsWith("~/"))
+                {
+                    url = url.Substring(2);
+                    url = Request.GetIdentityServerBaseUrl() + url;
+                }
+                result.Add(new LoginPageLink
+                {
+                    Text = link.Text, Href = url
+                });
+            }
+            return result;
         }
 
         private async Task<IHttpActionResult> RenderLogoutPromptPage()
