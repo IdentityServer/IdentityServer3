@@ -36,6 +36,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly IDataProtector _protector;
         private readonly int _messageExpiration;
 
+        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IDataProtector protector)
+        {
+            var result = new LoginResult(message, env, protector, Constants.DefaultSignInMessageExpiration);
+            var response = result.Execute();
+
+            return response.Headers.Location.AbsoluteUri;
+        }
+        
         public LoginResult(SignInMessage message, IDictionary<string, object> env, IDataProtector protector, int messageExpiration)
         {
             _message = message;
