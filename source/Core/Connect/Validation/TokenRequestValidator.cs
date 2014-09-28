@@ -254,6 +254,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<ValidationResult> ValidateResourceOwnerCredentialRequestAsync(NameValueCollection parameters)
         {
+            // if we've disabled local authentication, then fail
+            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            {
+                Logger.Error("EnableLocalLogin is disabled, failing with UnsupportedGrantType");
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+            }
+
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////

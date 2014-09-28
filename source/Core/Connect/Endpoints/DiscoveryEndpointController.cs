@@ -53,6 +53,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync();
 
+            var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
+            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            {
+                supportedGrantTypes = supportedGrantTypes.Where(type => type != Constants.GrantTypes.Password);
+            }
+
             return Json(new
             {
                 issuer = _options.IssuerUri,
@@ -64,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 scopes_supported = scopes.Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
-                grant_types_supported = Constants.SupportedGrantTypes,
+                grant_types_supported = supportedGrantTypes,
                 subject_types_support = new[] { "pairwise", "public" },
                 id_token_signing_alg_values_supported = "RS256"
             });

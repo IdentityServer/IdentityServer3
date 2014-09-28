@@ -89,6 +89,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             Logger.Info("Login page submitted");
 
+            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            {
+                Logger.Warn("EnableLocalLogin disabled -- returning 405 MethodNotAllowed");
+                return StatusCode(HttpStatusCode.MethodNotAllowed);
+            }
+
             if (model == null)
             {
                 Logger.Error("no data submitted");
@@ -401,7 +407,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 ExternalProviders = providers,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = Url.Route(Constants.RouteNames.Login, null),
+                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, null) : null,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
                 Username = username
             };

@@ -21,6 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     public class LoginViewModel : ErrorViewModel
     {
+        // LoginUrl might be null if local logins are disabled
         public string LoginUrl { get; set; }
         public string LogoutUrl { get; set; }
         public string Username { get; set; }
