@@ -101,26 +101,38 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
+            if (_options.AuthenticationOptions.CookieOptions.AllowRememberMe)
+            {
+                if (model.RememberMe != true)
+                {
+                    model.RememberMe = false;
+                }
+            }
+            else
+            {
+                model.RememberMe = null;
+            }
+
             if (!ModelState.IsValid)
             {
                 Logger.Warn("validation error: username or password missing");
-                return await RenderLoginPage(ModelState.GetError(), model.Username);
+                return await RenderLoginPage(ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
             var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, LoadSignInMessage());
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
-                return await RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username);
+                return await RenderLoginPage(Messages.InvalidUsernameOrPassword, model.Username, model.RememberMe == true);
             }
 
             if (authResult.IsError)
             {
                 Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
-                return await RenderLoginPage(authResult.ErrorMessage, model.Username);
+                return await RenderLoginPage(authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
 
-            return SignInAndRedirect(authResult);
+            return SignInAndRedirect(authResult, model.RememberMe);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
@@ -310,9 +322,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return externalId;
         }
 
-        private IHttpActionResult SignInAndRedirect(AuthenticateResult authResult)
+        private IHttpActionResult SignInAndRedirect(AuthenticateResult authResult, bool? rememberMe = null)
         {
-            IssueAuthenticationCookie(authResult);
+            IssueAuthenticationCookie(authResult, rememberMe);
 
             var redirectUrl = GetRedirectUrl(authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
@@ -340,7 +352,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
         }
 
-        private void IssueAuthenticationCookie(AuthenticateResult authResult)
+        private void IssueAuthenticationCookie(AuthenticateResult authResult, bool? rememberMe = null)
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
             
@@ -361,9 +373,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 ClearSignInMessage();
             }
 
-            if (!authResult.IsPartialSignIn && this._options.AuthenticationOptions.CookieOptions.IsPersistent)
+            if (!authResult.IsPartialSignIn)
             {
-                props.IsPersistent = true;
+                if (rememberMe == true || 
+                    (rememberMe != false && this._options.AuthenticationOptions.CookieOptions.IsPersistent))
+                {
+                    props.IsPersistent = true;
+                    if (rememberMe == true)
+                    {
+                        var expires = DateTime.UtcNow.Add(_options.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                        props.ExpiresUtc = new DateTimeOffset(expires);
+                    }
+                }
             }
 
             ClearAuthenticationCookies();
@@ -381,7 +402,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PartialSignInAuthenticationType);
         }
 
-        private async Task<IHttpActionResult> RenderLoginPage(string errorMessage = null, string username = null, SignInMessage message = null)
+        private async Task<IHttpActionResult> RenderLoginPage(string errorMessage = null, string username = null, bool rememberMe = false, SignInMessage message = null)
         {
             var ctx = Request.GetOwinContext();
             var providers =
@@ -408,6 +429,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
                 LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, null) : null,
+                AllowRememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe,
+                RememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
                 Username = username
             };

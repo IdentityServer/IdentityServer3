@@ -33,6 +33,8 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
+        public static readonly TimeSpan DefaultRememberMeDuration = TimeSpan.FromDays(30);
+        
         internal const int DefaultSignInMessageExpiration = 600;
 
         public static class AuthorizeRequest

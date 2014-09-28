@@ -23,6 +23,8 @@ namespace Thinktecture.IdentityServer.Core.Views
     {
         // LoginUrl might be null if local logins are disabled
         public string LoginUrl { get; set; }
+        public bool AllowRememberMe { get; set; }
+        public bool RememberMe { get; set; }
         public string LogoutUrl { get; set; }
         public string Username { get; set; }
         public IEnumerable<LoginPageLink> ExternalProviders { get; set; }

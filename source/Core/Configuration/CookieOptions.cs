@@ -24,11 +24,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             ExpireTimeSpan = Constants.DefaultCookieTimeSpan;
             SlidingExpiration = false;
+            
+            AllowRememberMe = true;
+            RememberMeDuration = Constants.DefaultRememberMeDuration;
         }
 
         public string Prefix { get; set; }
         public TimeSpan ExpireTimeSpan { get; set; }
         public bool IsPersistent { get; set; }
         public bool SlidingExpiration { get; set; }
+
+        public bool AllowRememberMe { get; set; }
+        public TimeSpan RememberMeDuration { get; set; }
     }
 }
