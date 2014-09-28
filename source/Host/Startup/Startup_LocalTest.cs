@@ -3,6 +3,7 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
+using System.IO;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host.Config;
@@ -41,6 +42,9 @@ namespace Thinktecture.IdentityServer.Host
                     };
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
+
+            // only for showing the getting started index page
+            app.UseStaticFiles();
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
