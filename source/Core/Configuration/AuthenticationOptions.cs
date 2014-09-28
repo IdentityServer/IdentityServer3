@@ -23,8 +23,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions()
         {
             this.SignInMessageExpiration = Constants.DefaultSignInMessageExpiration;
+            this.CookieOptions = new CookieOptions();
         }
 
+        public CookieOptions CookieOptions { get; set; }
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
         public int SignInMessageExpiration { get; set; }
     }

@@ -221,7 +221,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_CookieOptionsIsPersistentIsFalse_DoesNotIssuePersistentCookie()
         {
-            this.options.CookieOptions.IsPersistent = false;
+            this.options.AuthenticationOptions.CookieOptions.IsPersistent = false;
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
@@ -232,7 +232,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogin_CookieOptionsIsPersistentIsTrue_IssuesPersistentCookie()
         {
-            this.options.CookieOptions.IsPersistent = true;
+            this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
@@ -246,7 +246,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
             
-            this.options.CookieOptions.IsPersistent = true;
+            this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
             GetLoginPage();
             var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();

@@ -356,7 +356,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 ClearSignInMessage();
             }
 
-            if (!authResult.IsPartialSignIn && this._options.CookieOptions.IsPersistent)
+            if (!authResult.IsPartialSignIn && this._options.AuthenticationOptions.CookieOptions.IsPersistent)
             {
                 props.IsPersistent = true;
             }
@@ -473,7 +473,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                _options.CookieOptions.Prefix + SignInMessageCookieName,
+                _options.AuthenticationOptions.CookieOptions.Prefix + SignInMessageCookieName,
                 ".",
                 new Microsoft.Owin.CookieOptions
                 {
@@ -495,7 +495,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             var ctx = Request.GetOwinContext();
             ctx.Response.Cookies.Append(
-                _options.CookieOptions.Prefix + SignInMessageCookieName,
+                _options.AuthenticationOptions.CookieOptions.Prefix + SignInMessageCookieName,
                 message,
                 new Microsoft.Owin.CookieOptions
                 {
@@ -509,7 +509,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private SignInMessage LoadSignInMessage()
         {
             var ctx = Request.GetOwinContext();
-            var message = ctx.Request.Cookies[_options.CookieOptions.Prefix + SignInMessageCookieName];
+            var message = ctx.Request.Cookies[_options.AuthenticationOptions.CookieOptions.Prefix + SignInMessageCookieName];
 
             if (message.IsMissing())
             {

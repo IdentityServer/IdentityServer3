@@ -40,7 +40,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.RequireSsl = true;
 
             this.CorsPolicy = new CorsPolicy();
-            this.CookieOptions = new CookieOptions();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
         }
@@ -50,11 +49,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (IssuerUri.IsMissing())
             {
                 throw new ArgumentException("IssuerUri Is Missing");
-            }
-
-            if (CookieOptions == null)
-            {
-                throw new ArgumentException("CookieOptions is missing");
             }
         }
 
@@ -66,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions AuthenticationOptions { get; set; }
         public IDataProtector DataProtector { get; set; }
 
-        public CookieOptions CookieOptions { get; set; }
+        
         public bool RequireSsl { get; set; }
         
         public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
