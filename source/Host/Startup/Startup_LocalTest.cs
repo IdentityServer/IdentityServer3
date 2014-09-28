@@ -3,7 +3,6 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
-using System.IO;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host.Config;
@@ -29,7 +28,7 @@ namespace Thinktecture.IdentityServer.Host
                     var idsrvOptions = new IdentityServerOptions
                     {
                         IssuerUri = "https://idsrv3.com",
-                        SiteName = "Thinktecture IdentityServer v3 - preview 1",
+                        SiteName = "Thinktecture IdentityServer v3 - beta 2",
                         RequireSsl = false,
                         SigningCertificate = Cert.Load(),
                         CspOptions = new CspOptions {
