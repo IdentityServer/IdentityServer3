@@ -547,7 +547,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("rendering login page");
             }
 
-            var loginPageLinks = PrepareLoginPageLinks(_authenticationOptions.LoginPageLinks);
+            var loginPageLinks = PrepareLoginPageLinks(message.Id, _authenticationOptions.LoginPageLinks);
 
             var loginModel = new LoginViewModel
             {
@@ -567,7 +567,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return new LoginActionResult(_viewService, ctx.Environment, loginModel, message);
         }
 
-        private IEnumerable<LoginPageLink> PrepareLoginPageLinks(IEnumerable<LoginPageLink> links)
+        private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
         {
             if (links == null || !links.Any()) return null;
 
@@ -580,6 +580,17 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     url = url.Substring(2);
                     url = Request.GetIdentityServerBaseUrl() + url;
                 }
+
+                if (!url.Contains("?"))
+                {
+                    url += "?";
+                }
+                else
+                {
+                    url += "&";
+                }
+                url += "signin=" + signin;
+
                 result.Add(new LoginPageLink
                 {
                     Text = link.Text, Href = url
