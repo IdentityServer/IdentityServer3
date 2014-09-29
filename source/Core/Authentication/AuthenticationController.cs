@@ -465,9 +465,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             if (!authResult.IsPartialSignIn)
             {
+                // don't issue persistnt cookie if it's a partial signin
                 if (rememberMe == true || 
                     (rememberMe != false && this._options.AuthenticationOptions.CookieOptions.IsPersistent))
                 {
+                    // only issue persistent cookie if user consents (rememberMe == true) or
+                    // if server is configured to issue persistent cookies and user has not explicitly
+                    // denied the rememberMe (false)
+                    // if rememberMe is null, then user was not prompted for rememberMe
                     props.IsPersistent = true;
                     if (rememberMe == true)
                     {
