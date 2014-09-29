@@ -31,27 +31,27 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly SignInMessage _message;
-        private readonly IDictionary<string, object> _env;
-        private readonly IDataProtector _protector;
-        private readonly int _messageExpiration;
+        private readonly SignInMessage message;
+        private readonly IDictionary<string, object> env;
+        private readonly IdentityServerOptions options;
 
-        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IDataProtector protector)
+        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
         {
-            var result = new LoginResult(message, env, protector, Constants.DefaultSignInMessageExpiration);
+            var result = new LoginResult(message, env, options);
             var response = result.Execute();
 
             return response.Headers.Location.AbsoluteUri;
         }
         
-        public LoginResult(SignInMessage message, IDictionary<string, object> env, IDataProtector protector, int messageExpiration)
+        public LoginResult(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
         {
-            _message = message;
-            _env = env;
-            _protector = protector;
+            if (message == null) throw new ArgumentNullException("message");
+            if (env == null) throw new ArgumentNullException("env");
+            if (options == null) throw new ArgumentNullException("options");
 
-            if (messageExpiration <= 0) messageExpiration = Constants.DefaultSignInMessageExpiration;
-            _messageExpiration = messageExpiration;
+            this.message = message;
+            this.env = env;
+            this.options = options;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -61,24 +61,19 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private HttpResponseMessage Execute()
         {
-            var response = new HttpResponseMessage(HttpStatusCode.Redirect);
-
-            try
-            {
-                var sim = _message.Protect(_messageExpiration, _protector);
-                var url = _env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-                url += "?message=" + sim;
-
-                var uri = new Uri(url);
-                response.Headers.Location = uri;
-            }
-            catch
-            {
-                response.Dispose();
-                throw;
-            }
-
             Logger.Info("Redirecting to login page");
+
+            var cookie = new SignInMessageCookie(this.env, this.options);
+            message.Id = Guid.NewGuid().ToString("N");
+            cookie.Write(this.message);
+
+            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
+            url += "?signin=" + this.message.Id;
+
+            var uri = new Uri(url);
+
+            var response = new HttpResponseMessage(HttpStatusCode.Redirect);
+            response.Headers.Location = uri;
             return response;
         }
     }

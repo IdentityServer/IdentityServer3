@@ -27,6 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        public string Id { get; set; }
         public string ReturnUrl { get; set; }
         public string ClientId { get; set; }
         public string IdP { get; set; }
@@ -35,20 +36,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public string UiLocales { get; set; }
         public IEnumerable<string> AcrValues { get; set; }
 
-        // internal use
-        public DateTime ValidTo { get; set; }
-        public bool IsExpired
+        public string Protect(IDataProtector protector)
         {
-            get
-            {
-                return DateTime.UtcNow > ValidTo;
-            }
-        }
-
-        public string Protect(int ttl, IDataProtector protector)
-        {
-            ValidTo = DateTime.UtcNow.AddSeconds(ttl);
-
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,

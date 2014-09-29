@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
             
-            var val = msg.Protect(60000, protector);
+            var val = msg.Protect(protector);
             var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
             resp.AssertCookie(AuthenticationController.SignInMessageCookieName);
             client.SetCookies(resp.GetCookies());
