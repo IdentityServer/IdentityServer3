@@ -101,6 +101,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(Messages.InvalidUsernameOrPassword);
             }
 
+            // the browser will only send 'true' if ther user has checked the checkbox
+            // it will pass nothing if the user does not check the checkbox
+            // this check here is to establish if the user deliberatly did not check the checkbox
+            // or if the checkbox was not presented as an option (and thus AllowRememberMe is not allowed)
+            // true means they did check it, false means they did not, null means they were not presented with the choice
             if (_options.AuthenticationOptions.CookieOptions.AllowRememberMe)
             {
                 if (model.RememberMe != true)
