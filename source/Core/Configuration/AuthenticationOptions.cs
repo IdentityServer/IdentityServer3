@@ -24,14 +24,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions()
         {
             this.EnableLocalLogin = true;
-            this.SignInMessageExpiration = Constants.DefaultSignInMessageExpiration;
             this.CookieOptions = new CookieOptions();
         }
 
         public bool EnableLocalLogin { get; set; }
         public CookieOptions CookieOptions { get; set; }
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
-        public int SignInMessageExpiration { get; set; }
     }
 
     public class LoginPageLink
