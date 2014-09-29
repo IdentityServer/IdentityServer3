@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (signInMessage.IdP.IsPresent())
             {
                 Logger.InfoFormat("identity provider requested, redirecting to: {0}", signInMessage.IdP);
-                return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider = signInMessage.IdP }));
+                return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider = signInMessage.IdP, signin }));
             }
 
             return await RenderLoginPage(signInMessage);
@@ -258,14 +258,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (resume.IsMissing())
             {
                 Logger.Error("no resumeId passed");
-                return RedirectToRoute(Constants.RouteNames.Login, null);
+                return RenderErrorPage();
             }
 
             var user = await GetIdentityFromPartialSignIn();
             if (user == null)
             {
                 Logger.Error("no identity from partial login");
-                return RedirectToRoute(Constants.RouteNames.Login, null);
+                return RenderErrorPage();
             }
 
             var type = GetClaimTypeForResumeId(resume);
@@ -273,14 +273,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (resumeClaim == null)
             {
                 Logger.Error("no claim matching resumeId");
-                return RedirectToRoute(Constants.RouteNames.Login, null);
+                return RenderErrorPage();
             }
 
             var signInId = resumeClaim.Value;
             if (signInId.IsMissing())
             {
                 Logger.Error("No signin id found in resume claim");
-                return RedirectToRoute(Constants.RouteNames.Login, null);
+                return RenderErrorPage();
             }
 
             var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
@@ -295,7 +295,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
             if (externalProviderClaim == null)
             {
-                // the user/subject was known, so pass thru
+                // the user/subject was known, so pass thru (without the redirect claims)
+                user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
+                user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
                 result = new AuthenticateResult(new ClaimsPrincipal(user));
             }
             else
@@ -387,7 +389,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
             if (result != null)
             {
-                return result.Properties.Dictionary["signin"];
+                string val = null;
+                if (result.Properties.Dictionary.TryGetValue("signin", out val))
+                {
+                    return val;
+                }
             }
             return null;
         }
@@ -453,7 +459,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 // signIn ID. 
                 var resumeId = Guid.NewGuid().ToString("N");
 
-                var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resumeId = resumeId });
+                var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
                 id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessage.Id));

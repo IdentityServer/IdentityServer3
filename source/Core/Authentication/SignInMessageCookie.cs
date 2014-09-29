@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         public const string SignInMessageCookieName = "{0}.idsrv.signin.{1}";
 
-        private string GetCookieName(string id)
+        public string GetCookieName(string id)
         {
             return String.Format(SignInMessageCookieName, 
                 options.AuthenticationOptions.CookieOptions.Prefix,
@@ -86,12 +86,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             get
             {
-                return ctx.Request.Uri.Scheme == Uri.UriSchemeHttps;
+                return ctx.Request.Scheme == Uri.UriSchemeHttps;
             }
         }
 
         public void Write(SignInMessage message)
         {
+            if (message == null) throw new ArgumentNullException("message");
+            if (message.Id.IsMissing()) throw new InvalidOperationException("Invalid Message Id");
+
             var name = GetCookieName(message.Id);
             var data = Protect(message);
 

@@ -378,7 +378,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string LoginExternal = "external";
             public const string LoginExternalCallback = "callback";
             public const string Logout = "logout";
-            public const string ResumeLoginFromRedirect = "resume";
+            public const string ResumeLoginFromRedirect = "return";
             public const string CspReport = "csp/report";
 
             public static class Oidc

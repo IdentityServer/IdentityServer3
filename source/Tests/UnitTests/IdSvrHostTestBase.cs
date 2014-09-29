@@ -1,9 +1,11 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Owin;
 using System.Net.Http;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
@@ -16,6 +18,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected TestServer server;
         protected HttpClient client;
         protected Thinktecture.IdentityServer.Core.Configuration.IDataProtector protector;
+        protected Microsoft.Owin.Security.DataHandler.TicketDataFormat ticketFormatter;
 
         protected Mock<InMemoryUserService> mockUserService;
         protected IdentityServerOptions options;
@@ -46,6 +49,9 @@ namespace Thinktecture.IdentityServer.Tests
                 protector = options.DataProtector;
                 
                 app.UseIdentityServer(options);
+
+                ticketFormatter = new Microsoft.Owin.Security.DataHandler.TicketDataFormat(
+                    new DataProtectorAdapter(protector, options.AuthenticationOptions.CookieOptions.Prefix + Constants.PartialSignInAuthenticationType));
             });
 
             client = server.HttpClient;
@@ -80,6 +86,8 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected string Url(string path)
         {
+            if (path.StartsWith("http")) return path;
+
             if (path.StartsWith("/")) path = path.Substring(1);
             return "https://localhost:3333/" + path;
         }

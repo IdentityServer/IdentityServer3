@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Owin;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,12 +23,15 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
     public class AuthenticationControllerTests : IdSvrHostTestBase
     {
         public ClaimsIdentity SignInIdentity { get; set; }
+        public string SignInId { get; set; }
 
         protected override void Postprocess(Microsoft.Owin.IOwinContext ctx)
         {
             if (SignInIdentity != null)
             {
-                ctx.Authentication.SignIn(SignInIdentity);
+                var props = new Microsoft.Owin.Security.AuthenticationProperties();
+                props.Dictionary.Add("signin", SignInId);
+                ctx.Authentication.SignIn(props, SignInIdentity);
                 SignInIdentity = null;
             }
         }
@@ -55,27 +60,43 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
         {
             msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
+
+            var headers = new Dictionary<string, string[]>();
+            var env = new Dictionary<string, object>()
+            {
+                {"owin.RequestScheme", "https"},
+                {"owin.ResponseHeaders", headers}
+            };
             
-            var val = msg.Protect(protector);
-            var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
-            resp.AssertCookie(AuthenticationController.SignInMessageCookieName);
-            client.SetCookies(resp.GetCookies());
+            var ctx = new OwinContext(env);
+            var signInCookie = new SignInMessageCookie(ctx, this.options);
+            msg.Id = SignInId = Guid.NewGuid().ToString("N");
+            signInCookie.Write(msg);
+
+            client.SetCookies(headers["Set-Cookie"]);
+
+            var resp = Get(Constants.RoutePaths.Login + "?signin=" + SignInId);
             return resp;
+        }
+
+        private string GetLoginUrl()
+        {
+            return Constants.RoutePaths.Login + "?signin=" + SignInId;
+        }
+
+        private string GetResumeUrlFromPartialSignInCookie(HttpResponseMessage resp)
+        {
+            var cookie = resp.GetCookies().Where(x=>x.Name == Constants.PartialSignInAuthenticationType).Single();
+            var ticket = ticketFormatter.Unprotect(cookie.Value);
+            var urlClaim = ticket.Identity.Claims.Single(x => x.Type == Constants.ClaimTypes.PartialLoginReturnUrl);
+            return urlClaim.Value;
         }
 
         [TestMethod]
         public void GetLogin_WithSignInMessage_ReturnsLoginPage()
         {
-            var msg = new SignInMessage();
-            var val = msg.Protect(60000, protector);
-            var resp = Get(Constants.RoutePaths.Login + "?message=" + val);
+            var resp = GetLoginPage();
             AssertPage(resp, "login");
-        }
-
-        [TestMethod]
-        public void GetLogin_WithSignInMessage_IssuesMessageCookie()
-        {
-            GetLoginPage();
         }
 
         [TestMethod]
@@ -92,10 +113,10 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void GetLogin_NoSignInMessage_ReturnErrorPage()
+        public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
-            AssertPage(resp, "error");
+            Assert.AreEqual(404, (int)resp.StatusCode);
         }
 
         [TestMethod]
@@ -125,7 +146,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_ValidCredentials_IssuesAuthenticationCookie()
         {
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             resp.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
@@ -133,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_ValidCredentials_RedirectsBackToAuthorization()
         {
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
             Assert.AreEqual(resp.Headers.Location, Url("authorize"));
         }
@@ -142,7 +163,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_NoModel_ShowErrorPage()
         {
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, (LoginCredentials)null);
+            var resp = Post(GetLoginUrl(), (LoginCredentials)null);
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
@@ -152,7 +173,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_InvalidUsername_ShowErrorPage()
         {
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "bad", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "bad", Password = "alice" });
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
@@ -162,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_InvalidPassword_ShowErrorPage()
         {
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "bad" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "bad" });
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
@@ -175,7 +196,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult(new AuthenticateResult("bad stuff")));
 
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, "bad stuff");
@@ -188,7 +209,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult((AuthenticateResult)null));
 
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
@@ -201,7 +222,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             resp.AssertCookie(Constants.PartialSignInAuthenticationType);
         }
 
@@ -212,28 +233,53 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
             Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
         }
 
         [TestMethod]
-        public void PostToLogin_CookieOptionsIsPersistentIsFalse_DoesNotIssuePersistentCookie()
+        public void PostToLogin_CookieOptions_AllowRememberMeIsFalse_IsPersistentIsFalse_DoesNotIssuePersistentCookie()
         {
+            this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = false;
             this.options.AuthenticationOptions.CookieOptions.IsPersistent = false;
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
             Assert.IsFalse(cookie.Contains("expires="));
         }
 
         [TestMethod]
-        public void PostToLogin_CookieOptionsIsPersistentIsTrue_IssuesPersistentCookie()
+        public void PostToLogin_CookieOptions_AllowRememberMeIsFalse_IsPersistentIsTrue_IssuesPersistentCookie()
         {
+            this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = false;
             this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.GetRawCookies();
+            var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
+            Assert.IsTrue(cookie.Contains("expires="));
+        }
+
+        [TestMethod]
+        public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_DoNotCheckRememberMe_DoeNotIssuePersistentCookie()
+        {
+            this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = true;
+            this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
+            GetLoginPage();
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.GetRawCookies();
+            var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
+            Assert.IsFalse(cookie.Contains("expires="));
+        }
+        [TestMethod]
+        public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_CheckRememberMe_IssuesPersistentCookie()
+        {
+            this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = true;
+            this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
+            GetLoginPage();
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice", RememberMe = true });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
             Assert.IsTrue(cookie.Contains("expires="));
@@ -247,7 +293,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             
             this.options.AuthenticationOptions.CookieOptions.IsPersistent = true;
             GetLoginPage();
-            var resp = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "="));
             Assert.IsFalse(cookie.Contains("expires="));
@@ -260,9 +306,9 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
-            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp1 = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             client.SetCookies(resp1.GetCookies());
-            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+            var resp2 = Get(GetResumeUrlFromPartialSignInCookie(resp1));
             resp2.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
@@ -273,25 +319,24 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
-            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp1 = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             client.SetCookies(resp1.GetCookies());
-            
-            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
+
+            var resp2 = Get(GetResumeUrlFromPartialSignInCookie(resp1));
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
             Assert.AreEqual(Url("authorize"), resp2.Headers.Location.AbsoluteUri);
         }
 
         [TestMethod]
-        public void ResumeLoginFromRedirect_WithoutPartialCookie_RedirectsToLogin()
+        public void ResumeLoginFromRedirect_WithoutPartialCookie_ShowsError()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             GetLoginPage();
-            var resp1 = Post(Constants.RoutePaths.Login, new LoginCredentials { Username = "alice", Password = "alice" });
-            var resp2 = Get(Constants.RoutePaths.ResumeLoginFromRedirect);
-            Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
-            Assert.AreEqual(Url(Constants.RoutePaths.Login), resp2.Headers.Location.AbsoluteUri);
+            var resp1 = Post(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            var resp2 = Get(GetResumeUrlFromPartialSignInCookie(resp1));
+            AssertPage(resp2, "error");
         }
 
         [TestMethod]
@@ -306,7 +351,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             var resp = Post(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
-            Assert.AreEqual(4, cookies.Count());
+            Assert.AreEqual(3, cookies.Count());
             // GetCookies will not return values for cookies that are expired/revoked
             Assert.AreEqual(0, resp.GetCookies().Count());
         }
@@ -324,16 +369,14 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void LoginExternalCallback_WithoutExternalCookie_RendersLoginPageWithError()
+        public void LoginExternalCallback_WithoutExternalCookie_RendersErrorPage()
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
             var resp1 = GetLoginPage(msg);
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "login");
-            var model = GetModel<LoginViewModel>(resp3);
-            Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
+            AssertPage(resp3, "error");
         }
 
         [TestMethod]
