@@ -2,6 +2,8 @@
 
 **Current status: Beta 1**
 
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Overview ##
 
 IdentityServer v3 is a .NET-based open source implementation of an OpenID Connect and OAuth2 security token service.
