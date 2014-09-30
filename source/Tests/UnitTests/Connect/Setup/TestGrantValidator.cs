@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace UnitTests.Plumbing
 {
-    class TestAssertionValidator : ICustomGrantValidator
+    class TestGrantValidator : ICustomGrantValidator
     {
         public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
         {

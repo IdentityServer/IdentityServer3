@@ -71,7 +71,7 @@ namespace UnitTests.Plumbing
 
             if (customGrantValidator == null)
             {
-                customGrantValidator = new TestAssertionValidator();
+                customGrantValidator = new TestGrantValidator();
             }
 
             if (refreshTokens == null)
