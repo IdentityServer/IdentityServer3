@@ -446,7 +446,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (signInMessage == null) throw new ArgumentNullException("signInId");
             if (authResult == null) throw new ArgumentNullException("authResult");
             
-            Logger.InfoFormat("logging user in as subject: {0}, name: {1}{2}", authResult.User.GetSubjectId(), authResult.User.GetName(), authResult.IsPartialSignIn ? " (partial login)" : "");
+            Logger.InfoFormat("issuing cookie{0}", authResult.IsPartialSignIn ? " (partial login)" : "");
             
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
