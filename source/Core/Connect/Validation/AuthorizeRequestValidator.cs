@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IOwinContext context)
         {
             _options = options;
             _scopes = scopes;
@@ -52,7 +53,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customValidator = customValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest();
-            _validatedRequest.IdentityServerOptions = _options;
+            _validatedRequest.Options = _options;
+            _validatedRequest.Environment = context.Environment;
         }
 
         // basic protocol validation

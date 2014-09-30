@@ -23,12 +23,8 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    public class ValidatedTokenRequest
+    public class ValidatedTokenRequest : ValidatedRequest
     {
-        public NameValueCollection Raw { get; set; }
-        public ClaimsPrincipal Subject { get; set; }
-
-        public IdentityServerOptions Options { get; set; }
         public Client Client { get; set; }
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }

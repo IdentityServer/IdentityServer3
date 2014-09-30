@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
@@ -47,7 +49,8 @@ namespace UnitTests.Plumbing
             IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
             ICustomGrantValidator customGrantValidator = null,
-            ICustomRequestValidator customRequestValidator = null)
+            ICustomRequestValidator customRequestValidator = null,
+            IDictionary<string, object> environment = null)
         {
             if (options == null)
             {
@@ -79,7 +82,18 @@ namespace UnitTests.Plumbing
                 refreshTokens = new InMemoryRefreshTokenStore();
             }
 
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator);
+            IOwinContext context;
+            if (environment == null)
+            {
+                context = new OwinContext(new Dictionary<string, object>());
+            }
+            else
+            {
+                context = new OwinContext(environment);
+            }
+
+
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator, context);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeValidator(
@@ -87,7 +101,8 @@ namespace UnitTests.Plumbing
             IScopeStore scopes = null,
             IClientStore clients = null,
             IUserService users = null,
-            ICustomRequestValidator customValidator = null)
+            ICustomRequestValidator customValidator = null,
+            IDictionary<string, object> environment = null)
         {
             if (options == null)
             {
@@ -109,7 +124,17 @@ namespace UnitTests.Plumbing
                 customValidator = new DefaultCustomRequestValidator();
             }
 
-            return new AuthorizeRequestValidator(options, scopes, clients, customValidator);
+            IOwinContext context;
+            if (environment == null)
+            {
+                context = new OwinContext(new Dictionary<string, object>());
+            }
+            else
+            {
+                context = new OwinContext(environment);
+            }
+
+            return new AuthorizeRequestValidator(options, scopes, clients, customValidator, context);
         }
     }
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly IRefreshTokenStore _refreshTokens;
 
         private ValidatedTokenRequest _validatedRequest;
+        private IDictionary<string, object> _environment;
         
         public ValidatedTokenRequest ValidatedRequest
         {
@@ -48,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, IOwinContext context)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
@@ -57,6 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _scopes = scopes;
             _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
+            _environment = context.Environment;
         }
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
@@ -64,6 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.Info("Starting request validation");
 
             _validatedRequest = new ValidatedTokenRequest();
+            _validatedRequest.Environment = _environment;
 
             if (client == null)
             {

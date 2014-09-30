@@ -23,15 +23,11 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
-    public class ValidatedAuthorizeRequest
+    public class ValidatedAuthorizeRequest : ValidatedRequest
     {
-        public NameValueCollection Raw { get; set; }
-        public ClaimsPrincipal Subject { get; set; }
-
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public IdentityServerOptions IdentityServerOptions { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
 
         public string ClientId { get; set; }
