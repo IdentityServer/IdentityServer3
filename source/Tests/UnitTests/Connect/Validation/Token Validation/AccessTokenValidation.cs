@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("123");
             
             Assert.IsFalse(result.IsError);
-            Assert.AreEqual(7, result.Claims.Count());
+            Assert.AreEqual(8, result.Claims.Count());
             Assert.AreEqual("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
         }
 
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", 2, "read", "write");
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 2, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -133,61 +133,81 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_JWT_Token()
+        public async Task Valid_JWT_Token()
         {
-            throw new NotImplementedException();
+            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write"));
+
+            var validator = Factory.CreateTokenValidator(null);
+            var result = await validator.ValidateAccessTokenAsync(jwt);
+
+            Assert.IsFalse(result.IsError);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Expired_JWT_Token()
+        public async Task JWT_Token_invalid_Issuer()
         {
-            throw new NotImplementedException();
+            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            token.Issuer = "invalid";
+            var jwt = await signer.SignTokenAsync(token);
+
+            var validator = Factory.CreateTokenValidator(null);
+            var result = await validator.ValidateAccessTokenAsync(jwt);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_JWT_Token_wrong_Issuer()
+        public async Task JWT_Token_invalid_Audience()
         {
-            throw new NotImplementedException();
-        }
+            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            token.Audience = "invalid";
+            var jwt = await signer.SignTokenAsync(token);
 
+            var validator = Factory.CreateTokenValidator(null);
+            var result = await validator.ValidateAccessTokenAsync(jwt);
 
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Valid_JWT_Token_missing_Scope()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Valid_JWT_Token_but_User_not_active()
-        {
-            throw new NotImplementedException();
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_JWT_Token_but_Client_not_active()
+        public async Task Valid_AccessToken_but_User_not_active()
         {
-            throw new NotImplementedException();
-        }
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
 
-        
+            var token = TokenFactory.CreateAccessToken("roclient", "invalid", 600, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+
+            var result = await validator.ValidateAccessTokenAsync("123");
+
+            Assert.IsTrue(result.IsError);
+        }
 
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_Reference_Token_but_User_not_active()
+        public async Task Valid_AccessToken_but_Client_not_active()
         {
-            throw new NotImplementedException();
-        }
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
 
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Valid_Reference_Token_but_Client_not_active()
-        {
-            throw new NotImplementedException();
+            var token = TokenFactory.CreateAccessToken("unknown", "valid", 600, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+
+            var result = await validator.ValidateAccessTokenAsync("123");
+
+            Assert.IsTrue(result.IsError);
         }
     }
 }

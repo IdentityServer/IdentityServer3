@@ -14,16 +14,63 @@
  * limitations under the License.
  */
 
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
-        public Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
+        private readonly IUserService _users;
+        private readonly IClientStore _clients;
+
+        public DefaultCustomTokenValidator(IUserService users, IClientStore clients)
         {
-            return Task.FromResult(result);
+            _users = users;
+            _clients = clients;
+        }
+
+        public async Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
+        {
+            if (result.IsError)
+            {
+                return result;
+            }
+
+            // make sure user is still active (if sub claim is present)
+            var subClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject);
+            if (subClaim != null)
+            {
+                var principal = Principal.Create("tokenvalidator", subClaim);
+
+                if (! await _users.IsActive(principal))
+                {
+                    result.IsError = true;
+                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Claims = null;
+
+                    return result;
+                }
+            }
+
+            var clientClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId);
+            if (clientClaim != null)
+            {
+                var client = await _clients.FindClientByIdAsync(clientClaim.Value);
+                if (client == null || client.Enabled == false)
+                {
+                    result.IsError = true;
+                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Claims = null;
+
+                    return result;
+                }
+            }
+
+            return result;
         }
 
         public Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)

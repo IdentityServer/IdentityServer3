@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 ValidIssuer = _options.IssuerUri,
                 IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
-                ValidateLifetime = validateLifetime
+                ValidateLifetime = validateLifetime,
             };
 
             if (audience.IsPresent())

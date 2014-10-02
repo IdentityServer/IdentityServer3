@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_absolute_refresh_expiration_one_time_only");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_sliding_refresh_expiration_one_time_only");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_sliding_refresh_expiration_one_time_only");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var refreshToken = await store.GetAsync(handle);
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_sliding_refresh_expiration_one_time_only");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var refreshToken = await store.GetAsync(handle);
@@ -122,7 +122,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_absolute_refresh_expiration_reuse");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(await store.GetAsync(handle), client);
@@ -138,7 +138,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var service = new DefaultRefreshTokenService(store);
 
             var client = await _clients.FindClientByIdAsync("roclient_absolute_refresh_expiration_one_time_only");
-            var token = TokenFactory.CreateAccessToken(client.ClientId, 60, "read", "write");
+            var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(await store.GetAsync(handle), client);

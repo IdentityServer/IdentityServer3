@@ -138,12 +138,17 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
         public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore)
         {
+            var users = new TestUserService();
+            var clients = CreateClientStore();
+
             var validator = new TokenValidator(
                 options: TestIdentityServerOptions.Create(),
-                users: new TestUserService(),
-                clients: CreateClientStore(),
+                users: users,
+                clients: clients,
                 tokenHandles: tokenStore,
-                customValidator: new DefaultCustomTokenValidator());
+                customValidator: new DefaultCustomTokenValidator(
+                    users: users,
+                    clients: clients));
 
             return validator;
         }

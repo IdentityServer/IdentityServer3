@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
@@ -49,7 +50,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
         public Task<bool> IsActive(ClaimsPrincipal subject)
         {
-            throw new NotImplementedException();
+            var subjectId = subject.GetSubjectId();
+            if (subjectId == "valid")
+            {
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }
