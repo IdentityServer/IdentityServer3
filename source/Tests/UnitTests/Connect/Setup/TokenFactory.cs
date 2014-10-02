@@ -43,22 +43,5 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
             return token;
         }
-
-        public static Token CreateIdentityToken()
-        {
-            var token = new Token(Constants.TokenTypes.IdentityToken)
-            {
-                Audience = "client",
-                Issuer = "issuer",
-                Lifetime = 60,
-
-                Claims = new List<Claim> 
-                {
-                    new Claim("sub", "subject")
-                }
-            };
-
-            return token;
-        }
     }
 }

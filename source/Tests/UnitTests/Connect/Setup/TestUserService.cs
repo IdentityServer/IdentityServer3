@@ -30,7 +30,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (username == password)
             {
-
                 var p = IdentityServerPrincipal.Create(username, username, "password", "idsvr");
                 return Task.FromResult(new AuthenticateResult(p));
             }

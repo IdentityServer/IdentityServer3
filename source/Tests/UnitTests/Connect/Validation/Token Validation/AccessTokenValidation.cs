@@ -16,10 +16,9 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
@@ -35,9 +34,101 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         
         [TestMethod]
         [TestCategory(Category)]
-        public void Valid_Reference_Token()
+        public async Task Valid_Reference_Token()
         {
-            throw new NotImplementedException();
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+
+            var result = await validator.ValidateAccessTokenAsync("123");
+            
+            Assert.IsFalse(result.IsError);
+            Assert.AreEqual(7, result.Claims.Count());
+            Assert.AreEqual("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Valid_Reference_Token_with_required_Scope()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+
+            var result = await validator.ValidateAccessTokenAsync("123", "read");
+
+            Assert.IsFalse(result.IsError);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Valid_Reference_Token_with_missing_Scope()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var token = TokenFactory.CreateAccessToken("roclient", 600, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+
+            var result = await validator.ValidateAccessTokenAsync("123", "missing");
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Unknown_Reference_Token()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var result = await validator.ValidateAccessTokenAsync("unknown");
+            
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Expired_Reference_Token()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var token = TokenFactory.CreateAccessToken("roclient", 2, "read", "write");
+            var handle = "123";
+
+            await store.StoreAsync(handle, token);
+            await Task.Delay(2000);
+
+            var result = await validator.ValidateAccessTokenAsync("123");
+            
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Malformed_JWT_Token()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+
+            var result = await validator.ValidateAccessTokenAsync("unk.nown");
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [TestMethod]
@@ -46,14 +137,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         {
             throw new NotImplementedException();
         }
-
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Malformed_JWT_Token()
-        {
-            throw new NotImplementedException();
-        }
-
 
         [TestMethod]
         [TestCategory(Category)]
@@ -91,19 +174,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             throw new NotImplementedException();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Unknown_Reference_Token()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Expired_Reference_Token()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         [TestMethod]
         [TestCategory(Category)]
@@ -115,13 +186,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         [TestMethod]
         [TestCategory(Category)]
         public void Valid_Reference_Token_but_Client_not_active()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        [TestCategory(Category)]
-        public void Valid_Reference_Token_missing_Scope()
         {
             throw new NotImplementedException();
         }

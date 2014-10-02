@@ -135,5 +135,17 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
             return new AuthorizeRequestValidator(options, scopes, clients, customValidator, context);
         }
+
+        public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore)
+        {
+            var validator = new TokenValidator(
+                options: TestIdentityServerOptions.Create(),
+                users: new TestUserService(),
+                clients: CreateClientStore(),
+                tokenHandles: tokenStore,
+                customValidator: new DefaultCustomTokenValidator());
+
+            return validator;
+        }
     }
 }
