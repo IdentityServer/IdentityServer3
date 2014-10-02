@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Tests;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace UnitTests
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
     [TestClass]
     public class Authorize_ClientValidation_Valid

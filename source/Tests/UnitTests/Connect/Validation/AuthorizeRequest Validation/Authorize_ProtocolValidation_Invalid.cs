@@ -19,9 +19,9 @@ using System;
 using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace UnitTests
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
     [TestClass]
     public class Authorize_ProtocolValidation_Invalid

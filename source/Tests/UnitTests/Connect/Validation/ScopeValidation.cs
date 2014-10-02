@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace UnitTests.Validation_Tests
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 {
     [TestClass]
     public class ScopeValidation

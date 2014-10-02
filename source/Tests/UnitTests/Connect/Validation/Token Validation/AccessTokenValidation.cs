@@ -22,9 +22,9 @@ using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
     [TestClass]
     public class AccessTokenValidation

@@ -19,9 +19,9 @@ using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Connect.Models;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace UnitTests.Validation_Tests.Client_Validation
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
     [TestClass]
     public class Client_Validation

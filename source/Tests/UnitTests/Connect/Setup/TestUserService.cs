@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Plumbing;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace UnitTests.Plumbing
+namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     class TestUserService : IUserService
     {

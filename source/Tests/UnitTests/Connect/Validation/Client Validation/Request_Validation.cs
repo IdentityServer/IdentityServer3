@@ -22,9 +22,9 @@ using System.Text;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace UnitTests.Validation_Tests.Client_Validation
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
     [TestClass]
     public class Request_Validation

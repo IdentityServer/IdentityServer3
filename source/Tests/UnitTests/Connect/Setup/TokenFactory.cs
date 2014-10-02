@@ -19,7 +19,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
-namespace UnitTests.Plumbing
+namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     static class TokenFactory
     {

@@ -20,7 +20,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace UnitTests.Plumbing
+namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     class TestGrantValidator : ICustomGrantValidator
     {

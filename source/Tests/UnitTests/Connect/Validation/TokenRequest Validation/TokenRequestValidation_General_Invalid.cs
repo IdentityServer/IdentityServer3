@@ -22,10 +22,9 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Tests.Plumbing;
-using UnitTests.Plumbing;
+using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
-namespace UnitTests.TokenRequest_Validation
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
     [TestClass]
     public class TokenRequestValidation_General_Invalid
