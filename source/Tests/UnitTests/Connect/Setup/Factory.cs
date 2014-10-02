@@ -42,7 +42,7 @@ namespace UnitTests.Plumbing
             return new ClientValidator(clients);
         }
 
-        public static TokenRequestValidator CreateTokenValidator(
+        public static TokenRequestValidator CreateTokenRequestValidator(
             IdentityServerOptions options = null,
             IScopeStore scopes = null,
             IAuthorizationCodeStore authorizationCodeStore = null,
@@ -96,7 +96,7 @@ namespace UnitTests.Plumbing
             return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator, context);
         }
 
-        public static AuthorizeRequestValidator CreateAuthorizeValidator(
+        public static AuthorizeRequestValidator CreateAuthorizeRequestValidator(
             IdentityServerOptions options = null,
             IScopeStore scopes = null,
             IClientStore clients = null,

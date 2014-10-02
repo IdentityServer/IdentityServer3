@@ -40,7 +40,7 @@ namespace UnitTests.AuthorizeRequest_Validation
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
             Assert.AreEqual(false, protocolResult.IsError);
 

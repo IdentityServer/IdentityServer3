@@ -38,7 +38,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Parameters_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var result = await validator.ValidateRequestAsync(null, null);
@@ -50,7 +50,7 @@ namespace UnitTests.TokenRequest_Validation
         public async Task Client_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -77,7 +77,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -107,7 +107,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();

@@ -57,7 +57,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -96,7 +96,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -115,7 +115,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("client");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -132,7 +132,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
@@ -149,7 +149,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -168,7 +168,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -187,7 +187,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("roclient_restricted");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
@@ -206,7 +206,7 @@ namespace UnitTests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
@@ -235,7 +235,7 @@ namespace UnitTests.TokenRequest_Validation
 
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();
@@ -265,7 +265,7 @@ namespace UnitTests.TokenRequest_Validation
 
             var client = await _clients.FindClientByIdAsync("roclient_restricted_refresh");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();

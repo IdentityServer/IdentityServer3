@@ -31,7 +31,7 @@ namespace UnitTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null_Parameter()
         {
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(null);
         }
 
@@ -39,7 +39,7 @@ namespace UnitTests
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(new NameValueCollection());
 
             Assert.IsTrue(result.IsError);
@@ -58,7 +58,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -77,7 +77,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -95,7 +95,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -113,7 +113,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -130,7 +130,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -147,7 +147,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -164,7 +164,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -182,7 +182,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "malformed");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -200,7 +200,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https:///attacker.com");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -218,7 +218,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -236,7 +236,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, "unknown");
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -255,7 +255,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -274,7 +274,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "malformed");
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);
@@ -293,7 +293,7 @@ namespace UnitTests
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "-1");
 
-            var validator = Factory.CreateAuthorizeValidator();
+            var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
             Assert.IsTrue(result.IsError);

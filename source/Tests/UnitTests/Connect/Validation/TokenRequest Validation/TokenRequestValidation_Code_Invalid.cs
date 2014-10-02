@@ -50,7 +50,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -79,7 +79,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -109,7 +109,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -139,7 +139,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -170,7 +170,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -200,7 +200,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -229,7 +229,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -260,7 +260,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
             var parameters = new NameValueCollection();
@@ -297,7 +297,7 @@ namespace UnitTests.TokenRequest_Validation
 
             await store.StoreAsync("valid", code);
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
 
@@ -312,7 +312,7 @@ namespace UnitTests.TokenRequest_Validation
             Assert.IsFalse(result.IsError);
 
             // request second time
-            validator = Factory.CreateTokenValidator(
+            validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
             

@@ -40,7 +40,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
             var store = new InMemoryRefreshTokenStore();
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();
@@ -71,7 +71,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();
@@ -102,7 +102,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
             var client = await _clients.FindClientByIdAsync("roclient");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();
@@ -133,7 +133,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
 
             var client = await _clients.FindClientByIdAsync("roclient_restricted");
 
-            var validator = Factory.CreateTokenValidator(
+            var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();

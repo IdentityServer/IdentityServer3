@@ -136,7 +136,7 @@
     <Compile Include="Connect\Setup\TestClients.cs" />
     <Compile Include="Connect\Setup\TestScopes.cs" />
     <Compile Include="Connect\Setup\TestUserService.cs" />
-    <Compile Include="Connect\Setup\ValidatorFactory.cs" />
+    <Compile Include="Connect\Setup\Factory.cs" />
     <Compile Include="TestClients.cs" />
     <Compile Include="TestFactory.cs" />
     <Compile Include="TestIdentityServerOptions.cs" />

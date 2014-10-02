@@ -149,6 +149,17 @@ namespace Thinktecture.IdentityServer.Tests.Plumbing
                         ClientId = "disabled",
                         ClientSecret = "invalid",
                         Flow = Flows.Custom,
+                    },
+                    new Client
+                    {
+                        ClientName = "Reference Token Client",
+
+                        Enabled = true,
+                        ClientId = "referencetokenclient",
+                        ClientSecret = "secret",
+                        Flow = Flows.Implicit,
+
+                        AccessTokenType = AccessTokenType.Reference
                     }
             };
         }

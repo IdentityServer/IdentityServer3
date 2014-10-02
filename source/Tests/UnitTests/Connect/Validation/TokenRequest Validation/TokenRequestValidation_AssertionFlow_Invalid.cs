@@ -35,7 +35,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("client");
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
@@ -53,7 +53,7 @@ namespace UnitTests.Validation_Tests.TokenRequest_Validation
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
 
-            var validator = Factory.CreateTokenValidator();
+            var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "unknownGrantType");

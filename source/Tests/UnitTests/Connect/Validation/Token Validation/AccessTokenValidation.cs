@@ -14,47 +14,116 @@
  * limitations under the License.
  */
 
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using System.Threading.Tasks;
-//using Thinktecture.IdentityServer.Core;
-//using Thinktecture.IdentityServer.Core.Connect;
-//using Thinktecture.IdentityServer.Core.Connect.Models;
-//using Thinktecture.IdentityServer.Core.Connect.Services;
-//using Thinktecture.IdentityServer.Core.Services;
-//using UnitTests.Plumbing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
+using UnitTests.Plumbing;
 
-//namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
-//{
-//    [TestClass]
-//    public class AccessTokenValidation
-//    {
-//        TestSettings _settings = new TestSettings();
-//        IClientStore _clients = Factory.CreateClientStore();
+namespace Thinktecture.IdentityServer.Tests.Validation_Tests.Token_Validation
+{
+    [TestClass]
+    public class AccessTokenValidation
+    {
+        const string Category = "Access token validation";
 
-//        [TestMethod]
-//        public async Task Create_and_Validate_JWT_AccessToken_Valid()
-//        {
-//            var tokenService = new DefaultTokenService(
-//                null,
-//                _settings,
-//                null,
-//                null);
+        IClientStore _clients = Factory.CreateClientStore();
+        
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_Reference_Token()
+        {
+            throw new NotImplementedException();
+        }
 
-//            var token = new Token(Constants.TokenTypes.AccessToken)
-//            {
-//                Audience = string.Format(Constants.AccessTokenAudience, _settings.IssuerUri),
-//                Issuer = _settings.IssuerUri,
-//                Lifetime = 60,
-//                Client = await _clients.FindClientByIdAsync("client")
-//            };
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_JWT_Token()
+        {
+            throw new NotImplementedException();
+        }
 
-//            var jwt = await tokenService.CreateSecurityTokenAsync(token);
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Malformed_JWT_Token()
+        {
+            throw new NotImplementedException();
+        }
 
-//            var validator = new TokenValidator(_settings, null, null);
-//            var result = await validator.ValidateAccessTokenAsync(jwt);
 
-//            Assert.IsFalse(result.IsError);
-//            Assert.IsNotNull(result.Claims);
-//        }
-//    }
-//}
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Expired_JWT_Token()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_JWT_Token_wrong_Issuer()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_JWT_Token_missing_Scope()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_JWT_Token_but_User_not_active()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_JWT_Token_but_Client_not_active()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Unknown_Reference_Token()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Expired_Reference_Token()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_Reference_Token_but_User_not_active()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_Reference_Token_but_Client_not_active()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Valid_Reference_Token_missing_Scope()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
