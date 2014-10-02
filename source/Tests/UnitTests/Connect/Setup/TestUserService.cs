@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsActive(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
             var subjectId = subject.GetSubjectId();
             if (subjectId == "valid")

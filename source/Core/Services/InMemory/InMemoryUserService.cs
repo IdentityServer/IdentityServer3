@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public virtual Task<bool> IsActive(ClaimsPrincipal subject)
+        public virtual Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
             if (subject == null) throw new ArgumentNullException("subject");
 

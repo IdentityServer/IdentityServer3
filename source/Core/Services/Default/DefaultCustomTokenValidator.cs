@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             {
                 var principal = Principal.Create("tokenvalidator", subClaim);
 
-                if (! await _users.IsActive(principal))
+                if (! await _users.IsActiveAsync(principal))
                 {
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
