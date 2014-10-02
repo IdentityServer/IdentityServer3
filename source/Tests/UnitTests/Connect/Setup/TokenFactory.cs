@@ -18,24 +18,27 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     static class TokenFactory
     {
-        public static Token CreateAccessToken()
+        public static Token CreateAccessToken(string clientId, int lifetime, params string[] scopes)
         {
+            var claims = new List<Claim> 
+            {
+                new Claim("client_id", clientId),
+            };
+
+            scopes.ToList().ForEach(s => claims.Add(new Claim("scope", s)));
+
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
                 Audience = "audience",
                 Issuer = "issuer",
-                Lifetime = 60,
-
-                Claims = new List<Claim> 
-                {
-                    new Claim("client_id", "client"),
-                    new Claim("scope", "openid")
-                }
+                Lifetime = lifetime,
+                Claims = claims
             };
 
             return token;

@@ -109,6 +109,56 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                     },
                     new Client
                     {
+                        ClientName = "Resource Owner Client",
+                        Enabled = true,
+                        ClientId = "roclient_absolute_refresh_expiration_one_time_only",
+                        ClientSecret = "secret",
+                        Flow = Flows.ResourceOwner,
+
+                        RefreshTokenExpiration = TokenExpiration.Absolute,
+                        RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                        AbsoluteRefreshTokenLifetime = 200
+                    },
+                    new Client
+                    {
+                        ClientName = "Resource Owner Client",
+                        Enabled = true,
+                        ClientId = "roclient_absolute_refresh_expiration_reuse",
+                        ClientSecret = "secret",
+                        Flow = Flows.ResourceOwner,
+
+                        RefreshTokenExpiration = TokenExpiration.Absolute,
+                        RefreshTokenUsage = TokenUsage.ReUse,
+                        AbsoluteRefreshTokenLifetime = 200
+                    },
+                    new Client
+                    {
+                        ClientName = "Resource Owner Client",
+                        Enabled = true,
+                        ClientId = "roclient_sliding_refresh_expiration_one_time_only",
+                        ClientSecret = "secret",
+                        Flow = Flows.ResourceOwner,
+
+                        RefreshTokenExpiration = TokenExpiration.Sliding,
+                        RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                        AbsoluteRefreshTokenLifetime = 10,
+                        SlidingRefreshTokenLifetime = 4
+                    },
+                    new Client
+                    {
+                        ClientName = "Resource Owner Client",
+                        Enabled = true,
+                        ClientId = "roclient_sliding_refresh_expiration_reuse",
+                        ClientSecret = "secret",
+                        Flow = Flows.ResourceOwner,
+
+                        RefreshTokenExpiration = TokenExpiration.Sliding,
+                        RefreshTokenUsage = TokenUsage.ReUse,
+                        AbsoluteRefreshTokenLifetime = 200,
+                        SlidingRefreshTokenLifetime = 100
+                    },
+                    new Client
+                    {
                         ClientName = "Resource Owner Client (restricted)",
                         Enabled = true,
                         ClientId = "roclient_restricted",
@@ -122,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                     },
                     new Client
                     {
-                        ClientName = "Resource Owner Client (restricted)",
+                        ClientName = "Resource Owner Client (restricted with refresh)",
                         Enabled = true,
                         ClientId = "roclient_restricted_refresh",
                         ClientSecret = "secret",
