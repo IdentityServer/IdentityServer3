@@ -16,8 +16,10 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -31,7 +33,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         const string Category = "Access token validation";
 
         IClientStore _clients = Factory.CreateClientStore();
-        
+
+        static AccessTokenValidation()
+        {
+            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
+        }
+
         [TestMethod]
         [TestCategory(Category)]
         public async Task Valid_Reference_Token()

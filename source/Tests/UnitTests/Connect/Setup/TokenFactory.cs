@@ -44,5 +44,26 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
             return token;
         }
+
+        public static Token CreateIdentityToken(string clientId, string subjectId)
+        {
+            var clients = Factory.CreateClientStore();
+
+            var claims = new List<Claim> 
+            {
+                new Claim("sub", subjectId)
+            };
+
+            var token = new Token(Constants.TokenTypes.IdentityToken)
+            {
+                Audience = clientId,
+                Client = clients.FindClientByIdAsync(clientId).Result,
+                Issuer = "https://idsrv3.com",
+                Lifetime = 600,
+                Claims = claims
+            };
+
+            return token;
+        }
     }
 }

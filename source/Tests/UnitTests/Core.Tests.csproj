@@ -88,6 +88,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -129,6 +133,7 @@
     <Compile Include="Configuration\RegistrationTests.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests.cs" />
     <Compile Include="Connect\ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
+    <Compile Include="Connect\Validation\Token Validation\IdentityTokenValidation.cs" />
     <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
