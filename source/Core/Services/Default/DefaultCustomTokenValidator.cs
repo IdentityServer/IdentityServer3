@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             }
 
             // make sure user is still active (if sub claim is present)
-            var subClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject);
+            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
                 var principal = Principal.Create("tokenvalidator", subClaim);
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             }
 
             // make sure client is still active (if client_id claim is present)
-            var clientClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId);
+            var clientClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.ClientId);
             if (clientClaim != null)
             {
                 var client = await _clients.FindClientByIdAsync(clientClaim.Value);
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         public async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
             // make sure user is still active (if sub claim is present)
-            var subClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject);
+            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
                 var principal = Principal.Create("tokenvalidator", subClaim);
