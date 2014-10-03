@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using Microsoft.Owin;
-using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -103,6 +103,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                     {
                         ClientName = "Resource Owner Client",
                         Enabled = true,
+                        ClientId = "roclient_symmetric",
+                        ClientSecret = "V5CQ9HV04yVFOp4WZseN+PUzxtl6sYEcgaJ64IdE7cw=",
+                        Flow = Flows.ResourceOwner,
+                        IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret
+                    },
+                    new Client
+                    {
+                        ClientName = "Resource Owner Client",
+                        Enabled = true,
                         ClientId = "roclient",
                         ClientSecret = "secret",
                         Flow = Flows.ResourceOwner,
