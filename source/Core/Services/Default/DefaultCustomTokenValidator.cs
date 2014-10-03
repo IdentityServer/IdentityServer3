@@ -56,6 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 }
             }
 
+            // make sure client is still active (if client_id claim is present)
             var clientClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId);
             if (clientClaim != null)
             {
@@ -73,9 +74,25 @@ namespace Thinktecture.IdentityServer.Core.Services
             return result;
         }
 
-        public Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
+        public async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
-            return Task.FromResult(result);
+            // make sure user is still active (if sub claim is present)
+            var subClaim = result.Claims.First(c => c.Type == Constants.ClaimTypes.Subject);
+            if (subClaim != null)
+            {
+                var principal = Principal.Create("tokenvalidator", subClaim);
+
+                if (!await _users.IsActiveAsync(principal))
+                {
+                    result.IsError = true;
+                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Claims = null;
+
+                    return result;
+                }
+            }
+
+            return result;
         }
     }
 }
