@@ -27,6 +27,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -61,8 +62,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
-            // todo: check client signing key mode
-            var result = await ValidateJwtAsync(token, clientId, new X509SecurityKey(_options.SigningCertificate), validateLifetime);
+            var client = await _clients.FindClientByIdAsync(clientId);
+            if (client == null)
+            {
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+            }
+
+            SecurityKey signingKey;
+            if (client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+            {
+                signingKey = new InMemorySymmetricSecurityKey(Convert.FromBase64String(client.ClientSecret));
+            }
+            else
+            {
+                signingKey = new X509SecurityKey(_options.SigningCertificate);
+            }
+
+            var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
 
             if (result.IsError)
             {
@@ -78,14 +94,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             return customResult;
-        }
-
-        private string GetClientIdFromJwt(string token)
-        {
-            var jwt = new JwtSecurityToken(token);
-            var clientId = jwt.Audiences.FirstOrDefault();
-
-            return clientId;
         }
 
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
@@ -215,6 +223,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             claims.AddRange(token.Claims);
 
             return claims;
+        }
+
+        protected virtual string GetClientIdFromJwt(string token)
+        {
+            var jwt = new JwtSecurityToken(token);
+            var clientId = jwt.Audiences.FirstOrDefault();
+
+            return clientId;
         }
 
         protected virtual TokenValidationResult Invalid(string error)
