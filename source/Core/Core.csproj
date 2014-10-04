@@ -121,6 +121,7 @@
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
+    <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
