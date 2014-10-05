@@ -9,9 +9,9 @@
     <projectUrl>https://github.com/thinktecture/Thinktecture.IdentityServer.v3</projectUrl>
     <iconUrl>http://www.thinktecture.com/images/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Thinktecture IdentityServer is a light-weight OAuth2 and OpenID Connect security token service that can be embedded into your web applications.</description>
+    <description>OpenID Connect and OAuth2 Security Token Service and Authorization Server.</description>
     <copyright>Copyright 2014</copyright>
-    <tags>Thinktecture IdentityServer OpenIDConnect OAuth2 owin</tags>
+    <tags>Thinktecture IdentityServer OpenIDConnect OAuth2 OWIN</tags>
     <dependencies>
       <dependency id="Owin" version="1.0"/>
     </dependencies>
