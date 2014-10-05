@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core
 {
@@ -102,10 +103,18 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ResponseTypes
         {
+            // authorization code flow
+            public const string Code = "code";
+
+            // implicit flow
             public const string Token        = "token";
             public const string IdToken      = "id_token";
             public const string IdTokenToken = "id_token token";
-            public const string Code         = "code";
+            
+            // hybrid flow
+            public const string CodeIdToken      = "code id_token";
+            public const string CodeToken        = "code token";
+            public const string CodeIdTokenToken = "code id_token token";
         }
 
         public static readonly List<string> SupportedResponseTypes = new List<string> 
@@ -113,7 +122,21 @@ namespace Thinktecture.IdentityServer.Core
                                 ResponseTypes.Code,
                                 ResponseTypes.Token,
                                 ResponseTypes.IdToken,
-                                ResponseTypes.IdTokenToken
+                                ResponseTypes.IdTokenToken,
+                                ResponseTypes.CodeIdToken,
+                                ResponseTypes.CodeToken,
+                                ResponseTypes.CodeIdTokenToken
+                            };
+
+        public static readonly Dictionary<string, Flows> ResponseTypeToFlowMapping = new Dictionary<string, Flows>
+                            {
+                                { ResponseTypes.Code, Flows.AuthorizationCode },
+                                { ResponseTypes.Token, Flows.Implicit },
+                                { ResponseTypes.IdToken, Flows.Implicit },
+                                { ResponseTypes.IdTokenToken, Flows.Implicit },
+                                { ResponseTypes.CodeIdToken, Flows.Hybrid },
+                                { ResponseTypes.CodeToken, Flows.Hybrid },
+                                { ResponseTypes.CodeIdTokenToken, Flows.Hybrid }
                             };
 
         public static readonly List<string> SupportedGrantTypes = new List<string> 
@@ -124,6 +147,12 @@ namespace Thinktecture.IdentityServer.Core
                                 GrantTypes.Implicit
                             };
 
+        public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
+                            {
+                                { Flows.AuthorizationCode, new[] { ResponseModes.Query } },
+                                { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
+                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
+                            };
 
         public static class ResponseModes
         {

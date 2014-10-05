@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         Enabled = true,
                         ClientId = "codeclient",
                         ClientSecret = "secret",
-                        Flow = Flows.Code,
+                        Flow = Flows.AuthorizationCode,
                         ApplicationType = ApplicationTypes.Web,
                         RequireConsent = false,
                     
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         Enabled = true,
                         ClientId = "codeclient_restricted",
                         ClientSecret = "secret",
-                        Flow = Flows.Code,
+                        Flow = Flows.AuthorizationCode,
                         ApplicationType = ApplicationTypes.Web,
                         RequireConsent = false,
 

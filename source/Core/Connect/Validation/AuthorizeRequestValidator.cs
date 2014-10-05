@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (_validatedRequest.ResponseType == Constants.ResponseTypes.Code)
             {
                 Logger.Info("Flow: code");
-                _validatedRequest.Flow = Flows.Code;
+                _validatedRequest.Flow = Flows.AuthorizationCode;
                 _validatedRequest.ResponseMode = Constants.ResponseModes.Query;
             }
             else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token ||

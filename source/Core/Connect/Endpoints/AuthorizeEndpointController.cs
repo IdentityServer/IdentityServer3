@@ -166,7 +166,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return await CreateImplicitFlowAuthorizeResponseAsync(request);
             }
 
-            if (request.Flow == Flows.Code)
+            if (request.Flow == Flows.AuthorizationCode)
             {
                 return await CreateCodeFlowAuthorizeResponseAsync(request);
             }

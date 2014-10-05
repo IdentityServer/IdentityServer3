@@ -24,8 +24,9 @@ namespace Thinktecture.IdentityServer.Core.Models
 
     public enum Flows
     {
-        Code,
+        AuthorizationCode,
         Implicit,
+        Hybrid,
         ClientCredentials,
         ResourceOwner,
         Custom
