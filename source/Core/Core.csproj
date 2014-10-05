@@ -242,9 +242,6 @@
     <Compile Include="Connect\Models\TokenResponse.cs" />
     <Compile Include="Connect\ResponseHandling\TokenResponseGenerator.cs" />
     <Compile Include="Authentication\LoginResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeCodeResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeImplicitFormPostResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeImplicitFragmentResult.cs" />
     <Compile Include="Connect\Results\TokenErrorResult.cs" />
     <Compile Include="Connect\Results\TokenResult.cs" />
     <Compile Include="Connect\Results\ResultExtensions.cs" />

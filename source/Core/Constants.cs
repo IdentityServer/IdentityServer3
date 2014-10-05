@@ -139,7 +139,13 @@ namespace Thinktecture.IdentityServer.Core
                                 { ResponseTypes.CodeIdTokenToken, Flows.Hybrid }
                             };
 
-        // TODO
+        public static readonly List<Flows> AllowedFlowsForAuthorizeEndpoint = new List<Flows>
+                            {
+                                Flows.AuthorizationCode,
+                                Flows.Implicit,
+                                Flows.Hybrid
+                            };
+
         public enum ScopeRequirement
         {
             None, 
@@ -148,7 +154,6 @@ namespace Thinktecture.IdentityServer.Core
             Identity
         }
 
-        // TODO
         public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new Dictionary<string, ScopeRequirement>
                             {
                                 { ResponseTypes.Code, ScopeRequirement.None },

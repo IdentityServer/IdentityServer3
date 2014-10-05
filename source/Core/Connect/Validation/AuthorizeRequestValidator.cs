@@ -135,6 +135,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
 
             //////////////////////////////////////////////////////////
+            // check if flow is allowed at authorize endpoint
+            //////////////////////////////////////////////////////////
+            if (!Constants.AllowedFlowsForAuthorizeEndpoint.Contains(_validatedRequest.Flow))
+            {
+                return Invalid();
+            }
+
+            //////////////////////////////////////////////////////////
             // check response_mode parameter and set response_mode
             //////////////////////////////////////////////////////////
             var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
@@ -174,13 +182,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client);
             }
 
-            if (scope.Contains(Constants.StandardScopes.OpenId))
+            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
+            Logger.InfoFormat("scopes: {0}", scope);
+
+            if (_validatedRequest.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
             {
                 _validatedRequest.IsOpenIdRequest = true;
             }
-
-            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
-            Logger.InfoFormat("scopes: {0}", scope);
 
             //////////////////////////////////////////////////////////
             // check scope vs response_type plausability
@@ -196,29 +204,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
-            // TODO
-            // if response_type is code or code token - all scope variations are allowed
-            //if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code)
-            //{
-            //    // openid requests require a requested id_token
-            //    if (_validatedRequest.IsOpenIdRequest)
-            //    {
-            //        if (!_validatedRequest.ResponseType.Contains(Constants.ResponseTypes.IdToken))
-            //        {
-            //            Logger.Error("Request contains openid scope, but response_type does not contain an identity token");
-            //            return Invalid(ErrorTypes.Client);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        // resource requests require a token response_type
-            //        if (_validatedRequest.ResponseType != Constants.ResponseTypes.Token)
-            //        {
-            //            Logger.Error("Request does not contain the openid scope, but response_type contains an identity token");
-            //            return Invalid(ErrorTypes.Client);
-            //        }
-            //    }
-            //}
 
             //////////////////////////////////////////////////////////
             // check state

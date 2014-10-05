@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Execute());
         }
 
         HttpResponseMessage Execute()

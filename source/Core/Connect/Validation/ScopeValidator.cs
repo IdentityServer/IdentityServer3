@@ -145,7 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // must include identity scopes only
-            if (requirement == Constants.ScopeRequirement.IdentityOnly)
+            else if (requirement == Constants.ScopeRequirement.IdentityOnly)
             {
                 if (!ContainsOpenIdScopes || ContainsResourceScopes)
                 {
@@ -155,7 +155,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // must include resource scopes only
-            if (requirement == Constants.ScopeRequirement.ResourceOnly)
+            else if (requirement == Constants.ScopeRequirement.ResourceOnly)
             {
                 if (ContainsOpenIdScopes || !ContainsResourceScopes)
                 {
