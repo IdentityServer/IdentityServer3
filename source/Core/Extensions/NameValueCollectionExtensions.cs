@@ -18,6 +18,7 @@ using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -30,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 return String.Empty;
             }
 
-            var builder = new StringBuilder();
+            var builder = new StringBuilder(128);
             bool first = true;
             foreach (string name in collection)
             {
@@ -46,6 +47,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                         first = AppendNameValuePair(builder, first, true, name, value);
                     }
                 }
+            }
+
+            return builder.ToString();
+        }
+
+        public static string ToFormPost(this NameValueCollection collection)
+        {
+            var builder = new StringBuilder(128);
+            const string inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />\n";
+
+            foreach (string name in collection)
+            {
+                var values = collection.GetValues(name);
+                builder.AppendFormat(inputFieldFormat, name, values.First());
             }
 
             return builder.ToString();

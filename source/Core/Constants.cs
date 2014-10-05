@@ -139,6 +139,27 @@ namespace Thinktecture.IdentityServer.Core
                                 { ResponseTypes.CodeIdTokenToken, Flows.Hybrid }
                             };
 
+        // TODO
+        public enum ScopeRequirement
+        {
+            None, 
+            ResourceOnly, 
+            IdentityOnly,
+            Identity
+        }
+
+        // TODO
+        public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new Dictionary<string, ScopeRequirement>
+                            {
+                                { ResponseTypes.Code, ScopeRequirement.None },
+                                { ResponseTypes.Token, ScopeRequirement.ResourceOnly },
+                                { ResponseTypes.IdToken, ScopeRequirement.IdentityOnly },
+                                { ResponseTypes.IdTokenToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdTokenToken, ScopeRequirement.Identity }
+                            };
+                            
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
                                 GrantTypes.AuthorizationCode,

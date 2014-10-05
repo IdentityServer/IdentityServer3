@@ -23,6 +23,7 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Connect.Results;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -161,37 +162,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<IHttpActionResult> CreateAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
         {
-            if (request.Flow == Flows.Implicit)
+            var response = await _responseGenerator.CreateResponseAsync(request);
+
+            if (request.ResponseMode == Constants.ResponseModes.Query ||
+                request.ResponseMode == Constants.ResponseModes.Fragment)
             {
-                return await CreateImplicitFlowAuthorizeResponseAsync(request);
+                return new AuthorizeRedirectResult(response);
             }
 
-            if (request.Flow == Flows.AuthorizationCode)
-            {
-                return await CreateCodeFlowAuthorizeResponseAsync(request);
-            }
-
-            Logger.Error("Unsupported flow. Aborting.");
-            throw new InvalidOperationException("Unsupported flow");
-        }
-
-        private async Task<IHttpActionResult> CreateCodeFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
-        {
-            var response = await _responseGenerator.CreateCodeFlowResponseAsync(request, User as ClaimsPrincipal);
-            return this.AuthorizeCodeResponse(response);
-        }
-
-        private async Task<IHttpActionResult> CreateImplicitFlowAuthorizeResponseAsync(ValidatedAuthorizeRequest request)
-        {
-            var response = await _responseGenerator.CreateImplicitFlowResponseAsync(request);
-
-            // create form post response if responseMode is set form_post
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
-                return this.AuthorizeImplicitFormPostResponse(response);
+                return new AuthorizeFormPostResult(response, Request);
             }
 
-            return this.AuthorizeImplicitFragmentResponse(response);
+            Logger.Error("Unsupported response mode. Aborting.");
+            throw new InvalidOperationException("Unsupported response mode");
         }
 
         private IHttpActionResult CreateConsentResult(

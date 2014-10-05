@@ -19,12 +19,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
     public class AuthorizeResponseGenerator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly ITokenService _tokenService;
         private readonly IAuthorizationCodeStore _authorizationCodes;
 
@@ -34,12 +38,36 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _authorizationCodes = authorizationCodes;
         }
 
-        public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal subject)
+        public async Task<AuthorizeResponse> CreateResponseAsync(ValidatedAuthorizeRequest request)
+        {
+            if (request.Flow == Flows.AuthorizationCode)
+            {
+                return await CreateCodeFlowResponseAsync(request);
+            }
+            if (request.Flow == Flows.Implicit)
+            {
+                return await CreateImplicitFlowResponseAsync(request);
+            }
+            if (request.Flow == Flows.Hybrid)
+            {
+                return await CreateHybridFlowResponseAsync(request);
+            }
+
+            Logger.Error("Unsupported flow: " + request.Flow.ToString());
+            throw new InvalidOperationException("invalid flow: " + request.Flow.ToString());
+        }
+
+        private Task<AuthorizeResponse> CreateHybridFlowResponseAsync(ValidatedAuthorizeRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
             var code = new AuthorizationCode
             {
                 Client = request.Client,
-                Subject = subject,
+                Subject = request.Subject,
 
                 IsOpenId = request.IsOpenIdRequest,
                 RequestedScopes = request.ValidatedScopes.GrantedScopes,
@@ -54,6 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return new AuthorizeResponse
             {
+                Request = request,
                 RedirectUri = request.RedirectUri,
                 Code = id,
                 State = request.State
@@ -82,6 +111,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             return new AuthorizeResponse
             {
+                Request = request,
                 RedirectUri = request.RedirectUri,
                 AccessToken = accessTokenValue,
                 AccessTokenLifetime = accessTokenLifetime,
