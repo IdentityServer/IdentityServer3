@@ -22,6 +22,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -57,12 +58,29 @@ namespace Thinktecture.IdentityServer.Core.Connect
             throw new InvalidOperationException("invalid flow: " + request.Flow.ToString());
         }
 
-        private Task<AuthorizeResponse> CreateHybridFlowResponseAsync(ValidatedAuthorizeRequest request)
+        private async Task<AuthorizeResponse> CreateHybridFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
-            throw new NotImplementedException();
+            var code = await CreateCodeAsync(request);
+            var response = await CreateImplicitFlowResponseAsync(request, code);
+            response.Code = code;
+
+            return response;
         }
 
         public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request)
+        {
+            var code = await CreateCodeAsync(request);
+
+            return new AuthorizeResponse
+            {
+                Request = request,
+                RedirectUri = request.RedirectUri,
+                Code = code,
+                State = request.State
+            };
+        }
+
+        private async Task<string> CreateCodeAsync(ValidatedAuthorizeRequest request)
         {
             var code = new AuthorizationCode
             {
@@ -79,22 +97,18 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // store id token and access token and return authorization code
             var id = Guid.NewGuid().ToString("N");
             await _authorizationCodes.StoreAsync(id, code);
-
-            return new AuthorizeResponse
-            {
-                Request = request,
-                RedirectUri = request.RedirectUri,
-                Code = id,
-                State = request.State
-            };
+            
+            return id;
         }
 
-        public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request)
+        public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request, string authorizationCode = null)
         {
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
 
-            if (request.IsResourceRequest)
+            var responseTypes = request.ResponseType.FromSpaceSeparatedString();
+
+            if (responseTypes.Contains(Constants.ResponseTypes.Token))
             {
                 var accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
                 accessTokenLifetime = accessToken.Lifetime;
@@ -103,9 +117,21 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             string jwt = null;
-            if (request.IsOpenIdRequest)
+            if (responseTypes.Contains(Constants.ResponseTypes.IdToken))
             {
-                var idToken = await _tokenService.CreateIdentityTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, !request.AccessTokenRequested, request.Raw, accessTokenValue);
+                var tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.Subject,
+                    Client = request.Client,
+                    Scopes = request.ValidatedScopes.GrantedScopes,
+                    IncludeAllIdentityClaims = !request.AccessTokenRequested,
+                    ValidatedRequest = request,
+
+                    AccessTokenToHash = accessTokenValue,
+                    AuthorizationCodeToHash = authorizationCode
+                };
+
+                var idToken = await _tokenService.CreateIdentityTokenAsync(tokenRequest);
                 jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
             }
 

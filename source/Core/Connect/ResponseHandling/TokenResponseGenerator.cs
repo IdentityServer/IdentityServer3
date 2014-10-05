@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -83,7 +84,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
+                var tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.AuthorizationCode.Subject,
+                    Client = request.AuthorizationCode.Client,
+                    Scopes = request.AuthorizationCode.RequestedScopes,
+                    ValidatedRequest = request
+                };
+
+                var idToken = await _tokenService.CreateIdentityTokenAsync(tokenRequest);
                 var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
                 response.IdentityToken = jwt;
             }

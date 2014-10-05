@@ -50,15 +50,15 @@ namespace Thinktecture.IdentityServer.Core.Services
             _signingService = signingService;
         }
 
-        public virtual async Task<Token> CreateIdentityTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request, string accessTokenToHash = null)
+        public virtual async Task<Token> CreateIdentityTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating identity token");
 
             // host provided claims
             var claims = new List<Claim>();
-            
+
             // if nonce was sent, must be mirrored in id token
-            var nonce = request.Get(Constants.AuthorizeRequest.Nonce);
+            var nonce = request.ValidatedRequest.Raw.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
                 claims.Add(new Claim(Constants.ClaimTypes.Nonce, nonce));
@@ -68,25 +68,31 @@ namespace Thinktecture.IdentityServer.Core.Services
             claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTime.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
 
             // add at_hash claim
-            if (accessTokenToHash.IsPresent())
+            if (request.AccessTokenToHash.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAccessToken(accessTokenToHash)));
+                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAdditionalToken(request.AccessTokenToHash)));
+            }
+
+            // add c_hash claim
+            if (request.AuthorizationCodeToHash.IsPresent())
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalToken(request.AuthorizationCodeToHash)));
             }
 
             claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
-                subject,
-                client,
-                scopes,
-                includeAllIdentityClaims,
-                request));
+                request.Subject,
+                request.Client,
+                request.Scopes,
+                request.IncludeAllIdentityClaims,
+                request.ValidatedRequest.Raw));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
-                Audience = client.ClientId,
+                Audience = request.Client.ClientId,
                 Issuer = _options.IssuerUri,
-                Lifetime = client.IdentityTokenLifetime,
+                Lifetime = request.Client.IdentityTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
-                Client = client
+                Client = request.Client
             };
 
             return token;
@@ -145,7 +151,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             throw new InvalidOperationException("Invalid token type.");
         }
 
-        protected virtual string HashAccessToken(string accessTokenToHash)
+        protected virtual string HashAdditionalToken(string accessTokenToHash)
         {
             var algorithm = SHA256.Create();
             var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
