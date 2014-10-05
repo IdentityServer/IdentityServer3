@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 request.Client,
                 request.Scopes,
                 request.IncludeAllIdentityClaims,
-                request.ValidatedRequest.Raw));
+                request.ValidatedRequest));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 request.Subject,
                 request.Client,
                 request.Scopes,
-                request.ValidatedRequest.Raw);
+                request.ValidatedRequest);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {

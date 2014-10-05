@@ -38,7 +38,6 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
 
             var fields = _response.ToNameValueCollection();
-
             form = form.Replace("{{fields}}", fields.ToFormPost());
 
             var content = new StringContent(form, Encoding.UTF8, "text/html");
