@@ -29,7 +29,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string GrantType { get; set; }
         public AuthorizationCode AuthorizationCode { get; set; }
         public IEnumerable<string> Scopes { get; set; }
-        public ScopeValidator ValidatedScopes { get; set; }
         public string UserName { get; set; }
 
         public RefreshToken RefreshToken { get; set; }

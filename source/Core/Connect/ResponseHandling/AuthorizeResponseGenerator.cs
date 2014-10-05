@@ -121,12 +121,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 var tokenRequest = new TokenCreationRequest
                 {
+                    ValidatedRequest = request,
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
+                    
                     IncludeAllIdentityClaims = !request.AccessTokenRequested,
-                    ValidatedRequest = request,
-
                     AccessTokenToHash = accessTokenValue,
                     AuthorizationCodeToHash = authorizationCode
                 };

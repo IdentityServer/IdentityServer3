@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public ScopeValidator ValidatedScopes { get; set; }
+        
         public Client Client { get; set; }
         public Uri RedirectUri { get; set; }
 
