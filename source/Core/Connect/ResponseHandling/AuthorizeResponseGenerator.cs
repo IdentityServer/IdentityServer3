@@ -110,7 +110,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             if (responseTypes.Contains(Constants.ResponseTypes.Token))
             {
-                var accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+                var tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.Subject,
+                    Client = request.Client,
+                    Scopes = request.ValidatedScopes.GrantedScopes,
+                    ValidatedRequest = request
+                };
+                
+                var accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
                 accessTokenLifetime = accessToken.Lifetime;
 
                 accessTokenValue = await _tokenService.CreateSecurityTokenAsync(accessToken);

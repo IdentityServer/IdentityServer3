@@ -98,23 +98,23 @@ namespace Thinktecture.IdentityServer.Core.Services
             return token;
         }
 
-        public virtual async Task<Token> CreateAccessTokenAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
+        public async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating access token");
 
             var claims = await _claimsProvider.GetAccessTokenClaimsAsync(
-                subject,
-                client,
-                scopes,
-                request);
+                request.Subject,
+                request.Client,
+                request.Scopes,
+                request.ValidatedRequest.Raw);
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
                 Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri),
                 Issuer = _options.IssuerUri,
-                Lifetime = client.AccessTokenLifetime,
+                Lifetime = request.Client.AccessTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
-                Client = client
+                Client = request.Client
             };
 
             return token;

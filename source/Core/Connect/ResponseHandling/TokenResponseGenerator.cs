@@ -141,18 +141,35 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
+            TokenCreationRequest tokenRequest;
             bool createRefreshToken;
 
             if (request.AuthorizationCode != null)
             {
                 createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
-                accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
+                
+                tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.AuthorizationCode.Subject,
+                    Client = request.AuthorizationCode.Client,
+                    Scopes = request.AuthorizationCode.RequestedScopes,
+                    ValidatedRequest = request
+                };
             }
             else
             {
                 createRefreshToken = request.ValidatedScopes.ContainsOfflineAccessScope;
-                accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+
+                tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.Subject,
+                    Client = request.Client,
+                    Scopes = request.ValidatedScopes.GrantedScopes,
+                    ValidatedRequest = request
+                };
             }
+
+            accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
 
             string refreshToken = "";
             if (createRefreshToken)

@@ -175,7 +175,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
                             {
-                                { Flows.AuthorizationCode, new[] { ResponseModes.Query } },
+                                { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
                                 { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
                                 { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
                             };
