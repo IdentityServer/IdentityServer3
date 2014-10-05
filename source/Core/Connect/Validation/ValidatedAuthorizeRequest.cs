@@ -29,14 +29,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
-
-        public string ClientId { get; set; }
         public Client Client { get; set; }
         public Uri RedirectUri { get; set; }
+
+        public string ClientId { get; set; }
         public List<string> RequestedScopes { get; set; }
         public bool WasConsentShown { get; set; }
         public string State { get; set; }
         public string UiLocales { get; set; }
+        
         public bool IsOpenIdRequest { get; set; }
         public bool IsResourceRequest { get; set; }
         

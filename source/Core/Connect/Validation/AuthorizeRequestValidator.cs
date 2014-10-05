@@ -70,6 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             _validatedRequest.Raw = parameters;
 
+
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
@@ -82,6 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             Logger.InfoFormat("client_id: {0}", clientId);
             _validatedRequest.ClientId = clientId;
+
 
             //////////////////////////////////////////////////////////
             // redirect_uri must be present, and a valid uri
@@ -104,6 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.InfoFormat("redirect_uri: {0}", redirectUri);
             _validatedRequest.RedirectUri = new Uri(redirectUri);
 
+
             //////////////////////////////////////////////////////////
             // response_type must be present and supported
             //////////////////////////////////////////////////////////
@@ -123,23 +126,43 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.InfoFormat("response_type: {0}", responseType);
             _validatedRequest.ResponseType = responseType;
 
+
             //////////////////////////////////////////////////////////
             // match response_type to flow
             //////////////////////////////////////////////////////////
-            if (_validatedRequest.ResponseType == Constants.ResponseTypes.Code)
+            _validatedRequest.Flow = Constants.ResponseTypeToFlowMapping[_validatedRequest.ResponseType];
+            Logger.Info("Flow: " + _validatedRequest.Flow.ToString());
+
+
+            //////////////////////////////////////////////////////////
+            // check response_mode parameter and set response_mode
+            //////////////////////////////////////////////////////////
+            var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
+            if (responseMode.IsPresent())
             {
-                Logger.Info("Flow: code");
-                _validatedRequest.Flow = Flows.AuthorizationCode;
-                _validatedRequest.ResponseMode = Constants.ResponseModes.Query;
+                if (Constants.SupportedResponseModes.Contains(responseMode))
+                {
+                    if (Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].Contains(responseMode))
+                    {
+                        _validatedRequest.ResponseMode = responseMode;
+                    }
+                    else
+                    {
+                        Logger.Info("Invalid response_mode for flow: " + responseMode);
+                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    }
+                }
+                else
+                {
+                    Logger.InfoFormat("Unsupported response_mode: {0}", responseMode);
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                }
             }
-            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token ||
-                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdToken ||
-                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
+            else
             {
-                Logger.Info("Flow: implicit");
-                _validatedRequest.Flow = Flows.Implicit;
-                _validatedRequest.ResponseMode = Constants.ResponseModes.Fragment;
+                _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
             }
+
 
             //////////////////////////////////////////////////////////
             // scope must be present
@@ -163,8 +186,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // check scope vs response type plausability
             //////////////////////////////////////////////////////////
 
-            // if response_type is code - all scope variations are allowed
-            if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code)
+            // if response_type is code or code token - all scope variations are allowed
+            if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code &&
+                _validatedRequest.ResponseType != Constants.ResponseTypes.CodeToken)
             {
                 // openid requests require a requested id_token
                 if (_validatedRequest.IsOpenIdRequest)
@@ -221,36 +245,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         Logger.Error("Nonce required for implicit flow with openid scope");
                         return Invalid(ErrorTypes.Client);
                     }
-                }
-            }
-
-            //////////////////////////////////////////////////////////
-            // check response_mode
-            //////////////////////////////////////////////////////////
-            var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
-            if (responseMode.IsPresent())
-            {
-                if (Constants.SupportedResponseModes.Contains(responseMode))
-                {
-                    if (responseMode == Constants.ResponseModes.FormPost)
-                    {
-                        if (_validatedRequest.ResponseType != Constants.ResponseTypes.IdToken &&
-                            _validatedRequest.ResponseType != Constants.ResponseTypes.IdTokenToken)
-                        {
-                            Logger.Error("Invalid response_type for response_mode");
-                            return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
-                        }
-
-                        // should fail when unsupported/illegal response mode is requested?
-                        _validatedRequest.ResponseMode = Constants.ResponseModes.FormPost;
-                        Logger.InfoFormat("response_mode: {0}", _validatedRequest.ResponseMode);
-                    }
-                    
-                    Logger.InfoFormat("Ignoring response_mode: {0}", responseMode);
-                }
-                else
-                {
-                    Logger.InfoFormat("Unsupported response_mode - ignored: {0}", responseMode);
                 }
             }
 

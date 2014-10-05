@@ -265,6 +265,102 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
         [TestMethod]
         [TestCategory("AuthorizeRequest Protocol Validation")]
+        public void Invalid_ResponseMode_For_IdToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
+        public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
+        public void Invalid_ResponseMode_For_CodeToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
+        public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
+        public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdTokenToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = validator.ValidateProtocol(parameters);
+
+            Assert.IsTrue(result.IsError);
+            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
+            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+        }
+
+
+        [TestMethod]
+        [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
