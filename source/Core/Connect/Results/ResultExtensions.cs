@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Results;

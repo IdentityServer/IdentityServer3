@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {

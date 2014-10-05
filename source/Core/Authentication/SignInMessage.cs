@@ -15,7 +15,6 @@
  */
 
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;

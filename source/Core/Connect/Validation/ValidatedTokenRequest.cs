@@ -15,9 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
