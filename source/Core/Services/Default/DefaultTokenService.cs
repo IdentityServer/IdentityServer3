@@ -51,6 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         public virtual async Task<Token> CreateIdentityTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating identity token");
+            request.Validate();
 
             // host provided claims
             var claims = new List<Claim>();
@@ -99,6 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         public async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating access token");
+            request.Validate();
 
             var claims = await _claimsProvider.GetAccessTokenClaimsAsync(
                 request.Subject,
