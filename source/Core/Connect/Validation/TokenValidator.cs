@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 Logger.InfoFormat("Validating a JWT access token");
                 result = await ValidateJwtAsync(
                     token, 
-                    string.Format(Constants.AccessTokenAudience, _options.IssuerUri),
+                    string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
                     new X509SecurityKey(_options.SigningCertificate));
             }
             else

@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
-                Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri),
+                Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
                 Issuer = _options.IssuerUri,
                 Lifetime = request.Client.AccessTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),

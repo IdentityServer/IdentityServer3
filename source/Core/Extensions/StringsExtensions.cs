@@ -55,5 +55,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return !string.IsNullOrWhiteSpace(value);
         }
+
+        public static string EnsureTrailingSlash(this string url)
+        {
+            if (!url.EndsWith("/"))
+            {
+                return url += "/";
+            }
+
+            return url;
+        }
     }
 }

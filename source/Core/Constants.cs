@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         public const string BuiltInIdentityProvider         = "idsrv";
 
-        public const string AccessTokenAudience             = "{0}/resources";
+        public const string AccessTokenAudience             = "{0}resources";
 
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
