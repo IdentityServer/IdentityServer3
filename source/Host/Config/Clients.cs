@@ -125,6 +125,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         // OWIN middleware client
                         new Uri("http://localhost:2671/"),
+
+                        // WPF client
+                        new Uri("oob://localhost/wpfclient")
                     },
                 },
 

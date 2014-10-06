@@ -50,7 +50,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
             get
             {
                 return (ResponseType == Constants.ResponseTypes.IdTokenToken ||
-                        ResponseType == Constants.ResponseTypes.Code);
+                        ResponseType == Constants.ResponseTypes.Code ||
+                        ResponseType == Constants.ResponseTypes.CodeToken ||
+                        ResponseType == Constants.ResponseTypes.CodeIdTokenToken);
             }
         }
 
