@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     RedirectUris = new List<Uri>
                     {
                         // OWIN middleware client
-                        new Uri("http://localhost:2671/"),
+                        new Uri("http://localhost:2672/"),
 
                         // WPF client
                         new Uri("oob://localhost/wpfclient")
