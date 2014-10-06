@@ -145,7 +145,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.AuthorizationCode)
+            if (_validatedRequest.Client.Flow != Flows.AuthorizationCode &&
+                _validatedRequest.Client.Flow != Flows.Hybrid)
             {
                 Logger.Error("Client not authorized for code flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
