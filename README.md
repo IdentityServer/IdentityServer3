@@ -62,7 +62,7 @@ IdentityServer is built using the following great open source projects:
 - Json.Net
 - Thinktecture IdentityModel
 - ILMerge
-- DH.Logging
+- [LibLog](https://github.com/damianh/LibLog)
 - Katana
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
