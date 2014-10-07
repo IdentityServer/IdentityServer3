@@ -34,7 +34,7 @@ GitHub supports [markdown](http://github.github.com/github-flavored-markdown/), 
 
 
 ## Contributing code and content
-You will need to sign a CLA - please contact us first.
+You will need to sign a contributor license agreement (CLA) - please contact us first.
 
 Make sure you can build the code. Familiarize yourself with the project workflow and our coding conventions. If you don't know what a pull request is read this article: https://help.github.com/articles/using-pull-requests.
 
