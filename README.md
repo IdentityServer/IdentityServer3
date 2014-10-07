@@ -1,6 +1,6 @@
 # Thinktecture IdentityServer v3 #
 
-**Current status: Beta 1**
+**Current status: Beta 2**
 
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
