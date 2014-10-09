@@ -165,7 +165,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var authZcode = await _authorizationCodes.GetAsync(code);
             if (authZcode == null)
             {
-                Logger.ErrorFormat("Invalid authorization code: ", code);
+                Logger.ErrorFormat("Invalid authorization code: {0}", code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
             
