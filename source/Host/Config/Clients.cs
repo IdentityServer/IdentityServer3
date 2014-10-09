@@ -129,6 +129,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                         // WPF client
                         new Uri("oob://localhost/wpfclient")
                     },
+                    PostLogoutRedirectUris = new List<Uri>
+                    {
+                        new Uri("http://localhost:2672/")
+                    }
                 },
 
                 new Client
