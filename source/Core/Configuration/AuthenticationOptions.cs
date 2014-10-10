@@ -22,13 +22,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         public AuthenticationOptions()
         {
-            this.EnableLocalLogin = true;
-            this.CookieOptions = new CookieOptions();
+            EnableLocalLogin = true;
+            CookieOptions = new CookieOptions();
         }
 
         public bool EnableLocalLogin { get; set; }
         public CookieOptions CookieOptions { get; set; }
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
+        public bool DisableSignOutPrompt { get; set; }
     }
 
     public class LoginPageLink

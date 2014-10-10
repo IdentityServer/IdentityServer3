@@ -360,6 +360,14 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp = Get(Constants.RoutePaths.Logout);
             AssertPage(resp, "logout");
         }
+        
+        [TestMethod]
+        public void Logout_DisableSignOutPrompt_SkipsLogoutPromptPage()
+        {
+            this.options.AuthenticationOptions.DisableSignOutPrompt = true;
+            var resp = Get(Constants.RoutePaths.Logout);
+            AssertPage(resp, "loggedOut");
+        }
 
         [TestMethod]
         public void PostToLogout_RemovesCookies()

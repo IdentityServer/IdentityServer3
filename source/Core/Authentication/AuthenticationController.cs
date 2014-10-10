@@ -338,7 +338,15 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            return await RenderLogoutPromptPage();
+            if (!this._options.AuthenticationOptions.DisableSignOutPrompt)
+            {
+                return await RenderLogoutPromptPage();
+            }
+            else
+            {
+                Logger.InfoFormat("DisableSignOutPrompt set to true, performing logout");
+                return await Logout();
+            }
         }
         
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
