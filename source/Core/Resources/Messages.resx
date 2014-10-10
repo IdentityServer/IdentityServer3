@@ -129,4 +129,7 @@
   <data name="NoSubjectFromExternalProvider" xml:space="preserve">
     <value>Error authenticating with external provider</value>
   </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>There was an unexpected error</value>
+  </data>
 </root>

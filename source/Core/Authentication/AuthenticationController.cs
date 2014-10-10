@@ -646,6 +646,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private IHttpActionResult RenderErrorPage(string message = null)
         {
+            message = message ?? Resources.Messages.UnexpectedError;
             var errorModel = new ErrorViewModel
             {
                 SiteName = this._options.SiteName,

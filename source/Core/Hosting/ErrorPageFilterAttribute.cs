@@ -35,7 +35,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             var errorModel = new ErrorViewModel
             {
                 SiteName = options.SiteName,
-                SiteUrl = env.GetIdentityServerBaseUrl()
+                SiteUrl = env.GetIdentityServerBaseUrl(),
+                ErrorMessage = Resources.Messages.UnexpectedError,
             };
             var errorResult = new ErrorActionResult(viewSvc, env, errorModel);
             actionExecutedContext.Response = await errorResult.GetResponseMessage();
