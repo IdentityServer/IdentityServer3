@@ -126,6 +126,11 @@
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
+    <Compile Include="Resources\Scopes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Scopes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
@@ -292,6 +297,10 @@
     </None>
     <None Include="app.config" />
     <None Include="Views\Embedded\Assets\libs\bootstrap\custom.less" />
+    <EmbeddedResource Include="Resources\Scopes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Scopes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />

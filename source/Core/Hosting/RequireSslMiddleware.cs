@@ -17,6 +17,7 @@ using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
@@ -36,9 +37,9 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             if (context.Request.Uri.Scheme != Uri.UriSchemeHttps)
             {
                 context.Response.StatusCode = 403;
-                context.Response.ReasonPhrase = "SSL is required.";
+                context.Response.ReasonPhrase = Messages.SslRequired;
 
-                await context.Response.WriteAsync("SSL is required.");
+                await context.Response.WriteAsync(Messages.SslRequired);
 
                 return;
             }

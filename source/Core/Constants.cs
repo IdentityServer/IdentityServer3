@@ -194,6 +194,16 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseModes.Fragment,
                             };
 
+        public static string[] SupportedSubjectTypes = new string[]
+                            {
+                                "pairwise", "public"
+                            };
+
+        public static class SigningAlgorithms
+        {
+            public const string RSA_SHA_256 = "RS256";
+        }
+
         public static class DisplayModes
         {
             public const string Page  = "page";
