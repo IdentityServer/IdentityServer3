@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using System;
+using System.Linq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 
@@ -25,7 +27,7 @@ namespace Owin
 {
     static class UseCookieAuthenticationExtension
     {
-        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, CookieOptions options, IDataProtector dataProtector)
+        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, Thinktecture.IdentityServer.Core.Configuration.CookieOptions options, IDataProtector dataProtector)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (dataProtector == null) throw new ArgumentNullException("dataProtector");
@@ -35,16 +37,17 @@ namespace Owin
                 options.Prefix += ".";
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            var primary = new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.PrimaryAuthenticationType,
                 CookieName = options.Prefix + Constants.PrimaryAuthenticationType,
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PrimaryAuthenticationType))
-            });
+            };
+            app.UseCookieAuthentication(primary);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            var external = new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.ExternalAuthenticationType,
                 CookieName = options.Prefix + Constants.ExternalAuthenticationType,
@@ -52,9 +55,10 @@ namespace Owin
                 ExpireTimeSpan = Constants.ExternalCookieTimeSpan,
                 SlidingExpiration = false,
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.ExternalAuthenticationType))
-            });
+            };
+            app.UseCookieAuthentication(external);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            var partial = new CookieAuthenticationOptions
             {
                 AuthenticationType = Constants.PartialSignInAuthenticationType,
                 CookieName = options.Prefix + Constants.PartialSignInAuthenticationType,
@@ -62,7 +66,38 @@ namespace Owin
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PartialSignInAuthenticationType))
-            });
+            };
+            app.UseCookieAuthentication(partial);
+
+            Action<string> setCookiePath = (path) =>
+            {
+                if (!String.IsNullOrWhiteSpace(path))
+                {
+                    primary.CookiePath = external.CookiePath = path;
+                    // TODO: should we leave the partial path to "/"?
+                    partial.CookiePath = path;
+                }
+            };
+            
+            if (String.IsNullOrWhiteSpace(options.Path))
+            {
+                app.Use(async (ctx, next) =>
+                {
+                    // we only want this to run once, so assign to null once called 
+                    // (and yes, it's possible that many callers hit this at same time, 
+                    // but the set is idempotent)
+                    if (setCookiePath != null)
+                    {
+                        setCookiePath(ctx.Request.PathBase.Value);
+                        setCookiePath = null;
+                    }
+                    await next();
+                });
+            }
+            else
+            {
+                setCookiePath(options.Path);
+            }
 
             return app;
         }

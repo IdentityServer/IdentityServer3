@@ -48,9 +48,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         public string GetCookieName(string id)
         {
-            return String.Format(SignInMessageCookieName, 
+            return String.Format(SignInMessageCookieName,
                 options.AuthenticationOptions.CookieOptions.Prefix,
                 id);
+        }
+        
+        public string CookiePath
+        {
+            get
+            {
+                var path = ctx.Request.PathBase.Value;
+                if (String.IsNullOrWhiteSpace(path))
+                {
+                    path = "/";
+                }
+                return path;
+            }
         }
         
         private IEnumerable<string> GetCookieNames()
@@ -101,7 +114,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 new Microsoft.Owin.CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = Secure
+                    Secure = Secure,
+                    Path = CookiePath
                 });
         }
 
@@ -125,7 +139,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 {
                     Expires = DateTime.UtcNow.AddYears(-1),
                     HttpOnly = true,
-                    Secure = Secure
+                    Secure = Secure,
+                    Path = CookiePath
                 });
         }
 
@@ -141,7 +156,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         Expires = DateTime.UtcNow.AddYears(-1),
                         HttpOnly = true,
-                        Secure = Secure
+                        Secure = Secure,
+                        Path = CookiePath
                     });
             }
         }
