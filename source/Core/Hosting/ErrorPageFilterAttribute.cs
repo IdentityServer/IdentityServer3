@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Views;
 
@@ -26,8 +27,12 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 {
     class ErrorPageFilterAttribute : ExceptionFilterAttribute
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
         {
+            Logger.ErrorException("Exception accessing: " + actionExecutedContext.Request.RequestUri.AbsolutePath, actionExecutedContext.Exception);
+
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
             var scope = env.GetLifetimeScope();
             var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
