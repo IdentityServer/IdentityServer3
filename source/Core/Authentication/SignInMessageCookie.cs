@@ -123,9 +123,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             var name = GetCookieName(id);
             var data = ctx.Request.Cookies[name];
-            var message = Unprotect(data);
-            
-            return message;
+            if (!String.IsNullOrWhiteSpace(data))
+            {
+                return Unprotect(data);
+            }
+            return null;
         }
 
         public void Clear(string id)
