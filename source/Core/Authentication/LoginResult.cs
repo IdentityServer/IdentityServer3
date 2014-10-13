@@ -63,12 +63,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             Logger.Info("Redirecting to login page");
 
-            var cookie = new SignInMessageCookie(this.env, this.options);
-            message.Id = Guid.NewGuid().ToString("N");
-            cookie.Write(this.message);
+            var cookie = new MessageCookie<SignInMessage>(this.env, this.options);
+            var id = cookie.Write(this.message);
 
             var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-            url += "?signin=" + this.message.Id;
+            url += "?signin=" + id;
 
             var uri = new Uri(url);
 

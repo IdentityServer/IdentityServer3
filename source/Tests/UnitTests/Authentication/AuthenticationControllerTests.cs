@@ -84,9 +84,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             };
             
             var ctx = new OwinContext(env);
-            var signInCookie = new SignInMessageCookie(ctx, this.options);
-            msg.Id = SignInId = Guid.NewGuid().ToString("N");
-            signInCookie.Write(msg);
+            var signInCookie = new MessageCookie<SignInMessage>(ctx, this.options);
+            SignInId = signInCookie.Write(msg);
 
             client.SetCookies(headers["Set-Cookie"]);
 

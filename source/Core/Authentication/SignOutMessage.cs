@@ -22,14 +22,9 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
-    public class SignInMessage
+    public class SignOutMessage
     {
         public string ReturnUrl { get; set; }
         public string ClientId { get; set; }
-        public string IdP { get; set; }
-        public string Tenant { get; set; }
-        public string DisplayMode { get; set; }
-        public string UiLocales { get; set; }
-        public IEnumerable<string> AcrValues { get; set; }
     }
 }

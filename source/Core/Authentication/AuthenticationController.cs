@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = cookie.Read(signin);
             if (signInMessage == null)
             {
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider = signInMessage.IdP, signin }));
             }
 
-            return await RenderLoginPage(signInMessage);
+            return await RenderLoginPage(signInMessage, signin);
         }
 
         [Route(Constants.RoutePaths.Login)]
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = cookie.Read(signin);
             if (signInMessage == null)
             {
@@ -139,23 +139,23 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (!ModelState.IsValid)
             {
                 Logger.Warn("validation error: username or password missing");
-                return await RenderLoginPage(signInMessage, ModelState.GetError(), model.Username, model.RememberMe == true);
+                return await RenderLoginPage(signInMessage, signin, ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
             var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
-                return await RenderLoginPage(signInMessage, Messages.InvalidUsernameOrPassword, model.Username, model.RememberMe == true);
+                return await RenderLoginPage(signInMessage, signin, Messages.InvalidUsernameOrPassword, model.Username, model.RememberMe == true);
             }
 
             if (authResult.IsError)
             {
                 Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
-                return await RenderLoginPage(signInMessage, authResult.ErrorMessage, model.Username, model.RememberMe == true);
+                return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
 
-            return SignInAndRedirect(signInMessage, authResult, model.RememberMe);
+            return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = cookie.Read(signin);
             if (signInMessage == null)
             {
@@ -209,7 +209,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = cookie.Read(signInId);
             if (signInMessage == null)
             {
@@ -246,7 +246,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(signInMessage, authResult.ErrorMessage);
             }
 
-            return SignInAndRedirect(signInMessage, authResult);
+            return SignInAndRedirect(signInMessage, signInId, authResult);
         }
 
         [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name = Constants.RouteNames.ResumeLoginFromRedirect)]
@@ -283,7 +283,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = cookie.Read(signInId);
             if (signInMessage == null)
             {
@@ -328,7 +328,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 }
             }
 
-            return SignInAndRedirect(signInMessage, result);
+            return SignInAndRedirect(signInMessage, signInId, result);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
@@ -440,16 +440,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return externalId;
         }
 
-        private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, AuthenticateResult authResult, bool? rememberMe = null)
+        private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
-            IssueAuthenticationCookie(signInMessage, authResult, rememberMe);
+            IssueAuthenticationCookie(signInMessage, signInMessageId, authResult, rememberMe);
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
         }
 
-        private void IssueAuthenticationCookie(SignInMessage signInMessage, AuthenticateResult authResult, bool? rememberMe = null)
+        private void IssueAuthenticationCookie(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
             if (signInMessage == null) throw new ArgumentNullException("signInId");
             if (authResult == null) throw new ArgumentNullException("authResult");
@@ -470,11 +470,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
-                id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessage.Id));
+                id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessageId));
             }
             else
             {
-                ClearSignInCookie(signInMessage.Id);
+                ClearSignInCookie(signInMessageId);
             }
 
             if (!authResult.IsPartialSignIn)
@@ -537,14 +537,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PartialSignInAuthenticationType);
         }
 
-        private async Task<IHttpActionResult> RenderLoginPage(SignInMessage message, string errorMessage = null, string username = null, bool rememberMe = false)
+        private async Task<IHttpActionResult> RenderLoginPage(SignInMessage message, string signInMessageId, string errorMessage = null, string username = null, bool rememberMe = false)
         {
             if (message == null) throw new ArgumentNullException("message");
 
             var ctx = Request.GetOwinContext();
             var providers =
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                select new LoginPageLink{ Text = p.Caption, Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType, signin = message.Id }) };
+                select new LoginPageLink{ Text = p.Caption, Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType, signin = signInMessageId }) };
 
             if (errorMessage != null)
             {
@@ -555,7 +555,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("rendering login page");
             }
 
-            var loginPageLinks = PrepareLoginPageLinks(message.Id, _authenticationOptions.LoginPageLinks);
+            var loginPageLinks = PrepareLoginPageLinks(signInMessageId, _authenticationOptions.LoginPageLinks);
 
             var loginModel = new LoginViewModel
             {
@@ -565,7 +565,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 ExternalProviders = providers,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin= message.Id }) : null,
+                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin= signInMessageId }) : null,
                 AllowRememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
@@ -659,13 +659,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private void ClearSignInCookies()
         {
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             cookie.ClearAll();
         }
 
         private void ClearSignInCookie(string signin)
         {
-            var cookie = new SignInMessageCookie(Request.GetOwinContext(), this._options);
+            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             cookie.Clear(signin);
         }
     

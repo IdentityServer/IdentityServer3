@@ -113,7 +113,8 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Authentication\SignInMessageCookie.cs" />
+    <Compile Include="Authentication\MessageCookie.cs" />
+    <Compile Include="Authentication\SignOutMessage.cs" />
     <Compile Include="Configuration\CspOptions.cs" />
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
     <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
