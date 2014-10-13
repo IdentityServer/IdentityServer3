@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (model == null)
             {
                 Logger.Error("no data submitted");
-                return await RenderLoginPage(signInMessage, Messages.InvalidUsernameOrPassword);
+                return await RenderLoginPage(signInMessage, signin, Messages.InvalidUsernameOrPassword);
             }
 
             // the browser will only send 'true' if ther user has checked the checkbox
@@ -221,14 +221,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (user == null)
             {
                 Logger.Error("no identity from external identity provider");
-                return await RenderLoginPage(signInMessage, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
             }
 
             var externalIdentity = MapToExternalIdentity(user.Claims);
             if (externalIdentity == null)
             {
                 Logger.Error("no subject or unique identifier claims from external identity provider");
-                return await RenderLoginPage(signInMessage, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
             }
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
@@ -237,13 +237,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
-                return await RenderLoginPage(signInMessage, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
             }
 
             if (authResult.IsError)
             {
                 Logger.WarnFormat("user service returned error message: {0}", authResult.ErrorMessage);
-                return await RenderLoginPage(signInMessage, authResult.ErrorMessage);
+                return await RenderLoginPage(signInMessage, signInId, authResult.ErrorMessage);
             }
 
             return SignInAndRedirect(signInMessage, signInId, authResult);
@@ -318,13 +318,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 if (result == null)
                 {
                     Logger.Warn("user service failed to authenticate external identity");
-                    return await RenderLoginPage(signInMessage, Messages.NoMatchingExternalAccount);
+                    return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
                 }
 
                 if (result.IsError)
                 {
                     Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
-                    return await RenderLoginPage(signInMessage, result.ErrorMessage);
+                    return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
                 }
             }
 
