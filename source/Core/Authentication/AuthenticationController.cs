@@ -46,14 +46,16 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly IdentityServerOptions _options;
+        private readonly IClientStore _clientStore;
 
-        public AuthenticationController(IViewService viewService, IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions)
+        public AuthenticationController(IViewService viewService, IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions, IClientStore clientStore)
         {
             _viewService = viewService;
             _userService = userService;
             _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
             _options = idSvrOptions;
+            _clientStore = clientStore;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -333,25 +335,25 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
         [HttpGet]
-        public async Task<IHttpActionResult> LogoutPrompt()
+        public async Task<IHttpActionResult> LogoutPrompt(string id = null)
         {
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
             if (!this._options.AuthenticationOptions.DisableSignOutPrompt)
             {
-                return await RenderLogoutPromptPage();
+                return await RenderLogoutPromptPage(id);
             }
             else
             {
                 Logger.InfoFormat("DisableSignOutPrompt set to true, performing logout");
-                return await Logout();
+                return await Logout(id);
             }
         }
         
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
         [HttpPost]
-        public async Task<IHttpActionResult> Logout()
+        public async Task<IHttpActionResult> Logout(string id = null)
         {
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout requested for subject: {0}", sub);
@@ -359,7 +361,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             ClearAuthenticationCookies();
             ClearSignInCookies();
 
-            return RenderLoggedOutPage();
+            return await RenderLoggedOutPage(id);
         }
 
         private async Task<string> GetSubjectFromPrimaryAuthenticationType()
@@ -607,21 +609,26 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             return result;
         }
 
-        private async Task<IHttpActionResult> RenderLogoutPromptPage()
+        private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
         {
+            var clientName = await GetClientNameFromSignOutMessageId(id);
+
             var env = Request.GetOwinEnvironment();
             var logoutModel = new LogoutViewModel
             {
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = await GetNameFromPrimaryAuthenticationType(),
-                LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
+                LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id=id }),
+                ClientName = clientName
             };
             return new LogoutActionResult(_viewService, env, logoutModel);
         }
 
-        private IHttpActionResult RenderLoggedOutPage()
+        private async Task<IHttpActionResult> RenderLoggedOutPage(string id)
         {
+            Logger.Info("rendering logged out page");
+
             var env = Request.GetOwinEnvironment();
             var baseUrl = env.GetIdentityServerBaseUrl();
             var urls = new List<string>();
@@ -633,15 +640,48 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 urls.Add(baseUrl + tmp);
             }
 
-            Logger.Info("rendering logged out page");
+            var message = GetSignOutMessage(id);
+            var redirectUrl = message != null ? message.ReturnUrl : null;
+            var clientName = await GetClientNameFromSignOutMessage(message);
 
             var loggedOutModel = new LoggedOutViewModel
             {
                 SiteName = _options.SiteName,
                 SiteUrl = baseUrl,
                 IFrameUrls = urls,
+                ClientName = clientName,
+                RedirectUrl = redirectUrl
             };
             return new LoggedOutActionResult(_viewService, env, loggedOutModel);
+        }
+
+        private SignOutMessage GetSignOutMessage(string id)
+        {
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                var cookie = new MessageCookie<SignOutMessage>(Request.GetOwinContext(), this._options);
+                return cookie.Read(id);
+            }
+            return null;
+        }
+
+        private async Task<string> GetClientNameFromSignOutMessageId(string id)
+        {
+            var signOutMessage = GetSignOutMessage(id);
+            return await GetClientNameFromSignOutMessage(signOutMessage);
+        }
+
+        private async Task<string> GetClientNameFromSignOutMessage(SignOutMessage signOutMessage)
+        {
+            if (signOutMessage != null)
+            {
+                var client = await _clientStore.FindClientByIdAsync(signOutMessage.ClientId);
+                if (client != null)
+                {
+                    return client.ClientName;
+                }
+            }
+            return null;
         }
 
         private IHttpActionResult RenderErrorPage(string message = null)

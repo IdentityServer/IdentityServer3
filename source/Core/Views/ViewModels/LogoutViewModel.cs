@@ -19,5 +19,6 @@ namespace Thinktecture.IdentityServer.Core.Views
     public class LogoutViewModel : CommonViewModel
     {
         public string LogoutUrl { get; set; }
+        public string ClientName { get; set; }
     }
 }
