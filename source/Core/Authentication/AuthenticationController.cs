@@ -643,6 +643,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var message = GetSignOutMessage(id);
             var redirectUrl = message != null ? message.ReturnUrl : null;
             var clientName = await GetClientNameFromSignOutMessage(message);
+            ClearSignOutMessage();
 
             var loggedOutModel = new LoggedOutViewModel
             {
@@ -653,6 +654,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 RedirectUrl = redirectUrl
             };
             return new LoggedOutActionResult(_viewService, env, loggedOutModel);
+        }
+
+        private void ClearSignOutMessage()
+        {
+            var cookie = new MessageCookie<SignOutMessage>(Request.GetOwinContext(), this._options);
+            cookie.ClearAll();
         }
 
         private SignOutMessage GetSignOutMessage(string id)
