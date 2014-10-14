@@ -139,6 +139,7 @@
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
+    <Compile Include="Views\ActionResults\HtmlActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
