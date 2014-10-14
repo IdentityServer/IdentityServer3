@@ -1,10 +1,8 @@
 ﻿using Microsoft.Owin;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -43,6 +41,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _validatedRequest.Raw = parameters;
             _validatedRequest.Subject = subject;
 
+            if (!subject.Identity.IsAuthenticated)
+            {
+                return Invalid();
+            }
+
             var idTokenHint = parameters.Get(Constants.EndSessionRequest.IdTokenHint);
             if (idTokenHint.IsPresent())
             {
@@ -53,21 +56,23 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return Invalid();
                 }
 
-                // get client_id
-                var clientIdClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Audience);
-                if (clientIdClaim == null)
-                {
-                    return Invalid();
-                }
+                _validatedRequest.Client = tokenValidationResult.Client;
 
-                // get client
-                var client = await _clients.FindClientByIdAsync(clientIdClaim.Value);
-                if (client == null)
-                {
-                    return Invalid();
-                }
+                //// get client_id
+                //var clientIdClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Audience);
+                //if (clientIdClaim == null)
+                //{
+                //    return Invalid();
+                //}
 
-                _validatedRequest.Client = client;
+                //// get client
+                //var client = await _clients.FindClientByIdAsync(clientIdClaim.Value);
+                //if (client == null)
+                //{
+                //    return Invalid();
+                //}
+
+                
 
                 // validate sub claim against currently logged on user
                 var subClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
@@ -80,13 +85,47 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 }
             }
 
-            var redirectUrl = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
-            return Invalid();
+            var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
+            if (redirectUri.IsPresent())
+            {
+                Uri uri;
+                if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
+                {
+                    if (_validatedRequest.Client.PostLogoutRedirectUris.Contains(uri))
+                    {
+                        _validatedRequest.PostLogOutUri = uri;
+                    }
+                    else
+                    {
+                        return Invalid();
+                    }
+                }
+            }
+
+            var state = parameters.Get(Constants.EndSessionRequest.State);
+            if (state.IsPresent())
+            {
+                _validatedRequest.State = state;
+            }
+
+            return Valid();
+        }
+
+        private ValidationResult Valid()
+        {
+            return new ValidationResult
+            {
+                IsError = false
+            };
         }
 
         private ValidationResult Invalid()
         {
-            throw new NotImplementedException();
+            return new ValidationResult
+            {
+                IsError = true,
+                Error = "Invalid request"
+            };
         }
     }
 }

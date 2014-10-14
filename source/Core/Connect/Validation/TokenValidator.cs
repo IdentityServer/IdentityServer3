@@ -79,6 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
+            result.Client = client;
 
             if (result.IsError)
             {
