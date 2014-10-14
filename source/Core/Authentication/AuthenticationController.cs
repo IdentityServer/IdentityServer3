@@ -543,11 +543,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            var ctx = Request.GetOwinContext();
-            var providers =
-                from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                select new LoginPageLink{ Text = p.Caption, Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType, signin = signInMessageId }) };
-
             if (errorMessage != null)
             {
                 Logger.InfoFormat("rendering login page with error message: {0}", errorMessage);
@@ -557,12 +552,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Info("rendering login page");
             }
 
+            var providers = await GetExternalProviders(message, signInMessageId);
             var loginPageLinks = PrepareLoginPageLinks(signInMessageId, _authenticationOptions.LoginPageLinks);
 
             var loginModel = new LoginViewModel
             {
                 SiteName = _options.SiteName,
-                SiteUrl = ctx.Environment.GetIdentityServerBaseUrl(),
+                SiteUrl = Request.GetIdentityServerBaseUrl(),
                 CurrentUser = await GetNameFromPrimaryAuthenticationType(),
                 ExternalProviders = providers,
                 AdditionalLinks = loginPageLinks,
@@ -574,7 +570,27 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Username = username
             };
 
-            return new LoginActionResult(_viewService, ctx.Environment, loginModel, message);
+            return new LoginActionResult(_viewService, Request.GetOwinEnvironment(), loginModel, message);
+        }
+
+        private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
+        {
+            var client = await _clientStore.FindClientByIdAsync(message.ClientId);
+            if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
+
+            var filter = client.AllowedIdentityProviders ?? Enumerable.Empty<string>();
+
+            var ctx = Request.GetOwinContext();
+            var providers =
+                from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
+                where (!filter.Any() || filter.Contains(p.AuthenticationType))
+                select new LoginPageLink { 
+                    Text = p.Caption, 
+                    Href = Url.Route(Constants.RouteNames.LoginExternal, 
+                    new { provider = p.AuthenticationType, signin = signInMessageId }) 
+                };
+            
+            return providers.ToArray();
         }
 
         private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
