@@ -94,6 +94,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
         {
             msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
+            if (msg.ClientId == null) msg.ClientId = TestClients.Get().First().ClientId;
 
             SignInId = WriteMessageToCookie(msg);
 
