@@ -24,9 +24,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 {
     public class SignInMessage
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
-        public string Id { get; set; }
         public string ReturnUrl { get; set; }
         public string ClientId { get; set; }
         public string IdP { get; set; }
@@ -34,26 +31,5 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         public string DisplayMode { get; set; }
         public string UiLocales { get; set; }
         public IEnumerable<string> AcrValues { get; set; }
-
-        public string Protect(IDataProtector protector)
-        {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-            };
-
-            var json = JsonConvert.SerializeObject(this, settings);
-            Logger.DebugFormat("Protecting signin message: {0}", json);
-
-            return protector.Protect(json, "signinmessage");
-        }
-
-        public static SignInMessage Unprotect(string data, IDataProtector protector)
-        {
-            var json = protector.Unprotect(data, "signinmessage");
-            var message = JsonConvert.DeserializeObject<SignInMessage>(json);
-            return message;
-        }
     }
 }

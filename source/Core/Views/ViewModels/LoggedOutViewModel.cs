@@ -21,5 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Views
     public class LoggedOutViewModel : CommonViewModel
     {
         public IEnumerable<string> IFrameUrls { get; set; }
+        public string ClientName { get; set; }
+        public string RedirectUrl { get; set; }
     }
 }

@@ -72,23 +72,30 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             Assert.AreEqual(name, match.Groups[1].Value);
         }
 
-        private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
+        private string WriteMessageToCookie<T>(T msg)
+            where T : class
         {
-            msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
-
             var headers = new Dictionary<string, string[]>();
             var env = new Dictionary<string, object>()
             {
                 {"owin.RequestScheme", "https"},
                 {"owin.ResponseHeaders", headers}
             };
-            
+
             var ctx = new OwinContext(env);
-            var signInCookie = new SignInMessageCookie(ctx, this.options);
-            msg.Id = SignInId = Guid.NewGuid().ToString("N");
-            signInCookie.Write(msg);
+            var signInCookie = new MessageCookie<T>(ctx, this.options);
+            var id = signInCookie.Write(msg);
 
             client.SetCookies(headers["Set-Cookie"]);
+            
+            return id;
+        }
+
+        private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
+        {
+            msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
+
+            SignInId = WriteMessageToCookie(msg);
 
             var resp = Get(Constants.RoutePaths.Login + "?signin=" + SignInId);
             return resp;
@@ -548,6 +555,71 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             Get(Constants.RoutePaths.LoginExternalCallback);
 
             mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()));
+        }
+
+        [TestMethod]
+        public void LogoutPrompt_WithSignOutMessage_ContainsClientNameInPage()
+        {
+            var c = TestClients.Get().First();
+            var msg = new SignOutMessage
+            {
+                ClientId = c.ClientId,
+                ReturnUrl = "http://foo"
+            };
+            var id = WriteMessageToCookie(msg);
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            var model = GetModel<LogoutViewModel>(resp);
+            Assert.AreEqual(c.ClientName, model.ClientName);
+        }
+        
+        [TestMethod]
+        public void LogoutPrompt_NoSignOutMessage_ContainsNullClientNameInPage()
+        {
+            var resp = Get(Constants.RoutePaths.Logout);
+            var model = GetModel<LogoutViewModel>(resp);
+            Assert.IsNull(model.ClientName);
+        }
+
+        [TestMethod]
+        public void LogoutPrompt_InvalidSignOutMessageId_ContainsNullClientNameInPage()
+        {
+            var resp = Get(Constants.RoutePaths.Logout + "?id=123");
+            var model = GetModel<LogoutViewModel>(resp);
+            Assert.IsNull(model.ClientName);
+        }
+
+        [TestMethod]
+        public void LoggedOut_WithSignOutMessage_ContainsClientNameAndRedirectUrlInPage()
+        {
+            var c = TestClients.Get().First();
+            var msg = new SignOutMessage
+            {
+                ClientId = c.ClientId,
+                ReturnUrl = "http://foo"
+            };
+            var id = WriteMessageToCookie(msg);
+            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout + "?id=" + id), null).Result;
+            var model = GetModel<LoggedOutViewModel>(resp);
+            Assert.AreEqual(msg.ReturnUrl, model.RedirectUrl);
+            Assert.AreEqual(c.ClientName, model.ClientName);
+        }
+
+        [TestMethod]
+        public void LoggedOut_NoSignOutMessage_ContainsNullForClientNameAndRedirectUrlInPage()
+        {
+            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout), null).Result;
+            var model = GetModel<LoggedOutViewModel>(resp);
+            Assert.IsNull(model.RedirectUrl);
+            Assert.IsNull(model.ClientName);
+        }
+
+        [TestMethod]
+        public void LoggedOut_InvalidSignOutMessageId_ContainsNullForClientNameAndRedirectUrlInPage()
+        {
+            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout + "?id=123"), null).Result;
+            var model = GetModel<LoggedOutViewModel>(resp);
+            Assert.IsNull(model.RedirectUrl);
+            Assert.IsNull(model.ClientName);
         }
     }
 }

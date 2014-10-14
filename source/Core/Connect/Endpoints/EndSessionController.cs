@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System.Net.Http;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -45,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return NotFound();
             }
 
-            return Redirect(Url.Link(Constants.RouteNames.LogoutPrompt, null));
+            return new LogoutResult(/* SignOutMessage */ null, Request.GetOwinEnvironment(), this._options);
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
