@@ -607,15 +607,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     url = Request.GetIdentityServerBaseUrl() + url;
                 }
 
-                if (!url.Contains("?"))
-                {
-                    url += "?";
-                }
-                else
-                {
-                    url += "&";
-                }
-                url += "signin=" + signin;
+                url = url.AddQueryString("signin=" + signin);
 
                 result.Add(new LoginPageLink
                 {

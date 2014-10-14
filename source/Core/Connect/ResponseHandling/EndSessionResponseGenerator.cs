@@ -34,8 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 {
                     if (message.ReturnUrl.IsPresent())
                     {
-                        // todo: what to do if query param is already present
-                        message.ReturnUrl += "?state=" + request.State;
+                        message.ReturnUrl = message.ReturnUrl.AddQueryString("state=" + request.State);
                     }
                 }
             }

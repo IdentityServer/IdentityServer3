@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 var cookie = new MessageCookie<SignOutMessage>(this.env, this.options);
                 var id = cookie.Write(this.message);
 
-                url += "?id=" + id;
+                url = url.AddQueryString("id=" + id);
             }
 
             var uri = new Uri(url);

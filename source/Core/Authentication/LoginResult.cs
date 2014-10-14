@@ -67,9 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var id = cookie.Write(this.message);
 
             var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-            url += "?signin=" + id;
-
-            var uri = new Uri(url);
+            var uri = new Uri(url.AddQueryString("signin=" + id));
 
             var response = new HttpResponseMessage(HttpStatusCode.Redirect);
             response.Headers.Location = uri;

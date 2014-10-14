@@ -58,22 +58,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 _validatedRequest.Client = tokenValidationResult.Client;
 
-                //// get client_id
-                //var clientIdClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Audience);
-                //if (clientIdClaim == null)
-                //{
-                //    return Invalid();
-                //}
-
-                //// get client
-                //var client = await _clients.FindClientByIdAsync(clientIdClaim.Value);
-                //if (client == null)
-                //{
-                //    return Invalid();
-                //}
-
-                
-
                 // validate sub claim against currently logged on user
                 var subClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
                 if (subClaim != null)
@@ -83,31 +67,31 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         return Invalid();
                     }
                 }
-            }
 
-            var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
-            if (redirectUri.IsPresent())
-            {
-                Uri uri;
-                if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
+                var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
+                if (redirectUri.IsPresent())
                 {
-                    if (_validatedRequest.Client.PostLogoutRedirectUris.Contains(uri))
+                    Uri uri;
+                    if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
                     {
-                        _validatedRequest.PostLogOutUri = uri;
+                        if (_validatedRequest.Client.PostLogoutRedirectUris.Contains(uri))
+                        {
+                            _validatedRequest.PostLogOutUri = uri;
+                        }
+                        else
+                        {
+                            return Invalid();
+                        }
                     }
-                    else
+                    
+                    var state = parameters.Get(Constants.EndSessionRequest.State);
+                    if (state.IsPresent())
                     {
-                        return Invalid();
+                        _validatedRequest.State = state;
                     }
                 }
             }
-
-            var state = parameters.Get(Constants.EndSessionRequest.State);
-            if (state.IsPresent())
-            {
-                _validatedRequest.State = state;
-            }
-
+            
             return Valid();
         }
 
