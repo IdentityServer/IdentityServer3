@@ -57,12 +57,10 @@ The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v
 ## Credits ##
 IdentityServer is built using the following great open source projects:
 
-- ASP.NET Web API
-- Autofac
-- Json.Net
-- Thinktecture IdentityModel
-- ILMerge
+- [ASP.NET Web API](https://aspnetwebstack.codeplex.com/)
+- [Autofac](http://autofac.org/)
+- [Json.Net](http://james.newtonking.com/json)
 - [LibLog](https://github.com/damianh/LibLog)
-- Katana
+- [Katana](https://katanaproject.codeplex.com/)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
