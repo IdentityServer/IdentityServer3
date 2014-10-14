@@ -119,8 +119,11 @@
     <Compile Include="Configuration\CspOptions.cs" />
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
     <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
+    <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Connect\Results\AuthorizeFormPostResult.cs" />
     <Compile Include="Connect\Results\AuthorizeRedirectResult.cs" />
+    <Compile Include="Connect\Validation\EndSessionRequestValidator.cs" />
+    <Compile Include="Connect\Validation\ValidatedEndSessionRequest.cs" />
     <Compile Include="Connect\Validation\ValidatedRequest.cs" />
     <Compile Include="Extensions\AuthorizeResponseExtensions.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />

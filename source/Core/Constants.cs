@@ -68,6 +68,13 @@ namespace Thinktecture.IdentityServer.Core
             public const string Password     = "password";
         }
 
+        public static class EndSessionRequest
+        {
+            public const string IdTokenHint           = "id_token_hint";
+            public const string PostLogoutRedirectUri = "post_logout_redirect_uri";
+            public const string State                 = "state";
+        }
+
         public static class TokenResponse
         {
             public const string AccessToken   = "access_token";

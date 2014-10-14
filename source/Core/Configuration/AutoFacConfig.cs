@@ -182,12 +182,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeRequestValidator>();
             builder.RegisterType<ClientValidator>();
             builder.RegisterType<TokenValidator>();
+            builder.RegisterType<EndSessionRequestValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
+            builder.RegisterType<EndSessionResponseGenerator>();
 
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();
