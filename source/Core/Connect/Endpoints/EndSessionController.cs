@@ -59,12 +59,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var result = await _validator.ValidateAsync(Request.RequestUri.ParseQueryString(), User as ClaimsPrincipal);
             if (result.IsError)
             {
-                // todo: how to deal with errors here??
-                throw new Exception();
+                // if anything went wrong, ignore the params the RP sent
+                return new LogoutResult(null, Request.GetOwinEnvironment(), this._options);
             }
-
-            var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
-            return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
+            else
+            {
+                var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
+                return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
+            }
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
