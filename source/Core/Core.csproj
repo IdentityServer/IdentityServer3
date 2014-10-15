@@ -280,7 +280,7 @@
     <Compile Include="Services\InMemory\InMemoryTokenHandleStore.cs" />
     <Compile Include="Services\InMemory\InMemoryUser.cs" />
     <Compile Include="Services\InMemory\InMemoryUserService.cs" />
-    <Compile Include="Services\IScopeService.cs" />
+    <Compile Include="Services\IScopeStore.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\ITokenHandleStore.cs" />
     <Compile Include="Models\Scope.cs" />
