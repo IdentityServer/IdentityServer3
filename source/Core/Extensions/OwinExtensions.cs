@@ -62,5 +62,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
         }
+
+        public static T ResolveDependency<T>(this IDictionary<string, object> env)
+        {
+            var scope = env.GetLifetimeScope();
+            var instance = (T)scope.ResolveOptional(typeof(T));
+            return instance;
+        }
     }
 }

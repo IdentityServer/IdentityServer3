@@ -29,6 +29,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using System.Text;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -122,9 +123,12 @@ namespace Thinktecture.IdentityServer.Tests
             return result.Content.ReadAsAsync<T>().Result;
         }
 
-        static NameValueCollection Map(object values)
+        protected NameValueCollection Map(object values)
         {
-            var coll = new NameValueCollection();
+            var coll = values as NameValueCollection;
+            if (coll != null) return coll;
+
+            coll = new NameValueCollection();
             foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(values))
             {
                 var val = descriptor.GetValue(values);
@@ -133,11 +137,25 @@ namespace Thinktecture.IdentityServer.Tests
             }
             return coll;
         }
-        
-        protected HttpResponseMessage PostForm<T>(string path, T value)
+
+        protected string ToFormBody(NameValueCollection coll)
         {
-            var form = Map(value);
-            var content = new StringContent(form.ToQueryString(), System.Text.Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
+            var sb = new StringBuilder();
+            foreach(var item in coll.AllKeys)
+            {
+                if (sb.Length > 0)
+                {
+                    sb.Append("&");
+                }
+                sb.AppendFormat("{0}={1}", item, coll[item].ToString());
+            }
+            return sb.ToString();
+        }
+        
+        protected virtual HttpResponseMessage PostForm(string path, object value)
+        {
+            var form = ToFormBody(Map(value));
+            var content = new StringContent(form, System.Text.Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
             return client.PostAsync(Url(path), content).Result;
         }
 

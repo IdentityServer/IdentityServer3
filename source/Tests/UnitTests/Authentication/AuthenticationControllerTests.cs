@@ -39,6 +39,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
     {
         public ClaimsIdentity SignInIdentity { get; set; }
         public string SignInId { get; set; }
+        public AntiForgeryHiddenInputViewModel Xsrf { get; set; }
 
         protected override void Postprocess(Microsoft.Owin.IOwinContext ctx)
         {
@@ -50,6 +51,23 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 SignInIdentity = null;
             }
         }
+
+        private object MapAndAddXsrf(object value)
+        {
+            var coll = Map(value);
+            if (Xsrf != null)
+            {
+                coll.Add(Xsrf.Name, Xsrf.Value);
+            }
+            return coll;
+        }
+
+        protected override HttpResponseMessage PostForm(string path, object value)
+        {
+            var form = MapAndAddXsrf(value);
+            return base.PostForm(path, form);
+        }
+
 
         T GetModel<T>(string html)
         {
@@ -99,6 +117,17 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             SignInId = WriteMessageToCookie(msg);
 
             var resp = Get(Constants.RoutePaths.Login + "?signin=" + SignInId);
+            if (resp.IsSuccessStatusCode)
+            {
+                var loginModel = GetModel<LoginViewModel>(resp);
+                if (loginModel.AntiForgery != null)
+                {
+                    this.Xsrf = loginModel.AntiForgery;
+                    var cookies = resp.GetCookies().Where(x => x.Name == Xsrf.Name);
+                    client.SetCookies(cookies);
+                }
+            }
+
             return resp;
         }
 
@@ -186,7 +215,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_NoModel_ShowErrorPage()
         {
             GetLoginPage();
-            var resp = PostForm(GetLoginUrl(), (LoginCredentials)null);
+            var resp = Post(GetLoginUrl(), (LoginCredentials)null);
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
@@ -380,9 +409,11 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogout_RemovesCookies()
         {
+            GetLoginPage();
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
-            Assert.AreEqual(3, cookies.Count());
+            // 4: primary, partial, external, signin
+            Assert.AreEqual(4, cookies.Count());
             // GetCookies will not return values for cookies that are expired/revoked
             Assert.AreEqual(0, resp.GetCookies().Count());
         }
@@ -390,6 +421,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void PostToLogout_EmitsLogoutUrlsForProtocolIframes()
         {
+            GetLoginPage();
             this.options.ProtocolLogoutUrls.Add("/foo/signout");
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var model = GetModel<LoggedOutViewModel>(resp);

@@ -6,6 +6,8 @@
     <div class="col-md-6 col-sm-6">
         <p>Would you like to logout of {{model.siteName}}?</p>
         <form name="form" method="post" action="{{model.logoutUrl}}">
+            <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
+
             <fieldset>
                 <div class="form-group">
                     <button class="btn btn-primary">Yes</button>

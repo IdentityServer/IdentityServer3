@@ -32,6 +32,7 @@ using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
+    [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
     [NoCache]
@@ -144,6 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         [Route(Constants.RoutePaths.Oidc.Consent, Name = Constants.RouteNames.Oidc.Consent)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
             Logger.Info("Resuming from consent, restarting validation");
@@ -200,7 +202,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
                 LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
-                ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString())
+                ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment())
             };
             return new ConsentActionResult(_viewService, env, consentModel);
         }

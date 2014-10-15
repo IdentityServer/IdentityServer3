@@ -34,9 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             Logger.ErrorException("Exception accessing: " + actionExecutedContext.Request.RequestUri.AbsolutePath, actionExecutedContext.Exception);
 
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
-            var scope = env.GetLifetimeScope();
-            var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
-            var viewSvc = (IViewService)scope.ResolveOptional(typeof(IViewService));
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var viewSvc = env.ResolveDependency<IViewService>();
             var errorModel = new ErrorViewModel
             {
                 SiteName = options.SiteName,

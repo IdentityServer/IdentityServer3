@@ -14,6 +14,16 @@
         $scope.model = Model;
     });
 
+    app.directive("antiForgeryToken", function () {
+        return {
+            restrict: 'E',
+            replace:true,
+            scope:{
+                token:"="
+            },
+            template: "<input type='hidden' name='{{token.name}}' value='{{token.value}}'>"
+        };
+    });
 })();
 
 (function () {

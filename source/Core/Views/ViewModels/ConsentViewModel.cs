@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Views
         public string LoginWithDifferentAccountUrl { get; set; }
         public string LogoutUrl { get; set; }
         public string ConsentUrl { get; set; }
+        public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
         public string ClientName { get; set; }
         public string ClientUrl { get; set; }
         public string ClientLogoUrl { get; set; }

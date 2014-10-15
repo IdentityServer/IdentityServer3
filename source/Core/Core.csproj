@@ -128,7 +128,9 @@
     <Compile Include="Extensions\AuthorizeResponseExtensions.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Hosting\AntiForgeryTokenValidator.cs" />
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
+    <Compile Include="Hosting\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
     <Compile Include="Resources\Scopes.Designer.cs">
@@ -145,6 +147,7 @@
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
+    <Compile Include="Views\ViewModels\AntiForgeryHiddenInputViewModel.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
     <Compile Include="Views\ViewModels\ConsentScopeViewModel.cs" />

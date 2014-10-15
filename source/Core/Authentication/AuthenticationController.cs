@@ -91,6 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         [Route(Constants.RoutePaths.Login)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> LoginLocal(string signin, LoginCredentials model)
         {
             Logger.Info("Login page submitted");
@@ -353,6 +354,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> Logout(string id = null)
         {
             var sub = await GetSubjectFromPrimaryAuthenticationType();
@@ -567,6 +569,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 AllowRememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
                 Username = username
             };
 
@@ -628,6 +631,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = await GetNameFromPrimaryAuthenticationType(),
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id=id }),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
                 ClientName = clientName
             };
             return new LogoutActionResult(_viewService, env, logoutModel);

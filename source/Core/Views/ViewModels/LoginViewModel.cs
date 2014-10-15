@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Views
     {
         // LoginUrl might be null if local logins are disabled
         public string LoginUrl { get; set; }
+        public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
         public bool AllowRememberMe { get; set; }
         public bool RememberMe { get; set; }
         public string LogoutUrl { get; set; }
