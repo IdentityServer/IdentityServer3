@@ -20,23 +20,34 @@ using Thinktecture.IdentityServer.Core.Views;
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-    public class ValidateAntiForgeryTokenAttribute : AuthorizationFilterAttribute
+    public class ValidateAntiForgeryTokenAttribute : PreventUnsupportedRequestMediaTypesAttribute
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        public ValidateAntiForgeryTokenAttribute()
+            : base(allowFormUrlEncoded:true)
+        {
+        }
+
         public override async Task OnAuthorizationAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+        {
+            // firect check for 415
+            await base.OnAuthorizationAsync(actionContext, cancellationToken);
+
+            if (actionContext.Response == null)
+            {
+                await ValidateTokens(actionContext);
+            }
+        }
+
+        private static async Task ValidateTokens(HttpActionContext actionContext)
         {
             var env = actionContext.Request.GetOwinEnvironment();
 
-            var success = actionContext.Request.Method == HttpMethod.Post;
+            var success = actionContext.Request.Method == HttpMethod.Post &&
+                          actionContext.Request.Content.IsFormData();
             if (success)
             {
-                if (!actionContext.Request.Content.IsFormData())
-                {
-                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.UnsupportedMediaType);
-                    return;
-                }
-
                 // ReadAsByteArrayAsync buffers the request body stream
                 // we then put the buffered copy into the owin context
                 // so we can read it in the IsTokenValid API without 

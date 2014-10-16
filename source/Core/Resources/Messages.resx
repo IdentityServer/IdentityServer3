@@ -144,6 +144,9 @@
   <data name="UnexpectedError" xml:space="preserve">
     <value>There was an unexpected error</value>
   </data>
+  <data name="UnsupportedMediaType" xml:space="preserve">
+    <value>Unsupported Media Type</value>
+  </data>
   <data name="UsernameRequired" xml:space="preserve">
     <value>Username is required</value>
   </data>

@@ -38,6 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     [ErrorPageFilter]
     [SecurityHeaders]
     [NoCache]
+    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded:true)]
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

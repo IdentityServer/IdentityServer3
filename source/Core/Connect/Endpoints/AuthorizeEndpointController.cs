@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
     [NoCache]
+    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded:true)]
     public class AuthorizeEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

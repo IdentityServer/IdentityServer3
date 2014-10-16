@@ -128,6 +128,7 @@
     <Compile Include="Extensions\AuthorizeResponseExtensions.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Hosting\PreventUnsupportedRequestMediaTypesAttribute.cs" />
     <Compile Include="Hosting\AntiForgeryTokenValidator.cs" />
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Hosting\ValidateAntiForgeryTokenAttribute.cs" />

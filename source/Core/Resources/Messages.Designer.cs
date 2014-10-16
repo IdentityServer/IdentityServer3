@@ -142,6 +142,15 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unsupported Media Type.
+        /// </summary>
+        public static string UnsupportedMediaType {
+            get {
+                return ResourceManager.GetString("UnsupportedMediaType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Username is required.
         /// </summary>
         public static string UsernameRequired {
