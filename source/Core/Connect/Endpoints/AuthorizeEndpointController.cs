@@ -32,6 +32,7 @@ using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
+    [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
     [NoCache]
@@ -144,6 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         [Route(Constants.RoutePaths.Oidc.Consent, Name = Constants.RouteNames.Oidc.Consent)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
         {
             Logger.Info("Resuming from consent, restarting validation");
@@ -198,9 +200,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 ResourceScopes = validatedRequest.GetResourceScopes(),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
-                LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null) + "?" + requestParameters.ToQueryString(),
+                LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
                 LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
-                ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null) + "?" + requestParameters.ToQueryString()
+                ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment())
             };
             return new ConsentActionResult(_viewService, env, consentModel);
         }
@@ -209,7 +212,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             message = message ?? new SignInMessage();
 
-            var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null) + "?" + parameters.ToQueryString();
+            var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null).AddQueryString(parameters.ToQueryString());
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
 
@@ -245,22 +248,22 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             else
             {
-                string character;
+                var query = new NameValueCollection();
+                query.Add("error", error.Error);
+                if (error.State.IsPresent())
+                {
+                    query.Add("state", error.State);
+                }
+
+                var url = error.ErrorUri.AbsoluteUri;
                 if (error.ResponseMode == Constants.ResponseModes.Query ||
                     error.ResponseMode == Constants.ResponseModes.FormPost)
                 {
-                    character = "?";
+                    url = url.AddQueryString(query.ToQueryString());
                 }
                 else
                 {
-                    character = "#";
-                }
-
-                var url = string.Format("{0}{1}error={2}", error.ErrorUri.AbsoluteUri, character, error.Error);
-
-                if (error.State.IsPresent())
-                {
-                    url = string.Format("{0}&state={1}", url, error.State);
+                    url = url.AddHashFragment(query.ToQueryString());
                 }
 
                 Logger.Info("Redirecting to: " + url);

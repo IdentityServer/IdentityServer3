@@ -22,6 +22,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -56,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (token.IsMissing())
             {
                 Logger.Error("token is missing.");
-                return BadRequest("token is missing.");
+                return BadRequest(Messages.MissingToken);
             }
 
             var result = await _validator.ValidateAccessTokenAsync(token, parameters.Get("expectedScope"));

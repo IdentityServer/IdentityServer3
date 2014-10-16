@@ -15,18 +15,24 @@
  */
 
 using Microsoft.Owin;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
-    public class SignInMessageCookie
+    public class MessageCookie<TMessage>
+        where TMessage : class
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         IOwinContext ctx;
         IdentityServerOptions options;
-        public SignInMessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
+
+        public MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");
@@ -35,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             this.options = options;
         }
 
-        public SignInMessageCookie(IOwinContext ctx, IdentityServerOptions options)
+        public MessageCookie(IOwinContext ctx, IdentityServerOptions options)
         {
             if (ctx == null) throw new ArgumentNullException("ctx");
             if (options == null) throw new ArgumentNullException("options");
@@ -44,18 +50,56 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             this.options = options;
         }
 
-        public const string SignInMessageCookieName = "{0}.idsrv.signin.{1}";
-
-        public string GetCookieName(string id)
+        public string MessageType
         {
-            return String.Format(SignInMessageCookieName, 
-                options.AuthenticationOptions.CookieOptions.Prefix,
+            get { return typeof(TMessage).Name; }
+        }
+
+        public string Protect(IDataProtector protector, TMessage message)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+            };
+
+            var json = JsonConvert.SerializeObject(message, settings);
+            Logger.DebugFormat("Protecting message: {0}", json);
+
+            return protector.Protect(json, MessageType);
+        }
+
+        public TMessage Unprotect(string data, IDataProtector protector)
+        {
+            var json = protector.Unprotect(data, MessageType);
+            var message = JsonConvert.DeserializeObject<TMessage>(json);
+            return message;
+        }
+
+        public string GetCookieName(string id = null)
+        {
+            return String.Format("{0}.{1}.{2}", 
+                options.AuthenticationOptions.CookieOptions.Prefix, 
+                MessageType, 
                 id);
+        }
+        
+        public string CookiePath
+        {
+            get
+            {
+                var path = ctx.Request.PathBase.Value;
+                if (String.IsNullOrWhiteSpace(path))
+                {
+                    path = "/";
+                }
+                return path;
+            }
         }
         
         private IEnumerable<string> GetCookieNames()
         {
-            var key = GetCookieName(null);
+            var key = GetCookieName();
             foreach (var cookie in ctx.Request.Cookies)
             {
                 if (cookie.Key.StartsWith(key))
@@ -65,18 +109,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
         }
 
-        private string Protect(SignInMessage message)
+        private string Protect(TMessage message)
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            return message.Protect(options.DataProtector);
+            return Protect(options.DataProtector, message);
         }
 
-        private SignInMessage Unprotect(string data)
+        private TMessage Unprotect(string data)
         {
             if (data == null) throw new ArgumentNullException("data");
             
-            return SignInMessage.Unprotect(data, options.DataProtector);
+            return Unprotect(data, options.DataProtector);
         }
 
         private bool Secure
@@ -87,12 +131,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
         }
 
-        public void Write(SignInMessage message)
+        public string Write(TMessage message)
         {
             if (message == null) throw new ArgumentNullException("message");
-            if (message.Id.IsMissing()) throw new InvalidOperationException("Invalid Message Id");
 
-            var name = GetCookieName(message.Id);
+            var id = Guid.NewGuid().ToString("N");
+            var name = GetCookieName(id);
             var data = Protect(message);
 
             ctx.Response.Cookies.Append(
@@ -101,17 +145,21 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 new Microsoft.Owin.CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = Secure
+                    Secure = Secure,
+                    Path = CookiePath
                 });
+            return id;
         }
 
-        public SignInMessage Read(string id)
+        public TMessage Read(string id)
         {
             var name = GetCookieName(id);
             var data = ctx.Request.Cookies[name];
-            var message = Unprotect(data);
-            
-            return message;
+            if (!String.IsNullOrWhiteSpace(data))
+            {
+                return Unprotect(data);
+            }
+            return null;
         }
 
         public void Clear(string id)
@@ -125,7 +173,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 {
                     Expires = DateTime.UtcNow.AddYears(-1),
                     HttpOnly = true,
-                    Secure = Secure
+                    Secure = Secure,
+                    Path = CookiePath
                 });
         }
 
@@ -141,7 +190,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                     {
                         Expires = DateTime.UtcNow.AddYears(-1),
                         HttpOnly = true,
-                        Secure = Secure
+                        Secure = Secure,
+                        Path = CookiePath
                     });
             }
         }

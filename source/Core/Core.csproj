@@ -113,27 +113,41 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Authentication\SignInMessageCookie.cs" />
+    <Compile Include="Authentication\LogoutResult.cs" />
+    <Compile Include="Authentication\MessageCookie.cs" />
+    <Compile Include="Authentication\SignOutMessage.cs" />
     <Compile Include="Configuration\CspOptions.cs" />
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
     <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
+    <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Connect\Results\AuthorizeFormPostResult.cs" />
     <Compile Include="Connect\Results\AuthorizeRedirectResult.cs" />
+    <Compile Include="Connect\Validation\EndSessionRequestValidator.cs" />
+    <Compile Include="Connect\Validation\ValidatedEndSessionRequest.cs" />
     <Compile Include="Connect\Validation\ValidatedRequest.cs" />
     <Compile Include="Extensions\AuthorizeResponseExtensions.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Hosting\AntiForgeryTokenValidator.cs" />
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
+    <Compile Include="Hosting\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
+    <Compile Include="Resources\Scopes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Scopes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
+    <Compile Include="Views\ActionResults\HtmlActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
+    <Compile Include="Views\ViewModels\AntiForgeryHiddenInputViewModel.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
     <Compile Include="Views\ViewModels\ConsentScopeViewModel.cs" />
@@ -266,7 +280,7 @@
     <Compile Include="Services\InMemory\InMemoryTokenHandleStore.cs" />
     <Compile Include="Services\InMemory\InMemoryUser.cs" />
     <Compile Include="Services\InMemory\InMemoryUserService.cs" />
-    <Compile Include="Services\IScopeService.cs" />
+    <Compile Include="Services\IScopeStore.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\ITokenHandleStore.cs" />
     <Compile Include="Models\Scope.cs" />
@@ -292,6 +306,10 @@
     </None>
     <None Include="app.config" />
     <None Include="Views\Embedded\Assets\libs\bootstrap\custom.less" />
+    <EmbeddedResource Include="Resources\Scopes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Scopes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />

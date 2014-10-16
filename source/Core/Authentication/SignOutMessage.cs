@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Views
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
+
+namespace Thinktecture.IdentityServer.Core.Authentication
 {
-    public class LogoutViewModel : CommonViewModel
+    public class SignOutMessage
     {
-        public string LogoutUrl { get; set; }
-        public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
-        public string ClientName { get; set; }
+        public string ReturnUrl { get; set; }
+        public string ClientId { get; set; }
     }
 }

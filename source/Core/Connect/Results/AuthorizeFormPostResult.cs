@@ -21,11 +21,12 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Views;
 using Thinktecture.IdentityServer.Core.Views.Embedded.Assets;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
-    public class AuthorizeFormPostResult : IHttpActionResult
+    public class AuthorizeFormPostResult : HtmlActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -38,30 +39,28 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             _request = request;
         }
 
-        public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        protected override string GetHtml()
         {
-            return Task.FromResult(Execute());
+            var root = _request.GetIdentityServerBaseUrl();
+            if (root.EndsWith("/")) root = root.Substring(0, root.Length - 1);
+            var fields = _response.ToNameValueCollection().ToFormPost();
+            var redirect = _response.RedirectUri.AbsoluteUri;
+
+            string html = AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.FormPostResponse.html",
+                new
+                {
+                    rootUrl = root,
+                    redirect_uri = redirect,
+                    fields = fields
+                });
+
+            return html;
         }
 
-        HttpResponseMessage Execute()
+        public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            // TODO : cleanup using embedded assets helpers
-            var root = _request.GetRequestContext().VirtualPathRoot;
-            if (root.EndsWith("/")) root = root.Substring(0, root.Length - 1);
-            string form = AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.FormPostResponse.html", new { rootUrl = root });
-            form = form.Replace("{{redirect_uri}}", _response.RedirectUri.AbsoluteUri);
-
-            var fields = _response.ToNameValueCollection();
-            form = form.Replace("{{fields}}", fields.ToFormPost());
-
-            var content = new StringContent(form, Encoding.UTF8, "text/html");
-            var message = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = content
-            };
-
             Logger.Info("Posting to " + _response.RedirectUri.AbsoluteUri);
-            return message;
+            return base.ExecuteAsync(cancellationToken);
         }
     }
 }

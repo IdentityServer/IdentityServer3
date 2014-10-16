@@ -65,5 +65,33 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
             return url;
         }
+        
+        public static string AddQueryString(this string url, string query)
+        {
+            if (!url.Contains("?"))
+            {
+                url += "?";
+            }
+            else if (!url.EndsWith("&"))
+            {
+                url += "&";
+            }
+
+            return url + query;
+        }
+
+        public static string AddHashFragment(this string url, string query)
+        {
+            if (!url.Contains("#"))
+            {
+                url += "#";
+            }
+            else if (!url.EndsWith("&"))
+            {
+                url += "&";
+            }
+
+            return url + query;
+        }
     }
 }

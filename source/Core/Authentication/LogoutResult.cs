@@ -27,31 +27,31 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Authentication
 {
-    public class LoginResult : IHttpActionResult
+    public class LogoutResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly SignInMessage message;
+        private readonly SignOutMessage message;
         private readonly IDictionary<string, object> env;
         private readonly IdentityServerOptions options;
 
-        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
+        public static string GetRedirectUrl(SignOutMessage message, IDictionary<string, object> env, IdentityServerOptions options)
         {
-            var result = new LoginResult(message, env, options);
+            var result = new LogoutResult(message, env, options);
             var response = result.Execute();
 
             return response.Headers.Location.AbsoluteUri;
         }
-        
-        public LoginResult(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
+
+        public LogoutResult(SignOutMessage message, IDictionary<string, object> env, IdentityServerOptions options)
         {
-            if (message == null) throw new ArgumentNullException("message");
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");
 
-            this.message = message;
             this.env = env;
             this.options = options;
+
+            this.message = message;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -61,13 +61,19 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private HttpResponseMessage Execute()
         {
-            Logger.Info("Redirecting to login page");
+            Logger.Info("Redirecting to logout page");
 
-            var cookie = new MessageCookie<SignInMessage>(this.env, this.options);
-            var id = cookie.Write(this.message);
+            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
 
-            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-            var uri = new Uri(url.AddQueryString("signin=" + id));
+            if (message != null)
+            {
+                var cookie = new MessageCookie<SignOutMessage>(this.env, this.options);
+                var id = cookie.Write(this.message);
+
+                url = url.AddQueryString("id=" + id);
+            }
+
+            var uri = new Uri(url);
 
             var response = new HttpResponseMessage(HttpStatusCode.Redirect);
             response.Headers.Location = uri;

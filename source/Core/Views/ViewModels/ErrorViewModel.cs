@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 namespace Thinktecture.IdentityServer.Core.Views
 {
     public class ErrorViewModel : CommonViewModel

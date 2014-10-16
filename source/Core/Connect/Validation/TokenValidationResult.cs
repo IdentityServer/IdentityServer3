@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -25,6 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public IEnumerable<Claim> Claims { get; set; }
         public string Jwt { get; set; }
         public Token ReferenceToken { get; set; }
+        public Client Client { get; set; }
 
         public string Error { get; set; }
         public bool IsError { get; set; }

@@ -42,22 +42,20 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
 
         HttpResponseMessage Execute()
         {
-            string character = "#";
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
             var url = _response.RedirectUri.AbsoluteUri;
 
+            var query = _response.ToNameValueCollection().ToQueryString();
+
             if (_response.Request.ResponseMode == Constants.ResponseModes.Query)
             {
-                character = "?";
+                url = url.AddQueryString(query);
+            }
+            else
+            {
+                url = url.AddHashFragment(query);
             }
 
-            var query = _response.ToNameValueCollection();
-
-            url = string.Format("{0}{1}{2}", 
-                url,
-                character,
-                query.ToQueryString());
-            
             responseMessage.Headers.Location = new Uri(url);
             Logger.Info("Redirecting to: " + url);
 

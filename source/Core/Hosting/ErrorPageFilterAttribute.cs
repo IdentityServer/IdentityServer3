@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Views;
 
@@ -26,16 +27,20 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 {
     class ErrorPageFilterAttribute : ExceptionFilterAttribute
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
         {
+            Logger.ErrorException("Exception accessing: " + actionExecutedContext.Request.RequestUri.AbsolutePath, actionExecutedContext.Exception);
+
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
-            var scope = env.GetLifetimeScope();
-            var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
-            var viewSvc = (IViewService)scope.ResolveOptional(typeof(IViewService));
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var viewSvc = env.ResolveDependency<IViewService>();
             var errorModel = new ErrorViewModel
             {
                 SiteName = options.SiteName,
-                SiteUrl = env.GetIdentityServerBaseUrl()
+                SiteUrl = env.GetIdentityServerBaseUrl(),
+                ErrorMessage = Resources.Messages.UnexpectedError,
             };
             var errorResult = new ErrorActionResult(viewSvc, env, errorModel);
             actionExecutedContext.Response = await errorResult.GetResponseMessage();

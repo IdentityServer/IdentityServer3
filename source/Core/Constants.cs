@@ -68,6 +68,13 @@ namespace Thinktecture.IdentityServer.Core
             public const string Password     = "password";
         }
 
+        public static class EndSessionRequest
+        {
+            public const string IdTokenHint           = "id_token_hint";
+            public const string PostLogoutRedirectUri = "post_logout_redirect_uri";
+            public const string State                 = "state";
+        }
+
         public static class TokenResponse
         {
             public const string AccessToken   = "access_token";
@@ -193,6 +200,16 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseModes.Query,
                                 Constants.ResponseModes.Fragment,
                             };
+
+        public static string[] SupportedSubjectTypes = new string[]
+                            {
+                                "pairwise", "public"
+                            };
+
+        public static class SigningAlgorithms
+        {
+            public const string RSA_SHA_256 = "RS256";
+        }
 
         public static class DisplayModes
         {

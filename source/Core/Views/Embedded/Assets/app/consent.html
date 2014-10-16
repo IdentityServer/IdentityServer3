@@ -15,6 +15,7 @@
                 {{model.errorMessage}}
             </div>
             <form name="form" method="post" action="{{model.consentUrl}}" class="consent-form">
+                <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
 
                 <div>Uncheck the permissions you do not wish to grant.</div>
 

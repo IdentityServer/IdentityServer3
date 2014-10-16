@@ -22,6 +22,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Connect
 {
@@ -56,14 +57,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (token.IsMissing())
             {
                 Logger.Error("token is missing.");
-                return BadRequest("token is missing.");
+                return BadRequest(Messages.MissingToken);
             }
 
             var clientId = parameters.Get("client_id");
             if (clientId.IsMissing())
             {
                 Logger.Error("client_id is missing.");
-                return BadRequest("client_id is missing.");
+                return BadRequest(Messages.MissingClientId);
             }
 
             var result = await _validator.ValidateIdentityTokenAsync(token, clientId);

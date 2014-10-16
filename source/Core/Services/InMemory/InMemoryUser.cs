@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         public InMemoryUser()
         {
             Enabled = true;
+            Claims = new List<Claim>();
         }
     }
 }

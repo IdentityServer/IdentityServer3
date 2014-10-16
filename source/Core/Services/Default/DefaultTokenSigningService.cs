@@ -17,6 +17,7 @@
 using System;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -63,6 +64,12 @@ namespace Thinktecture.IdentityServer.Core.Services
                 DateTime.UtcNow, 
                 DateTime.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
+
+            var x509credential = credentials as X509SigningCredentials;
+            if (x509credential != null)
+            {
+                jwt.Header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+            }
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);

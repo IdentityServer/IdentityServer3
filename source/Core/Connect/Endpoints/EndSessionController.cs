@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+using System;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -23,19 +28,25 @@ namespace Thinktecture.IdentityServer.Core.Connect
 {
     [SecurityHeaders]
     [NoCache]
+    [HostAuthentication(Constants.PrimaryAuthenticationType)]
     public class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         private readonly IdentityServerOptions _options;
+        private readonly EndSessionRequestValidator _validator;
+        private readonly EndSessionResponseGenerator _generator;
 
-        public EndSessionController(IdentityServerOptions options)
+        public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator)
         {
             _options = options;
+            _validator = validator;
+            _generator = generator;
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
         [HttpGet]
-        public IHttpActionResult Logout()
+        public async Task<IHttpActionResult> Logout()
         {
             Logger.Info("End session request");
 
@@ -45,7 +56,17 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return NotFound();
             }
 
-            return Redirect(Url.Link(Constants.RouteNames.LogoutPrompt, null));
+            var result = await _validator.ValidateAsync(Request.RequestUri.ParseQueryString(), User as ClaimsPrincipal);
+            if (result.IsError)
+            {
+                // if anything went wrong, ignore the params the RP sent
+                return new LogoutResult(null, Request.GetOwinEnvironment(), this._options);
+            }
+            else
+            {
+                var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
+                return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
+            }
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]

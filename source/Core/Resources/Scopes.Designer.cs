@@ -22,24 +22,24 @@ namespace Thinktecture.IdentityServer.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Messages {
+    internal class Scopes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Messages() {
+        internal Scopes() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Thinktecture.IdentityServer.Core.Resources.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Thinktecture.IdentityServer.Core.Resources.Scopes", typeof(Scopes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,92 +61,65 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Username or Password.
+        ///   Looks up a localized string similar to Your postal address.
         /// </summary>
-        public static string InvalidUsernameOrPassword {
+        internal static string AddressDisplayName {
             get {
-                return ResourceManager.GetString("InvalidUsernameOrPassword", resourceCulture);
+                return ResourceManager.GetString("AddressDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to client_id is missing.
+        ///   Looks up a localized string similar to Your email address.
         /// </summary>
-        public static string MissingClientId {
+        internal static string EmailDisplayName {
             get {
-                return ResourceManager.GetString("MissingClientId", resourceCulture);
+                return ResourceManager.GetString("EmailDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Token is missing.
+        ///   Looks up a localized string similar to Offline access.
         /// </summary>
-        public static string MissingToken {
+        internal static string OfflineAccessDisplayName {
             get {
-                return ResourceManager.GetString("MissingToken", resourceCulture);
+                return ResourceManager.GetString("OfflineAccessDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must select at least one permission..
+        ///   Looks up a localized string similar to Your user identifier.
         /// </summary>
-        public static string MustSelectAtLeastOnePermission {
+        internal static string OpenIdDisplayName {
             get {
-                return ResourceManager.GetString("MustSelectAtLeastOnePermission", resourceCulture);
+                return ResourceManager.GetString("OpenIdDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Account.
+        ///   Looks up a localized string similar to Your phone number.
         /// </summary>
-        public static string NoMatchingExternalAccount {
+        internal static string PhoneDisplayName {
             get {
-                return ResourceManager.GetString("NoMatchingExternalAccount", resourceCulture);
+                return ResourceManager.GetString("PhoneDisplayName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error authenticating with external provider.
+        ///   Looks up a localized string similar to Your user profile information (first name, last name, etc.).
         /// </summary>
-        public static string NoSubjectFromExternalProvider {
+        internal static string ProfileDescription {
             get {
-                return ResourceManager.GetString("NoSubjectFromExternalProvider", resourceCulture);
+                return ResourceManager.GetString("ProfileDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password is required.
+        ///   Looks up a localized string similar to User profile.
         /// </summary>
-        public static string PasswordRequired {
+        internal static string ProfileDisplayName {
             get {
-                return ResourceManager.GetString("PasswordRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SSL is required.
-        /// </summary>
-        public static string SslRequired {
-            get {
-                return ResourceManager.GetString("SslRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There was an unexpected error.
-        /// </summary>
-        public static string UnexpectedError {
-            get {
-                return ResourceManager.GetString("UnexpectedError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Username is required.
-        /// </summary>
-        public static string UsernameRequired {
-            get {
-                return ResourceManager.GetString("UsernameRequired", resourceCulture);
+                return ResourceManager.GetString("ProfileDisplayName", resourceCulture);
             }
         }
     }

@@ -98,7 +98,9 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded.Assets
             string value = LoadResourceString(name);
             foreach(var key in values.Keys)
             {
-                value = value.Replace("{" + key + "}", values[key].ToString());
+                var val = values[key];
+                val = val ?? String.Empty;
+                value = value.Replace("{" + key + "}", val.ToString());
             }
             return value;
         }

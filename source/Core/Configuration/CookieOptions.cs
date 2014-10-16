@@ -33,6 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public TimeSpan ExpireTimeSpan { get; set; }
         public bool IsPersistent { get; set; }
         public bool SlidingExpiration { get; set; }
+        public string Path { get; set; }
 
         public bool AllowRememberMe { get; set; }
         public TimeSpan RememberMeDuration { get; set; }

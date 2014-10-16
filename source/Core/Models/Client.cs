@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -54,6 +55,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
         public AccessTokenType AccessTokenType { get; set; }
 
+        // login page related
+        public bool AllowLocalLogin { get; set; }
+        // if empty, all allowed
+        public IEnumerable<string> AllowedIdentityProviders { get; set; }
+
         // not implemented yet
         public bool RequireSignedAuthorizeRequest { get; set; }
         public SubjectTypes SubjectType { get; set; }
@@ -86,6 +92,9 @@ namespace Thinktecture.IdentityServer.Core.Models
 
             IdentityTokenSigningKeyType = SigningKeyTypes.Default;
             AccessTokenType = AccessTokenType.Jwt;
+
+            AllowedIdentityProviders = Enumerable.Empty<string>();
+            AllowLocalLogin = true;
         }
     }
 }

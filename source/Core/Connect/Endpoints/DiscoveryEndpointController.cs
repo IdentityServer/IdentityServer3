@@ -71,8 +71,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
                 grant_types_supported = supportedGrantTypes,
-                subject_types_support = new[] { "pairwise", "public" },
-                id_token_signing_alg_values_supported = "RS256"
+                subject_types_support = "public",
+                id_token_signing_alg_values_supported = Constants.SigningAlgorithms.RSA_SHA_256
             });
         }
 
