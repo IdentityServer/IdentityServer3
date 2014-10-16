@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -42,6 +53,12 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync();
 
+            var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
+            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            {
+                supportedGrantTypes = supportedGrantTypes.Where(type => type != Constants.GrantTypes.Password);
+            }
+
             return Json(new
             {
                 issuer = _options.IssuerUri,
@@ -53,9 +70,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 scopes_supported = scopes.Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
-                grant_types_supported = Constants.SupportedGrantTypes,
-                subject_types_support = new[] { "pairwise", "public" },
-                id_token_signing_alg_values_supported = "RS256"
+                grant_types_supported = supportedGrantTypes,
+                subject_types_support = "public",
+                id_token_signing_alg_values_supported = Constants.SigningAlgorithms.RSA_SHA_256
             });
         }
 

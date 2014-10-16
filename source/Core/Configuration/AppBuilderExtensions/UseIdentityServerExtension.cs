@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using Microsoft.Owin.Infrastructure;
@@ -26,12 +37,17 @@ namespace Owin
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
             JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
 
+            if (options.RequireSsl)
+            {
+                app.Use<RequireSslMiddleware>();
+            }
+
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
             
             app.ConfigureIdentityServerBaseUrl(options.PublicHostName);
             app.UseCors(options.CorsPolicy);
-            app.ConfigureCookieAuthentication(options.CookieOptions);
+            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
             
             if (options.PluginConfiguration != null)
             {

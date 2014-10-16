@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -16,6 +27,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -38,9 +50,51 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customValidator = customValidator;
         }
 
-        public virtual Task<TokenValidationResult> ValidateIdentityTokenAsync(string token)
+        public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(string token, string clientId = null, bool validateLifetime = true)
         {
-            throw new NotImplementedException();
+            if (clientId.IsMissing())
+            {
+                clientId = GetClientIdFromJwt(token);
+
+                if (clientId.IsMissing())
+                {
+                    return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+                }
+            }
+
+            var client = await _clients.FindClientByIdAsync(clientId);
+            if (client == null)
+            {
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+            }
+
+            SecurityKey signingKey;
+            if (client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
+            {
+                signingKey = new InMemorySymmetricSecurityKey(Convert.FromBase64String(client.ClientSecret));
+            }
+            else
+            {
+                signingKey = new X509SecurityKey(_options.SigningCertificate);
+            }
+
+            var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
+            result.Client = client;
+
+            if (result.IsError)
+            {
+                return result;
+            }
+
+            Logger.Debug("Calling custom token validator");
+            var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
+
+            if (customResult.IsError)
+            {
+                Logger.Error("Custom validator failed: " + customResult.Error ?? "unknown");
+            }
+
+            return customResult;
         }
 
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
@@ -53,12 +107,20 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (token.Contains("."))
             {
                 Logger.InfoFormat("Validating a JWT access token");
-                result = await ValidateJwtAccessTokenAsync(token);
+                result = await ValidateJwtAsync(
+                    token, 
+                    string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
+                    new X509SecurityKey(_options.SigningCertificate));
             }
             else
             {
                 Logger.InfoFormat("Validating a reference access token");
                 result = await ValidateReferenceAccessTokenAsync(token);
+            }
+
+            if (result.IsError)
+            {
+                return result;
             }
 
             if (expectedScope.IsPresent())
@@ -84,7 +146,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return customResult;
         }
 
-        protected virtual Task<TokenValidationResult> ValidateJwtAccessTokenAsync(string jwt)
+        public virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler();
             handler.Configuration = new SecurityTokenHandlerConfiguration();
@@ -94,15 +156,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
             var parameters = new TokenValidationParameters
             {
                 ValidIssuer = _options.IssuerUri,
-                IssuerSigningToken = new X509SecurityToken(_options.SigningCertificate),
-                ValidAudience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri)
+                IssuerSigningKey = signingKey,
+                ValidateLifetime = validateLifetime,
+                ValidAudience = audience
             };
 
             try
             {
                 SecurityToken jwtToken;
                 var id = handler.ValidateToken(jwt, parameters, out jwtToken);
-                Logger.Info("JWT access token validatio successful");
+                Logger.Info("JWT access token validation successful");
 
                 return Task.FromResult(new TokenValidationResult
                 {
@@ -161,6 +224,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             claims.AddRange(token.Claims);
 
             return claims;
+        }
+
+        protected virtual string GetClientIdFromJwt(string token)
+        {
+            var jwt = new JwtSecurityToken(token);
+            var clientId = jwt.Audiences.FirstOrDefault();
+
+            return clientId;
         }
 
         protected virtual TokenValidationResult Invalid(string error)

@@ -38,13 +38,13 @@
                     </ul>
                 </div>
 
-                <div class="panel panel-default" ng-show="model.applicationScopes">
+                <div class="panel panel-default" ng-show="model.resourceScopes">
                     <div class="panel-heading">
                         <span class="glyphicon glyphicon-tasks"></span>
                         Application Access
                     </div>
                     <ul class="list-group">
-                        <li ng-repeat="scope in model.applicationScopes" class="list-group-item">
+                        <li ng-repeat="scope in model.resourceScopes" class="list-group-item">
                             <label>
                                 <input class="consent-scopecheck" type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" />
                                 <strong>{{scope.displayName}}</strong>

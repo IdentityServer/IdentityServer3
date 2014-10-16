@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -28,6 +39,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public LoginInteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
+            // let the login page know the client requesting authorization
+            _signIn.ClientId = request.ClientId;
+
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
             {
@@ -43,10 +57,20 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // check login_hint - we only support idp: right now
             if (request.LoginHint.IsPresent())
             {
-                if (request.LoginHint.StartsWith("idp:"))
+                if (request.LoginHint.StartsWith(Constants.LoginHints.HomeRealm))
                 {
-                    _signIn.IdP = request.LoginHint.Substring(4);
+                    _signIn.IdP = request.LoginHint.Substring(Constants.LoginHints.HomeRealm.Length);
                 }
+                if (request.LoginHint.StartsWith(Constants.LoginHints.Tenant))
+                {
+                    _signIn.Tenant = request.LoginHint.Substring(Constants.LoginHints.Tenant.Length);
+                }
+            }
+
+            // pass through acr values
+            if (request.AuthenticationContextReferenceClasses.Any())
+            {
+                _signIn.AcrValues = request.AuthenticationContextReferenceClasses;
             }
 
             if (request.PromptMode == Constants.PromptModes.Login)

@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -48,7 +59,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     return false;
                 }
 
-                if (scopeDetail.IsOpenIdScope)
+                if (scopeDetail.Enabled == false)
+                {
+                    Logger.ErrorFormat("Scope disabled: {0}", requestedScope);
+                    return false;
+                }
+
+                if (scopeDetail.Type == ScopeType.Identity)
                 {
                     ContainsOpenIdScopes = true;
                 }
@@ -115,34 +132,67 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public bool IsResponseTypeValid(string responseType)
         {
-            if (responseType == Constants.ResponseTypes.IdToken)
-            {
-                // must include identity scopes, but no resource scopes
-                if (!ContainsOpenIdScopes || ContainsResourceScopes)
-                {
-                    Logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
-                    return false;
-                }
+            var requirement = Constants.ResponseTypeToScopeRequirement[responseType];
 
-            }
-            else if (responseType == Constants.ResponseTypes.IdTokenToken)
+            // must include identity scopes
+            if (requirement == Constants.ScopeRequirement.Identity)
             {
-                // must include identity scopes
                 if (!ContainsOpenIdScopes)
                 {
                     Logger.Error("Requests for id_token response type must include identity scopes");
                     return false;
                 }
             }
-            else if (responseType == Constants.ResponseTypes.Token)
+
+            // must include identity scopes only
+            else if (requirement == Constants.ScopeRequirement.IdentityOnly)
             {
-                // must include resource scopes, but no identity scopes
-                if (ContainsOpenIdScopes || !ContainsResourceScopes)
+                if (!ContainsOpenIdScopes || ContainsResourceScopes)
                 {
-                    Logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
+                    Logger.Error("Requests for id_token response type only must not include resource scopes");
                     return false;
                 }
             }
+
+            // must include resource scopes only
+            else if (requirement == Constants.ScopeRequirement.ResourceOnly)
+            {
+                if (ContainsOpenIdScopes || !ContainsResourceScopes)
+                {
+                    Logger.Error("Requests for token response type only must include resource scopes, but no identity scopes.");
+                    return false;
+                }
+            }
+
+
+            //if (responseType == Constants.ResponseTypes.IdToken)
+            //{
+            //    // must include identity scopes, but no resource scopes
+            //    if (!ContainsOpenIdScopes || ContainsResourceScopes)
+            //    {
+            //        Logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
+            //        return false;
+            //    }
+
+            //}
+            //else if (responseType == Constants.ResponseTypes.IdTokenToken)
+            //{
+            //    // must include identity scopes
+            //    if (!ContainsOpenIdScopes)
+            //    {
+            //        Logger.Error("Requests for id_token response type must include identity scopes");
+            //        return false;
+            //    }
+            //}
+            //else if (responseType == Constants.ResponseTypes.Token)
+            //{
+            //    // must include resource scopes, but no identity scopes
+            //    if (ContainsOpenIdScopes || !ContainsResourceScopes)
+            //    {
+            //        Logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
+            //        return false;
+            //    }
+            //}
 
             return true;
         }

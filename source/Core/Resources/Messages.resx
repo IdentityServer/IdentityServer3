@@ -120,6 +120,12 @@
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>Invalid Username or Password</value>
   </data>
+  <data name="MissingClientId" xml:space="preserve">
+    <value>client_id is missing</value>
+  </data>
+  <data name="MissingToken" xml:space="preserve">
+    <value>Token is missing</value>
+  </data>
   <data name="MustSelectAtLeastOnePermission" xml:space="preserve">
     <value>Must select at least one permission.</value>
   </data>
@@ -128,5 +134,17 @@
   </data>
   <data name="NoSubjectFromExternalProvider" xml:space="preserve">
     <value>Error authenticating with external provider</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="SslRequired" xml:space="preserve">
+    <value>SSL is required</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>There was an unexpected error</value>
+  </data>
+  <data name="UsernameRequired" xml:space="preserve">
+    <value>Username is required</value>
   </data>
 </root>

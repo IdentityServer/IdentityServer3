@@ -1,10 +1,23 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core
 {
@@ -17,11 +30,12 @@ namespace Thinktecture.IdentityServer.Core
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         public const string BuiltInIdentityProvider         = "idsrv";
 
-        public const string AccessTokenAudience             = "{0}/resources";
+        public const string AccessTokenAudience             = "{0}resources";
 
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
-
+        public static readonly TimeSpan DefaultRememberMeDuration = TimeSpan.FromDays(30);
+        
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
@@ -52,6 +66,13 @@ namespace Thinktecture.IdentityServer.Core
             public const string Scope        = "scope";
             public const string UserName     = "username";
             public const string Password     = "password";
+        }
+
+        public static class EndSessionRequest
+        {
+            public const string IdTokenHint           = "id_token_hint";
+            public const string PostLogoutRedirectUri = "post_logout_redirect_uri";
+            public const string State                 = "state";
         }
 
         public static class TokenResponse
@@ -89,10 +110,18 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ResponseTypes
         {
+            // authorization code flow
+            public const string Code = "code";
+
+            // implicit flow
             public const string Token        = "token";
             public const string IdToken      = "id_token";
             public const string IdTokenToken = "id_token token";
-            public const string Code         = "code";
+            
+            // hybrid flow
+            public const string CodeIdToken      = "code id_token";
+            public const string CodeToken        = "code token";
+            public const string CodeIdTokenToken = "code id_token token";
         }
 
         public static readonly List<string> SupportedResponseTypes = new List<string> 
@@ -100,9 +129,49 @@ namespace Thinktecture.IdentityServer.Core
                                 ResponseTypes.Code,
                                 ResponseTypes.Token,
                                 ResponseTypes.IdToken,
-                                ResponseTypes.IdTokenToken
+                                ResponseTypes.IdTokenToken,
+                                ResponseTypes.CodeIdToken,
+                                ResponseTypes.CodeToken,
+                                ResponseTypes.CodeIdTokenToken
                             };
 
+        public static readonly Dictionary<string, Flows> ResponseTypeToFlowMapping = new Dictionary<string, Flows>
+                            {
+                                { ResponseTypes.Code, Flows.AuthorizationCode },
+                                { ResponseTypes.Token, Flows.Implicit },
+                                { ResponseTypes.IdToken, Flows.Implicit },
+                                { ResponseTypes.IdTokenToken, Flows.Implicit },
+                                { ResponseTypes.CodeIdToken, Flows.Hybrid },
+                                { ResponseTypes.CodeToken, Flows.Hybrid },
+                                { ResponseTypes.CodeIdTokenToken, Flows.Hybrid }
+                            };
+
+        public static readonly List<Flows> AllowedFlowsForAuthorizeEndpoint = new List<Flows>
+                            {
+                                Flows.AuthorizationCode,
+                                Flows.Implicit,
+                                Flows.Hybrid
+                            };
+
+        public enum ScopeRequirement
+        {
+            None, 
+            ResourceOnly, 
+            IdentityOnly,
+            Identity
+        }
+
+        public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new Dictionary<string, ScopeRequirement>
+                            {
+                                { ResponseTypes.Code, ScopeRequirement.None },
+                                { ResponseTypes.Token, ScopeRequirement.ResourceOnly },
+                                { ResponseTypes.IdToken, ScopeRequirement.IdentityOnly },
+                                { ResponseTypes.IdTokenToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdTokenToken, ScopeRequirement.Identity }
+                            };
+                            
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
                                 GrantTypes.AuthorizationCode,
@@ -111,6 +180,12 @@ namespace Thinktecture.IdentityServer.Core
                                 GrantTypes.Implicit
                             };
 
+        public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
+                            {
+                                { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
+                                { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
+                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
+                            };
 
         public static class ResponseModes
         {
@@ -125,6 +200,16 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.ResponseModes.Query,
                                 Constants.ResponseModes.Fragment,
                             };
+
+        public static string[] SupportedSubjectTypes = new string[]
+                            {
+                                "pairwise", "public"
+                            };
+
+        public static class SigningAlgorithms
+        {
+            public const string RSA_SHA_256 = "RS256";
+        }
 
         public static class DisplayModes
         {
@@ -157,6 +242,12 @@ namespace Thinktecture.IdentityServer.Core
                                 Constants.PromptModes.Consent,
                                 Constants.PromptModes.SelectAccount,
                             };
+
+        public static class LoginHints
+        {
+            public const string HomeRealm = "idp:";
+            public const string Tenant = "tenant:";
+        }
 
         public static class AuthorizeErrors
         {
@@ -199,8 +290,15 @@ namespace Thinktecture.IdentityServer.Core
             public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
         }
-        
 
+        public static Dictionary<string, HttpStatusCode> ProtectedResourceErrorStatusCodes = new Dictionary<string, HttpStatusCode>
+        {
+            { ProtectedResourceErrors.InvalidToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.ExpiredToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.InvalidRequest,    HttpStatusCode.BadRequest },
+            { ProtectedResourceErrors.InsufficientScope, HttpStatusCode.Forbidden },
+        };
+        
         public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new Dictionary<string, IEnumerable<string>>
         {
             { StandardScopes.Profile, new[]
@@ -294,10 +392,16 @@ namespace Thinktecture.IdentityServer.Core
             public const string Id               = "id";
             public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
+            public const string Role             = "role";
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
             public const string PartialLoginReturnUrl = "partial_login_return_url";
+
+            // internal claim types
+            // claim type to identify external user from external provider
+            public const string ExternalProviderUserId = "external_provider_user_id";
+            public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
 
         public static class AuthenticationMethods
@@ -344,7 +448,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string LoginExternal = "external";
             public const string LoginExternalCallback = "callback";
             public const string Logout = "logout";
-            public const string ResumeLoginFromRedirect = "resume";
+            public const string ResumeLoginFromRedirect = "return";
             public const string CspReport = "csp/report";
 
             public static class Oidc
@@ -357,6 +461,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string Token = "connect/token";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
+                public const string IdentityTokenValidation = "connect/identityTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";
             }

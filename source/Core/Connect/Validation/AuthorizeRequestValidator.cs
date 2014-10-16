@@ -1,8 +1,20 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
+using Microsoft.Owin;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -33,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IOwinContext context)
         {
             _options = options;
             _scopes = scopes;
@@ -41,7 +53,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _customValidator = customValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest();
-            _validatedRequest.IdentityServerOptions = _options;
+            _validatedRequest.Options = _options;
+            _validatedRequest.Environment = context.Environment;
         }
 
         // basic protocol validation
@@ -57,6 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             _validatedRequest.Raw = parameters;
 
+
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
@@ -69,6 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
             Logger.InfoFormat("client_id: {0}", clientId);
             _validatedRequest.ClientId = clientId;
+
 
             //////////////////////////////////////////////////////////
             // redirect_uri must be present, and a valid uri
@@ -91,6 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.InfoFormat("redirect_uri: {0}", redirectUri);
             _validatedRequest.RedirectUri = new Uri(redirectUri);
 
+
             //////////////////////////////////////////////////////////
             // response_type must be present and supported
             //////////////////////////////////////////////////////////
@@ -110,23 +126,51 @@ namespace Thinktecture.IdentityServer.Core.Connect
             Logger.InfoFormat("response_type: {0}", responseType);
             _validatedRequest.ResponseType = responseType;
 
+
             //////////////////////////////////////////////////////////
             // match response_type to flow
             //////////////////////////////////////////////////////////
-            if (_validatedRequest.ResponseType == Constants.ResponseTypes.Code)
+            _validatedRequest.Flow = Constants.ResponseTypeToFlowMapping[_validatedRequest.ResponseType];
+            Logger.Info("Flow: " + _validatedRequest.Flow.ToString());
+
+
+            //////////////////////////////////////////////////////////
+            // check if flow is allowed at authorize endpoint
+            //////////////////////////////////////////////////////////
+            if (!Constants.AllowedFlowsForAuthorizeEndpoint.Contains(_validatedRequest.Flow))
             {
-                Logger.Info("Flow: code");
-                _validatedRequest.Flow = Flows.Code;
-                _validatedRequest.ResponseMode = Constants.ResponseModes.Query;
+                return Invalid();
             }
-            else if (_validatedRequest.ResponseType == Constants.ResponseTypes.Token ||
-                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdToken ||
-                     _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken)
+
+            //////////////////////////////////////////////////////////
+            // check response_mode parameter and set response_mode
+            //////////////////////////////////////////////////////////
+            var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
+            if (responseMode.IsPresent())
             {
-                Logger.Info("Flow: implicit");
-                _validatedRequest.Flow = Flows.Implicit;
-                _validatedRequest.ResponseMode = Constants.ResponseModes.Fragment;
+                if (Constants.SupportedResponseModes.Contains(responseMode))
+                {
+                    if (Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].Contains(responseMode))
+                    {
+                        _validatedRequest.ResponseMode = responseMode;
+                    }
+                    else
+                    {
+                        Logger.Info("Invalid response_mode for flow: " + responseMode);
+                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    }
+                }
+                else
+                {
+                    Logger.InfoFormat("Unsupported response_mode: {0}", responseMode);
+                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                }
             }
+            else
+            {
+                _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
+            }
+
 
             //////////////////////////////////////////////////////////
             // scope must be present
@@ -138,42 +182,28 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client);
             }
 
-            scope = scope.Trim();
+            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
+            Logger.InfoFormat("scopes: {0}", scope);
 
-            if (scope.Contains(Constants.StandardScopes.OpenId))
+            if (_validatedRequest.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
             {
                 _validatedRequest.IsOpenIdRequest = true;
             }
 
-            _validatedRequest.RequestedScopes = scope.Split(' ').Distinct().ToList();
-            Logger.InfoFormat("scopes: {0}", scope);
-
             //////////////////////////////////////////////////////////
-            // check scope vs response type plausability
+            // check scope vs response_type plausability
             //////////////////////////////////////////////////////////
-
-            // if response_type is code - all scope variations are allowed
-            if (_validatedRequest.ResponseType != Constants.ResponseTypes.Code)
+            var requirement = Constants.ResponseTypeToScopeRequirement[_validatedRequest.ResponseType];
+            if (requirement == Constants.ScopeRequirement.Identity ||
+                requirement == Constants.ScopeRequirement.IdentityOnly)
             {
-                // openid requests require a requested id_token
-                if (_validatedRequest.IsOpenIdRequest)
+                if (_validatedRequest.IsOpenIdRequest == false)
                 {
-                    if (!_validatedRequest.ResponseType.Contains(Constants.ResponseTypes.IdToken))
-                    {
-                        Logger.Error("Request contains openid scope, but response_type does not contain an identity token");
-                        return Invalid(ErrorTypes.Client);
-                    }
-                }
-                else
-                {
-                    // resource requests require a token response_type
-                    if (_validatedRequest.ResponseType != Constants.ResponseTypes.Token)
-                    {
-                        Logger.Error("Request does not contain the openid scope, but response_type contains an identity token");
-                        return Invalid(ErrorTypes.Client);
-                    }
+                    Logger.Error("response_type requires the openid scope");
+                    return Invalid(ErrorTypes.Client);
                 }
             }
+
 
             //////////////////////////////////////////////////////////
             // check state
@@ -210,34 +240,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
                         Logger.Error("Nonce required for implicit flow with openid scope");
                         return Invalid(ErrorTypes.Client);
                     }
-                }
-            }
-
-            //////////////////////////////////////////////////////////
-            // check response_mode
-            //////////////////////////////////////////////////////////
-            var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
-            if (responseMode.IsPresent())
-            {
-                if (Constants.SupportedResponseModes.Contains(responseMode))
-                {
-                    if (responseMode == Constants.ResponseModes.FormPost)
-                    {
-                        if (_validatedRequest.ResponseType != Constants.ResponseTypes.IdToken &&
-                            _validatedRequest.ResponseType != Constants.ResponseTypes.IdTokenToken)
-                        {
-                            Logger.Error("Invalid response_type for response_mode");
-                            return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
-                    
-                        }
-                    }
-                    
-                    _validatedRequest.ResponseMode = responseMode;
-                    Logger.InfoFormat("response_mode: {0}", responseMode);
-                }
-                else
-                {
-                    Logger.Info("Unsupported response_mode - ignored.");
                 }
             }
 
@@ -306,7 +308,15 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 _validatedRequest.LoginHint = loginHint;
             }
 
-            // todo: parse amr, acr
+            //////////////////////////////////////////////////////////
+            // check acr_values
+            //////////////////////////////////////////////////////////
+            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            if (acrValues.IsPresent())
+            {
+                Logger.InfoFormat("acr_values: {0}", acrValues);
+                _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+            }
 
             Logger.Info("Protocol validation successful");
             return Valid();
@@ -376,9 +386,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsResourceScopes ||
-                _validatedRequest.ResponseType == Constants.ResponseTypes.IdTokenToken ||
-                _validatedRequest.ResponseType == Constants.ResponseTypes.Token)
+            if (scopeValidator.ContainsResourceScopes)
             {
                 _validatedRequest.IsResourceRequest = true;
             }

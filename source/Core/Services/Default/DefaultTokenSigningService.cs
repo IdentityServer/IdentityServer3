@@ -1,11 +1,23 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 using System;
-using System.IdentityModel.Protocols.WSTrust;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -52,6 +64,12 @@ namespace Thinktecture.IdentityServer.Core.Services
                 DateTime.UtcNow, 
                 DateTime.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
+
+            var x509credential = credentials as X509SigningCredentials;
+            if (x509credential != null)
+            {
+                jwt.Header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+            }
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);

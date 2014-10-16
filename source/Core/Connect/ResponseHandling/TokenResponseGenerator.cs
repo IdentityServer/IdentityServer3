@@ -1,6 +1,17 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
@@ -9,6 +20,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Connect
@@ -34,18 +46,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
             {
                 return await ProcessAuthorizationCodeRequestAsync(request);
             }
-            
-            if (request.GrantType == Constants.GrantTypes.ClientCredentials ||
-                     request.GrantType == Constants.GrantTypes.Password ||
-                     request.Assertion.IsPresent())
-            {
-                return await ProcessTokenRequestAsync(request);
-            }
-            
+
             if (request.GrantType == Constants.GrantTypes.RefreshToken)
             {
                 return await ProcessRefreshTokenRequestAsync(request);
             }
+
+            return await ProcessTokenRequestAsync(request);
 
             throw new InvalidOperationException("Unknown grant type.");
         }
@@ -63,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 AccessToken = accessToken.Item1,
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
-            
+
             //////////////////////////
             // refresh token
             /////////////////////////
@@ -77,8 +84,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
             /////////////////////////
             if (request.AuthorizationCode.IsOpenId)
             {
-                var idToken = await _tokenService.CreateIdentityTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, false, request.Raw);
-                var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);    
+                var tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.AuthorizationCode.Subject,
+                    Client = request.AuthorizationCode.Client,
+                    Scopes = request.AuthorizationCode.RequestedScopes,
+                    ValidatedRequest = request
+                };
+
+                var idToken = await _tokenService.CreateIdentityTokenAsync(tokenRequest);
+                var jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
                 response.IdentityToken = jwt;
             }
 
@@ -126,18 +141,35 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
             Token accessToken;
+            TokenCreationRequest tokenRequest;
             bool createRefreshToken;
 
             if (request.AuthorizationCode != null)
             {
                 createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
-                accessToken = await _tokenService.CreateAccessTokenAsync(request.AuthorizationCode.Subject, request.AuthorizationCode.Client, request.AuthorizationCode.RequestedScopes, request.Raw);
+                
+                tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.AuthorizationCode.Subject,
+                    Client = request.AuthorizationCode.Client,
+                    Scopes = request.AuthorizationCode.RequestedScopes,
+                    ValidatedRequest = request
+                };
             }
             else
             {
                 createRefreshToken = request.ValidatedScopes.ContainsOfflineAccessScope;
-                accessToken = await _tokenService.CreateAccessTokenAsync(request.Subject, request.Client, request.ValidatedScopes.GrantedScopes, request.Raw);
+
+                tokenRequest = new TokenCreationRequest
+                {
+                    Subject = request.Subject,
+                    Client = request.Client,
+                    Scopes = request.ValidatedScopes.GrantedScopes,
+                    ValidatedRequest = request
+                };
             }
+
+            accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
 
             string refreshToken = "";
             if (createRefreshToken)

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -11,6 +10,10 @@ namespace Thinktecture.IdentityServer.Host.Config
         {
             return new[]
                 {
+                    ////////////////////////
+                    // identity scopes
+                    ////////////////////////
+
                     Scope.OpenId,
                     Scope.Profile,
                     Scope.Email,
@@ -18,17 +21,47 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     new Scope
                     {
+                        Name = "roles",
+                        DisplayName = "Roles",
+                        Description = "Your organizational roles",
+                        Type = ScopeType.Identity,
+
+                        Claims = new[]
+                        {
+                            new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
+                        }
+                    },
+
+                    ////////////////////////
+                    // resource scopes
+                    ////////////////////////
+
+                    new Scope
+                    {
                         Name = "read",
                         DisplayName = "Read data",
-                        IsOpenIdScope = false,
+                        Type = ScopeType.Resource,
                         Emphasize = false,
                     },
                     new Scope
                     {
                         Name = "write",
                         DisplayName = "Write data",
-                        IsOpenIdScope = false,
+                        Type = ScopeType.Resource,
                         Emphasize = true,
+                    },
+                    new Scope
+                    {
+                        Name = "idmgr",
+                        DisplayName = "IdentityManager",
+                        Type = ScopeType.Resource,
+                        Emphasize = true,
+                        
+                        Claims = new[]
+                        {
+                            new ScopeClaim(Constants.ClaimTypes.Name),
+                            new ScopeClaim(Constants.ClaimTypes.Role)
+                        }
                     }
                 };
         }

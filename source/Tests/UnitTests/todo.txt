@@ -1,8 +1,0 @@
-﻿Refresh tokens
-----------------------
-
-response generation tests:
-
-- timeouts (sliding vs absolute)
-- handle re-gen vs re-use
-- ...

@@ -1,13 +1,23 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
 using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -122,13 +132,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultCustomRequestValidator>().As<ICustomRequestValidator>();
             }
 
-            if (fact.AssertionGrantValidator != null)
+            if (fact.CustomGrantValidator != null)
             {
-                builder.Register(fact.AssertionGrantValidator);
+                builder.Register(fact.CustomGrantValidator);
             }
             else
             {
-                builder.RegisterType<DefaultAssertionGrantValidator>().As<IAssertionGrantValidator>();
+                builder.RegisterType<DefaultCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
             if (fact.ExternalClaimsFilter != null)
@@ -172,15 +182,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             builder.RegisterType<AuthorizeRequestValidator>();
             builder.RegisterType<ClientValidator>();
             builder.RegisterType<TokenValidator>();
+            builder.RegisterType<EndSessionRequestValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
             builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
-
-            // general services
-            builder.RegisterType<CookieMiddlewareTrackingCookieService>().As<ITrackingCookieService>();
+            builder.RegisterType<EndSessionResponseGenerator>();
 
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();

@@ -1,6 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Thinktecture.IdentityServer.Core;
+﻿/*
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Tests
@@ -11,68 +24,28 @@ namespace Thinktecture.IdentityServer.Tests
         {
             return new Scope[]
             {
-                new Scope
-                {
-                    Name = Constants.StandardScopes.OpenId, 
-                    DisplayName = "Your user identifier",
-                    Required = true,
-                    IsOpenIdScope = true,
-                    Claims = new List<ScopeClaim>
-                        {
-                            new ScopeClaim
-                            {
-                                AlwaysIncludeInIdToken = true,
-                                Name = "sub",
-                                Description = "subject identifier"
-                            }
-                        }
-                 },
-                 new Scope
-                 {
-                    Name = Constants.StandardScopes.Profile, 
-                    DisplayName = "Basic profile",
-                    Description = "Your basic user profile information (first name, last name, etc.). This is a really long string to see what the UI look like when someone puts in too much stuff here. I know this is not what we really want, but this is just test data (for now). KThxBye.",
-                    IsOpenIdScope = true,
-                    Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(x=>new ScopeClaim{Name = x, Description = x}))
-                },
-                new Scope
-                {
-                    Name = Constants.StandardScopes.Email, 
-                    DisplayName = "Your email address",
-                    IsOpenIdScope = true,
-                    Emphasize = true,
-                    Claims = new List<ScopeClaim>
-                    {
-                        new ScopeClaim
-                        {
-                            Name = "email",
-                            Description = "email address",
-                        },
-                        new ScopeClaim
-                        {
-                            Name = "email_verified",
-                            Description = "email is verified",
-                        }
-                    }
-                },
+                Scope.OpenId,
+                Scope.Profile,
+                Scope.Email,
+
                 new Scope
                 {
                     Name = "read",
                     DisplayName = "Read data",
-                    IsOpenIdScope = false,
+                    Type = ScopeType.Resource,
                     Emphasize = false,
                 },
                 new Scope
                 {
                     Name = "write",
                     DisplayName = "Write data",
-                    IsOpenIdScope = false,
+                    Type = ScopeType.Resource,
                     Emphasize = true,
                 },
                 new Scope
                 {
                     Name = "forbidden",
+                    Type = ScopeType.Resource,
                     DisplayName = "Forbidden scope",
                     Emphasize = true
                 }

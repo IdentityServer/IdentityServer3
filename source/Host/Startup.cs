@@ -3,11 +3,13 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Owin;
+using System;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Host;
 using Thinktecture.IdentityServer.Host.Config;
 
-[assembly: OwinStartup("LocalTest", typeof(Thinktecture.IdentityServer.Host.Startup_LocalTest))]
+[assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
 
 namespace Thinktecture.IdentityServer.Host
 {
@@ -16,6 +18,7 @@ namespace Thinktecture.IdentityServer.Host
         public void Configuration(IAppBuilder app)
         {
             LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
+            //LogProvider.SetCurrentLogProvider(new TraceSourceLogProvider());
 
             // uncomment to enable HSTS headers for the host
             // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
@@ -28,27 +31,34 @@ namespace Thinktecture.IdentityServer.Host
                     var idsrvOptions = new IdentityServerOptions
                     {
                         IssuerUri = "https://idsrv3.com",
-                        SiteName = "Thinktecture IdentityServer v3 - preview 1",
+                        SiteName = "Thinktecture IdentityServer v3 - beta 2",
+                        RequireSsl = false,
                         SigningCertificate = Cert.Load(),
-                        CspReportEndpoint = EndpointSettings.Enabled,
+                        CspOptions = new CspOptions {
+                            ReportEndpoint = EndpointSettings.Enabled,
+                        },
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
-                        PublicHostName = "http://localhost:3333",
                         Factory = factory,
                         AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
-                        CorsPolicy = CorsPolicy.AllowAll
+                        CorsPolicy = CorsPolicy.AllowAll,
                     };
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
+
+            // only for showing the getting started index page
+            app.UseStaticFiles();
         }
 
         public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
-            //var google = new GoogleAuthenticationOptions
-            //{
-            //    AuthenticationType = "Google",
-            //    SignInAsAuthenticationType = signInAsType
-            //};
-            //app.UseGoogleAuthentication(google);
+            var google = new GoogleOAuth2AuthenticationOptions
+            {
+                AuthenticationType = "Google",
+                SignInAsAuthenticationType = signInAsType,
+                ClientId = "767400843187-8boio83mb57ruogr9af9ut09fkg56b27.apps.googleusercontent.com",
+                ClientSecret = "5fWcBT0udKY7_b6E3gEiJlze"
+            };
+            app.UseGoogleAuthentication(google);
 
             var fb = new FacebookAuthenticationOptions
             {

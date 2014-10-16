@@ -42,7 +42,7 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -74,7 +74,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -88,40 +88,61 @@
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Cors, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.2\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.0\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.Owin, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http.Owin, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.0\lib\net45\System.Web.Http.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.2\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.1.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
+      <HintPath>..\packages\Thinktecture.IdentityModel.Core.1.2.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Authentication\LogoutResult.cs" />
+    <Compile Include="Authentication\MessageCookie.cs" />
+    <Compile Include="Authentication\SignOutMessage.cs" />
+    <Compile Include="Configuration\CspOptions.cs" />
+    <Compile Include="Configuration\DataProtectorAdapter.cs" />
+    <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
+    <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
+    <Compile Include="Connect\Results\AuthorizeFormPostResult.cs" />
+    <Compile Include="Connect\Results\AuthorizeRedirectResult.cs" />
+    <Compile Include="Connect\Validation\EndSessionRequestValidator.cs" />
+    <Compile Include="Connect\Validation\ValidatedEndSessionRequest.cs" />
+    <Compile Include="Connect\Validation\ValidatedRequest.cs" />
+    <Compile Include="Extensions\AuthorizeResponseExtensions.cs" />
     <Compile Include="Extensions\ClaimListExtensions.cs" />
     <Compile Include="Extensions\ValidatedAuthorizeRequestExtensions.cs" />
+    <Compile Include="Hosting\RequireSslMiddleware.cs" />
+    <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
+    <Compile Include="Models\TokenCreationRequest.cs" />
+    <Compile Include="Resources\Scopes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Scopes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
+    <Compile Include="Views\ActionResults\HtmlActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
     <Compile Include="Authentication\AuthenticateResult.cs" />
     <Compile Include="Authentication\AuthenticationController.cs" />
-    <Compile Include="Authentication\ExternalAuthenticateResult.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
@@ -164,13 +185,11 @@
     <Compile Include="Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\EndpointSettings.cs" />
-    <Compile Include="Configuration\FuncDataProtector.cs" />
     <Compile Include="Configuration\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Hosting\KatanaDependencyResolver.cs" />
-    <Compile Include="Configuration\NoDataProtector.cs" />
     <Compile Include="Configuration\WebApiConfig.cs" />
     <Compile Include="Connect\Endpoints\AccessTokenValidationController.cs" />
     <Compile Include="Connect\Endpoints\DiscoveryEndpointController.cs" />
@@ -188,7 +207,7 @@
     <Compile Include="Services\Default\DefaultCustomTokenValidator.cs" />
     <Compile Include="Services\Default\DefaultTokenService.cs" />
     <Compile Include="Services\Default\DefaultClaimsProvider.cs" />
-    <Compile Include="Services\IAssertionGrantValidator.cs" />
+    <Compile Include="Services\ICustomGrantValidator.cs" />
     <Compile Include="Services\IClaimsProvider.cs" />
     <Compile Include="Services\ICustomRequestValidator.cs" />
     <Compile Include="Services\ICustomTokenValidator.cs" />
@@ -218,7 +237,6 @@
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
     <Compile Include="Models\IdentityProvider.cs" />
-    <Compile Include="Plumbing\ClaimComparer.cs" />
     <Compile Include="Extensions\PrincipalExtensions.cs" />
     <Compile Include="Plumbing\ClaimMap.cs" />
     <Compile Include="Hosting\ErrorPageFilterAttribute.cs" />
@@ -236,9 +254,6 @@
     <Compile Include="Connect\Models\TokenResponse.cs" />
     <Compile Include="Connect\ResponseHandling\TokenResponseGenerator.cs" />
     <Compile Include="Authentication\LoginResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeCodeResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeImplicitFormPostResult.cs" />
-    <Compile Include="Connect\Results\AuthorizeImplicitFragmentResult.cs" />
     <Compile Include="Connect\Results\TokenErrorResult.cs" />
     <Compile Include="Connect\Results\TokenResult.cs" />
     <Compile Include="Connect\Results\ResultExtensions.cs" />
@@ -248,7 +263,6 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\IAuthorizationCodeStore.cs" />
-    <Compile Include="Hosting\CookieMiddlewareCookieService.cs" />
     <Compile Include="Services\Default\DefaultExternalClaimsFilter.cs" />
     <Compile Include="Services\IClientStore.cs" />
     <Compile Include="Services\InMemory\InMemoryRefreshTokenStore.cs" />
@@ -289,6 +303,10 @@
     </None>
     <None Include="app.config" />
     <None Include="Views\Embedded\Assets\libs\bootstrap\custom.less" />
+    <EmbeddedResource Include="Resources\Scopes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Scopes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <EmbeddedResource Include="Views\Embedded\Assets\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />

@@ -1,10 +1,23 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -25,6 +38,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         [DebuggerStepThrough]
+        public static IEnumerable<string> FromSpaceSeparatedString(this string input)
+        {
+            input = input.Trim();
+            return input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
+
+        [DebuggerStepThrough]
         public static bool IsMissing(this string value)
         {
             return string.IsNullOrWhiteSpace(value);
@@ -34,6 +54,44 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static bool IsPresent(this string value)
         {
             return !string.IsNullOrWhiteSpace(value);
+        }
+
+        public static string EnsureTrailingSlash(this string url)
+        {
+            if (!url.EndsWith("/"))
+            {
+                return url += "/";
+            }
+
+            return url;
+        }
+        
+        public static string AddQueryString(this string url, string query)
+        {
+            if (!url.Contains("?"))
+            {
+                url += "?";
+            }
+            else if (!url.EndsWith("&"))
+            {
+                url += "&";
+            }
+
+            return url + query;
+        }
+
+        public static string AddHashFragment(this string url, string query)
+        {
+            if (!url.Contains("#"))
+            {
+                url += "#";
+            }
+            else if (!url.EndsWith("&"))
+            {
+                url += "&";
+            }
+
+            return url + query;
         }
     }
 }

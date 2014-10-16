@@ -1,13 +1,24 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -16,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     public class DefaultClaimsProvider : IClaimsProvider
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         private readonly IUserService _users;
 
         public DefaultClaimsProvider(IUserService users)
@@ -24,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             _users = users;
         }
 
-        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, NameValueCollection request)
+        public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, ValidatedRequest request)
         {
             Logger.Debug("Getting claims for identity token");
 
@@ -34,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
             {
-                if (scope.IsOpenIdScope)
+                if (scope.Type == ScopeType.Identity)
                 {
                     foreach (var scopeClaim in scope.Claims)
                     {
@@ -48,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             if (additionalClaims.Count > 0)
             {
-                var claims = await _users.GetProfileDataAsync(subject.GetSubjectId(), additionalClaims);
+                var claims = await _users.GetProfileDataAsync(subject, additionalClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -58,26 +69,51 @@ namespace Thinktecture.IdentityServer.Core.Services
             return outputClaims;
         }
 
-        public virtual Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, NameValueCollection request)
+        public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ValidatedRequest request)
         {
             Logger.Debug("Getting claims for access token");
 
-            var claims = new List<Claim>
+            var outputClaims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
             };
 
             foreach (var scope in scopes)
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
+                outputClaims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
             }
 
             if (subject != null)
             {
-                claims.AddRange(GetStandardSubjectClaims(subject));
+                outputClaims.AddRange(GetStandardSubjectClaims(subject));
+
+                // fetch all resource claims that need to go into the id token
+                var additionalClaims = new List<string>();
+                foreach (var scope in scopes)
+                {
+                    if (scope.Type == ScopeType.Resource)
+                    {
+                        if (scope.Claims != null)
+                        {
+                            foreach (var scopeClaim in scope.Claims)
+                            {
+                                additionalClaims.Add(scopeClaim.Name);
+                            }
+                        }
+                    }
+                }
+
+                if (additionalClaims.Count > 0)
+                {
+                    var claims = await _users.GetProfileDataAsync(subject, additionalClaims.Distinct());
+                    if (claims != null)
+                    {
+                        outputClaims.AddRange(claims);
+                    }
+                }
             }
 
-            return Task.FromResult<IEnumerable<Claim>>(claims);
+            return outputClaims;
         }
 
         protected virtual IEnumerable<Claim> GetStandardSubjectClaims(ClaimsPrincipal subject)
@@ -88,7 +124,6 @@ namespace Thinktecture.IdentityServer.Core.Services
                 subject.FindFirst(Constants.ClaimTypes.AuthenticationMethod),
                 subject.FindFirst(Constants.ClaimTypes.AuthenticationTime),
                 subject.FindFirst(Constants.ClaimTypes.IdentityProvider),
-                subject.FindFirst(Constants.ClaimTypes.Name)
             };
 
             return claims;

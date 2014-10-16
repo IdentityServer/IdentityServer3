@@ -1,13 +1,25 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace UnitTests.Validation_Tests
+namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 {
     [TestClass]
     public class ScopeValidation
@@ -19,22 +31,28 @@ namespace UnitTests.Validation_Tests
                 new Scope
                 {
                     Name = "openid",
-                    IsOpenIdScope = true
+                    Type = ScopeType.Identity
                 },
                 new Scope
                 {
                     Name = "email",
-                    IsOpenIdScope = true
+                    Type = ScopeType.Identity
                 },
                 new Scope
                 {
                     Name = "resource1",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
                 },
                 new Scope
                 {
                     Name = "resource2",
-                    IsOpenIdScope = false
+                    Type = ScopeType.Resource
+                },
+                new Scope
+                {
+                    Name = "disabled",
+                    Enabled = false,
+                    Type = ScopeType.Resource
                 },
             };
 
@@ -44,15 +62,16 @@ namespace UnitTests.Validation_Tests
             };
 
         Client _restrictedClient = new Client
-        {
-            ClientId = "restricted",
-            
-            ScopeRestrictions = new List<string>
             {
-                "openid",
-                "resource1"
-            }
-        };
+                ClientId = "restricted",
+            
+                ScopeRestrictions = new List<string>
+                {
+                    "openid",
+                    "resource1",
+                    "disabled"
+                }
+            };
 
         [TestMethod]
         [TestCategory(Category)]
@@ -123,6 +142,18 @@ namespace UnitTests.Validation_Tests
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("openid email resource1 resource2 unknown");
+
+            var result = validator.AreScopesValid(scopes, _allScopes);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public void Disabled_Scope()
+        {
+            var validator = new ScopeValidator();
+            var scopes = validator.ParseScopes("openid email resource1 resource2 disabled");
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
