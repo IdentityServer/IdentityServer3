@@ -8,23 +8,42 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Views;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
     class AntiForgeryTokenValidator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         const string TokenName = "idsrv.xsrf";
         const string CookieEntropy = TokenName + "Cookie";
         const string HiddenInputEntropy = TokenName + "Hidden";
 
         internal static async Task<bool> IsTokenValid(IDictionary<string, object> env)
         {
-            var cookieToken = GetCookieToken(env);
-            var hiddenInputToken = await GetHiddenInputTokenAsync(env);
+            try
+            {
+                var cookieToken = GetCookieToken(env);
+                var hiddenInputToken = await GetHiddenInputTokenAsync(env);
+                return CompareByteArrays(cookieToken, hiddenInputToken);
+            }
+            catch(Exception ex)
+            {
+                Logger.ErrorException("AntiForgeryTokenValidator validating token", ex);
+            }
+            return false;
+        }
 
-            var g1 = new Guid(cookieToken);
-            var g2 = new Guid(hiddenInputToken);
-            return g1.Equals(g2);
+        private static bool CompareByteArrays(byte[] cookieToken, byte[] hiddenInputToken)
+        {
+            if (cookieToken == null || hiddenInputToken == null) return false;
+            if (cookieToken.Length != hiddenInputToken.Length) return false;
+            for(var i = 0; i < cookieToken.Length; i++)
+            {
+                if (cookieToken[i] != hiddenInputToken[i]) return false;
+            }
+            return true;
         }
 
         internal static byte[] GetCookieToken(IDictionary<string, object> env)
@@ -64,6 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             ctx.Request.Body.Seek(0L, SeekOrigin.Begin);
 
             var token = form[TokenName];
+            if (token == null) return null;
             var tokenBytes = Thinktecture.IdentityModel.Base64Url.Decode(token);
 
             var options = env.ResolveDependency<IdentityServerOptions>();

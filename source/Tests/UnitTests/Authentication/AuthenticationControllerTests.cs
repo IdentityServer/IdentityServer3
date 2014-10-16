@@ -168,7 +168,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
-            Assert.AreEqual(404, (int)resp.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
         [TestMethod]
@@ -215,10 +215,10 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void PostToLogin_NoModel_ShowErrorPage()
         {
             GetLoginPage();
-            var resp = Post(GetLoginUrl(), (LoginCredentials)null);
+            var resp = PostForm(GetLoginUrl(), null);
             AssertPage(resp, "login");
             var model = GetModel<LoginViewModel>(resp);
-            Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+            Assert.AreEqual(model.ErrorMessage, Messages.UsernameRequired);
         }
 
         [TestMethod]
@@ -624,6 +624,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void LoggedOut_WithSignOutMessage_ContainsClientNameAndRedirectUrlInPage()
         {
+            GetLoginPage();
             var c = TestClients.Get().First();
             var msg = new SignOutMessage
             {
@@ -631,7 +632,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
                 ReturnUrl = "http://foo"
             };
             var id = WriteMessageToCookie(msg);
-            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout + "?id=" + id), null).Result;
+            var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=" + id), null);
             var model = GetModel<LoggedOutViewModel>(resp);
             Assert.AreEqual(msg.ReturnUrl, model.RedirectUrl);
             Assert.AreEqual(c.ClientName, model.ClientName);
@@ -640,7 +641,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void LoggedOut_NoSignOutMessage_ContainsNullForClientNameAndRedirectUrlInPage()
         {
-            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout), null).Result;
+            GetLoginPage();
+            var resp = PostForm(Url(Constants.RoutePaths.Logout), null);
             var model = GetModel<LoggedOutViewModel>(resp);
             Assert.IsNull(model.RedirectUrl);
             Assert.IsNull(model.ClientName);
@@ -649,10 +651,33 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         [TestMethod]
         public void LoggedOut_InvalidSignOutMessageId_ContainsNullForClientNameAndRedirectUrlInPage()
         {
-            var resp = client.PostAsync(Url(Constants.RoutePaths.Logout + "?id=123"), null).Result;
+            GetLoginPage();
+            var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=123"), null);
             var model = GetModel<LoggedOutViewModel>(resp);
             Assert.IsNull(model.RedirectUrl);
             Assert.IsNull(model.ClientName);
+        }
+
+        [TestMethod]
+        public void Login_PostWithJson_ReturnsUnsupportedMediaType()
+        {
+            GetLoginPage();
+            var resp = Post(GetLoginUrl(), (object)null);
+            Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+        }
+
+        [TestMethod]
+        public void Login_PostWithoutXsrf_ReturnsError()
+        {
+            var resp = PostForm(Url(Constants.RoutePaths.Login + "?signin="), (object)null);
+            AssertPage(resp, "error");
+        }
+
+        [TestMethod]
+        public void Logout_PostWithoutXsrf_ReturnsError()
+        {
+            var resp = PostForm(Url(Constants.RoutePaths.Logout), (object)null);
+            AssertPage(resp, "error");
         }
     }
 }
