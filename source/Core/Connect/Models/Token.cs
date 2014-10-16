@@ -37,5 +37,10 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
             Type = tokenType;
             CreationTime = DateTime.UtcNow;
         }
+
+        /// Default constructor for serializers.
+        public Token()
+        {
+        }
     }
 }
