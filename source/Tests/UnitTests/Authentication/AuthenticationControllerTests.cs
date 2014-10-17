@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.Owin;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Authentication;
@@ -39,7 +35,6 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
     {
         public ClaimsIdentity SignInIdentity { get; set; }
         public string SignInId { get; set; }
-        public AntiForgeryHiddenInputViewModel Xsrf { get; set; }
 
         protected override void Postprocess(Microsoft.Owin.IOwinContext ctx)
         {
@@ -52,63 +47,6 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             }
         }
 
-        private object MapAndAddXsrf(object value)
-        {
-            var coll = Map(value);
-            if (Xsrf != null)
-            {
-                coll.Add(Xsrf.Name, Xsrf.Value);
-            }
-            return coll;
-        }
-
-        protected override HttpResponseMessage PostForm(string path, object value)
-        {
-            var form = MapAndAddXsrf(value);
-            return base.PostForm(path, form);
-        }
-
-
-        T GetModel<T>(string html)
-        {
-            var match = Regex.Match(html, "<script id='modelJson' type='application/json'>(.|\n)*?</script>");
-            match = Regex.Match(match.Value, "{(.)*}");
-            return JsonConvert.DeserializeObject<T>(match.Value);
-        }
-        T GetModel<T>(HttpResponseMessage resp)
-        {
-            var html = resp.Content.ReadAsStringAsync().Result;
-            return GetModel<T>(html);
-        }
-
-        void AssertPage(HttpResponseMessage resp, string name)
-        {
-            Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
-            Assert.AreEqual("text/html", resp.Content.Headers.ContentType.MediaType);
-            var html = resp.Content.ReadAsStringAsync().Result;
-            var match = Regex.Match(html, "<ng-include src=\"'/assets/app\\.(.*)\\.html'\"></ng-include>");
-            Assert.AreEqual(name, match.Groups[1].Value);
-        }
-
-        private string WriteMessageToCookie<T>(T msg)
-            where T : class
-        {
-            var headers = new Dictionary<string, string[]>();
-            var env = new Dictionary<string, object>()
-            {
-                {"owin.RequestScheme", "https"},
-                {"owin.ResponseHeaders", headers}
-            };
-
-            var ctx = new OwinContext(env);
-            var signInCookie = new MessageCookie<T>(ctx, this.options);
-            var id = signInCookie.Write(msg);
-
-            client.SetCookies(headers["Set-Cookie"]);
-            
-            return id;
-        }
-
         private HttpResponseMessage GetLoginPage(SignInMessage msg = null)
         {
             msg = msg ?? new SignInMessage() { ReturnUrl = Url("authorize") };
@@ -117,17 +55,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             SignInId = WriteMessageToCookie(msg);
 
             var resp = Get(Constants.RoutePaths.Login + "?signin=" + SignInId);
-            if (resp.IsSuccessStatusCode)
-            {
-                var loginModel = GetModel<LoginViewModel>(resp);
-                if (loginModel.AntiForgery != null)
-                {
-                    this.Xsrf = loginModel.AntiForgery;
-                    var cookies = resp.GetCookies().Where(x => x.Name == Xsrf.Name);
-                    client.SetCookies(cookies);
-                }
-            }
-
+            ProcessXsrf(resp);
             return resp;
         }
 
@@ -148,7 +76,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void GetLogin_WithSignInMessage_ReturnsLoginPage()
         {
             var resp = GetLoginPage();
-            AssertPage(resp, "login");
+            resp.AssertPage("login");
         }
 
         [TestMethod]
@@ -216,8 +144,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), null);
-            AssertPage(resp, "login");
-            var model = GetModel<LoginViewModel>(resp);
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             Assert.AreEqual(model.ErrorMessage, Messages.UsernameRequired);
         }
 
@@ -226,8 +154,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "bad", Password = "alice" });
-            AssertPage(resp, "login");
-            var model = GetModel<LoginViewModel>(resp);
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
@@ -236,8 +164,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "bad" });
-            AssertPage(resp, "login");
-            var model = GetModel<LoginViewModel>(resp);
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
@@ -249,8 +177,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
 
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
-            AssertPage(resp, "login");
-            var model = GetModel<LoginViewModel>(resp);
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             Assert.AreEqual(model.ErrorMessage, "bad stuff");
         }
 
@@ -262,8 +190,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
 
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
-            AssertPage(resp, "login");
-            var model = GetModel<LoginViewModel>(resp);
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
@@ -388,14 +316,14 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             GetLoginPage();
             var resp1 = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var resp2 = Get(GetResumeUrlFromPartialSignInCookie(resp1));
-            AssertPage(resp2, "error");
+            resp2.AssertPage("error");
         }
 
         [TestMethod]
         public void Logout_ShowsLogoutPromptPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);
-            AssertPage(resp, "logout");
+            resp.AssertPage("logout");
         }
         
         [TestMethod]
@@ -403,7 +331,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             this.options.AuthenticationOptions.DisableSignOutPrompt = true;
             var resp = Get(Constants.RoutePaths.Logout);
-            AssertPage(resp, "loggedOut");
+            resp.AssertPage("loggedOut");
         }
 
         [TestMethod]
@@ -424,7 +352,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             GetLoginPage();
             this.options.ProtocolLogoutUrls.Add("/foo/signout");
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
-            var model = GetModel<LoggedOutViewModel>(resp);
+            var model = resp.GetModel<LoggedOutViewModel>();
             var signOutUrls = model.IFrameUrls.ToArray();
             Assert.AreEqual(2, signOutUrls.Length);
             CollectionAssert.Contains(signOutUrls, Url(Constants.RoutePaths.Oidc.EndSessionCallback));
@@ -439,7 +367,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp1 = GetLoginPage(msg);
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "error");
+            resp3.AssertPage("error");
         }
 
         [TestMethod]
@@ -454,8 +382,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             client.SetCookies(resp2.GetCookies());
 
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "login");
-            var model = GetModel<LoginViewModel>(resp3);
+            resp3.AssertPage("login");
+            var model = resp3.GetModel<LoginViewModel>();
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
         
@@ -471,8 +399,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             client.SetCookies(resp2.GetCookies());
             
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "login");
-            var model = GetModel<LoginViewModel>(resp3);
+            resp3.AssertPage("login");
+            var model = resp3.GetModel<LoginViewModel>();
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
 
@@ -545,8 +473,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             client.SetCookies(resp2.GetCookies());
 
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "login");
-            var model = GetModel<LoginViewModel>(resp3);
+            resp3.AssertPage("login");
+            var model = resp3.GetModel<LoginViewModel>();
             Assert.AreEqual("foo bad", model.ErrorMessage);
         }
 
@@ -567,8 +495,8 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             client.SetCookies(resp2.GetCookies());
 
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            AssertPage(resp3, "login");
-            var model = GetModel<LoginViewModel>(resp3);
+            resp3.AssertPage("login");
+            var model = resp3.GetModel<LoginViewModel>();
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
 
@@ -601,7 +529,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             };
             var id = WriteMessageToCookie(msg);
             var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
-            var model = GetModel<LogoutViewModel>(resp);
+            var model = resp.GetModel<LogoutViewModel>();
             Assert.AreEqual(c.ClientName, model.ClientName);
         }
         
@@ -609,7 +537,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void LogoutPrompt_NoSignOutMessage_ContainsNullClientNameInPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);
-            var model = GetModel<LogoutViewModel>(resp);
+            var model = resp.GetModel<LogoutViewModel>();
             Assert.IsNull(model.ClientName);
         }
 
@@ -617,7 +545,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void LogoutPrompt_InvalidSignOutMessageId_ContainsNullClientNameInPage()
         {
             var resp = Get(Constants.RoutePaths.Logout + "?id=123");
-            var model = GetModel<LogoutViewModel>(resp);
+            var model = resp.GetModel<LogoutViewModel>();
             Assert.IsNull(model.ClientName);
         }
 
@@ -633,7 +561,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             };
             var id = WriteMessageToCookie(msg);
             var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=" + id), null);
-            var model = GetModel<LoggedOutViewModel>(resp);
+            var model = resp.GetModel<LoggedOutViewModel>();
             Assert.AreEqual(msg.ReturnUrl, model.RedirectUrl);
             Assert.AreEqual(c.ClientName, model.ClientName);
         }
@@ -643,7 +571,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout), null);
-            var model = GetModel<LoggedOutViewModel>(resp);
+            var model = resp.GetModel<LoggedOutViewModel>();
             Assert.IsNull(model.RedirectUrl);
             Assert.IsNull(model.ClientName);
         }
@@ -653,7 +581,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         {
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=123"), null);
-            var model = GetModel<LoggedOutViewModel>(resp);
+            var model = resp.GetModel<LoggedOutViewModel>();
             Assert.IsNull(model.RedirectUrl);
             Assert.IsNull(model.ClientName);
         }
@@ -670,14 +598,14 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         public void Login_PostWithoutXsrf_ReturnsError()
         {
             var resp = PostForm(Url(Constants.RoutePaths.Login + "?signin="), (object)null);
-            AssertPage(resp, "error");
+            resp.AssertPage("error");
         }
 
         [TestMethod]
         public void Logout_PostWithoutXsrf_ReturnsError()
         {
             var resp = PostForm(Url(Constants.RoutePaths.Logout), (object)null);
-            AssertPage(resp, "error");
+            resp.AssertPage("error");
         }
     }
 }

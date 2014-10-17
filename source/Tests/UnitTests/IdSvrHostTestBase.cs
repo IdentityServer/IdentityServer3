@@ -18,6 +18,7 @@ using Microsoft.Owin.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Owin;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -30,6 +31,11 @@ using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using System.Text;
+using System.Net;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -97,6 +103,22 @@ namespace Thinktecture.IdentityServer.Tests
             app.UseGoogleAuthentication(google);
         }
 
+        public AntiForgeryHiddenInputViewModel Xsrf { get; set; }
+
+        protected void ProcessXsrf(HttpResponseMessage resp)
+        {
+            if (resp.IsSuccessStatusCode)
+            {
+                var model = resp.GetModel<LoginViewModel>();
+                if (model.AntiForgery != null)
+                {
+                    this.Xsrf = model.AntiForgery;
+                    var cookies = resp.GetCookies().Where(x => x.Name == Xsrf.Name);
+                    client.SetCookies(cookies);
+                }
+            }
+        }
+
         protected virtual void Preprocess(IOwinContext ctx)
         {
         }
@@ -151,11 +173,22 @@ namespace Thinktecture.IdentityServer.Tests
             }
             return sb.ToString();
         }
-        
-        protected virtual HttpResponseMessage PostForm(string path, object value)
+
+        private NameValueCollection MapAndAddXsrf(object value)
         {
-            var form = ToFormBody(Map(value));
-            var content = new StringContent(form, System.Text.Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
+            var coll = Map(value);
+            if (Xsrf != null)
+            {
+                coll.Add(Xsrf.Name, Xsrf.Value);
+            }
+            return coll;
+        }
+
+        protected HttpResponseMessage PostForm(string path, object value, bool includeCsrf = true)
+        {
+            var form = includeCsrf ? MapAndAddXsrf(value) : Map(value);
+            var body = ToFormBody(form);
+            var content = new StringContent(body, System.Text.Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
             return client.PostAsync(Url(path), content).Result;
         }
 
@@ -172,6 +205,25 @@ namespace Thinktecture.IdentityServer.Tests
         protected HttpResponseMessage Delete(string path)
         {
             return client.DeleteAsync(Url(path)).Result;
+        }
+
+        protected string WriteMessageToCookie<T>(T msg)
+            where T : class
+        {
+            var headers = new Dictionary<string, string[]>();
+            var env = new Dictionary<string, object>()
+            {
+                {"owin.RequestScheme", "https"},
+                {"owin.ResponseHeaders", headers}
+            };
+
+            var ctx = new OwinContext(env);
+            var signInCookie = new MessageCookie<T>(ctx, this.options);
+            var id = signInCookie.Write(msg);
+
+            client.SetCookies(headers["Set-Cookie"]);
+
+            return id;
         }
     }
 }
