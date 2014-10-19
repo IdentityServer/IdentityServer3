@@ -33,6 +33,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
     public class AuthorizeInteractionResponseGeneratorTests
     {
         Mock<IConsentService> mockConsent;
+        Mock<IUserService> mockUserService;
         AuthorizeInteractionResponseGenerator subject;
 
         void RequiresConsent(bool value)
@@ -61,7 +62,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public void Init()
         {
             mockConsent = new Mock<IConsentService>();
-            subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object);
+            mockUserService = new Mock<IUserService>();
+            subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object);
         }
 
         [TestMethod]

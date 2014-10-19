@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
-            var loginInteraction = _interactionGenerator.ProcessLogin(request, User as ClaimsPrincipal);
+            var loginInteraction = await _interactionGenerator.ProcessLoginAsync(request, User as ClaimsPrincipal);
 
             if (loginInteraction.IsError)
             {
