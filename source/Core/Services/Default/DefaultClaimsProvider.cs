@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
@@ -41,6 +42,18 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             var outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
             var additionalClaims = new List<string>();
+
+            // if a include all claims rule exists, call the user service without a claims filter
+            if (scopes.IncludesAllClaimsForUserRule(ScopeType.Identity))
+            {
+                var claims = await _users.GetProfileDataAsync(subject);
+                if (claims != null)
+                {
+                    outputClaims.AddRange(claims);
+                }
+
+                return outputClaims;
+            }
 
             // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
@@ -86,6 +99,19 @@ namespace Thinktecture.IdentityServer.Core.Services
             if (subject != null)
             {
                 outputClaims.AddRange(GetStandardSubjectClaims(subject));
+
+                // if a include all claims rule exists, call the user service without a claims filter
+                if (scopes.IncludesAllClaimsForUserRule(ScopeType.Resource))
+                {
+                    var claims = await _users.GetProfileDataAsync(subject);
+                    if (claims != null)
+                    {
+                        outputClaims.AddRange(claims);
+                    }
+
+                    return outputClaims;
+                }
+
 
                 // fetch all resource claims that need to go into the id token
                 var additionalClaims = new List<string>();

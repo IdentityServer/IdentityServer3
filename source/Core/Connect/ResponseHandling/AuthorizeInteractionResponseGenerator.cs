@@ -30,14 +30,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly SignInMessage _signIn;
         private readonly IConsentService _consent;
+        private readonly IUserService _users;
 
-        public AuthorizeInteractionResponseGenerator(IConsentService consent)
+        public AuthorizeInteractionResponseGenerator(IConsentService consent, IUserService users)
         {
             _signIn = new SignInMessage();
             _consent = consent;
+            _users = users;
         }
 
-        public LoginInteractionResponse ProcessLogin(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
+        public async Task<LoginInteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
         {
             // let the login page know the client requesting authorization
             _signIn.ClientId = request.ClientId;
@@ -85,7 +87,8 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             // unauthenticated user
-            if (!user.Identity.IsAuthenticated)
+            if (user.Identity.IsAuthenticated    == false ||
+                await _users.IsActiveAsync(user) == false)
             {
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)

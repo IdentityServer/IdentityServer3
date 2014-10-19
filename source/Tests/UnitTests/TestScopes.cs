@@ -24,9 +24,9 @@ namespace Thinktecture.IdentityServer.Tests
         {
             return new Scope[]
             {
-                Scope.OpenId,
-                Scope.Profile,
-                Scope.Email,
+                StandardScopes.OpenId,
+                StandardScopes.Profile,
+                StandardScopes.Email,
 
                 new Scope
                 {

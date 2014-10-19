@@ -108,6 +108,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
+                        Constants.StandardScopes.AllClaims,
                         "roles",
                         "read",
                         "write",

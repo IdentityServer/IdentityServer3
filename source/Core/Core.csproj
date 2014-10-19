@@ -135,6 +135,7 @@
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Hosting\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
+    <Compile Include="Models\StandardScopes.cs" />
     <Compile Include="Models\ClientPermission.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
     <Compile Include="Resources\Scopes.Designer.cs">

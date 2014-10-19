@@ -86,6 +86,15 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All user information.
+        /// </summary>
+        internal static string AllClaimsDisplayName {
+            get {
+                return ResourceManager.GetString("AllClaimsDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your email address.
         /// </summary>
         internal static string EmailDisplayName {
@@ -136,6 +145,15 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         internal static string ProfileDisplayName {
             get {
                 return ResourceManager.GetString("ProfileDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User roles.
+        /// </summary>
+        internal static string RolesDisplayName {
+            get {
+                return ResourceManager.GetString("RolesDisplayName", resourceCulture);
             }
         }
     }

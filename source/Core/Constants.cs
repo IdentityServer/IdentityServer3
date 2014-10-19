@@ -346,6 +346,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string Address       = "address";
             public const string Phone         = "phone";
             public const string OfflineAccess = "offline_access";
+
+            // not part of spec
+            public const string AllClaims     = "all_claims";
+            public const string Roles         = "roles";
         }
 
         public static class ClaimTypes

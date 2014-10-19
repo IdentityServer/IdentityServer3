@@ -29,23 +29,12 @@ namespace Thinktecture.IdentityServer.Host.Config
                     // identity scopes
                     ////////////////////////
 
-                    Scope.OpenId,
-                    Scope.Profile,
-                    Scope.Email,
-                    Scope.OfflineAccess,
-
-                    new Scope
-                    {
-                        Name = "roles",
-                        DisplayName = "Roles",
-                        Description = "Your organizational roles",
-                        Type = ScopeType.Identity,
-
-                        Claims = new[]
-                        {
-                            new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
-                        }
-                    },
+                    StandardScopes.OpenId,
+                    StandardScopes.Profile,
+                    StandardScopes.Email,
+                    StandardScopes.OfflineAccess,
+                    StandardScopes.RolesAlwaysInclude,
+                    StandardScopes.AllClaims,
 
                     ////////////////////////
                     // resource scopes

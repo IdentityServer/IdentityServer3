@@ -120,6 +120,9 @@
   <data name="AddressDisplayName" xml:space="preserve">
     <value>Your postal address</value>
   </data>
+  <data name="AllClaimsDisplayName" xml:space="preserve">
+    <value>All user information</value>
+  </data>
   <data name="EmailDisplayName" xml:space="preserve">
     <value>Your email address</value>
   </data>
@@ -137,5 +140,8 @@
   </data>
   <data name="ProfileDisplayName" xml:space="preserve">
     <value>User profile</value>
+  </data>
+  <data name="RolesDisplayName" xml:space="preserve">
+    <value>User roles</value>
   </data>
 </root>
