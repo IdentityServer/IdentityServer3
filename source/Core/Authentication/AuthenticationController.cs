@@ -579,10 +579,14 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
         {
-            var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-            if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-
-            var filter = client.AllowedIdentityProviders ?? Enumerable.Empty<string>();
+            IEnumerable<string> filter = null;
+            if (!String.IsNullOrWhiteSpace(message.ClientId))
+            {
+                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
+                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
+                filter = client.AllowedIdentityProviders ?? filter;
+            }
+            filter = filter ?? Enumerable.Empty<string>();
 
             var ctx = Request.GetOwinContext();
             var providers =
