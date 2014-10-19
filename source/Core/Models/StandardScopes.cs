@@ -57,6 +57,22 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        public static Scope ProfileAlwaysInclude
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Profile,
+                    DisplayName = Resources.Scopes.ProfileDisplayName,
+                    Description = Resources.Scopes.ProfileDescription,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
+                };
+            }
+        }
+
         public static Scope Email
         {
             get
@@ -68,6 +84,21 @@ namespace Thinktecture.IdentityServer.Core.Models
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim)))
+                };
+            }
+        }
+
+        public static Scope EmailAlwaysInclude
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Email,
+                    DisplayName = Resources.Scopes.EmailDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
                 };
             }
         }
@@ -87,6 +118,21 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        public static Scope PhoneAlwaysInclude
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Phone,
+                    DisplayName = Resources.Scopes.ProfileDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
+                };
+            }
+        }
+
         public static Scope Address
         {
             get
@@ -98,6 +144,22 @@ namespace Thinktecture.IdentityServer.Core.Models
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim)))
+                };
+            }
+        }
+
+
+        public static Scope AddressAlwaysInclude
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Address,
+                    DisplayName = Resources.Scopes.AddressDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
                 };
             }
         }
