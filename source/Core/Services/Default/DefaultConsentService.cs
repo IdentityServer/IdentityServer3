@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 using System;
-/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
- */
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,7 +44,25 @@ namespace Thinktecture.IdentityServer.Core.Services
                 return false;
             }
 
-            return await _store.RequiresConsentAsync(client.ClientId, user.GetSubjectId(), scopes);
+            // TODO: validate that this is a correct statement
+            if (!client.AllowRememberConsent)
+            {
+                return true;
+            }
+
+            if (scopes == null || !scopes.Any())
+            {
+                return false;
+            }
+            
+            var consent = await _store.LoadAsync(user.GetSubjectId(), client.ClientId);
+            if (consent != null && consent.Scopes != null)
+            {
+                var intersect = scopes.Intersect(consent.Scopes);
+                return !(scopes.Count() == intersect.Count());
+            }
+
+            return true;
         }
 
         public async Task UpdateConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
@@ -57,7 +72,23 @@ namespace Thinktecture.IdentityServer.Core.Services
 
             if (client.AllowRememberConsent)
             {
-                await _store.UpdateConsentAsync(client.ClientId, user.GetSubjectId(), scopes);
+                var subject = user.GetSubjectId();
+                var clientId = client.ClientId;
+
+                if (scopes != null && scopes.Any())
+                {
+                    var consent = new Consent
+                    {
+                        Subject = subject,
+                        ClientId = clientId,
+                        Scopes = scopes
+                    };
+                    await _store.UpdateAsync(consent);
+                }
+                else
+                {
+                    await _store.DeleteAsync(subject, clientId);
+                }
             }
         }
     }

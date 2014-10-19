@@ -144,6 +144,7 @@
     <Compile Include="Connect\Setup\TestScopes.cs" />
     <Compile Include="Connect\Setup\TestUserService.cs" />
     <Compile Include="Connect\Setup\Factory.cs" />
+    <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
     <Compile Include="TestClients.cs" />
     <Compile Include="TestFactory.cs" />
     <Compile Include="TestIdentityServerOptions.cs" />

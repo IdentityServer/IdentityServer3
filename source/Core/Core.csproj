@@ -120,6 +120,7 @@
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
     <Compile Include="Connect\Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
+    <Compile Include="Connect\Models\RevokeClientPermission.cs" />
     <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Connect\Results\AuthorizeFormPostResult.cs" />
     <Compile Include="Connect\Results\AuthorizeRedirectResult.cs" />
@@ -134,12 +135,15 @@
     <Compile Include="Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Hosting\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
+    <Compile Include="Models\ClientPermission.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
     <Compile Include="Resources\Scopes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Scopes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Default\DefaultClientPermissionsService.cs" />
+    <Compile Include="Services\IClientPermissionsService.cs" />
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
     <Compile Include="Views\ActionResults\ClientPermissionsActionResult.cs" />

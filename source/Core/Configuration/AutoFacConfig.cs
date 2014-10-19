@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             {
                 builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
             }
-            
+
             if (fact.ConsentService != null)
             {
                 builder.Register(fact.ConsentService);
@@ -166,6 +166,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             else
             {
                 builder.RegisterType<DefaultConsentService>().As<IConsentService>();
+            }
+
+            if (fact.ClientPermissionsService != null)
+            {
+                builder.Register(fact.ClientPermissionsService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultClientPermissionsService>().As<IClientPermissionsService>();
             }
 
             if (fact.ViewService != null)

@@ -107,6 +107,9 @@
     <Content Include="index.html" />
     <Content Include="packages.config" />
     <EmbeddedResource Include="Config\idsrv3test.pfx" />
+    <Content Include="..\default.licenseheader">
+      <Link>default.licenseheader</Link>
+    </Content>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Web.AzureWebSites.config">
       <DependentUpon>Web.config</DependentUpon>

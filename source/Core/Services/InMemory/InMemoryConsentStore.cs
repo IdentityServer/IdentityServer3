@@ -24,29 +24,58 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
     public class InMemoryConsentStore : IConsentStore
     {
-        private readonly ConcurrentBag<Consent> _consents = new ConcurrentBag<Consent>();
-        
-        public Task<bool> RequiresConsentAsync(string client, string subject, IEnumerable<string> scopes)
+        private readonly List<Consent> _consents = new List<Consent>();
+
+        public Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
-            var orderedScopes = string.Join(" ", scopes.OrderBy(s => s).ToArray());
-
-            var query = from c in _consents
-                        where c.ClientId == client &&
-                              c.Scopes == orderedScopes &&
-                              c.Subject == subject
-                        select c;
-
-            var hit = query.FirstOrDefault();
-
-            return Task.FromResult(hit == null);
+            var query =
+                from c in _consents
+                where c.Subject == subject
+                select c;
+            return Task.FromResult<IEnumerable<Consent>>(query.ToArray());
         }
 
-        public Task UpdateConsentAsync(string client, string subject, IEnumerable<string> scopes)
+        public Task<Consent> LoadAsync(string subject, string client)
         {
-            var orderedScopes = string.Join(" ", scopes.OrderBy(s => s).ToArray());
-            
-            _consents.Add(new Consent { ClientId = client, Subject = subject, Scopes = orderedScopes });
+            var query =
+                from c in _consents
+                where c.Subject == subject && c.ClientId == client
+                select c;
+            return Task.FromResult(query.SingleOrDefault());
+        }
 
+        public Task UpdateAsync(Consent consent)
+        {
+            // makes a snapshot as a DB would
+            consent.Scopes = consent.Scopes.ToArray();
+
+            var query =
+                from c in _consents
+                where c.Subject == consent.Subject && c.ClientId == consent.ClientId
+                select c;
+            var item = query.SingleOrDefault();
+            if (item != null)
+            {
+                item.Scopes = consent.Scopes.ToArray();
+            }
+            else
+            {
+                _consents.Add(consent);
+            }
+            return Task.FromResult(0);
+        }
+
+        public Task DeleteAsync(string subject, string client)
+        {
+            var query =
+                from c in _consents
+                where c.Subject == subject && c.ClientId == client
+                select c;
+            var item = query.SingleOrDefault();
+            if (item != null)
+            {
+                _consents.Remove(item);
+            }
             return Task.FromResult(0);
         }
     }

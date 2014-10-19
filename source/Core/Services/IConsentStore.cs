@@ -16,12 +16,15 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IConsentStore
     {
-        Task<bool> RequiresConsentAsync(string client, string subject, IEnumerable<string> scopes);
-        Task UpdateConsentAsync(string client, string subject, IEnumerable<string> scopes);
+        Task<IEnumerable<Consent>> LoadAllAsync(string subject);
+        Task<Consent> LoadAsync(string subject, string client);
+        Task UpdateAsync(Consent consent);
+        Task DeleteAsync(string subject, string client);
     }
 }

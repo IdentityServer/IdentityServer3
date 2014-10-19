@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Thinktecture.IdentityServer.Core.Configuration;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Host.Config
+namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
-    public class Factory
+    public class RevokeClientPermission
     {
-        public static IdentityServerServiceFactory Create()
-        {
-            var factory = InMemoryFactory.Create(
-                Users.Get(),
-                Clients.Get(),
-                Scopes.Get());
-
-            return factory;
-        }
+        [Required(ErrorMessageResourceType = typeof(Resources.Messages), ErrorMessageResourceName = "ClientIdRequired")]
+        public string ClientId { get; set; }
     }
 }
