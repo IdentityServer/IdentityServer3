@@ -587,6 +587,34 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
+        public void Login_ClientFiltersAllowedIdentityProviders_OnlyAllowedIdPsInLoginPage()
+        {
+            var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "no_external_idps" };
+            var resp = GetLoginPage(msg);
+            var model = resp.GetModel<LoginViewModel>();
+            var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
+            Assert.IsNull(google);
+        }
+        
+        [TestMethod]
+        public void Login_ClientDoesNotFiltersAllowedIdentityProviders_ExternalIsInLoginPage()
+        {
+            var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "any_external_idps" };
+            var resp = GetLoginPage(msg);
+            var model = resp.GetModel<LoginViewModel>();
+            var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
+            Assert.IsNotNull(google);
+        }
+
+        [TestMethod]
+        public void Login_InvalidClientId_ShowsErrorPage()
+        {
+            var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "bad_id" };
+            var resp = GetLoginPage(msg);
+            resp.AssertPage("error");
+        }
+
+        [TestMethod]
         public void Login_PostWithJson_ReturnsUnsupportedMediaType()
         {
             GetLoginPage();
