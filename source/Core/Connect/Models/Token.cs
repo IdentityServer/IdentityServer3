@@ -32,6 +32,12 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
 
         public List<Claim> Claims { get; set; }
 
+        public Token()
+        {
+            Type = Constants.TokenTypes.AccessToken;
+            CreationTime = DateTime.UtcNow;
+        }
+
         public Token(string tokenType)
         {
             Type = tokenType;
