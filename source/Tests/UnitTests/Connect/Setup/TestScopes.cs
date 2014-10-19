@@ -24,9 +24,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             return new Scope[]
             {
-                Scope.OpenId,
-                Scope.Profile,
-                Scope.OfflineAccess,
+                StandardScopes.OpenId,
+                StandardScopes.Profile,
+                StandardScopes.OfflineAccess,
 
                 new Scope
                 {

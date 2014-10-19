@@ -14,10 +14,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                     // identity scopes
                     ////////////////////////
 
-                    Scope.OpenId,
-                    Scope.Profile,
-                    Scope.Email,
-                    Scope.OfflineAccess,
+                    StandardScopes.OpenId,
+                    StandardScopes.Profile,
+                    StandardScopes.Email,
+                    StandardScopes.OfflineAccess,
 
                     new Scope
                     {
