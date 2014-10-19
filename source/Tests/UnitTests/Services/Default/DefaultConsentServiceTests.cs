@@ -138,12 +138,22 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
             Assert.IsTrue(result);
         }
-        
+
         [TestMethod]
         public void UpdateConsentAsync_PriorConsentGiven_EmptyScopeCollection_ConsentNowRequired()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             subject.UpdateConsentAsync(client, user, new string[0]).Wait();
+            var result = subject.RequiresConsentAsync(client, user, scopes).Result;
+            Assert.IsTrue(result);
+        }
+        
+        [TestMethod]
+        public void UpdateConsentAsync_ChangeConsent_OldConsentNotAllowed()
+        {
+            subject.UpdateConsentAsync(client, user, scopes).Wait();
+            var newConsent = new string[] { "foo", "bar" };
+            subject.UpdateConsentAsync(client, user, newConsent).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
             Assert.IsTrue(result);
         }

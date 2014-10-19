@@ -26,10 +26,18 @@ namespace Thinktecture.IdentityServer.Core.Services
     public class DefaultClientPermissionsService : IClientPermissionsService
     {
         IConsentStore consentStore;
-        
-        public DefaultClientPermissionsService(IConsentStore consentStore)
+        IClientStore clientStore;
+        IScopeStore scopeStore;
+
+        public DefaultClientPermissionsService(IConsentStore consentStore, IClientStore clientStore, IScopeStore scopeStore)
         {
+            if (consentStore == null) throw new ArgumentNullException("consentStore");
+            if (clientStore == null) throw new ArgumentNullException("clientStore");
+            if (scopeStore == null) throw new ArgumentNullException("scopeStore");
+
             this.consentStore = consentStore;
+            this.clientStore = clientStore;
+            this.scopeStore = scopeStore;
         }
 
         public async Task<IEnumerable<Models.ClientPermission>> GetClientPermissionsAsync(string subject)
@@ -43,10 +51,22 @@ namespace Thinktecture.IdentityServer.Core.Services
             var list = new List<ClientPermission>();
             foreach(var consent in consents)
             {
-                //list.Add(new ClientPermission {
-                //    ClientId = consent.ClientId,
-                    
-                //});
+                var client = await clientStore.FindClientByIdAsync(consent.ClientId);
+                if (client != null)
+                {
+                    var scopes = await scopeStore.GetScopesAsync();
+                    var identityScopes = scopes.Where(x=>x.Type == ScopeType.Identity && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
+                    var resourceScopes = scopes.Where(x=>x.Type == ScopeType.Resource && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
+
+                    list.Add(new ClientPermission
+                    {
+                        ClientId = client.ClientId,
+                        ClientName = client.ClientName,
+                        ClientLogoUrl = client.LogoUri.AbsoluteUri,
+                        IdentityPermissions = identityScopes,
+                        ResourcePermissions = resourceScopes
+                    });
+                }
             }
             return list;
         }

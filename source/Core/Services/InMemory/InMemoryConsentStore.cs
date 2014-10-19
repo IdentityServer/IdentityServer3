@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var item = query.SingleOrDefault();
             if (item != null)
             {
-                item.Scopes = consent.Scopes.ToArray();
+                item.Scopes = consent.Scopes;
             }
             else
             {

@@ -86,7 +86,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return await RenderPermissionsPage(error);
             }
 
-            return await RenderPermissionsPage();
+            await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
+
+            return RedirectToRoute(Constants.RouteNames.Oidc.ClientPermissions, null);
         }
 
         private IHttpActionResult RedirectToLogin()
