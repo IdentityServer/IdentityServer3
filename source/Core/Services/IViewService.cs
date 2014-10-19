@@ -28,6 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         Task<Stream> Logout(IDictionary<string, object> env, LogoutViewModel model);
         Task<Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model);
         Task<Stream> Consent(IDictionary<string, object> env, ConsentViewModel model);
+        Task<Stream> ClientPermissions(IDictionary<string, object> env, ClientPermissionsViewModel model);
         Task<Stream> Error(IDictionary<string, object> env, ErrorViewModel model);
     }
 }

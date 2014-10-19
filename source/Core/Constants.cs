@@ -439,6 +439,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string SwitchUser = "idsrv.oidc.switch";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
+                public const string ClientPermissions = "idsrv.oidc.permissions";
             }
         }
 
@@ -464,6 +465,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string IdentityTokenValidation = "connect/identityTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";
+                public const string ClientPermissions = "connect/permissions";
             }
             
             public static readonly string[] CorsPaths = new string[]{

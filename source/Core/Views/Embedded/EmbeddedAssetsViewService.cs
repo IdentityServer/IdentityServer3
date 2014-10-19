@@ -59,6 +59,11 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
             return Render(model, "consent");
         }
 
+        public Task<Stream> ClientPermissions(IDictionary<string, object> env, ClientPermissionsViewModel model)
+        {
+            return Render(model, "permissions");
+        }
+
         public virtual Task<System.IO.Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
         {
             return Render(model, "error");

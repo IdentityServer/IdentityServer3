@@ -118,6 +118,7 @@
     <Compile Include="Authentication\SignOutMessage.cs" />
     <Compile Include="Configuration\CspOptions.cs" />
     <Compile Include="Configuration\DataProtectorAdapter.cs" />
+    <Compile Include="Connect\Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Connect\Endpoints\IdentityTokenValidationController.cs" />
     <Compile Include="Connect\ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Connect\Results\AuthorizeFormPostResult.cs" />
@@ -141,6 +142,7 @@
     </Compile>
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
+    <Compile Include="Views\ActionResults\ClientPermissionsActionResult.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
     <Compile Include="Views\ActionResults\HtmlActionResult.cs" />
     <Compile Include="Views\Embedded\Assets\AssetManager.cs" />
@@ -148,6 +150,7 @@
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
+    <Compile Include="Views\FileSystem\FileSystemViewService.cs" />
     <Compile Include="Views\ViewModels\AntiForgeryHiddenInputViewModel.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
@@ -295,6 +298,7 @@
     <Compile Include="Authentication\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
     <Compile Include="Services\IViewService.cs" />
+    <Compile Include="Views\ViewModels\ClientPermissionsViewModel.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -380,6 +384,7 @@
     <EmbeddedResource Include="Views\Embedded\Assets\app\loggedOut.html" />
     <EmbeddedResource Include="Views\Embedded\Assets\app\error.html" />
     <EmbeddedResource Include="Views\Embedded\Assets\app\logout.html" />
+    <EmbeddedResource Include="Views\Embedded\Assets\app\permissions.html" />
     <Content Include="Views\Embedded\Assets\libs\angular\angular.1.2.13.js" />
     <Content Include="Views\Embedded\Assets\libs\angular\angular.1.2.13.min.js" />
     <Content Include="Views\Embedded\Assets\libs\bootstrap\css\bootstrap-theme.css" />

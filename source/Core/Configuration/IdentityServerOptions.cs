@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.AccessTokenValidationEndpoint = EndpointSettings.Disabled;
             this.IdentityTokenValidationEndpoint = EndpointSettings.Enabled;
             this.EndSessionEndpoint = EndpointSettings.Enabled;
+            this.ClientPermissionsEndpoint = EndpointSettings.Enabled;
 
             this.RequireSsl = true;
 
@@ -77,6 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public EndpointSettings AccessTokenValidationEndpoint { get; set; }
         public EndpointSettings IdentityTokenValidationEndpoint { get; set; }
         public EndpointSettings EndSessionEndpoint { get; set; }
+        public EndpointSettings ClientPermissionsEndpoint { get; set; }
 
         public CspOptions CspOptions { get; set; }
 
