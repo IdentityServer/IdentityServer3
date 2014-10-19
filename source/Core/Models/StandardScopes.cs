@@ -148,7 +148,6 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
-
         public static Scope AddressAlwaysInclude
         {
             get
@@ -160,6 +159,57 @@ namespace Thinktecture.IdentityServer.Core.Models
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
+                };
+            }
+        }
+
+        public static Scope AllClaims
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.AllClaims,
+                    DisplayName = Resources.Scopes.AllClaimsDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    IncludeAllClaimsForUser = true
+                };
+            }
+        }
+
+        public static Scope Roles
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Roles,
+                    DisplayName = Resources.Scopes.RolesDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = new [] 
+                    {
+                        new ScopeClaim(Constants.ClaimTypes.Role)
+                    }
+                };
+            }
+        }
+
+        public static Scope RolesAlwaysInclude
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Roles,
+                    DisplayName = Resources.Scopes.RolesDisplayName,
+                    Type = ScopeType.Identity,
+                    Emphasize = true,
+                    Claims = new[] 
+                    {
+                        new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
+                    }
                 };
             }
         }

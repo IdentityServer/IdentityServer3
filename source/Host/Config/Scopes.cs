@@ -18,19 +18,8 @@ namespace Thinktecture.IdentityServer.Host.Config
                     StandardScopes.Profile,
                     StandardScopes.Email,
                     StandardScopes.OfflineAccess,
-
-                    new Scope
-                    {
-                        Name = "roles",
-                        DisplayName = "Roles",
-                        Description = "Your organizational roles",
-                        Type = ScopeType.Identity,
-
-                        Claims = new[]
-                        {
-                            new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
-                        }
-                    },
+                    StandardScopes.RolesAlwaysInclude,
+                    StandardScopes.AllClaims,
 
                     ////////////////////////
                     // resource scopes
