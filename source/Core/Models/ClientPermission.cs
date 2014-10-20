@@ -26,6 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }
+        public string ClientUrl { get; set; }
         public string ClientLogoUrl { get; set; }
         public IEnumerable<PermissionDescription> IdentityPermissions { get; set; }
         public IEnumerable<PermissionDescription> ResourcePermissions { get; set; }

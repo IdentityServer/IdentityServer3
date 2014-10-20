@@ -62,6 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                     {
                         ClientId = client.ClientId,
                         ClientName = client.ClientName,
+                        ClientUrl = client.ClientUri,
                         ClientLogoUrl = client.LogoUri.AbsoluteUri,
                         IdentityPermissions = identityScopes,
                         ResourcePermissions = resourceScopes
