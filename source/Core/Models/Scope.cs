@@ -75,6 +75,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public string ClaimsRule { get; set; }
 
+        /// <summary>
+        /// Creates a Scope with default values
+        /// </summary>
         public Scope()
         {
             Type = ScopeType.Resource;

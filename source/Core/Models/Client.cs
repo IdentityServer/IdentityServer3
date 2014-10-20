@@ -20,6 +20,9 @@ using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models an OpenID Connect or OAuth2 client
+    /// </summary>
     public class Client
     {
         /// <summary>
@@ -147,7 +150,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         //public Uri SectorIdentifierUri { get; set; }
         //public ApplicationTypes ApplicationType { get; set; }
 
-        // sensible defaults
+        /// <summary>
+        /// Creates a Client with default values
+        /// </summary>
         public Client()
         {
             Flow = Flows.Implicit;
