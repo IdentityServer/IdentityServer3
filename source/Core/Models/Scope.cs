@@ -20,6 +20,9 @@ using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models are resource (either identity resource or web api resource)
+    /// </summary>
     public class Scope
     {
         /// <summary>
