@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             await Task.Delay(8000);
 
-            var newHandle = await service.UpdateRefreshTokenAsync(refreshToken, client);
+            var newHandle = await service.UpdateRefreshTokenAsync(handle, refreshToken, client);
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
@@ -121,7 +121,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             await Task.Delay(1000);
 
-            var newHandle = await service.UpdateRefreshTokenAsync(refreshToken, client);
+            var newHandle = await service.UpdateRefreshTokenAsync(handle, refreshToken, client);
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
-            var newHandle = await service.UpdateRefreshTokenAsync(await store.GetAsync(handle), client);
+            var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
             Assert.AreEqual(handle, newHandle);
         }
@@ -156,7 +156,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var token = TokenFactory.CreateAccessToken(client.ClientId, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
-            var newHandle = await service.UpdateRefreshTokenAsync(await store.GetAsync(handle), client);
+            var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
             Assert.AreNotEqual(handle, newHandle);
         }
@@ -168,18 +168,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 AccessToken = new Token("access_token"),
                 ClientId = client.ClientId,
                 LifeTime = 600,
-                Handle = Guid.NewGuid().ToString(),
                 CreationTime = DateTime.UtcNow
             };
+            var handle = Guid.NewGuid().ToString();
 
-            await store.StoreAsync(refreshToken.Handle, refreshToken);
+            await store.StoreAsync(handle, refreshToken);
 
             var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, refreshToken.Handle);
+            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 

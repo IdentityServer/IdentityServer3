@@ -23,6 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Services
     public interface IRefreshTokenService
     {
         Task<string> CreateRefreshTokenAsync(Token accessToken, Client client);
-        Task<string> UpdateRefreshTokenAsync(RefreshToken refreshToken, Client client);
+        Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client);
     }
 }

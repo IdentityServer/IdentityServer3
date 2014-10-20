@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
 
             var newAccessToken = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
-            var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshToken, request.Client);
+            var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);
 
             return new TokenResponse
                 {
