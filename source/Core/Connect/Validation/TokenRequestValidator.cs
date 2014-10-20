@@ -39,9 +39,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         private readonly ICustomGrantValidator _customGrantValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
+        private readonly IDictionary<string, object> _environment;
 
         private ValidatedTokenRequest _validatedRequest;
-        private IDictionary<string, object> _environment;
+        
         
         public ValidatedTokenRequest ValidatedRequest
         {

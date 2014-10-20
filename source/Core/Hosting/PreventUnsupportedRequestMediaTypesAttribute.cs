@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Resources;
@@ -14,8 +9,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 {
     public class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
     {
-        bool allowJson = false;
-        bool allowFormUrlEncoded = false;
+        readonly bool allowJson = false;
+        readonly bool allowFormUrlEncoded = false;
         
         public PreventUnsupportedRequestMediaTypesAttribute(bool allowJson = false, bool allowFormUrlEncoded = false)
         {

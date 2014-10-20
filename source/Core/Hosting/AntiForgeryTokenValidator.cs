@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Views;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityModel;
 
 namespace Thinktecture.IdentityServer.Core.Hosting
 {
@@ -58,13 +57,13 @@ namespace Thinktecture.IdentityServer.Core.Hosting
                 var bytes = Guid.NewGuid().ToByteArray();
 
                 var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
-                var token = Thinktecture.IdentityModel.Base64Url.Encode(protectedTokenBytes);
+                var token = Base64Url.Encode(protectedTokenBytes);
                 ctx.Response.Cookies.Append(TokenName, token);
 
                 return bytes;
             }
 
-            var protectedCookieBytes = Thinktecture.IdentityModel.Base64Url.Decode(cookie);
+            var protectedCookieBytes = Base64Url.Decode(cookie);
             var tokenBytes = options.DataProtector.Unprotect(protectedCookieBytes, CookieEntropy);
             return tokenBytes;
         }
@@ -84,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Hosting
 
             var token = form[TokenName];
             if (token == null) return null;
-            var tokenBytes = Thinktecture.IdentityModel.Base64Url.Decode(token);
+            var tokenBytes = Base64Url.Decode(token);
 
             var options = env.ResolveDependency<IdentityServerOptions>();
             var unprotectedTokenBytes = options.DataProtector.Unprotect(tokenBytes, HiddenInputEntropy);
@@ -97,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Hosting
             
             var tokenBytes = GetCookieToken(env);
             var protectedTokenBytes = options.DataProtector.Protect(tokenBytes, HiddenInputEntropy);
-            var token = Thinktecture.IdentityModel.Base64Url.Encode(protectedTokenBytes);
+            var token = Base64Url.Encode(protectedTokenBytes);
 
             return new AntiForgeryHiddenInputViewModel
             {

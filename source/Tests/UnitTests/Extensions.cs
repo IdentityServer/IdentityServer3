@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests
             IEnumerable<string> values;
             if (resp.Headers.TryGetValues("Set-Cookie", out values))
             {
-                List<CookieState> cookies = new List<CookieState>();
+                var cookies = new List<CookieState>();
                 foreach (var value in values)
                 {
                     CookieHeaderValue cookie;

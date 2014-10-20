@@ -188,7 +188,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return RenderErrorPage();
             }
 
-            var ctx = Request.GetOwinContext();
             var authProp = new Microsoft.Owin.Security.AuthenticationProperties
             {
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)

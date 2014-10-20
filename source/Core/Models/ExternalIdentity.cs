@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Models
                 }
             }
 
-            claims = claims.Except(new Claim[] { subClaim });
+            claims = claims.Except(new[] { subClaim });
             
             return new ExternalIdentity
             {

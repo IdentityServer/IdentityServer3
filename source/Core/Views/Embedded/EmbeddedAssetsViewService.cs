@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
 {
     public class EmbeddedAssetsViewService : IViewService
     {
-        private EmbeddedAssetsViewServiceConfiguration config;
+        private readonly EmbeddedAssetsViewServiceConfiguration config;
 
         public EmbeddedAssetsViewService()
         {
@@ -39,12 +39,12 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
             this.config = config;
         }
 
-        public virtual Task<System.IO.Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
+        public virtual Task<Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
         {
             return Render(model, "login");
         }
 
-        public virtual Task<System.IO.Stream> Logout(IDictionary<string, object> env, LogoutViewModel model)
+        public virtual Task<Stream> Logout(IDictionary<string, object> env, LogoutViewModel model)
         {
             return Render(model, "logout");
         }
@@ -54,17 +54,17 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded
             return Render(model, "loggedOut");
         }
 
-        public virtual Task<System.IO.Stream> Consent(IDictionary<string, object> env, ConsentViewModel model)
+        public virtual Task<Stream> Consent(IDictionary<string, object> env, ConsentViewModel model)
         {
             return Render(model, "consent");
         }
 
-        public virtual Task<System.IO.Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
+        public virtual Task<Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
         {
             return Render(model, "error");
         }
 
-        protected virtual Task<System.IO.Stream> Render(CommonViewModel model, string page)
+        protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
             string html = AssetManager.GetLayoutHtml(model, page, config.Stylesheets, config.Scripts);
             return Task.FromResult(StringToStream(html));

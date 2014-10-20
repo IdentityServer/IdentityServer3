@@ -25,7 +25,8 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     class HtmlStreamActionResult : IHttpActionResult
     {
-        Func<Task<Stream>> renderFunc;
+        readonly Func<Task<Stream>> renderFunc;
+
         public HtmlStreamActionResult(Func<Task<Stream>> renderFunc)
         {
             this.renderFunc = renderFunc;
@@ -46,13 +47,13 @@ namespace Thinktecture.IdentityServer.Core.Views
                 CharSet = Encoding.UTF8.WebName
             };
 
-            return new HttpResponseMessage()
+            return new HttpResponseMessage
             {
                 Content = content
             };
         }
 
-        public async Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             return await GetResponseMessage();
         }

@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Views.Embedded.Assets
             return sb.ToString();
         }
 
-        static ConcurrentDictionary<string, string> ResourceStrings = new ConcurrentDictionary<string, string>();
+        static readonly ConcurrentDictionary<string, string> ResourceStrings = new ConcurrentDictionary<string, string>();
         internal static string LoadResourceString(string name)
         {
             string value;

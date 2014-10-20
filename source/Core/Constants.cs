@@ -196,15 +196,15 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedResponseModes = new List<string>
                             {
-                                Constants.ResponseModes.FormPost,
-                                Constants.ResponseModes.Query,
-                                Constants.ResponseModes.Fragment,
+                                ResponseModes.FormPost,
+                                ResponseModes.Query,
+                                ResponseModes.Fragment,
                             };
 
-        public static string[] SupportedSubjectTypes = new string[]
-                            {
-                                "pairwise", "public"
-                            };
+        public static string[] SupportedSubjectTypes =
+        {
+            "pairwise", "public"
+        };
 
         public static class SigningAlgorithms
         {
@@ -221,10 +221,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedDisplayModes = new List<string>
                             {
-                                Constants.DisplayModes.Page,
-                                Constants.DisplayModes.Popup,
-                                Constants.DisplayModes.Touch,
-                                Constants.DisplayModes.Wap,
+                                DisplayModes.Page,
+                                DisplayModes.Popup,
+                                DisplayModes.Touch,
+                                DisplayModes.Wap,
                             };
 
         public static class PromptModes
@@ -237,10 +237,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedPromptModes = new List<string>
                             {
-                                Constants.PromptModes.None,
-                                Constants.PromptModes.Login,
-                                Constants.PromptModes.Consent,
-                                Constants.PromptModes.SelectAccount,
+                                PromptModes.None,
+                                PromptModes.Login,
+                                PromptModes.Consent,
+                                PromptModes.SelectAccount,
                             };
 
         public static class LoginHints
@@ -470,11 +470,12 @@ namespace Thinktecture.IdentityServer.Core
                 public const string EndSessionCallback = "connect/endsessioncallback";
             }
             
-            public static readonly string[] CorsPaths = new string[]{
+            public static readonly string[] CorsPaths =
+            {
                 RoutePaths.Oidc.DiscoveryConfiguration,
                 RoutePaths.Oidc.DiscoveryWebKeys,
                 RoutePaths.Oidc.Token,
-                RoutePaths.Oidc.UserInfo,
+                RoutePaths.Oidc.UserInfo
             };
         }
         

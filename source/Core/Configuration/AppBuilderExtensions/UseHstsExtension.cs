@@ -27,7 +27,7 @@ namespace Owin
 
             if (duration > TimeSpan.Zero)
             {
-                int seconds = (int)duration.TotalSeconds;
+                var seconds = (int)duration.TotalSeconds;
                 app.Use(async (ctx, next) =>
                 {
                     if (ctx.Request.IsSecure)

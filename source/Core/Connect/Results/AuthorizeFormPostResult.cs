@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Net;
+
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -30,8 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private AuthorizeResponse _response;
-        private HttpRequestMessage _request;
+        private readonly AuthorizeResponse _response;
+        private readonly HttpRequestMessage _request;
 
         public AuthorizeFormPostResult(AuthorizeResponse response, HttpRequestMessage request)
         {

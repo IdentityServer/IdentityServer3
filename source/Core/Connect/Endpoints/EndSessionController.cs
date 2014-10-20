@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;

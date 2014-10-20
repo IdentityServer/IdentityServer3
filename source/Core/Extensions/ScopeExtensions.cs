@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 if (scope.Type == type)
                 {
-                    if (scope.IncludeAllClaimsForUser == true)
+                    if (scope.IncludeAllClaimsForUser)
                     {
                         return true;
                     }

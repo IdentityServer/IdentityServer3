@@ -53,8 +53,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             return await ProcessTokenRequestAsync(request);
-
-            throw new InvalidOperationException("Unknown grant type.");
         }
 
         private async Task<TokenResponse> ProcessAuthorizationCodeRequestAsync(ValidatedTokenRequest request)
