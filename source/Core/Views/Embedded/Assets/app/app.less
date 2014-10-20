@@ -53,7 +53,7 @@ iframe.signout{
 
 .page-permissions{
     .page-header{
-        margin-bottom:0px;
+        margin-bottom:10px;
     }
 }
 
@@ -70,18 +70,25 @@ iframe.signout{
 
         .permission-clientname{
             font-size:140%;
+            font-weight:bold;
         }
         .permission-type{
             font-size:120%;
+            font-weight:bold;
         }
         
         li {
             list-style-type:none;
+            display:inline;
+            &:after{
+                content:', ';
+            }
+            &:last-child:after{
+                content:'';
+            }
             .permission-displayname{
-                font-weight:bold;
             }
             .permission.description{
-                font-style:italic;
             }
         }
     }

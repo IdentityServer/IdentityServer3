@@ -7325,7 +7325,7 @@ iframe.signout {
   display: none;
 }
 .page-permissions .page-header {
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 .permissions .permission {
   margin-top: 20px;
@@ -7338,17 +7338,20 @@ iframe.signout {
 }
 .permissions .permission .permission-clientname {
   font-size: 140%;
+  font-weight: bold;
 }
 .permissions .permission .permission-type {
   font-size: 120%;
+  font-weight: bold;
 }
 .permissions .permission li {
   list-style-type: none;
+  display: inline;
 }
-.permissions .permission li .permission-displayname {
-  font-weight: bold;
+.permissions .permission li:after {
+  content: ', ';
 }
-.permissions .permission li .permission.description {
-  font-style: italic;
+.permissions .permission li:last-child:after {
+  content: '';
 }
 

@@ -32,19 +32,13 @@
                 <div ng-show="client.identityPermissions">
                     <div class="permission-type">Identity Permissions</div>
                     <ul>
-                        <li ng-repeat="permission in client.identityPermissions">
-                            <span class="permission-displayname">{{permission.displayName}}</span>
-                            <span ng-show="permission.description"><span class="permission-description">{{permission.description}}</span></span>
-                        </li>
+                        <li ng-repeat="permission in client.identityPermissions" ng-bind="permission.displayName"></li>
                     </ul>
                 </div>
                 <div ng-show="client.resourcePermissions">
                     <div class="permission-type">Resource Permissions</div>
                     <ul>
-                        <li ng-repeat="permission in client.resourcePermissions">
-                            <span class="permission-displayname">{{permission.displayName}}</span>
-                            <span ng-show="permission.description"><span class="permission-description">{{permission.description}}</span></span>
-                        </li>
+                        <li ng-repeat="permission in client.resourcePermissions" ng-bind="permission.displayName"></li>
                     </ul>
                 </div>
             </div>
