@@ -582,7 +582,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var client = await _clientStore.FindClientByIdAsync(message.ClientId);
             if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
 
-            var filter = client.AllowedIdentityProviders ?? Enumerable.Empty<string>();
+            var filter = client.IdentityProviderRestrictions ?? Enumerable.Empty<string>();
 
             var ctx = Request.GetOwinContext();
             var providers =
