@@ -29,8 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        IOwinContext ctx;
-        IdentityServerOptions options;
+        readonly IOwinContext ctx;
+        readonly IdentityServerOptions options;
 
         public MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
         {

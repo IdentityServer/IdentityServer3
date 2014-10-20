@@ -15,11 +15,12 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
-using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models are resource (either identity resource or web api resource)
+    /// </summary>
     public class Scope
     {
         /// <summary>
@@ -72,6 +73,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public string ClaimsRule { get; set; }
 
+        /// <summary>
+        /// Creates a Scope with default values
+        /// </summary>
         public Scope()
         {
             Type = ScopeType.Resource;

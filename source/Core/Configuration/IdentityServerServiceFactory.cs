@@ -28,7 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         // keep list of any additional dependencies the 
         // hosting application might need. these will be
         // added to the DI container
-        List<Registration> _registrations = new List<Registration>();
+        readonly List<Registration> _registrations = new List<Registration>();
+
         public IEnumerable<Registration> Registrations
         {
             get { return _registrations; }

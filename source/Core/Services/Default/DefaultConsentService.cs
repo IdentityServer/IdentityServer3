@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultConsentService : IConsentService
     {
-        IConsentStore _store;
+        readonly IConsentStore _store;
 
         public DefaultConsentService(IConsentStore store)
         {

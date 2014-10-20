@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
             if (loginInteraction.IsLogin)
             {
-                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw, _options);
+                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
             }
 
             // user must be authenticated at this point
@@ -188,7 +188,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             string errorMessage)
         {
             var env = Request.GetOwinEnvironment();
-            var consentModel = new ConsentViewModel()
+            var consentModel = new ConsentViewModel
             {
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
@@ -209,7 +209,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
             return new ConsentActionResult(_viewService, env, consentModel);
         }
 
-        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters, IdentityServerOptions options)
+        IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters)
         {
             message = message ?? new SignInMessage();
 

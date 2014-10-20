@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public ICollection<string> AllowedOrigins { get; private set; }
         public Func<string, Task<bool>> PolicyCallback { get; set; }
 
-        public static readonly CorsPolicy AllowAll = new CorsPolicy()
+        public static readonly CorsPolicy AllowAll = new CorsPolicy
         {
             PolicyCallback = origin => Task.FromResult(true)
         };

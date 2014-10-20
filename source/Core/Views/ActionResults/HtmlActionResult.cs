@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -39,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Views
             return message;
         }
 
-        public virtual Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             return Task.FromResult(GetResponseMessage());
         }

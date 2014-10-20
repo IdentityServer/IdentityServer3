@@ -52,9 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Connect
             _clients = clients;
             _customValidator = customValidator;
 
-            _validatedRequest = new ValidatedAuthorizeRequest();
-            _validatedRequest.Options = _options;
-            _validatedRequest.Environment = context.Environment;
+            _validatedRequest = new ValidatedAuthorizeRequest
+            {
+                Options = _options, 
+                Environment = context.Environment
+            };
         }
 
         // basic protocol validation
@@ -414,19 +416,22 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private ValidationResult Invalid(ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)
         {
-            var result = new ValidationResult();
-
-            result.IsError = true;
-            result.Error = error;
-            result.ErrorType = errorType;
+            var result = new ValidationResult
+            {
+                IsError = true, 
+                Error = error, 
+                ErrorType = errorType
+            };
 
             return result;
         }
 
         private ValidationResult Valid()
         {
-            var result = new ValidationResult();
-            result.IsError = false;
+            var result = new ValidationResult
+            {
+                IsError = false
+            };
 
             return result;
         }

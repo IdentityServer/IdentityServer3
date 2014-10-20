@@ -27,7 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Hosting
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        IdentityServerOptions options;
+        readonly IdentityServerOptions options;
+        
         public CspReportController(IdentityServerOptions options)
         {
             this.options = options;

@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.paths = allowedPaths.Select(path => Normalize(path)).ToArray();
         }
 
-        public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(Microsoft.Owin.IOwinRequest request)
+        public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(IOwinRequest request)
         {
             if (IsPathAllowed(request))
             {

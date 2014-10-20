@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Autofac;
 using System.Net.Http;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Configuration;
