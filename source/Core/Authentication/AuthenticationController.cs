@@ -583,7 +583,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 var client = await _clientStore.FindClientByIdAsync(message.ClientId);
                 if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-                filter = client.AllowedIdentityProviders ?? filter;
+                filter = client.IdentityProviderRestrictions ?? filter;
             }
             filter = filter ?? Enumerable.Empty<string>();
 

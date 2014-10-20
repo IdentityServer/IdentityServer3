@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "no_external_idps",
                     ClientSecret = "secret",
                     Flow = Flows.AuthorizationCode,
-                    AllowedIdentityProviders = new string[]{"NotGoogle"},
+                    IdentityProviderRestrictions = new string[]{"NotGoogle"},
                     
                     RequireConsent = true,
                     AllowRememberConsent = true,
@@ -180,7 +180,8 @@ namespace Thinktecture.IdentityServer.Tests
 
                     
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
-                    SubjectType = SubjectTypes.Global,
+                    
+                    //SubjectType = SubjectTypes.Global,
                     AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
@@ -194,7 +195,7 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "any_external_idps",
                     ClientSecret = "secret",
                     Flow = Flows.AuthorizationCode,
-                    AllowedIdentityProviders = new string[]{},
+                    IdentityProviderRestrictions = new string[]{},
                     
                     RequireConsent = true,
                     AllowRememberConsent = true,
@@ -222,7 +223,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                     
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
-                    SubjectType = SubjectTypes.Global,
+                    //SubjectType = SubjectTypes.Global,
                     AccessTokenType = AccessTokenType.Reference,
                     
                     IdentityTokenLifetime = 360,
