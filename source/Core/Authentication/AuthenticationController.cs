@@ -363,6 +363,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
             ClearAuthenticationCookies();
             ClearSignInCookies();
+            await SignOutOfExternalIdP();
 
             return await RenderLoggedOutPage(id);
         }
@@ -556,6 +557,22 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType,
                 Constants.PartialSignInAuthenticationType);
+        }
+
+        private async Task SignOutOfExternalIdP()
+        {
+            // look for idp claim other than IdSvr
+            // if present, then signout of it
+            var user = await GetIdentityFromPrimaryAuthenticationType();
+            if (user != null)
+            {
+                var idp = user.GetIdentityProvider();
+                if (idp != Constants.BuiltInIdentityProvider)
+                {
+                    var ctx = Request.GetOwinContext();
+                    ctx.Authentication.SignOut(idp);
+                }
+            }
         }
 
         private async Task<IHttpActionResult> RenderLoginPage(SignInMessage message, string signInMessageId, string errorMessage = null, string username = null, bool rememberMe = false)
