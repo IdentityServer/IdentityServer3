@@ -161,7 +161,7 @@
     <Compile Include="Authentication\AuthenticationController.cs" />
     <Compile Include="Views\ActionResults\LoginActionResult.cs" />
     <Compile Include="Views\Embedded\EmbeddedAssetsViewServiceRegistration.cs" />
-    <Compile Include="Views\FileSystem\FileSystemViewService.cs" />
+    <Compile Include="Views\Embedded\IResourceLoader.cs" />
     <Compile Include="Views\ViewModels\AntiForgeryHiddenInputViewModel.cs" />
     <Compile Include="Views\ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="Views\ViewModels\LogoutViewModel.cs" />
