@@ -22,11 +22,11 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class AggregateConsentStore : IConsentStore
+    public class AggregatePermissionsStore : IPermissionsStore
     {
-        IConsentStore[] stores;
+        IPermissionsStore[] stores;
 
-        public AggregateConsentStore(params IConsentStore[] stores)
+        public AggregatePermissionsStore(params IPermissionsStore[] stores)
         {
             if (stores == null) throw new ArgumentNullException("stores");
 
@@ -54,21 +54,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return query;
         }
 
-        public Task<Models.Consent> LoadAsync(string subject, string client)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Models.Consent consent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task DeleteAsync(string subject, string client)
+        public async Task RevokeAsync(string subject, string client)
         {
             foreach (var store in stores)
             {
-                await store.DeleteAsync(subject, client);
+                await store.RevokeAsync(subject, client);
             }
         }
     }

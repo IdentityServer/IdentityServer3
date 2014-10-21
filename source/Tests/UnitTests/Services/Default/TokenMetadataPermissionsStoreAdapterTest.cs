@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
     [TestClass]
-    public class TokenMetadataConsentStoreAdapterTest
+    public class TokenMetadataPermissionsStoreAdapterTest
     {
         List<ITokenMetadata> tokens;
         Func<string, Task<IEnumerable<ITokenMetadata>>> get;
@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         string subjectDeleted;
         string clientDeleted;
 
-        TokenMetadataConsentStoreAdapter subject;
+        TokenMetadataPermissionsStoreAdapter subject;
 
         [TestInitialize]
         public void Init()
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
                 this.clientDeleted = client;
                 return Task.FromResult(0);
             };
-            this.subject = new TokenMetadataConsentStoreAdapter(get, delete);
+            this.subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
         }
 
         class TokenMeta : ITokenMetadata
@@ -67,13 +67,12 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             var c2 = result.Single(x=>x.ClientId == "client2");
             Assert.AreEqual("sub", c2.Subject);
             CollectionAssert.AreEquivalent(new string[] { "baz", "quux" }, c2.Scopes.ToArray());
-
         }
 
         [TestMethod]
-        public void DeleteAsync_CallsRevoke()
+        public void RevokeAsync_CallsRevoke()
         {
-            subject.DeleteAsync("sub34", "client12").Wait();
+            subject.RevokeAsync("sub34", "client12").Wait();
             Assert.AreEqual("sub34", this.subjectDeleted);
             Assert.AreEqual("client12", this.clientDeleted);
         }

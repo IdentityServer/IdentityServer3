@@ -8,12 +8,12 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class TokenMetadataConsentStoreAdapter : IConsentStore
+    public class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
     {
         Func<string, Task<IEnumerable<ITokenMetadata>>> get;
         Func<string, string, Task> delete;
 
-        public TokenMetadataConsentStoreAdapter(
+        public TokenMetadataPermissionsStoreAdapter(
             Func<string, Task<IEnumerable<ITokenMetadata>>> get, 
             Func<string, string, Task> delete)
         {
@@ -40,17 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return query.ToArray();
         }
 
-        public Task<Models.Consent> LoadAsync(string subject, string client)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Models.Consent consent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task DeleteAsync(string subject, string client)
+        public async Task RevokeAsync(string subject, string client)
         {
             await delete(subject, client);
         }

@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 }
                 else
                 {
-                    await _store.DeleteAsync(subject, clientId);
+                    await _store.RevokeAsync(subject, clientId);
                 }
             }
         }

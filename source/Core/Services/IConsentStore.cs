@@ -20,11 +20,15 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public interface IConsentStore
+    public interface IPermissionsStore
     {
         Task<IEnumerable<Consent>> LoadAllAsync(string subject);
+        Task RevokeAsync(string subject, string client);
+    }
+
+    public interface IConsentStore : IPermissionsStore
+    {
         Task<Consent> LoadAsync(string subject, string client);
         Task UpdateAsync(Consent consent);
-        Task DeleteAsync(string subject, string client);
     }
 }

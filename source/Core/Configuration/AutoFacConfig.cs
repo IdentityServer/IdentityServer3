@@ -181,28 +181,30 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultConsentService>().As<IConsentService>();
             }
 
+            // this is more of an internal interface, but maybe we want to open it up as pluggable?
+            // this is used by the DefaultClientPermissionsService below, or it could be used
+            // by a custom IClientPermissionsService
+            builder.Register(ctx =>
+            {
+                var consent = ctx.Resolve<IConsentStore>();
+                var refresh = ctx.Resolve<IRefreshTokenStore>();
+                var code = ctx.Resolve<IAuthorizationCodeStore>();
+                var access = ctx.Resolve<ITokenHandleStore>();
+                return new AggregatePermissionsStore(
+                    consent,
+                    new TokenMetadataPermissionsStoreAdapter(refresh.GetAllAsync, refresh.RevokeAsync),
+                    new TokenMetadataPermissionsStoreAdapter(code.GetAllAsync, code.RevokeAsync),
+                    new TokenMetadataPermissionsStoreAdapter(access.GetAllAsync, access.RevokeAsync)
+                );
+            }).As<IPermissionsStore>();
+
             if (fact.ClientPermissionsService != null)
             {
                 builder.Register(fact.ClientPermissionsService);
             }
             else
             {
-                builder.Register<DefaultClientPermissionsService>(ctx =>
-                {
-                    var refresh = ctx.Resolve<IRefreshTokenStore>();
-                    var code = ctx.Resolve<IAuthorizationCodeStore>();
-                    var access = ctx.Resolve<ITokenHandleStore>();
-
-                    return new DefaultClientPermissionsService(
-                        new AggregateConsentStore(
-                            ctx.Resolve<IConsentStore>(),
-                            new TokenMetadataConsentStoreAdapter(refresh.GetAllAsync, refresh.RevokeAsync),
-                            new TokenMetadataConsentStoreAdapter(code.GetAllAsync, code.RevokeAsync),
-                            new TokenMetadataConsentStoreAdapter(access.GetAllAsync, access.RevokeAsync)
-                        ),
-                        ctx.Resolve<IClientStore>(),
-                        ctx.Resolve<IScopeStore>());
-                }).As<IClientPermissionsService>();
+                builder.RegisterType<DefaultClientPermissionsService>().As<IClientPermissionsService>();
             }
 
             if (fact.ViewService != null)

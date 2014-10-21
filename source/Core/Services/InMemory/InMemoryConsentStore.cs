@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(0);
         }
 
-        public Task DeleteAsync(string subject, string client)
+        public Task RevokeAsync(string subject, string client)
         {
             var query =
                 from c in _consents

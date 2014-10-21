@@ -23,9 +23,9 @@ using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
     [TestClass]
-    public class AggregateConsentStoreTests
+    public class AggregatePermissionsStoreTests
     {
-        AggregateConsentStore subject;
+        AggregatePermissionsStore subject;
         InMemoryConsentStore store1;
         InMemoryConsentStore store2;
 
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             store1 = new InMemoryConsentStore();
             store2 = new InMemoryConsentStore();
-            subject = new AggregateConsentStore(store1, store2);
+            subject = new AggregatePermissionsStore(store1, store2);
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         }
 
         [TestMethod]
-        public void DeleteAsync_DeletesInAllStores()
+        public void RevokeAsync_DeletesInAllStores()
         {
             store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "sub", Scopes = new string[] { "foo1" } });
             store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "bad", Scopes = new string[] { "bad" } });
@@ -139,7 +139,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client2", Subject = "sub", Scopes = new string[] { "bar1", "bar2" } });
             store2.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new string[] { "bar1", "bar2", "bar3" } });
 
-            subject.DeleteAsync("sub", "client1").Wait();
+            subject.RevokeAsync("sub", "client1").Wait();
             Assert.AreEqual(0, store1.LoadAllAsync("sub").Result.Count());
             Assert.AreEqual(2, store2.LoadAllAsync("sub").Result.Count());
         }

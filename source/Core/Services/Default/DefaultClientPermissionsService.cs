@@ -26,20 +26,20 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultClientPermissionsService : IClientPermissionsService
     {
-        IConsentStore consentStore;
+        IPermissionsStore permissionsStore;
         IClientStore clientStore;
         IScopeStore scopeStore;
 
         public DefaultClientPermissionsService(
-            IConsentStore consentStore, 
+            IPermissionsStore permissionsStore, 
             IClientStore clientStore, 
             IScopeStore scopeStore)
         {
-            if (consentStore == null) throw new ArgumentNullException("consentStore");
+            if (permissionsStore == null) throw new ArgumentNullException("permissionsStore");
             if (clientStore == null) throw new ArgumentNullException("clientStore");
             if (scopeStore == null) throw new ArgumentNullException("scopeStore");
 
-            this.consentStore = consentStore;
+            this.permissionsStore = permissionsStore;
             this.clientStore = clientStore;
             this.scopeStore = scopeStore;
         }
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 throw new ArgumentNullException("subject");
             }
 
-            var consents = await this.consentStore.LoadAllAsync(subject);
+            var consents = await this.permissionsStore.LoadAllAsync(subject);
             var list = new List<ClientPermission>();
             foreach(var consent in consents)
             {
@@ -89,7 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 throw new ArgumentNullException("clientId");
             }
 
-            await this.consentStore.DeleteAsync(subject, clientId);
+            await this.permissionsStore.RevokeAsync(subject, clientId);
         }
     }
 }

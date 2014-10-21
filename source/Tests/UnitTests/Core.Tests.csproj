@@ -147,8 +147,8 @@
     <Compile Include="Connect\Setup\Factory.cs" />
     <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
-    <Compile Include="Services\Default\AggregateConsentStoreTests.cs" />
-    <Compile Include="Services\Default\TokenMetadataConsentStoreAdapterTest.cs" />
+    <Compile Include="Services\Default\AggregatePermissionsStoreTests.cs" />
+    <Compile Include="Services\Default\TokenMetadataPermissionsStoreAdapterTest.cs" />
     <Compile Include="TestClients.cs" />
     <Compile Include="TestFactory.cs" />
     <Compile Include="TestIdentityServerOptions.cs" />
