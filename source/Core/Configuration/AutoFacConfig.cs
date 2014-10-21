@@ -50,33 +50,45 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             // optional from factory
             if (fact.AuthorizationCodeStore != null)
             {
-                builder.Register(fact.AuthorizationCodeStore);
+                builder.Register(fact.AuthorizationCodeStore, "inner");
             }
             else
             {
                 var inmemCodeStore = new InMemoryAuthorizationCodeStore();
-                builder.RegisterInstance(inmemCodeStore).As<IAuthorizationCodeStore>();
+                builder.RegisterInstance(inmemCodeStore).Named<IAuthorizationCodeStore>("inner");
             }
+            builder.RegisterDecorator<IAuthorizationCodeStore>((s, inner) =>
+            {
+                return new KeyHashingAuthorizationCodeStore(inner);
+            }, "inner");
 
             if (fact.TokenHandleStore != null)
             {
-                builder.Register(fact.TokenHandleStore);
+                builder.Register(fact.TokenHandleStore, "inner");
             }
             else
             {
                 var inmemTokenHandleStore = new InMemoryTokenHandleStore();
-                builder.RegisterInstance(inmemTokenHandleStore).As<ITokenHandleStore>();
+                builder.RegisterInstance(inmemTokenHandleStore).Named<ITokenHandleStore>("inner");
             }
+            builder.RegisterDecorator<ITokenHandleStore>((s, inner) =>
+            {
+                return new KeyHashingTokenHandleStore(inner);
+            }, "inner");
 
             if (fact.RefreshTokenStore != null)
             {
-                builder.Register(fact.RefreshTokenStore);
+                builder.Register(fact.RefreshTokenStore, "inner");
             }
             else
             {
                 var inmemRefreshTokenStore = new InMemoryRefreshTokenStore();
-                builder.RegisterInstance(inmemRefreshTokenStore).As<IRefreshTokenStore>();
+                builder.RegisterInstance(inmemRefreshTokenStore).Named<IRefreshTokenStore>("inner");
             }
+            builder.RegisterDecorator<IRefreshTokenStore>((s, inner) =>
+            {
+                return new KeyHashingRefreshTokenStore(inner);
+            }, "inner");
 
             if (fact.ConsentStore != null)
             {
@@ -232,15 +244,31 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             return builder.Build();
         }
 
-        private static void Register(this ContainerBuilder builder, Registration registration)
+        private static void Register(this ContainerBuilder builder, Registration registration, string name = null)
         {
             if (registration.ImplementationType != null)
             {
-                builder.RegisterType(registration.ImplementationType).As(registration.InterfaceType);
+                var reg = builder.RegisterType(registration.ImplementationType);
+                if (name != null)
+                {
+                    reg.Named(name, registration.InterfaceType);
+                }
+                else
+                {
+                    reg.As(registration.InterfaceType);
+                }
             }
             else if (registration.ImplementationFactory != null)
             {
-                builder.Register(ctx => registration.ImplementationFactory()).As(registration.InterfaceType);
+                var reg = builder.Register(ctx => registration.ImplementationFactory());
+                if (name != null)
+                {
+                    reg.Named(name, registration.InterfaceType);
+                }
+                else
+                {
+                    reg.As(registration.InterfaceType);
+                }
             }
             else
             {

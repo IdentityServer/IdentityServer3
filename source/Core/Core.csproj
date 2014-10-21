@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="Services\Default\AggregateConsentStore.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsService.cs" />
+    <Compile Include="Services\Default\KeyHashingTransientDataRepository.cs" />
     <Compile Include="Services\Default\TokenMetadataConsentStoreAdapter.cs" />
     <Compile Include="Services\IClientPermissionsService.cs" />
     <Compile Include="Services\IConsentStore.cs" />
