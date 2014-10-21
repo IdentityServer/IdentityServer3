@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         protected string FacebookProviderName = "Facebook";
         protected string TwitterProviderName = "Twitter";
 
-        public IEnumerable<Claim> Filter(IdentityProvider provider, IEnumerable<Claim> claims)
+        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
             claims = NormalizeExternalClaimTypes(claims);
 
@@ -40,13 +40,13 @@ namespace Thinktecture.IdentityServer.Core.Services
             return Plumbing.ClaimMap.Map(incomingClaims);
         }
 
-        protected virtual IEnumerable<Claim> TransformSocialClaims(IdentityProvider provider, IEnumerable<Claim> claims)
+        protected virtual IEnumerable<Claim> TransformSocialClaims(string provider, IEnumerable<Claim> claims)
         {
-            if (provider.Name == FacebookProviderName)
+            if (provider == FacebookProviderName)
             {
                 claims = TransformFacebookClaims(claims);
             }
-            else if (provider.Name == TwitterProviderName)
+            else if (provider == TwitterProviderName)
             {
                 claims = TransformTwitterClaims(claims);
             }

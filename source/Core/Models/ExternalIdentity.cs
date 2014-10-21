@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 {
     public class ExternalIdentity
     {
-        public IdentityProvider Provider { get; set; }
+        public string Provider { get; set; }
         public string ProviderId { get; set; }
         public IEnumerable<Claim> Claims { get; set; }
 
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             
             return new ExternalIdentity
             {
-                Provider = new IdentityProvider { Name = subClaim.Issuer },
+                Provider = subClaim.Issuer,
                 ProviderId = subClaim.Value,
                 Claims = claims
             };

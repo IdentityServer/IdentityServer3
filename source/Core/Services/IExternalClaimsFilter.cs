@@ -22,6 +22,6 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IExternalClaimsFilter
     {
-        IEnumerable<Claim> Filter(IdentityProvider provider, IEnumerable<Claim> claims);
+        IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims);
     }
 }

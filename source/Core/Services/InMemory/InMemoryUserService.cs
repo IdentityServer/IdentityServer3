@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var query =
                 from u in _users
                 where
-                    u.Provider == externalUser.Provider.Name &&
+                    u.Provider == externalUser.Provider &&
                     u.ProviderId == externalUser.ProviderId
                 select u;
             
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 user = new InMemoryUser
                 {
                     Subject = Guid.NewGuid().ToString("N"),
-                    Provider = externalUser.Provider.Name,
+                    Provider = externalUser.Provider,
                     ProviderId = externalUser.ProviderId,
                     Username = name.Value,
                     Claims = externalUser.Claims
@@ -96,7 +96,6 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var result = new AuthenticateResult(p);
             return Task.FromResult(result);
         }
-
 
         public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
@@ -118,7 +117,6 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 
             return Task.FromResult<IEnumerable<Claim>>(claims);
         }
-
 
         public virtual Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {

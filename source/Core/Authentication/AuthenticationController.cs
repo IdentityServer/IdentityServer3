@@ -311,7 +311,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 var providerId = externalProviderClaim.Value;
                 var externalId = new ExternalIdentity()
                 {
-                    Provider = new IdentityProvider{ Name = provider },
+                    Provider = provider,
                     ProviderId = providerId,
                     Claims = user.Claims
                 };

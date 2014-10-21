@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var id = new ClaimsIdentity(externalId.Claims, Constants.PartialSignInAuthenticationType);
             // we're keeping the external provider info for the partial signin so we can re-execute AuthenticateExternalAsync
             // once the user is re-directed back into identityserver from the external redirect
-            id.AddClaim(new Claim(Constants.ClaimTypes.ExternalProviderUserId, externalId.ProviderId, ClaimValueTypes.String, externalId.Provider.Name));
+            id.AddClaim(new Claim(Constants.ClaimTypes.ExternalProviderUserId, externalId.ProviderId, ClaimValueTypes.String, externalId.Provider));
             User = new ClaimsPrincipal(id);
         }
 
