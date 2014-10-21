@@ -42,6 +42,10 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             {
                 var props = new Microsoft.Owin.Security.AuthenticationProperties();
                 props.Dictionary.Add("signin", SignInId);
+                if(SignInIdentity.AuthenticationType == Constants.ExternalAuthenticationType)
+                {
+                    props.Dictionary.Add("katanaAuthenticationType", "Google");
+                }
                 ctx.Authentication.SignIn(props, SignInIdentity);
                 SignInIdentity = null;
             }
