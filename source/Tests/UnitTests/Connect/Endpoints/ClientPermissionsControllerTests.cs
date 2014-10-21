@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         string clientId;
 
         [TestInitialize]
-        public void Init()
+        public new void Init()
         {
             base.Init();
             clientId = TestClients.Get().First().ClientId;
