@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ITransientDataRepository<T>
+        where T : ITokenMetadata
     {
         Task StoreAsync(string key, T value);
         Task<T> GetAsync(string key);
         Task RemoveAsync(string key);
+
+        Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject);
+        Task RevokeAsync(string subject, string client);
     }
 }

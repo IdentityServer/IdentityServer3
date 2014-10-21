@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
@@ -48,6 +49,32 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             _repository.TryRemove(key, out val);
 
             return Task.FromResult<object>(null);
+        }
+
+
+        public Task<System.Collections.Generic.IEnumerable<ITokenMetadata>> GetAllAsync(string subject)
+        {
+            var query =
+                from item in _repository
+                where item.Value.SubjectId == subject
+                select item.Value;
+            var list = query.ToArray();
+            return Task.FromResult(list.Cast<ITokenMetadata>());
+        }
+
+        public Task RevokeAsync(string subject, string client)
+        {
+            var query =
+                from item in _repository
+                where item.Value.SubjectId == subject && item.Value.ClientId == client
+                select item.Key;
+            
+            foreach(var key in query)
+            {
+                RemoveAsync(key);
+            }
+            
+            return Task.FromResult(0);
         }
     }
 }

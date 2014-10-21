@@ -15,15 +15,26 @@
  */
 
 using System;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
-    public class RefreshToken
+    public class RefreshToken : ITokenMetadata
     {
         public string ClientId { get; set; }
         public DateTime CreationTime { get; set; }
         public int LifeTime { get; set; }
 
         public Token AccessToken { get; set; }
+
+        public string SubjectId
+        {
+            get { return AccessToken.SubjectId; }
+        }
+
+        public System.Collections.Generic.IEnumerable<string> Scopes
+        {
+            get { return AccessToken.Scopes; }
+        }
     }
 }

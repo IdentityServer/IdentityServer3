@@ -15,13 +15,15 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
-    public class AuthorizationCode
+    public class AuthorizationCode : ITokenMetadata
     {
         public DateTime CreationTime { get; set; }
 
@@ -37,6 +39,21 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         public AuthorizationCode()
         {
             CreationTime = DateTime.UtcNow;
+        }
+
+        public string SubjectId
+        {
+            get { return Subject.GetSubjectId(); }
+        }
+
+        public string ClientId
+        {
+            get { return Client.ClientId; }
+        }
+
+        public IEnumerable<string> Scopes
+        {
+            get { return RequestedScopes.Select(x => x.Name); }
         }
     }
 }

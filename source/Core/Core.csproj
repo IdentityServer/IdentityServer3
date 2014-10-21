@@ -146,7 +146,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Scopes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Default\AggregateConsentStore.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsService.cs" />
+    <Compile Include="Services\Default\TokenMetadataConsentStoreAdapter.cs" />
     <Compile Include="Services\IClientPermissionsService.cs" />
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />

@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
@@ -29,7 +30,10 @@ namespace Thinktecture.IdentityServer.Core.Services
         IClientStore clientStore;
         IScopeStore scopeStore;
 
-        public DefaultClientPermissionsService(IConsentStore consentStore, IClientStore clientStore, IScopeStore scopeStore)
+        public DefaultClientPermissionsService(
+            IConsentStore consentStore, 
+            IClientStore clientStore, 
+            IScopeStore scopeStore)
         {
             if (consentStore == null) throw new ArgumentNullException("consentStore");
             if (clientStore == null) throw new ArgumentNullException("clientStore");
@@ -69,6 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                     });
                 }
             }
+
             return list;
         }
 

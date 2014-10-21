@@ -20,6 +20,7 @@ using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Views.Embedded;
 
@@ -174,7 +175,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             }
             else
             {
-                builder.RegisterType<DefaultClientPermissionsService>().As<IClientPermissionsService>();
+                builder.Register<DefaultClientPermissionsService>(ctx =>
+                {
+                    var refresh = ctx.Resolve<IRefreshTokenStore>();
+                    var code = ctx.Resolve<IAuthorizationCodeStore>();
+                    var access = ctx.Resolve<ITokenHandleStore>();
+
+                    return new DefaultClientPermissionsService(
+                        new AggregateConsentStore(
+                            ctx.Resolve<IConsentStore>(),
+                            new TokenMetadataConsentStoreAdapter(refresh.GetAllAsync, refresh.RevokeAsync),
+                            new TokenMetadataConsentStoreAdapter(code.GetAllAsync, code.RevokeAsync),
+                            new TokenMetadataConsentStoreAdapter(access.GetAllAsync, access.RevokeAsync)
+                        ),
+                        ctx.Resolve<IClientStore>(),
+                        ctx.Resolve<IScopeStore>());
+                }).As<IClientPermissionsService>();
             }
 
             if (fact.ViewService != null)

@@ -15,13 +15,28 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
-    public class Token
+    public interface ITokenMetadata
+    {
+        string SubjectId { get; }
+        string ClientId { get; }
+        IEnumerable<string> Scopes { get; }
+    }
+    
+    public class InMemoryTokenMetadata : ITokenMetadata
+    {
+        public string SubjectId { get; set; }
+        public string ClientId { get; set; }
+        public IEnumerable<string> Scopes { get; set; }
+    }
+
+    public class Token : ITokenMetadata
     {
         public string Audience { get; set; }
         public string Issuer { get; set; }
@@ -42,6 +57,27 @@ namespace Thinktecture.IdentityServer.Core.Connect.Models
         {
             Type = tokenType;
             CreationTime = DateTime.UtcNow;
+        }
+
+        public string SubjectId
+        {
+            get
+            {
+                return Claims.Single(x => x.Type == Constants.ClaimTypes.Subject).Value;
+            }
+        }
+
+        public string ClientId
+        {
+            get
+            {
+                return Client.ClientId;
+            }
+        }
+
+        public IEnumerable<string> Scopes
+        {
+            get { return Claims.Where(x => x.Type == Constants.ClaimTypes.Scope).Select(x => x.Value); }
         }
     }
 }

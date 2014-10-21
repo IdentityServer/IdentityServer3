@@ -131,6 +131,7 @@
     <Compile Include="Authentication\AuthenticateResultTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
     <Compile Include="Configuration\RegistrationTests.cs" />
+    <Compile Include="Connect\Endpoints\ClientPermissionsControllerTests.cs" />
     <Compile Include="Connect\Endpoints\AuthorizeEndpointControllerTests.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests.cs" />
     <Compile Include="Connect\ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
@@ -145,6 +146,9 @@
     <Compile Include="Connect\Setup\TestUserService.cs" />
     <Compile Include="Connect\Setup\Factory.cs" />
     <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
+    <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
+    <Compile Include="Services\Default\AggregateConsentStoreTests.cs" />
+    <Compile Include="Services\Default\TokenMetadataConsentStoreAdapterTest.cs" />
     <Compile Include="TestClients.cs" />
     <Compile Include="TestFactory.cs" />
     <Compile Include="TestIdentityServerOptions.cs" />
