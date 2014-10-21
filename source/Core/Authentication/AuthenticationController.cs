@@ -194,6 +194,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             };
             // add the id to the dictionary so we can recall the cookie id on the callback
             authProp.Dictionary.Add("signin", signin);
+            authProp.Dictionary.Add("katanaAuthenticationType", provider);
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
             return Unauthorized();
         }
@@ -393,7 +394,23 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
         private async Task<ClaimsIdentity> GetIdentityFromExternalProvider()
         {
-            return await GetIdentityFrom(Constants.ExternalAuthenticationType);
+            var id = await GetIdentityFrom(Constants.ExternalAuthenticationType);
+            if (id != null)
+            {
+                // this is mapping from the external IdP's issuer to the name of the 
+                // katana middleware that's registered in startup
+                var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+                if (!result.Properties.Dictionary.Keys.Contains("katanaAuthenticationType"))
+                {
+                    Logger.Error("Missing katanaAuthenticationType in external callback");
+                    throw new InvalidOperationException("Missing katanaAuthenticationType");
+                }
+
+                var provider = result.Properties.Dictionary["katanaAuthenticationType"];
+                var newClaims = id.Claims.Select(x=>new Claim(x.Type, x.Value, x.ValueType, provider));
+                id = new ClaimsIdentity(newClaims, id.AuthenticationType);
+            }
+            return id;
         }
         
         private async Task<string> GetSignInIdFromExternalProvider()
