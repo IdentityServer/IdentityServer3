@@ -43,12 +43,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public KeyHashingTransientDataRepository(string hashName, ITransientDataRepository<T> inner)
         {
+            if (String.IsNullOrWhiteSpace(hashName)) throw new ArgumentNullException("hashName");
+            if (inner == null) throw new ArgumentNullException("inner");
+
             hash = HashAlgorithm.Create(hashName);
             this.inner = inner;
         }
 
         protected string Hash(string value)
         {
+            if (String.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("inner");
+
             var bytes = Encoding.UTF8.GetBytes(value);
             var hashedBytes = hash.ComputeHash(bytes);
             var hashedString = Thinktecture.IdentityModel.Base64Url.Encode(hashedBytes);
