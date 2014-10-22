@@ -242,7 +242,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
                     CurrentUser = User.GetName(),
-                    ErrorMessage = error.Error
+                    ErrorMessage = LookupErrorMessage(error.Error)
                 };
                 var errorResult = new ErrorActionResult(_viewService, env, errorModel);
                 return errorResult;
@@ -271,6 +271,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
                 return Redirect(url);
             }
+        }
+
+        private string LookupErrorMessage(string error)
+        {
+            var msg = Resources.Messages.ResourceManager.GetString(error);
+            if (msg.IsMissing())
+            {
+                msg = error;
+            }
+            return msg;
         }
     }
 }
