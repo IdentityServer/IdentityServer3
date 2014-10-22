@@ -58,5 +58,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
             return Task.FromResult(false);
         }
+
+        public Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

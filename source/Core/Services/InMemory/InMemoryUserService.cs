@@ -34,6 +34,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             _users.AddRange(users);
         }
 
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
+        {
+            return Task.FromResult<AuthenticateResult>(null);
+        }
+        
         protected virtual string GetDisplayName(InMemoryUser user)
         {
             var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);

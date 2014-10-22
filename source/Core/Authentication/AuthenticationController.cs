@@ -81,6 +81,18 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
+            var authResult = await _userService.PreAuthenticateAsync(Request.GetOwinEnvironment(), signInMessage);
+            if (authResult != null)
+            {
+                if (authResult.IsError)
+                {
+                    Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
+                    return RenderErrorPage(authResult.ErrorMessage);
+                }
+
+                return SignInAndRedirect(signInMessage, signin, authResult);
+            }
+
             if (signInMessage.IdP.IsPresent())
             {
                 Logger.InfoFormat("identity provider requested, redirecting to: {0}", signInMessage.IdP);

@@ -24,6 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IUserService
     {
+        Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message);
         Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null);
         Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser);
         Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);

@@ -16,6 +16,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -104,6 +105,72 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsNull_ShowsLoginPage()
+        {
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
+        }
+
+        [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsError_ShowsErrorPage()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .ReturnsAsync(new AuthenticateResult("SomeError"));
+
+            var resp = GetLoginPage();
+            resp.AssertPage("error");
+            var model = resp.GetModel<ErrorViewModel>();
+            Assert.AreEqual("SomeError", model.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
+
+            var resp = GetLoginPage();
+            resp.AssertCookie(Constants.PrimaryAuthenticationType);
+        }
+
+        [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsFullLogin_RedirectsToReturnUrl()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
+
+            var resp = GetLoginPage();
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.AreEqual(Url("authorize"), resp.Headers.Location.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesPartialLoginCookie()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+
+            var resp = GetLoginPage();
+            resp.AssertCookie(Constants.PartialSignInAuthenticationType);
+        }
+
+        [TestMethod]
+        public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesRedirect()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+
+            var resp = GetLoginPage();
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
+        }
+        
+        [TestMethod]
         public void GetExternalLogin_ValidProvider_RedirectsToProvider()
         {
             var msg = new SignInMessage();
@@ -116,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void GetExternalLogin_InalidProvider_ReturnsUnauthorized()
+        public void GetExternalLogin_InvalidProvider_ReturnsUnauthorized()
         {
             var msg = new SignInMessage();
             msg.IdP = "Foo";
@@ -125,7 +192,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Unauthorized, resp2.StatusCode);
         }
-
+        
         [TestMethod]
         public void PostToLogin_ValidCredentials_IssuesAuthenticationCookie()
         {
