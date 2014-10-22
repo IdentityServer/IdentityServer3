@@ -364,16 +364,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            //////////////////////////////////////////////////////////
-            // check scopes and scope restrictions
-            //////////////////////////////////////////////////////////
             var scopeValidator = new ScopeValidator();
-
-            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
-            {
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
@@ -391,6 +382,14 @@ namespace Thinktecture.IdentityServer.Core.Connect
             if (scopeValidator.ContainsResourceScopes)
             {
                 _validatedRequest.IsResourceRequest = true;
+            }
+
+            //////////////////////////////////////////////////////////
+            // check scopes and scope restrictions
+            //////////////////////////////////////////////////////////
+            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
+            {
+                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
             _validatedRequest.ValidatedScopes = scopeValidator;
