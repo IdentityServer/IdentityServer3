@@ -34,17 +34,24 @@ namespace Thinktecture.IdentityServer.Core.Views
             this.directory = directory;
         }
 
-        public string Load(string name)
+        public string Load(string page)
         {
             if (Directory.Exists(directory))
             {
-                name += ".html";
+                var name = page + ".html";
                 var path = Path.Combine(directory, name);
 
                 // look for full file with name login.html
                 if (File.Exists(path))
                 {
                     return File.ReadAllText(path);
+                }
+
+                var layoutName = Path.Combine(directory, "_layout.html");
+                string layout = null;
+                if (File.Exists(layoutName))
+                {
+                    layout = File.ReadAllText(layoutName);
                 }
 
                 // look for partial with name _login.html
@@ -54,15 +61,20 @@ namespace Thinktecture.IdentityServer.Core.Views
                 {
                     var partial = File.ReadAllText(path);
 
-                    // we have a partial, so locate the layout
-                    var layoutName = Path.Combine(directory, "_layout.html");
-                    if (File.Exists(layoutName))
+                    if (layout != null)
                     {
-                        var layout = File.ReadAllText(layoutName);
                         return AssetManager.ApplyContentToLayout(layout, partial);
                     }
 
                     return AssetManager.LoadLayoutWithContent(partial);
+                }
+
+                // no partial, but layout might exist
+                if (layout != null)
+                {
+                    // so load embedded asset page, but use custom layout
+                    var content = AssetManager.LoadPage(page);
+                    return AssetManager.ApplyContentToLayout(layout, content);
                 }
             }
 

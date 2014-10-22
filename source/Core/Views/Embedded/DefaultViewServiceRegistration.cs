@@ -50,26 +50,32 @@ namespace Thinktecture.IdentityServer.Core.Views
 
     public class DefaultViewServiceServiceConfiguration
     {
-        internal static readonly DefaultViewServiceServiceConfiguration Default = new DefaultViewServiceServiceConfiguration();
+        internal static readonly DefaultViewServiceServiceConfiguration Default = 
+            new DefaultViewServiceServiceConfiguration();
 
         public DefaultViewServiceServiceConfiguration()
         {
             Stylesheets = new HashSet<string>();
             // adding default CSS here so hosting application can choose to remove it
             Stylesheets.Add("~/assets/styles.min.css");
-            
+
             Scripts = new HashSet<string>();
             CacheViews = true;
         }
 
+        static volatile IViewLoader _loader = null;
         internal IViewLoader GetLoader()
         {
-            IViewLoader loader = ViewLoader ?? new FileSystemWithEmbeddedFallbackViewLoader();
-            if (CacheViews)
+            if (_loader == null)
             {
-                loader = new CachingLoader(loader);
+                IViewLoader loader = ViewLoader ?? new FileSystemWithEmbeddedFallbackViewLoader();
+                if (CacheViews)
+                {
+                    loader = new CachingLoader(loader);
+                }
+                _loader = loader;
             }
-            return loader;
+            return _loader;
         }
         
         public ICollection<string> Stylesheets { get; set; }
