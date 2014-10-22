@@ -17,28 +17,37 @@ using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Views.Embedded
+namespace Thinktecture.IdentityServer.Core.Views
 {
-    public class EmbeddedAssetsViewServiceRegistration : Registration<IViewService>
+    public class DefaultViewServiceRegistration : Registration<IViewService>
     {
-        public EmbeddedAssetsViewServiceRegistration(EmbeddedAssetsViewServiceConfiguration config)
+        public DefaultViewServiceRegistration()
         {
-            this.TypeFactory = () => new EmbeddedAssetsViewService(config);
+            this.TypeFactory = () => new DefaultViewService();
+        }
+
+        public DefaultViewServiceRegistration(DefaultViewServiceServiceConfiguration config)
+        {
+            this.TypeFactory = () => new DefaultViewService(config);
         }
     }
 
-    public class EmbeddedAssetsViewServiceConfiguration
+    public class DefaultViewServiceServiceConfiguration
     {
-        public EmbeddedAssetsViewServiceConfiguration()
+        internal static readonly DefaultViewServiceServiceConfiguration Default = new DefaultViewServiceServiceConfiguration();
+
+        public DefaultViewServiceServiceConfiguration()
         {
             Stylesheets = new HashSet<string>();
             // adding default CSS here so hosting application can choose to remove it
             Stylesheets.Add("~/assets/styles.min.css");
             
             Scripts = new HashSet<string>();
+            ViewLoader = new CachingLoader(new EmbeddedAssetsViewLoader());
         }
         
         public ICollection<string> Stylesheets { get; set; }
         public ICollection<string> Scripts { get; set; }
+        public IViewLoader ViewLoader { get; set; }
     }
 }

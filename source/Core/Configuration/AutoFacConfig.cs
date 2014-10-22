@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Views.Embedded;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -213,7 +213,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             }
             else
             {
-                builder.RegisterType<EmbeddedAssetsViewService>().As<IViewService>();
+                builder.RegisterType<DefaultViewService>().As<IViewService>();
             }
 
             // validators

@@ -20,7 +20,6 @@ using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Views;
-using Thinktecture.IdentityServer.Core.Views.Embedded.Assets;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Results
 {
@@ -44,15 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Connect.Results
             var fields = _response.ToNameValueCollection().ToFormPost();
             var redirect = _response.RedirectUri.AbsoluteUri;
 
-            string html = AssetManager.LoadResourceString("Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.FormPostResponse.html",
-                new
-                {
-                    rootUrl = root,
-                    redirect_uri = redirect,
-                    fields = fields
-                });
-
-            return html;
+            return AssetManager.LoadFormPost(root, redirect, fields);
         }
 
         public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
