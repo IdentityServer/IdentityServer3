@@ -77,13 +77,13 @@ namespace Thinktecture.IdentityServer.Core.Views
         {
             string html = this.config.GetLoader().Load(page);
 
-            var data = BuildModel(model, config.Stylesheets, config.Scripts);
+            var data = BuildModel(model, page, config.Stylesheets, config.Scripts);
             html = AssetManager.Format(html, data);
             
             return Task.FromResult(html.ToStream());
         }
 
-        object BuildModel(CommonViewModel model, ICollection<string> stylesheets, ICollection<string> scripts)
+        object BuildModel(CommonViewModel model, string page, ICollection<string> stylesheets, ICollection<string> scripts)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (stylesheets == null) throw new ArgumentNullException("stylesheets");
@@ -106,6 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Views
                 siteName = model.SiteName,
                 applicationPath,
                 model = json,
+                page,
                 stylesheets = additionalStylesheets,
                 scripts = additionalScripts
             };

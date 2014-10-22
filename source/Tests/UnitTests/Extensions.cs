@@ -82,7 +82,8 @@ namespace Thinktecture.IdentityServer.Tests
             Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
             Assert.AreEqual("text/html", resp.Content.Headers.ContentType.MediaType);
             var html = resp.Content.ReadAsStringAsync().Result;
-            var match = Regex.Match(html, "<ng-include src=\"'/assets/app\\.(.*)\\.html'\"></ng-include>");
+
+            var match = Regex.Match(html, "<div class='container page-(.*)' ng-cloak>");
             Assert.AreEqual(name, match.Groups[1].Value);
         }
 
