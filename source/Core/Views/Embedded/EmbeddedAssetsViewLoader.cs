@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Views
     {
         public string Load(string name)
         {
-            return AssetManager.LoadLayout(name);
+            return AssetManager.LoadLayoutWithPage(name);
         }
     }
 }

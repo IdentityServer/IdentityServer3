@@ -32,11 +32,28 @@ namespace Thinktecture.IdentityServer.Core.Views
 
         static readonly ResourceCache cache = new ResourceCache();
 
-        const string PageUrlTemplate = "assets/app.{0}.html";
-        public static string LoadLayout(string pageName)
+        const string PageNameTemplate = Prefix + "{0}" + ".html";
+        public static string LoadPage(string pageName)
         {
-            var pageUrl = String.Format(PageUrlTemplate, pageName);
-            return LoadResourceString(AssetManager.Layout, new { pageUrl });
+            pageName = String.Format(PageNameTemplate, pageName);
+            return LoadResourceString(pageName);
+        }
+
+        public static string ApplyContentToLayout(string layout, string content)
+        {
+            return Format(layout, new { pageContent = content });
+        }
+        
+        public static string LoadLayoutWithContent(string content)
+        {
+            var layout = LoadResourceString(AssetManager.Layout);
+            return ApplyContentToLayout(layout, content);
+        }
+
+        public static string LoadLayoutWithPage(string pageName)
+        {
+            var pageContent = LoadPage(pageName);
+            return LoadLayoutWithContent(pageContent);
         }
         
         public static string LoadFormPost(string rootUrl, string redirect_uri, string fields)

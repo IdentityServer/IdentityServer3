@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Views
 
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
-            string html = this.config.ViewLoader.Load(page);
+            string html = this.config.GetLoader().Load(page);
 
             var data = BuildModel(model, config.Stylesheets, config.Scripts);
             html = AssetManager.Format(html, data);

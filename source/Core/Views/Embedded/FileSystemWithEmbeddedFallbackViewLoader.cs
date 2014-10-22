@@ -28,12 +28,24 @@ namespace Thinktecture.IdentityServer.Core.Views
         FileSystemViewLoader file;
         EmbeddedAssetsViewLoader embedded;
 
+        public FileSystemWithEmbeddedFallbackViewLoader()
+            : this(GetDefaultDirectory())
+        {
+        }
+
         public FileSystemWithEmbeddedFallbackViewLoader(string directory)
         {
             this.file = new FileSystemViewLoader(directory);
             this.embedded = new EmbeddedAssetsViewLoader();
         }
 
+        static string GetDefaultDirectory()
+        {
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+            path = Path.Combine(path, "assets");
+            return path;
+        }
+        
         public string Load(string name)
         {
             var value = file.Load(name);

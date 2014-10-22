@@ -30,18 +30,40 @@ namespace Thinktecture.IdentityServer.Core.Views
         public FileSystemViewLoader(string directory)
         {
             if (String.IsNullOrWhiteSpace(directory)) throw new ArgumentNullException("directory");
-            if (!Directory.Exists(directory)) throw new InvalidOperationException(String.Format("{0} is an invalid directory", directory));
             
             this.directory = directory;
         }
 
         public string Load(string name)
         {
-            var path = Path.Combine(directory, name);
-
-            if (File.Exists(path))
+            if (Directory.Exists(directory))
             {
-                return File.ReadAllText(path);
+                name += ".html";
+                var path = Path.Combine(directory, name);
+
+                // look for full file with name login.html
+                if (File.Exists(path))
+                {
+                    return File.ReadAllText(path);
+                }
+
+                // look for partial with name _login.html
+                name = "_" + name;
+                path = Path.Combine(directory, name);
+                if (File.Exists(path))
+                {
+                    var partial = File.ReadAllText(path);
+
+                    // we have a partial, so locate the layout
+                    var layoutName = Path.Combine(directory, "_layout.html");
+                    if (File.Exists(layoutName))
+                    {
+                        var layout = File.ReadAllText(layoutName);
+                        return AssetManager.ApplyContentToLayout(layout, partial);
+                    }
+
+                    return AssetManager.LoadLayoutWithContent(partial);
+                }
             }
 
             return null;
