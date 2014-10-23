@@ -109,6 +109,7 @@ namespace Thinktecture.IdentityServer.Host
             {
                 AuthenticationType = "adfs",
                 Caption = "ADFS",
+                SignInAsAuthenticationType = signInAsType,
 
                 MetadataAddress = "https://adfs.leastprivilege.vm/federationmetadata/2007-06/federationmetadata.xml",
                 Wtrealm = "urn:idsrv3"
