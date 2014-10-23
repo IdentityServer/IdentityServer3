@@ -15,15 +15,14 @@
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Services;
-using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Views
 {

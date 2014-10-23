@@ -15,7 +15,6 @@
  */
 
 using System;
-using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
