@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
