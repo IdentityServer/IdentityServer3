@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
@@ -26,6 +27,10 @@ namespace Owin
             {
                 var baseUrl = ctx.Environment.GetBaseUrl(publicHostName);
                 ctx.Environment.SetIdentityServerBaseUrl(baseUrl);
+                
+                var basePath = ctx.Request.PathBase.Value;
+                if (basePath == String.Empty) basePath = "/";
+                ctx.Environment.SetIdentityServerBasePath(basePath);
 
                 await next();
             });

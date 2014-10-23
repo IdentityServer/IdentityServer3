@@ -88,12 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             get
             {
-                var path = ctx.Request.PathBase.Value;
-                if (String.IsNullOrWhiteSpace(path))
-                {
-                    path = "/";
-                }
-                return path;
+                return ctx.Request.Environment.GetIdentityServerBasePath();
             }
         }
         

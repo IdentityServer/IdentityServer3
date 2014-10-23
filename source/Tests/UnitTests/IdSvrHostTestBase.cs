@@ -214,7 +214,8 @@ namespace Thinktecture.IdentityServer.Tests
             var env = new Dictionary<string, object>()
             {
                 {"owin.RequestScheme", "https"},
-                {"owin.ResponseHeaders", headers}
+                {"owin.ResponseHeaders", headers},
+                {Constants.OwinEnvironment.IdentityServerBasePath, "/"},
             };
 
             var ctx = new OwinContext(env);

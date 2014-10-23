@@ -54,6 +54,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             env[Constants.OwinEnvironment.IdentityServerBaseUrl] = value;
         }
 
+        public static string GetIdentityServerBasePath(this IDictionary<string, object> env)
+        {
+            return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
+        }
+
+        public static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
+        {
+            env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
+        }
+
         public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
             return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
