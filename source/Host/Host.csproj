@@ -111,9 +111,6 @@
       <Link>default.licenseheader</Link>
     </Content>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
-    <None Include="Web.AzureWebSites.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
