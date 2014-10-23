@@ -29,14 +29,14 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     public class DefaultViewService : IViewService
     {
-        private readonly DefaultViewServiceServiceConfiguration config;
+        private readonly DefaultViewServiceConfiguration config;
 
         public DefaultViewService()
-            : this(DefaultViewServiceServiceConfiguration.Default)
+            : this(DefaultViewServiceConfiguration.Default)
         {
         }
 
-        public DefaultViewService(DefaultViewServiceServiceConfiguration config)
+        public DefaultViewService(DefaultViewServiceConfiguration config)
         {
             if (config == null) throw new ArgumentNullException("config");
             
