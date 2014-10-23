@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static string AddHashFragment(this string url, string query)
         {
-            if (!url.Contains("#"))
+            if (!url.EndsWith("#"))
             {
                 url += "#";
             }
