@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return claim.Value;
         }
 
-        public static string GetIdentityProvicer(this IPrincipal principal)
+        public static string GetIdentityProvider(this IPrincipal principal)
         {
             return principal.Identity.GetIdentityProvider();
         }
