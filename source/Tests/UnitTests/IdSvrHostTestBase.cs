@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;
-                options.AdditionalIdentityProviderConfiguration = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
+                options.AuthenticationOptions.AdditionalIdentityProviderConfiguration = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
                 
                 protector = options.DataProtector;
                 

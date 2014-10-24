@@ -59,8 +59,10 @@ namespace Thinktecture.IdentityServer.Host
                         },
                         
                         AccessTokenValidationEndpoint = EndpointSettings.Enabled,
-                        AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
                         
+                        AuthenticationOptions = new AuthenticationOptions {
+                            AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
+                        }
                     };
 
                     coreApp.UseIdentityServer(idsrvOptions);

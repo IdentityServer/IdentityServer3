@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using Owin;
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
@@ -30,6 +32,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public CookieOptions CookieOptions { get; set; }
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
         public bool DisableSignOutPrompt { get; set; }
+        public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
+
     }
 
     public class LoginPageLink
