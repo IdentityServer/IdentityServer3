@@ -485,8 +485,9 @@ namespace Thinktecture.IdentityServer.Core
         
         public static class OwinEnvironment
         {
-            public const string IdentityServerBaseUrl = "idsrv:IdentityServerBaseUrl";
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
+            public const string IdentityServerHost = "idsrv:IdentityServerHost";
+            
             public const string AutofacScope = "idsrv:AutofacScope";
         }
     }

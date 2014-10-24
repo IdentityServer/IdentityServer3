@@ -591,16 +591,28 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             if (message == null) throw new ArgumentNullException("message");
 
+            var providers = await GetExternalProviders(message, signInMessageId);
+
             if (errorMessage != null)
             {
                 Logger.InfoFormat("rendering login page with error message: {0}", errorMessage);
             }
             else
             {
-                Logger.Info("rendering login page");
+                if (_authenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
+                {
+                    // no local login and only one provider -- redirect to provider
+                    Logger.Info("no local login and only one provider -- redirect to provider");
+                    var url = Request.GetOwinEnvironment().GetIdentityServerHost();
+                    url += providers.First().Href;
+                    return Redirect(url);
+                }
+                else
+                {
+                    Logger.Info("rendering login page");
+                }
             }
 
-            var providers = await GetExternalProviders(message, signInMessageId);
             var loginPageLinks = PrepareLoginPageLinks(signInMessageId, _authenticationOptions.LoginPageLinks);
 
             var loginModel = new LoginViewModel

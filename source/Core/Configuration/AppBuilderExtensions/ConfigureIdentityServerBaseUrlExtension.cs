@@ -25,12 +25,11 @@ namespace Owin
         {
             app.Use(async (ctx, next) =>
             {
-                var baseUrl = ctx.Environment.GetBaseUrl(publicHostName);
-                ctx.Environment.SetIdentityServerBaseUrl(baseUrl);
+                var host = ctx.Environment.GetHost(publicHostName);
+                var path = ctx.Environment.GetBasePath();
                 
-                var basePath = ctx.Request.PathBase.Value;
-                if (basePath == String.Empty) basePath = "/";
-                ctx.Environment.SetIdentityServerBasePath(basePath);
+                ctx.Environment.SetIdentityServerHost(host);
+                ctx.Environment.SetIdentityServerBasePath(path);
 
                 await next();
             });

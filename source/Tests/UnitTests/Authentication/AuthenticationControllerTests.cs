@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Owin;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -168,6 +169,38 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp = GetLoginPage();
             Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
             Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void GetLogin_EnableLocalLoginAndOnlyOneProvider_RedirectsToProvider()
+        {
+            options.AuthenticationOptions.EnableLocalLogin = false;
+            var resp = GetLoginPage();
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.IsTrue(resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google"));
+        }
+
+        [TestMethod]
+        public void GetLogin_EnableLocalLoginMoreThanOneProvider_ShowsLoginPage()
+        {
+            Action<IAppBuilder, string> config = (app, name)=>{
+                base.ConfigureAdditionalIdentityProviders(app, name);
+                var google = new Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions
+                {
+                    AuthenticationType = "Google2",
+                    Caption = "Google2",
+                    SignInAsAuthenticationType = Constants.ExternalAuthenticationType,
+                    ClientId = "foo",
+                    ClientSecret = "bar"
+                };
+                app.UseGoogleAuthentication(google);
+            };
+            OverrideIdentityProviderConfiguration = config;
+            this.Init();
+            
+            options.AuthenticationOptions.EnableLocalLogin = false;
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
         }
         
         [TestMethod]

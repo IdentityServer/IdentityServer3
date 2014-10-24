@@ -36,6 +36,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Views;
+using System;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -50,6 +51,8 @@ namespace Thinktecture.IdentityServer.Tests
         protected IdentityServerOptions options;
 
         public TestContext TestContext { get; set; }
+        protected IAppBuilder appBuilder;
+        protected Action<IAppBuilder, string> OverrideIdentityProviderConfiguration { get; set; }
 
         [TestInitialize]
         public void Init()
@@ -62,6 +65,7 @@ namespace Thinktecture.IdentityServer.Tests
             
             server = TestServer.Create(app =>
             {
+                appBuilder = app;
                 var factory = TestFactory.Create();
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
@@ -70,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;
-                options.AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders;
+                options.AdditionalIdentityProviderConfiguration = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
                 
                 protector = options.DataProtector;
                 
@@ -82,7 +86,6 @@ namespace Thinktecture.IdentityServer.Tests
 
             client = server.HttpClient;
         }
-
 
         public virtual void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
         {
