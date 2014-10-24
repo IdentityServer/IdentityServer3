@@ -112,6 +112,33 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
+            // check current idp
+            var currentIdp = user.GetIdentityProvider();
+
+            // check idp restrictions
+            if (request.Client.IdentityProviderRestrictions != null && request.Client.IdentityProviderRestrictions.Any())
+            {
+                if (!request.Client.IdentityProviderRestrictions.Contains(currentIdp))
+                {
+                    return new LoginInteractionResponse
+                    {
+                        SignInMessage = _signIn
+                    };
+                }
+            }
+
+            // check if idp login hint matches current provider
+            if (_signIn.IdP.IsPresent())
+            {
+                if (_signIn.IdP != currentIdp)
+                {
+                    return new LoginInteractionResponse
+                    {
+                        SignInMessage = _signIn
+                    };
+                }
+            }
+
             // check authentication freshness
             if (request.MaxAge.HasValue)
             {

@@ -30,7 +30,7 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
     [TestClass]
-    public class AuthorizeInteractionResponseGeneratorTests
+    public class AuthorizeInteractionResponseGeneratorTests_Consent
     {
         Mock<IConsentService> mockConsent;
         Mock<IUserService> mockUserService;
