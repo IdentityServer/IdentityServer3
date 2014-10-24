@@ -135,6 +135,7 @@
     <Compile Include="Connect\Endpoints\AuthorizeEndpointControllerTests.cs" />
     <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Consent.cs" />
     <Compile Include="Connect\ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
+    <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
     <Compile Include="Connect\Validation\Token Validation\IdentityTokenValidation.cs" />
     <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
     <Compile Include="Extensions.cs" />
