@@ -60,6 +60,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         DisplayName = "IdentityManager",
                         Type = ScopeType.Resource,
                         Emphasize = true,
+                        ShowInDiscoveryDocument = false,
                         
                         Claims = new[]
                         {

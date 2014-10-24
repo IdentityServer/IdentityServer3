@@ -74,6 +74,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string ClaimsRule { get; set; }
 
         /// <summary>
+        /// Specifies whether this scope is shown in the discovery document (defaults to true)
+        /// </summary>
+        public bool ShowInDiscoveryDocument { get; set; }
+
+        /// <summary>
         /// Creates a Scope with default values
         /// </summary>
         public Scope()
@@ -82,6 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             Claims = new ScopeClaim[] { };
             IncludeAllClaimsForUser = false;
             Enabled = true;
+            ShowInDiscoveryDocument = true;
         }
     }
 }
