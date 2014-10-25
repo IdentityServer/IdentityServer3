@@ -18,7 +18,9 @@ using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Refresh token storage
+    /// </summary>
     public interface IRefreshTokenStore : ITransientDataRepository<RefreshToken>
-    {
-    }
+    { }
 }

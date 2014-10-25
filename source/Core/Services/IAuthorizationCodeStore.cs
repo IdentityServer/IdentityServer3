@@ -18,7 +18,9 @@ using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Abstraction for storing authorization codes
+    /// </summary>
     public interface IAuthorizationCodeStore : ITransientDataRepository<AuthorizationCode>
-    {
-    }
+    { }
 }

@@ -20,8 +20,15 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Scope retrieval
+    /// </summary>
     public interface IScopeStore
     {
+        /// <summary>
+        /// Gets all scopes.
+        /// </summary>
+        /// <returns>List of scopes</returns>
         Task<IEnumerable<Scope>> GetScopesAsync();
     }
 }

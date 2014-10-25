@@ -19,9 +19,23 @@ using Thinktecture.IdentityServer.Core.Connect;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Allows inserting custom validation logic into authorize and token requests
+    /// </summary>
     public interface ICustomRequestValidator
     {
+        /// <summary>
+        /// Custom validation logic for the authorize request.
+        /// </summary>
+        /// <param name="request">The validated request.</param>
+        /// <returns>The validation result</returns>
         Task<ValidationResult> ValidateAuthorizeRequestAsync(ValidatedAuthorizeRequest request);
+
+        /// <summary>
+        /// Custom validation logic for the token request.
+        /// </summary>
+        /// <param name="request">The validated request.</param>
+        /// <returns>The validation result</returns>
         Task<ValidationResult> ValidateTokenRequestAsync(ValidatedTokenRequest request);
     }
 }

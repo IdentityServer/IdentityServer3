@@ -19,9 +19,24 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Service to manage client permissions (refresh and access tokens, consent)
+    /// </summary>
     public interface IClientPermissionsService
     {
+        /// <summary>
+        /// Gets the client permissions asynchronous.
+        /// </summary>
+        /// <param name="subject">The subject identifier.</param>
+        /// <returns>A list of client permissions</returns>
         Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject);
+
+        /// <summary>
+        /// Revokes the client permissions asynchronous.
+        /// </summary>
+        /// <param name="subject">The subject identifier.</param>
+        /// <param name="clientId">The client identifier.</param>
+        /// <returns></returns>
         Task RevokeClientPermissionsAsync(string subject, string clientId);
     }
 }

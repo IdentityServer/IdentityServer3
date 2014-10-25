@@ -153,6 +153,7 @@
     <Compile Include="Services\IClientPermissionsService.cs" />
     <Compile Include="Services\IConsentStore.cs" />
     <Compile Include="Services\InMemory\InMemoryConsentStore.cs" />
+    <Compile Include="Services\IPermissionStore.cs" />
     <Compile Include="Views\ActionResults\ClientPermissionsActionResult.cs" />
     <Compile Include="Views\ActionResults\ErrorActionResult.cs" />
     <Compile Include="Views\ActionResults\HtmlActionResult.cs" />

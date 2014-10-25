@@ -18,7 +18,9 @@ using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Token handle storage
+    /// </summary>
     public interface ITokenHandleStore : ITransientDataRepository<Token>
-    {
-    }
+    { }
 }
