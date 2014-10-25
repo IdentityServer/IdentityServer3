@@ -10,9 +10,9 @@
   </settings>
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
-    <file>/Views/Embedded/Assets/libs/jquery/jquery-1.11.0.min.js</file>
-    <file>/Views/Embedded/Assets/libs/bootstrap/js/bootstrap.min.js</file>
-    <file>/Views/Embedded/Assets/libs/angular/angular.1.2.13.min.js</file>
-    <file>/Views/Embedded/Assets/app/app.js</file>
+    <file>/Services/DefaultViewService/Assets/libs/jquery/jquery-1.11.0.min.js</file>
+    <file>/Services/DefaultViewService/Assets/libs/bootstrap/js/bootstrap.min.js</file>
+    <file>/Services/DefaultViewService/Assets/libs/angular/angular.1.2.13.min.js</file>
+    <file>/Services/DefaultViewService/Assets/app/app.js</file>
   </files>
 </bundle>

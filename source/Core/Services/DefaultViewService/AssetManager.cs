@@ -23,13 +23,16 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     class AssetManager
     {
-        const string Prefix = "Thinktecture.IdentityServer.Core.Views.Embedded.Assets.app.";
-        const string Layout = Prefix + "layout.html";
-        const string FormPostResponse = Prefix + "FormPostResponse.html";
+        public const string PageAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.Assets";
+        public const string FontAssetsNamespace = PageAssetsNamespace + ".libs.bootstrap.fonts";
+
+        const string PagesPrefix = PageAssetsNamespace + ".app.";
+        const string Layout = PagesPrefix + "layout.html";
+        const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
 
         static readonly ResourceCache cache = new ResourceCache();
 
-        const string PageNameTemplate = Prefix + "{0}" + ".html";
+        const string PageNameTemplate = PagesPrefix + "{0}" + ".html";
         public static string LoadPage(string pageName)
         {
             pageName = String.Format(PageNameTemplate, pageName);

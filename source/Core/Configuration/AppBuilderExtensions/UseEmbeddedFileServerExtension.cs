@@ -19,6 +19,7 @@ using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Views;
 
 namespace Owin
 {
@@ -29,14 +30,14 @@ namespace Owin
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Views.Embedded.Assets")
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.PageAssetsNamespace)
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets/libs/fonts"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, "Thinktecture.IdentityServer.Core.Views.Embedded.Assets.libs.bootstrap.fonts")
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.FontAssetsNamespace)
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
