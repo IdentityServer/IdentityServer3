@@ -20,40 +20,114 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-    public class DefaultExternalClaimsFilter : IExternalClaimsFilter
+    public class ExternalClaimsFilterUserService : IUserService
     {
-        protected string FacebookProviderName = "Facebook";
-        protected string TwitterProviderName = "Twitter";
+        IExternalClaimsFilter filter;
+        IUserService inner;
+
+        public ExternalClaimsFilterUserService(IExternalClaimsFilter filter, IUserService inner)
+        {
+            this.filter = filter;
+            this.inner = inner;
+        }
+
+        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, Authentication.SignInMessage message)
+        {
+            return inner.PreAuthenticateAsync(env, message);
+        }
+
+        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> AuthenticateLocalAsync(string username, string password, Authentication.SignInMessage message = null)
+        {
+            return inner.AuthenticateLocalAsync(username, password, message);
+        }
+
+        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
+        {
+            externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
+            return inner.AuthenticateExternalAsync(externalUser);
+        }
+
+        public System.Threading.Tasks.Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        {
+            return inner.GetProfileDataAsync(subject, requestedClaimTypes);
+        }
+
+        public System.Threading.Tasks.Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        {
+            return inner.IsActiveAsync(subject);
+        }
+    }
+
+    public class AggregateExternalClaimsFilter : IExternalClaimsFilter
+    {
+        IExternalClaimsFilter[] filters;
+        public AggregateExternalClaimsFilter(params IExternalClaimsFilter[] filters)
+        {
+            this.filters = filters;
+        }
 
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
-            claims = NormalizeExternalClaimTypes(claims);
+            foreach (var filter in this.filters)
+            {
+                claims = filter.Filter(provider, claims);
+            }
+            return claims;
+        }
+    }
 
-            claims = TransformSocialClaims(provider, claims);
+    public class NormalizingClaimsFilter : IExternalClaimsFilter
+    {
+        IExternalClaimsFilter inner;
+
+        public NormalizingClaimsFilter(IExternalClaimsFilter inner)
+        {
+            this.inner = inner;
+        }
+
+        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
+        {
+            claims = Plumbing.ClaimMap.Map(claims);
+
+            return inner.Filter(provider, claims);
+        }
+    }
+
+    public abstract class ClaimsFilterBase : IExternalClaimsFilter
+    {
+        readonly string provider;
+
+        public ClaimsFilterBase(string provider)
+        {
+            this.provider = provider;
+        }
+
+        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
+        {
+            if (this.provider == provider)
+            {
+                claims = TransformClaims(claims);
+            }
 
             return claims;
         }
 
-        protected virtual IEnumerable<Claim> NormalizeExternalClaimTypes(IEnumerable<Claim> incomingClaims)
+        protected abstract IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims);
+    }
+
+    public class FacebookClaimsFilter : ClaimsFilterBase
+    {
+        public FacebookClaimsFilter()
+            : this("Facebook")
         {
-            return Plumbing.ClaimMap.Map(incomingClaims);
         }
 
-        protected virtual IEnumerable<Claim> TransformSocialClaims(string provider, IEnumerable<Claim> claims)
+        public FacebookClaimsFilter(string provider)
+            : base(provider)
         {
-            if (provider == FacebookProviderName)
-            {
-                claims = TransformFacebookClaims(claims);
-            }
-            else if (provider == TwitterProviderName)
-            {
-                claims = TransformTwitterClaims(claims);
-            }
-
-            return claims;
         }
 
-        protected virtual IEnumerable<Claim> TransformFacebookClaims(IEnumerable<Claim> claims)
+        protected override IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims)
         {
             var nameClaim = claims.FirstOrDefault(x => x.Type == "urn:facebook:name");
             if (nameClaim != null)
@@ -66,8 +140,21 @@ namespace Thinktecture.IdentityServer.Core.Services
             }
             return claims;
         }
+    }
 
-        protected virtual IEnumerable<Claim> TransformTwitterClaims(IEnumerable<Claim> claims)
+    public class TwitterClaimsFilter : ClaimsFilterBase
+    {
+        public TwitterClaimsFilter()
+            : this("Twitter")
+        {
+        }
+
+        public TwitterClaimsFilter(string provider)
+            : base(provider)
+        {
+        }
+
+        protected override IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims)
         {
             return claims.Where(x => x.Type != "urn:twitter:userid");
         }

@@ -154,14 +154,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 builder.RegisterType<DefaultCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
-            if (fact.ExternalClaimsFilter != null)
-            {
-                builder.Register(fact.ExternalClaimsFilter);
-            }
-            else
-            {
-                builder.RegisterType<DefaultExternalClaimsFilter>().As<IExternalClaimsFilter>();
-            }
+            //if (fact.ExternalClaimsFilter != null)
+            //{
+            //    builder.Register(fact.ExternalClaimsFilter);
+            //}
+            //else
+            //{
+            //    builder.RegisterType<DefaultExternalClaimsFilter>().As<IExternalClaimsFilter>();
+            //}
 
             if (fact.CustomTokenValidator != null)
             {

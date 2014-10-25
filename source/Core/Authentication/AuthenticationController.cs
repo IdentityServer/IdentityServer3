@@ -45,15 +45,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         private readonly IViewService _viewService;
         private readonly IUserService _userService;
         private readonly AuthenticationOptions _authenticationOptions;
-        private readonly IExternalClaimsFilter _externalClaimsFilter;
         private readonly IdentityServerOptions _options;
         private readonly IClientStore _clientStore;
 
-        public AuthenticationController(IViewService viewService, IUserService userService, IExternalClaimsFilter externalClaimsFilter, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions, IClientStore clientStore)
+        public AuthenticationController(IViewService viewService, IUserService userService, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions, IClientStore clientStore)
         {
             _viewService = viewService;
             _userService = userService;
-            _externalClaimsFilter = externalClaimsFilter;
             _authenticationOptions = authenticationOptions;
             _options = idSvrOptions;
             _clientStore = clientStore;
@@ -240,7 +238,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
             }
 
-            var externalIdentity = MapToExternalIdentity(user.Claims);
+            var externalIdentity = ExternalIdentity.FromClaims(user.Claims);
             if (externalIdentity == null)
             {
                 Logger.Error("no subject or unique identifier claims from external identity provider");
@@ -460,16 +458,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var ctx = Request.GetOwinContext();
             var result = await ctx.Authentication.AuthenticateAsync(type);
             return result;
-        }
-
-        private ExternalIdentity MapToExternalIdentity(IEnumerable<Claim> claims)
-        {
-            var externalId = ExternalIdentity.FromClaims(claims);
-            if (externalId != null && _externalClaimsFilter != null)
-            {
-                externalId.Claims = _externalClaimsFilter.Filter(externalId.Provider, externalId.Claims);
-            }
-            return externalId;
         }
 
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
