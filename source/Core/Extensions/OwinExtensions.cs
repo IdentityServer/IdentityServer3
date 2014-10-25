@@ -16,7 +16,6 @@
 
 using Autofac;
 using Microsoft.Owin;
-using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
