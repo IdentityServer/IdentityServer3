@@ -42,7 +42,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                Client = new Client()
             };
 
             var principal = IdentityServerPrincipal.Create("123", "dom");
@@ -62,6 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
+                Subject = IdentityServerPrincipal.Create("123", "dom"),
                 Client = new Client 
                 {
                     IdentityProviderRestrictions = new List<string> 
@@ -71,8 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 }
             };
 
-            var principal = IdentityServerPrincipal.Create("123", "dom");
-            var result = await generator.ProcessLoginAsync(request, principal);
+            var result = await generator.ProcessClientLoginAsync(request);
 
             Assert.IsFalse(result.IsLogin);
         }
@@ -88,6 +87,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
+                Subject = IdentityServerPrincipal.Create("123", "dom"),
                 Client = new Client
                 {
                     IdentityProviderRestrictions = new List<string> 
@@ -97,8 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 }
             };
 
-            var principal = IdentityServerPrincipal.Create("123", "dom");
-            var result = await generator.ProcessLoginAsync(request, principal);
+            var result = await generator.ProcessClientLoginAsync(request);
 
             Assert.IsTrue(result.IsLogin);
         }
@@ -114,7 +113,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                Client = new Client(),
                 LoginHint = "idp:" + Constants.BuiltInIdentityProvider
             };
 
@@ -135,7 +133,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                Client = new Client(),
                 LoginHint = "idp:some_idp"
             };
 

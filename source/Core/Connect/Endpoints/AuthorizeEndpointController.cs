@@ -128,6 +128,13 @@ namespace Thinktecture.IdentityServer.Core.Connect
                     request.State);
             }
 
+            // now that client configuration is loaded, we can do further validation
+            loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
+            if (loginInteraction.IsLogin)
+            {
+                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
+            }
+
             var consentInteraction = await _interactionGenerator.ProcessConsentAsync(request, consent);
 
             if (consentInteraction.IsError)

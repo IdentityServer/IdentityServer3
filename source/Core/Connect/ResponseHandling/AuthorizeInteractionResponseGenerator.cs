@@ -115,18 +115,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
             // check current idp
             var currentIdp = user.GetIdentityProvider();
 
-            // check idp restrictions
-            if (request.Client.IdentityProviderRestrictions != null && request.Client.IdentityProviderRestrictions.Any())
-            {
-                if (!request.Client.IdentityProviderRestrictions.Contains(currentIdp))
-                {
-                    return new LoginInteractionResponse
-                    {
-                        SignInMessage = _signIn
-                    };
-                }
-            }
-
             // check if idp login hint matches current provider
             if (_signIn.IdP.IsPresent())
             {
@@ -153,6 +141,26 @@ namespace Thinktecture.IdentityServer.Core.Connect
             }
 
             return new LoginInteractionResponse();
+        }
+
+        public Task<LoginInteractionResponse> ProcessClientLoginAsync(ValidatedAuthorizeRequest request)
+        {
+            // check idp restrictions
+            var currentIdp = request.Subject.GetIdentityProvider();
+            if (request.Client.IdentityProviderRestrictions != null && request.Client.IdentityProviderRestrictions.Any())
+            {
+                if (!request.Client.IdentityProviderRestrictions.Contains(currentIdp))
+                {
+                    var response = new LoginInteractionResponse
+                    {
+                        SignInMessage = _signIn
+                    };
+
+                    return Task.FromResult(response);
+                }
+            }
+
+            return Task.FromResult(new LoginInteractionResponse());
         }
 
         public async Task<ConsentInteractionResponse> ProcessConsentAsync(ValidatedAuthorizeRequest request, UserConsent consent = null)
