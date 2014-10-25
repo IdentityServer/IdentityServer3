@@ -49,7 +49,6 @@ namespace Thinktecture.IdentityServer.Host
                         IssuerUri = "https://idsrv3.com",
                         SiteName = "Thinktecture IdentityServer v3 - beta 3",
                         Factory = factory,
-                        RequireSsl = false,
                         SigningCertificate = Cert.Load(),
 
                         CorsPolicy = CorsPolicy.AllowAll,
