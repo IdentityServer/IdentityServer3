@@ -18,8 +18,8 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     public class CachingLoader : IViewLoader
     {
-        ResourceCache cache = new ResourceCache();
-        IViewLoader inner;
+        readonly ResourceCache cache = new ResourceCache();
+        readonly IViewLoader inner;
 
         public CachingLoader(IViewLoader inner)
         {

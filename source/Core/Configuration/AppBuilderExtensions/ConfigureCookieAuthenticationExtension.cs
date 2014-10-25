@@ -25,7 +25,7 @@ namespace Owin
 {
     static class UseCookieAuthenticationExtension
     {
-        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, Thinktecture.IdentityServer.Core.Configuration.CookieOptions options, IDataProtector dataProtector)
+        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, CookieOptions options, IDataProtector dataProtector)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (dataProtector == null) throw new ArgumentNullException("dataProtector");
@@ -67,7 +67,7 @@ namespace Owin
             };
             app.UseCookieAuthentication(partial);
 
-            Action<string> setCookiePath = (path) =>
+            Action<string> setCookiePath = path =>
             {
                 if (!String.IsNullOrWhiteSpace(path))
                 {

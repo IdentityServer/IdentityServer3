@@ -476,10 +476,10 @@ namespace Thinktecture.IdentityServer.Core
             
             public static readonly string[] CorsPaths =
             {
-                RoutePaths.Oidc.DiscoveryConfiguration,
-                RoutePaths.Oidc.DiscoveryWebKeys,
-                RoutePaths.Oidc.Token,
-                RoutePaths.Oidc.UserInfo
+                Oidc.DiscoveryConfiguration,
+                Oidc.DiscoveryWebKeys,
+                Oidc.Token,
+                Oidc.UserInfo
             };
         }
         

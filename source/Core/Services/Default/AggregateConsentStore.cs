@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class AggregatePermissionsStore : IPermissionsStore
     {
-        IPermissionsStore[] stores;
+        readonly IPermissionsStore[] stores;
 
         public AggregatePermissionsStore(params IPermissionsStore[] stores)
         {
@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.stores = stores;
         }
         
-        public async Task<IEnumerable<Models.Consent>> LoadAllAsync(string subject)
+        public async Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
             var result = 
                 await stores

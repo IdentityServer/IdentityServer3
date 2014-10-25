@@ -24,9 +24,9 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public class DefaultClientPermissionsService : IClientPermissionsService
     {
-        IPermissionsStore permissionsStore;
-        IClientStore clientStore;
-        IScopeStore scopeStore;
+        readonly IPermissionsStore permissionsStore;
+        readonly IClientStore clientStore;
+        readonly IScopeStore scopeStore;
 
         public DefaultClientPermissionsService(
             IPermissionsStore permissionsStore, 
@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Services
             this.scopeStore = scopeStore;
         }
 
-        public async Task<IEnumerable<Models.ClientPermission>> GetClientPermissionsAsync(string subject)
+        public async Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject)
         {
             if (String.IsNullOrWhiteSpace(subject))
             {

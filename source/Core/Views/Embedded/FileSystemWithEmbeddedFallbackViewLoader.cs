@@ -20,8 +20,8 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     public class FileSystemWithEmbeddedFallbackViewLoader : IViewLoader
     {
-        FileSystemViewLoader file;
-        EmbeddedAssetsViewLoader embedded;
+        readonly FileSystemViewLoader file;
+        readonly EmbeddedAssetsViewLoader embedded;
 
         public FileSystemWithEmbeddedFallbackViewLoader()
             : this(GetDefaultDirectory())

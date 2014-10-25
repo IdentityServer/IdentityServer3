@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     public class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         private readonly IdentityServerOptions _options;
         private readonly EndSessionRequestValidator _validator;
         private readonly EndSessionResponseGenerator _generator;
@@ -61,11 +61,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 // if anything went wrong, ignore the params the RP sent
                 return new LogoutResult(null, Request.GetOwinEnvironment(), this._options);
             }
-            else
-            {
-                var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
-                return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
-            }
+        
+            var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
+            return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
         }
 
         [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]

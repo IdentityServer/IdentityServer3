@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
     [ErrorPageFilter]
     [SecurityHeaders]
     [NoCache]
-    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded:true)]
+    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Error("No cookie matching signin id found");
                 return RenderErrorPage();
             }
-            
+
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
             var authResult = await _userService.PreAuthenticateAsync(Request.GetOwinEnvironment(), signInMessage);
@@ -185,7 +185,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 Logger.Error("No provider passed");
                 return RenderErrorPage();
             }
-            
+
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
@@ -248,7 +248,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
-            
+
             var authResult = await _userService.AuthenticateExternalAsync(externalIdentity);
             if (authResult == null)
             {
@@ -305,8 +305,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 Logger.Error("No cookie matching signin id found");
                 return RenderErrorPage();
-            } 
-            
+            }
+
             AuthenticateResult result = null;
             var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
             if (externalProviderClaim == null)
@@ -322,7 +322,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 // to obtain a subject to proceed
                 var provider = externalProviderClaim.Issuer;
                 var providerId = externalProviderClaim.Value;
-                var externalId = new ExternalIdentity()
+                var externalId = new ExternalIdentity
                 {
                     Provider = provider,
                     ProviderId = providerId,
@@ -358,13 +358,11 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             {
                 return await RenderLogoutPromptPage(id);
             }
-            else
-            {
-                Logger.InfoFormat("DisableSignOutPrompt set to true, performing logout");
-                return await Logout(id);
-            }
+
+            Logger.InfoFormat("DisableSignOutPrompt set to true, performing logout");
+            return await Logout(id);
         }
-        
+
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -389,7 +387,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             }
             return null;
         }
-        
+
         private async Task<string> GetNameFromPrimaryAuthenticationType()
         {
             var user = await GetIdentityFromPrimaryAuthenticationType();
@@ -420,12 +418,12 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 }
 
                 var provider = result.Properties.Dictionary["katanaAuthenticationType"];
-                var newClaims = id.Claims.Select(x=>new Claim(x.Type, x.Value, x.ValueType, provider));
+                var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
                 id = new ClaimsIdentity(newClaims, id.AuthenticationType);
             }
             return id;
         }
-        
+
         private async Task<string> GetSignInIdFromExternalProvider()
         {
             var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
@@ -487,9 +485,9 @@ namespace Thinktecture.IdentityServer.Core.Authentication
         {
             if (signInMessage == null) throw new ArgumentNullException("signInId");
             if (authResult == null) throw new ArgumentNullException("authResult");
-            
+
             Logger.InfoFormat("issuing cookie{0}", authResult.IsPartialSignIn ? " (partial login)" : "");
-            
+
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
             var id = authResult.User.Identities.First();
@@ -514,7 +512,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (!authResult.IsPartialSignIn)
             {
                 // don't issue persistnt cookie if it's a partial signin
-                if (rememberMe == true || 
+                if (rememberMe == true ||
                     (rememberMe != false && this._options.AuthenticationOptions.CookieOptions.IsPersistent))
                 {
                     // only issue persistent cookie if user consents (rememberMe == true) or
@@ -623,7 +621,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 ExternalProviders = providers,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin= signInMessageId }) : null,
+                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
                 AllowRememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
@@ -649,12 +647,13 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var providers =
                 from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
                 where (!filter.Any() || filter.Contains(p.AuthenticationType))
-                select new LoginPageLink { 
-                    Text = p.Caption, 
-                    Href = Url.Route(Constants.RouteNames.LoginExternal, 
-                    new { provider = p.AuthenticationType, signin = signInMessageId }) 
+                select new LoginPageLink
+                {
+                    Text = p.Caption,
+                    Href = Url.Route(Constants.RouteNames.LoginExternal,
+                    new { provider = p.AuthenticationType, signin = signInMessageId })
                 };
-            
+
             return providers.ToArray();
         }
 
@@ -663,7 +662,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             if (links == null || !links.Any()) return null;
 
             var result = new List<LoginPageLink>();
-            foreach(var link in links)
+            foreach (var link in links)
             {
                 var url = link.Href;
                 if (url.StartsWith("~/"))
@@ -676,7 +675,8 @@ namespace Thinktecture.IdentityServer.Core.Authentication
 
                 result.Add(new LoginPageLink
                 {
-                    Text = link.Text, Href = url
+                    Text = link.Text,
+                    Href = url
                 });
             }
             return result;
@@ -692,7 +692,7 @@ namespace Thinktecture.IdentityServer.Core.Authentication
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = await GetNameFromPrimaryAuthenticationType(),
-                LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id=id }),
+                LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id = id }),
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
                 ClientName = clientName
             };
@@ -789,6 +789,6 @@ namespace Thinktecture.IdentityServer.Core.Authentication
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             cookie.Clear(signin);
         }
-    
+
     }
 }

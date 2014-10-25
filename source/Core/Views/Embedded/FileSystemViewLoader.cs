@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     public class FileSystemViewLoader : IViewLoader
     {
-        string directory;
+        readonly string directory;
 
         public FileSystemViewLoader(string directory)
         {

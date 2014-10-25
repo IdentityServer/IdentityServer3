@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Views
 {
     class ResourceCache
     {
-        ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        readonly ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
 
         public string Read(string name)
         {

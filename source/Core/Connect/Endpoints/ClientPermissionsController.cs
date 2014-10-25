@@ -35,9 +35,9 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     public class ClientPermissionsController : ApiController
     {
-        IClientPermissionsService clientPermissionsService;
-        IdentityServerOptions options;
-        IViewService viewSvc;
+        readonly IClientPermissionsService clientPermissionsService;
+        readonly IdentityServerOptions options;
+        readonly IViewService viewSvc;
 
         public ClientPermissionsController(IClientPermissionsService clientPermissionsService, IdentityServerOptions options, IViewService viewSvc)
         {
@@ -103,7 +103,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             var env = Request.GetOwinEnvironment();
             var clients = await this.clientPermissionsService.GetClientPermissionsAsync(User.GetSubjectId());
-            var vm = new ClientPermissionsViewModel()
+            var vm = new ClientPermissionsViewModel
             {
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),

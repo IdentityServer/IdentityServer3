@@ -39,10 +39,13 @@ namespace Thinktecture.IdentityServer.Core.Views
 
         public DefaultViewServiceConfiguration()
         {
-            Stylesheets = new HashSet<string>();
             // adding default CSS here so hosting application can choose to remove it
-            Stylesheets.Add("~/assets/styles.min.css");
+            Stylesheets = new HashSet<string>
+            {
+                "~/assets/styles.min.css"
+            };
 
+            
             Scripts = new HashSet<string>();
             CacheViews = true;
         }

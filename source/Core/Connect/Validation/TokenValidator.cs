@@ -36,7 +36,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;
-        private readonly IUserService _users;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ICustomTokenValidator _customValidator;
         private readonly IClientStore _clients;
@@ -44,7 +43,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public TokenValidator(IdentityServerOptions options, IUserService users, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
             _options = options;
-            _users = users;
             _clients = clients;
             _tokenHandles = tokenHandles;
             _customValidator = customValidator;
@@ -148,11 +146,16 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         public virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
         {
-            var handler = new JwtSecurityTokenHandler();
-            handler.Configuration = new SecurityTokenHandlerConfiguration();
-            handler.Configuration.CertificateValidationMode = X509CertificateValidationMode.None;
-            handler.Configuration.CertificateValidator = X509CertificateValidator.None;
-            
+            var handler = new JwtSecurityTokenHandler
+            {
+                Configuration =
+                    new SecurityTokenHandlerConfiguration
+                    {
+                        CertificateValidationMode = X509CertificateValidationMode.None,
+                        CertificateValidator = X509CertificateValidator.None
+                    }
+            };
+
             var parameters = new TokenValidationParameters
             {
                 ValidIssuer = _options.IssuerUri,

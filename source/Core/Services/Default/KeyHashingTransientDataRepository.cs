@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -47,8 +48,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class KeyHashingTransientDataRepository<T> : ITransientDataRepository<T>
         where T : ITokenMetadata
     {
-        HashAlgorithm hash;
-        ITransientDataRepository<T> inner;
+        readonly HashAlgorithm hash;
+        readonly ITransientDataRepository<T> inner;
 
         public KeyHashingTransientDataRepository(ITransientDataRepository<T> inner)
             : this(Constants.DefaultHashAlgorithm, inner)
@@ -70,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             var bytes = Encoding.UTF8.GetBytes(value);
             var hashedBytes = hash.ComputeHash(bytes);
-            var hashedString = Thinktecture.IdentityModel.Base64Url.Encode(hashedBytes);
+            var hashedString = Base64Url.Encode(hashedBytes);
             return hashedString;
         }
 

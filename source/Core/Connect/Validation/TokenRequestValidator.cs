@@ -68,8 +68,10 @@ namespace Thinktecture.IdentityServer.Core.Connect
         {
             Logger.Info("Starting request validation");
 
-            _validatedRequest = new ValidatedTokenRequest();
-            _validatedRequest.Environment = _environment;
+            _validatedRequest = new ValidatedTokenRequest
+            {
+                Environment = _environment
+            };
 
             if (client == null)
             {

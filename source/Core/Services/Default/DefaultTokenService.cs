@@ -130,15 +130,13 @@ namespace Thinktecture.IdentityServer.Core.Services
 
                     return await _signingService.SignTokenAsync(token);
                 }
-                else
-                {
-                    Logger.Debug("Creating reference access token");
+                
+                Logger.Debug("Creating reference access token");
 
-                    var handle = Guid.NewGuid().ToString("N");
-                    await _tokenHandles.StoreAsync(handle, token);
+                var handle = Guid.NewGuid().ToString("N");
+                await _tokenHandles.StoreAsync(handle, token);
 
-                    return handle;
-                }
+                return handle;
             }
 
             if (token.Type == Constants.TokenTypes.IdentityToken)

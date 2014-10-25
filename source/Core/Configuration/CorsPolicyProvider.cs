@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using System;
@@ -27,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         readonly CorsPolicy policy;
         readonly string[] paths;
 
-        public CorsPolicyProvider(CorsPolicy policy, string[] allowedPaths)
+        public CorsPolicyProvider(CorsPolicy policy, IEnumerable<string> allowedPaths)
         {
             if (policy == null) throw new ArgumentNullException("policy");
             if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");

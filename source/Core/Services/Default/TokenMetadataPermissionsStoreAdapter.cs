@@ -24,8 +24,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
     {
-        Func<string, Task<IEnumerable<ITokenMetadata>>> get;
-        Func<string, string, Task> delete;
+        readonly Func<string, Task<IEnumerable<ITokenMetadata>>> get;
+        readonly Func<string, string, Task> delete;
 
         public TokenMetadataPermissionsStoreAdapter(
             Func<string, Task<IEnumerable<ITokenMetadata>>> get, 
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.delete = delete;
         }
 
-        public async Task<IEnumerable<Models.Consent>> LoadAllAsync(string subject)
+        public async Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
             var tokens = await get(subject);
             

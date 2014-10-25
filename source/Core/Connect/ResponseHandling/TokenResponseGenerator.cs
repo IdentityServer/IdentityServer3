@@ -138,7 +138,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
 
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
         {
-            Token accessToken;
             TokenCreationRequest tokenRequest;
             bool createRefreshToken;
 
@@ -167,7 +166,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 };
             }
 
-            accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
+            Token accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
 
             string refreshToken = "";
             if (createRefreshToken)

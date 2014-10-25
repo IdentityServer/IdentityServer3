@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Connect
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
     [NoCache]
-    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded:true)]
+    [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     public class AuthorizeEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -254,30 +254,31 @@ namespace Thinktecture.IdentityServer.Core.Connect
                 var errorResult = new ErrorActionResult(_viewService, env, errorModel);
                 return errorResult;
             }
+
+            var query = new NameValueCollection
+            {
+                {"error", error.Error}
+            };
+
+            if (error.State.IsPresent())
+            {
+                query.Add("state", error.State);
+            }
+
+            var url = error.ErrorUri.AbsoluteUri;
+            if (error.ResponseMode == Constants.ResponseModes.Query ||
+                error.ResponseMode == Constants.ResponseModes.FormPost)
+            {
+                url = url.AddQueryString(query.ToQueryString());
+            }
             else
             {
-                var query = new NameValueCollection();
-                query.Add("error", error.Error);
-                if (error.State.IsPresent())
-                {
-                    query.Add("state", error.State);
-                }
-
-                var url = error.ErrorUri.AbsoluteUri;
-                if (error.ResponseMode == Constants.ResponseModes.Query ||
-                    error.ResponseMode == Constants.ResponseModes.FormPost)
-                {
-                    url = url.AddQueryString(query.ToQueryString());
-                }
-                else
-                {
-                    url = url.AddHashFragment(query.ToQueryString());
-                }
-
-                Logger.Info("Redirecting to: " + url);
-
-                return Redirect(url);
+                url = url.AddHashFragment(query.ToQueryString());
             }
+
+            Logger.Info("Redirecting to: " + url);
+
+            return Redirect(url);
         }
 
         private string LookupErrorMessage(string error)

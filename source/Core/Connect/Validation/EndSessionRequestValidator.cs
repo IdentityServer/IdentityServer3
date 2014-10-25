@@ -29,7 +29,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
     {
         private readonly ValidatedEndSessionRequest _validatedRequest;
         private readonly TokenValidator _tokenValidator;
-        private readonly IClientStore _clients;
 
         public ValidatedEndSessionRequest ValidatedRequest
         {
@@ -42,7 +41,6 @@ namespace Thinktecture.IdentityServer.Core.Connect
         public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IClientStore clients)
         {
             _tokenValidator = tokenValidator;
-            _clients = clients;
 
             _validatedRequest = new ValidatedEndSessionRequest
             {
