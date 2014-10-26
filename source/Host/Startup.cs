@@ -19,9 +19,7 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
-using System;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Host;
 using Thinktecture.IdentityServer.Host.Config;
@@ -43,7 +41,10 @@ namespace Thinktecture.IdentityServer.Host
 
             app.Map("/core", coreApp =>
                 {
-                    var factory = Factory.Create();
+                    var factory = InMemoryFactory.Create(
+                        users:   Users.Get(),
+                        clients: Clients.Get(),
+                        scopes:  Scopes.Get());
 
                     var idsrvOptions = new IdentityServerOptions
                     {
@@ -58,10 +59,9 @@ namespace Thinktecture.IdentityServer.Host
                             ReportEndpoint = EndpointSettings.Enabled,
                         },
                         
-                        AccessTokenValidationEndpoint = EndpointSettings.Enabled,
-                        
-                        AuthenticationOptions = new AuthenticationOptions {
-                            AdditionalIdentityProviderConfiguration = ConfigureAdditionalIdentityProviders,
+                        AuthenticationOptions = new AuthenticationOptions 
+                        {
+                            IdentityProviders = ConfigureIdentityProviders,
                         }
                     };
 
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Host
             app.UseStaticFiles();
         }
 
-        public static void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
+        public static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
         {
             var google = new GoogleOAuth2AuthenticationOptions
             {
