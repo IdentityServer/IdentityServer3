@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Results
+namespace Thinktecture.IdentityServer.Core.Results
 {
     public class TokenErrorResult : IHttpActionResult
     {

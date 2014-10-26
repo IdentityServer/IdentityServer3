@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Results
+namespace Thinktecture.IdentityServer.Core.Results
 {
     public class AuthorizeRedirectResult : IHttpActionResult
     {

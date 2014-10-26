@@ -15,7 +15,6 @@
  */
 
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Connect.Results;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results

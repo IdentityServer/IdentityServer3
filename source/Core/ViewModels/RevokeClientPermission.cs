@@ -15,7 +15,7 @@
  */
 using System.ComponentModel.DataAnnotations;
 
-namespace Thinktecture.IdentityServer.Core.Connect.ViewModels
+namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     public class RevokeClientPermission
     {
