@@ -18,7 +18,7 @@ using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
     public class EndSessionResponseGenerator
     {

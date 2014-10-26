@@ -19,6 +19,7 @@ using Autofac.Integration.WebApi;
 using System;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;

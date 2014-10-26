@@ -5,6 +5,7 @@ using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityModel;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Moq;
 using System.Security.Claims;

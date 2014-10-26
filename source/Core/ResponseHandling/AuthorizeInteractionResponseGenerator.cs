@@ -25,7 +25,7 @@ using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
     public class AuthorizeInteractionResponseGenerator
     {
