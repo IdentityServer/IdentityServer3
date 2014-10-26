@@ -18,11 +18,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace Thinktecture.IdentityServer.Core.Endpoints
 {
-    internal class CspReportController : ApiController
+    public class CspReportController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

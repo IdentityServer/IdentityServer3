@@ -196,7 +196,7 @@
     <Compile Include="Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
     <Compile Include="Extensions\OwinExtensions.cs" />
-    <Compile Include="Configuration\Hosting\CspReportController.cs" />
+    <Compile Include="Endpoints\CspReportController.cs" />
     <Compile Include="Configuration\Hosting\NoCacheAttribute.cs" />
     <Compile Include="Configuration\Hosting\SecurityHeadersAttribute.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
