@@ -15,7 +15,6 @@
  */
 
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services

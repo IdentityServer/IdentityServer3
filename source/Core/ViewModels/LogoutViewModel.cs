@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
