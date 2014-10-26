@@ -289,7 +289,6 @@
     <Compile Include="Services\Default\DefaultExternalClaimsFilter.cs" />
     <Compile Include="Services\IClientStore.cs" />
     <Compile Include="Services\InMemory\InMemoryRefreshTokenStore.cs" />
-    <Compile Include="Services\ITrackingCookieService.cs" />
     <Compile Include="Services\IExternalClaimsFilter.cs" />
     <Compile Include="Services\IConsentService.cs" />
     <Compile Include="Services\ITokenService.cs" />
