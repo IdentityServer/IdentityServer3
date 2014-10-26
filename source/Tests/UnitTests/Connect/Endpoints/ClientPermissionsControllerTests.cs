@@ -18,6 +18,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Thinktecture.IdentityServer.Core;
 using System.Net;
+using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Views;
 using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Authentication;

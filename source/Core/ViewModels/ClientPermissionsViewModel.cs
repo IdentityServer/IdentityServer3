@@ -15,8 +15,9 @@
  */
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     public class ClientPermissionsViewModel : ErrorViewModel
     {

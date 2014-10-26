@@ -26,16 +26,12 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using System.Text;
-using System.Net;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using Thinktecture.IdentityServer.Core.Authentication;
+using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Views;
 using System;
 

@@ -29,6 +29,7 @@ using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Resources;
+using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication

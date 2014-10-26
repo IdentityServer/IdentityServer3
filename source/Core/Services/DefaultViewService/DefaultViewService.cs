@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Authentication;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Views
 {
