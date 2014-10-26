@@ -19,7 +19,7 @@ using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Views;
+using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Owin
 {

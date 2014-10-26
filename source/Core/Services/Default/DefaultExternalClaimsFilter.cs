@@ -20,7 +20,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class ExternalClaimsFilterUserService : IUserService
     {

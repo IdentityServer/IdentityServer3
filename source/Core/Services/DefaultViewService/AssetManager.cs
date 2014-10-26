@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     class AssetManager
     {

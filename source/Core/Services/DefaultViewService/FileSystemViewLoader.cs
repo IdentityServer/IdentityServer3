@@ -16,7 +16,7 @@
 using System;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class FileSystemViewLoader : IViewLoader
     {

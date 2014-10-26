@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class EmbeddedAssetsViewLoader : IViewLoader
     {

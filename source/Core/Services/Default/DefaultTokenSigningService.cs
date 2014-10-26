@@ -22,7 +22,7 @@ using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     // todo: logging
     public class DefaultTokenSigningService : ITokenSigningService

@@ -32,7 +32,6 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using System.Text;
 using Thinktecture.IdentityServer.Core.ViewModels;
-using Thinktecture.IdentityServer.Core.Views;
 using System;
 
 namespace Thinktecture.IdentityServer.Tests

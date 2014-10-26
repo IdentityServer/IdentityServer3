@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Linq;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Thinktecture.IdentityServer.Core;
 using System.Net;
-using Thinktecture.IdentityServer.Core.Views;
 using System.Net.Http;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints

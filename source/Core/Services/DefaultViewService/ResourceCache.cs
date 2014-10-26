@@ -15,7 +15,7 @@
  */
 using System.Collections.Concurrent;
 
-namespace Thinktecture.IdentityServer.Core.Views
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     class ResourceCache
     {
