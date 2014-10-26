@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Connect.Models
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class ClientCredential
     {

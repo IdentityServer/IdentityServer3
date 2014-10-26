@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {

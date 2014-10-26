@@ -2,11 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Connect.Models;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Models;
-using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

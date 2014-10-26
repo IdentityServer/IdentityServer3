@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Models
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class RefreshToken : ITokenMetadata
     {

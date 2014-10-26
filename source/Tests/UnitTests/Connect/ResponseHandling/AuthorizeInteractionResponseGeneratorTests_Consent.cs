@@ -21,8 +21,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
@@ -73,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         {
             try
             {
-                var result = subject.ProcessConsentAsync(null, new Core.Connect.Models.UserConsent()).Result;
+                var result = subject.ProcessConsentAsync(null, new UserConsent()).Result;
                 Assert.Fail();
             }
             catch(AggregateException ex){

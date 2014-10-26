@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Authentication
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class SignInMessage
     {

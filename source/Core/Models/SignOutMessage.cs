@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Authentication
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class SignOutMessage
     {

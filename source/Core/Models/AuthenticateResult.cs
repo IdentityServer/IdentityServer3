@@ -16,12 +16,9 @@
 
 using System;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Authentication
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class AuthenticateResult
     {

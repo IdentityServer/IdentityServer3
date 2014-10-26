@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Thinktecture.IdentityServer.Core.Connect.Models
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public class UserConsent
     {

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Authentication;
-
-namespace Thinktecture.IdentityServer.Core.Connect.Models
+namespace Thinktecture.IdentityServer.Core.Models
 {
     public abstract class InteractionResponse
     {

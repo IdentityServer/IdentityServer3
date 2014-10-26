@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
@@ -32,17 +33,17 @@ namespace Thinktecture.IdentityServer.Core.Services
             this.inner = inner;
         }
 
-        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, Authentication.SignInMessage message)
+        public System.Threading.Tasks.Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
         {
             return inner.PreAuthenticateAsync(env, message);
         }
 
-        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> AuthenticateLocalAsync(string username, string password, Authentication.SignInMessage message = null)
+        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
         {
             return inner.AuthenticateLocalAsync(username, password, message);
         }
 
-        public System.Threading.Tasks.Task<Authentication.AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
+        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
         {
             externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
             return inner.AuthenticateExternalAsync(externalUser);
