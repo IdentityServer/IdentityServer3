@@ -24,7 +24,7 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Protocols.Connect.Results
+namespace Thinktecture.IdentityServer.Core.Results
 {
     public class TokenResult : IHttpActionResult
     {

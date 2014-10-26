@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Views;

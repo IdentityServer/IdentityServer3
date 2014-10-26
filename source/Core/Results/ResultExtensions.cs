@@ -17,9 +17,8 @@
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Connect.Results;
-using Thinktecture.IdentityServer.Core.Protocols.Connect.Results;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Results
 {
     public static class ResultExtensions
     {
