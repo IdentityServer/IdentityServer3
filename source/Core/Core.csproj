@@ -123,6 +123,12 @@
     <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\ClaimsFilterBase.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\NormalizingClaimsFilter.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\AggregateExternalClaimsFilter.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -286,7 +292,7 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\IAuthorizationCodeStore.cs" />
-    <Compile Include="Services\Default\DefaultExternalClaimsFilter.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\TwitterClaimsFilter.cs" />
     <Compile Include="Services\IClientStore.cs" />
     <Compile Include="Services\InMemory\InMemoryRefreshTokenStore.cs" />
     <Compile Include="Services\IExternalClaimsFilter.cs" />

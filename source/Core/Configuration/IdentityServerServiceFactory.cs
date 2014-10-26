@@ -18,12 +18,32 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class IdentityServerServiceFactory
     {
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
+        static readonly Registration<IExternalClaimsFilter> DefaultClaimsFilter;
+        static IdentityServerServiceFactory()
+        {
+            DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>(() =>
+            {
+                var aggregate = new AggregateExternalClaimsFilter(
+                    new FacebookClaimsFilter(),
+                    new TwitterClaimsFilter()
+                );
+
+                return new NormalizingClaimsFilter(aggregate);
+            });
+        }
+
+        public IdentityServerServiceFactory()
+        {
+            this.ExternalClaimsFilter = DefaultClaimsFilter;
+        }
 
         // keep list of any additional dependencies the 
         // hosting application might need. these will be

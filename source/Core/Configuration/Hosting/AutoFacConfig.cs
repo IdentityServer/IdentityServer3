@@ -44,7 +44,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterInstance(options).AsSelf();
 
             // mandatory from factory
-            builder.Register(fact.UserService);
+            builder.Register(fact.UserService, "inner");
+            builder.RegisterDecorator<IUserService>((s, inner) =>
+            {
+                var filter = s.Resolve<IExternalClaimsFilter>();
+                return new ExternalClaimsFilterUserService(filter, inner);
+            }, "inner");
+
             builder.Register(fact.ScopeStore);
             builder.Register(fact.ClientStore);
             
@@ -155,14 +161,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.RegisterType<DefaultCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
-            //if (fact.ExternalClaimsFilter != null)
-            //{
-            //    builder.Register(fact.ExternalClaimsFilter);
-            //}
-            //else
-            //{
-            //    builder.RegisterType<DefaultExternalClaimsFilter>().As<IExternalClaimsFilter>();
-            //}
+            if (fact.ExternalClaimsFilter != null)
+            {
+                builder.Register(fact.ExternalClaimsFilter);
+            }
+            else
+            {
+                builder.RegisterType<NopClaimsFilter>().As<IExternalClaimsFilter>();
+            }
 
             if (fact.CustomTokenValidator != null)
             {
