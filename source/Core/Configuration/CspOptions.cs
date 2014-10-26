@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class CspOptions
