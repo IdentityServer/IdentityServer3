@@ -54,9 +54,9 @@ namespace Owin
                 options.PluginConfiguration(app, options);
             }
 
-            if (options.AuthenticationOptions.AdditionalIdentityProviderConfiguration != null)
+            if (options.AuthenticationOptions.IdentityProviders != null)
             {
-                options.AuthenticationOptions.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
+                options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
             }
 
             app.UseEmbeddedFileServer();

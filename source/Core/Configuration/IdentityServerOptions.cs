@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.TokenEndpoint = EndpointSettings.Enabled;
             this.UserInfoEndpoint = EndpointSettings.Enabled;
             this.DiscoveryEndpoint = EndpointSettings.Enabled;
-            this.AccessTokenValidationEndpoint = EndpointSettings.Disabled;
+            this.AccessTokenValidationEndpoint = EndpointSettings.Enabled;
             this.IdentityTokenValidationEndpoint = EndpointSettings.Enabled;
             this.EndSessionEndpoint = EndpointSettings.Enabled;
             this.ClientPermissionsEndpoint = EndpointSettings.Enabled;

@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public CookieOptions CookieOptions { get; set; }
         public IEnumerable<LoginPageLink> LoginPageLinks { get; set; }
         public bool DisableSignOutPrompt { get; set; }
-        public Action<IAppBuilder, string> AdditionalIdentityProviderConfiguration { get; set; }
+        public Action<IAppBuilder, string> IdentityProviders { get; set; }
 
     }
 
