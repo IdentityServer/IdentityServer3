@@ -32,7 +32,7 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]

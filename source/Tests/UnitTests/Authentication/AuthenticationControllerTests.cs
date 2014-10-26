@@ -24,13 +24,9 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Authentication;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
-using Thinktecture.IdentityServer.Core.Views;
 
 namespace Thinktecture.IdentityServer.Tests.Authentication
 {

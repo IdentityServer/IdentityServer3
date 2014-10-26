@@ -25,7 +25,7 @@ using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
     [NoCache]
