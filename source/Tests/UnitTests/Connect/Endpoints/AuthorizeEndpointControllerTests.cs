@@ -15,9 +15,9 @@
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Thinktecture.IdentityServer.Core;
 using System.Net;
 using System.Net.Http;
+using Thinktecture.IdentityServer.Core;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {

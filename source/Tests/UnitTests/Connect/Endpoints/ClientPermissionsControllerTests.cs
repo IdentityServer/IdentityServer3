@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Thinktecture.IdentityServer.Core;
+using System.Linq;
 using System.Net;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Resources;
+using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {

@@ -16,7 +16,6 @@
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Thinktecture.IdentityServer.Tests
 {
