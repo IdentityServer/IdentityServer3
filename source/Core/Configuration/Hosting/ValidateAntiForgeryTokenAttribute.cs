@@ -20,16 +20,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Views;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-    public class ValidateAntiForgeryTokenAttribute : PreventUnsupportedRequestMediaTypesAttribute
+    internal class ValidateAntiForgeryTokenAttribute : PreventUnsupportedRequestMediaTypesAttribute
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

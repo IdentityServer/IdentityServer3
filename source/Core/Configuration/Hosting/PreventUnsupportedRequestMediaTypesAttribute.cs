@@ -20,9 +20,9 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Resources;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    public class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
+    internal class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
     {
         readonly bool allowJson = false;
         readonly bool allowFormUrlEncoded = false;

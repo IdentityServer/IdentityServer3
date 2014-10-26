@@ -120,7 +120,7 @@
     <Compile Include="Configuration\Hosting\MessageCookie.cs" />
     <Compile Include="Models\SignOutMessage.cs" />
     <Compile Include="Configuration\CspOptions.cs" />
-    <Compile Include="Configuration\DataProtectorAdapter.cs" />
+    <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
@@ -188,7 +188,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\UseHstsExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\UseIdentityServerExtension.cs" />
     <Compile Include="Configuration\AuthenticationOptions.cs" />
-    <Compile Include="Configuration\AutofacConfig.cs" />
+    <Compile Include="Configuration\Hosting\AutofacConfig.cs" />
     <Compile Include="Configuration\CookieOptions.cs" />
     <Compile Include="Configuration\CorsPolicy.cs" />
     <Compile Include="Configuration\CorsPolicyProvider.cs" />
@@ -214,7 +214,7 @@
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
     <Compile Include="Configuration\Hosting\KatanaDependencyResolver.cs" />
-    <Compile Include="Configuration\WebApiConfig.cs" />
+    <Compile Include="Configuration\Hosting\WebApiConfig.cs" />
     <Compile Include="Endpoints\Connect\AccessTokenValidationController.cs" />
     <Compile Include="Endpoints\Connect\DiscoveryEndpointController.cs" />
     <Compile Include="Endpoints\Connect\EndSessionController.cs" />
@@ -264,7 +264,7 @@
     <Compile Include="Configuration\Hosting\ClaimMap.cs" />
     <Compile Include="Configuration\Hosting\ErrorPageFilterAttribute.cs" />
     <Compile Include="Configuration\Hosting\LogProviderExceptionLogger.cs" />
-    <Compile Include="Configuration\Hosting\IdentityServerPrincipal.cs" />
+    <Compile Include="IdentityServerPrincipal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\AuthorizeError.cs" />
     <Compile Include="Models\Client.cs" />

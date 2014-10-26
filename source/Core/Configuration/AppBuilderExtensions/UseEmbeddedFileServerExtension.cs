@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.Views;
 
 namespace Owin
 {
-    static class UseEmbeddedFileServerExtension
+    internal static class UseEmbeddedFileServerExtension
     {
         public static IAppBuilder UseEmbeddedFileServer(this IAppBuilder app)
         {

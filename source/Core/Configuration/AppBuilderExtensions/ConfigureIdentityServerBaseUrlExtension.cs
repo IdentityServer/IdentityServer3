@@ -18,7 +18,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
 {
-    static class ConfigureIdentityServerBaseUrlExtension
+    internal static class ConfigureIdentityServerBaseUrlExtension
     {
         public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicHostName)
         {

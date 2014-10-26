@@ -19,9 +19,9 @@ using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class LogProviderExceptionLogger : IExceptionLogger
+    internal class LogProviderExceptionLogger : IExceptionLogger
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

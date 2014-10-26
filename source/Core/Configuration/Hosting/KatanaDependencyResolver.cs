@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 using System.Web.Http.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class KatanaDependencyResolver : DelegatingHandler
+    internal class KatanaDependencyResolver : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

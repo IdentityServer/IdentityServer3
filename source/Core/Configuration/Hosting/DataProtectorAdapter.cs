@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class DataProtectorAdapter : Microsoft.Owin.Security.DataProtection.IDataProtector
+    internal class DataProtectorAdapter : Microsoft.Owin.Security.DataProtection.IDataProtector
     {
         private readonly IDataProtector _idsrvProtector;
         private readonly string _entropy;

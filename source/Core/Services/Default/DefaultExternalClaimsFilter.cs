@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
@@ -87,7 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
-            claims = Plumbing.ClaimMap.Map(claims);
+            claims = ClaimMap.Map(claims);
 
             return inner.Filter(provider, claims);
         }

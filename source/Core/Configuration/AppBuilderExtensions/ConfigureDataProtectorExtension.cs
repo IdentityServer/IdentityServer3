@@ -17,10 +17,11 @@
 using Microsoft.Owin.Security.DataProtection;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
-    static class ConfigureDataProtectorExtension
+    internal static class ConfigureDataProtectorExtension
     {
         public static IAppBuilder ConfigureDataProtectionProvider(this IAppBuilder app, IdentityServerOptions options)
         {

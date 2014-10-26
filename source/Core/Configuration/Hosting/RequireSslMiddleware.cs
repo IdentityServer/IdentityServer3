@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Resources;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class RequireSslMiddleware
+    internal class RequireSslMiddleware
     {
         readonly Func<IDictionary<string, object>, Task> _next;
 

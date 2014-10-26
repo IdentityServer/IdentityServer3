@@ -18,9 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    public class ClaimMap
+    internal class ClaimMap
     {
         static readonly Dictionary<string, string> ClaimTypeMap = BuildClaimTypeMap();
 

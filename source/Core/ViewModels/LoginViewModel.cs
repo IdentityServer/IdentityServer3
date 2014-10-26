@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Thinktecture.IdentityServer.Core.Views
 {

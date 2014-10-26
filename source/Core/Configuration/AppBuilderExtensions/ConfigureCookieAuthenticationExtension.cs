@@ -20,10 +20,11 @@ using Microsoft.Owin.Security.DataHandler;
 using System;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
-    static class UseCookieAuthenticationExtension
+    internal static class UseCookieAuthenticationExtension
     {
         public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, CookieOptions options, IDataProtector dataProtector)
         {

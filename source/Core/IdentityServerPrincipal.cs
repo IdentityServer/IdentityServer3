@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityModel.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Plumbing
+namespace Thinktecture.IdentityServer.Core
 {
     public static class IdentityServerPrincipal
     {

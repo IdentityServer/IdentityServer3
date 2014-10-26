@@ -17,9 +17,9 @@
 using System;
 using System.Web.Http.Filters;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class NoCacheAttribute : ActionFilterAttribute
+    internal class NoCacheAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {

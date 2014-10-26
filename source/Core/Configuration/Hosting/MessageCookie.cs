@@ -18,11 +18,10 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Authentication
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     public class MessageCookie<TMessage>
         where TMessage : class

@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Hosting
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class AutofacContainerMiddleware
+    internal class AutofacContainerMiddleware
     {
         readonly private Func<IDictionary<string, object>, Task> _next;
         readonly private IContainer _container;

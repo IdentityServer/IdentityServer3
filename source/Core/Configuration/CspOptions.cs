@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public class CspOptions

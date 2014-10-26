@@ -16,9 +16,8 @@
 
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
-using Thinktecture.IdentityServer.Core.Hosting;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal static class WebApiConfig
     {

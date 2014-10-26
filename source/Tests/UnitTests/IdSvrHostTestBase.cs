@@ -25,8 +25,9 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -44,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests
     {
         protected TestServer server;
         protected HttpClient client;
-        protected Thinktecture.IdentityServer.Core.Configuration.IDataProtector protector;
+        protected IDataProtector protector;
         protected Microsoft.Owin.Security.DataHandler.TicketDataFormat ticketFormatter;
 
         protected Mock<InMemoryUserService> mockUserService;
