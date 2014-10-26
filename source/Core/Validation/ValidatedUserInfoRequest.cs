@@ -16,7 +16,7 @@
 
 using Thinktecture.IdentityServer.Core.Connect.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class ValidatedUserInfoRequest
     {

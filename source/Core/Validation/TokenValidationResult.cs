@@ -19,7 +19,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class TokenValidationResult
     {

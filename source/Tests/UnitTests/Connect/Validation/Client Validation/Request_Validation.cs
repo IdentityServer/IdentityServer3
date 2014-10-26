@@ -21,7 +21,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect;
+using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients

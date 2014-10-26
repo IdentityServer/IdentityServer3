@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Connect;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
 using Thinktecture.IdentityServer.Core.Views;
 

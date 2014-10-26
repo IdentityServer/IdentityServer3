@@ -16,7 +16,7 @@
 using System;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class ValidatedEndSessionRequest : ValidatedRequest
     {

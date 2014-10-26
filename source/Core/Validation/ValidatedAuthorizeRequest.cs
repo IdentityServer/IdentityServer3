@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Connect
+namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class ValidatedAuthorizeRequest : ValidatedRequest
     {

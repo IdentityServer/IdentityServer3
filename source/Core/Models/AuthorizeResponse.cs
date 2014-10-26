@@ -15,6 +15,7 @@
  */
 
 using System;
+using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Connect.Models
 {
