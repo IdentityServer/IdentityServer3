@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void ShowPermissions_RendersPermissionPage()
         {
             Login();
-            var resp = Get(Constants.RoutePaths.Oidc.ClientPermissions);
+            var resp = Get(Constants.RoutePaths.ClientPermissions);
             resp.AssertPage("permissions");
         }
 
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             base.options.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
-            var resp = Get(Constants.RoutePaths.Oidc.ClientPermissions);
+            var resp = Get(Constants.RoutePaths.ClientPermissions);
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             base.options.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
-            var resp = PostForm(Constants.RoutePaths.Oidc.ClientPermissions, new { ClientId = clientId });
+            var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void RevokePermission_NoBody_ShowsError()
         {
             Login();
-            var resp = PostForm(Constants.RoutePaths.Oidc.ClientPermissions, (object)null);
+            var resp = PostForm(Constants.RoutePaths.ClientPermissions, (object)null);
             var model = resp.GetModel<ClientPermissionsViewModel>();
             Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
         }
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void RevokePermission_NoClient_ShowsError()
         {
             Login();
-            var resp = PostForm(Constants.RoutePaths.Oidc.ClientPermissions, new { ClientId = "" });
+            var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = "" });
             var model = resp.GetModel<ClientPermissionsViewModel>();
             Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
         }
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void ShowPermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
-            var resp = Get(Constants.RoutePaths.Oidc.ClientPermissions);
+            var resp = Get(Constants.RoutePaths.ClientPermissions);
             Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
             StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
         }
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void RevokePermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
-            var resp = PostForm(Constants.RoutePaths.Oidc.ClientPermissions, new { ClientId = clientId });
+            var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
             Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
             StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
         }

@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             this.viewSvc = viewSvc;
         }
 
-        [Route(Constants.RoutePaths.Oidc.ClientPermissions)]
+        [Route(Constants.RoutePaths.ClientPermissions)]
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return await RenderPermissionsPage();
         }
 
-        [Route(Constants.RoutePaths.Oidc.ClientPermissions, Name = Constants.RouteNames.Oidc.ClientPermissions)]
+        [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
         [HttpPost]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
@@ -85,14 +85,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
 
-            return RedirectToRoute(Constants.RouteNames.Oidc.ClientPermissions, null);
+            return RedirectToRoute(Constants.RouteNames.ClientPermissions, null);
         }
 
         private IHttpActionResult RedirectToLogin()
         {
             var message = new SignInMessage();
 
-            var path = Url.Route(Constants.RouteNames.Oidc.ClientPermissions, null);
+            var path = Url.Route(Constants.RouteNames.ClientPermissions, null);
             var url = new Uri(Request.RequestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
 
@@ -109,7 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = User.GetName(),
                 LogoutUrl = Url.Link(Constants.RouteNames.Logout, null),
-                RevokePermissionUrl = Url.Link(Constants.RouteNames.Oidc.ClientPermissions, null),
+                RevokePermissionUrl = Url.Link(Constants.RouteNames.ClientPermissions, null),
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(env),
                 Clients = clients,
                 ErrorMessage = error
