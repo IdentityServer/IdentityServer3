@@ -37,17 +37,6 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         {
             return Task.FromResult<AuthenticateResult>(null);
         }
-        
-        protected virtual string GetDisplayName(InMemoryUser user)
-        {
-            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
-            if (nameClaim != null)
-            {
-                return nameClaim.Value;
-            }
-
-            return user.Username;
-        }
 
         public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
@@ -55,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 from u in _users
                 where u.Username == username && u.Password == password
                 select u;
-            
+
             var user = query.SingleOrDefault();
             if (user != null)
             {
@@ -67,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
         {
             var query =
                 from u in _users
@@ -75,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                     u.Provider == externalUser.Provider &&
                     u.ProviderId == externalUser.ProviderId
                 select u;
-            
+
             var user = query.SingleOrDefault();
             if (user == null)
             {
@@ -84,7 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 {
                     return Task.FromResult<AuthenticateResult>(null);
                 }
-                
+
                 user = new InMemoryUser
                 {
                     Subject = Guid.NewGuid().ToString("N"),
@@ -99,6 +88,17 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.External, user.Provider);
             var result = new AuthenticateResult(p);
             return Task.FromResult(result);
+        }
+
+        protected virtual string GetDisplayName(InMemoryUser user)
+        {
+            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+            if (nameClaim != null)
+            {
+                return nameClaim.Value;
+            }
+
+            return user.Username;
         }
 
         public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
