@@ -89,6 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     return RenderErrorPage(authResult.ErrorMessage);
                 }
 
+                Logger.Info("user service returned a login result");
                 return SignInAndRedirect(signInMessage, signin, authResult);
             }
 
