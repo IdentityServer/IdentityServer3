@@ -16,6 +16,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
@@ -117,6 +118,19 @@ namespace Thinktecture.IdentityServer.Host
                 Wtrealm = "urn:idsrv3"
             };
             app.UseWsFederationAuthentication(adfs);
+
+            var aad = new OpenIdConnectAuthenticationOptions
+            {
+                AuthenticationType = "aad",
+                Caption = "Azure AD",
+                SignInAsAuthenticationType = signInAsType,
+
+                Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
+                ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
+                RedirectUri = "https://localhost:44333/core/aadcb"
+            };
+
+            app.UseOpenIdConnectAuthentication(aad);
         }
     }
 }
