@@ -31,12 +31,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>(() =>
             {
-                var aggregate = new AggregateExternalClaimsFilter(
+                var aggregateFilter = new AggregateExternalClaimsFilter(
+                    new NormalizingClaimsFilter(),
                     new FacebookClaimsFilter(),
                     new TwitterClaimsFilter()
                 );
 
-                return new NormalizingClaimsFilter(aggregate);
+                return aggregateFilter;
             });
         }
 

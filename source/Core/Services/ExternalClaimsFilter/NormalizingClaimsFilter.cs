@@ -24,18 +24,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class NormalizingClaimsFilter : IExternalClaimsFilter
     {
-        IExternalClaimsFilter inner;
-
-        public NormalizingClaimsFilter(IExternalClaimsFilter inner)
-        {
-            this.inner = inner;
-        }
-
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
-            claims = ClaimMap.Map(claims);
-
-            return inner.Filter(provider, claims);
+            return ClaimMap.Map(claims);
         }
     }
 }
