@@ -52,11 +52,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public abstract Type InterfaceType { get; }
         public abstract Type ImplementationType { get; }
         public abstract Func<object> ImplementationFactory { get; }
-
-        internal static Registration<Services.IExternalClaimsFilter> RegisterFactory<T1>(Func<Services.IExternalClaimsFilter> func)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class Registration<T> : Registration
