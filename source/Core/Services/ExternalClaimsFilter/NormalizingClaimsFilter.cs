@@ -26,6 +26,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
+            return Filter(claims);
+        }
+        
+        public IEnumerable<Claim> Filter(IEnumerable<Claim> claims)
+        {
             return ClaimMap.Map(claims);
         }
     }
