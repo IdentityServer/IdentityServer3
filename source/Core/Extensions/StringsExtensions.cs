@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -82,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static string AddHashFragment(this string url, string query)
         {
-            if (!url.Contains("#"))
+            if (!url.EndsWith("#"))
             {
                 url += "#";
             }
@@ -92,6 +93,18 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             return url + query;
+        }
+
+        public static Stream ToStream(this string s)
+        {
+            if (s == null) throw new ArgumentNullException("string");
+
+            var ms = new MemoryStream();
+            var sw = new StreamWriter(ms);
+            sw.Write(s);
+            sw.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms;
         }
     }
 }

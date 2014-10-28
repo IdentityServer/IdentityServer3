@@ -17,6 +17,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         readonly CorsPolicy policy;
         readonly string[] paths;
 
-        public CorsPolicyProvider(CorsPolicy policy, string[] allowedPaths)
+        public CorsPolicyProvider(CorsPolicy policy, IEnumerable<string> allowedPaths)
         {
             if (policy == null) throw new ArgumentNullException("policy");
             if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");
@@ -36,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.paths = allowedPaths.Select(path => Normalize(path)).ToArray();
         }
 
-        public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(Microsoft.Owin.IOwinRequest request)
+        public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(IOwinRequest request)
         {
             if (IsPathAllowed(request))
             {

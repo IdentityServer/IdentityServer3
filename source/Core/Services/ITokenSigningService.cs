@@ -15,12 +15,20 @@
  */
 
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Logic for signing security tokens
+    /// </summary>
     public interface ITokenSigningService
     {
+        /// <summary>
+        /// Signs the token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>A protected and serialized security token</returns>
         Task<string> SignTokenAsync(Token token);
     }
 }

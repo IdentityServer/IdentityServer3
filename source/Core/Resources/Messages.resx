@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ClientIdRequired" xml:space="preserve">
+    <value>Client Identifier is required</value>
+  </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>Invalid Username or Password</value>
+  </data>
+  <data name="invalid_scope" xml:space="preserve">
+    <value>The client application tried to access a resource it does not have access to</value>
   </data>
   <data name="MissingClientId" xml:space="preserve">
     <value>client_id is missing</value>
@@ -141,8 +147,17 @@
   <data name="SslRequired" xml:space="preserve">
     <value>SSL is required</value>
   </data>
+  <data name="unauthorized_client" xml:space="preserve">
+    <value>The client application tried to access a resource it does not have access to</value>
+  </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>There was an unexpected error</value>
+  </data>
+  <data name="UnsupportedMediaType" xml:space="preserve">
+    <value>Unsupported Media Type</value>
+  </data>
+  <data name="unsupported_response_type" xml:space="preserve">
+    <value>The authorization server does not support the requested response type</value>
   </data>
   <data name="UsernameRequired" xml:space="preserve">
     <value>Username is required</value>

@@ -16,12 +16,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultRefreshTokenService : IRefreshTokenService
     {
@@ -50,32 +49,30 @@ namespace Thinktecture.IdentityServer.Core.Services
                 lifetime = client.SlidingRefreshTokenLifetime;
             }
 
+            var handle = Guid.NewGuid().ToString("N");
             var refreshToken = new RefreshToken
             {
-                Handle = Guid.NewGuid().ToString("N"),
                 ClientId = client.ClientId,
                 CreationTime = DateTime.UtcNow,
                 LifeTime = lifetime,
                 AccessToken = accessToken
             };
 
-            await _store.StoreAsync(refreshToken.Handle, refreshToken);
-            return refreshToken.Handle;
+            await _store.StoreAsync(handle, refreshToken);
+            return handle;
         }
 
-        public async Task<string> UpdateRefreshTokenAsync(RefreshToken refreshToken, Client client)
+        public async Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client)
         {
             Logger.Debug("Updating refresh token");
 
             bool needsUpdate = false;
-            string oldHandle = refreshToken.Handle;
 
             if (client.RefreshTokenUsage == TokenUsage.OneTimeOnly)
             {
                 Logger.Debug("Token usage is one-time only. Generating new handle");
 
                 // generate new handle
-                refreshToken.Handle = Guid.NewGuid().ToString("N");
                 needsUpdate = true;
             }
 
@@ -104,17 +101,18 @@ namespace Thinktecture.IdentityServer.Core.Services
             if (needsUpdate)
             {
                 // delete old one
-                await _store.RemoveAsync(oldHandle);
+                await _store.RemoveAsync(handle);
 
                 // create new one
-                await _store.StoreAsync(refreshToken.Handle, refreshToken);
+                string newHandle = Guid.NewGuid().ToString("N");
+                await _store.StoreAsync(newHandle, refreshToken);
 
                 Logger.Debug("Updated refresh token in store");
-                return refreshToken.Handle;
+                return newHandle;
             }
 
             Logger.Debug("No updates to refresh token done");
-            return oldHandle;
+            return handle;
         }
     }
 }

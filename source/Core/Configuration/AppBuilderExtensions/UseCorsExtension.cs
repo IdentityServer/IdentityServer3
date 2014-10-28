@@ -19,7 +19,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin
 {
-    static class UseCorsExtension
+    internal static class UseCorsExtension
     {
         public static void UseCors(this IAppBuilder app, CorsPolicy policy)
         {

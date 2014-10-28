@@ -15,14 +15,30 @@
  */
 
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Implements refresh token creation and validation
+    /// </summary>
     public interface IRefreshTokenService
     {
+        /// <summary>
+        /// Creates the refresh token.
+        /// </summary>
+        /// <param name="accessToken">The access token.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>The refresh token handle</returns>
         Task<string> CreateRefreshTokenAsync(Token accessToken, Client client);
-        Task<string> UpdateRefreshTokenAsync(RefreshToken refreshToken, Client client);
+
+        /// <summary>
+        /// Updates the refresh token.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="refreshToken">The refresh token.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>The refresh token handle</returns>
+        Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client);
     }
 }

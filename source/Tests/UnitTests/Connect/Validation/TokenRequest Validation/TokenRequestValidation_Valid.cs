@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -226,12 +225,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
                 AccessToken = new Token("access_token"),
                 ClientId = "roclient",
                 LifeTime = 600,
-                Handle = Guid.NewGuid().ToString(),
                 CreationTime = DateTime.UtcNow
             };
+            var handle = Guid.NewGuid().ToString();
 
             var store = new InMemoryRefreshTokenStore();
-            await store.StoreAsync(refreshToken.Handle, refreshToken);
+            await store.StoreAsync(handle, refreshToken);
 
             var client = await _clients.FindClientByIdAsync("roclient");
 
@@ -240,7 +239,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, refreshToken.Handle);
+            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -256,12 +255,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
                 AccessToken = new Token("access_token"),
                 ClientId = "roclient_restricted_refresh",
                 LifeTime = 600,
-                Handle = Guid.NewGuid().ToString(),
                 CreationTime = DateTime.UtcNow
             };
+            var handle = Guid.NewGuid().ToString();
 
             var store = new InMemoryRefreshTokenStore();
-            await store.StoreAsync(refreshToken.Handle, refreshToken);
+            await store.StoreAsync(handle, refreshToken);
 
             var client = await _clients.FindClientByIdAsync("roclient_restricted_refresh");
 
@@ -270,7 +269,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, refreshToken.Handle);
+            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 

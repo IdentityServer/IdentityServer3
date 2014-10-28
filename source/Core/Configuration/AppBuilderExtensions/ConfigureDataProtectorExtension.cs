@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Owin
 {
-    static class ConfigureDataProtectorExtension
+    internal static class ConfigureDataProtectorExtension
     {
         public static IAppBuilder ConfigureDataProtectionProvider(this IAppBuilder app, IdentityServerOptions options)
         {

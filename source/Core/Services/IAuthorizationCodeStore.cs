@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Connect.Models;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Abstraction for storing authorization codes
+    /// </summary>
     public interface IAuthorizationCodeStore : ITransientDataRepository<AuthorizationCode>
-    {
-    }
+    { }
 }

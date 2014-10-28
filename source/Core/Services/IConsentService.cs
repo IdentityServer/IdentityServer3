@@ -21,9 +21,27 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Service to retrieve and update consent.
+    /// </summary>
     public interface IConsentService
     {
-        Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
-        Task UpdateConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes);
+        /// <summary>
+        /// Checks if consent is required.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="subject">The user.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns>Boolean if consent is required.</returns>
+        Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes);
+
+        /// <summary>
+        /// Updates the consent.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns></returns>
+        Task UpdateConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes);
     }
 }

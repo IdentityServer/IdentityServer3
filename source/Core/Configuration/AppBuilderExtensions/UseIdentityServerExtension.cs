@@ -20,7 +20,7 @@ using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Hosting;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
@@ -54,9 +54,9 @@ namespace Owin
                 options.PluginConfiguration(app, options);
             }
 
-            if (options.AdditionalIdentityProviderConfiguration != null)
+            if (options.AuthenticationOptions.IdentityProviders != null)
             {
-                options.AdditionalIdentityProviderConfiguration(app, Constants.ExternalAuthenticationType);
+                options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
             }
 
             app.UseEmbeddedFileServer();

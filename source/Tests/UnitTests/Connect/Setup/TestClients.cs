@@ -32,7 +32,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientId = "codeclient",
                         ClientSecret = "secret",
                         Flow = Flows.AuthorizationCode,
-                        ApplicationType = ApplicationTypes.Web,
                         RequireConsent = false,
                     
                         RedirectUris = new List<Uri>
@@ -49,7 +48,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientId = "implicitclient",
                         ClientSecret = "secret",
                         Flow = Flows.Implicit,
-                        ApplicationType = ApplicationTypes.Native,
                         RequireConsent = false,
                     
                         RedirectUris = new List<Uri>
@@ -64,7 +62,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientId = "codeclient_restricted",
                         ClientSecret = "secret",
                         Flow = Flows.AuthorizationCode,
-                        ApplicationType = ApplicationTypes.Web,
                         RequireConsent = false,
 
                         ScopeRestrictions = new List<string>

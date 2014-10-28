@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Thinktecture.IdentityServer.Core.Models
 {
     public class Consent
     {
         public string Subject { get; set; }
         public string ClientId { get; set; }
-        public string Scopes { get; set; }
+        public IEnumerable<string> Scopes { get; set; }
     }
 }

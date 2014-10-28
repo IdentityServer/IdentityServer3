@@ -15,137 +15,79 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
-using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models are resource (either identity resource or web api resource)
+    /// </summary>
     public class Scope
     {
+        /// <summary>
+        /// Scope enabled
+        /// </summary>
         public bool Enabled { get; set; }
 
+        /// <summary>
+        /// Name of the scope. This is the value a client will use to request the scope.
+        /// </summary>
         public string Name { get; set; }
+        
+        /// <summary>
+        /// Display name. This value will be used e.g. on the consent screen.
+        /// </summary>
         public string DisplayName { get; set; }
+        
+        /// <summary>
+        /// Description. This value will be used e.g. on the consent screen.
+        /// </summary>
         public string Description { get; set; }
+        
+        /// <summary>
+        /// Specifies whether the user can de-select the scope on the consent screen.
+        /// </summary>
         public bool Required { get; set; }
+
+        /// <summary>
+        /// Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes.
+        /// </summary>
         public bool Emphasize { get; set; }
 
+        /// <summary>
+        /// Specifies whether this scope is about identity information from the userinfo endpoint, or a resource (e.g. a Web API)
+        /// </summary>
         public ScopeType Type { get; set; }
+        
+        /// <summary>
+        /// List of user claims that should be included in the identity (identity scope) or access token (resource scope). 
+        /// </summary>
         public IEnumerable<ScopeClaim> Claims { get; set; }
+        
+        /// <summary>
+        /// If enabled, all claims for the user will be included in the token
+        /// </summary>
+        public bool IncludeAllClaimsForUser { get; set; }
+        
+        /// <summary>
+        /// Rule for determining which claims should be included in the token (this is implementation specific)
+        /// </summary>
+        public string ClaimsRule { get; set; }
 
+        /// <summary>
+        /// Specifies whether this scope is shown in the discovery document (defaults to true)
+        /// </summary>
+        public bool ShowInDiscoveryDocument { get; set; }
+
+        /// <summary>
+        /// Creates a Scope with default values
+        /// </summary>
         public Scope()
         {
             Type = ScopeType.Resource;
             Claims = new ScopeClaim[] { };
+            IncludeAllClaimsForUser = false;
             Enabled = true;
-        }
-
-        public static IEnumerable<Scope> StandardScopes
-        {
-            get
-            {
-                return new[]
-                {
-                    OpenId,
-                    Profile,
-                    Email,
-                    Phone,
-                    Address
-                };
-            }
-        }
-
-        public static Scope OpenId
-        {
-            get
-            {
-                return new Scope
-                {
-                    Name = Constants.StandardScopes.OpenId,
-                    DisplayName = Scopes.OpenIdDisplayName,
-                    Required = true,
-                    Type = ScopeType.Identity,
-                    Claims = new List<ScopeClaim>
-                    {
-                        new ScopeClaim(Constants.ClaimTypes.Subject, alwaysInclude: true)
-                    }
-                };
-            }
-        }
-
-        public static Scope Profile
-        {
-            get
-            {
-                return new Scope
-                 {
-                     Name = Constants.StandardScopes.Profile,
-                     DisplayName = Scopes.ProfileDisplayName,
-                     Description = Scopes.ProfileDescription,
-                     Type = ScopeType.Identity,
-                     Emphasize = true,
-                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim)))
-                 };
-            }
-        }
-
-        public static Scope Email
-        {
-            get
-            {
-                return new Scope
-                {
-                    Name = Constants.StandardScopes.Email,
-                    DisplayName = Scopes.EmailDisplayName,
-                    Type = ScopeType.Identity,
-                    Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim)))
-                };
-            }
-        }
-
-        public static Scope Phone
-        {
-            get
-            {
-                return new Scope
-                {
-                    Name = Constants.StandardScopes.Phone,
-                    DisplayName = Scopes.ProfileDisplayName,
-                    Type = ScopeType.Identity,
-                    Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim)))
-                };
-            }
-        }
-
-        public static Scope Address
-        {
-            get
-            {
-                return new Scope
-                {
-                    Name = Constants.StandardScopes.Address,
-                    DisplayName = Scopes.AddressDisplayName,
-                    Type = ScopeType.Identity,
-                    Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim)))
-                };
-            }
-        }
-
-        public static Scope OfflineAccess
-        {
-            get
-            {
-                return new Scope
-                {
-                    Name = Constants.StandardScopes.OfflineAccess,
-                    DisplayName = Scopes.OfflineAccessDisplayName,
-                    Type = ScopeType.Resource,
-                    Emphasize = true
-                };
-            }
+            ShowInDiscoveryDocument = true;
         }
     }
 }

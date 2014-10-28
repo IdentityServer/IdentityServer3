@@ -35,7 +35,9 @@ namespace Thinktecture.IdentityServer.Core
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
         public static readonly TimeSpan DefaultRememberMeDuration = TimeSpan.FromDays(30);
-        
+
+        public const string DefaultHashAlgorithm = "SHA256";
+
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
@@ -196,15 +198,15 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedResponseModes = new List<string>
                             {
-                                Constants.ResponseModes.FormPost,
-                                Constants.ResponseModes.Query,
-                                Constants.ResponseModes.Fragment,
+                                ResponseModes.FormPost,
+                                ResponseModes.Query,
+                                ResponseModes.Fragment,
                             };
 
-        public static string[] SupportedSubjectTypes = new string[]
-                            {
-                                "pairwise", "public"
-                            };
+        public static string[] SupportedSubjectTypes =
+        {
+            "pairwise", "public"
+        };
 
         public static class SigningAlgorithms
         {
@@ -221,10 +223,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedDisplayModes = new List<string>
                             {
-                                Constants.DisplayModes.Page,
-                                Constants.DisplayModes.Popup,
-                                Constants.DisplayModes.Touch,
-                                Constants.DisplayModes.Wap,
+                                DisplayModes.Page,
+                                DisplayModes.Popup,
+                                DisplayModes.Touch,
+                                DisplayModes.Wap,
                             };
 
         public static class PromptModes
@@ -237,10 +239,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedPromptModes = new List<string>
                             {
-                                Constants.PromptModes.None,
-                                Constants.PromptModes.Login,
-                                Constants.PromptModes.Consent,
-                                Constants.PromptModes.SelectAccount,
+                                PromptModes.None,
+                                PromptModes.Login,
+                                PromptModes.Consent,
+                                PromptModes.SelectAccount,
                             };
 
         public static class LoginHints
@@ -346,6 +348,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string Address       = "address";
             public const string Phone         = "phone";
             public const string OfflineAccess = "offline_access";
+
+            // not part of spec
+            public const string AllClaims     = "all_claims";
+            public const string Roles         = "roles";
         }
 
         public static class ClaimTypes
@@ -420,17 +426,14 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RouteNames
         {
-            // TODO:brock
-            //public static class Authentication
-            //{
-                public const string Login = "idsrv.authentication.login";
-                public const string LoginExternal = "idsrv.authentication.loginexternal";
-                public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
-                public const string LogoutPrompt = "idsrv.authentication.logoutprompt";
-                public const string Logout = "idsrv.authentication.logout";
-                public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
-                public const string CspReport = "idsrv.csp.report";
-            //}
+            public const string Login = "idsrv.authentication.login";
+            public const string LoginExternal = "idsrv.authentication.loginexternal";
+            public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
+            public const string LogoutPrompt = "idsrv.authentication.logoutprompt";
+            public const string Logout = "idsrv.authentication.logout";
+            public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
+            public const string CspReport = "idsrv.csp.report";
+            public const string ClientPermissions = "idsrv.permissions";
             
             public static class Oidc
             {
@@ -450,6 +453,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Logout = "logout";
             public const string ResumeLoginFromRedirect = "return";
             public const string CspReport = "csp/report";
+            public const string ClientPermissions = "permissions";
 
             public static class Oidc
             {
@@ -466,18 +470,21 @@ namespace Thinktecture.IdentityServer.Core
                 public const string EndSessionCallback = "connect/endsessioncallback";
             }
             
-            public static readonly string[] CorsPaths = new string[]{
-                RoutePaths.Oidc.DiscoveryConfiguration,
-                RoutePaths.Oidc.DiscoveryWebKeys,
-                RoutePaths.Oidc.Token,
-                RoutePaths.Oidc.UserInfo,
+            public static readonly string[] CorsPaths =
+            {
+                Oidc.DiscoveryConfiguration,
+                Oidc.DiscoveryWebKeys,
+                Oidc.Token,
+                Oidc.UserInfo
             };
         }
         
         public static class OwinEnvironment
         {
-            public const string IdentityServerBaseUrl   = "idsrv:IdentityServerBaseUrl";
-            public const string AutofacScope            = "idsrv:AutofacScope";
+            public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
+            public const string IdentityServerHost = "idsrv:IdentityServerHost";
+            
+            public const string AutofacScope = "idsrv:AutofacScope";
         }
     }
 }

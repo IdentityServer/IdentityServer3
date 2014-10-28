@@ -50,7 +50,5 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             return factory;
         }
-
-        public static IScopeStore scopeStore { get; set; }
     }
 }

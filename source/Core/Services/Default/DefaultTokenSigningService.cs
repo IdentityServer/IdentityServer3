@@ -20,10 +20,9 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Connect.Models;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     // todo: logging
     public class DefaultTokenSigningService : ITokenSigningService
@@ -38,18 +37,16 @@ namespace Thinktecture.IdentityServer.Core.Services
         public Task<string> SignTokenAsync(Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken ||
-               (token.Type == Constants.TokenTypes.IdentityToken && 
+               (token.Type == Constants.TokenTypes.IdentityToken &&
                 token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default))
             {
                 return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
             }
-            else
+
+            if (token.Type == Constants.TokenTypes.IdentityToken &&
+                token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
             {
-                if (token.Type == Constants.TokenTypes.IdentityToken &&
-                    token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-                {
-                    return Task.FromResult(CreateJsonWebToken(token, new HmacSigningCredentials(token.Client.ClientSecret)));
-                }
+                return Task.FromResult(CreateJsonWebToken(token, new HmacSigningCredentials(token.Client.ClientSecret)));
             }
 
             throw new InvalidOperationException("Invalid token type");
@@ -61,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Services
                 token.Issuer,
                 token.Audience,
                 token.Claims,
-                DateTime.UtcNow, 
+                DateTime.UtcNow,
                 DateTime.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 

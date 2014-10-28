@@ -16,25 +16,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Tests\UnitTes
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		AzureWebSites|Any CPU = AzureWebSites|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
-		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
 		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB9E026E-BAB3-498A-A954-B93B05C146A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
-		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
 		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C41ECC23-BB27-4BDD-990E-4908B872F12C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.ActiveCfg = AzureWebSites|Any CPU
-		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.AzureWebSites|Any CPU.Build.0 = AzureWebSites|Any CPU
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.ActiveCfg = Release|Any CPU

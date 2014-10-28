@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -25,10 +26,31 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     {
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        static readonly Registration<IExternalClaimsFilter> DefaultClaimsFilter;
+        static IdentityServerServiceFactory()
+        {
+            DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>(() =>
+            {
+                var aggregateFilter = new AggregateExternalClaimsFilter(
+                    new NormalizingClaimsFilter(),
+                    new FacebookClaimsFilter(),
+                    new TwitterClaimsFilter()
+                );
+
+                return aggregateFilter;
+            });
+        }
+
+        public IdentityServerServiceFactory()
+        {
+            this.ExternalClaimsFilter = DefaultClaimsFilter;
+        }
+
         // keep list of any additional dependencies the 
         // hosting application might need. these will be
         // added to the DI container
-        List<Registration> _registrations = new List<Registration>();
+        readonly List<Registration> _registrations = new List<Registration>();
+
         public IEnumerable<Registration> Registrations
         {
             get { return _registrations; }
@@ -55,6 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         
         // optional
         public Registration<IConsentService> ConsentService { get; set; }
+        public Registration<IClientPermissionsService> ClientPermissionsService { get; set; }
         public Registration<ICustomGrantValidator> CustomGrantValidator { get; set; }
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }

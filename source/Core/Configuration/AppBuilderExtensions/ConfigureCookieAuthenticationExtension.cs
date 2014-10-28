@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using System;
-using System.Linq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
-    static class UseCookieAuthenticationExtension
+    internal static class UseCookieAuthenticationExtension
     {
-        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, Thinktecture.IdentityServer.Core.Configuration.CookieOptions options, IDataProtector dataProtector)
+        public static IAppBuilder ConfigureCookieAuthentication(this IAppBuilder app, CookieOptions options, IDataProtector dataProtector)
         {
             if (options == null) throw new ArgumentNullException("options");
             if (dataProtector == null) throw new ArgumentNullException("dataProtector");
@@ -69,7 +68,7 @@ namespace Owin
             };
             app.UseCookieAuthentication(partial);
 
-            Action<string> setCookiePath = (path) =>
+            Action<string> setCookiePath = path =>
             {
                 if (!String.IsNullOrWhiteSpace(path))
                 {
