@@ -29,17 +29,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             SiteName = Constants.IdentityServerName;
 
             this.ProtocolLogoutUrls = new List<string>();
-            this.AuthorizeEndpoint = EndpointSettings.Enabled;
-            this.TokenEndpoint = EndpointSettings.Enabled;
-            this.UserInfoEndpoint = EndpointSettings.Enabled;
-            this.DiscoveryEndpoint = EndpointSettings.Enabled;
-            this.AccessTokenValidationEndpoint = EndpointSettings.Enabled;
-            this.IdentityTokenValidationEndpoint = EndpointSettings.Enabled;
-            this.EndSessionEndpoint = EndpointSettings.Enabled;
-            this.ClientPermissionsEndpoint = EndpointSettings.Enabled;
 
             this.RequireSsl = true;
-
+            
+            this.Endpoints = new Endpoints();
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
@@ -59,6 +52,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             {
                 throw new ArgumentException("CspOptions is missing");
             }
+            if (Endpoints == null)
+            {
+                throw new ArgumentException("Endpoints is missing");
+            }
         }
 
         public string SiteName { get; set; }
@@ -69,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions AuthenticationOptions { get; set; }
         public IDataProtector DataProtector { get; set; }
 
-        
+        public Endpoints Endpoints { get; set; }
         public bool RequireSsl { get; set; }
         
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }
@@ -77,15 +74,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public List<string> ProtocolLogoutUrls { get; set; }
 
         public CorsPolicy CorsPolicy { get; set; }
-        
-        public EndpointSettings AuthorizeEndpoint { get; set; }
-        public EndpointSettings TokenEndpoint { get; set; }
-        public EndpointSettings UserInfoEndpoint { get; set; }
-        public EndpointSettings DiscoveryEndpoint { get; set; }
-        public EndpointSettings AccessTokenValidationEndpoint { get; set; }
-        public EndpointSettings IdentityTokenValidationEndpoint { get; set; }
-        public EndpointSettings EndSessionEndpoint { get; set; }
-        public EndpointSettings ClientPermissionsEndpoint { get; set; }
 
         public CspOptions CspOptions { get; set; }
 

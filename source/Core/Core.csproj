@@ -116,6 +116,7 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Results\LogoutResult.cs" />
     <Compile Include="Configuration\Hosting\MessageCookie.cs" />
     <Compile Include="Models\SignOutMessage.cs" />

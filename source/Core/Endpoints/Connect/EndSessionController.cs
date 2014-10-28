@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("End session request");
 
-            if (!_options.EndSessionEndpoint.IsEnabled)
+            if (!_options.Endpoints.EndSessionEndpoint.IsEnabled)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
