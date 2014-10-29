@@ -212,8 +212,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
             // add the id to the dictionary so we can recall the cookie id on the callback
-            authProp.Dictionary.Add("signin", signin);
-            authProp.Dictionary.Add("katanaAuthenticationType", provider);
+            
+            authProp.Dictionary.Add(Constants.Authentication.SigninId, signin);
+            authProp.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, provider);
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
             return Unauthorized();
         }
@@ -418,13 +419,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // this is mapping from the external IdP's issuer to the name of the 
                 // katana middleware that's registered in startup
                 var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
-                if (!result.Properties.Dictionary.Keys.Contains("katanaAuthenticationType"))
+                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
                 {
                     Logger.Error("Missing katanaAuthenticationType in external callback");
-                    throw new InvalidOperationException("Missing katanaAuthenticationType");
+                    throw new InvalidOperationException("Missing KatanaAuthenticationType");
                 }
 
-                var provider = result.Properties.Dictionary["katanaAuthenticationType"];
+                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
                 var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
                 id = new ClaimsIdentity(newClaims, id.AuthenticationType);
             }
@@ -437,7 +438,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (result != null)
             {
                 string val = null;
-                if (result.Properties.Dictionary.TryGetValue("signin", out val))
+                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
                 {
                     return val;
                 }

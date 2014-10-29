@@ -478,13 +478,19 @@ namespace Thinktecture.IdentityServer.Core
                 Oidc.UserInfo
             };
         }
-        
+
         public static class OwinEnvironment
         {
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
             public const string IdentityServerHost = "idsrv:IdentityServerHost";
-            
+
             public const string AutofacScope = "idsrv:AutofacScope";
+        }
+        
+        public static class Authentication
+        {
+            public const string SigninId = "signinid";
+            public const string KatanaAuthenticationType = "katanaAuthenticationType";
         }
     }
 }
