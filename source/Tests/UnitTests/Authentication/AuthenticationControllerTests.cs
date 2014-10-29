@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-/*
- * Copyright 2014 Dominick Baier, Brock Allen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 using Owin;
 using System;
 using System.Collections.Generic;
@@ -217,7 +203,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
         
         [TestMethod]
-        public void GetExternalLogin_ValidProvider_RedirectsToProvider()
+        public void GetLoginExternal_ValidProvider_RedirectsToProvider()
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
@@ -229,7 +215,7 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
         }
 
         [TestMethod]
-        public void GetExternalLogin_InvalidProvider_ReturnsUnauthorized()
+        public void GetLoginExternal_InvalidProvider_ReturnsUnauthorized()
         {
             var msg = new SignInMessage();
             msg.IdP = "Foo";
@@ -238,7 +224,37 @@ namespace Thinktecture.IdentityServer.Tests.Authentication
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Unauthorized, resp2.StatusCode);
         }
-        
+
+        [TestMethod]
+        public void GetLoginExternal_ClientDoesNotAllowProvider_ShowsErrorPage()
+        {
+            var clientApp = clients.First();
+            clientApp.IdentityProviderRestrictions = new string[] { "foo" };
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ClientId = clientApp.ClientId;
+
+            var resp1 = GetLoginPage(msg);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            resp2.AssertPage("error");
+        }
+
+        [TestMethod]
+        public void GetLoginExternal_ClientDoesAllowsProvider_RedirectsToProvider()
+        {
+            var clientApp = clients.First();
+            clientApp.IdentityProviderRestrictions = new string[] { "Google" };
+
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ClientId = clientApp.ClientId;
+
+            var resp = GetLoginPage(msg);
+            resp = client.GetAsync(resp.Headers.Location.AbsoluteUri).Result;
+            Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
+            Assert.IsTrue(resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
+        }
+
         [TestMethod]
         public void PostToLogin_ValidCredentials_IssuesAuthenticationCookie()
         {

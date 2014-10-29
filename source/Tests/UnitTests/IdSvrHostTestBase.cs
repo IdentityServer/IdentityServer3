@@ -30,6 +30,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.ViewModels;
@@ -50,9 +51,21 @@ namespace Thinktecture.IdentityServer.Tests
         protected IAppBuilder appBuilder;
         protected Action<IAppBuilder, string> OverrideIdentityProviderConfiguration { get; set; }
 
+        protected List<Client> clients;
+
         [TestInitialize]
         public void Init()
         {
+            clients = TestClients.Get();
+            var clientStore = new InMemoryClientStore(clients);
+            var scopeStore = new InMemoryScopeStore(TestScopes.Get());
+
+            var factory = new IdentityServerServiceFactory
+            {
+                ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore),
+                ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore)
+            };
+
             LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
             // white space between unit tests
             LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
@@ -62,7 +75,6 @@ namespace Thinktecture.IdentityServer.Tests
             server = TestServer.Create(app =>
             {
                 appBuilder = app;
-                var factory = TestFactory.Create();
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;

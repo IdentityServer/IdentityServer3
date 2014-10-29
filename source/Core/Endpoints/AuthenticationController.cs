@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
         [HttpGet]
-        public IHttpActionResult LoginExternal(string signin, string provider)
+        public async Task<IHttpActionResult> LoginExternal(string signin, string provider)
         {
             Logger.InfoFormat("External login requested for provider: {0}", provider);
 
@@ -197,6 +197,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
+                return RenderErrorPage();
+            }
+
+            var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
+            if (providerFilter != null && providerFilter.Any() && !providerFilter.Contains(provider))
+            {
+                Logger.ErrorFormat("Provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
                 return RenderErrorPage();
             }
 
@@ -624,14 +631,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
         {
-            IEnumerable<string> filter = null;
-            if (!String.IsNullOrWhiteSpace(message.ClientId))
-            {
-                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-                filter = client.IdentityProviderRestrictions ?? filter;
-            }
-            filter = filter ?? Enumerable.Empty<string>();
+            IEnumerable<string> filter = await GetProviderFilterForClientAsync(message);
 
             var ctx = Request.GetOwinContext();
             var providers =
@@ -645,6 +645,19 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 };
 
             return providers.ToArray();
+        }
+
+        private async Task<IEnumerable<string>> GetProviderFilterForClientAsync(SignInMessage message)
+        {
+            IEnumerable<string> filter = null;
+            if (!String.IsNullOrWhiteSpace(message.ClientId))
+            {
+                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
+                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
+                filter = client.IdentityProviderRestrictions ?? filter;
+            }
+            filter = filter ?? Enumerable.Empty<string>();
+            return filter;
         }
 
         private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
