@@ -1,6 +1,6 @@
 # Thinktecture IdentityServer v3 #
 
-**Current status: Beta 2**
+**Current status: Beta 3**
 
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -28,7 +28,7 @@ public void Configuration(IAppBuilder appBuilder)
     var options = new IdentityServerOptions
     {
         IssuerUri = "https://idsrv3.com",
-        SiteName = "Thinktecture IdentityServer v3 - preview 1 (SelfHost)"
+        SiteName = "Thinktecture IdentityServer v3"
 
         SigningCertificate = Certificate.Get(),
         Factory = factory,
@@ -38,9 +38,9 @@ public void Configuration(IAppBuilder appBuilder)
 }
 ```
 
-You can find the *CN=idsrv3test* certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the samples repository.
+You can find a test signing certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the samples repository.
 
-The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/) shows other configuration options
+The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/) shows other configuration options, including
 * support for MembershipReboot and ASP.NET Identity based user stores
 * support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
 * support for EntityFramework based persistence of configuration
