@@ -16,9 +16,25 @@
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Represents a link on the login page
+    /// </summary>
     public class LoginPageLink
     {
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the href.
+        /// </summary>
+        /// <value>
+        /// The href.
+        /// </value>
         public string Href { get; set; }
     }
 }
