@@ -27,9 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IUserService _users;
+        protected readonly IUserService _users;
 
         public DefaultClaimsProvider(IUserService users)
         {
