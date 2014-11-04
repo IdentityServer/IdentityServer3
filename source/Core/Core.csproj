@@ -51,6 +51,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -116,6 +117,7 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\LibLog.1.3\Logging.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Results\LogoutResult.cs" />
@@ -145,7 +147,7 @@
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidator.cs" />
     <Compile Include="Configuration\Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Configuration\Hosting\ValidateAntiForgeryTokenAttribute.cs" />
-    <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
+    <Compile Include="Logging\TraceSourceLogProvider.cs" />
     <Compile Include="Models\StandardScopes.cs" />
     <Compile Include="Models\ClientPermission.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
@@ -256,15 +258,7 @@
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogExtensions.cs" />
-    <Compile Include="Logging\ILogProvider.cs" />
-    <Compile Include="Logging\LoggerExecutionWrapper.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="Logging\LogProvider.cs" />
-    <Compile Include="Logging\LogProviders\DiagnosticsTraceLogProvider.cs" />
-    <Compile Include="Logging\LogProviders\Log4NetLogProvider.cs" />
-    <Compile Include="Logging\LogProviders\NLogLogProvider.cs" />
+    <Compile Include="Logging\DiagnosticsTraceLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />

@@ -42,12 +42,14 @@ namespace Thinktecture.IdentityServer.Core.Logging
             _name = name;
         }
 
-        public void Log(LogLevel logLevel, Func<string> messageFunc)
+        public bool Log(LogLevel logLevel, Func<string> messageFunc)
         {
             var eventType = GetEventType(logLevel);
             EnsureCorrelationId();
 
             _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
+
+            return true;
         }
 
         public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
