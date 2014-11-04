@@ -21,6 +21,9 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
+    /// <summary>
+    /// In-memory consent store
+    /// </summary>
     public class InMemoryConsentStore : IConsentStore
     {
         private readonly List<Consent> _consents = new List<Consent>();

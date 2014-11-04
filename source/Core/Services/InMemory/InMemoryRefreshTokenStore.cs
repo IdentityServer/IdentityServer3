@@ -15,16 +15,26 @@
  */
 
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
+    /// <summary>
+    /// In-memory refresh token store
+    /// </summary>
     public class InMemoryRefreshTokenStore : IRefreshTokenStore
     {
         readonly ConcurrentDictionary<string, RefreshToken> _repository = new ConcurrentDictionary<string, RefreshToken>();
 
+        /// <summary>
+        /// Stores the data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public Task StoreAsync(string key, RefreshToken value)
         {
             _repository[key] = value;
@@ -32,6 +42,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<object>(null);
         }
 
+        /// <summary>
+        /// Retrieves the data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public Task<RefreshToken> GetAsync(string key)
         {
             RefreshToken code;
@@ -43,6 +58,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<RefreshToken>(null);
         }
 
+        /// <summary>
+        /// Removes the data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public Task RemoveAsync(string key)
         {
             RefreshToken val;
@@ -52,7 +72,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         }
 
 
-        public Task<System.Collections.Generic.IEnumerable<ITokenMetadata>> GetAllAsync(string subject)
+        /// <summary>
+        /// Retrieves all data for a subject identifier.
+        /// </summary>
+        /// <param name="subject">The subject identifier.</param>
+        /// <returns>
+        /// A list of token metadata
+        /// </returns>
+        public Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject)
         {
             var query =
                 from item in _repository
@@ -62,6 +89,12 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(list.Cast<ITokenMetadata>());
         }
 
+        /// <summary>
+        /// Revokes all data for a client and subject id combination.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="client">The client.</param>
+        /// <returns></returns>
         public Task RevokeAsync(string subject, string client)
         {
             var query =
