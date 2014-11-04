@@ -28,7 +28,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultConsentService : IConsentService
     {
-        readonly IConsentStore _store;
+        /// <summary>
+        /// The consent store
+        /// </summary>
+        protected readonly IConsentStore _store;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConsentService"/> class.

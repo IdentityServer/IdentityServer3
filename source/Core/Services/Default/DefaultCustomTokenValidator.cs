@@ -26,7 +26,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
-        private readonly IUserService _users;
+        /// <summary>
+        /// The user service
+        /// </summary>
+        protected readonly IUserService _users;
+
+        /// <summary>
+        /// The client store
+        /// </summary>
         private readonly IClientStore _clients;
 
         /// <summary>
