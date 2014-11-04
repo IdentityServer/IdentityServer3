@@ -19,8 +19,18 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default custom request validator
+    /// </summary>
     public class DefaultCustomRequestValidator : ICustomRequestValidator
     {
+        /// <summary>
+        /// Custom validation logic for the authorize request.
+        /// </summary>
+        /// <param name="request">The validated request.</param>
+        /// <returns>
+        /// The validation result
+        /// </returns>
         public Task<ValidationResult> ValidateAuthorizeRequestAsync(ValidatedAuthorizeRequest request)
         {
             return Task.FromResult(new ValidationResult
@@ -29,6 +39,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             });
         }
 
+        /// <summary>
+        /// Custom validation logic for the token request.
+        /// </summary>
+        /// <param name="request">The validated request.</param>
+        /// <returns>
+        /// The validation result
+        /// </returns>
         public Task<ValidationResult> ValidateTokenRequestAsync(ValidatedTokenRequest request)
         {
             return Task.FromResult(new ValidationResult

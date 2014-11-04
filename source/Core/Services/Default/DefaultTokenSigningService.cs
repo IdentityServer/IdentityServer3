@@ -24,16 +24,33 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    // todo: logging
+    /// <summary>
+    /// Default token signing service
+    /// </summary>
     public class DefaultTokenSigningService : ITokenSigningService
     {
-        private readonly IdentityServerOptions _options;
+        /// <summary>
+        /// The identity server options
+        /// </summary>
+        protected readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
         public DefaultTokenSigningService(IdentityServerOptions options)
         {
             _options = options;
         }
 
+        /// <summary>
+        /// Signs the token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>
+        /// A protected and serialized security token
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">Invalid token type</exception>
         public Task<string> SignTokenAsync(Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken ||
@@ -52,6 +69,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             throw new InvalidOperationException("Invalid token type");
         }
 
+        /// <summary>
+        /// Creates the json web token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns></returns>
         protected virtual string CreateJsonWebToken(Token token, SigningCredentials credentials)
         {
             var jwt = new JwtSecurityToken(

@@ -21,17 +21,32 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default custom token validator
+    /// </summary>
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
         private readonly IUserService _users;
         private readonly IClientStore _clients;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultCustomTokenValidator"/> class.
+        /// </summary>
+        /// <param name="users">The users store.</param>
+        /// <param name="clients">The client store.</param>
         public DefaultCustomTokenValidator(IUserService users, IClientStore clients)
         {
             _users = users;
             _clients = clients;
         }
 
+        /// <summary>
+        /// Custom validation logic for access tokens.
+        /// </summary>
+        /// <param name="result">The validation result so far.</param>
+        /// <returns>
+        /// The validation result
+        /// </returns>
         public async Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
         {
             if (result.IsError)
@@ -73,6 +88,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return result;
         }
 
+        /// <summary>
+        /// Custom validation logic for identity tokens.
+        /// </summary>
+        /// <param name="result">The validation result so far.</param>
+        /// <returns>
+        /// The validation result
+        /// </returns>
         public async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
             // make sure user is still active (if sub claim is present)

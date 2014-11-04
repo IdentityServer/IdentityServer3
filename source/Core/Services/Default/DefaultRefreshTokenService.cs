@@ -22,17 +22,38 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default refresh token service
+    /// </summary>
     public class DefaultRefreshTokenService : IRefreshTokenService
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        /// <summary>
+        /// The logger
+        /// </summary>
+        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IRefreshTokenStore _store;
-        
+        /// <summary>
+        /// The refresh token store
+        /// </summary>
+        protected readonly IRefreshTokenStore _store;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultRefreshTokenService"/> class.
+        /// </summary>
+        /// <param name="store">The refresh token store.</param>
         public DefaultRefreshTokenService(IRefreshTokenStore store)
         {
             _store = store;
         }
 
+        /// <summary>
+        /// Creates the refresh token.
+        /// </summary>
+        /// <param name="accessToken">The access token.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>
+        /// The refresh token handle
+        /// </returns>
         public async Task<string> CreateRefreshTokenAsync(Token accessToken, Client client)
         {
             Logger.Debug("Creating refresh token");
@@ -62,6 +83,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return handle;
         }
 
+        /// <summary>
+        /// Updates the refresh token.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="refreshToken">The refresh token.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>
+        /// The refresh token handle
+        /// </returns>
         public async Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client)
         {
             Logger.Debug("Updating refresh token");
