@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             get
             {
-                return Claims.Single(x => x.Type == Constants.ClaimTypes.Subject).Value;
+                return Claims.Where(x => x.Type == Constants.ClaimTypes.Subject).Select(x => x.Value).SingleOrDefault();
             }
         }
 
