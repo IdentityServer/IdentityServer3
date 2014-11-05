@@ -15,8 +15,10 @@
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
@@ -187,8 +189,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         [TestCategory(Category)]
         public async Task Valid_AccessToken_but_User_not_active()
         {
+            var mock = new Mock<IUserService>();
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));                        
+
             var store = new InMemoryTokenHandleStore();
-            var validator = Factory.CreateTokenValidator(store);
+            var validator = Factory.CreateTokenValidator(tokenStore: store, users: mock.Object);
 
             var token = TokenFactory.CreateAccessToken("roclient", "invalid", 600, "read", "write");
             var handle = "123";
