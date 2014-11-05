@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core
@@ -72,6 +73,12 @@ namespace Thinktecture.IdentityServer.Core
 
             var id = new ClaimsIdentity(principal.Claims, authenticationType);
             return new ClaimsPrincipal(id);
+        }
+
+        public static ClaimsPrincipal FromSubjectId(string subjectId)
+        {
+            return Principal.Create(Constants.PrimaryAuthenticationType,
+                new Claim(Constants.ClaimTypes.Subject, subjectId));
         }
     }
 }
