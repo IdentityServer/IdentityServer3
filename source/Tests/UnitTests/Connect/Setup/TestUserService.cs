@@ -51,14 +51,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
             return Task.FromResult(true);
-
-            var subjectId = subject.GetSubjectId();
-            if (subjectId == "valid")
-            {
-                return Task.FromResult(true);
-            }
-
-            return Task.FromResult(false);
         }
 
         public Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
