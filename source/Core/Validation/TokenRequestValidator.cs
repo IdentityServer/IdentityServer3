@@ -383,7 +383,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (await _users.IsActiveAsync(IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId)) == false)
             {
-                Logger.Error("User has been disabled: " + _validatedRequest.AuthorizationCode.Subject);
+                Logger.Error("User has been disabled: " + _validatedRequest.RefreshToken.SubjectId);
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
