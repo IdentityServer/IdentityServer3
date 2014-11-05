@@ -323,5 +323,44 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task Code_Request_with_disabled_User()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
+
+            var mock = new Mock<IUserService>();
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                RedirectUri = new Uri("https://server/cb"),
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store,
+                userService: mock.Object);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            Assert.IsTrue(result.IsError);
+        }
     }
 }

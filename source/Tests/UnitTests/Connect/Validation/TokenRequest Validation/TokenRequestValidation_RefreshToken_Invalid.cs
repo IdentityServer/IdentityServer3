@@ -15,8 +15,11 @@
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
@@ -144,6 +147,42 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             Assert.IsTrue(result.IsError);
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+        }
+
+        [TestMethod]
+        [TestCategory(Category)]
+        public async Task RefreshToken_Request_with_disabled_User()
+        {
+            var mock = new Mock<IUserService>();
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+
+            var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+
+            var refreshToken = new RefreshToken
+            {
+                AccessToken = new Token("access_token") { Claims = new List<Claim> { subjectClaim } },
+                ClientId = "roclient",
+                LifeTime = 600,
+                CreationTime = DateTime.UtcNow
+            };
+            var handle = Guid.NewGuid().ToString();
+
+            var store = new InMemoryRefreshTokenStore();
+            await store.StoreAsync(handle, refreshToken);
+
+            var client = await _clients.FindClientByIdAsync("roclient");
+
+            var validator = Factory.CreateTokenRequestValidator(
+                refreshTokens: store,
+                userService: mock.Object);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
+            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            Assert.IsTrue(result.IsError);
         }
     }
 }
