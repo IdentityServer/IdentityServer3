@@ -15,6 +15,7 @@
  */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -30,8 +31,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
-                DateFormatHandling = DateFormatHandling.IsoDateFormat
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                Formatting = Formatting.Indented,
             };
+            settings.Converters.Add(new StringEnumConverter());
 
             var json = JsonConvert.SerializeObject(evt, settings);
             Logger.Info(json);

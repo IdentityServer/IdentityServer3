@@ -48,14 +48,22 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IdentityServerOptions _options;
         private readonly IClientStore _clientStore;
+        private readonly IEventService _events;
 
-        public AuthenticationController(IViewService viewService, IUserService userService, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions, IClientStore clientStore)
+        public AuthenticationController(
+            IViewService viewService, 
+            IUserService userService, 
+            AuthenticationOptions authenticationOptions, 
+            IdentityServerOptions idSvrOptions, 
+            IClientStore clientStore, 
+            IEventService events)
         {
             _viewService = viewService;
             _userService = userService;
             _authenticationOptions = authenticationOptions;
             _options = idSvrOptions;
             _clientStore = clientStore;
+            _events = events;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -170,6 +178,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
                 return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
+
+            RaiseLocalLoginSuccessEvent(model.Username, signInMessage, authResult);
 
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
@@ -477,6 +487,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
+        }
+
+        private void RaiseLocalLoginSuccessEvent(string username, SignInMessage signInMessage, AuthenticateResult authResult)
+        {
+            _events.RaiseLocalLoginSuccessEvent(Request.GetOwinEnvironment(), username, signInMessage, authResult);
         }
 
         private void IssueAuthenticationCookie(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)

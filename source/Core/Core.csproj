@@ -124,6 +124,12 @@
     <Compile Include="Events\EventType.cs" />
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
+    <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Resources\Events.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Events.resx</DependentUpon>
+    </Compile>
     <Compile Include="Results\LogoutResult.cs" />
     <Compile Include="Configuration\Hosting\MessageCookie.cs" />
     <Compile Include="Models\SignOutMessage.cs" />
@@ -326,6 +332,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Events.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Events.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>

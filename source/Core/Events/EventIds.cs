@@ -6,13 +6,21 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public static class EventIds
+    public static class EventConstants
     {
-        internal const int AuthenticationEventsStart = 1000;
+        public static class Categories
+        {
+            public const string Authentication = "Authentication";
+        }
+        
+        public static class Ids
+        {
+            internal const int AuthenticationEventsStart = 1000;
 
-        public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
-        public const int FailedLocalLogin = AuthenticationEventsStart + 1;
-        public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
-        public const int FailedExternalLogin = AuthenticationEventsStart + 3;
+            public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
+            public const int FailedLocalLogin = AuthenticationEventsStart + 1;
+            public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
+            public const int FailedExternalLogin = AuthenticationEventsStart + 3;
+        }
     }
 }

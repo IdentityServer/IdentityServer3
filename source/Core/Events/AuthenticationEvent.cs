@@ -20,6 +20,11 @@ namespace Thinktecture.IdentityServer.Core.Events
 {
     public class AuthenticationEventBase : EventBase
     {
+        public AuthenticationEventBase()
+        {
+            this.Category = EventConstants.Categories.Authentication;
+        }
+
         public string SubjectId { get; set; }
         public SignInMessage SignInMessage { get; set; }
     }

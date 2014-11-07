@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -23,6 +24,24 @@ namespace Thinktecture.IdentityServer.Core.Events
 {
     public class EventBase
     {
+        internal static string GetActivityId()
+        {
+            if (Trace.CorrelationManager.ActivityId == Guid.Empty)
+            {
+                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            }
+
+            return Trace.CorrelationManager.ActivityId.ToString("N");
+        }
+        
+        public EventBase()
+        {
+            this.ActivityId = GetActivityId();
+            this.TimeStamp = DateTime.UtcNow;
+            this.ProcessId = Process.GetCurrentProcess().Id;
+            this.MachineName = Environment.MachineName;
+        }
+
         public int Id { get; set; }
         public string ActivityId { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -31,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Events
 
         public int ProcessId { get; set; }
         public string MachineName { get; set; }
-        public string SourceIpAddress { get; set; }
+        public string RemoteIpAddress { get; set; }
         
         public string Message { get; set; }
         public string Details { get; set; }
