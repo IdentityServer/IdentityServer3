@@ -233,6 +233,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
 
+        public Registration<IEventService> EventService { get; set; }
+
         /// <summary>
         /// Gets or sets the custom token validator - Implements custom additional validation of tokens for the token validation endpoints.
         /// </summary>

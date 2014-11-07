@@ -120,6 +120,10 @@
     <Compile Include="App_Packages\LibLog.1.3\Logging.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
+    <Compile Include="Events\EventIds.cs" />
+    <Compile Include="Events\EventType.cs" />
+    <Compile Include="Events\AuthenticationEvent.cs" />
+    <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Results\LogoutResult.cs" />
     <Compile Include="Configuration\Hosting\MessageCookie.cs" />
     <Compile Include="Models\SignOutMessage.cs" />
@@ -127,12 +131,15 @@
     <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
+    <Compile Include="Events\EventBase.cs" />
+    <Compile Include="Services\Default\DefaultEventService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\ClaimsFilterBase.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NormalizingClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\AggregateExternalClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
+    <Compile Include="Services\IEventService.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />

@@ -188,6 +188,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.RegisterType<DefaultConsentService>().As<IConsentService>();
             }
 
+            if (fact.EventService != null)
+            {
+                builder.Register(fact.EventService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultEventService>().As<IEventService>();
+            }
+
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
             // by a custom IClientPermissionsService
