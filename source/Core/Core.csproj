@@ -139,6 +139,7 @@
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
     <Compile Include="Events\EventBase.cs" />
     <Compile Include="Services\Default\DefaultEventService.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\IgnoreClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\ClaimsFilterBase.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NormalizingClaimsFilter.cs" />
