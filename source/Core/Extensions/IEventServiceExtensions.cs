@@ -26,17 +26,31 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 SignInMessage = signInMessage,
                 LoginUserName = username
             };
-            evt.Apply(env);
+            evt.ApplyEnvironment(env);
             events.Raise(evt);
         }
 
-        internal static void Apply(this EventBase evt, IDictionary<string, object> env)
+        internal static void ApplyEnvironment(this EventBase evt, IDictionary<string, object> env)
         {
             if (env == null) throw new ArgumentNullException("env");
 
             var ctx = new OwinContext(env);
-            
+
+            evt.ActivityId = GetActivityId();
+            evt.TimeStamp = DateTime.UtcNow;
+            evt.ProcessId = Process.GetCurrentProcess().Id;
+            evt.MachineName = Environment.MachineName; 
             evt.RemoteIpAddress = ctx.Request.RemoteIpAddress;
+        }
+
+        internal static string GetActivityId()
+        {
+            if (Trace.CorrelationManager.ActivityId == Guid.Empty)
+            {
+                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            }
+
+            return Trace.CorrelationManager.ActivityId.ToString("N");
         }
     }
 }
