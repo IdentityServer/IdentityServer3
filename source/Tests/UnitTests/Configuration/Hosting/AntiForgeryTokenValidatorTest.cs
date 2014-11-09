@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Thinktecture.IdentityServer.Tests.Authentication
+namespace Thinktecture.IdentityServer.Tests.Configuration.Hosting
 {
     [TestClass]
-    public class AuthenticateResultTests
+    public class AntiForgeryTokenValidatorTest
     {
-       
     }
 }

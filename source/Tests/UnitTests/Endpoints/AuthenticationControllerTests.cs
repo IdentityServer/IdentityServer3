@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Tests.Authentication
+namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
     [TestClass]
     public class AuthenticationControllerTests : IdSvrHostTestBase

@@ -127,8 +127,8 @@
     <Compile Include="..\..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Authentication\AuthenticationControllerTests.cs" />
-    <Compile Include="Authentication\AuthenticateResultTests.cs" />
+    <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
+    <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
     <Compile Include="Configuration\RegistrationTests.cs" />
     <Compile Include="Connect\Endpoints\ClientPermissionsControllerTests.cs" />
