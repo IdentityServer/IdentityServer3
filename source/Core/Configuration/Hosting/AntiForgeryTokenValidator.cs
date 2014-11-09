@@ -66,20 +66,28 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var ctx = new OwinContext(env);
             var cookie = ctx.Request.Cookies[TokenName];
 
-            if (cookie == null)
+            if (cookie != null)
             {
-                var bytes = Guid.NewGuid().ToByteArray();
-
-                var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
-                var token = Base64Url.Encode(protectedTokenBytes);
-                ctx.Response.Cookies.Append(TokenName, token);
-
-                return bytes;
+                try
+                {
+                    var protectedCookieBytes = Base64Url.Decode(cookie);
+                    var tokenBytes = options.DataProtector.Unprotect(protectedCookieBytes, CookieEntropy);
+                    return tokenBytes;
+                }
+                catch(Exception ex)
+                {
+                    // if there's an exception we fall thru the catch block to reissue a new cookie
+                    Logger.WarnFormat("Problem unprotecting cookie; Issuing new cookie. Error message: {0}", ex.Message);
+                }
             }
 
-            var protectedCookieBytes = Base64Url.Decode(cookie);
-            var tokenBytes = options.DataProtector.Unprotect(protectedCookieBytes, CookieEntropy);
-            return tokenBytes;
+            var bytes = Guid.NewGuid().ToByteArray();
+
+            var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
+            var token = Base64Url.Encode(protectedTokenBytes);
+            ctx.Response.Cookies.Append(TokenName, token);
+
+            return bytes;
         }
 
         internal static async Task<byte[]> GetHiddenInputTokenAsync(IDictionary<string, object> env)
