@@ -32,9 +32,8 @@ Here are questions you can answer before you file a bug to make sure you're not 
 
 GitHub supports [markdown](http://github.github.com/github-flavored-markdown/), so when filing bugs make sure you check the formatting before clicking submit.
 
-
 ## Contributing code and content
-You will need to sign a contributor license agreement (CLA) - please contact us first.
+You will need to sign a [Contributor License Agreement](https://cla.msopentech.com) before submitting your pull request. To complete the Contributor License Agreement (CLA), you will need to submit a request via the form and then electronically sign the Contributor License Agreement when you receive the email containing the link to the document. This needs to only be done once for any Microsoft Open Technologies OSS project.
 
 Make sure you can build the code. Familiarize yourself with the project workflow and our coding conventions. If you don't know what a pull request is read this article: https://help.github.com/articles/using-pull-requests.
 
