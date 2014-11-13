@@ -125,6 +125,9 @@
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Validation\BearerTokenUsageType.cs" />
+    <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
+    <Compile Include="Validation\BearerTokenUsageValidator.cs" />
     <Compile Include="Resources\Events.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
