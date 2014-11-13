@@ -62,8 +62,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var idTokenHint = parameters.Get(Constants.EndSessionRequest.IdTokenHint);
             if (idTokenHint.IsPresent())
             {
-                // validate id_token
-                var tokenValidationResult = await _tokenValidator.ValidateIdentityTokenAsync(idTokenHint);
+                // validate id_token - no need to validate token life time
+                var tokenValidationResult = await _tokenValidator.ValidateIdentityTokenAsync(idTokenHint, null, false);
                 if (tokenValidationResult.IsError)
                 {
                     return Invalid();
@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                             return Invalid();
                         }
                     }
-                    
+
                     var state = parameters.Get(Constants.EndSessionRequest.State);
                     if (state.IsPresent())
                     {
@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     }
                 }
             }
-            
+
             return Valid();
         }
 
