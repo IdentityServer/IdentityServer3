@@ -91,10 +91,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var claims = new List<Claim>();
 
             // if nonce was sent, must be mirrored in id token
-            var nonce = request.ValidatedRequest.Raw.Get(Constants.AuthorizeRequest.Nonce);
-            if (nonce.IsPresent())
+            if (request.Nonce.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Nonce, nonce));
+                claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
             }
 
             // add iat claim

@@ -33,19 +33,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     public class UserInfoEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         private readonly UserInfoResponseGenerator _generator;
         private readonly TokenValidator _tokenValidator;
+        private readonly BearerTokenUsageValidator _tokenUsageValidator;
         private readonly IdentityServerOptions _options;
 
-        public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator)
+        public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator, BearerTokenUsageValidator tokenUsageValidator)
         {
             _tokenValidator = tokenValidator;
             _generator = generator;
             _options = options;
+            _tokenUsageValidator = tokenUsageValidator;
         }
 
         [Route]
-        public async Task<IHttpActionResult> Get(HttpRequestMessage request)
+        [HttpGet, HttpPost]
+        public async Task<IHttpActionResult> GetUserInfo(HttpRequestMessage request)
         {
             Logger.Info("Start userinfo request");
 
@@ -55,27 +59,24 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
-            var authorizationHeader = request.Headers.Authorization;
-
-            if (authorizationHeader == null ||
-                !authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) ||
-                authorizationHeader.Parameter.IsMissing())
+            var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request);
+            if (tokenUsageResult.TokenFound == false)
             {
                 return Error(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
-            var result = await _tokenValidator.ValidateAccessTokenAsync(
-                authorizationHeader.Parameter, 
+            var tokenResult = await _tokenValidator.ValidateAccessTokenAsync(
+                tokenUsageResult.Token, 
                 Constants.StandardScopes.OpenId);
 
-            if (result.IsError)
+            if (tokenResult.IsError)
             {
-                return Error(result.Error);
+                return Error(tokenResult.Error);
             }
 
             // pass scopes/claims to profile service
-            var subject = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
-            var scopes = result.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
+            var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
+            var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
             var payload = await _generator.ProcessAsync(subject, scopes);
             return new UserInfoResult(payload);

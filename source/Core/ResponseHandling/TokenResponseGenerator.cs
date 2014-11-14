@@ -87,6 +87,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     Subject = request.AuthorizationCode.Subject,
                     Client = request.AuthorizationCode.Client,
                     Scopes = request.AuthorizationCode.RequestedScopes,
+                    Nonce = request.AuthorizationCode.Nonce,
+
                     ValidatedRequest = request
                 };
 

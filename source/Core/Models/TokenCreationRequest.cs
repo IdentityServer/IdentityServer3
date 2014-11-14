@@ -33,6 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public bool IncludeAllIdentityClaims { get; set; }
         public string AccessTokenToHash { get; set; }
         public string AuthorizationCodeToHash { get; set; }
+        public string Nonce { get; set; }
 
         public void Validate()
         {
