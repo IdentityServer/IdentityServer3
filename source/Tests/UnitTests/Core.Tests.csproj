@@ -128,6 +128,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
+    <Compile Include="Connect\Endpoints\TokenEndpointControllerTests.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
     <Compile Include="Configuration\RegistrationTests.cs" />
