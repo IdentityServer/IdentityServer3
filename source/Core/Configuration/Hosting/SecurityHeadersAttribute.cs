@@ -63,6 +63,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     if (options.CspOptions.Enabled)
                     {
                         var value = "default-src 'self'; script-src 'self' {0}; style-src 'self' 'unsafe-inline' {1}; img-src *;";
+                        
+                        if (!String.IsNullOrWhiteSpace(options.CspOptions.FontSrc))
+                        {
+                            value += String.Format("font-src {0};", options.CspOptions.FontSrc);
+                        }
+
                         value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
                         if (options.CspOptions.ReportEndpoint.IsEnabled)
                         {

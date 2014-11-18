@@ -28,5 +28,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public EndpointSettings ReportEndpoint { get; set; }
         public string ScriptSrc { get; set; }
         public string StyleSrc { get; set; }
+        public string FontSrc { get; set; }
     }
 }
