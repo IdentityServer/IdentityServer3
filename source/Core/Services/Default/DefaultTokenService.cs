@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// An access token
         /// </returns>
-        public async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
+        public virtual async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating access token");
             request.Validate();
