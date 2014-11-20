@@ -222,9 +222,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             message = message ?? new SignInMessage();
 
             var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null).AddQueryString(parameters.ToQueryString());
-            var url = new Uri(Request.RequestUri, path);
+            var requestUri = !string.IsNullOrWhiteSpace(_options.PublicHostName)
+                ? new Uri(_options.PublicHostName)
+                : Request.RequestUri;
+            var url = new Uri(requestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
-
+            
             return new LoginResult(message, Request.GetOwinContext().Environment, _options);
         }
 

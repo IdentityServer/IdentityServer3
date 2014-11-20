@@ -93,9 +93,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var message = new SignInMessage();
 
             var path = Url.Route(Constants.RouteNames.ClientPermissions, null);
-            var url = new Uri(Request.RequestUri, path);
+            var requestUri = !string.IsNullOrWhiteSpace(options.PublicHostName)
+                ? new Uri(options.PublicHostName)
+                : Request.RequestUri;
+            var url = new Uri(requestUri, path);
             message.ReturnUrl = url.AbsoluteUri;
-
             return new LoginResult(message, Request.GetOwinContext().Environment, options);
         }
 
