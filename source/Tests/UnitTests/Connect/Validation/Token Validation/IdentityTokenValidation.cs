@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
-            Assert.IsTrue(result.IsError);
+            Xunit.Assert.True(result.IsError);
             Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient_symmetric");
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestCategory(Category)]
@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
     }
 }

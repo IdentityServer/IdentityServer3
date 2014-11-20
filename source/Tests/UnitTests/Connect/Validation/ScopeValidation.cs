@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -145,7 +145,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -157,7 +157,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -169,7 +169,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_unrestrictedClient, scopes);
 
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -181,7 +181,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -205,9 +205,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsTrue(result);
-            Assert.IsTrue(validator.ContainsOpenIdScopes);
-            Assert.IsTrue(validator.ContainsResourceScopes);
+            Xunit.Assert.True(result);
+            Xunit.Assert.True(validator.ContainsOpenIdScopes);
+            Xunit.Assert.True(validator.ContainsResourceScopes);
         }
 
         [TestMethod]
@@ -219,9 +219,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsTrue(result);
-            Assert.IsFalse(validator.ContainsOpenIdScopes);
-            Assert.IsTrue(validator.ContainsResourceScopes);
+            Xunit.Assert.True(result);
+            Xunit.Assert.False(validator.ContainsOpenIdScopes);
+            Xunit.Assert.True(validator.ContainsResourceScopes);
         }
 
         [TestMethod]
@@ -233,9 +233,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.IsTrue(result);
-            Assert.IsTrue(validator.ContainsOpenIdScopes);
-            Assert.IsFalse(validator.ContainsResourceScopes);
+            Xunit.Assert.True(result);
+            Xunit.Assert.True(validator.ContainsOpenIdScopes);
+            Xunit.Assert.False(validator.ContainsResourceScopes);
         }
     }
 }

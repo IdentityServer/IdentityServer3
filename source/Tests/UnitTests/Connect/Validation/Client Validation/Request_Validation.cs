@@ -41,8 +41,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
+            Xunit.Assert.False(credential.IsMalformed);
+            Xunit.Assert.True(credential.IsPresent);
             Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
 
             Assert.AreEqual("client", credential.ClientId);
@@ -59,8 +59,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(null, body);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
+            Xunit.Assert.False(credential.IsMalformed);
+            Xunit.Assert.True(credential.IsPresent);
             Assert.AreEqual(Constants.ClientAuthenticationMethods.FormPost, credential.Type);
 
             Assert.AreEqual("client", credential.ClientId);
@@ -79,8 +79,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
+            Xunit.Assert.False(credential.IsMalformed);
+            Xunit.Assert.True(credential.IsPresent);
             Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
 
             Assert.AreEqual("client", credential.ClientId);
@@ -93,8 +93,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         {
             var credential = _validator.ValidateHttpRequest(null, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.False(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
 
         [TestMethod]
@@ -105,8 +105,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.True(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
 
         [TestMethod]
@@ -117,8 +117,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.False(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
 
         [TestMethod]
@@ -129,8 +129,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.True(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
 
         [TestMethod]
@@ -143,8 +143,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.True(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
 
         [TestMethod]
@@ -157,8 +157,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            Xunit.Assert.True(credential.IsMalformed);
+            Xunit.Assert.False(credential.IsPresent);
         }
     }
 }

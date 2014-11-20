@@ -42,8 +42,8 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
 
         void AssertAllowed(string origin, System.Web.Cors.CorsPolicy cp)
         {
-            Assert.IsTrue(cp.AllowAnyHeader);
-            Assert.IsTrue(cp.AllowAnyMethod);
+            Xunit.Assert.True(cp.AllowAnyHeader);
+            Xunit.Assert.True(cp.AllowAnyMethod);
             Assert.AreEqual(1, cp.Origins.Count);
             CollectionAssert.Contains(cp.Origins.ToArray(), origin);
         }

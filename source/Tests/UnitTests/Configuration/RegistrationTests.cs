@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Func<object> f = () => { wasCalled = true; return new object(); };
             var reg = Registration.RegisterFactory<object>(f);
             var result = reg.ImplementationFactory();
-            Assert.IsTrue(wasCalled);
+            Xunit.Assert.True(wasCalled);
         }
 
         [TestMethod]

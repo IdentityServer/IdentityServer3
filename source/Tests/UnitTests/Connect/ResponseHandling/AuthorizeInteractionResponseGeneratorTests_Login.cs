@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessLoginAsync(request, Principal.Anonymous);
 
-            Assert.IsTrue(result.IsLogin);
+            Xunit.Assert.True(result.IsLogin);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsFalse(result.IsLogin);
+            Xunit.Assert.False(result.IsLogin);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.IsFalse(result.IsLogin);
+            Xunit.Assert.False(result.IsLogin);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.IsTrue(result.IsLogin);
+            Xunit.Assert.True(result.IsLogin);
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsFalse(result.IsLogin);
+            Xunit.Assert.False(result.IsLogin);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsTrue(result.IsLogin);
+            Xunit.Assert.True(result.IsLogin);
         }
     }
 }

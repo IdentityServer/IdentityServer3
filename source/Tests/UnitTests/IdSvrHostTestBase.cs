@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected T Get<T>(string path)
         {
             var result = Get(path);
-            Assert.IsTrue(result.IsSuccessStatusCode);
+            Xunit.Assert.True(result.IsSuccessStatusCode);
             return result.Content.ReadAsAsync<T>().Result;
         }
 

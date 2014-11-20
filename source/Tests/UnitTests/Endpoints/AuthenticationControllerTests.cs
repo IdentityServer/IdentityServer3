@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             options.AuthenticationOptions.EnableLocalLogin = false;
             var resp = GetLoginPage();
             Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
-            Assert.IsTrue(resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google"));
+            Xunit.Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google"));
         }
 
         [TestMethod]
@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Found, resp2.StatusCode);
-            Assert.IsTrue(resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
+            Xunit.Assert.True(resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
         }
 
         [TestMethod]
@@ -252,7 +252,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage(msg);
             resp = client.GetAsync(resp.Headers.Location.AbsoluteUri).Result;
             Assert.AreEqual(HttpStatusCode.Found, resp.StatusCode);
-            Assert.IsTrue(resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
+            Xunit.Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
         }
 
         [TestMethod]
@@ -360,7 +360,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.IsFalse(cookie.Contains("expires="));
+            Xunit.Assert.False(cookie.Contains("expires="));
         }
 
         [TestMethod]
@@ -372,7 +372,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.IsTrue(cookie.Contains("expires="));
+            Xunit.Assert.True(cookie.Contains("expires="));
         }
 
         [TestMethod]
@@ -384,7 +384,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.IsFalse(cookie.Contains("expires="));
+            Xunit.Assert.False(cookie.Contains("expires="));
         }
         [TestMethod]
         public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_CheckRememberMe_IssuesPersistentCookie()
@@ -395,7 +395,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice", RememberMe = true });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.IsTrue(cookie.Contains("expires="));
+            Xunit.Assert.True(cookie.Contains("expires="));
         }
 
         [TestMethod]
@@ -409,7 +409,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "="));
-            Assert.IsFalse(cookie.Contains("expires="));
+            Xunit.Assert.False(cookie.Contains("expires="));
         }
 
         [TestMethod]

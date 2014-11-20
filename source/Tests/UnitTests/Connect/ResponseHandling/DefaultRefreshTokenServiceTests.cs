@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.IsFalse(string.IsNullOrWhiteSpace(handle));
+            Xunit.Assert.False(string.IsNullOrWhiteSpace(handle));
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.IsFalse(string.IsNullOrWhiteSpace(handle));
+            Xunit.Assert.False(string.IsNullOrWhiteSpace(handle));
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
@@ -183,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
             return validator.ValidatedRequest;
         }
     }

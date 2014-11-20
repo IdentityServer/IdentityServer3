@@ -41,10 +41,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
@@ -61,10 +61,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -82,10 +82,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -103,10 +103,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -123,10 +123,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
@@ -143,10 +143,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            Xunit.Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
+            Xunit.Assert.True(clientResult.IsError);
             Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }

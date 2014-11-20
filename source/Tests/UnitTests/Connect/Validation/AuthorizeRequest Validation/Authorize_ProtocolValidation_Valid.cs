@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -154,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -172,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -190,7 +190,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
     }
 }

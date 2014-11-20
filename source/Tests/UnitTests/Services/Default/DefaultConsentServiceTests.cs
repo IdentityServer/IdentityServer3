@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void RequiresConsentAsync_NoPriorConsentGiven_ReturnsTrue()
         {
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Reverse();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Add("query");
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.RemoveAt(0);
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
         
         [TestMethod]
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Clear();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             client.RequireConsent = false;
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             client.AllowRememberConsent = false;
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result =  subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsFalse(result);
+            Xunit.Assert.False(result);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             client.AllowRememberConsent = false;
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             subject.UpdateConsentAsync(client, user, null).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
 
         [TestMethod]
@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             subject.UpdateConsentAsync(client, user, new string[0]).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
         
         [TestMethod]
@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             var newConsent = new string[] { "foo", "bar" };
             subject.UpdateConsentAsync(client, user, newConsent).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.IsTrue(result);
+            Xunit.Assert.True(result);
         }
     }
 }

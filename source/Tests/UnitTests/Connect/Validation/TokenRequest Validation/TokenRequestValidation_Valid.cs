@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -141,7 +141,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -179,7 +179,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -198,7 +198,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -251,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
 
         [TestMethod]
@@ -287,7 +287,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            Xunit.Assert.False(result.IsError);
         }
     }
 }

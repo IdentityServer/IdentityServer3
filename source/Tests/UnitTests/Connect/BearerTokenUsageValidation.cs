@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsTrue(result.TokenFound);
+            Xunit.Assert.True(result.TokenFound);
             Assert.AreEqual("token", result.Token);
             Assert.AreEqual(BearerTokenUsageType.AuthorizationHeader, result.UsageType);
         }
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsTrue(result.TokenFound);
+            Xunit.Assert.True(result.TokenFound);
             Assert.AreEqual("token", result.Token);
             Assert.AreEqual(BearerTokenUsageType.PostBody, result.UsageType);
         }
@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            Xunit.Assert.False(result.TokenFound);
         }
     }
 }
