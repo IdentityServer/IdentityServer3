@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         List<string> scopes;
 
         
-        public void Init()
+        public DefaultConsentServiceTests()
         {
             scopes = new List<string> { "read", "write" };
             client = new Client {ClientId = "client", AllowRememberConsent = true, RequireConsent = true};

@@ -30,9 +30,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         string clientId;
 
         
-        public new void Init()
+        public ClientPermissionsControllerTests()
         {
-            base.Init();
             clientId = TestClients.Get().First().ClientId;
         }
 

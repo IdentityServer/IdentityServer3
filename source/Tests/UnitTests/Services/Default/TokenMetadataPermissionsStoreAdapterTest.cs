@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         TokenMetadataPermissionsStoreAdapter subject;
 
         
-        public void Init()
+        public TokenMetadataPermissionsStoreAdapterTest()
         {
             tokens = new List<ITokenMetadata>();
             get = s => Task.FromResult(tokens.AsEnumerable());

@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         
-        public void Init()
+        public AuthorizeInteractionResponseGeneratorTests_Consent()
         {
             mockConsent = new Mock<IConsentService>();
             mockUserService = new Mock<IUserService>();
