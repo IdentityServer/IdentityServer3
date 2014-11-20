@@ -11,7 +11,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
     {
         const string Category = "BearerTokenUsageValidator Tests";
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task No_Header_no_Body_Get()
         {
@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task No_Header_no_Body_Post()
         {
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Non_Bearer_Scheme_Header()
         {
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Empty_Bearer_Scheme_Header()
         {
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Whitespaces_Bearer_Scheme_Header()
         {
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Bearer_Scheme_Header()
         {
@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Assert.AreEqual(BearerTokenUsageType.AuthorizationHeader, result.UsageType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Body_Post()
         {
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Assert.AreEqual(BearerTokenUsageType.PostBody, result.UsageType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Body_Post_empty_Token()
         {
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Body_Post_Whitespace_Token()
         {
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             Xunit.Assert.False(result.TokenFound);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Body_Post_no_Token()
         {

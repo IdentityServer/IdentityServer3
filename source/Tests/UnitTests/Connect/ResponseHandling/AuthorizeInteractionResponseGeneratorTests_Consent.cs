@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_NullRequest_Throws()
         {
             try
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             }
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_AllowsNullConsent()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var result = subject.ProcessConsentAsync(request, null).Result;
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsLogin_Throws()
         {
             RequiresConsent(true);
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 StringAssert.Contains(ex2.Message, "PromptMode");
             }
         }
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
         {
             RequiresConsent(true);
@@ -141,7 +141,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_RequiresConsentButPromptModeIsNone_ReturnsErrorResult()
         {
             RequiresConsent(true);
@@ -161,7 +161,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_NoPriorConsent_ReturnsConsentResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -177,7 +177,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_NoPriorConsent_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -194,7 +194,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_ConsentNotGranted_ReturnsErrorResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -219,7 +219,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentNotGranted_ReturnsErrorResult()
         {
             RequiresConsent(true);
@@ -246,7 +246,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
 
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_ConsentGranted_NoScopesSelected_ReturnsConsentResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -271,7 +271,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_NoScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -296,7 +296,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -323,7 +323,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -350,7 +350,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ProcessConsentAsync_AllowConsentSelected_SavesConsent()
         {
             RequiresConsent(true);

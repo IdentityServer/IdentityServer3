@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         IClientStore _clients = Factory.CreateClientStore();
         const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_AuthorizationCode()
         {
@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Invalid_AuthorizationCode()
         {
@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task No_Scopes_for_AuthorizationCode()
         {
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(result.Error, Constants.TokenErrors.InvalidRequest);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
@@ -155,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_RedirectUri()
         {
@@ -215,7 +215,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
@@ -245,7 +245,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Expired_AuthorizationCode()
         {
@@ -276,7 +276,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Reused_AuthorizationCode()
         {
@@ -324,7 +324,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Code_Request_with_disabled_User()
         {

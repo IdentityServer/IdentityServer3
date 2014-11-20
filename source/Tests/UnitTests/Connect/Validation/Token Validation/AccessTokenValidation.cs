@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Reference_Token()
         {
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Reference_Token_with_required_Scope()
         {
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Reference_Token_with_missing_Scope()
         {
@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Unknown_Reference_Token()
         {
@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Expired_Reference_Token()
         {
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Malformed_JWT_Token()
         {
@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_JWT_Token()
         {
@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task JWT_Token_invalid_Issuer()
         {
@@ -169,7 +169,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task JWT_Token_invalid_Audience()
         {
@@ -185,7 +185,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_AccessToken_but_User_not_active()
         {
@@ -205,7 +205,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.True(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_AccessToken_but_Client_not_active()
         {

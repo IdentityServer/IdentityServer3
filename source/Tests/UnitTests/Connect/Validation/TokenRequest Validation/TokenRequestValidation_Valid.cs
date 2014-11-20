@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Code_Request()
         {
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Code_Request_with_Refresh_Token()
         {
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request()
         {
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
@@ -144,7 +144,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request()
         {
@@ -163,7 +163,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request_with_Refresh_Token()
         {
@@ -182,7 +182,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_ResourceOwner_Request_Restricted_Client()
         {
@@ -201,7 +201,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_CustomGrant_Request()
         {
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_RefreshToken_Request()
         {
@@ -254,7 +254,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_RefreshToken_Request_using_Restricted_Client()
         {

@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_OpenId_Code_Request()
         {
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Resource_Code_Request()
         {
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_Code_Request()
         {
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_Code_Request_Multiple_Scopes()
         {
@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_OpenId_IdTokenToken_Request()
         {
@@ -119,7 +119,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request()
         {
@@ -138,7 +138,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request_Multiple_Scopes()
         {
@@ -157,7 +157,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(clientResult.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Resource_Token_Request()
         {

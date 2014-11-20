@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
     [TestClass]
     public class AuthorizeInteractionResponseGeneratorTests_Login
     {
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Anonymous_User_must_SignIn()
         {
             var generator = new AuthorizeInteractionResponseGenerator(null, null);
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.True(result.IsLogin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Authenticated_User_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.False(result.IsLogin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.False(result.IsLogin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Authenticated_User_with_restricted_current_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.True(result.IsLogin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Authenticated_User_with_allowed_requested_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.False(result.IsLogin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public async Task Authenticated_User_with_different_requested_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();

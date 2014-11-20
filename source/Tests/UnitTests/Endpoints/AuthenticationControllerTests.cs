@@ -77,14 +77,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             return urlClaim.Value;
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_WithSignInMessage_ReturnsLoginPage()
         {
             var resp = GetLoginPage();
             resp.AssertPage("login");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_SignInMessageHasIdentityProvider_RedirectsToExternalProviderLogin()
         {
             var msg = new SignInMessage();
@@ -97,21 +97,21 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             StringAssert.Contains(resp.Headers.Location.Query, "provider=Google");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsNull_ShowsLoginPage()
         {
             var resp = GetLoginPage();
             resp.AssertPage("login");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsError_ShowsErrorPage()
         {
             mockUserService
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual("SomeError", model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
         {
             mockUserService
@@ -135,7 +135,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsFullLogin_RedirectsToReturnUrl()
         {
             mockUserService
@@ -147,7 +147,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Url("authorize"), resp.Headers.Location.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService
@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertCookie(Constants.PartialSignInAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesRedirect()
         {
             mockUserService
@@ -170,7 +170,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_EnableLocalLoginAndOnlyOneProvider_RedirectsToProvider()
         {
             options.AuthenticationOptions.EnableLocalLogin = false;
@@ -179,7 +179,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google"));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLogin_EnableLocalLoginMoreThanOneProvider_ShowsLoginPage()
         {
             Action<IAppBuilder, string> config = (app, name)=>{
@@ -202,7 +202,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertPage("login");
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLoginExternal_ValidProvider_RedirectsToProvider()
         {
             var msg = new SignInMessage();
@@ -214,7 +214,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.True(resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLoginExternal_InvalidProvider_ReturnsUnauthorized()
         {
             var msg = new SignInMessage();
@@ -225,7 +225,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(HttpStatusCode.Unauthorized, resp2.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLoginExternal_ClientDoesNotAllowProvider_ShowsErrorPage()
         {
             var clientApp = clients.First();
@@ -239,7 +239,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp2.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetLoginExternal_ClientDoesAllowsProvider_RedirectsToProvider()
         {
             var clientApp = clients.First();
@@ -255,7 +255,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_ValidCredentials_IssuesAuthenticationCookie()
         {
             GetLoginPage();
@@ -263,7 +263,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_ValidCredentials_RedirectsBackToAuthorization()
         {
             GetLoginPage();
@@ -272,7 +272,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(resp.Headers.Location, Url("authorize"));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_NoModel_ShowErrorPage()
         {
             GetLoginPage();
@@ -282,7 +282,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(model.ErrorMessage, Messages.UsernameRequired);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_InvalidUsername_ShowErrorPage()
         {
             GetLoginPage();
@@ -292,7 +292,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_InvalidPassword_ShowErrorPage()
         {
             GetLoginPage();
@@ -302,7 +302,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_UserServiceReturnsError_ShowErrorPage()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -315,7 +315,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(model.ErrorMessage, "bad stuff");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_UserServiceReturnsNull_ShowErrorPage()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -328,7 +328,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -339,7 +339,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertCookie(Constants.PartialSignInAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesRedirect()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -351,7 +351,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Url("foo"), resp.Headers.Location.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_CookieOptions_AllowRememberMeIsFalse_IsPersistentIsFalse_DoesNotIssuePersistentCookie()
         {
             this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = false;
@@ -363,7 +363,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.False(cookie.Contains("expires="));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_CookieOptions_AllowRememberMeIsFalse_IsPersistentIsTrue_IssuesPersistentCookie()
         {
             this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = false;
@@ -375,7 +375,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.True(cookie.Contains("expires="));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_DoNotCheckRememberMe_DoeNotIssuePersistentCookie()
         {
             this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = true;
@@ -386,7 +386,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
             Xunit.Assert.False(cookie.Contains("expires="));
         }
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_CheckRememberMe_IssuesPersistentCookie()
         {
             this.options.AuthenticationOptions.CookieOptions.AllowRememberMe = true;
@@ -398,7 +398,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.True(cookie.Contains("expires="));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -412,7 +412,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.False(cookie.Contains("expires="));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -425,7 +425,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp2.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -440,7 +440,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Url("authorize"), resp2.Headers.Location.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ResumeLoginFromRedirect_WithoutPartialCookie_ShowsError()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
@@ -452,14 +452,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp2.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Logout_ShowsLogoutPromptPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("logout");
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void Logout_DisableSignOutPrompt_SkipsLogoutPromptPage()
         {
             this.options.AuthenticationOptions.DisableSignOutPrompt = true;
@@ -467,7 +467,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertPage("loggedOut");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogout_RemovesCookies()
         {
             GetLoginPage();
@@ -479,7 +479,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(0, resp.GetCookies().Count());
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void PostToLogout_EmitsLogoutUrlsForProtocolIframes()
         {
             GetLoginPage();
@@ -492,7 +492,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             CollectionAssert.Contains(signOutUrls, Url("/foo/signout"));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithoutExternalCookie_RendersErrorPage()
         {
             var msg = new SignInMessage();
@@ -503,7 +503,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp3.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithNoClaims_RendersLoginPageWithError()
         {
             var msg = new SignInMessage();
@@ -520,7 +520,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithoutSubjectOrNameIdClaims_RendersLoginPageWithError()
         {
             var msg = new SignInMessage();
@@ -537,7 +537,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithValidSubjectClaim_IssuesAuthenticationCookie()
         {
             var msg = new SignInMessage();
@@ -554,7 +554,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp3.AssertCookie(Constants.PrimaryAuthenticationType);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithValidNameIDClaim_IssuesAuthenticationCookie()
         {
             var msg = new SignInMessage();
@@ -571,7 +571,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp3.AssertCookie(Constants.PrimaryAuthenticationType);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_WithValidSubjectClaim_RedirectsToAuthorizeEndpoint()
         {
             var msg = new SignInMessage();
@@ -589,7 +589,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Url("authorize"), resp3.Headers.Location.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_UserServiceReturnsError_ShowsError()
         {
             mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
@@ -611,7 +611,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual("foo bad", model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_UserServiceReturnsNull_ShowError()
         {
             mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
@@ -633,7 +633,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(Messages.NoMatchingExternalAccount, model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoginExternalCallback_UserIsAnonymous_NoSubjectIsPassedToUserService()
         {
             var msg = new SignInMessage();
@@ -651,7 +651,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()));
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LogoutPrompt_WithSignOutMessage_ContainsClientNameInPage()
         {
             var c = TestClients.Get().First();
@@ -666,7 +666,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(c.ClientName, model.ClientName);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void LogoutPrompt_NoSignOutMessage_ContainsNullClientNameInPage()
         {
             var resp = Get(Constants.RoutePaths.Logout);
@@ -674,7 +674,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNull(model.ClientName);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LogoutPrompt_InvalidSignOutMessageId_ContainsNullClientNameInPage()
         {
             var resp = Get(Constants.RoutePaths.Logout + "?id=123");
@@ -682,7 +682,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNull(model.ClientName);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoggedOut_WithSignOutMessage_ContainsClientNameAndRedirectUrlInPage()
         {
             GetLoginPage();
@@ -699,7 +699,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(c.ClientName, model.ClientName);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoggedOut_NoSignOutMessage_ContainsNullForClientNameAndRedirectUrlInPage()
         {
             GetLoginPage();
@@ -709,7 +709,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNull(model.ClientName);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoggedOut_InvalidSignOutMessageId_ContainsNullForClientNameAndRedirectUrlInPage()
         {
             GetLoginPage();
@@ -719,7 +719,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNull(model.ClientName);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Login_ClientFiltersAllowedIdentityProviders_OnlyAllowedIdPsInLoginPage()
         {
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "no_external_idps" };
@@ -729,7 +729,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNull(google);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void Login_ClientDoesNotFiltersAllowedIdentityProviders_ExternalIsInLoginPage()
         {
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "any_external_idps" };
@@ -739,7 +739,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.IsNotNull(google);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Login_InvalidClientId_ShowsErrorPage()
         {
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "bad_id" };
@@ -747,7 +747,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Login_PostWithJson_ReturnsUnsupportedMediaType()
         {
             GetLoginPage();
@@ -755,14 +755,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Login_PostWithoutXsrf_ReturnsError()
         {
             var resp = PostForm(Url(Constants.RoutePaths.Login + "?signin="), (object)null);
             resp.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void Logout_PostWithoutXsrf_ReturnsError()
         {
             var resp = PostForm(Url(Constants.RoutePaths.Logout), (object)null);

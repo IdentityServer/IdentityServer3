@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             public IEnumerable<string> Scopes {get; set;}
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void LoadAllAsync_CallsGet_MapsResultsToConsent()
         {
             tokens.Add(new TokenMeta("sub", "client1", new string[] { "foo", "bar" }));
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             CollectionAssert.AreEquivalent(new string[] { "baz", "quux" }, c2.Scopes.ToArray());
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokeAsync_CallsRevoke()
         {
             subject.RevokeAsync("sub34", "client12").Wait();

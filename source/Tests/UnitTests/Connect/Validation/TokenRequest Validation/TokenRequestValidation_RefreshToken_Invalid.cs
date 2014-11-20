@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Non_existing_RefreshToken()
         {
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Expired_RefreshToken()
         {
@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Wrong_Client_Binding_RefreshToken_Request()
         {
@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Client_has_no_OfflineAccess_Scope_anymore_at_RefreshToken_Request()
         {
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task RefreshToken_Request_with_disabled_User()
         {

@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
         const string Category = "Client validation";
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_Client_Credentials()
         {
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             Assert.AreEqual("codeclient", client.ClientId);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Invalid_Client_Credentials()
         {
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             Assert.IsNull(client);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Unkown_Client()
         {
@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             Assert.IsNull(client);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Disabled_Client()
         {
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             Assert.IsNull(client);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
         [TestCategory(Category)]
         public async Task Null_Client_Credentials()
@@ -101,7 +101,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             var client = await _validator.ValidateClientCredentialsAsync(credential);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
         [TestCategory(Category)]
         public async Task Null_ClientId()
@@ -111,7 +111,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             var client = await _validator.ValidateClientCredentialsAsync(credential);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Empty_Client_Credentials()
         {

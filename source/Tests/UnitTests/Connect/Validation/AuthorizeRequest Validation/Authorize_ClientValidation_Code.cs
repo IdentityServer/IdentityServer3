@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task Code_Request_Unknown_Scope()
         {
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
@@ -111,7 +111,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Unknown_Client()
         {
@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Restricted_Scope()
         {

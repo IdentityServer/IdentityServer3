@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             CollectionAssert.Contains(cp.Origins.ToArray(), origin);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ctor_NullPolicy_Throws()
         {
             try
@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_NoAllowedOriginsNoCallback_DoesNotAllowOrigin()
         {
             var policy = new CorsPolicy();
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_PolicyAllowsAll_AllowsRandomOrigin()
         {
             var policy = CorsPolicy.AllowAll;
@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_OriginIsInAllowedOrigins_AllowOrigin()
         {
             var origin = "http://foo.com";
@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_OriginIsInAllowedOriginsButNoOriginRequested_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_OriginIsNotInAllowedOrigins_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -119,7 +119,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_NoOriginRequested_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_CallbackAllowOrigin_AllowOrigin()
         {
             var origin = "http://foo.com";
@@ -143,7 +143,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_CallbackAllowOriginButNoOriginRequested_DoesNotAllowOrigin()
         {
             var policy = new CorsPolicy();
@@ -154,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_CallbackDoesNotAllowOrigin_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -166,7 +166,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ctor_NullPaths_Throws()
         {
             try
@@ -180,7 +180,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_MatchingPath_AllowsOrigin()
         {
             var origin = "http://foo.com";
@@ -193,7 +193,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_NoMatchingPath_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -206,7 +206,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_MatchingPaths_AllowsOrigin()
         {
             var origin = "http://foo.com";
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_NoMatchingPaths_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
@@ -230,7 +230,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.IsNull(cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_PathDoesNotStartWithSlash_NormalizesPathCorrectly()
         {
             var origin = "http://foo.com";
@@ -242,7 +242,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetCorsPolicyAsync_PathEndsWithSlash_NormalizesPathCorrectly()
         {
             var origin = "http://foo.com";

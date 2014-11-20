@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
                 }
             };
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Assert.IsNull(scopes);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Parse_Scopes_with_Sorting()
         {
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Assert.AreEqual(scopes[2], "scope3");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Parse_Scopes_with_Extra_Spaces()
         {
@@ -111,7 +111,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Assert.AreEqual(scopes[2], "scope3");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Parse_Scopes_with_Duplicate_Scope()
         {
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Assert.AreEqual(scopes[1], "scope2");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void All_Scopes_Valid()
         {
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Invalid_Scope()
         {
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Disabled_Scope()
         {
@@ -160,7 +160,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void All_Scopes_Allowed_For_Unrestricted_Client()
         {
@@ -172,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void All_Scopes_Allowed_For_Restricted_Client()
         {
@@ -184,7 +184,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Restricted_Scopes()
         {
@@ -196,7 +196,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Contains_Resource_and_Identity_Scopes()
         {
@@ -210,7 +210,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.True(validator.ContainsResourceScopes);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Contains_Resource_Scopes_Only()
         {
@@ -224,7 +224,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             Xunit.Assert.True(validator.ContainsResourceScopes);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public void Contains_Identity_Scopes_Only()
         {

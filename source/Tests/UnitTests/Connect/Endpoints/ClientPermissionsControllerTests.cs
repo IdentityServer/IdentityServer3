@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             }
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ShowPermissions_RendersPermissionPage()
         {
             Login();
@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("permissions");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ShowPermissions_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermission_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermission_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             Login();
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermission_NoAntiCsrf_ReturnsErrorPage()
         {
             Login();
@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("error");
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermission_NoBody_ShowsError()
         {
             Login();
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermission_NoClient_ShowsError()
         {
             Login();
@@ -111,7 +111,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void ShowPermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void RevokePermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);

@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
     [TestClass]
     public class RegistrationTests
     {
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterSingleton_NullInstance_Throws()
         {
             try
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
         {
             object theSingleton = new object();
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Assert.AreSame(theSingleton, result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterFactory_NullFunc_Throws()
         {
             try
@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterFactory_FactoryInvokesFunc()
         {
             var wasCalled = false;
@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Xunit.Assert.True(wasCalled);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterType_NullType_Throws()
         {
             try
@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = Registration.RegisterType<object>(typeof(string));

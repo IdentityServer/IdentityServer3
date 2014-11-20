@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             return resp;
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetAuthorize_AuthorizeEndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.AuthorizeEndpoint.IsEnabled = false;
@@ -39,28 +39,28 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void GetAuthorize_NoQueryStringParams_ReturnsErrorPage()
         {
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
             resp.AssertPage("error");
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostConsent_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             var resp = Post(Constants.RoutePaths.Oidc.Consent, (object)null);
             Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void PostConsent_NoAntiCsrf_ReturnsErrorPage()
         {
             var resp = PostForm(Constants.RoutePaths.Oidc.Consent, (object)null);
             resp.AssertPage("error");
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void PostConsent_NoBody_ReturnsErrorPage()
         {
             GetAuthorizePage();

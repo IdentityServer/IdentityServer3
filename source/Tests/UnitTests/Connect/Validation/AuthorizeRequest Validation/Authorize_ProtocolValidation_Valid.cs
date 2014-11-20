@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     [TestClass]
     public class Authorize_ProtocolValidation_Valid
     {
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_Code_Request()
         {
@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(false, result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Code_Request()
         {
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_Code_Request()
         {
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Token_Request()
         {
@@ -88,7 +88,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Request()
         {
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         // is valid because protocol validation on its own cannot know about resource scopes
         public void Valid_Mixed_IdToken_Request()
@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdTokenToken_Request()
         {
@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request()
         {
@@ -157,7 +157,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_With_FormPost_ResponseMode_Request()
         {
@@ -175,7 +175,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Token_With_FormPost_ResponseMode_Request()
         {

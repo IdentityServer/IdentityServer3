@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.AreEqual(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.AreEqual(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.AreEqual(client.AbsoluteRefreshTokenLifetime, newLifetime);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task ReUse_Handle_reuses_Handle()
         {
@@ -145,7 +145,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.AreEqual(handle, newHandle);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task OneTime_Handle_creates_new_Handle()
         {

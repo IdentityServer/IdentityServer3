@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Invalid_Assertion()
         {

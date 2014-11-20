@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Invalid_GrantType_For_Client()
         {
@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task No_Scopes()
         {
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Unknown_Scope()
         {
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Unknown_Scope_Multiple()
         {
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Restricted_Scope()
         {
@@ -114,7 +114,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Restricted_Scope_Multiple()
         {
@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Identity_Scope()
         {
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Resource_and_Refresh_Token()
         {

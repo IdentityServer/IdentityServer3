@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_IdentityToken_DefaultKeyType()
         {
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_IdentityToken_DefaultKeyType_no_ClientId_supplied()
         {
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_IdentityToken_no_ClientId_supplied()
         {
@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task IdentityToken_InvalidClientId()
         {
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
         
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory(Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType()
         {

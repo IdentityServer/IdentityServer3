@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     [TestClass]
     public class Authorize_ProtocolValidation_Invalid
     {
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null_Parameter()
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var result = validator.ValidateProtocol(null);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         // fails because openid scope is requested, but no response type that indicates an identity token
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void OpenId_Token_Only_Request()
         {
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Resource_Only_IdToken_Request()
         {
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Mixed_Token_Only_Request()
         {
@@ -103,7 +103,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void OpenId_IdToken_Request_Nonce_Missing()
         {
@@ -121,7 +121,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_ClientId()
         {
@@ -138,7 +138,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_Scope()
         {
@@ -155,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_RedirectUri()
         {
@@ -172,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri()
         {
@@ -190,7 +190,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri_Triple_Slash()
         {
@@ -209,7 +209,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Missing_ResponseType()
         {
@@ -226,7 +226,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Unknown_ResponseType()
         {
@@ -244,7 +244,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
@@ -263,7 +263,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdToken_ResponseType()
         {
@@ -282,7 +282,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
@@ -301,7 +301,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
@@ -320,7 +320,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
@@ -339,7 +339,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
@@ -359,7 +359,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
@@ -378,7 +378,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         [TestCategory("AuthorizeRequest Protocol Validation")]
         public void Negative_MaxAge()
         {

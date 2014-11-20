@@ -42,14 +42,14 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject = new DefaultConsentService(store);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_NoPriorConsentGiven_ReturnsTrue()
         {
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_PriorConsentGiven_ReturnsFalse()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_PriorConsentGiven_ScopesInDifferentOrder_ReturnsFalse()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_PriorConsentGiven_MoreScopesRequested_ReturnsTrue()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_PriorConsentGiven_FewerScopesRequested_ReturnsFalse()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_PriorConsentGiven_NoScopesRequested_ReturnsFalse()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_ClientDoesNotRequireConsent_ReturnsFalse()
         {
             client.RequireConsent = false;
@@ -101,7 +101,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void RequiresConsentAsync_ClientDoesNotAllowRememberConsent_ReturnsTrue()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void UpdateConsentAsync_ConsentGiven_ConsentNoLongerRequired()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.False(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void UpdateConsentAsync_ClientDoesNotAllowRememberConsent_ConsentStillRequired()
         {
             client.AllowRememberConsent = false;
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void UpdateConsentAsync_PriorConsentGiven_NullScopes_ConsentNowRequired()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.True(result);
         }
 
-        [TestMethod]
+        [Xunit.Fact]
         public void UpdateConsentAsync_PriorConsentGiven_EmptyScopeCollection_ConsentNowRequired()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
@@ -145,7 +145,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             Xunit.Assert.True(result);
         }
         
-        [TestMethod]
+        [Xunit.Fact]
         public void UpdateConsentAsync_ChangeConsent_OldConsentNotAllowed()
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
