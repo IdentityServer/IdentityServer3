@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_RefreshToken_Invalid
     {
         const string Category = "TokenRequest Validation - RefreshToken - Invalid";

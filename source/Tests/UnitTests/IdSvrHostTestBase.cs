@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected List<Client> clients;
 
-        [TestInitialize]
+        
         public void Init()
         {
             clients = TestClients.Get();

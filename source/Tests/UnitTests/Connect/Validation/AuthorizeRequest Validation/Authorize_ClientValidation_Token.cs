@@ -24,7 +24,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    [TestClass]
+    
     public class Authorize_ClientValidation_Token
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();

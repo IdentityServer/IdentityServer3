@@ -24,12 +24,12 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    [TestClass]
+    
     public class ClientPermissionsControllerTests : IdSvrHostTestBase
     {
         string clientId;
 
-        [TestInitialize]
+        
         public new void Init()
         {
             base.Init();

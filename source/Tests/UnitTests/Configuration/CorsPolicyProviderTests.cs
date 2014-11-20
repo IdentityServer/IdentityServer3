@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
-    [TestClass]
+    
     public class CorsPolicyProviderTests
     {
         IOwinRequest Request(string origin = null, string path = null)

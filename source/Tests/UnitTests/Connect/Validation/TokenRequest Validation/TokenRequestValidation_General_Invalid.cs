@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_General_Invalid
     {
         IClientStore _clients = new InMemoryClientStore(TestClients.Get());

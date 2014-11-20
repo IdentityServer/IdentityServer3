@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_Valid
     {
         const string Category = "TokenRequest Validation - General - Valid";

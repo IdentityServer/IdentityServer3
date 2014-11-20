@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 {
-    [TestClass]
+    
     public class ScopeValidation
     {
         const string Category = "Scope Validation";

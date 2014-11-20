@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class AuthorizeInteractionResponseGeneratorTests_Consent
     {
         Mock<IConsentService> mockConsent;
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.AreEqual(request.State, error.State);
         }
 
-        [TestInitialize]
+        
         public void Init()
         {
             mockConsent = new Mock<IConsentService>();

@@ -30,7 +30,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_Code_Invalid
     {
         IClientStore _clients = Factory.CreateClientStore();

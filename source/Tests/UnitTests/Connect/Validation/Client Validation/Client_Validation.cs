@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    [TestClass]
+    
     public class Client_Validation
     {
         ClientValidator _validator = Factory.CreateClientValidator();

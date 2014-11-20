@@ -27,7 +27,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class AuthorizeInteractionResponseGeneratorTests_Login
     {
         [Xunit.Fact]

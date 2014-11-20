@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    [TestClass]
+    
     public class AuthorizeEndpointControllerTests : IdSvrHostTestBase
     {
         HttpResponseMessage GetAuthorizePage()

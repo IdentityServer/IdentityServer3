@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
-    [TestClass]
+    
     public class AccessTokenValidation
     {
         const string Category = "Access token validation";

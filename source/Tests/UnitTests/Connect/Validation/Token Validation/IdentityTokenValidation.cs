@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
-    [TestClass]
+    
     public class IdentityTokenValidation
     {
         const string Category = "Identity token validation";

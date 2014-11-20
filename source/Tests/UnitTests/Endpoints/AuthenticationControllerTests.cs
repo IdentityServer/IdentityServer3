@@ -31,7 +31,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
-    [TestClass]
+    
     public class AuthenticationControllerTests : IdSvrHostTestBase
     {
         public ClaimsIdentity SignInIdentity { get; set; }

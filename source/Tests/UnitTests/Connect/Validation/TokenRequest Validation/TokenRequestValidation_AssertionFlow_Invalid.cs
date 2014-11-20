@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_AssertionFlow_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";

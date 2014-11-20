@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
-    [TestClass]
+    
     public class TokenMetadataPermissionsStoreAdapterTest
     {
         List<ITokenMetadata> tokens;
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
 
         TokenMetadataPermissionsStoreAdapter subject;
 
-        [TestInitialize]
+        
         public void Init()
         {
             tokens = new List<ITokenMetadata>();

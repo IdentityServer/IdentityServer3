@@ -27,7 +27,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class DefaultRefreshTokenServiceTests
     {
         const string Category = "Default RefreshToken Service";

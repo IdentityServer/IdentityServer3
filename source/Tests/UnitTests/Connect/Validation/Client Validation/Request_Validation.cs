@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    [TestClass]
+    
     public class Request_Validation
     {
         const string Category = "Client Credentials - Request Validation";

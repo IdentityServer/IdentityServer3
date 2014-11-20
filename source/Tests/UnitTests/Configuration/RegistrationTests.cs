@@ -19,7 +19,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
-    [TestClass]
+    
     public class RegistrationTests
     {
         [Xunit.Fact]

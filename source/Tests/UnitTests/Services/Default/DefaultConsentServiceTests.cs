@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
-    [TestClass]
+    
     public class DefaultConsentServiceTests
     {
         DefaultConsentService subject;
@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         Client client;
         List<string> scopes;
 
-        [TestInitialize]
+        
         public void Init()
         {
             scopes = new List<string> { "read", "write" };

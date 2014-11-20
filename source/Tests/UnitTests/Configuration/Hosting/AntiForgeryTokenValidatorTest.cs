@@ -18,7 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration.Hosting
 {
-    [TestClass]
+    
     public class AntiForgeryTokenValidatorTest
     {
     }
