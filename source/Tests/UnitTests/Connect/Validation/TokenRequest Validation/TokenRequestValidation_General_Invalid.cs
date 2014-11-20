@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var result = await validator.ValidateRequestAsync(null, null);
+            await XunitExtensions.ThrowsAsync<ArgumentNullException>(() => validator.ValidateRequestAsync(null, null));
         }
 
         [Xunit.Fact]
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            var result = await validator.ValidateRequestAsync(parameters, null);
+            await XunitExtensions.ThrowsAsync<ArgumentNullException>(() => validator.ValidateRequestAsync(parameters, null));
         }
 
         [Xunit.Fact]

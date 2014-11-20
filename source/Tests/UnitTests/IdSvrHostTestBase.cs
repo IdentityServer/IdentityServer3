@@ -65,13 +65,13 @@ namespace Thinktecture.IdentityServer.Tests
                 ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore),
                 ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore)
             };
-
+/*
             LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
             // white space between unit tests
             LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             LogProvider.GetLogger("").Debug("UNIT TEST: " + TestContext.TestName);
             LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            
+            */
             server = TestServer.Create(app =>
             {
                 appBuilder = app;

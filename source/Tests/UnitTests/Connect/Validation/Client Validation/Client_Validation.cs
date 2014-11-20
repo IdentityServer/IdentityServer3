@@ -23,7 +23,8 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    
+    using System.IO;
+
     public class Client_Validation
     {
         ClientValidator _validator = Factory.CreateClientValidator();
@@ -98,7 +99,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         {
             var credential = new ClientCredential();
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            await XunitExtensions.ThrowsAsync<InvalidOperationException>(
+                    () => _validator.ValidateClientCredentialsAsync(credential));
         }
 
         [Xunit.Fact]
@@ -107,8 +109,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         public async Task Null_ClientId()
         {
             var credential = new ClientCredential();
-            
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            await XunitExtensions.ThrowsAsync<InvalidOperationException>(
+                () => _validator.ValidateClientCredentialsAsync(credential));
         }
 
         [Xunit.Fact]

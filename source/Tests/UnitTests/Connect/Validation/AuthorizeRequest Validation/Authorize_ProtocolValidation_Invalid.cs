@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         public void Null_Parameter()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(null);
+            Xunit.Assert.Throws<ArgumentNullException>(() => validator.ValidateProtocol(null));
         }
 
         [Xunit.Fact]

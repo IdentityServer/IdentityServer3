@@ -178,6 +178,7 @@
     <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
     <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
     <Compile Include="Connect\Validation\ScopeValidation.cs" />
+    <Compile Include="XunitExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
