@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 /*
  * Copyright 2014 Dominick Baier, Brock Allen
@@ -61,86 +63,86 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         [Fact]
         public void LoadAllAsync_OnlyOneStoreHasConsent_ReturnsSameConsent()
         {
-            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "foo", "bar" } });
+            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
 
             var result = subject.LoadAllAsync("sub").Result;
             Assert.Equal(1, result.Count());
             var consent = result.First();
             Assert.Equal("sub", consent.Subject);
             Assert.Equal("client", consent.ClientId);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar" }, consent.Scopes.ToArray());
+            consent.Scopes.ShouldAllBeEquivalentTo(new [] { "foo", "bar" });
         }
         
         [Fact]
         public void LoadAllAsync_StoresHaveSameConsent_ReturnsSameConsent()
         {
-            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "foo", "bar" } });
-            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "foo", "bar" } });
+            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new [] { "foo", "bar" } });
+            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
 
             var result = subject.LoadAllAsync("sub").Result;
             Assert.Equal(1, result.Count());
             var consent = result.First();
             Assert.Equal("sub", consent.Subject);
             Assert.Equal("client", consent.ClientId);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar" }, consent.Scopes.ToArray());
+            consent.Scopes.ShouldAllBeEquivalentTo(new [] { "foo", "bar" });
         }
         
         [Fact]
         public void LoadAllAsync_StoresHaveOverlappingConsent_ReturnsCorrectUnion()
         {
-            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "foo", "bar" } });
-            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "bar", "baz" } });
+            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
+            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "bar", "baz" } });
 
             var result = subject.LoadAllAsync("sub").Result;
             Assert.Equal(1, result.Count());
             var consent = result.First();
             Assert.Equal("sub", consent.Subject);
             Assert.Equal("client", consent.ClientId);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar", "baz" }, consent.Scopes.ToArray());
+            consent.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar", "baz" });
         }
 
         [Fact]
         public void LoadAllAsync_BothStoresHaveDifferentConsent_ReturnsCorrectUnion()
         {
-            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "foo", "bar" } });
-            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new string[] { "quux", "baz" } });
+            store1.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
+            store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "quux", "baz" } });
 
             var result = subject.LoadAllAsync("sub").Result;
             Assert.Equal(1, result.Count());
             var consent = result.First();
             Assert.Equal("sub", consent.Subject);
             Assert.Equal("client", consent.ClientId);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar", "baz", "quux" }, consent.Scopes.ToArray());
+            consent.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar", "baz", "quux" });
         }
         
         [Fact]
         public void LoadAllAsync_StoresHaveMultipleClientConsent_ReturnsCorrectConsent()
         {
-            store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "sub", Scopes = new string[] { "foo1" } });
-            store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "bad", Scopes = new string[] { "bad" } });
-            store1.UpdateAsync(new Consent { ClientId = "client2", Subject = "sub", Scopes = new string[] { "foo1", "foo2" } });
-            store1.UpdateAsync(new Consent { ClientId = "client2", Subject = "bad", Scopes = new string[] { "bad" } });
-            store1.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new string[] { "foo1", "foo2", "foo3" } });
-            store1.UpdateAsync(new Consent { ClientId = "client3", Subject = "bad", Scopes = new string[] { "bad" } });
+            store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "sub", Scopes = new[] { "foo1" } });
+            store1.UpdateAsync(new Consent { ClientId = "client1", Subject = "bad", Scopes = new[] { "bad" } });
+            store1.UpdateAsync(new Consent { ClientId = "client2", Subject = "sub", Scopes = new[] { "foo1", "foo2" } });
+            store1.UpdateAsync(new Consent { ClientId = "client2", Subject = "bad", Scopes = new[] { "bad" } });
+            store1.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new[] { "foo1", "foo2", "foo3" } });
+            store1.UpdateAsync(new Consent { ClientId = "client3", Subject = "bad", Scopes = new[] { "bad" } });
             
-            store2.UpdateAsync(new Consent { ClientId = "client1", Subject = "sub", Scopes = new string[] { "bar1" } });
-            store2.UpdateAsync(new Consent { ClientId = "client2", Subject = "sub", Scopes = new string[] { "bar1", "bar2" } });
-            store2.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new string[] { "bar1", "bar2", "bar3" } });
+            store2.UpdateAsync(new Consent { ClientId = "client1", Subject = "sub", Scopes = new[] { "bar1" } });
+            store2.UpdateAsync(new Consent { ClientId = "client2", Subject = "sub", Scopes = new[] { "bar1", "bar2" } });
+            store2.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new[] { "bar1", "bar2", "bar3" } });
 
             var result = subject.LoadAllAsync("sub").Result;
             Assert.Equal(3, result.Count());
 
             var c1 = result.Single(x => x.ClientId == "client1");
             Assert.Equal("sub", c1.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "foo1", "bar1" }, c1.Scopes.ToArray());
+            c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1" });
 
             var c2 = result.Single(x => x.ClientId == "client2");
             Assert.Equal("sub", c1.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "foo1", "bar1", "foo2", "bar2" }, c2.Scopes.ToArray());
+            c2.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1", "foo2", "bar2" });
             
             var c3 = result.Single(x => x.ClientId == "client3");
             Assert.Equal("sub", c1.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "foo1", "bar1", "foo2", "bar2", "foo3", "bar3" }, c3.Scopes.ToArray());
+            c3.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1", "foo2", "bar2", "foo3", "bar3" });
         }
 
         [Fact]

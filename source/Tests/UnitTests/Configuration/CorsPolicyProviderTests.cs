@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.Owin;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -45,21 +47,16 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Xunit.Assert.True(cp.AllowAnyHeader);
             Xunit.Assert.True(cp.AllowAnyMethod);
             Xunit.Assert.Equal(1, cp.Origins.Count);
-            CollectionAssert.Contains(cp.Origins.ToArray(), origin);
+            cp.Origins.Should().Contain(origin);
         }
 
         [Xunit.Fact]
         public void ctor_NullPolicy_Throws()
         {
-            try
-            {
-                new CorsPolicyProvider(null, new string[] { "/" });
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Xunit.Assert.Equal("policy", ex.ParamName);
-            }
+            Action act = () => new CorsPolicyProvider(null, new [] { "/" });
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("policy");
         }
 
         [Xunit.Fact]

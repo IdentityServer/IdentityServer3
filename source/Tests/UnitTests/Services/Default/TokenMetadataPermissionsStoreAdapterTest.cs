@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -73,11 +75,11 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             
             var c1 = result.Single(x=>x.ClientId == "client1");
             Xunit.Assert.Equal("sub", c1.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar" }, c1.Scopes.ToArray());
+            c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar" });
 
             var c2 = result.Single(x=>x.ClientId == "client2");
             Xunit.Assert.Equal("sub", c2.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "baz", "quux" }, c2.Scopes.ToArray());
+            c2.Scopes.ShouldAllBeEquivalentTo(new[] { "baz", "quux" });
         }
 
         [Xunit.Fact]

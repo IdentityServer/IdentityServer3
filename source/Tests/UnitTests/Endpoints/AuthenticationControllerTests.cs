@@ -489,8 +489,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var model = resp.GetModel<LoggedOutViewModel>();
             var signOutUrls = model.IFrameUrls.ToArray();
             Xunit.Assert.Equal(2, signOutUrls.Length);
-            CollectionAssert.Contains(signOutUrls, Url(Constants.RoutePaths.Oidc.EndSessionCallback));
-            CollectionAssert.Contains(signOutUrls, Url("/foo/signout"));
+            signOutUrls.Should().Contain(Url(Constants.RoutePaths.Oidc.EndSessionCallback));
+            signOutUrls.Should().Contain(Url("/foo/signout"));
         }
 
         [Xunit.Fact]
