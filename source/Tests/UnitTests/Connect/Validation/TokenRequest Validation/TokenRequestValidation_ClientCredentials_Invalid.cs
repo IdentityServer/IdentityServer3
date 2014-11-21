@@ -16,6 +16,7 @@
 
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
@@ -43,8 +44,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -59,8 +60,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -76,8 +77,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -93,8 +94,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -110,8 +111,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -127,8 +128,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -144,8 +145,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
         [Fact]
@@ -161,8 +162,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
     }
 }

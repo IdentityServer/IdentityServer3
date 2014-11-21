@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Security.Claims;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
@@ -31,7 +32,6 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         ClaimsPrincipal user;
         Client client;
         List<string> scopes;
-
         
         public DefaultConsentServiceTests()
         {
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void RequiresConsentAsync_NoPriorConsentGiven_ReturnsTrue()
         {
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Reverse();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Add("query");
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.RemoveAt(0);
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
         
         [Fact]
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             scopes.Clear();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             client.RequireConsent = false;
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             client.AllowRememberConsent = false;
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result =  subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             client.AllowRememberConsent = false;
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             subject.UpdateConsentAsync(client, user, null).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, scopes).Wait();
             subject.UpdateConsentAsync(client, user, new string[0]).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
         
         [Fact]
@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             var newConsent = new string[] { "foo", "bar" };
             subject.UpdateConsentAsync(client, user, newConsent).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
-            Assert.True(result);
+            result.Should().BeTrue();
         }
     }
 }

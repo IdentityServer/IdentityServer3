@@ -37,9 +37,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
         {
             object theSingleton = new object();
-            var reg = Registration.RegisterSingleton<object>(theSingleton);
+            var reg = Registration.RegisterSingleton(theSingleton);
             var result = reg.ImplementationFactory();
-            Assert.Same(theSingleton, result);
+            result.Should().BeSameAs(theSingleton);
         }
 
         [Fact]
@@ -56,9 +56,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         {
             var wasCalled = false;
             Func<object> f = () => { wasCalled = true; return new object(); };
-            var reg = Registration.RegisterFactory<object>(f);
+            var reg = Registration.RegisterFactory(f);
             var result = reg.ImplementationFactory();
-            Assert.True(wasCalled);
+            wasCalled.Should().BeTrue();
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = Registration.RegisterType<object>(typeof(string));
-            Assert.Equal(typeof(string), result.ImplementationType);
+            result.ImplementationType.Should().Be(typeof(string));
         }
     }
 }

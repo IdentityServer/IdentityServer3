@@ -16,6 +16,7 @@
 
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -41,12 +42,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.Equal(false, protocolResult.IsError);
+            protocolResult.IsError.Should().Be(false);
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.True(clientResult.IsError);
-            Assert.Equal(ErrorTypes.Client, clientResult.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.Client);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
     }
 }

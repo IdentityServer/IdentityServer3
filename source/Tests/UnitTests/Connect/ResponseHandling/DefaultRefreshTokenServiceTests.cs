@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -47,15 +48,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.False(string.IsNullOrWhiteSpace(handle));
+            string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.NotNull(refreshToken);
+            refreshToken.Should().NotBeNull();
 
             // check refresh token values
-            Assert.Equal(refreshToken.ClientId, client.ClientId);
-            Assert.Equal(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
+            client.ClientId.Should().Be(refreshToken.ClientId);
+            client.AbsoluteRefreshTokenLifetime.Should().Be(refreshToken.LifeTime);
         }
 
         [Fact]
@@ -71,15 +72,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.False(string.IsNullOrWhiteSpace(handle));
+            string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.NotNull(refreshToken);
+            refreshToken.Should().NotBeNull();
 
             // check refresh token values
-            Assert.Equal(refreshToken.ClientId, client.ClientId);
-            Assert.Equal(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
+            client.ClientId.Should().Be(refreshToken.ClientId);
+            client.SlidingRefreshTokenLifetime.Should().Be(refreshToken.LifeTime);
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.Equal(client.AbsoluteRefreshTokenLifetime, newLifetime);
+            newLifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
         }
 
         [Fact]
@@ -125,8 +126,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.Equal(newLifetime, client.SlidingRefreshTokenLifetime + 1);
-
+            (client.SlidingRefreshTokenLifetime + 1).Should().Be(newLifetime);
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.Equal(handle, newHandle);
+            newHandle.Should().Be(handle);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.NotEqual(handle, newHandle);
+            newHandle.Should().NotBe(handle);
         }
 
         private async Task<ValidatedTokenRequest> CreateValidatedRequest(Client client, IRefreshTokenStore store)
@@ -183,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
             return validator.ValidatedRequest;
         }
     }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Moq;
 using System.IdentityModel.Tokens;
 using System.Linq;
@@ -54,9 +55,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.False(result.IsError);
-            Assert.Equal(8, result.Claims.Count());
-            Assert.Equal("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
+            result.IsError.Should().BeFalse();
+            result.Claims.Count().Should().Be(8);
+            result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value.Should().Be("roclient");
         }
 
         [Fact]
@@ -73,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "read");
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -90,8 +91,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "missing");
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InsufficientScope);
         }
 
         [Fact]
@@ -103,8 +104,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("unknown");
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -122,8 +123,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.ExpiredToken);
         }
 
         [Fact]
@@ -135,8 +136,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -149,7 +150,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -164,8 +165,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -180,8 +181,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         [Fact]
@@ -201,7 +202,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.True(result.IsError);
+            result.IsError.Should().BeTrue();
         }
 
         [Fact]
@@ -218,7 +219,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.True(result.IsError);
+            result.IsError.Should().BeTrue();
         }
     }
 }

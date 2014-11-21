@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void LoadAllAsync_EmptyStores_ReturnsEmptyConsentCollection()
         {
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(0, result.Count());
+            result.Count().Should().Be(0);
         }
 
         [Fact]
@@ -49,10 +49,10 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(1, result.Count());
+            result.Count().Should().Be(1);
             var consent = result.First();
-            Assert.Equal("sub", consent.Subject);
-            Assert.Equal("client", consent.ClientId);
+            consent.Subject.Should().Be("sub");
+            consent.ClientId.Should().Be("client");
             consent.Scopes.ShouldAllBeEquivalentTo(new [] { "foo", "bar" });
         }
         
@@ -63,10 +63,10 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "foo", "bar" } });
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(1, result.Count());
+            result.Count().Should().Be(1);
             var consent = result.First();
-            Assert.Equal("sub", consent.Subject);
-            Assert.Equal("client", consent.ClientId);
+            consent.Subject.Should().Be("sub");
+            consent.ClientId.Should().Be("client");
             consent.Scopes.ShouldAllBeEquivalentTo(new [] { "foo", "bar" });
         }
         
@@ -77,10 +77,10 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "bar", "baz" } });
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(1, result.Count());
+            result.Count().Should().Be(1);
             var consent = result.First();
-            Assert.Equal("sub", consent.Subject);
-            Assert.Equal("client", consent.ClientId);
+            consent.Subject.Should().Be("sub");
+            consent.ClientId.Should().Be("client");
             consent.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar", "baz" });
         }
 
@@ -91,10 +91,10 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client", Subject = "sub", Scopes = new[] { "quux", "baz" } });
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(1, result.Count());
+            result.Count().Should().Be(1);
             var consent = result.First();
-            Assert.Equal("sub", consent.Subject);
-            Assert.Equal("client", consent.ClientId);
+            consent.Subject.Should().Be("sub");
+            consent.ClientId.Should().Be("client");
             consent.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar", "baz", "quux" });
         }
         
@@ -113,18 +113,18 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new[] { "bar1", "bar2", "bar3" } });
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(3, result.Count());
+            result.Count().Should().Be(3);
 
             var c1 = result.Single(x => x.ClientId == "client1");
-            Assert.Equal("sub", c1.Subject);
+            c1.Subject.Should().Be("sub");
             c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1" });
 
             var c2 = result.Single(x => x.ClientId == "client2");
-            Assert.Equal("sub", c1.Subject);
+            c1.Subject.Should().Be("sub");
             c2.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1", "foo2", "bar2" });
             
             var c3 = result.Single(x => x.ClientId == "client3");
-            Assert.Equal("sub", c1.Subject);
+            c1.Subject.Should().Be("sub");
             c3.Scopes.ShouldAllBeEquivalentTo(new[] { "foo1", "bar1", "foo2", "bar2", "foo3", "bar3" });
         }
 
@@ -139,8 +139,8 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             store2.UpdateAsync(new Consent { ClientId = "client3", Subject = "sub", Scopes = new string[] { "bar1", "bar2", "bar3" } });
 
             subject.RevokeAsync("sub", "client1").Wait();
-            Assert.Equal(0, store1.LoadAllAsync("sub").Result.Count());
-            Assert.Equal(2, store2.LoadAllAsync("sub").Result.Count());
+            store1.LoadAllAsync("sub").Result.Count().Should().Be(0);
+            store2.LoadAllAsync("sub").Result.Count().Should().Be(2);
         }
     }
 }

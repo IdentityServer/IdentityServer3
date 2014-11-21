@@ -16,6 +16,7 @@
 
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
@@ -43,8 +44,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
 
         [Fact]
@@ -61,8 +62,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
     }
 }

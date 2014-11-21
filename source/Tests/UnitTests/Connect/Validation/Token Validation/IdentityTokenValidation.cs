@@ -16,6 +16,7 @@
 
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.Default;
@@ -43,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -67,7 +68,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -79,8 +80,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         
@@ -94,7 +95,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient_symmetric");
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Trait("Category", Category)]
@@ -105,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

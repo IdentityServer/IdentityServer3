@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Specialized;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
 using Xunit;
@@ -37,7 +38,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.Equal(false, result.IsError);
+            result.IsError.Should().Be(false);
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -69,7 +70,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -120,7 +121,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -137,7 +138,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -154,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -172,7 +173,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -190,7 +191,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

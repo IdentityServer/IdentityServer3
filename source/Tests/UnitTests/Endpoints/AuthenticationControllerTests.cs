@@ -95,9 +95,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             msg.IdP = "Google";
             var resp = GetLoginPage(msg);
 
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
             var expected = new Uri(Url(Constants.RoutePaths.LoginExternal));
-            Assert.Equal(expected.AbsolutePath, resp.Headers.Location.AbsolutePath);
+            resp.Headers.Location.AbsolutePath.Should().Be(expected.AbsolutePath);
             resp.Headers.Location.Query.Should().Contain("provider=Google");
         }
 
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
-            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage();
             resp.AssertPage("error");
             var model = resp.GetModel<ErrorViewModel>();
-            Assert.Equal("SomeError", model.ErrorMessage);
+            model.ErrorMessage.Should().Be("SomeError");
         }
 
         [Fact]
@@ -147,8 +147,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
 
             var resp = GetLoginPage();
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
-            Assert.Equal(Url("authorize"), resp.Headers.Location.AbsoluteUri);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("authorize"));
         }
 
         [Fact]
@@ -170,8 +170,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
 
             var resp = GetLoginPage();
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
-            Assert.Equal(Url("foo"), resp.Headers.Location.AbsoluteUri);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("foo"));
         }
 
         [Fact]
@@ -179,8 +179,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             options.AuthenticationOptions.EnableLocalLogin = false;
             var resp = GetLoginPage();
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
-            Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google"));
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google").Should().BeTrue();
         }
 
         [Fact(Skip = "Calling init here wtf")]
@@ -214,8 +214,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp1 = GetLoginPage(msg);
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            Assert.Equal(HttpStatusCode.Found, resp2.StatusCode);
-            Assert.True(resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
+            resp2.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
 
         [Fact]
@@ -226,7 +226,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp1 = GetLoginPage(msg);
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            Assert.Equal(HttpStatusCode.Unauthorized, resp2.StatusCode);
+            resp2.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -255,8 +255,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
             var resp = GetLoginPage(msg);
             resp = client.GetAsync(resp.Headers.Location.AbsoluteUri).Result;
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
-            Assert.True(resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com"));
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
 
         [Fact]
@@ -272,7 +272,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.Should().Be(Url("authorize"));
         }
 
@@ -283,7 +283,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), null);
             resp.AssertPage("login");
             var model = resp.GetModel<LoginViewModel>();
-            Assert.Equal(model.ErrorMessage, Messages.UsernameRequired);
+            Messages.UsernameRequired.Should().Be(model.ErrorMessage);
         }
 
         [Fact]
@@ -293,7 +293,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "bad", Password = "alice" });
             resp.AssertPage("login");
             var model = resp.GetModel<LoginViewModel>();
-            Assert.Equal(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+            Messages.InvalidUsernameOrPassword.Should().Be(model.ErrorMessage);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "bad" });
             resp.AssertPage("login");
             var model = resp.GetModel<LoginViewModel>();
-            Assert.Equal(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+            Messages.InvalidUsernameOrPassword.Should().Be(model.ErrorMessage);
         }
 
         [Fact]
@@ -316,7 +316,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             resp.AssertPage("login");
             var model = resp.GetModel<LoginViewModel>();
-            Assert.Equal(model.ErrorMessage, "bad stuff");
+            "bad stuff".Should().Be(model.ErrorMessage);
         }
 
         [Fact]
@@ -329,7 +329,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             resp.AssertPage("login");
             var model = resp.GetModel<LoginViewModel>();
-            Assert.Equal(model.ErrorMessage, Messages.InvalidUsernameOrPassword);
+            Messages.InvalidUsernameOrPassword.Should().Be(model.ErrorMessage);
         }
 
         [Fact]
@@ -351,8 +351,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
-            Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
-            Assert.Equal(Url("foo"), resp.Headers.Location.AbsoluteUri);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("foo"));
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.False(cookie.Contains("expires="));
+            cookie.Contains("expires=").Should().BeFalse();
         }
 
         [Fact]
@@ -376,7 +376,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.True(cookie.Contains("expires="));
+            cookie.Contains("expires=").Should().BeTrue();
         }
 
         [Fact]
@@ -388,7 +388,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.False(cookie.Contains("expires="));
+            cookie.Contains("expires=").Should().BeFalse();
         }
         [Fact]
         public void PostToLogin_CookieOptions_AllowRememberMeIsTrue_IsPersistentIsTrue_CheckRememberMe_IssuesPersistentCookie()
@@ -399,7 +399,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice", RememberMe = true });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PrimaryAuthenticationType + "="));
-            Assert.True(cookie.Contains("expires="));
+            cookie.Contains("expires=").Should().BeTrue();
         }
 
         [Fact]
@@ -413,7 +413,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
             var cookies = resp.GetRawCookies();
             var cookie = cookies.Single(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "="));
-            Assert.False(cookie.Contains("expires="));
+            cookie.Contains("expires=").Should().BeFalse();
         }
 
         [Fact]
@@ -440,8 +440,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             client.SetCookies(resp1.GetCookies());
 
             var resp2 = Get(GetResumeUrlFromPartialSignInCookie(resp1));
-            Assert.Equal(HttpStatusCode.Found, resp2.StatusCode);
-            Assert.Equal(Url("authorize"), resp2.Headers.Location.AbsoluteUri);
+            resp2.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp2.Headers.Location.AbsoluteUri.Should().Be(Url("authorize"));
         }
 
         [Fact]
@@ -478,9 +478,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
             // 4: primary, partial, external, signin
-            Assert.Equal(4, cookies.Count());
+            cookies.Count().Should().Be(4);
             // GetCookies will not return values for cookies that are expired/revoked
-            Assert.Equal(0, resp.GetCookies().Count());
+            resp.GetCookies().Count().Should().Be(0);
         }
         
         [Fact]
@@ -491,7 +491,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var model = resp.GetModel<LoggedOutViewModel>();
             var signOutUrls = model.IFrameUrls.ToArray();
-            Assert.Equal(2, signOutUrls.Length);
+            signOutUrls.Length.Should().Be(2);
             signOutUrls.Should().Contain(Url(Constants.RoutePaths.Oidc.EndSessionCallback));
             signOutUrls.Should().Contain(Url("/foo/signout"));
         }
@@ -521,7 +521,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
             resp3.AssertPage("login");
             var model = resp3.GetModel<LoginViewModel>();
-            Assert.Equal(Messages.NoMatchingExternalAccount, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.NoMatchingExternalAccount);
         }
         
         [Fact]
@@ -538,7 +538,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
             resp3.AssertPage("login");
             var model = resp3.GetModel<LoginViewModel>();
-            Assert.Equal(Messages.NoMatchingExternalAccount, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.NoMatchingExternalAccount);
         }
 
         [Fact]
@@ -589,8 +589,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             client.SetCookies(resp2.GetCookies());
 
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
-            Assert.Equal(HttpStatusCode.Found, resp3.StatusCode);
-            Assert.Equal(Url("authorize"), resp3.Headers.Location.AbsoluteUri);
+            resp3.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp3.Headers.Location.AbsoluteUri.Should().Be(Url("authorize"));
         }
 
         [Fact]
@@ -612,7 +612,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
             resp3.AssertPage("login");
             var model = resp3.GetModel<LoginViewModel>();
-            Assert.Equal("foo bad", model.ErrorMessage);
+            model.ErrorMessage.Should().Be("foo bad");
         }
 
         [Fact]
@@ -634,7 +634,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp3 = Get(Constants.RoutePaths.LoginExternalCallback);
             resp3.AssertPage("login");
             var model = resp3.GetModel<LoginViewModel>();
-            Assert.Equal(Messages.NoMatchingExternalAccount, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.NoMatchingExternalAccount);
         }
 
         [Fact]
@@ -667,7 +667,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var id = WriteMessageToCookie(msg);
             var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
             var model = resp.GetModel<LogoutViewModel>();
-            Assert.Equal(c.ClientName, model.ClientName);
+            model.ClientName.Should().Be(c.ClientName);
         }
         
         [Fact]
@@ -675,7 +675,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             var resp = Get(Constants.RoutePaths.Logout);
             var model = resp.GetModel<LogoutViewModel>();
-            Assert.Null(model.ClientName);
+            model.ClientName.Should().BeNull();
         }
 
         [Fact]
@@ -683,7 +683,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             var resp = Get(Constants.RoutePaths.Logout + "?id=123");
             var model = resp.GetModel<LogoutViewModel>();
-            Assert.Null(model.ClientName);
+            model.ClientName.Should().BeNull();
         }
 
         [Fact]
@@ -699,8 +699,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var id = WriteMessageToCookie(msg);
             var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=" + id), null);
             var model = resp.GetModel<LoggedOutViewModel>();
-            Assert.Equal(msg.ReturnUrl, model.RedirectUrl);
-            Assert.Equal(c.ClientName, model.ClientName);
+            model.RedirectUrl.Should().Be(msg.ReturnUrl);
+            model.ClientName.Should().Be(c.ClientName);
         }
 
         [Fact]
@@ -709,8 +709,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout), null);
             var model = resp.GetModel<LoggedOutViewModel>();
-            Assert.Null(model.RedirectUrl);
-            Assert.Null(model.ClientName);
+            model.RedirectUrl.Should().BeNull();
+            model.ClientName.Should().BeNull();
         }
 
         [Fact]
@@ -719,8 +719,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=123"), null);
             var model = resp.GetModel<LoggedOutViewModel>();
-            Assert.Null(model.RedirectUrl);
-            Assert.Null(model.ClientName);
+            model.RedirectUrl.Should().BeNull();
+            model.ClientName.Should().BeNull();
         }
 
         [Fact]
@@ -730,7 +730,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage(msg);
             var model = resp.GetModel<LoginViewModel>();
             var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
-            Assert.Null(google);
+            google.Should().BeNull();
         }
         
         [Fact]
@@ -740,7 +740,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage(msg);
             var model = resp.GetModel<LoginViewModel>();
             var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
-            Assert.NotNull(google);
+            google.Should().NotBeNull();
         }
 
         [Fact]
@@ -756,7 +756,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             GetLoginPage();
             var resp = Post(GetLoginUrl(), (object)null);
-            Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
         [Fact]

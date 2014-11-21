@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -52,8 +53,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -83,8 +84,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -114,8 +115,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -145,8 +146,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -182,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
+            result.IsError.Should().BeTrue();
         }
     }
 }

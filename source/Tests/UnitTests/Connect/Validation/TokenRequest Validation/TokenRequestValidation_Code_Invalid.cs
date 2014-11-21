@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -91,8 +92,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -121,8 +122,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(result.Error, Constants.TokenErrors.InvalidRequest);
+            result.IsError.Should().BeTrue();
+            Constants.TokenErrors.InvalidRequest.Should().Be(result.Error);
         }
 
         [Fact]
@@ -151,8 +152,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -182,8 +183,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client2);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -211,8 +212,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -241,8 +242,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
         [Fact]
@@ -272,8 +273,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -311,7 +312,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             // request first time
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
 
             // request second time
             validator = Factory.CreateTokenRequestValidator(
@@ -320,8 +321,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             
             result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -360,7 +361,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
+            result.IsError.Should().BeTrue();
         }
     }
 }

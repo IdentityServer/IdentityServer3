@@ -43,9 +43,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
 
         void AssertAllowed(string origin, CorsPolicy cp)
         {
-            Assert.True(cp.AllowAnyHeader);
-            Assert.True(cp.AllowAnyMethod);
-            Assert.Equal(1, cp.Origins.Count);
+            cp.AllowAnyHeader.Should().BeTrue();
+            cp.AllowAnyMethod.Should().BeTrue();
+            cp.Origins.Count.Should().Be(1);
             cp.Origins.Should().Contain(origin);
         }
 
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var policy = new Core.Configuration.CorsPolicy();
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
             var cp = subject.GetCorsPolicyAsync(Request("http://foo.com")).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
         
         [Fact]
@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(null)).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request("http://bar.com")).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
         
         [Fact]
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin)).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { path });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/baz")).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/bar", "/baz", "/quux" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bad")).Result;
-            Assert.Null(cp);
+            cp.Should().BeNull();
         }
 
         [Fact]

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -124,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -160,7 +161,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -179,7 +180,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -198,7 +199,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -215,7 +216,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -251,7 +252,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -287,7 +288,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.False(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

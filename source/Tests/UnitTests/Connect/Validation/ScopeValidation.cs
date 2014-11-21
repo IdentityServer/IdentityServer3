@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("");
 
-            Assert.Null(scopes);
+            scopes.Should().BeNull();
         }
 
         [Fact]
@@ -89,12 +90,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope3 scope2 scope1");
-            
-            Assert.Equal(scopes.Count, 3);
 
-            Assert.Equal(scopes[0], "scope1");
-            Assert.Equal(scopes[1], "scope2");
-            Assert.Equal(scopes[2], "scope3");
+            scopes.Count.Should().Be(3);
+
+            scopes[0].Should().Be("scope1");
+            scopes[1].Should().Be("scope2");
+            scopes[2].Should().Be("scope3");
         }
 
         [Fact]
@@ -104,11 +105,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("   scope3     scope2     scope1   ");
 
-            Assert.Equal(scopes.Count, 3);
+            scopes.Count.Should().Be(3);
 
-            Assert.Equal(scopes[0], "scope1");
-            Assert.Equal(scopes[1], "scope2");
-            Assert.Equal(scopes[2], "scope3");
+            scopes[0].Should().Be("scope1");
+            scopes[1].Should().Be("scope2");
+            scopes[2].Should().Be("scope3");
         }
 
         [Fact]
@@ -118,10 +119,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope2 scope1 scope2");
 
-            Assert.Equal(scopes.Count, 2);
+            scopes.Count.Should().Be(2);
 
-            Assert.Equal(scopes[0], "scope1");
-            Assert.Equal(scopes[1], "scope2");
+            scopes[0].Should().Be("scope1");
+            scopes[1].Should().Be("scope2");
         }
 
         [Fact]
@@ -133,7 +134,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -145,7 +146,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -157,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -169,7 +170,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_unrestrictedClient, scopes);
 
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -181,7 +182,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -193,7 +194,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -205,9 +206,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.True(result);
-            Assert.True(validator.ContainsOpenIdScopes);
-            Assert.True(validator.ContainsResourceScopes);
+            result.Should().BeTrue();
+            validator.ContainsOpenIdScopes.Should().BeTrue();
+            validator.ContainsResourceScopes.Should().BeTrue();
         }
 
         [Fact]
@@ -219,9 +220,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.True(result);
-            Assert.False(validator.ContainsOpenIdScopes);
-            Assert.True(validator.ContainsResourceScopes);
+            result.Should().BeTrue();
+            validator.ContainsOpenIdScopes.Should().BeFalse();
+            validator.ContainsResourceScopes.Should().BeTrue();
         }
 
         [Fact]
@@ -233,9 +234,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Assert.True(result);
-            Assert.True(validator.ContainsOpenIdScopes);
-            Assert.False(validator.ContainsResourceScopes);
+            result.Should().BeTrue();
+            validator.ContainsOpenIdScopes.Should().BeTrue();
+            validator.ContainsResourceScopes.Should().BeFalse();
         }
     }
 }

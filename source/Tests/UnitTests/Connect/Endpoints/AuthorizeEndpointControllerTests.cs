@@ -16,6 +16,7 @@
 
 using System.Net;
 using System.Net.Http;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Xunit;
 
@@ -36,7 +37,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             base.options.Endpoints.AuthorizeEndpoint.IsEnabled = false;
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
-            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void PostConsent_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             var resp = Post(Constants.RoutePaths.Oidc.Consent, (object)null);
-            Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
         [Fact]

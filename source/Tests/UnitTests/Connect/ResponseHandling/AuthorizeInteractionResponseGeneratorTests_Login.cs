@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -43,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessLoginAsync(request, Principal.Anonymous);
 
-            Assert.True(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
 
         [Fact]
@@ -62,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.False(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
         [Fact]
@@ -88,7 +89,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.False(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
         [Fact]
@@ -114,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.True(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
 
         [Fact]
@@ -134,7 +135,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.False(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
         [Fact]
@@ -154,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.True(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
     }
 }

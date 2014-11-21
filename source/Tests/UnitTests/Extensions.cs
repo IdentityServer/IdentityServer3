@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,17 +76,17 @@ namespace Thinktecture.IdentityServer.Tests
         {
             var cookies = resp.GetCookies();
             var cookie = cookies.SingleOrDefault(x => x.Name == name);
-            Assert.NotNull(cookie);
+            cookie.Should().NotBeNull();
         }
 
         public static void AssertPage(this HttpResponseMessage resp, string name)
         {
-            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-            Assert.Equal("text/html", resp.Content.Headers.ContentType.MediaType);
+            resp.StatusCode.Should().Be(HttpStatusCode.OK);
+            resp.Content.Headers.ContentType.MediaType.Should().Be("text/html");
             var html = resp.Content.ReadAsStringAsync().Result;
 
             var match = Regex.Match(html, "<div class='container page-(.*)' ng-cloak>");
-            Assert.Equal(name, match.Groups[1].Value);
+            match.Groups[1].Value.Should().Be(name);
         }
 
         static T GetModel<T>(string html)

@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login();
             var resp = Post(Constants.RoutePaths.Oidc.Consent, new { ClientId = clientId });
-            Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, (object)null);
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.ClientIdRequired);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = "" });
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.ClientIdRequired);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login(false);
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
             resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
         
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login(false);
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
             resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
     }

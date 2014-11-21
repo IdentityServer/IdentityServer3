@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Specialized;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
@@ -23,7 +24,6 @@ using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    
     public class Authorize_ProtocolValidation_Invalid
     {
         [Fact]
@@ -32,7 +32,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         public void Null_Parameter()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
-            Assert.Throws<ArgumentNullException>(() => validator.ValidateProtocol(null));
+
+            Action act = () => validator.ValidateProtocol(null);
+
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -42,9 +45,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(new NameValueCollection());
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         // fails because openid scope is requested, but no response type that indicates an identity token
@@ -61,9 +64,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -80,9 +83,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -98,9 +101,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -116,9 +119,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -133,9 +136,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -150,9 +153,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -167,9 +170,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -185,9 +188,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -203,9 +206,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
 
@@ -221,9 +224,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -239,9 +242,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -258,9 +261,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -277,9 +280,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -296,9 +299,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -315,9 +318,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -334,9 +337,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
         [Fact]
@@ -353,9 +356,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
 
@@ -373,9 +376,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         [Fact]
@@ -392,9 +395,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.True(result.IsError);
-            Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
     }
 }

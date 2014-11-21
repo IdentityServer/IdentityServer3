@@ -15,6 +15,7 @@
  */
 
 using System.Linq;
+using FluentAssertions;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.Google;
@@ -153,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected T Get<T>(string path)
         {
             var result = Get(path);
-            Assert.True(result.IsSuccessStatusCode);
+            result.IsSuccessStatusCode.Should().BeTrue();
             return result.Content.ReadAsAsync<T>().Result;
         }
 

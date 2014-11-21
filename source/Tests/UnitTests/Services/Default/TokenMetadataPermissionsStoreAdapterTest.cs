@@ -71,14 +71,14 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             tokens.Add(new TokenMeta("sub", "client2", new string[] { "baz", "quux" }));
 
             var result = subject.LoadAllAsync("sub").Result;
-            Assert.Equal(2, result.Count());
-            
+            result.Count().Should().Be(2);
+
             var c1 = result.Single(x=>x.ClientId == "client1");
-            Assert.Equal("sub", c1.Subject);
+            c1.Subject.Should().Be("sub");
             c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar" });
 
             var c2 = result.Single(x=>x.ClientId == "client2");
-            Assert.Equal("sub", c2.Subject);
+            c2.Subject.Should().Be("sub");
             c2.Scopes.ShouldAllBeEquivalentTo(new[] { "baz", "quux" });
         }
 
@@ -86,8 +86,8 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void RevokeAsync_CallsRevoke()
         {
             subject.RevokeAsync("sub34", "client12").Wait();
-            Assert.Equal("sub34", subjectDeleted);
-            Assert.Equal("client12", clientDeleted);
+            subjectDeleted.Should().Be("sub34");
+            clientDeleted.Should().Be("client12");
         }
     }
 }

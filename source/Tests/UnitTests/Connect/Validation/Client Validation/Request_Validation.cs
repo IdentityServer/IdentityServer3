@@ -18,6 +18,7 @@ using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -40,12 +41,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.False(credential.IsMalformed);
-            Assert.True(credential.IsPresent);
-            Assert.Equal(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
 
-            Assert.Equal("client", credential.ClientId);
-            Assert.Equal("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
         [Fact]
@@ -58,12 +59,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(null, body);
 
-            Assert.False(credential.IsMalformed);
-            Assert.True(credential.IsPresent);
-            Assert.Equal(Constants.ClientAuthenticationMethods.FormPost, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.FormPost);
 
-            Assert.Equal("client", credential.ClientId);
-            Assert.Equal("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
         [Fact]
@@ -78,12 +79,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.False(credential.IsMalformed);
-            Assert.True(credential.IsPresent);
-            Assert.Equal(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
 
-            Assert.Equal("client", credential.ClientId);
-            Assert.Equal("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
         [Fact]
@@ -92,8 +93,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         {
             var credential = _validator.ValidateHttpRequest(null, null);
 
-            Assert.False(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeFalse();
         }
 
         [Fact]
@@ -104,8 +105,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.True(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
         [Fact]
@@ -116,8 +117,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.False(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeFalse();
         }
 
         [Fact]
@@ -128,8 +129,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.True(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
         [Fact]
@@ -142,8 +143,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.True(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
         [Fact]
@@ -156,8 +157,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.True(credential.IsMalformed);
-            Assert.False(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
     }
 }

@@ -90,8 +90,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
 
         [Fact]
@@ -119,8 +119,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.True(result.IsError);
-            Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
     }
 }
