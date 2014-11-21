@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var policy = new CorsPolicy();
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
             var cp = subject.GetCorsPolicyAsync(Request("http://foo.com")).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
         
         [Xunit.Fact]
@@ -101,7 +101,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(null)).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]
@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request("http://bar.com")).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
         
         [Xunit.Fact]
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]
@@ -160,7 +160,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin)).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]
@@ -200,7 +200,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { path });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/baz")).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]
@@ -224,7 +224,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var subject = new CorsPolicyProvider(policy, new string[] { "/bar", "/baz", "/quux" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bad")).Result;
-            Assert.IsNull(cp);
+            Xunit.Assert.Null(cp);
         }
 
         [Xunit.Fact]

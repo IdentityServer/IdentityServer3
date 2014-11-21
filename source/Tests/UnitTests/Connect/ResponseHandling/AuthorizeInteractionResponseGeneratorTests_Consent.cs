@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -57,7 +59,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Xunit.Assert.Equal(request.RedirectUri, error.ErrorUri);
             Xunit.Assert.Equal(request.State, error.State);
         }
-
         
         public AuthorizeInteractionResponseGeneratorTests_Consent()
         {
@@ -76,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             }
             catch(AggregateException ex){
                 ArgumentNullException ex2 = (ArgumentNullException)ex.InnerException;
-                StringAssert.Contains(ex2.ParamName, "request");
+                ex2.ParamName.Should().Contain("request");
             }
         }
         
@@ -113,7 +114,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             catch (AggregateException ex)
             {
                 var ex2 = ex.InnerException;
-                StringAssert.Contains(ex2.Message, "PromptMode");
+                ex2.Message.Should().Contain("PromptMode");
             }
         }
         [Xunit.Fact]
@@ -136,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             catch (AggregateException ex)
             {
                 var ex2 = ex.InnerException;
-                StringAssert.Contains(ex2.Message, "PromptMode");
+                ex2.Message.Should().Contain("PromptMode");
             }
         }
 

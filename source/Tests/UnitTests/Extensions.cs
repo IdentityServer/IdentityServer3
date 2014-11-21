@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests
         {
             var cookies = resp.GetCookies();
             var cookie = cookies.SingleOrDefault(x => x.Name == name);
-            Assert.IsNotNull(cookie);
+            Xunit.Assert.NotNull(cookie);
         }
 
         public static void AssertPage(this HttpResponseMessage resp, string name)

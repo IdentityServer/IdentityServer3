@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNotNull(client);
+            Xunit.Assert.NotNull(client);
             Xunit.Assert.Equal("codeclient", client.ClientId);
         }
 
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            Xunit.Assert.Null(client);
         }
 
         [Xunit.Fact]
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            Xunit.Assert.Null(client);
         }
 
         [Xunit.Fact]
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            Xunit.Assert.Null(client);
         }
 
         [Xunit.Fact]
@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            Xunit.Assert.Null(client);
         }
     }
 }

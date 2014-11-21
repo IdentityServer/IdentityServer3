@@ -95,7 +95,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             Xunit.Assert.Equal(HttpStatusCode.Found, resp.StatusCode);
             var expected = new Uri(Url(Constants.RoutePaths.LoginExternal));
             Xunit.Assert.Equal(expected.AbsolutePath, resp.Headers.Location.AbsolutePath);
-            StringAssert.Contains(resp.Headers.Location.Query, "provider=Google");
+            resp.Headers.Location.Query.Should().Contain("provider=Google");
         }
 
         [Xunit.Fact]
@@ -672,7 +672,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             var resp = Get(Constants.RoutePaths.Logout);
             var model = resp.GetModel<LogoutViewModel>();
-            Assert.IsNull(model.ClientName);
+            Xunit.Assert.Null(model.ClientName);
         }
 
         [Xunit.Fact]
@@ -680,7 +680,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             var resp = Get(Constants.RoutePaths.Logout + "?id=123");
             var model = resp.GetModel<LogoutViewModel>();
-            Assert.IsNull(model.ClientName);
+            Xunit.Assert.Null(model.ClientName);
         }
 
         [Xunit.Fact]
@@ -706,8 +706,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout), null);
             var model = resp.GetModel<LoggedOutViewModel>();
-            Assert.IsNull(model.RedirectUrl);
-            Assert.IsNull(model.ClientName);
+            Xunit.Assert.Null(model.RedirectUrl);
+            Xunit.Assert.Null(model.ClientName);
         }
 
         [Xunit.Fact]
@@ -716,8 +716,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             GetLoginPage();
             var resp = PostForm(Url(Constants.RoutePaths.Logout + "?id=123"), null);
             var model = resp.GetModel<LoggedOutViewModel>();
-            Assert.IsNull(model.RedirectUrl);
-            Assert.IsNull(model.ClientName);
+            Xunit.Assert.Null(model.RedirectUrl);
+            Xunit.Assert.Null(model.ClientName);
         }
 
         [Xunit.Fact]
@@ -727,7 +727,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage(msg);
             var model = resp.GetModel<LoginViewModel>();
             var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
-            Assert.IsNull(google);
+            Xunit.Assert.Null(google);
         }
         
         [Xunit.Fact]
@@ -737,7 +737,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = GetLoginPage(msg);
             var model = resp.GetModel<LoginViewModel>();
             var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
-            Assert.IsNotNull(google);
+            Xunit.Assert.NotNull(google);
         }
 
         [Xunit.Fact]

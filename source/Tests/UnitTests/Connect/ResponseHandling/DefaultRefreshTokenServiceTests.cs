@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.IsNotNull(refreshToken);
+            Xunit.Assert.NotNull(refreshToken);
 
             // check refresh token values
             Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.IsNotNull(refreshToken);
+            Xunit.Assert.NotNull(refreshToken);
 
             // check refresh token values
             Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);

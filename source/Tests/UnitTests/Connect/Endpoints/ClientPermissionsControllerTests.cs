@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Net;
@@ -116,7 +117,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login(false);
             var resp = Get(Constants.RoutePaths.ClientPermissions);
             Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
-            StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
+            resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
         
         [Xunit.Fact]
@@ -125,7 +126,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login(false);
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
             Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
-            StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
+            resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
     }
 }

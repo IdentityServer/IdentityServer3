@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("");
 
-            Assert.IsNull(scopes);
+            Xunit.Assert.Null(scopes);
         }
 
         [Xunit.Fact]
