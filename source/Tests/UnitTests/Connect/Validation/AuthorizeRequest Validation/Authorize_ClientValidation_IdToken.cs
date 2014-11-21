@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;

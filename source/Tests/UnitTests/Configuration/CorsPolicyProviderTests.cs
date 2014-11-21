@@ -25,7 +25,6 @@ using CorsPolicy = System.Web.Cors.CorsPolicy;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
-    
     public class CorsPolicyProviderTests
     {
         IOwinRequest Request(string origin = null, string path = null)

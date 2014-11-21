@@ -15,7 +15,6 @@
  */
 
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 /*
  * Copyright 2014 Dominick Baier, Brock Allen
  *

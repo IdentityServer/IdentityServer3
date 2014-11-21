@@ -15,7 +15,6 @@
  */
 
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
@@ -24,8 +23,6 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    using System.IO;
-
     public class Client_Validation
     {
         ClientValidator _validator = Factory.CreateClientValidator();

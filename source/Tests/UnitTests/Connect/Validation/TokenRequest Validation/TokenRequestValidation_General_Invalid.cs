@@ -15,7 +15,6 @@
  */
 
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;

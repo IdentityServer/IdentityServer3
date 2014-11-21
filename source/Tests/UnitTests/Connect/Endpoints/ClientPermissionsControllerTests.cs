@@ -15,7 +15,6 @@
  */
 
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Net;
 using Thinktecture.IdentityServer.Core;
