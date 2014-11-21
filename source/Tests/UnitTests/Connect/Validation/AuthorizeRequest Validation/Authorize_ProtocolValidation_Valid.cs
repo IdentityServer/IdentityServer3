@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     public class Authorize_ProtocolValidation_Valid
     {
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
@@ -89,7 +89,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         // is valid because protocol validation on its own cannot know about resource scopes
         public void Valid_Mixed_IdToken_Request()
         {
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -141,7 +141,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_With_FormPost_ResponseMode_Request()
         {
             var parameters = new NameValueCollection();
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Token_With_FormPost_ResponseMode_Request()
         {
             var parameters = new NameValueCollection();

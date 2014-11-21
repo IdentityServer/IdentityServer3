@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         [Xunit.Fact]
         [ExpectedException(typeof(ArgumentNullException))]
-        [TestCategory("TokenRequest Validation - General - Invalid")]
+        [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public async Task Parameters_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         [Xunit.Fact]
         [ExpectedException(typeof(ArgumentNullException))]
-        [TestCategory("TokenRequest Validation - General - Invalid")]
+        [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public async Task Client_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("TokenRequest Validation - General - Invalid")]
+        [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public async Task Unknown_Grant_Type()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("TokenRequest Validation - General - Invalid")]
+        [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public async Task Missing_Grant_Type()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");

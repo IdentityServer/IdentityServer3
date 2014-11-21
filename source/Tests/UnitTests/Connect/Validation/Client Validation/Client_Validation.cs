@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         const string Category = "Client validation";
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Client_Credentials()
         {
             var credential = new ClientCredential
@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Invalid_Client_Credentials()
         {
             var credential = new ClientCredential
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Unkown_Client()
         {
             var credential = new ClientCredential
@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Disabled_Client()
         {
             var credential = new ClientCredential
@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
         [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Null_Client_Credentials()
         {
             var credential = new ClientCredential();
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
         [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Null_ClientId()
         {
             var credential = new ClientCredential();
@@ -114,7 +114,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Empty_Client_Credentials()
         {
             var credential = new ClientCredential

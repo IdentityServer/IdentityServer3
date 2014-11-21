@@ -12,7 +12,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         const string Category = "BearerTokenUsageValidator Tests";
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task No_Header_no_Body_Get()
         {
             var request = new HttpRequestMessage();
@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task No_Header_no_Body_Post()
         {
             var request = new HttpRequestMessage();
@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Non_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Empty_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Whitespaces_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Body_Post()
         {
             var request = new HttpRequestMessage();
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Body_Post_empty_Token()
         {
             var request = new HttpRequestMessage();
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Body_Post_Whitespace_Token()
         {
             var request = new HttpRequestMessage();
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Body_Post_no_Token()
         {
             var request = new HttpRequestMessage();

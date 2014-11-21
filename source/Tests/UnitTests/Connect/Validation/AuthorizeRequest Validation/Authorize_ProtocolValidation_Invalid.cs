@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     public class Authorize_ProtocolValidation_Invalid
     {
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Null_Parameter()
         {
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
         // fails because openid scope is requested, but no response type that indicates an identity token
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
@@ -122,7 +122,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ClientId()
         {
             var parameters = new NameValueCollection();
@@ -139,7 +139,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_Scope()
         {
             var parameters = new NameValueCollection();
@@ -156,7 +156,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -173,7 +173,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -191,7 +191,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri_Triple_Slash()
         {
             var parameters = new NameValueCollection();
@@ -210,7 +210,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -227,7 +227,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -245,7 +245,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -264,7 +264,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -283,7 +283,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -302,7 +302,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -321,7 +321,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -340,7 +340,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -360,7 +360,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -379,7 +379,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Negative_MaxAge()
         {
             var parameters = new NameValueCollection();

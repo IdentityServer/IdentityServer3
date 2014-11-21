@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_IdentityToken_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task IdentityToken_InvalidClientId()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             Xunit.Assert.False(result.IsError);
         }
 
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());

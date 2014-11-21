@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -112,7 +112,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Unknown_Client()
         {
             var parameters = new NameValueCollection();
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         }
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Restricted_Scope()
         {
             var parameters = new NameValueCollection();

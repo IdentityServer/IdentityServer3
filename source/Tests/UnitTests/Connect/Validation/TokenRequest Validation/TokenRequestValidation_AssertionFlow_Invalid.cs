@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         IClientStore _clients = Factory.CreateClientStore();
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Invalid_Assertion()
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");

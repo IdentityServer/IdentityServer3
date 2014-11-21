@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         IClientStore _clients = Factory.CreateClientStore();
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task ReUse_Handle_reuses_Handle()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -146,7 +146,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task OneTime_Handle_creates_new_Handle()
         {
             var store = new InMemoryRefreshTokenStore();

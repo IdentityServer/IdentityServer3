@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         ClientValidator _validator = Factory.CreateClientValidator();
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Valid_BasicAuthentication_Request()
         {
             var header = new BasicAuthenticationHeaderValue("client", "secret");
@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Valid_FormPost_Request()
         {
             var body = new NameValueCollection();
@@ -68,7 +68,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Valid_BasicAuthentication_and_FormPost_Request()
         {
             var header = new BasicAuthenticationHeaderValue("client", "secret");
@@ -88,7 +88,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void No_Client_Credentials()
         {
             var credential = _validator.ValidateHttpRequest(null, null);
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Empty_Basic_Header()
         {
             var header = new AuthenticationHeaderValue("Basic");
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Unknown_Scheme()
         {
             var header = new AuthenticationHeaderValue("Unkown", "data");
@@ -122,7 +122,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
         {
             var header = new AuthenticationHeaderValue("Basic", "somerandomdata");
@@ -134,7 +134,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
             var invalidCred = "username";
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only_With_Colon()
         {
             var invalidCred = "username:";

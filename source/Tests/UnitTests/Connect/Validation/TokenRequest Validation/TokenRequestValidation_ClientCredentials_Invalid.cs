@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         IClientStore _clients = Factory.CreateClientStore();
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("roclient");
@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task No_Scopes()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Unknown_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Unknown_Scope_Multiple()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Restricted_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Restricted_Scope_Multiple()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Identity_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Resource_and_Refresh_Token()
         {
             var client = await _clients.FindClientByIdAsync("client");

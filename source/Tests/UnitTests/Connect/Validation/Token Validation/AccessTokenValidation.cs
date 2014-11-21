@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_required_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_missing_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Unknown_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -109,7 +109,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -128,7 +128,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Malformed_JWT_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -141,7 +141,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_JWT_Token()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -154,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task JWT_Token_invalid_Issuer()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -170,7 +170,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task JWT_Token_invalid_Audience()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_AccessToken_but_User_not_active()
         {
             var mock = new Mock<IUserService>();
@@ -206,7 +206,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public async Task Valid_AccessToken_but_Client_not_active()
         {
             var store = new InMemoryTokenHandleStore();

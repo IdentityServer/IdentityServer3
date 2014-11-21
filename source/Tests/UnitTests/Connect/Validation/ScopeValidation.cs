@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             };
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
             var validator = new ScopeValidator();
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Parse_Scopes_with_Sorting()
         {
             var validator = new ScopeValidator();
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Parse_Scopes_with_Extra_Spaces()
         {
             var validator = new ScopeValidator();
@@ -112,7 +112,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Parse_Scopes_with_Duplicate_Scope()
         {
             var validator = new ScopeValidator();
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void All_Scopes_Valid()
         {
             var validator = new ScopeValidator();
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Invalid_Scope()
         {
             var validator = new ScopeValidator();
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Disabled_Scope()
         {
             var validator = new ScopeValidator();
@@ -161,7 +161,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Unrestricted_Client()
         {
             var validator = new ScopeValidator();
@@ -173,7 +173,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Restricted_Client()
         {
             var validator = new ScopeValidator();
@@ -185,7 +185,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Restricted_Scopes()
         {
             var validator = new ScopeValidator();
@@ -197,7 +197,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Contains_Resource_and_Identity_Scopes()
         {
             var validator = new ScopeValidator();
@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Contains_Resource_Scopes_Only()
         {
             var validator = new ScopeValidator();
@@ -225,7 +225,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         }
 
         [Xunit.Fact]
-        [TestCategory(Category)]
+        [Xunit.Trait("Category", Category)]
         public void Contains_Identity_Scopes_Only()
         {
             var validator = new ScopeValidator();

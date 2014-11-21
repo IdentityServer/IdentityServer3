@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
         [Xunit.Fact]
-        [TestCategory("AuthorizeRequest Client Validation - IdToken")]
+        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - IdToken")]
         public async Task Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();
