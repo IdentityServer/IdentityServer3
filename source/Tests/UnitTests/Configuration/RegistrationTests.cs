@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             object theSingleton = new object();
             var reg = Registration.RegisterSingleton<object>(theSingleton);
             var result = reg.ImplementationFactory();
-            Assert.AreSame(theSingleton, result);
+            Xunit.Assert.Same(theSingleton, result);
         }
 
         [Xunit.Fact]
