@@ -47,7 +47,6 @@ namespace Thinktecture.IdentityServer.Tests
         protected Mock<InMemoryUserService> mockUserService;
         protected IdentityServerOptions options;
 
-        public TestContext TestContext { get; set; }
         protected IAppBuilder appBuilder;
         protected Action<IAppBuilder, string> OverrideIdentityProviderConfiguration { get; set; }
 
