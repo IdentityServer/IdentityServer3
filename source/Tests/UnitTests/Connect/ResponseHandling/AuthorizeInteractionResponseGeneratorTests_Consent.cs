@@ -70,15 +70,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Xunit.Fact]
         public void ProcessConsentAsync_NullRequest_Throws()
         {
-            try
-            {
-                var result = subject.ProcessConsentAsync(null, new UserConsent()).Result;
-                Assert.Fail();
-            }
-            catch(AggregateException ex){
-                ArgumentNullException ex2 = (ArgumentNullException)ex.InnerException;
-                ex2.ParamName.Should().Contain("request");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(null, new UserConsent());
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("request");
         }
         
         [Xunit.Fact]
@@ -106,17 +101,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.Login
             };
 
-            try
-            {
-                var result = subject.ProcessConsentAsync(request).Result;
-                Assert.Fail();
-            }
-            catch (AggregateException ex)
-            {
-                var ex2 = ex.InnerException;
-                ex2.Message.Should().Contain("PromptMode");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(request);
+
+            act.ShouldThrow<ArgumentException>()
+                .And.Message.Should().Contain("PromptMode");
         }
+
         [Xunit.Fact]
         public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
         {
@@ -129,16 +119,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.SelectAccount
             };
 
-            try
-            {
-                var result = subject.ProcessConsentAsync(request).Result;
-                Assert.Fail();
-            }
-            catch (AggregateException ex)
-            {
-                var ex2 = ex.InnerException;
-                ex2.Message.Should().Contain("PromptMode");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(request);
+
+            act.ShouldThrow<ArgumentException>()
+                .And.Message.Should().Contain("PromptMode");
         }
 
 

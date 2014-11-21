@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -25,15 +27,10 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Xunit.Fact]
         public void RegisterSingleton_NullInstance_Throws()
         {
-            try
-            {
-                Registration.RegisterSingleton<object>(null);
-                Assert.Fail();
-            }
-            catch(ArgumentNullException ex)
-            {
-                Xunit.Assert.Equal("instance", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterSingleton<object>(null);
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("instance");
         }
 
         [Xunit.Fact]
@@ -48,15 +45,10 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Xunit.Fact]
         public void RegisterFactory_NullFunc_Throws()
         {
-            try
-            {
-                Registration.RegisterFactory<object>(null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Xunit.Assert.Equal("typeFunc", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterFactory<object>(null); ;
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("typeFunc");
         }
         
         [Xunit.Fact]
@@ -72,15 +64,10 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Xunit.Fact]
         public void RegisterType_NullType_Throws()
         {
-            try
-            {
-                Registration.RegisterType<object>(null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Xunit.Assert.Equal("type", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterType<object>(null);
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("type");
         }
 
         [Xunit.Fact]

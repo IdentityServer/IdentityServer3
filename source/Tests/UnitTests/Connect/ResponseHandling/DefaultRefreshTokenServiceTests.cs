@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.AreNotEqual(handle, newHandle);
+            Xunit.Assert.NotEqual(handle, newHandle);
         }
 
         private async Task<ValidatedTokenRequest> CreateValidatedRequest(Client client, IRefreshTokenStore store)
