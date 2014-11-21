@@ -6,7 +6,6 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Tests.Connect
 {
-    
     public class BearerTokenUsageValidation
     {
         const string Category = "BearerTokenUsageValidator Tests";

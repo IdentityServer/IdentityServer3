@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
@@ -95,22 +96,25 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
         [Xunit.Trait("Category", Category)]
-        public async Task Null_Client_Credentials()
+        public void Null_Client_Credentials()
         {
             var credential = new ClientCredential();
 
-            await XunitExtensions.ThrowsAsync<InvalidOperationException>(
-                    () => _validator.ValidateClientCredentialsAsync(credential));
+            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Xunit.Fact]
         [ExpectedException(typeof(InvalidOperationException))]
         [Xunit.Trait("Category", Category)]
-        public async Task Null_ClientId()
+        public void Null_ClientId()
         {
             var credential = new ClientCredential();
-            await XunitExtensions.ThrowsAsync<InvalidOperationException>(
-                () => _validator.ValidateClientCredentialsAsync(credential));
+
+            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
         }
 
         [Xunit.Fact]

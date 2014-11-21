@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
@@ -26,7 +27,6 @@ using Thinktecture.IdentityServer.Tests.Connect.Setup;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    
     public class TokenRequestValidation_General_Invalid
     {
         IClientStore _clients = new InMemoryClientStore(TestClients.Get());
@@ -34,19 +34,21 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         [Xunit.Fact]
         [ExpectedException(typeof(ArgumentNullException))]
         [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
-        public async Task Parameters_Null()
+        public void Parameters_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            await XunitExtensions.ThrowsAsync<ArgumentNullException>(() => validator.ValidateRequestAsync(null, null));
+            Func<Task> act = () => validator.ValidateRequestAsync(null, null);
+
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Xunit.Fact]
         [ExpectedException(typeof(ArgumentNullException))]
         [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
-        public async Task Client_Null()
+        public void Client_Null()
         {
             var store = new InMemoryAuthorizationCodeStore();
             var validator = Factory.CreateTokenRequestValidator(
@@ -57,7 +59,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             parameters.Add(Constants.TokenRequest.Code, "valid");
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
-            await XunitExtensions.ThrowsAsync<ArgumentNullException>(() => validator.ValidateRequestAsync(parameters, null));
+            Func<Task> act = () => validator.ValidateRequestAsync(parameters, null);
+
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Xunit.Fact]
