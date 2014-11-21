@@ -37,12 +37,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user)
         {
             throw new NotImplementedException();
         }

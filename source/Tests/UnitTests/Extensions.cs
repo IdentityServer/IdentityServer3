@@ -21,6 +21,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -74,17 +75,17 @@ namespace Thinktecture.IdentityServer.Tests
         {
             var cookies = resp.GetCookies();
             var cookie = cookies.SingleOrDefault(x => x.Name == name);
-            Xunit.Assert.NotNull(cookie);
+            Assert.NotNull(cookie);
         }
 
         public static void AssertPage(this HttpResponseMessage resp, string name)
         {
-            Xunit.Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-            Xunit.Assert.Equal("text/html", resp.Content.Headers.ContentType.MediaType);
+            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Equal("text/html", resp.Content.Headers.ContentType.MediaType);
             var html = resp.Content.ReadAsStringAsync().Result;
 
             var match = Regex.Match(html, "<div class='container page-(.*)' ng-cloak>");
-            Xunit.Assert.Equal(name, match.Groups[1].Value);
+            Assert.Equal(name, match.Groups[1].Value);
         }
 
         static T GetModel<T>(string html)

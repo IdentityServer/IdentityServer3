@@ -17,13 +17,14 @@
 using FluentAssertions;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
     
     public class RegistrationTests
     {
-        [Xunit.Fact]
+        [Fact]
         public void RegisterSingleton_NullInstance_Throws()
         {
             Action act = () => Registration.RegisterSingleton<object>(null);
@@ -32,16 +33,16 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
                 .And.ParamName.Should().Be("instance");
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
         {
             object theSingleton = new object();
             var reg = Registration.RegisterSingleton<object>(theSingleton);
             var result = reg.ImplementationFactory();
-            Xunit.Assert.Same(theSingleton, result);
+            Assert.Same(theSingleton, result);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RegisterFactory_NullFunc_Throws()
         {
             Action act = () => Registration.RegisterFactory<object>(null); ;
@@ -50,17 +51,17 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
                 .And.ParamName.Should().Be("typeFunc");
         }
         
-        [Xunit.Fact]
+        [Fact]
         public void RegisterFactory_FactoryInvokesFunc()
         {
             var wasCalled = false;
             Func<object> f = () => { wasCalled = true; return new object(); };
             var reg = Registration.RegisterFactory<object>(f);
             var result = reg.ImplementationFactory();
-            Xunit.Assert.True(wasCalled);
+            Assert.True(wasCalled);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RegisterType_NullType_Throws()
         {
             Action act = () => Registration.RegisterType<object>(null);
@@ -69,11 +70,11 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
                 .And.ParamName.Should().Be("type");
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = Registration.RegisterType<object>(typeof(string));
-            Xunit.Assert.Equal(typeof(string), result.ImplementationType);
+            Assert.Equal(typeof(string), result.ImplementationType);
         }
     }
 }

@@ -19,36 +19,37 @@ using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
     
     public class Authorize_ProtocolValidation_Invalid
     {
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         
         public void Null_Parameter()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
-            Xunit.Assert.Throws<ArgumentNullException>(() => validator.ValidateProtocol(null));
+            Assert.Throws<ArgumentNullException>(() => validator.ValidateProtocol(null));
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(new NameValueCollection());
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.User, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
         // fails because openid scope is requested, but no response type that indicates an identity token
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -60,13 +61,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -79,13 +80,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -97,13 +98,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
@@ -115,13 +116,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ClientId()
         {
             var parameters = new NameValueCollection();
@@ -132,13 +133,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.User, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_Scope()
         {
             var parameters = new NameValueCollection();
@@ -149,13 +150,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -166,13 +167,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.User, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -184,13 +185,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.User, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri_Triple_Slash()
         {
             var parameters = new NameValueCollection();
@@ -202,14 +203,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.User, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.User, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -220,13 +221,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -238,13 +239,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -257,13 +258,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -276,13 +277,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -295,13 +296,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -314,13 +315,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -333,13 +334,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -352,14 +353,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
         }
 
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -372,13 +373,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Negative_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -391,9 +392,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, result.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(ErrorTypes.Client, result.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidRequest, result.Error);
         }
     }
 }

@@ -16,6 +16,8 @@
 
 using System.Linq;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.DataHandler;
+using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Testing;
 using Moq;
 using Owin;
@@ -33,6 +35,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests
 {
@@ -41,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected TestServer server;
         protected HttpClient client;
         protected IDataProtector protector;
-        protected Microsoft.Owin.Security.DataHandler.TicketDataFormat ticketFormatter;
+        protected TicketDataFormat ticketFormatter;
 
         protected Mock<InMemoryUserService> mockUserService;
         protected IdentityServerOptions options;
@@ -86,7 +89,7 @@ namespace Thinktecture.IdentityServer.Tests
                 
                 app.UseIdentityServer(options);
 
-                ticketFormatter = new Microsoft.Owin.Security.DataHandler.TicketDataFormat(
+                ticketFormatter = new TicketDataFormat(
                     new DataProtectorAdapter(protector, options.AuthenticationOptions.CookieOptions.Prefix + Constants.PartialSignInAuthenticationType));
             });
 
@@ -102,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests
                 Postprocess(ctx);
             });
 
-            var google = new Microsoft.Owin.Security.Google.GoogleOAuth2AuthenticationOptions
+            var google = new GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "Google",
                 SignInAsAuthenticationType = signInAsType,
@@ -121,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests
                 var model = resp.GetModel<LoginViewModel>();
                 if (model.AntiForgery != null)
                 {
-                    this.Xsrf = model.AntiForgery;
+                    Xsrf = model.AntiForgery;
                     var cookies = resp.GetCookies().Where(x => x.Name == Xsrf.Name);
                     client.SetCookies(cookies);
                 }
@@ -150,7 +153,7 @@ namespace Thinktecture.IdentityServer.Tests
         protected T Get<T>(string path)
         {
             var result = Get(path);
-            Xunit.Assert.True(result.IsSuccessStatusCode);
+            Assert.True(result.IsSuccessStatusCode);
             return result.Content.ReadAsAsync<T>().Result;
         }
 
@@ -197,7 +200,7 @@ namespace Thinktecture.IdentityServer.Tests
         {
             var form = includeCsrf ? MapAndAddXsrf(value) : Map(value);
             var body = ToFormBody(form);
-            var content = new StringContent(body, System.Text.Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
+            var content = new StringContent(body, Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
             return client.PostAsync(Url(path), content).Result;
         }
 
@@ -228,7 +231,7 @@ namespace Thinktecture.IdentityServer.Tests
             };
 
             var ctx = new OwinContext(env);
-            var signInCookie = new MessageCookie<T>(ctx, this.options);
+            var signInCookie = new MessageCookie<T>(ctx, options);
             var id = signInCookie.Write(msg);
 
             client.SetCookies(headers["Set-Cookie"]);

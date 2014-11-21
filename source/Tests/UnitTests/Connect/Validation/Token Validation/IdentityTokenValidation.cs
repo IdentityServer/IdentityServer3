@@ -20,6 +20,7 @@ using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
@@ -33,8 +34,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -42,11 +43,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -54,11 +55,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -66,11 +67,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task IdentityToken_InvalidClientId()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -78,14 +79,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -93,10 +94,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient_symmetric");
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Trait("Category", Category)]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -104,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
     }
 }

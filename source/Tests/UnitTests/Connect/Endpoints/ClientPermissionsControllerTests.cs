@@ -21,6 +21,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
@@ -50,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             }
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void ShowPermissions_RendersPermissionPage()
         {
             Login();
@@ -58,33 +59,33 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("permissions");
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void ShowPermissions_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Xunit.Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermission_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Xunit.Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermission_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             Login();
             var resp = Post(Constants.RoutePaths.Oidc.Consent, new { ClientId = clientId });
-            Xunit.Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermission_NoAntiCsrf_ReturnsErrorPage()
         {
             Login();
@@ -92,39 +93,39 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("error");
         }
         
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermission_NoBody_ShowsError()
         {
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, (object)null);
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Xunit.Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
+            Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermission_NoClient_ShowsError()
         {
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = "" });
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Xunit.Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
+            Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void ShowPermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
             resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
         
-        [Xunit.Fact]
+        [Fact]
         public void RevokePermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
             resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
     }

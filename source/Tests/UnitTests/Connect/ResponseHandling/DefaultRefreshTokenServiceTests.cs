@@ -23,6 +23,7 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
@@ -33,8 +34,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -46,19 +47,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Xunit.Assert.False(string.IsNullOrWhiteSpace(handle));
+            Assert.False(string.IsNullOrWhiteSpace(handle));
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Xunit.Assert.NotNull(refreshToken);
+            Assert.NotNull(refreshToken);
 
             // check refresh token values
-            Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);
-            Xunit.Assert.Equal(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
+            Assert.Equal(refreshToken.ClientId, client.ClientId);
+            Assert.Equal(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -70,19 +71,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Xunit.Assert.False(string.IsNullOrWhiteSpace(handle));
+            Assert.False(string.IsNullOrWhiteSpace(handle));
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Xunit.Assert.NotNull(refreshToken);
+            Assert.NotNull(refreshToken);
 
             // check refresh token values
-            Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);
-            Xunit.Assert.Equal(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
+            Assert.Equal(refreshToken.ClientId, client.ClientId);
+            Assert.Equal(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -101,11 +102,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Xunit.Assert.Equal(client.AbsoluteRefreshTokenLifetime, newLifetime);
+            Assert.Equal(client.AbsoluteRefreshTokenLifetime, newLifetime);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -124,12 +125,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Xunit.Assert.Equal(newLifetime, client.SlidingRefreshTokenLifetime + 1);
+            Assert.Equal(newLifetime, client.SlidingRefreshTokenLifetime + 1);
 
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task ReUse_Handle_reuses_Handle()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -141,11 +142,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Xunit.Assert.Equal(handle, newHandle);
+            Assert.Equal(handle, newHandle);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task OneTime_Handle_creates_new_Handle()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -157,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Xunit.Assert.NotEqual(handle, newHandle);
+            Assert.NotEqual(handle, newHandle);
         }
 
         private async Task<ValidatedTokenRequest> CreateValidatedRequest(Client client, IRefreshTokenStore store)
@@ -182,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
             return validator.ValidatedRequest;
         }
     }

@@ -20,6 +20,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
@@ -28,8 +29,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - IdToken")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - IdToken")]
         public async Task Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -41,12 +42,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.True(clientResult.IsError);
-            Xunit.Assert.Equal(ErrorTypes.Client, clientResult.ErrorType);
-            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            Assert.True(clientResult.IsError);
+            Assert.Equal(ErrorTypes.Client, clientResult.ErrorType);
+            Assert.Equal(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
     }
 }

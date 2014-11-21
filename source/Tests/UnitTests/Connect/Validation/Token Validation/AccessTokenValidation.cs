@@ -25,10 +25,10 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
-    
     public class AccessTokenValidation
     {
         const string Category = "Access token validation";
@@ -40,8 +40,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -54,13 +54,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Xunit.Assert.False(result.IsError);
-            Xunit.Assert.Equal(8, result.Claims.Count());
-            Xunit.Assert.Equal("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
+            Assert.False(result.IsError);
+            Assert.Equal(8, result.Claims.Count());
+            Assert.Equal("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_required_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -73,11 +73,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "read");
 
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_missing_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -90,12 +90,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "missing");
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Unknown_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -103,12 +103,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("unknown");
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -122,12 +122,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Malformed_JWT_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -135,12 +135,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_JWT_Token()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -149,11 +149,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Xunit.Assert.False(result.IsError);
+            Assert.False(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Issuer()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -164,12 +164,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Audience()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -180,12 +180,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_AccessToken_but_User_not_active()
         {
             var mock = new Mock<IUserService>();
@@ -201,11 +201,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Xunit.Assert.True(result.IsError);
+            Assert.True(result.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_AccessToken_but_Client_not_active()
         {
             var store = new InMemoryTokenHandleStore();
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Xunit.Assert.True(result.IsError);
+            Assert.True(result.IsError);
         }
     }
 }

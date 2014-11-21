@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
@@ -43,50 +44,50 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             get = s => Task.FromResult(tokens.AsEnumerable());
             delete = (subject, client) =>
             {
-                this.subjectDeleted = subject;
-                this.clientDeleted = client;
+                subjectDeleted = subject;
+                clientDeleted = client;
                 return Task.FromResult(0);
             };
-            this.subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
+            subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
         }
 
         class TokenMeta : ITokenMetadata
         {
             public TokenMeta(string sub, string client, IEnumerable<string> scopes)
             {
-                this.SubjectId = sub;
-                this.ClientId = client;
-                this.Scopes = scopes;
+                SubjectId = sub;
+                ClientId = client;
+                Scopes = scopes;
             }
             public string SubjectId {get; set;}
             public string ClientId {get; set;}
             public IEnumerable<string> Scopes {get; set;}
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void LoadAllAsync_CallsGet_MapsResultsToConsent()
         {
             tokens.Add(new TokenMeta("sub", "client1", new string[] { "foo", "bar" }));
             tokens.Add(new TokenMeta("sub", "client2", new string[] { "baz", "quux" }));
 
-            var result = this.subject.LoadAllAsync("sub").Result;
-            Xunit.Assert.Equal(2, result.Count());
+            var result = subject.LoadAllAsync("sub").Result;
+            Assert.Equal(2, result.Count());
             
             var c1 = result.Single(x=>x.ClientId == "client1");
-            Xunit.Assert.Equal("sub", c1.Subject);
+            Assert.Equal("sub", c1.Subject);
             c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar" });
 
             var c2 = result.Single(x=>x.ClientId == "client2");
-            Xunit.Assert.Equal("sub", c2.Subject);
+            Assert.Equal("sub", c2.Subject);
             c2.Scopes.ShouldAllBeEquivalentTo(new[] { "baz", "quux" });
         }
 
-        [Xunit.Fact]
+        [Fact]
         public void RevokeAsync_CallsRevoke()
         {
             subject.RevokeAsync("sub34", "client12").Wait();
-            Xunit.Assert.Equal("sub34", this.subjectDeleted);
-            Xunit.Assert.Equal("client12", this.clientDeleted);
+            Assert.Equal("sub34", subjectDeleted);
+            Assert.Equal("client12", clientDeleted);
         }
     }
 }

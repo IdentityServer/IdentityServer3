@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 {
@@ -72,59 +73,59 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
                 }
             };
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("");
 
-            Xunit.Assert.Null(scopes);
+            Assert.Null(scopes);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Parse_Scopes_with_Sorting()
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope3 scope2 scope1");
             
-            Xunit.Assert.Equal(scopes.Count, 3);
+            Assert.Equal(scopes.Count, 3);
 
-            Xunit.Assert.Equal(scopes[0], "scope1");
-            Xunit.Assert.Equal(scopes[1], "scope2");
-            Xunit.Assert.Equal(scopes[2], "scope3");
+            Assert.Equal(scopes[0], "scope1");
+            Assert.Equal(scopes[1], "scope2");
+            Assert.Equal(scopes[2], "scope3");
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Parse_Scopes_with_Extra_Spaces()
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("   scope3     scope2     scope1   ");
 
-            Xunit.Assert.Equal(scopes.Count, 3);
+            Assert.Equal(scopes.Count, 3);
 
-            Xunit.Assert.Equal(scopes[0], "scope1");
-            Xunit.Assert.Equal(scopes[1], "scope2");
-            Xunit.Assert.Equal(scopes[2], "scope3");
+            Assert.Equal(scopes[0], "scope1");
+            Assert.Equal(scopes[1], "scope2");
+            Assert.Equal(scopes[2], "scope3");
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Parse_Scopes_with_Duplicate_Scope()
         {
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope2 scope1 scope2");
 
-            Xunit.Assert.Equal(scopes.Count, 2);
+            Assert.Equal(scopes.Count, 2);
 
-            Xunit.Assert.Equal(scopes[0], "scope1");
-            Xunit.Assert.Equal(scopes[1], "scope2");
+            Assert.Equal(scopes[0], "scope1");
+            Assert.Equal(scopes[1], "scope2");
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void All_Scopes_Valid()
         {
             var validator = new ScopeValidator();
@@ -132,11 +133,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.True(result);
+            Assert.True(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Invalid_Scope()
         {
             var validator = new ScopeValidator();
@@ -144,11 +145,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.False(result);
+            Assert.False(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Disabled_Scope()
         {
             var validator = new ScopeValidator();
@@ -156,11 +157,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.False(result);
+            Assert.False(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Unrestricted_Client()
         {
             var validator = new ScopeValidator();
@@ -168,11 +169,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_unrestrictedClient, scopes);
 
-            Xunit.Assert.True(result);
+            Assert.True(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Restricted_Client()
         {
             var validator = new ScopeValidator();
@@ -180,11 +181,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Xunit.Assert.True(result);
+            Assert.True(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Restricted_Scopes()
         {
             var validator = new ScopeValidator();
@@ -192,11 +193,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
-            Xunit.Assert.False(result);
+            Assert.False(result);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Contains_Resource_and_Identity_Scopes()
         {
             var validator = new ScopeValidator();
@@ -204,13 +205,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.True(result);
-            Xunit.Assert.True(validator.ContainsOpenIdScopes);
-            Xunit.Assert.True(validator.ContainsResourceScopes);
+            Assert.True(result);
+            Assert.True(validator.ContainsOpenIdScopes);
+            Assert.True(validator.ContainsResourceScopes);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Contains_Resource_Scopes_Only()
         {
             var validator = new ScopeValidator();
@@ -218,13 +219,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.True(result);
-            Xunit.Assert.False(validator.ContainsOpenIdScopes);
-            Xunit.Assert.True(validator.ContainsResourceScopes);
+            Assert.True(result);
+            Assert.False(validator.ContainsOpenIdScopes);
+            Assert.True(validator.ContainsResourceScopes);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Contains_Identity_Scopes_Only()
         {
             var validator = new ScopeValidator();
@@ -232,9 +233,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
             var result = validator.AreScopesValid(scopes, _allScopes);
 
-            Xunit.Assert.True(result);
-            Xunit.Assert.True(validator.ContainsOpenIdScopes);
-            Xunit.Assert.False(validator.ContainsResourceScopes);
+            Assert.True(result);
+            Assert.True(validator.ContainsOpenIdScopes);
+            Assert.False(validator.ContainsResourceScopes);
         }
     }
 }

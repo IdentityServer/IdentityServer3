@@ -25,6 +25,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
@@ -35,8 +36,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Non_existing_RefreshToken()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -51,12 +52,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Expired_RefreshToken()
         {
             var refreshToken = new RefreshToken
@@ -82,12 +83,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Wrong_Client_Binding_RefreshToken_Request()
         {
             var refreshToken = new RefreshToken
@@ -113,12 +114,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Client_has_no_OfflineAccess_Scope_anymore_at_RefreshToken_Request()
         {
             var refreshToken = new RefreshToken
@@ -144,12 +145,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task RefreshToken_Request_with_disabled_User()
         {
             var mock = new Mock<IUserService>();
@@ -181,7 +182,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
+            Assert.True(result.IsError);
         }
     }
 }

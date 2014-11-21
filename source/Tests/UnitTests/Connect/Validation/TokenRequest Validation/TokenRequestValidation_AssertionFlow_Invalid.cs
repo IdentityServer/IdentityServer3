@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
@@ -29,8 +30,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -42,12 +43,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_Assertion()
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
@@ -60,8 +61,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Xunit.Assert.True(result.IsError);
-            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
+            Assert.True(result.IsError);
+            Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
     }
 }

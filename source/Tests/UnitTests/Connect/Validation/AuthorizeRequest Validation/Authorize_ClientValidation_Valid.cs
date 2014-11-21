@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
@@ -27,8 +28,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -39,14 +40,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -57,14 +58,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -75,14 +76,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_Code_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
@@ -93,14 +94,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -112,14 +113,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -131,14 +132,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request_Multiple_Scopes()
         {
             var parameters = new NameValueCollection();
@@ -150,14 +151,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
 
-        [Xunit.Fact]
-        [Xunit.Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
         public async Task Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
@@ -168,10 +169,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Xunit.Assert.False(protocolResult.IsError);
+            Assert.False(protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
-            Xunit.Assert.False(clientResult.IsError);
+            Assert.False(clientResult.IsError);
         }
     }
 }
