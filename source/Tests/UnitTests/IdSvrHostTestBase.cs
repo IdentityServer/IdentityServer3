@@ -17,7 +17,6 @@
 using System.Linq;
 using Microsoft.Owin;
 using Microsoft.Owin.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Owin;
 using System;
