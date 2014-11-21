@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+            Xunit.Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
         [Xunit.Fact]
@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+            Xunit.Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
         }
 
         [Xunit.Fact]
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login();
             var resp = Post(Constants.RoutePaths.Oidc.Consent, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            Xunit.Assert.Equal(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
         }
 
         [Xunit.Fact]
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, (object)null);
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
+            Xunit.Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
         [Xunit.Fact]
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = "" });
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
+            Xunit.Assert.Equal(Messages.ClientIdRequired, model.ErrorMessage);
         }
 
         [Xunit.Fact]
@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login(false);
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
+            Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
             StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
         }
         
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         {
             Login(false);
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
+            Xunit.Assert.Equal(HttpStatusCode.Redirect, resp.StatusCode);
             StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
         }
     }

@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         IClientStore _clients = new InMemoryClientStore(TestClients.Get());
 
         [Xunit.Fact]
-        [ExpectedException(typeof(ArgumentNullException))]
+        
         [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public void Parameters_Null()
         {
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         }
 
         [Xunit.Fact]
-        [ExpectedException(typeof(ArgumentNullException))]
+        
         [Xunit.Trait("Category", "TokenRequest Validation - General - Invalid")]
         public void Client_Null()
         {
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            Xunit.Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
 
         [Xunit.Fact]
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            Xunit.Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             Assert.IsNotNull(client);
-            Assert.AreEqual("codeclient", client.ClientId);
+            Xunit.Assert.Equal("codeclient", client.ClientId);
         }
 
         [Xunit.Fact]
@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [ExpectedException(typeof(InvalidOperationException))]
+        
         [Xunit.Trait("Category", Category)]
         public void Null_Client_Credentials()
         {
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         }
 
         [Xunit.Fact]
-        [ExpectedException(typeof(InvalidOperationException))]
+        
         [Xunit.Trait("Category", Category)]
         public void Null_ClientId()
         {

@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
             catch(ArgumentNullException ex)
             {
-                Assert.AreEqual("instance", ex.ParamName);
+                Xunit.Assert.Equal("instance", ex.ParamName);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
             catch (ArgumentNullException ex)
             {
-                Assert.AreEqual("typeFunc", ex.ParamName);
+                Xunit.Assert.Equal("typeFunc", ex.ParamName);
             }
         }
         
@@ -79,7 +79,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
             catch (ArgumentNullException ex)
             {
-                Assert.AreEqual("type", ex.ParamName);
+                Xunit.Assert.Equal("type", ex.ParamName);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = Registration.RegisterType<object>(typeof(string));
-            Assert.AreEqual(typeof(string), result.ImplementationType);
+            Xunit.Assert.Equal(typeof(string), result.ImplementationType);
         }
     }
 }

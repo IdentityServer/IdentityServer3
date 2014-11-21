@@ -46,8 +46,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var clientResult = await validator.ValidateClientAsync();
             Xunit.Assert.True(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            Xunit.Assert.Equal(ErrorTypes.Client, clientResult.ErrorType);
+            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
     }
 }

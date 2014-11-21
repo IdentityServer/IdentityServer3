@@ -54,8 +54,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.IsNotNull(refreshToken);
 
             // check refresh token values
-            Assert.AreEqual(refreshToken.ClientId, client.ClientId);
-            Assert.AreEqual(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
+            Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);
+            Xunit.Assert.Equal(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
         }
 
         [Xunit.Fact]
@@ -78,8 +78,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             Assert.IsNotNull(refreshToken);
 
             // check refresh token values
-            Assert.AreEqual(refreshToken.ClientId, client.ClientId);
-            Assert.AreEqual(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
+            Xunit.Assert.Equal(refreshToken.ClientId, client.ClientId);
+            Xunit.Assert.Equal(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
         }
 
         [Xunit.Fact]
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.AreEqual(client.AbsoluteRefreshTokenLifetime, newLifetime);
+            Xunit.Assert.Equal(client.AbsoluteRefreshTokenLifetime, newLifetime);
         }
 
         [Xunit.Fact]
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.AreEqual(newLifetime, client.SlidingRefreshTokenLifetime + 1);
+            Xunit.Assert.Equal(newLifetime, client.SlidingRefreshTokenLifetime + 1);
 
         }
 
@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.AreEqual(handle, newHandle);
+            Xunit.Assert.Equal(handle, newHandle);
         }
 
         [Xunit.Fact]

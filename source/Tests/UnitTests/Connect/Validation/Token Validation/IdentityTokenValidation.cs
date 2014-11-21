@@ -79,7 +79,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         

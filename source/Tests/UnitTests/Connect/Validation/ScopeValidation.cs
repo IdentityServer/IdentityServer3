@@ -90,11 +90,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope3 scope2 scope1");
             
-            Assert.AreEqual(scopes.Count, 3);
+            Xunit.Assert.Equal(scopes.Count, 3);
 
-            Assert.AreEqual(scopes[0], "scope1");
-            Assert.AreEqual(scopes[1], "scope2");
-            Assert.AreEqual(scopes[2], "scope3");
+            Xunit.Assert.Equal(scopes[0], "scope1");
+            Xunit.Assert.Equal(scopes[1], "scope2");
+            Xunit.Assert.Equal(scopes[2], "scope3");
         }
 
         [Xunit.Fact]
@@ -104,11 +104,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("   scope3     scope2     scope1   ");
 
-            Assert.AreEqual(scopes.Count, 3);
+            Xunit.Assert.Equal(scopes.Count, 3);
 
-            Assert.AreEqual(scopes[0], "scope1");
-            Assert.AreEqual(scopes[1], "scope2");
-            Assert.AreEqual(scopes[2], "scope3");
+            Xunit.Assert.Equal(scopes[0], "scope1");
+            Xunit.Assert.Equal(scopes[1], "scope2");
+            Xunit.Assert.Equal(scopes[2], "scope3");
         }
 
         [Xunit.Fact]
@@ -118,10 +118,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
             var validator = new ScopeValidator();
             var scopes = validator.ParseScopes("scope2 scope1 scope2");
 
-            Assert.AreEqual(scopes.Count, 2);
+            Xunit.Assert.Equal(scopes.Count, 2);
 
-            Assert.AreEqual(scopes[0], "scope1");
-            Assert.AreEqual(scopes[1], "scope2");
+            Xunit.Assert.Equal(scopes[0], "scope1");
+            Xunit.Assert.Equal(scopes[1], "scope2");
         }
 
         [Xunit.Fact]

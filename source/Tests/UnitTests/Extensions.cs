@@ -79,12 +79,12 @@ namespace Thinktecture.IdentityServer.Tests
 
         public static void AssertPage(this HttpResponseMessage resp, string name)
         {
-            Assert.AreEqual(HttpStatusCode.OK, resp.StatusCode);
-            Assert.AreEqual("text/html", resp.Content.Headers.ContentType.MediaType);
+            Xunit.Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Xunit.Assert.Equal("text/html", resp.Content.Headers.ContentType.MediaType);
             var html = resp.Content.ReadAsStringAsync().Result;
 
             var match = Regex.Match(html, "<div class='container page-(.*)' ng-cloak>");
-            Assert.AreEqual(name, match.Groups[1].Value);
+            Xunit.Assert.Equal(name, match.Groups[1].Value);
         }
 
         static T GetModel<T>(string html)

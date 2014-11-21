@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         {
             Xunit.Assert.True(cp.AllowAnyHeader);
             Xunit.Assert.True(cp.AllowAnyMethod);
-            Assert.AreEqual(1, cp.Origins.Count);
+            Xunit.Assert.Equal(1, cp.Origins.Count);
             CollectionAssert.Contains(cp.Origins.ToArray(), origin);
         }
 
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
             catch (ArgumentNullException ex)
             {
-                Assert.AreEqual("policy", ex.ParamName);
+                Xunit.Assert.Equal("policy", ex.ParamName);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             }
             catch (ArgumentNullException ex)
             {
-                Assert.AreEqual("allowedPaths", ex.ParamName);
+                Xunit.Assert.Equal("allowedPaths", ex.ParamName);
             }
         }
 

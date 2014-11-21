@@ -91,8 +91,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var result = await validator.ValidateAsync(request);
 
             Xunit.Assert.True(result.TokenFound);
-            Assert.AreEqual("token", result.Token);
-            Assert.AreEqual(BearerTokenUsageType.AuthorizationHeader, result.UsageType);
+            Xunit.Assert.Equal("token", result.Token);
+            Xunit.Assert.Equal(BearerTokenUsageType.AuthorizationHeader, result.UsageType);
         }
 
         [Xunit.Fact]
@@ -110,8 +110,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var result = await validator.ValidateAsync(request);
 
             Xunit.Assert.True(result.TokenFound);
-            Assert.AreEqual("token", result.Token);
-            Assert.AreEqual(BearerTokenUsageType.PostBody, result.UsageType);
+            Xunit.Assert.Equal("token", result.Token);
+            Xunit.Assert.Equal(BearerTokenUsageType.PostBody, result.UsageType);
         }
 
         [Xunit.Fact]

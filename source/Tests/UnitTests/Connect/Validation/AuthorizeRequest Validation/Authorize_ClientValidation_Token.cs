@@ -41,12 +41,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.AreEqual(false, protocolResult.IsError);
+            Xunit.Assert.Equal(false, protocolResult.IsError);
 
             var clientResult = await validator.ValidateClientAsync();
             Xunit.Assert.True(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            Xunit.Assert.Equal(ErrorTypes.Client, clientResult.ErrorType);
+            Xunit.Assert.Equal(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
         }
     }
 }

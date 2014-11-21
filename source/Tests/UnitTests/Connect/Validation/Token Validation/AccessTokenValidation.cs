@@ -56,8 +56,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("123");
 
             Xunit.Assert.False(result.IsError);
-            Assert.AreEqual(8, result.Claims.Count());
-            Assert.AreEqual("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
+            Xunit.Assert.Equal(8, result.Claims.Count());
+            Xunit.Assert.Equal("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
         }
 
         [Xunit.Fact]
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("123", "missing");
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
         }
 
         [Xunit.Fact]
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("unknown");
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [Xunit.Fact]
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("123");
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
         }
 
         [Xunit.Fact]
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [Xunit.Fact]
@@ -166,7 +166,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [Xunit.Fact]
@@ -182,7 +182,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            Xunit.Assert.Equal(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
         }
 
         [Xunit.Fact]

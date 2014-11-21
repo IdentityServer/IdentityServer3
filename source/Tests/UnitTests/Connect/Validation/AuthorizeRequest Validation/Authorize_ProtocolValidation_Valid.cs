@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            Xunit.Assert.Equal(false, result.IsError);
         }
 
         [Xunit.Fact]

@@ -42,10 +42,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             Xunit.Assert.False(credential.IsMalformed);
             Xunit.Assert.True(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            Xunit.Assert.Equal(Constants.ClientAuthenticationMethods.Basic, credential.Type);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            Xunit.Assert.Equal("client", credential.ClientId);
+            Xunit.Assert.Equal("secret", credential.Secret);
         }
 
         [Xunit.Fact]
@@ -60,10 +60,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             Xunit.Assert.False(credential.IsMalformed);
             Xunit.Assert.True(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.FormPost, credential.Type);
+            Xunit.Assert.Equal(Constants.ClientAuthenticationMethods.FormPost, credential.Type);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            Xunit.Assert.Equal("client", credential.ClientId);
+            Xunit.Assert.Equal("secret", credential.Secret);
         }
 
         [Xunit.Fact]
@@ -80,10 +80,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             Xunit.Assert.False(credential.IsMalformed);
             Xunit.Assert.True(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            Xunit.Assert.Equal(Constants.ClientAuthenticationMethods.Basic, credential.Type);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            Xunit.Assert.Equal("client", credential.ClientId);
+            Xunit.Assert.Equal("secret", credential.Secret);
         }
 
         [Xunit.Fact]

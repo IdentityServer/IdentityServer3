@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            Xunit.Assert.Equal(Constants.TokenErrors.UnsupportedGrantType, result.Error);
         }
 
         [Xunit.Fact]
@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             Xunit.Assert.True(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            Xunit.Assert.Equal(Constants.TokenErrors.InvalidGrant, result.Error);
         }
     }
 }
