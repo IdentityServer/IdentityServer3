@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
                 clientDeleted = client;
                 return Task.FromResult(0);
             };
-            subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
+            this.subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
         }
 
         class TokenMeta : ITokenMetadata
