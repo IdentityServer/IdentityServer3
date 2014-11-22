@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (options == null)
             {
-                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
+                options = TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (options == null)
             {
-                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
+                options = TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)

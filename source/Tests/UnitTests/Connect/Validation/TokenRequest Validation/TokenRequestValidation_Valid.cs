@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -26,18 +26,19 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_Valid
     {
         const string Category = "TokenRequest Validation - General - Valid";
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Code_Request()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -68,11 +69,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Code_Request_with_Refresh_Token()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -107,11 +108,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ClientCredentials_Request()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -124,11 +125,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
@@ -141,11 +142,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ResourceOwner_Request()
         {
             var client = await _clients.FindClientByIdAsync("roclient");
@@ -160,11 +161,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ResourceOwner_Request_with_Refresh_Token()
         {
             var client = await _clients.FindClientByIdAsync("roclient");
@@ -179,11 +180,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ResourceOwner_Request_Restricted_Client()
         {
             var client = await _clients.FindClientByIdAsync("roclient_restricted");
@@ -198,11 +199,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_CustomGrant_Request()
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
@@ -215,11 +216,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_RefreshToken_Request()
         {
             var mock = new Mock<IUserService>();
@@ -251,11 +252,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_RefreshToken_Request_using_Restricted_Client()
         {
             var mock = new Mock<IUserService>();
@@ -287,7 +288,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

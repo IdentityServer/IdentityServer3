@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_ClientCredentials_Invalid
     {
         const string Category = "TokenRequest Validation - ClientCredentials - Invalid";
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("roclient");
@@ -43,12 +44,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task No_Scopes()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -59,12 +60,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Unknown_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -76,12 +77,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Unknown_Scope_Multiple()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -93,12 +94,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Restricted_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
@@ -110,12 +111,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Restricted_Scope_Multiple()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
@@ -127,12 +128,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Identity_Scope()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -144,12 +145,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Resource_and_Refresh_Token()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -161,8 +162,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
         }
     }
 }

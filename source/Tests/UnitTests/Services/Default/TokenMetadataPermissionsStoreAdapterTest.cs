@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
-    [TestClass]
+    
     public class TokenMetadataPermissionsStoreAdapterTest
     {
         List<ITokenMetadata> tokens;
@@ -35,15 +37,15 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
 
         TokenMetadataPermissionsStoreAdapter subject;
 
-        [TestInitialize]
-        public void Init()
+        
+        public TokenMetadataPermissionsStoreAdapterTest()
         {
             tokens = new List<ITokenMetadata>();
             get = s => Task.FromResult(tokens.AsEnumerable());
             delete = (subject, client) =>
             {
-                this.subjectDeleted = subject;
-                this.clientDeleted = client;
+                subjectDeleted = subject;
+                clientDeleted = client;
                 return Task.FromResult(0);
             };
             this.subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
@@ -53,39 +55,39 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         {
             public TokenMeta(string sub, string client, IEnumerable<string> scopes)
             {
-                this.SubjectId = sub;
-                this.ClientId = client;
-                this.Scopes = scopes;
+                SubjectId = sub;
+                ClientId = client;
+                Scopes = scopes;
             }
             public string SubjectId {get; set;}
             public string ClientId {get; set;}
             public IEnumerable<string> Scopes {get; set;}
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadAllAsync_CallsGet_MapsResultsToConsent()
         {
             tokens.Add(new TokenMeta("sub", "client1", new string[] { "foo", "bar" }));
             tokens.Add(new TokenMeta("sub", "client2", new string[] { "baz", "quux" }));
 
-            var result = this.subject.LoadAllAsync("sub").Result;
-            Assert.AreEqual(2, result.Count());
-            
+            var result = subject.LoadAllAsync("sub").Result;
+            result.Count().Should().Be(2);
+
             var c1 = result.Single(x=>x.ClientId == "client1");
-            Assert.AreEqual("sub", c1.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "foo", "bar" }, c1.Scopes.ToArray());
+            c1.Subject.Should().Be("sub");
+            c1.Scopes.ShouldAllBeEquivalentTo(new[] { "foo", "bar" });
 
             var c2 = result.Single(x=>x.ClientId == "client2");
-            Assert.AreEqual("sub", c2.Subject);
-            CollectionAssert.AreEquivalent(new string[] { "baz", "quux" }, c2.Scopes.ToArray());
+            c2.Subject.Should().Be("sub");
+            c2.Scopes.ShouldAllBeEquivalentTo(new[] { "baz", "quux" });
         }
 
-        [TestMethod]
+        [Fact]
         public void RevokeAsync_CallsRevoke()
         {
             subject.RevokeAsync("sub34", "client12").Wait();
-            Assert.AreEqual("sub34", this.subjectDeleted);
-            Assert.AreEqual("client12", this.clientDeleted);
+            subjectDeleted.Should().Be("sub34");
+            clientDeleted.Should().Be("client12");
         }
     }
 }

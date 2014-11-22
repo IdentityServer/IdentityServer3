@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
-    [TestClass]
     public class DefaultClientPermissionsServiceTests
     {
         InMemoryConsentStore consentStore;
@@ -27,8 +25,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         //InMemoryScopeStore scopeStore;
         //DefaultClientPermissionsService subject;
 
-        [TestInitialize]
-        public void Init()
+        public DefaultClientPermissionsServiceTests()
         {
             consentStore = new InMemoryConsentStore();
 

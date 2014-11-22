@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using Moq;
 using System.IdentityModel.Tokens;
 using System.Linq;
@@ -26,10 +26,10 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
-    [TestClass]
     public class AccessTokenValidation
     {
         const string Category = "Access token validation";
@@ -41,8 +41,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -54,14 +54,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             await store.StoreAsync(handle, token);
 
             var result = await validator.ValidateAccessTokenAsync("123");
-            
-            Assert.IsFalse(result.IsError);
-            Assert.AreEqual(8, result.Claims.Count());
-            Assert.AreEqual("roclient", result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value);
+
+            result.IsError.Should().BeFalse();
+            result.Claims.Count().Should().Be(8);
+            result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value.Should().Be("roclient");
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_required_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -74,11 +74,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "read");
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Reference_Token_with_missing_Scope()
         {
             var store = new InMemoryTokenHandleStore();
@@ -91,25 +91,25 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123", "missing");
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InsufficientScope, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InsufficientScope);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Unknown_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
             var result = await validator.ValidateAccessTokenAsync("unknown");
-            
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -122,13 +122,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             await Task.Delay(2000);
 
             var result = await validator.ValidateAccessTokenAsync("123");
-            
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.ExpiredToken, result.Error);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.ExpiredToken);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Malformed_JWT_Token()
         {
             var store = new InMemoryTokenHandleStore();
@@ -136,12 +136,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_JWT_Token()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -150,11 +150,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Issuer()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -165,12 +165,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Audience()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -181,12 +181,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_AccessToken_but_User_not_active()
         {
             var mock = new Mock<IUserService>();
@@ -202,11 +202,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.IsTrue(result.IsError);
+            result.IsError.Should().BeTrue();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_AccessToken_but_Client_not_active()
         {
             var store = new InMemoryTokenHandleStore();
@@ -219,7 +219,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
-            Assert.IsTrue(result.IsError);
+            result.IsError.Should().BeTrue();
         }
     }
 }

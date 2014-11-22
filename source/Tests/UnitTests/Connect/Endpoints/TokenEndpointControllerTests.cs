@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Net;
-using System.Net.Http;
-using Thinktecture.IdentityServer.Core;
-
-
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    [TestClass]
+    
     public class TokenEndpointControllerTests : IdSvrHostTestBase
     {
     }

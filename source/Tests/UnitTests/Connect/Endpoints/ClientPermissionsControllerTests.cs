@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using System.Linq;
 using System.Net;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    [TestClass]
+    
     public class ClientPermissionsControllerTests : IdSvrHostTestBase
     {
         string clientId;
 
-        [TestInitialize]
-        public new void Init()
+        
+        public ClientPermissionsControllerTests()
         {
-            base.Init();
             clientId = TestClients.Get().First().ClientId;
         }
 
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShowPermissions_RendersPermissionPage()
         {
             Login();
@@ -59,33 +59,33 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("permissions");
         }
 
-        [TestMethod]
+        [Fact]
         public void ShowPermissions_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [TestMethod]
+        [Fact]
         public void RevokePermission_EndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [TestMethod]
+        [Fact]
         public void RevokePermission_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             Login();
             var resp = Post(Constants.RoutePaths.Oidc.Consent, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
-        [TestMethod]
+        [Fact]
         public void RevokePermission_NoAntiCsrf_ReturnsErrorPage()
         {
             Login();
@@ -93,40 +93,40 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             resp.AssertPage("error");
         }
         
-        [TestMethod]
+        [Fact]
         public void RevokePermission_NoBody_ShowsError()
         {
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, (object)null);
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.ClientIdRequired);
         }
 
-        [TestMethod]
+        [Fact]
         public void RevokePermission_NoClient_ShowsError()
         {
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = "" });
             var model = resp.GetModel<ClientPermissionsViewModel>();
-            Assert.AreEqual(Messages.ClientIdRequired, model.ErrorMessage);
+            model.ErrorMessage.Should().Be(Messages.ClientIdRequired);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShowPermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
             var resp = Get(Constants.RoutePaths.ClientPermissions);
-            Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
-            StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
         
-        [TestMethod]
+        [Fact]
         public void RevokePermissions_Unauthenticated_ShowsLoginPage()
         {
             Login(false);
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
-            Assert.AreEqual(HttpStatusCode.Redirect, resp.StatusCode);
-            StringAssert.Contains(resp.Headers.Location.AbsoluteUri, Constants.RoutePaths.Login);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            resp.Headers.Location.AbsoluteUri.Should().Contain(Constants.RoutePaths.Login);
         }
     }
 }
