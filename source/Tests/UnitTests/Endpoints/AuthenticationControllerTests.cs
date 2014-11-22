@@ -183,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google").Should().BeTrue();
         }
 
-        [Fact(Skip = "Calling init here wtf")]
+        [Fact]
         public void GetLogin_EnableLocalLoginMoreThanOneProvider_ShowsLoginPage()
         {
             Action<IAppBuilder, string> config = (app, name)=>{
@@ -199,7 +199,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 app.UseGoogleAuthentication(google);
             };
             OverrideIdentityProviderConfiguration = config;
-            //this.Init();
+            Init();
             
             options.AuthenticationOptions.EnableLocalLogin = false;
             var resp = GetLoginPage();

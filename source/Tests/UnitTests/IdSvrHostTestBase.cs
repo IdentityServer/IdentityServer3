@@ -59,6 +59,11 @@ namespace Thinktecture.IdentityServer.Tests
         
         public IdSvrHostTestBase()
         {
+            Init();
+        }
+
+        protected void Init()
+        {
             clients = TestClients.Get();
             var clientStore = new InMemoryClientStore(clients);
             var scopeStore = new InMemoryScopeStore(TestScopes.Get());
@@ -80,9 +85,9 @@ namespace Thinktecture.IdentityServer.Tests
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;
                 options.AuthenticationOptions.IdentityProviders = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
-                
+
                 protector = options.DataProtector;
-                
+
                 app.UseIdentityServer(options);
 
                 ticketFormatter = new TicketDataFormat(
