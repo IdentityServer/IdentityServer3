@@ -32,6 +32,7 @@ using System.Text;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -67,13 +68,7 @@ namespace Thinktecture.IdentityServer.Tests
                 ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore),
                 ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore)
             };
-/*
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
-            // white space between unit tests
-            LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            LogProvider.GetLogger("").Debug("UNIT TEST: " + TestContext.TestName);
-            LogProvider.GetLogger("").Debug("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            */
+
             server = TestServer.Create(app =>
             {
                 appBuilder = app;
