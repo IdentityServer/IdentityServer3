@@ -3,6 +3,11 @@ Param(
 	[string]$preRelease = $null
 )
 
+if(Test-Path Env:\APPVEYOR_BUILD_NUMBER){
+	$preRelease = [int]$Env:APPVEYOR_BUILD_NUMBER
+	Write-Host "Using APPVEYOR_BUILD_NUMBER"
+}
+
 gci .\source -Recurse "packages.config" |% {
 	"Restoring " + $_.FullName
 	.\source\.nuget\nuget.exe i $_.FullName -o .\source\packages
