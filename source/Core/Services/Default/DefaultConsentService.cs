@@ -23,10 +23,21 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default consent service
+    /// </summary>
     public class DefaultConsentService : IConsentService
     {
-        readonly IConsentStore _store;
+        /// <summary>
+        /// The consent store
+        /// </summary>
+        protected readonly IConsentStore _store;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultConsentService"/> class.
+        /// </summary>
+        /// <param name="store">The consent store.</param>
+        /// <exception cref="System.ArgumentNullException">store</exception>
         public DefaultConsentService(IConsentStore store)
         {
             if (store == null) throw new ArgumentNullException("store");

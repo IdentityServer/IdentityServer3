@@ -22,11 +22,17 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Use this class to replace built-in services, or add additional dependencies to the container
+    /// </summary>
     public class IdentityServerServiceFactory
     {
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         static readonly Registration<IExternalClaimsFilter> DefaultClaimsFilter;
+
+        /// <summary>
+        /// Initializes the <see cref="IdentityServerServiceFactory"/> class.
+        /// </summary>
         static IdentityServerServiceFactory()
         {
             DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>(() =>
@@ -41,53 +47,203 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             });
         }
 
-        public IdentityServerServiceFactory()
-        {
-            this.ExternalClaimsFilter = DefaultClaimsFilter;
-        }
-
         // keep list of any additional dependencies the 
         // hosting application might need. these will be
         // added to the DI container
         readonly List<Registration> _registrations = new List<Registration>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IdentityServerServiceFactory"/> class.
+        /// </summary>
+        public IdentityServerServiceFactory()
+        {
+            this.ExternalClaimsFilter = DefaultClaimsFilter;
+        }
+
+        /// <summary>
+        /// Gets the a list of additional dependencies.
+        /// </summary>
+        /// <value>
+        /// The dependencies.
+        /// </value>
         public IEnumerable<Registration> Registrations
         {
             get { return _registrations; }
         }
 
-        public void Register<T>(Registration<T> r)
+        /// <summary>
+        /// Adds a registration to the dependency list
+        /// </summary>
+        /// <typeparam name="T">Type of the dependency</typeparam>
+        /// <param name="registration">The registration.</param>
+        public void Register<T>(Registration<T> registration)
             where T : class
         {
-            _registrations.Add(r);
+            _registrations.Add(registration);
         }
 
+        ///////////////////////
         // mandatory (external)
+        ///////////////////////
+
+        /// <summary>
+        /// Gets or sets the user service. The user service implements user authentication against the local user store as well as association of external users. There are standard implementations for in-memory, MembershipReboot and ASP.NET Identity
+        /// </summary>
+        /// <value>
+        /// The user service.
+        /// </value>
         public Registration<IUserService> UserService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scope store. The scope store implements retrieval of scopes configuration data.
+        /// </summary>
+        /// <value>
+        /// The scope store.
+        /// </value>
         public Registration<IScopeStore> ScopeStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client store. The client store implements retrieval of client configuration data.
+        /// </summary>
+        /// <value>
+        /// The client store.
+        /// </value>
         public Registration<IClientStore> ClientStore { get; set; }
-        
+
+
+        ///////////////////////
         // mandatory (for authorization code, reference & refresh tokens and consent)
         // but with default in memory implementation
+        ///////////////////////
+
+        /// <summary>
+        /// Gets or sets the authorization code store - implements storage and retrieval of authorization codes.
+        /// </summary>
+        /// <value>
+        /// The authorization code store.
+        /// </value>
         public Registration<IAuthorizationCodeStore> AuthorizationCodeStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the token handle store - Implements storage and retrieval of handles for reference tokens.
+        /// </summary>
+        /// <value>
+        /// The token handle store.
+        /// </value>
         public Registration<ITokenHandleStore> TokenHandleStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the consent store - Implements storage and retrieval of consent decisions.
+        /// </summary>
+        /// <value>
+        /// The consent store.
+        /// </value>
         public Registration<IConsentStore> ConsentStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refresh token store - Implements storage and retrieval of refresh tokens.
+        /// </summary>
+        /// <value>
+        /// The refresh token store.
+        /// </value>
         public Registration<IRefreshTokenStore> RefreshTokenStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the view service - Implements retrieval of UI assets. Defaults to using the embedded assets.
+        /// </summary>
+        /// <value>
+        /// The view service.
+        /// </value>
         public Registration<IViewService> ViewService { get; set; }
-        
-        // optional
+
+
+        ///////////////////////
+        // optional (with default implementations)
+        ///////////////////////
+
+        /// <summary>
+        /// Gets or sets the consent service - Implements logic of consent decisions 
+        /// </summary>
+        /// <value>
+        /// The consent service.
+        /// </value>
         public Registration<IConsentService> ConsentService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client permissions service - Implements retrieval and revocation of consents, reference and refresh tokens.
+        /// </summary>
+        /// <value>
+        /// The client permissions service.
+        /// </value>
         public Registration<IClientPermissionsService> ClientPermissionsService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom grant validator - Implements validation of custom grant types.
+        /// </summary>
+        /// <value>
+        /// The custom grant validator.
+        /// </value>
         public Registration<ICustomGrantValidator> CustomGrantValidator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom request validator - Implements custom additional validation of authorize and token requests.
+        /// </summary>
+        /// <value>
+        /// The custom request validator.
+        /// </value>
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the claims provider - Implements retrieval of claims for identity and access tokens.
+        /// </summary>
+        /// <value>
+        /// The claims provider.
+        /// </value>
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the token service - Implements creation of security tokens definitions.
+        /// </summary>
+        /// <value>
+        /// The token service.
+        /// </value>
         public Registration<ITokenService> TokenService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refresh token service - Implements creation and updates of refresh tokens.
+        /// </summary>
+        /// <value>
+        /// The refresh token service.
+        /// </value>
         public Registration<IRefreshTokenService> RefreshTokenService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the token signing service - Implements creation and signing of security tokens.
+        /// </summary>
+        /// <value>
+        /// The token signing service.
+        /// </value>
         public Registration<ITokenSigningService> TokenSigningService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the external claims filter - Implements filtering and transformation of claims for external identity providers.
+        /// </summary>
+        /// <value>
+        /// The external claims filter.
+        /// </value>
         public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
+
+        public Registration<IEventService> EventService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom token validator - Implements custom additional validation of tokens for the token validation endpoints.
+        /// </summary>
+        /// <value>
+        /// The custom token validator.
+        /// </value>
         public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
-        public void Validate()
+        internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");
             if (ScopeStore == null) LogAndStop("ScopeStore not configured.");

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    [TestClass]
+    
     public class Authorize_ClientValidation_IdToken
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - IdToken")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - IdToken")]
         public async Task Mixed_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -42,12 +43,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.Client);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
     }
 }

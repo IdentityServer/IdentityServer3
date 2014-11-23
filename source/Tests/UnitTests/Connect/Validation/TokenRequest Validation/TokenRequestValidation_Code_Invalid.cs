@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
@@ -25,17 +27,18 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_Code_Invalid
     {
         IClientStore _clients = Factory.CreateClientStore();
         const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -59,12 +62,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Invalid_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -89,12 +92,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task No_Scopes_for_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -119,12 +122,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(result.Error, Constants.TokenErrors.InvalidRequest);
+            result.IsError.Should().BeTrue();
+            Constants.TokenErrors.InvalidRequest.Should().Be(result.Error);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
             var client = await _clients.FindClientByIdAsync("implicitclient");
@@ -149,12 +152,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
             var client1 = await _clients.FindClientByIdAsync("codeclient");
@@ -180,12 +183,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client2);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Missing_RedirectUri()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -209,12 +212,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -239,12 +242,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnauthorizedClient, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Expired_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -270,12 +273,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [TestMethod]
-        [TestCategory("TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
         public async Task Reused_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -309,7 +312,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             // request first time
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
 
             // request second time
             validator = Factory.CreateTokenRequestValidator(
@@ -318,8 +321,47 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             
             result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_with_disabled_User()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
+
+            var mock = new Mock<IUserService>();
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                RedirectUri = new Uri("https://server/cb"),
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store,
+                userService: mock.Object);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
         }
     }
 }

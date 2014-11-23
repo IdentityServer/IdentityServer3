@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (options == null)
             {
-                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
+                options = TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (options == null)
             {
-                options = Thinktecture.IdentityServer.Tests.TestIdentityServerOptions.Create();
+                options = TestIdentityServerOptions.Create();
             }
 
             if (scopes == null)
@@ -137,9 +137,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             return new AuthorizeRequestValidator(options, scopes, clients, customValidator, context);
         }
 
-        public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null)
+        public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null, IUserService users = null)
         {
-            var users = new TestUserService();
+            if (users == null)
+            {
+                users = new TestUserService();
+            }
+
             var clients = CreateClientStore();
 
             var validator = new TokenValidator(

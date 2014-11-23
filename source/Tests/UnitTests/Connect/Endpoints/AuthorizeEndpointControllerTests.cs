@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.Net.Http;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    [TestClass]
+    
     public class AuthorizeEndpointControllerTests : IdSvrHostTestBase
     {
         HttpResponseMessage GetAuthorizePage()
@@ -31,36 +32,36 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
             return resp;
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAuthorize_AuthorizeEndpointDisabled_ReturnsNotFound()
         {
             base.options.Endpoints.AuthorizeEndpoint.IsEnabled = false;
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
-            Assert.AreEqual(HttpStatusCode.NotFound, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAuthorize_NoQueryStringParams_ReturnsErrorPage()
         {
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
             resp.AssertPage("error");
         }
 
-        [TestMethod]
+        [Fact]
         public void PostConsent_JsonMediaType_ReturnsUnsupportedMediaType()
         {
             var resp = Post(Constants.RoutePaths.Oidc.Consent, (object)null);
-            Assert.AreEqual(HttpStatusCode.UnsupportedMediaType, resp.StatusCode);
+            resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
-        [TestMethod]
+        [Fact]
         public void PostConsent_NoAntiCsrf_ReturnsErrorPage()
         {
             var resp = PostForm(Constants.RoutePaths.Oidc.Consent, (object)null);
             resp.AssertPage("error");
         }
         
-        [TestMethod]
+        [Fact]
         public void PostConsent_NoBody_ReturnsErrorPage()
         {
             GetAuthorizePage();

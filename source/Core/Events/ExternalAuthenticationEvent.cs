@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace Thinktecture.IdentityServer.Core.Events
 {
-    using System;
-
-    public interface ILog
+    public class LocalAuthenticationEvent : AuthenticationEventBase
     {
-        void Log(LogLevel logLevel, Func<string> messageFunc);
+        public string LoginUserName { get; set; }
+    }
 
-        void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception;
+    public class ExternalAuthenticationEvent : AuthenticationEventBase
+    {
+        public string Provider { get; set; }
+        public string ProviderId { get; set; }
     }
 }

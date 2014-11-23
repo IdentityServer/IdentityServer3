@@ -51,6 +51,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -77,7 +78,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -88,7 +89,7 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.1\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -116,7 +117,22 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
+    <Compile Include="Configuration\LoginPageLink.cs" />
+    <Compile Include="Events\EventIds.cs" />
+    <Compile Include="Events\EventType.cs" />
+    <Compile Include="Events\AuthenticationEvent.cs" />
+    <Compile Include="Events\ExternalAuthenticationEvent.cs" />
+    <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Validation\BearerTokenUsageType.cs" />
+    <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
+    <Compile Include="Validation\BearerTokenUsageValidator.cs" />
+    <Compile Include="Resources\Events.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Events.resx</DependentUpon>
+    </Compile>
     <Compile Include="Results\LogoutResult.cs" />
     <Compile Include="Configuration\Hosting\MessageCookie.cs" />
     <Compile Include="Models\SignOutMessage.cs" />
@@ -124,12 +140,16 @@
     <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
+    <Compile Include="Events\EventBase.cs" />
+    <Compile Include="Services\Default\DefaultEventService.cs" />
+    <Compile Include="Services\ExternalClaimsFilter\IgnoreClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\ClaimsFilterBase.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NormalizingClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\AggregateExternalClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
+    <Compile Include="Services\IEventService.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -144,7 +164,7 @@
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidator.cs" />
     <Compile Include="Configuration\Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Configuration\Hosting\ValidateAntiForgeryTokenAttribute.cs" />
-    <Compile Include="Logging\LogProviders\TraceSourceLogProvider.cs" />
+    <Compile Include="Logging\TraceSourceLogProvider.cs" />
     <Compile Include="Models\StandardScopes.cs" />
     <Compile Include="Models\ClientPermission.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
@@ -255,15 +275,7 @@
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogExtensions.cs" />
-    <Compile Include="Logging\ILogProvider.cs" />
-    <Compile Include="Logging\LoggerExecutionWrapper.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
-    <Compile Include="Logging\LogProvider.cs" />
-    <Compile Include="Logging\LogProviders\DiagnosticsTraceLogProvider.cs" />
-    <Compile Include="Logging\LogProviders\Log4NetLogProvider.cs" />
-    <Compile Include="Logging\LogProviders\NLogLogProvider.cs" />
+    <Compile Include="Logging\DiagnosticsTraceLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
@@ -324,6 +336,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Events.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Events.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>

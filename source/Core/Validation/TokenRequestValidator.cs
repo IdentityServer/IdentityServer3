@@ -221,6 +221,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
+
+            /////////////////////////////////////////////
+            // make sure user is enabled
+            /////////////////////////////////////////////
+            if (await _users.IsActiveAsync(_validatedRequest.AuthorizationCode.Subject) == false)
+            {
+                Logger.Error("User has been disabled: " + _validatedRequest.AuthorizationCode.Subject);
+                return Invalid(Constants.TokenErrors.InvalidRequest);
+            }
+
             Logger.Info("Successful validation of authorization_code request");
             return Valid();
         }
@@ -367,6 +377,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             _validatedRequest.RefreshToken = refreshToken;
             Logger.Info("Refresh token request: " + refreshTokenHandle);
+
+            /////////////////////////////////////////////
+            // make sure user is enabled
+            /////////////////////////////////////////////
+            if (await _users.IsActiveAsync(IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId)) == false)
+            {
+                Logger.Error("User has been disabled: " + _validatedRequest.RefreshToken.SubjectId);
+                return Invalid(Constants.TokenErrors.InvalidRequest);
+            }
 
             Logger.Info("Successful validation of refresh token request");
             return Valid();

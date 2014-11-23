@@ -20,15 +20,28 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
+    /// <summary>
+    /// In-memory scope store
+    /// </summary>
     public class InMemoryScopeStore : IScopeStore
     {
         readonly IEnumerable<Scope> _scopes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryScopeStore"/> class.
+        /// </summary>
+        /// <param name="scopes">The scopes.</param>
         public InMemoryScopeStore(IEnumerable<Scope> scopes)
         {
             _scopes = scopes;
         }
 
+        /// <summary>
+        /// Gets all scopes.
+        /// </summary>
+        /// <returns>
+        /// List of scopes
+        /// </returns>
         public Task<IEnumerable<Scope>> GetScopesAsync()
         {
             return Task.FromResult(_scopes);

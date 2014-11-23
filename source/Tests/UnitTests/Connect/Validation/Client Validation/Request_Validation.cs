@@ -14,43 +14,43 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    [TestClass]
     public class Request_Validation
     {
         const string Category = "Client Credentials - Request Validation";
 
         ClientValidator _validator = Factory.CreateClientValidator();
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Valid_BasicAuthentication_Request()
         {
             var header = new BasicAuthenticationHeaderValue("client", "secret");
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Valid_FormPost_Request()
         {
             var body = new NameValueCollection();
@@ -59,16 +59,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(null, body);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.FormPost, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.FormPost);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void Valid_BasicAuthentication_and_FormPost_Request()
         {
             var header = new BasicAuthenticationHeaderValue("client", "secret");
@@ -79,62 +79,62 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsTrue(credential.IsPresent);
-            Assert.AreEqual(Constants.ClientAuthenticationMethods.Basic, credential.Type);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeTrue();
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
 
-            Assert.AreEqual("client", credential.ClientId);
-            Assert.AreEqual("secret", credential.Secret);
+            credential.ClientId.Should().Be("client");
+            credential.Secret.Should().Be("secret");
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void No_Client_Credentials()
         {
             var credential = _validator.ValidateHttpRequest(null, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Empty_Basic_Header()
         {
             var header = new AuthenticationHeaderValue("Basic");
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Unknown_Scheme()
         {
             var header = new AuthenticationHeaderValue("Unkown", "data");
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsFalse(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeFalse();
+            credential.IsPresent.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
         {
             var header = new AuthenticationHeaderValue("Basic", "somerandomdata");
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
             var invalidCred = "username";
@@ -143,12 +143,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only_With_Colon()
         {
             var invalidCred = "username:";
@@ -157,8 +157,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
-            Assert.IsTrue(credential.IsMalformed);
-            Assert.IsFalse(credential.IsPresent);
+            credential.IsMalformed.Should().BeTrue();
+            credential.IsPresent.Should().BeFalse();
         }
     }
 }

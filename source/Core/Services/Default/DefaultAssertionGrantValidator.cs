@@ -20,8 +20,18 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default custom grant validator
+    /// </summary>
     public class DefaultCustomGrantValidator : ICustomGrantValidator
     {
+        /// <summary>
+        /// Validates the custom grant request.
+        /// </summary>
+        /// <param name="request">The validated token request.</param>
+        /// <returns>
+        /// A principal
+        /// </returns>
         public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
         {
             return Task.FromResult<ClaimsPrincipal>(null);

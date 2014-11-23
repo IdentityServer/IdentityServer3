@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,11 @@ using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class AuthorizeInteractionResponseGeneratorTests_Consent
     {
         Mock<IConsentService> mockConsent;
@@ -53,34 +55,28 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
         private void AssertErrorReturnsRequestValues(AuthorizeError error, ValidatedAuthorizeRequest request)
         {
-            Assert.AreEqual(request.ResponseMode, error.ResponseMode);
-            Assert.AreEqual(request.RedirectUri, error.ErrorUri);
-            Assert.AreEqual(request.State, error.State);
+            error.ResponseMode.Should().Be(request.ResponseMode);
+            error.ErrorUri.Should().Be(request.RedirectUri);
+            error.State.Should().Be(request.State);
         }
-
-        [TestInitialize]
-        public void Init()
+        
+        public AuthorizeInteractionResponseGeneratorTests_Consent()
         {
             mockConsent = new Mock<IConsentService>();
             mockUserService = new Mock<IUserService>();
             subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object);
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_NullRequest_Throws()
         {
-            try
-            {
-                var result = subject.ProcessConsentAsync(null, new UserConsent()).Result;
-                Assert.Fail();
-            }
-            catch(AggregateException ex){
-                ArgumentNullException ex2 = (ArgumentNullException)ex.InnerException;
-                StringAssert.Contains(ex2.ParamName, "request");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(null, new UserConsent());
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("request");
         }
         
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_AllowsNullConsent()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -93,7 +89,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var result = subject.ProcessConsentAsync(request, null).Result;
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_PromptModeIsLogin_Throws()
         {
             RequiresConsent(true);
@@ -105,18 +101,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.Login
             };
 
-            try
-            {
-                var result = subject.ProcessConsentAsync(request).Result;
-                Assert.Fail();
-            }
-            catch (AggregateException ex)
-            {
-                var ex2 = ex.InnerException;
-                StringAssert.Contains(ex2.Message, "PromptMode");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(request);
+
+            act.ShouldThrow<ArgumentException>()
+                .And.Message.Should().Contain("PromptMode");
         }
-        [TestMethod]
+
+        [Fact]
         public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
         {
             RequiresConsent(true);
@@ -128,20 +119,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.SelectAccount
             };
 
-            try
-            {
-                var result = subject.ProcessConsentAsync(request).Result;
-                Assert.Fail();
-            }
-            catch (AggregateException ex)
-            {
-                var ex2 = ex.InnerException;
-                StringAssert.Contains(ex2.Message, "PromptMode");
-            }
+            Func<Task> act = () => subject.ProcessConsentAsync(request);
+
+            act.ShouldThrow<ArgumentException>()
+                .And.Message.Should().Contain("PromptMode");
         }
 
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_RequiresConsentButPromptModeIsNone_ReturnsErrorResult()
         {
             RequiresConsent(true);
@@ -153,15 +138,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.None
             };
             var result = subject.ProcessConsentAsync(request).Result;
-            Assert.IsFalse(request.WasConsentShown);
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.Error.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InteractionRequired, result.Error.Error);
+            request.WasConsentShown.Should().BeFalse();
+            result.IsError.Should().BeTrue();
+            result.Error.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Error.Should().Be(Constants.AuthorizeErrors.InteractionRequired);
             AssertErrorReturnsRequestValues(result.Error, request);
             AssertUpdateConsentNotCalled();
         }
         
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_NoPriorConsent_ReturnsConsentResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -172,12 +157,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.Consent
             };
             var result = subject.ProcessConsentAsync(request).Result;
-            Assert.IsFalse(request.WasConsentShown);
-            Assert.IsTrue(result.IsConsent);
+            request.WasConsentShown.Should().BeFalse();
+            result.IsConsent.Should().BeTrue();
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_NoPriorConsent_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -189,12 +174,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 PromptMode = Constants.PromptModes.Consent
             };
             var result = subject.ProcessConsentAsync(request).Result;
-            Assert.IsFalse(request.WasConsentShown);
-            Assert.IsTrue(result.IsConsent);
+            request.WasConsentShown.Should().BeFalse();
+            result.IsConsent.Should().BeTrue();
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_ConsentNotGranted_ReturnsErrorResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -211,15 +196,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] { "read", "write" }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.Error.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.AccessDenied, result.Error.Error);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsError.Should().BeTrue();
+            result.Error.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Error.Should().Be(Constants.AuthorizeErrors.AccessDenied);
             AssertErrorReturnsRequestValues(result.Error, request);
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentNotGranted_ReturnsErrorResult()
         {
             RequiresConsent(true);
@@ -236,17 +221,17 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] { "read", "write" }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.Error.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.AccessDenied, result.Error.Error);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsError.Should().BeTrue();
+            result.Error.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Error.Should().Be(Constants.AuthorizeErrors.AccessDenied);
             AssertErrorReturnsRequestValues(result.Error, request);
             AssertUpdateConsentNotCalled();
         }
 
 
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_PromptModeIsConsent_ConsentGranted_NoScopesSelected_ReturnsConsentResult()
         {
             var request = new ValidatedAuthorizeRequest()
@@ -265,13 +250,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] {  }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsTrue(result.IsConsent);
-            Assert.AreEqual(Messages.MustSelectAtLeastOnePermission, result.ConsentError);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsConsent.Should().BeTrue();
+            result.ConsentError.Should().Be(Messages.MustSelectAtLeastOnePermission);
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_NoScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -290,13 +275,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] {  }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsTrue(result.IsConsent);
-            Assert.AreEqual(Messages.MustSelectAtLeastOnePermission, result.ConsentError);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsConsent.Should().BeTrue();
+            result.ConsentError.Should().Be(Messages.MustSelectAtLeastOnePermission);
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -316,14 +301,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] { "read" }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.AreEqual(1, request.ValidatedScopes.GrantedScopes.Count);
-            Assert.AreEqual(request.ValidatedScopes.GrantedScopes.First().Name, "read");
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsFalse(result.IsConsent);
+            request.ValidatedScopes.GrantedScopes.Count.Should().Be(1);
+            "read".Should().Be(request.ValidatedScopes.GrantedScopes.First().Name);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsConsent.Should().BeFalse();
             AssertUpdateConsentNotCalled();
         }
         
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_PromptModeConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
@@ -343,14 +328,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Scopes = new string[] { "read" }
             };
             var result = subject.ProcessConsentAsync(request, consent).Result;
-            Assert.AreEqual(1, request.ValidatedScopes.GrantedScopes.Count);
-            Assert.AreEqual(request.ValidatedScopes.GrantedScopes.First().Name, "read");
-            Assert.IsTrue(request.WasConsentShown);
-            Assert.IsFalse(result.IsConsent);
+            request.ValidatedScopes.GrantedScopes.Count.Should().Be(1);
+            "read".Should().Be(request.ValidatedScopes.GrantedScopes.First().Name);
+            request.WasConsentShown.Should().BeTrue();
+            result.IsConsent.Should().BeFalse();
             AssertUpdateConsentNotCalled();
         }
 
-        [TestMethod]
+        [Fact]
         public void ProcessConsentAsync_AllowConsentSelected_SavesConsent()
         {
             RequiresConsent(true);

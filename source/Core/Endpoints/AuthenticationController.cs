@@ -48,14 +48,22 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthenticationOptions _authenticationOptions;
         private readonly IdentityServerOptions _options;
         private readonly IClientStore _clientStore;
+        private readonly IEventService _events;
 
-        public AuthenticationController(IViewService viewService, IUserService userService, AuthenticationOptions authenticationOptions, IdentityServerOptions idSvrOptions, IClientStore clientStore)
+        public AuthenticationController(
+            IViewService viewService, 
+            IUserService userService, 
+            AuthenticationOptions authenticationOptions, 
+            IdentityServerOptions idSvrOptions, 
+            IClientStore clientStore, 
+            IEventService events)
         {
             _viewService = viewService;
             _userService = userService;
             _authenticationOptions = authenticationOptions;
             _options = idSvrOptions;
             _clientStore = clientStore;
+            _events = events;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -171,12 +179,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
 
+            RaiseLocalLoginSuccessEvent(model.Username, signInMessage, authResult);
+
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
         [HttpGet]
-        public IHttpActionResult LoginExternal(string signin, string provider)
+        public async Task<IHttpActionResult> LoginExternal(string signin, string provider)
         {
             Logger.InfoFormat("External login requested for provider: {0}", provider);
 
@@ -200,13 +210,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage();
             }
 
+            var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
+            if (providerFilter != null && providerFilter.Any() && !providerFilter.Contains(provider))
+            {
+                Logger.ErrorFormat("Provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
+                return RenderErrorPage();
+            }
+
             var authProp = new Microsoft.Owin.Security.AuthenticationProperties
             {
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
             // add the id to the dictionary so we can recall the cookie id on the callback
-            authProp.Dictionary.Add("signin", signin);
-            authProp.Dictionary.Add("katanaAuthenticationType", provider);
+            
+            authProp.Dictionary.Add(Constants.Authentication.SigninId, signin);
+            authProp.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, provider);
             Request.GetOwinContext().Authentication.Challenge(authProp, provider);
             return Unauthorized();
         }
@@ -411,13 +429,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // this is mapping from the external IdP's issuer to the name of the 
                 // katana middleware that's registered in startup
                 var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
-                if (!result.Properties.Dictionary.Keys.Contains("katanaAuthenticationType"))
+                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
                 {
                     Logger.Error("Missing katanaAuthenticationType in external callback");
-                    throw new InvalidOperationException("Missing katanaAuthenticationType");
+                    throw new InvalidOperationException("Missing KatanaAuthenticationType");
                 }
 
-                var provider = result.Properties.Dictionary["katanaAuthenticationType"];
+                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
                 var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
                 id = new ClaimsIdentity(newClaims, id.AuthenticationType);
             }
@@ -430,7 +448,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (result != null)
             {
                 string val = null;
-                if (result.Properties.Dictionary.TryGetValue("signin", out val))
+                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
                 {
                     return val;
                 }
@@ -469,6 +487,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
+        }
+
+        private void RaiseLocalLoginSuccessEvent(string username, SignInMessage signInMessage, AuthenticateResult authResult)
+        {
+            _events.RaiseLocalLoginSuccessEvent(Request.GetOwinEnvironment(), username, signInMessage, authResult);
         }
 
         private void IssueAuthenticationCookie(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
@@ -624,14 +647,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
         {
-            IEnumerable<string> filter = null;
-            if (!String.IsNullOrWhiteSpace(message.ClientId))
-            {
-                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-                filter = client.IdentityProviderRestrictions ?? filter;
-            }
-            filter = filter ?? Enumerable.Empty<string>();
+            IEnumerable<string> filter = await GetProviderFilterForClientAsync(message);
 
             var ctx = Request.GetOwinContext();
             var providers =
@@ -645,6 +661,19 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 };
 
             return providers.ToArray();
+        }
+
+        private async Task<IEnumerable<string>> GetProviderFilterForClientAsync(SignInMessage message)
+        {
+            IEnumerable<string> filter = null;
+            if (!String.IsNullOrWhiteSpace(message.ClientId))
+            {
+                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
+                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
+                filter = client.IdentityProviderRestrictions ?? filter;
+            }
+            filter = filter ?? Enumerable.Empty<string>();
+            return filter;
         }
 
         private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)

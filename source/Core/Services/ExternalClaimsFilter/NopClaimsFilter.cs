@@ -22,25 +22,11 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public abstract class ClaimsFilterBase : IExternalClaimsFilter
+    public class NopClaimsFilter : IExternalClaimsFilter
     {
-        readonly string provider;
-
-        public ClaimsFilterBase(string provider)
-        {
-            this.provider = provider;
-        }
-
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
-            if (this.provider == provider)
-            {
-                claims = TransformClaims(claims);
-            }
-
             return claims;
         }
-
-        protected abstract IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims);
     }
 }

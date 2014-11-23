@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Thinktecture.IdentityServer.Tests.Authentication
+namespace Thinktecture.IdentityServer.Core.Validation
 {
-    [TestClass]
-    public class AuthenticateResultTests
+    public class BearerTokenUsageValidationResult
     {
-       
+        public bool TokenFound { get; set; }
+        public string Token { get; set; }
+        public BearerTokenUsageType UsageType { get; set; }
     }
 }

@@ -89,6 +89,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 IsOpenId = request.IsOpenIdRequest,
                 RequestedScopes = request.ValidatedScopes.GrantedScopes,
                 RedirectUri = request.RedirectUri,
+                Nonce = request.Nonce,
 
                 WasConsentShown = request.WasConsentShown,
             };
@@ -114,6 +115,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
+                    
                     ValidatedRequest = request
                 };
                 
@@ -132,7 +134,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
-                    
+
+                    Nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce),
                     IncludeAllIdentityClaims = !request.AccessTokenRequested,
                     AccessTokenToHash = accessTokenValue,
                     AuthorizationCodeToHash = authorizationCode

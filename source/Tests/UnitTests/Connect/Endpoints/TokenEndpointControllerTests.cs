@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
 {
-    public interface ILogProvider
+    
+    public class TokenEndpointControllerTests : IdSvrHostTestBase
     {
-        ILog GetLogger(string name);
     }
 }

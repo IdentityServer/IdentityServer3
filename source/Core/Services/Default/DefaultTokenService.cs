@@ -30,15 +30,43 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default token service
+    /// </summary>
     public class DefaultTokenService : ITokenService
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        /// <summary>
+        /// The logger
+        /// </summary>
+        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IdentityServerOptions _options;
-        private readonly IClaimsProvider _claimsProvider;
-        private readonly ITokenHandleStore _tokenHandles;
-        private readonly ITokenSigningService _signingService;
+        /// <summary>
+        /// The identity server options
+        /// </summary>
+        protected readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// The claims provider
+        /// </summary>
+        protected readonly IClaimsProvider _claimsProvider;
+
+        /// <summary>
+        /// The token handles
+        /// </summary>
+        protected readonly ITokenHandleStore _tokenHandles;
+
+        /// <summary>
+        /// The signing service
+        /// </summary>
+        protected readonly ITokenSigningService _signingService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenService"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="claimsProvider">The claims provider.</param>
+        /// <param name="tokenHandles">The token handles.</param>
+        /// <param name="signingService">The signing service.</param>
         public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
         {
             _options = options;
@@ -47,6 +75,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             _signingService = signingService;
         }
 
+        /// <summary>
+        /// Creates an identity token.
+        /// </summary>
+        /// <param name="request">The token creation request.</param>
+        /// <returns>
+        /// An identity token
+        /// </returns>
         public virtual async Task<Token> CreateIdentityTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating identity token");
@@ -56,10 +91,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var claims = new List<Claim>();
 
             // if nonce was sent, must be mirrored in id token
-            var nonce = request.ValidatedRequest.Raw.Get(Constants.AuthorizeRequest.Nonce);
-            if (nonce.IsPresent())
+            if (request.Nonce.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Nonce, nonce));
+                claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
             }
 
             // add iat claim
@@ -96,7 +130,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return token;
         }
 
-        public async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
+        /// <summary>
+        /// Creates an access token.
+        /// </summary>
+        /// <param name="request">The token creation request.</param>
+        /// <returns>
+        /// An access token
+        /// </returns>
+        public virtual async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
         {
             Logger.Debug("Creating access token");
             request.Validate();
@@ -119,6 +160,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return token;
         }
 
+        /// <summary>
+        /// Creates a serialized and protected security token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>
+        /// A security token in serialized form
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">Invalid token type.</exception>
         public virtual async Task<string> CreateSecurityTokenAsync(Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
@@ -148,10 +197,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             throw new InvalidOperationException("Invalid token type.");
         }
 
-        protected virtual string HashAdditionalToken(string accessTokenToHash)
+        /// <summary>
+        /// Hashes an additional token.
+        /// </summary>
+        /// <param name="tokenToHash">The token to hash.</param>
+        /// <returns></returns>
+        protected virtual string HashAdditionalToken(string tokenToHash)
         {
             var algorithm = SHA256.Create();
-            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(accessTokenToHash));
+            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(tokenToHash));
 
             var leftPart = new byte[16];
             Array.Copy(hash, leftPart, 16);

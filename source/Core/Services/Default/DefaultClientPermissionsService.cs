@@ -22,12 +22,28 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default client permission service
+    /// </summary>
     public class DefaultClientPermissionsService : IClientPermissionsService
     {
         readonly IPermissionsStore permissionsStore;
         readonly IClientStore clientStore;
         readonly IScopeStore scopeStore;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultClientPermissionsService"/> class.
+        /// </summary>
+        /// <param name="permissionsStore">The permissions store.</param>
+        /// <param name="clientStore">The client store.</param>
+        /// <param name="scopeStore">The scope store.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// permissionsStore
+        /// or
+        /// clientStore
+        /// or
+        /// scopeStore
+        /// </exception>
         public DefaultClientPermissionsService(
             IPermissionsStore permissionsStore, 
             IClientStore clientStore, 
@@ -42,6 +58,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.scopeStore = scopeStore;
         }
 
+        /// <summary>
+        /// Gets the client permissions asynchronous.
+        /// </summary>
+        /// <param name="subject">The subject identifier.</param>
+        /// <returns>
+        /// A list of client permissions
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">subject</exception>
         public async Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject)
         {
             if (String.IsNullOrWhiteSpace(subject))
@@ -75,6 +99,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return list;
         }
 
+        /// <summary>
+        /// Revokes the client permissions asynchronous.
+        /// </summary>
+        /// <param name="subject">The subject identifier.</param>
+        /// <param name="clientId">The client identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// subject
+        /// or
+        /// clientId
+        /// </exception>
         public async Task RevokeClientPermissionsAsync(string subject, string clientId)
         {
             if (String.IsNullOrWhiteSpace(subject))

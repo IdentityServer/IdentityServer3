@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Logging
+using Thinktecture.IdentityServer.Core.Models;
+
+namespace Thinktecture.IdentityServer.Core.Events
 {
-	public enum LogLevel
-	{
-		Trace,
-		Debug,
-		Info,
-		Warn,
-		Error,
-		Fatal
-	}
+    public class AuthenticationEventBase : EventBase
+    {
+        public AuthenticationEventBase()
+        {
+            this.Category = EventConstants.Categories.Authentication;
+        }
+
+        public string SubjectId { get; set; }
+        public SignInMessage SignInMessage { get; set; }
+    }
 }

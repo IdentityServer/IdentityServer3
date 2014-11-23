@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using Microsoft.Owin;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Xunit;
+using CorsPolicy = System.Web.Cors.CorsPolicy;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
-    [TestClass]
     public class CorsPolicyProviderTests
     {
         IOwinRequest Request(string origin = null, string path = null)
@@ -40,41 +41,36 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             return ctx.Request;
         }
 
-        void AssertAllowed(string origin, System.Web.Cors.CorsPolicy cp)
+        void AssertAllowed(string origin, CorsPolicy cp)
         {
-            Assert.IsTrue(cp.AllowAnyHeader);
-            Assert.IsTrue(cp.AllowAnyMethod);
-            Assert.AreEqual(1, cp.Origins.Count);
-            CollectionAssert.Contains(cp.Origins.ToArray(), origin);
+            cp.AllowAnyHeader.Should().BeTrue();
+            cp.AllowAnyMethod.Should().BeTrue();
+            cp.Origins.Count.Should().Be(1);
+            cp.Origins.Should().Contain(origin);
         }
 
-        [TestMethod]
+        [Fact]
         public void ctor_NullPolicy_Throws()
         {
-            try
-            {
-                new CorsPolicyProvider(null, new string[] { "/" });
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.AreEqual("policy", ex.ParamName);
-            }
+            Action act = () => new CorsPolicyProvider(null, new [] { "/" });
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("policy");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_NoAllowedOriginsNoCallback_DoesNotAllowOrigin()
         {
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
             var cp = subject.GetCorsPolicyAsync(Request("http://foo.com")).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
         
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_PolicyAllowsAll_AllowsRandomOrigin()
         {
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var rnd = new Random().Next();
@@ -83,11 +79,11 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_OriginIsInAllowedOrigins_AllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.AllowedOrigins.Add(origin);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
@@ -95,47 +91,47 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_OriginIsInAllowedOriginsButNoOriginRequested_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.AllowedOrigins.Add(origin);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(null)).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_OriginIsNotInAllowedOrigins_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.AllowedOrigins.Add(origin);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request("http://bar.com")).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
         
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_NoOriginRequested_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.AllowedOrigins.Add(origin);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_CallbackAllowOrigin_AllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.PolicyCallback = o => Task.FromResult(true);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
@@ -143,49 +139,44 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_CallbackAllowOriginButNoOriginRequested_DoesNotAllowOrigin()
         {
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.PolicyCallback = o => Task.FromResult(true);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request()).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_CallbackDoesNotAllowOrigin_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = new CorsPolicy();
+            var policy = new Core.Configuration.CorsPolicy();
             policy.PolicyCallback = o => Task.FromResult(false);
             var subject = new CorsPolicyProvider(policy, new string[] { "/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin)).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ctor_NullPaths_Throws()
         {
-            try
-            {
-                new CorsPolicyProvider(new CorsPolicy(), null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.AreEqual("allowedPaths", ex.ParamName);
-            }
+            Action act = () => new CorsPolicyProvider(new Core.Configuration.CorsPolicy(), null);
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("allowedPaths");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_MatchingPath_AllowsOrigin()
         {
             var origin = "http://foo.com";
             var path = "/bar";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { path });
 
@@ -193,24 +184,24 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_NoMatchingPath_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
             var path = "/bar";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { path });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/baz")).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_MatchingPaths_AllowsOrigin()
         {
             var origin = "http://foo.com";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { "/bar", "/baz", "/quux" });
 
@@ -218,23 +209,23 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_NoMatchingPaths_DoesNotAllowOrigin()
         {
             var origin = "http://foo.com";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { "/bar", "/baz", "/quux" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bad")).Result;
-            Assert.IsNull(cp);
+            cp.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_PathDoesNotStartWithSlash_NormalizesPathCorrectly()
         {
             var origin = "http://foo.com";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { "bar" });
 
@@ -242,11 +233,11 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             AssertAllowed(origin, cp);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCorsPolicyAsync_PathEndsWithSlash_NormalizesPathCorrectly()
         {
             var origin = "http://foo.com";
-            var policy = CorsPolicy.AllowAll;
+            var policy = Core.Configuration.CorsPolicy.AllowAll;
 
             var subject = new CorsPolicyProvider(policy, new string[] { "bar/" });
 

@@ -24,10 +24,17 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
+    /// <summary>
+    /// In-memory user service
+    /// </summary>
     public class InMemoryUserService : IUserService
     {
         readonly List<InMemoryUser> _users = new List<InMemoryUser>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryUserService"/> class.
+        /// </summary>
+        /// <param name="users">The users.</param>
         public InMemoryUserService(IEnumerable<InMemoryUser> users)
         {
             _users.AddRange(users);

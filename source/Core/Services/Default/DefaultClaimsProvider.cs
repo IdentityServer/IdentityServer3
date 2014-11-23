@@ -25,17 +25,41 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default claims provider implementation
+    /// </summary>
     public class DefaultClaimsProvider : IClaimsProvider
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        /// <summary>
+        /// The logger
+        /// </summary>
+        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IUserService _users;
+        /// <summary>
+        /// The user service
+        /// </summary>
+        protected readonly IUserService _users;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultClaimsProvider"/> class.
+        /// </summary>
+        /// <param name="users">The users service</param>
         public DefaultClaimsProvider(IUserService users)
         {
             _users = users;
         }
 
+        /// <summary>
+        /// Returns claims for an identity token
+        /// </summary>
+        /// <param name="subject">The subject</param>
+        /// <param name="client">The client</param>
+        /// <param name="scopes">The requested scopes</param>
+        /// <param name="includeAllIdentityClaims">Specifies if all claims should be included in the token, or if the userinfo endpoint can be used to retrieve them</param>
+        /// <param name="request">The raw request</param>
+        /// <returns>
+        /// Claims for the identity token
+        /// </returns>
         public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, ValidatedRequest request)
         {
             Logger.Debug("Getting claims for identity token");
@@ -82,6 +106,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return outputClaims;
         }
 
+        /// <summary>
+        /// Returns claims for an identity token.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="client">The client.</param>
+        /// <param name="scopes">The requested scopes.</param>
+        /// <param name="request">The raw request.</param>
+        /// <returns>
+        /// Claims for the access token
+        /// </returns>
         public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ValidatedRequest request)
         {
             Logger.Debug("Getting claims for access token");
@@ -142,6 +176,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return outputClaims;
         }
 
+        /// <summary>
+        /// Gets the standard subject claims.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>A list of standard claims</returns>
         protected virtual IEnumerable<Claim> GetStandardSubjectClaims(ClaimsPrincipal subject)
         {
             var claims = new List<Claim>
