@@ -4,7 +4,7 @@ Param(
 )
 
 if(Test-Path Env:\APPVEYOR_BUILD_NUMBER){
-	$preRelease = [int]$Env:APPVEYOR_BUILD_NUMBER
+	$preRelease = "pre-" + [int]$Env:APPVEYOR_BUILD_NUMBER
 	Write-Host "Using APPVEYOR_BUILD_NUMBER"
 }
 
