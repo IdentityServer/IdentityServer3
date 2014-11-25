@@ -744,11 +744,11 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void Login_InvalidClientId_ShowsErrorPage()
+        public void Login_InvalidClientId_ShowsLoginPage()
         {
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "bad_id" };
             var resp = GetLoginPage(msg);
-            resp.AssertPage("error");
+            resp.AssertPage("login");
         }
 
         [Fact]
