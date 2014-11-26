@@ -236,13 +236,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
-                var username = "";
-
-                try
-                {
-                    username = User.GetName();
-                }
-                catch { }
+                var username = User.Identity.IsAuthenticated ? User.GetName() : (string)null;
 
                 var errorModel = new ErrorViewModel
                 {
