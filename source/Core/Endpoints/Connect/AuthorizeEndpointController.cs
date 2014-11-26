@@ -236,11 +236,19 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
+                var username = "";
+
+                try
+                {
+                    username = User.GetName();
+                }
+                catch { }
+
                 var errorModel = new ErrorViewModel
                 {
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    //CurrentUser = User.GetName(),
+                    CurrentUser = username,
                     ErrorMessage = LookupErrorMessage(error)
                 };
 
