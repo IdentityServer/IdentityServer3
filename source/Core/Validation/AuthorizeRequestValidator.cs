@@ -147,6 +147,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check response_mode parameter and set response_mode
             //////////////////////////////////////////////////////////
+
+            // set default response mode for flow first
+            _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
+            
+            // check if response_mode parameter is present and valid
             var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
             if (responseMode.IsPresent())
             {
@@ -159,20 +164,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     else
                     {
                         Logger.Info("Invalid response_mode for flow: " + responseMode);
-                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                        return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                     }
                 }
                 else
                 {
                     Logger.InfoFormat("Unsupported response_mode: {0}", responseMode);
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                 }
             }
-            else
-            {
-                _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
-            }
-
+            
 
             //////////////////////////////////////////////////////////
             // scope must be present
