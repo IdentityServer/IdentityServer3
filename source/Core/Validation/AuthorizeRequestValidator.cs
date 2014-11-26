@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly IScopeStore _scopes;
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
+        private readonly IRedirectUriValidator _uriValidator;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -45,12 +46,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IOwinContext context)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, IOwinContext context)
         {
             _options = options;
             _scopes = scopes;
             _clients = clients;
             _customValidator = customValidator;
+            _uriValidator = uriValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest
             {
@@ -349,7 +351,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check if redirect_uri is valid
             //////////////////////////////////////////////////////////
-            if (!_validatedRequest.Client.RedirectUris.Contains(_validatedRequest.RedirectUri))
+            if (await _uriValidator.IsRedirecUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
             {
                 Logger.ErrorFormat("Invalid redirect_uri: {0}", _validatedRequest.RedirectUri);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
