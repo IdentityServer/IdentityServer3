@@ -173,7 +173,20 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                 }
             }
-            
+
+            //////////////////////////////////////////////////////////
+            // check state
+            //////////////////////////////////////////////////////////
+            var state = parameters.Get(Constants.AuthorizeRequest.State);
+            if (state.IsPresent())
+            {
+                Logger.InfoFormat("State: {0}", state);
+                _validatedRequest.State = state;
+            }
+            else
+            {
+                Logger.Info("No state supplied");
+            }
 
             //////////////////////////////////////////////////////////
             // scope must be present
@@ -207,20 +220,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
             }
 
-
-            //////////////////////////////////////////////////////////
-            // check state
-            //////////////////////////////////////////////////////////
-            var state = parameters.Get(Constants.AuthorizeRequest.State);
-            if (state.IsPresent())
-            {
-                Logger.InfoFormat("State: {0}", state);
-                _validatedRequest.State = state;
-            }
-            else
-            {
-                Logger.Info("No state supplied");
-            }
 
             //////////////////////////////////////////////////////////
             // check nonce
