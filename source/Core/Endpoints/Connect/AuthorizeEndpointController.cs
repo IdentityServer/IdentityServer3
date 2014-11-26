@@ -90,16 +90,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return this.AuthorizeError(
                     result.ErrorType,
                     result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
+                    request);
             }
 
             var loginInteraction = await _interactionGenerator.ProcessLoginAsync(request, User as ClaimsPrincipal);
 
             if (loginInteraction.IsError)
             {
-                return this.AuthorizeError(loginInteraction.Error);
+                return this.AuthorizeError(
+                    loginInteraction.Error.ErrorType,
+                    loginInteraction.Error.Error,
+                    request);
             }
             if (loginInteraction.IsLogin)
             {
@@ -124,9 +125,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return this.AuthorizeError(
                     result.ErrorType,
                     result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
+                    request);
             }
 
             // now that client configuration is loaded, we can do further validation
@@ -140,7 +139,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (consentInteraction.IsError)
             {
-                return this.AuthorizeError(consentInteraction.Error);
+                return this.AuthorizeError(
+                    consentInteraction.Error.ErrorType,
+                    consentInteraction.Error.Error,
+                    request);
             }
 
             if (consentInteraction.IsConsent)
@@ -228,58 +230,44 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new LoginResult(message, Request.GetOwinContext().Environment, _options);
         }
 
-        IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, string responseMode, Uri errorUri, string state)
+        IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
         {
-            return AuthorizeError(new AuthorizeError
-            {
-                ErrorType = errorType,
-                Error = error,
-                ResponseMode = responseMode,
-                ErrorUri = errorUri,
-                State = state
-            });
-        }
-
-        IHttpActionResult AuthorizeError(AuthorizeError error)
-        {
-            if (error.ErrorType == ErrorTypes.User)
+            // show error message to user
+            if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
                 var errorModel = new ErrorViewModel
                 {
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    CurrentUser = User.GetName(),
-                    ErrorMessage = LookupErrorMessage(error.Error)
+                    //CurrentUser = User.GetName(),
+                    ErrorMessage = LookupErrorMessage(error)
                 };
+
                 var errorResult = new ErrorActionResult(_viewService, env, errorModel);
                 return errorResult;
             }
 
-            var query = new NameValueCollection
+            // return error to client
+            var response = new AuthorizeResponse
             {
-                {"error", error.Error}
+                Request = request,
+                
+                IsError = true,
+                Error = error,
+                State = request.State,
+                RedirectUri = request.RedirectUri
             };
 
-            if (error.State.IsPresent())
+            if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
-                query.Add("state", error.State);
-            }
-
-            var url = error.ErrorUri.AbsoluteUri;
-            if (error.ResponseMode == Constants.ResponseModes.Query ||
-                error.ResponseMode == Constants.ResponseModes.FormPost)
-            {
-                url = url.AddQueryString(query.ToQueryString());
+                return new AuthorizeFormPostResult(response, Request);
             }
             else
             {
-                url = url.AddHashFragment(query.ToQueryString());
+                return new AuthorizeRedirectResult(response);
             }
-
-            Logger.Info("Redirecting to: " + url);
-
-            return Redirect(url);
+           
         }
 
         private string LookupErrorMessage(string error)

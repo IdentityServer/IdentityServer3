@@ -29,5 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Code { get; set; }
         public string State { get; set; }
         public string Scope { get; set; }
+
+        public string Error { get; set; }
+        public bool IsError { get; set; }
     }
 }
