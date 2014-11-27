@@ -108,6 +108,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.AllClaims,
+                        Constants.ClaimTypes.Address,
                         "roles",
                         "read",
                         "write",
@@ -118,7 +119,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 3600,
+                    AccessTokenLifetime = 3600
                 },
 
                 new Client

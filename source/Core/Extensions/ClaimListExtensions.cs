@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -20,7 +22,7 @@ using Thinktecture.IdentityModel;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class ClaimListExtensions
+    internal static class ClaimListExtensions
     {
         public static Dictionary<string, object> ToClaimsDictionary(this IEnumerable<Claim> claims)
         {
@@ -37,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 if (!d.ContainsKey(claim.Type))
                 {
-                    d.Add(claim.Type, claim.Value);
+                    d.Add(claim.Type, GetValue(claim));
                 }
                 else
                 {
@@ -46,17 +48,27 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     var list = value as List<object>;
                     if (list != null)
                     {
-                        list.Add(claim.Value);
+                        list.Add(GetValue(claim));
                     }
                     else
                     {
                         d.Remove(claim.Type);
-                        d.Add(claim.Type, new List<object> { value, claim.Value });
+                        d.Add(claim.Type, new List<object> { value, GetValue(claim) });
                     }
                 }
             }
 
             return d;
+        }
+
+        private static object GetValue(Claim claim)
+        {
+            if (claim.Type == Constants.ClaimTypes.Address)
+            {
+                return JsonConvert.DeserializeObject(claim.Value);
+            }
+
+            return claim.Value;
         }
     }
 }
