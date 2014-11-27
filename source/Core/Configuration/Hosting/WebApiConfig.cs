@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal static class WebApiConfig
     {
-        public static HttpConfiguration Configure()
+        public static HttpConfiguration Configure(IdentityServerOptions options)
         {
             var config = new HttpConfiguration();
 
@@ -32,6 +32,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            if (options.EnableWebApiDiagnostics)
+            {
+                config.EnableSystemDiagnosticsTracing();
+            }
 
             return config;
         }
