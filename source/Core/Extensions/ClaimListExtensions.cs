@@ -15,15 +15,19 @@
  */
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class ClaimListExtensions
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public static Dictionary<string, object> ToClaimsDictionary(this IEnumerable<Claim> claims)
         {
             var d = new Dictionary<string, object>();
@@ -65,7 +69,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (claim.Type == Constants.ClaimTypes.Address)
             {
-                return JsonConvert.DeserializeObject(claim.Value);
+                try
+                {
+                    return JsonConvert.DeserializeObject(claim.Value);
+                }
+                catch (Exception ex)
+                {
+                    Logger.ErrorException("Exception while deserializing address claim", ex);
+                }
             }
 
             return claim.Value;
