@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     {
         public string Audience { get; set; }
         public string Issuer { get; set; }
-        public DateTime CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
         public int Lifetime { get; set; }
         public string Type { get; set; }
         public Client Client { get; set; }
@@ -49,13 +49,13 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Token()
         {
             Type = Constants.TokenTypes.AccessToken;
-            CreationTime = DateTime.UtcNow;
+            CreationTime = DateTimeOffset.UtcNow;
         }
 
         public Token(string tokenType)
         {
             Type = tokenType;
-            CreationTime = DateTime.UtcNow;
+            CreationTime = DateTimeOffset.UtcNow;
         }
 
         public string SubjectId
