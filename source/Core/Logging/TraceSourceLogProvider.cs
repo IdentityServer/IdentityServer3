@@ -44,20 +44,26 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public bool Log(LogLevel logLevel, Func<string> messageFunc)
         {
-            var eventType = GetEventType(logLevel);
-            EnsureCorrelationId();
+            if (messageFunc != null)
+            {
+                var eventType = GetEventType(logLevel);
+                EnsureCorrelationId();
 
-            _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
+                _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
+            }
 
             return true;
         }
 
         public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
         {
-            var eventType = GetEventType(logLevel);
-            EnsureCorrelationId();
+            if (messageFunc != null && exception != null)
+            {
+                var eventType = GetEventType(logLevel);
+                EnsureCorrelationId();
 
-            _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception.ToString()));
+                _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception.ToString()));
+            }
         }
 
         private TraceEventType GetEventType(LogLevel logLevel)

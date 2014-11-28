@@ -29,6 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         private readonly ValidatedEndSessionRequest _validatedRequest;
         private readonly TokenValidator _tokenValidator;
+        private readonly IRedirectUriValidator _uriValidator;
 
         public ValidatedEndSessionRequest ValidatedRequest
         {
@@ -38,9 +39,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IClientStore clients)
+        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IRedirectUriValidator uriValidator, IClientStore clients)
         {
             _tokenValidator = tokenValidator;
+            _uriValidator = uriValidator;
 
             _validatedRequest = new ValidatedEndSessionRequest
             {
@@ -62,8 +64,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var idTokenHint = parameters.Get(Constants.EndSessionRequest.IdTokenHint);
             if (idTokenHint.IsPresent())
             {
-                // validate id_token
-                var tokenValidationResult = await _tokenValidator.ValidateIdentityTokenAsync(idTokenHint);
+                // validate id_token - no need to validate token life time
+                var tokenValidationResult = await _tokenValidator.ValidateIdentityTokenAsync(idTokenHint, null, false);
                 if (tokenValidationResult.IsError)
                 {
                     return Invalid();
@@ -87,7 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     Uri uri;
                     if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
                     {
-                        if (_validatedRequest.Client.PostLogoutRedirectUris.Contains(uri))
+                        if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(uri, _validatedRequest.Client) == true)
                         {
                             _validatedRequest.PostLogOutUri = uri;
                         }
@@ -96,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                             return Invalid();
                         }
                     }
-                    
+
                     var state = parameters.Get(Constants.EndSessionRequest.State);
                     if (state.IsPresent())
                     {
@@ -104,7 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     }
                 }
             }
-            
+
             return Valid();
         }
 

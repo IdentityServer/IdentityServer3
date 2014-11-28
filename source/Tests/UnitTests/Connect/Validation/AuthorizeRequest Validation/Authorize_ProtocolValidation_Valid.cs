@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    [TestClass]
+    
     public class Authorize_ProtocolValidation_Valid
     {
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -37,11 +38,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.AreEqual(false, result.IsError);
+            result.IsError.Should().Be(false);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -53,11 +54,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_Code_Request()
         {
             var parameters = new NameValueCollection();
@@ -69,11 +70,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Resource_Token_Request()
         {
             var parameters = new NameValueCollection();
@@ -85,11 +86,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -102,11 +103,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         // is valid because protocol validation on its own cannot know about resource scopes
         public void Valid_Mixed_IdToken_Request()
         {
@@ -120,11 +121,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -137,11 +138,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_Mixed_IdTokenToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -154,11 +155,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_With_FormPost_ResponseMode_Request()
         {
             var parameters = new NameValueCollection();
@@ -172,11 +173,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation - Valid")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public void Valid_OpenId_IdToken_Token_With_FormPost_ResponseMode_Request()
         {
             var parameters = new NameValueCollection();
@@ -190,7 +191,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

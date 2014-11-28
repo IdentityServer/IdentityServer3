@@ -391,6 +391,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string AccessTokenHash                     = "at_hash";
             public const string AuthorizationCodeHash               = "c_hash";
             public const string Nonce                               = "nonce";
+            public const string JwtId                               = "jti";
 
             // more claims
             public const string ClientId         = "client_id";

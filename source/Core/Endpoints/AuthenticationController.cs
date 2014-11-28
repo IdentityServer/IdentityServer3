@@ -669,8 +669,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!String.IsNullOrWhiteSpace(message.ClientId))
             {
                 var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-                filter = client.IdentityProviderRestrictions ?? filter;
+                if (client != null)
+                {
+                    filter = client.IdentityProviderRestrictions;
+                }
             }
             filter = filter ?? Enumerable.Empty<string>();
             return filter;

@@ -49,18 +49,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                         new Uri("https://localhost:44312/callback"),
                     },
                     
-                    ScopeRestrictions = new List<string>
-                    { 
-                        Constants.StandardScopes.OpenId,
-                        Constants.StandardScopes.Profile,
-                        Constants.StandardScopes.Email,
-                        Constants.StandardScopes.OfflineAccess,
-                        "idmgr",
-                        "read",
-                        "write"
-                    },
-
-                    
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     AccessTokenType = AccessTokenType.Reference,
                     
@@ -102,23 +90,11 @@ namespace Thinktecture.IdentityServer.Host.Config
                         new Uri("http://localhost:2671/"),
                     },
                     
-                    ScopeRestrictions = new List<string>
-                    { 
-                        Constants.StandardScopes.OpenId,
-                        Constants.StandardScopes.Profile,
-                        Constants.StandardScopes.Email,
-                        Constants.StandardScopes.AllClaims,
-                        "roles",
-                        "read",
-                        "write",
-                        "idmgr"
-                    },
-
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 3600,
+                    AccessTokenLifetime = 3600
                 },
 
                 new Client
@@ -194,13 +170,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientSecret = "secret",
                     Flow = Flows.ResourceOwner,
                     
-                    ScopeRestrictions = new List<string>
-                    { 
-                        "read",
-                        "write",
-                        "offline_access"
-                    },
-
                     AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 3600,
                     AbsoluteRefreshTokenLifetime = 86400,

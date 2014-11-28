@@ -65,9 +65,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                var principal = Principal.Create("tokenvalidator", subClaim);
+                var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (! await _users.IsActiveAsync(principal))
+                if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
@@ -108,9 +108,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                var principal = Principal.Create("tokenvalidator", subClaim);
+                var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (!await _users.IsActiveAsync(principal))
+                if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.ExpiredToken;

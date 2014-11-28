@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    [TestClass]
+    
     public class TokenRequestValidation_AssertionFlow_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_GrantType_For_Client()
         {
             var client = await _clients.FindClientByIdAsync("client");
@@ -43,12 +44,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.UnsupportedGrantType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_Assertion()
         {
             var client = await _clients.FindClientByIdAsync("assertionclient");
@@ -61,8 +62,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.TokenErrors.InvalidGrant, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
     }
 }

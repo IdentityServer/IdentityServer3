@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Validation;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect
 {
-    [TestClass]
     public class BearerTokenUsageValidation
     {
         const string Category = "BearerTokenUsageValidator Tests";
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task No_Header_no_Body_Get()
         {
             var request = new HttpRequestMessage();
@@ -21,11 +21,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task No_Header_no_Body_Post()
         {
             var request = new HttpRequestMessage();
@@ -35,11 +35,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Non_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -49,11 +49,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Empty_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -63,11 +63,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Whitespaces_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -77,11 +77,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Bearer_Scheme_Header()
         {
             var request = new HttpRequestMessage();
@@ -91,13 +91,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsTrue(result.TokenFound);
-            Assert.AreEqual("token", result.Token);
-            Assert.AreEqual(BearerTokenUsageType.AuthorizationHeader, result.UsageType);
+            result.TokenFound.Should().BeTrue();
+            result.Token.Should().Be("token");
+            result.UsageType.Should().Be(BearerTokenUsageType.AuthorizationHeader);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Body_Post()
         {
             var request = new HttpRequestMessage();
@@ -110,13 +110,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsTrue(result.TokenFound);
-            Assert.AreEqual("token", result.Token);
-            Assert.AreEqual(BearerTokenUsageType.PostBody, result.UsageType);
+            result.TokenFound.Should().BeTrue();
+            result.Token.Should().Be("token");
+            result.UsageType.Should().Be(BearerTokenUsageType.PostBody);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Body_Post_empty_Token()
         {
             var request = new HttpRequestMessage();
@@ -129,11 +129,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Body_Post_Whitespace_Token()
         {
             var request = new HttpRequestMessage();
@@ -146,11 +146,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Body_Post_no_Token()
         {
             var request = new HttpRequestMessage();
@@ -163,7 +163,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect
             var validator = new BearerTokenUsageValidator();
             var result = await validator.ValidateAsync(request);
 
-            Assert.IsFalse(result.TokenFound);
+            result.TokenFound.Should().BeFalse();
         }
     }
 }

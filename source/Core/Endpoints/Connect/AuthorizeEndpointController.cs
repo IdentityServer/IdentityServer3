@@ -33,6 +33,9 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OAuth2/OpenID Connect authorize endpoint
+    /// </summary>
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
@@ -48,6 +51,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
         private readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizeEndpointController"/> class.
+        /// </summary>
+        /// <param name="viewService">The view service.</param>
+        /// <param name="validator">The validator.</param>
+        /// <param name="responseGenerator">The response generator.</param>
+        /// <param name="interactionGenerator">The interaction generator.</param>
+        /// <param name="options">The options.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,
@@ -63,6 +74,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _validator = validator;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [Route(Constants.RoutePaths.Oidc.Authorize, Name = Constants.RouteNames.Oidc.Authorize)]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
@@ -71,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
-        protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
+        private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
             if (!_options.Endpoints.AuthorizeEndpoint.IsEnabled)
             {
@@ -90,16 +106,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return this.AuthorizeError(
                     result.ErrorType,
                     result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
+                    request);
             }
 
             var loginInteraction = await _interactionGenerator.ProcessLoginAsync(request, User as ClaimsPrincipal);
 
             if (loginInteraction.IsError)
             {
-                return this.AuthorizeError(loginInteraction.Error);
+                return this.AuthorizeError(
+                    loginInteraction.Error.ErrorType,
+                    loginInteraction.Error.Error,
+                    request);
             }
             if (loginInteraction.IsLogin)
             {
@@ -124,9 +141,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return this.AuthorizeError(
                     result.ErrorType,
                     result.Error,
-                    request.ResponseMode,
-                    request.RedirectUri,
-                    request.State);
+                    request);
             }
 
             // now that client configuration is loaded, we can do further validation
@@ -140,7 +155,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (consentInteraction.IsError)
             {
-                return this.AuthorizeError(consentInteraction.Error);
+                return this.AuthorizeError(
+                    consentInteraction.Error.ErrorType,
+                    consentInteraction.Error.Error,
+                    request);
             }
 
             if (consentInteraction.IsConsent)
@@ -231,58 +249,46 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new LoginResult(message, Request.GetOwinContext().Environment, _options);
         }
 
-        IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, string responseMode, Uri errorUri, string state)
+        IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
         {
-            return AuthorizeError(new AuthorizeError
-            {
-                ErrorType = errorType,
-                Error = error,
-                ResponseMode = responseMode,
-                ErrorUri = errorUri,
-                State = state
-            });
-        }
-
-        IHttpActionResult AuthorizeError(AuthorizeError error)
-        {
-            if (error.ErrorType == ErrorTypes.User)
+            // show error message to user
+            if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
+                var username = User.Identity.IsAuthenticated ? User.GetName() : (string)null;
+
                 var errorModel = new ErrorViewModel
                 {
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    CurrentUser = User.GetName(),
-                    ErrorMessage = LookupErrorMessage(error.Error)
+                    CurrentUser = username,
+                    ErrorMessage = LookupErrorMessage(error)
                 };
+
                 var errorResult = new ErrorActionResult(_viewService, env, errorModel);
                 return errorResult;
             }
 
-            var query = new NameValueCollection
+            // return error to client
+            var response = new AuthorizeResponse
             {
-                {"error", error.Error}
+                Request = request,
+                
+                IsError = true,
+                Error = error,
+                State = request.State,
+                RedirectUri = request.RedirectUri
             };
 
-            if (error.State.IsPresent())
+            if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
-                query.Add("state", error.State);
-            }
-
-            var url = error.ErrorUri.AbsoluteUri;
-            if (error.ResponseMode == Constants.ResponseModes.Query ||
-                error.ResponseMode == Constants.ResponseModes.FormPost)
-            {
-                url = url.AddQueryString(query.ToQueryString());
+                return new AuthorizeFormPostResult(response, Request);
             }
             else
             {
-                url = url.AddHashFragment(query.ToQueryString());
+                return new AuthorizeRedirectResult(response);
             }
-
-            Logger.Info("Redirecting to: " + url);
-
-            return Redirect(url);
+           
         }
 
         private string LookupErrorMessage(string error)

@@ -173,6 +173,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public CspOptions CspOptions { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether web API diagnostics should be enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if web API diagnostics should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableWebApiDiagnostics { get; set; }
+
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {
             get

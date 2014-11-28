@@ -27,6 +27,9 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OAuth2/OpenID Conect token endpoint
+    /// </summary>
     [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
@@ -39,6 +42,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly ClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenEndpointController"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="requestValidator">The request validator.</param>
+        /// <param name="clientValidator">The client validator.</param>
+        /// <param name="generator">The generator.</param>
         public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
         {
             _requestValidator = requestValidator;
@@ -47,6 +57,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _options = options;
         }
 
+        /// <summary>
+        /// POST
+        /// </summary>
+        /// <returns>Token response</returns>
         [Route]
         public async Task<IHttpActionResult> Post()
         {
@@ -55,6 +69,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
         }
 
+        /// <summary>
+        /// Processes the token request
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>Token response</returns>
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             if (!_options.Endpoints.TokenEndpoint.IsEnabled)

@@ -63,7 +63,7 @@ namespace Owin
 
             app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
             SignatureConversions.AddConversions(app);
-            app.UseWebApi(WebApiConfig.Configure());
+            app.UseWebApi(WebApiConfig.Configure(options));
 
             return app;
         }

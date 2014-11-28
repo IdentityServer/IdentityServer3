@@ -13,81 +13,68 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using FluentAssertions;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
-    [TestClass]
+    
     public class RegistrationTests
     {
-        [TestMethod]
+        [Fact]
         public void RegisterSingleton_NullInstance_Throws()
         {
-            try
-            {
-                Registration.RegisterSingleton<object>(null);
-                Assert.Fail();
-            }
-            catch(ArgumentNullException ex)
-            {
-                Assert.AreEqual("instance", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterSingleton<object>(null);
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("instance");
         }
 
-        [TestMethod]
+        [Fact]
         public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
         {
             object theSingleton = new object();
-            var reg = Registration.RegisterSingleton<object>(theSingleton);
+            var reg = Registration.RegisterSingleton(theSingleton);
             var result = reg.ImplementationFactory();
-            Assert.AreSame(theSingleton, result);
+            result.Should().BeSameAs(theSingleton);
         }
 
-        [TestMethod]
+        [Fact]
         public void RegisterFactory_NullFunc_Throws()
         {
-            try
-            {
-                Registration.RegisterFactory<object>(null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.AreEqual("typeFunc", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterFactory<object>(null); ;
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("typeFunc");
         }
         
-        [TestMethod]
+        [Fact]
         public void RegisterFactory_FactoryInvokesFunc()
         {
             var wasCalled = false;
             Func<object> f = () => { wasCalled = true; return new object(); };
-            var reg = Registration.RegisterFactory<object>(f);
+            var reg = Registration.RegisterFactory(f);
             var result = reg.ImplementationFactory();
-            Assert.IsTrue(wasCalled);
+            wasCalled.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void RegisterType_NullType_Throws()
         {
-            try
-            {
-                Registration.RegisterType<object>(null);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.AreEqual("type", ex.ParamName);
-            }
+            Action act = () => Registration.RegisterType<object>(null);
+
+            act.ShouldThrow<ArgumentNullException>()
+                .And.ParamName.Should().Be("type");
         }
 
-        [TestMethod]
+        [Fact]
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = Registration.RegisterType<object>(typeof(string));
-            Assert.AreEqual(typeof(string), result.ImplementationType);
+            result.ImplementationType.Should().Be(typeof(string));
         }
     }
 }

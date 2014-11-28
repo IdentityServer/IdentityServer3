@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
@@ -27,6 +28,9 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OpenID Connect discovery document endpoint
+    /// </summary>
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -39,6 +43,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _scopes = scopes;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <returns>Discovery document</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
         public async Task<IHttpActionResult> GetConfiguration()
         {
@@ -76,6 +84,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             });
         }
 
+        /// <summary>
+        /// GET for JWKs
+        /// </summary>
+        /// <returns>JSON Web Key set</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
         public IHttpActionResult GetKeyData()
         {
@@ -94,6 +106,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 {
                     var cert64 = Convert.ToBase64String(pubKey.RawData);
                     var thumbprint = Base64Url.Encode(pubKey.GetCertHash());
+                    var key = pubKey.PublicKey.Key as RSACryptoServiceProvider;
+                    var parameters = key.ExportParameters(false);
+                    var exponent = Convert.ToBase64String(parameters.Exponent);
+                    var modulus = Convert.ToBase64String(parameters.Modulus);
 
                     var webKey = new JsonWebKeyDto
                     {
@@ -101,6 +117,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                         use = "sig",
                         kid = thumbprint,
                         x5t = thumbprint,
+                        e = exponent,
+                        n = modulus,
                         x5c = new[] { cert64 }
                     };
 
@@ -117,6 +135,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             public string use { get; set; }
             public string kid { get; set; }
             public string x5t { get; set; }
+            public string e { get; set; }
+            public string n { get; set; }
             public string[] x5c { get; set; }
         }
     }

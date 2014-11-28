@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
 {
-    [TestClass]
+    
     public class IdentityTokenValidation
     {
         const string Category = "Identity token validation";
@@ -33,8 +35,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -42,11 +44,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_DefaultKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -54,11 +56,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -66,11 +68,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task IdentityToken_InvalidClientId()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -78,14 +80,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(Constants.ProtectedResourceErrors.InvalidToken, result.Error);
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
 
         
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -93,10 +95,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient_symmetric");
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
 
-        [TestCategory(Category)]
+        [Trait("Category", Category)]
         public async Task Valid_IdentityToken_SymmetricKeyType_no_ClientId_supplied()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
@@ -104,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var validator = Factory.CreateTokenValidator();
 
             var result = await validator.ValidateIdentityTokenAsync(jwt);
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
         }
     }
 }

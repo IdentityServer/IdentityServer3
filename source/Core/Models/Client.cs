@@ -142,6 +142,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public IEnumerable<string> IdentityProviderRestrictions { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether JWT access tokens should include an identifier
+        /// </summary>
+        /// <value>
+        /// <c>true</c> to add an id; otherwise, <c>false</c>.
+        /// </value>
+        public bool IncludeJwtId { get; set; }
+
         // not implemented yet
 
         //public bool RefreshClaimsOnRefreshToken { get; set; }

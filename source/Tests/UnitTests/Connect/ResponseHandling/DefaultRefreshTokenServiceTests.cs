@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -24,18 +24,19 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class DefaultRefreshTokenServiceTests
     {
         const string Category = "Default RefreshToken Service";
 
         IClientStore _clients = Factory.CreateClientStore();
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -47,19 +48,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.IsFalse(string.IsNullOrWhiteSpace(handle));
+            string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.IsNotNull(refreshToken);
+            refreshToken.Should().NotBeNull();
 
             // check refresh token values
-            Assert.AreEqual(refreshToken.ClientId, client.ClientId);
-            Assert.AreEqual(refreshToken.LifeTime, client.AbsoluteRefreshTokenLifetime);
+            client.ClientId.Should().Be(refreshToken.ClientId);
+            client.AbsoluteRefreshTokenLifetime.Should().Be(refreshToken.LifeTime);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -71,19 +72,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
-            Assert.IsFalse(string.IsNullOrWhiteSpace(handle));
+            string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
             var refreshToken = await store.GetAsync(handle);
-            Assert.IsNotNull(refreshToken);
+            refreshToken.Should().NotBeNull();
 
             // check refresh token values
-            Assert.AreEqual(refreshToken.ClientId, client.ClientId);
-            Assert.AreEqual(refreshToken.LifeTime, client.SlidingRefreshTokenLifetime);
+            client.ClientId.Should().Be(refreshToken.ClientId);
+            client.SlidingRefreshTokenLifetime.Should().Be(refreshToken.LifeTime);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -102,11 +103,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.AreEqual(client.AbsoluteRefreshTokenLifetime, newLifetime);
+            newLifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -125,12 +126,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var newRefreshToken = await store.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
-            Assert.AreEqual(newLifetime, client.SlidingRefreshTokenLifetime + 1);
-
+            (client.SlidingRefreshTokenLifetime + 1).Should().Be(newLifetime);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task ReUse_Handle_reuses_Handle()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -142,11 +142,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.AreEqual(handle, newHandle);
+            newHandle.Should().Be(handle);
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task OneTime_Handle_creates_new_Handle()
         {
             var store = new InMemoryRefreshTokenStore();
@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await store.GetAsync(handle), client);
 
-            Assert.AreNotEqual(handle, newHandle);
+            newHandle.Should().NotBe(handle);
         }
 
         private async Task<ValidatedTokenRequest> CreateValidatedRequest(Client client, IRefreshTokenStore store)
@@ -183,7 +183,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
-            Assert.IsFalse(result.IsError);
+            result.IsError.Should().BeFalse();
             return validator.ValidatedRequest;
         }
     }

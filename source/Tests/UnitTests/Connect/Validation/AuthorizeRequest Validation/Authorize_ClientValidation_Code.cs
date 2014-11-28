@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    [TestClass]
+    
     public class Authorize_ClientValidation_Code
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
@@ -41,16 +42,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.Client, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidScope, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.Client);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -61,16 +62,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.User);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -82,16 +83,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.User);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -103,16 +104,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.User);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Unknown_Client()
         {
             var parameters = new NameValueCollection();
@@ -123,16 +124,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.User);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Client Validation - Code")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Restricted_Scope()
         {
             var parameters = new NameValueCollection();
@@ -143,12 +144,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var protocolResult = validator.ValidateProtocol(parameters);
-            Assert.IsFalse(protocolResult.IsError);
+            protocolResult.IsError.Should().BeFalse();
 
             var clientResult = await validator.ValidateClientAsync();
-            Assert.IsTrue(clientResult.IsError);
-            Assert.AreEqual(ErrorTypes.User, clientResult.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnauthorizedClient, clientResult.Error);
+            clientResult.IsError.Should().BeTrue();
+            clientResult.ErrorType.Should().Be(ErrorTypes.User);
+            clientResult.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
     }
 }

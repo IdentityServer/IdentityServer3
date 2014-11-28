@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -38,12 +37,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public Task<IEnumerable<System.Security.Claims.Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(Thinktecture.IdentityServer.Core.Models.ExternalIdentity user)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user)
         {
             throw new NotImplementedException();
         }

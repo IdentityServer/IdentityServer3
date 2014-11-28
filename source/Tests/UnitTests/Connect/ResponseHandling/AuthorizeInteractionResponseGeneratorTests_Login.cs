@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -24,13 +25,14 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 {
-    [TestClass]
+    
     public class AuthorizeInteractionResponseGeneratorTests_Login
     {
-        [TestMethod]
+        [Fact]
         public async Task Anonymous_User_must_SignIn()
         {
             var generator = new AuthorizeInteractionResponseGenerator(null, null);
@@ -42,10 +44,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessLoginAsync(request, Principal.Anonymous);
 
-            Assert.IsTrue(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Authenticated_User_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -61,10 +63,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsFalse(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -87,10 +89,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.IsFalse(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Authenticated_User_with_restricted_current_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -113,10 +115,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             var result = await generator.ProcessClientLoginAsync(request);
 
-            Assert.IsTrue(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Authenticated_User_with_allowed_requested_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -133,10 +135,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsFalse(result.IsLogin);
+            result.IsLogin.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Authenticated_User_with_different_requested_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
@@ -153,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var principal = IdentityServerPrincipal.Create("123", "dom");
             var result = await generator.ProcessLoginAsync(request, principal);
 
-            Assert.IsTrue(result.IsLogin);
+            result.IsLogin.Should().BeTrue();
         }
     }
 }

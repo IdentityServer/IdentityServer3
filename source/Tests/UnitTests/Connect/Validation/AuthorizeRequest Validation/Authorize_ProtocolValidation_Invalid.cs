@@ -14,42 +14,45 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Specialized;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
 {
-    [TestClass]
     public class Authorize_ProtocolValidation_Invalid
     {
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
+        
         public void Null_Parameter()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(null);
+
+            Action act = () => validator.ValidateProtocol(null);
+
+            act.ShouldThrow<ArgumentNullException>();
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Empty_Parameters()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(new NameValueCollection());
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
         // fails because openid scope is requested, but no response type that indicates an identity token
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -61,13 +64,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
@@ -80,13 +83,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
@@ -98,13 +101,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
@@ -116,13 +119,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ClientId()
         {
             var parameters = new NameValueCollection();
@@ -133,13 +136,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_Scope()
         {
             var parameters = new NameValueCollection();
@@ -150,13 +153,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -167,13 +170,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -185,13 +188,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_RedirectUri_Triple_Slash()
         {
             var parameters = new NameValueCollection();
@@ -203,14 +206,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.User, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -221,13 +224,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -239,13 +242,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -258,13 +261,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -277,13 +280,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -296,13 +299,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -315,13 +318,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -334,13 +337,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -353,14 +356,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.UnsupportedResponseType, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -373,13 +376,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [TestMethod]
-        [TestCategory("AuthorizeRequest Protocol Validation")]
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public void Negative_MaxAge()
         {
             var parameters = new NameValueCollection();
@@ -392,9 +395,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = validator.ValidateProtocol(parameters);
 
-            Assert.IsTrue(result.IsError);
-            Assert.AreEqual(ErrorTypes.Client, result.ErrorType);
-            Assert.AreEqual(Constants.AuthorizeErrors.InvalidRequest, result.Error);
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
     }
 }

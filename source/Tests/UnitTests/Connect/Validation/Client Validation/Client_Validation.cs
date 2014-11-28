@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Connect.Setup;
+using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 {
-    [TestClass]
     public class Client_Validation
     {
         ClientValidator _validator = Factory.CreateClientValidator();
 
         const string Category = "Client validation";
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_Client_Credentials()
         {
             var credential = new ClientCredential
@@ -42,12 +42,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNotNull(client);
-            Assert.AreEqual("codeclient", client.ClientId);
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be("codeclient");
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Invalid_Client_Credentials()
         {
             var credential = new ClientCredential
@@ -58,11 +58,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            client.Should().BeNull();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Unkown_Client()
         {
             var credential = new ClientCredential
@@ -73,11 +73,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            client.Should().BeNull();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Disabled_Client()
         {
             var credential = new ClientCredential
@@ -88,31 +88,35 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            client.Should().BeNull();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        [TestCategory(Category)]
-        public async Task Null_Client_Credentials()
+        [Fact]
+        
+        [Trait("Category", Category)]
+        public void Null_Client_Credentials()
         {
             var credential = new ClientCredential();
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        [TestCategory(Category)]
-        public async Task Null_ClientId()
+        [Fact]
+        
+        [Trait("Category", Category)]
+        public void Null_ClientId()
         {
             var credential = new ClientCredential();
-            
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
         }
 
-        [TestMethod]
-        [TestCategory(Category)]
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Empty_Client_Credentials()
         {
             var credential = new ClientCredential
@@ -123,7 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
-            Assert.IsNull(client);
+            client.Should().BeNull();
         }
     }
 }
