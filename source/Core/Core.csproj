@@ -123,6 +123,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\EventIds.cs" />

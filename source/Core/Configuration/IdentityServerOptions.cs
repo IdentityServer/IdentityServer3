@@ -42,11 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         }
 
         internal void Validate()
-        {
-            if (IssuerUri.IsMissing())
-            {
-                throw new ArgumentException("IssuerUri Is Missing");
-            }
+        {            
             if (AuthenticationOptions == null)
             {
                 throw new ArgumentException("AuthenticationOptions is missing");

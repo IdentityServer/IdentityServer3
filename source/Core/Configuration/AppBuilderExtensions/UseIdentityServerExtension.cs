@@ -44,8 +44,10 @@ namespace Owin
 
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
-            
+
             app.ConfigureIdentityServerBaseUrl(options.PublicHostName);
+            app.ConfigureIdentityServerIssuer(options);
+
             app.UseCors(options.CorsPolicy);
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
             
