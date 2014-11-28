@@ -40,9 +40,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
         private readonly IDictionary<string, object> _environment;
+        private readonly ScopeValidator _scopeValidator;
 
         private ValidatedTokenRequest _validatedRequest;
-        
         
         public ValidatedTokenRequest ValidatedRequest
         {
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, IOwinContext context)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, IScopeStore scopes, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator, IOwinContext context)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
@@ -61,6 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _scopes = scopes;
             _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
+            _scopeValidator = scopeValidator;
             _environment = context.Environment;
         }
 
@@ -429,26 +430,25 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
-            var scopeValidator = new ScopeValidator();
-            var requestedScopes = scopeValidator.ParseScopes(parameters.Get(Constants.TokenRequest.Scope));
+            var requestedScopes = ScopeValidator.ParseScopesString(parameters.Get(Constants.TokenRequest.Scope));
 
             if (requestedScopes == null)
             {
                 return false;
             }
 
-            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, requestedScopes))
+            if (!_scopeValidator.AreScopesAllowed(_validatedRequest.Client, requestedScopes))
             {
                 return false;
             }
             
-            if (!scopeValidator.AreScopesValid(requestedScopes, await _scopes.GetScopesAsync()))
+            if (! await _scopeValidator.AreScopesValidAsync(requestedScopes))
             {
                 return false;
             }
 
             _validatedRequest.Scopes = requestedScopes;
-            _validatedRequest.ValidatedScopes = scopeValidator;
+            _validatedRequest.ValidatedScopes = _scopeValidator;
             return true;
         }
 

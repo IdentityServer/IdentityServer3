@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var scopeString = string.Join(" ", scopes);
             Logger.InfoFormat("Scopes in access token: {0}", scopeString);
 
-            var scopeDetails = await _scopes.GetScopesAsync();
+            var scopeDetails = await _scopes.GetScopesAsync(scopes);
             var scopeClaims = new List<string>();
 
             foreach (var scope in scopes)

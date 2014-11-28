@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
 {
@@ -42,9 +43,18 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         /// <returns>
         /// List of scopes
         /// </returns>
-        public Task<IEnumerable<Scope>> GetScopesAsync()
+        public Task<IEnumerable<Scope>> GetScopesAsync(IEnumerable<string> scopeNames = null)
         {
-            return Task.FromResult(_scopes);
+            if (scopeNames == null)
+            {
+                return Task.FromResult(_scopes);
+            }
+
+            var scopes = from s in _scopes
+                         where scopeNames.ToList().Contains(s.Name)
+                         select s;
+
+            return Task.FromResult<IEnumerable<Scope>>(scopes.ToList());
         }
     }
 }
