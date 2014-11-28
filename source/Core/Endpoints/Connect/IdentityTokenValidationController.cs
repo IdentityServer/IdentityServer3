@@ -27,6 +27,9 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// Endpoint for validating identity tokens
+    /// </summary>
     [RoutePrefix(Constants.RoutePaths.Oidc.IdentityTokenValidation)]
     [NoCache]
     public class IdentityTokenValidationController : ApiController
@@ -41,6 +44,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _options = options;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <returns>Claims if token is valid</returns>
         [Route]
         public async Task<IHttpActionResult> Get()
         {

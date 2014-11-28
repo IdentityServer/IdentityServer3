@@ -28,6 +28,9 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OpenID Connect discovery document endpoint
+    /// </summary>
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -40,6 +43,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _scopes = scopes;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <returns>Discovery document</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
         public async Task<IHttpActionResult> GetConfiguration()
         {
@@ -77,6 +84,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             });
         }
 
+        /// <summary>
+        /// GET for JWKs
+        /// </summary>
+        /// <returns>JSON Web Key set</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
         public IHttpActionResult GetKeyData()
         {

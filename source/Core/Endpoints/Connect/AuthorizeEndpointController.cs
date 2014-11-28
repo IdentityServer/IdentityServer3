@@ -33,6 +33,9 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OAuth2/OpenID Connect authorize endpoint
+    /// </summary>
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
@@ -48,6 +51,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
         private readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizeEndpointController"/> class.
+        /// </summary>
+        /// <param name="viewService">The view service.</param>
+        /// <param name="validator">The validator.</param>
+        /// <param name="responseGenerator">The response generator.</param>
+        /// <param name="interactionGenerator">The interaction generator.</param>
+        /// <param name="options">The options.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,
@@ -63,6 +74,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _validator = validator;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [Route(Constants.RoutePaths.Oidc.Authorize, Name = Constants.RouteNames.Oidc.Authorize)]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
@@ -71,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
         }
 
-        protected async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
+        private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
             if (!_options.Endpoints.AuthorizeEndpoint.IsEnabled)
             {
