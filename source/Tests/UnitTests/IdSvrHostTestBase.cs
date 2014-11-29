@@ -56,6 +56,8 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected List<Client> clients;
 
+        protected Action<IdentityServerOptions> ConfigureIdentityServerOptions;
+
         
         public IdSvrHostTestBase()
         {
@@ -88,6 +90,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 protector = options.DataProtector;
 
+                if (ConfigureIdentityServerOptions != null) ConfigureIdentityServerOptions(options);
                 app.UseIdentityServer(options);
 
                 ticketFormatter = new TicketDataFormat(

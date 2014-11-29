@@ -175,6 +175,24 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_PublicHostNameConfigured_PreAuthenticateReturnsParialLogin_IssuesRedirectToCustomHost()
+        {
+            ConfigureIdentityServerOptions = opts =>
+            {
+                opts.PublicHostName = "http://somehost";
+            };
+            Init();
+            
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>(), It.IsAny<IDictionary<string, object>>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+
+            var resp = GetLoginPage();
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.Should().Be("http://somehost/foo");
+        }
+
+        [Fact]
         public void GetLogin_EnableLocalLoginAndOnlyOneProvider_RedirectsToProvider()
         {
             options.AuthenticationOptions.EnableLocalLogin = false;
