@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Logging;
-namespace Thinktecture.IdentityServer.Core.ViewModels
+using System;
+using System.Diagnostics;
+
+namespace Thinktecture.IdentityServer.Core.Logging
 {
-    public class ErrorViewModel : CommonViewModel
+    internal class ActivityId
     {
-        public ErrorViewModel()
+        internal static string GetCurrentId()
         {
-            this.RequestId = ActivityId.GetCurrentId();
+            if (Trace.CorrelationManager.ActivityId == Guid.Empty)
+            {
+                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            }
+
+            return Trace.CorrelationManager.ActivityId.ToString("N");
         }
 
-        public string ErrorMessage { get; set; }
-        public string RequestId { get; set; }
     }
 }

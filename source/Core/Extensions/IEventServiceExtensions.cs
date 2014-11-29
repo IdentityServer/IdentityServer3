@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -51,21 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
             var ctx = new OwinContext(env);
 
-            evt.ActivityId = GetActivityId();
+            evt.ActivityId = ActivityId.GetCurrentId();
             evt.TimeStamp = DateTime.UtcNow;
             evt.ProcessId = Process.GetCurrentProcess().Id;
             evt.MachineName = Environment.MachineName; 
             evt.RemoteIpAddress = ctx.Request.RemoteIpAddress;
-        }
-
-        internal static string GetActivityId()
-        {
-            if (Trace.CorrelationManager.ActivityId == Guid.Empty)
-            {
-                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
-            }
-
-            return Trace.CorrelationManager.ActivityId.ToString("N");
         }
     }
 }

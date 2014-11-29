@@ -131,6 +131,7 @@
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
