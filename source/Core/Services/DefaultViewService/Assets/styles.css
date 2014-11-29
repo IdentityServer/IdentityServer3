@@ -7321,6 +7321,10 @@ body {
 .login-page .login-remember input {
   margin-right: 5px;
 }
+.login-page .external-providers li {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 iframe.signout {
   display: none;
 }
