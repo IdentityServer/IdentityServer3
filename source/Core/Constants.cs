@@ -430,6 +430,14 @@ namespace Thinktecture.IdentityServer.Core
             ClaimTypes.IdentityProvider,
         };
 
+        public static readonly string[] AuthenticateResultClaimTypes = new string[]{
+            ClaimTypes.Subject,
+            ClaimTypes.Name,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
+        };
+
         public static class AuthenticationMethods
         {
             public const string Certificate             = "certificate";
