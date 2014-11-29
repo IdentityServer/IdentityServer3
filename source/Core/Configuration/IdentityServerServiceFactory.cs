@@ -39,6 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             {
                 var aggregateFilter = new AggregateExternalClaimsFilter(
                     new NormalizingClaimsFilter(),
+                    new IgnoreClaimsFilter(Constants.ExternalIdentityProviderProtocolClaimTypes),
                     new FacebookClaimsFilter(),
                     new TwitterClaimsFilter()
                 );
