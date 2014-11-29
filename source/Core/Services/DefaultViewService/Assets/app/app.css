@@ -1,6 +1,13 @@
 ﻿body {
   margin-top: 65px;
 }
+.consent-page .client-logo {
+  float: left;
+}
+.consent-page .client-logo img {
+  width: 80px;
+  height: 80px;
+}
 .consent-buttons {
   margin-top: 25px;
 }
