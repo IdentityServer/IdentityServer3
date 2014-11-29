@@ -33,20 +33,20 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.inner = inner;
         }
 
-        public System.Threading.Tasks.Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
+        public System.Threading.Tasks.Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message, IDictionary<string, object> env)
         {
-            return inner.PreAuthenticateAsync(env, message);
+            return inner.PreAuthenticateAsync(message, env);
         }
 
-        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
+        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null, IDictionary<string, object> env = null)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return inner.AuthenticateLocalAsync(username, password, message, env);
         }
 
-        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser)
+        public System.Threading.Tasks.Task<AuthenticateResult> AuthenticateExternalAsync(Models.ExternalIdentity externalUser, IDictionary<string, object> env)
         {
             externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser);
+            return inner.AuthenticateExternalAsync(externalUser, env);
         }
 
         public System.Threading.Tasks.Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
@@ -57,6 +57,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         public System.Threading.Tasks.Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
             return inner.IsActiveAsync(subject);
+        }
+
+        public System.Threading.Tasks.Task SignOutAsync(ClaimsPrincipal subject, IDictionary<string, object> env)
+        {
+            return inner.SignOutAsync(subject, env);
         }
     }
 }
