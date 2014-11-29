@@ -21,8 +21,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
@@ -180,6 +182,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             RaiseLocalLoginSuccessEvent(model.Username, signInMessage, authResult);
+
+            IssueLastUsernameCookie(model.Username);
 
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
@@ -609,6 +613,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (message == null) throw new ArgumentNullException("message");
 
+            username = username ?? GetLastUsernameFromCookie();
+
             var providers = await GetExternalProviders(message, signInMessageId);
 
             if (errorMessage != null)
@@ -818,5 +824,61 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             cookie.Clear(signin);
         }
 
+        private void IssueLastUsernameCookie(string username)
+        {
+            if (this._options.AuthenticationOptions.RememberLastUsername)
+            {
+                var ctx = Request.GetOwinContext();
+                var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
+                var path = ctx.Request.Environment.GetIdentityServerBasePath();
+                if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+
+                var options = new Microsoft.Owin.CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = secure,
+                    Path = path
+                };
+                
+                if (!String.IsNullOrWhiteSpace(username))
+                {
+                    var bytes = Encoding.UTF8.GetBytes(username);
+                    bytes = _options.DataProtector.Protect(bytes, cookieName);
+                    username = Base64Url.Encode(bytes);
+                    options.Expires = DateTime.UtcNow.AddYears(1);
+                }
+                else
+                {
+                    username = ".";
+                    options.Expires = DateTime.UtcNow.AddYears(-1);
+                }
+
+                ctx.Response.Cookies.Append(cookieName, username, options);
+            }
+        }
+
+        private string GetLastUsernameFromCookie()
+        {
+            if (this._options.AuthenticationOptions.RememberLastUsername)
+            {
+                try
+                {
+                    var ctx = Request.GetOwinContext();
+                    var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                    var value = ctx.Request.Cookies[cookieName];
+
+                    var bytes = Base64Url.Decode(value);
+                    bytes = _options.DataProtector.Unprotect(bytes, cookieName);
+                    value = Encoding.UTF8.GetString(bytes);
+
+                    return value;
+                }
+                catch {
+                    IssueLastUsernameCookie(null);
+                }
+            }
+            return null;
+        }
     }
 }

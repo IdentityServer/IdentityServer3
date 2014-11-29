@@ -69,6 +69,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <c>true</c> if sign-out prompt is disabled; otherwise, <c>false</c>.
         /// </value>
         public bool DisableSignOutPrompt { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the last username will be remembered; otherwise, <c>false</c>.
+        /// </value>
+        public bool RememberLastUsername { get; set; }
 
         /// <summary>
         /// Allows configuring additional identity providers
