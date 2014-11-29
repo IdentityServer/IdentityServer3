@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public string GetCookieName(string id = null)
         {
-            return String.Format("{0}.{1}.{2}", 
+            return String.Format("{0}{1}.{2}", 
                 options.AuthenticationOptions.CookieOptions.Prefix, 
                 MessageType, 
                 id);
@@ -87,7 +87,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             get
             {
-                return ctx.Request.Environment.GetIdentityServerBasePath();
+                var path = ctx.Request.Environment.GetIdentityServerBasePath();
+                if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+                return path;
             }
         }
         
