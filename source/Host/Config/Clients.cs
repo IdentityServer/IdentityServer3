@@ -89,6 +89,10 @@ namespace Thinktecture.IdentityServer.Host.Config
                         // OWIN middleware client
                         new Uri("http://localhost:2671/"),
                     },
+                    PostLogoutRedirectUris = new List<Uri>
+                    {
+                        new Uri("http://localhost:23453/index.html"),
+                    },
                     
                     IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     AccessTokenType = AccessTokenType.Jwt,
