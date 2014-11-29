@@ -240,10 +240,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             message = message ?? new SignInMessage();
 
             var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null).AddQueryString(parameters.ToQueryString());
-            var requestUri = !string.IsNullOrWhiteSpace(_options.PublicHostName)
-                ? new Uri(_options.PublicHostName)
-                : Request.RequestUri;
-            var url = new Uri(requestUri, path);
+            var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost()); 
+            var url = new Uri(host, path);
             message.ReturnUrl = url.AbsoluteUri;
             
             return new LoginResult(message, Request.GetOwinContext().Environment, _options);

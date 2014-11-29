@@ -565,13 +565,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (authResult.IsPartialSignIn)
             {
-                var url = authResult.PartialSignInRedirectPath;
-                if (url.StartsWith("~/"))
+                var path = authResult.PartialSignInRedirectPath;
+                if (path.StartsWith("~/"))
                 {
-                    url = url.Substring(2);
-                    url = Request.GetIdentityServerBaseUrl() + url;
+                    path = path.Substring(2);
+                    path = Request.GetIdentityServerBaseUrl() + path;
                 }
-                return new Uri(Request.RequestUri, url);
+                var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
+                return new Uri(host, path);
             }
             else
             {
