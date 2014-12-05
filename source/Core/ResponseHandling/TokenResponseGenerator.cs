@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             Logger.Info("Processing refresh token request");
 
             var oldAccessToken = request.RefreshToken.AccessToken;
-            oldAccessToken.CreationTime = DateTime.UtcNow;
+            oldAccessToken.CreationTime = DateTimeOffset.UtcNow;
             oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
 
             var newAccessToken = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);

@@ -19,18 +19,18 @@ using System.Diagnostics;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class DateTimeExtensions
+    public static class DateTimeOffsetExtensions
     {
         [DebuggerStepThrough]
-        public static bool HasExceeded(this DateTime creationTime, int seconds)
+        public static bool HasExceeded(this DateTimeOffset creationTime, int seconds)
         {
-            return (DateTime.UtcNow > creationTime.AddSeconds(seconds));
+            return (DateTimeOffset.UtcNow > creationTime.AddSeconds(seconds));
         }
 
         [DebuggerStepThrough]
-        public static int GetLifetimeInSeconds(this DateTime creationTime)
+        public static int GetLifetimeInSeconds(this DateTimeOffset creationTime)
         {
-            return ((int)(DateTime.UtcNow- creationTime).TotalSeconds);
+            return ((int)(DateTimeOffset.UtcNow - creationTime).TotalSeconds);
         }
     }
 }
