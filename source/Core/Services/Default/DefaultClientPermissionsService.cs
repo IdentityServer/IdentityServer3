@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 var client = await clientStore.FindClientByIdAsync(consent.ClientId);
                 if (client != null)
                 {
-                    var scopes = await scopeStore.GetScopesAsync();
+                    var scopes = await scopeStore.GetScopesAsync(consent.Scopes);
                     var identityScopes = scopes.Where(x=>x.Type == ScopeType.Identity && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
                     var resourceScopes = scopes.Where(x=>x.Type == ScopeType.Resource && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
 
