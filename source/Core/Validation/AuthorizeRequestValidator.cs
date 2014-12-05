@@ -37,6 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;
+        private readonly ScopeValidator _scopeValidator;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -46,13 +47,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, IOwinContext context)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, IOwinContext context)
         {
             _options = options;
-            _scopes = scopes;
             _clients = clients;
             _customValidator = customValidator;
             _uriValidator = uriValidator;
+            _scopeValidator = scopeValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest
             {
@@ -366,22 +367,21 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            var scopeValidator = new ScopeValidator();
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, await _scopes.GetScopesAsync()))
+            if (await _scopeValidator.AreScopesValidAsync(_validatedRequest.RequestedScopes) == false)
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
+            if (_scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
             {
                 Logger.Error("Identity related scope requests, but no openid scope");
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsResourceScopes)
+            if (_scopeValidator.ContainsResourceScopes)
             {
                 _validatedRequest.IsResourceRequest = true;
             }
@@ -389,17 +389,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check scopes and scope restrictions
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
+            if (!_scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
             {
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            _validatedRequest.ValidatedScopes = scopeValidator;
+            _validatedRequest.ValidatedScopes = _scopeValidator;
 
             //////////////////////////////////////////////////////////
             // check id vs resource scopes and response types plausability
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
+            if (!_scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }

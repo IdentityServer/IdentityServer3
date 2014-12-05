@@ -29,6 +29,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Gets all scopes.
         /// </summary>
         /// <returns>List of scopes</returns>
-        Task<IEnumerable<Scope>> GetScopesAsync();
+        Task<IEnumerable<Scope>> GetScopesAsync(IEnumerable<string> scopeNames = null);
     }
 }
