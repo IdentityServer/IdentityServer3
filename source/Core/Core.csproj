@@ -278,7 +278,7 @@
     <Compile Include="Validation\TokenValidator.cs" />
     <Compile Include="Validation\ValidatedUserInfoRequest.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\DateTimeOffsetExtensions.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Extensions\IDataProtectorExtensions.cs" />
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />

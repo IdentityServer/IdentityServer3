@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var refreshToken = new RefreshToken
             {
                 ClientId = client.ClientId,
-                CreationTime = DateTime.UtcNow,
+                CreationTime = DateTimeOffset.UtcNow,
                 LifeTime = lifetime,
                 AccessToken = accessToken
             };

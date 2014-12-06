@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 {
     public class AuthorizationCode : ITokenMetadata
     {
-        public DateTime CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
 
         public Client Client { get; set; }
         public ClaimsPrincipal Subject { get; set; }
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public AuthorizationCode()
         {
-            CreationTime = DateTime.UtcNow;
+            CreationTime = DateTimeOffset.UtcNow;
         }
 
         public string SubjectId
