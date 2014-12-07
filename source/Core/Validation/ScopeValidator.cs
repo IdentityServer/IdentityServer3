@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<bool> AreScopesValidAsync(IEnumerable<string> requestedScopes)
         {
-            var availableScopes = await  _store.GetScopesAsync(requestedScopes);
+            var availableScopes = await  _store.FindScopesAsync(requestedScopes);
 
             foreach (var requestedScope in requestedScopes)
             {

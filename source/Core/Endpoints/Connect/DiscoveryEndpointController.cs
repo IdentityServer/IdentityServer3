@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var baseUrl = Request.GetIdentityServerBaseUrl();
-            var scopes = await _scopes.GetScopesAsync();
+            var scopes = await _scopes.GetScopesAsync(publicOnly: true);
 
             var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
             if (this._options.AuthenticationOptions.EnableLocalLogin == false)

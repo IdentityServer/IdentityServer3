@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var consents = await this.permissionsStore.LoadAllAsync(subject);
 
             var scopesNeeded = consents.Select(x => x.Scopes).SelectMany(x=>x).Distinct();
-            var scopes = await scopeStore.GetScopesAsync(scopesNeeded);
+            var scopes = await scopeStore.FindScopesAsync(scopesNeeded);
             
             var list = new List<ClientPermission>();
             foreach(var consent in consents)
