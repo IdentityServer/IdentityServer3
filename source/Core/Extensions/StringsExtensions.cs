@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static Stream ToStream(this string s)
         {
-            if (s == null) throw new ArgumentNullException("string");
+            if (s == null) throw new ArgumentNullException("s");
 
             var ms = new MemoryStream();
             var sw = new StreamWriter(ms);

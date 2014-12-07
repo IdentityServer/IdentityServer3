@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.Owin;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -36,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var evt = new LocalAuthenticationEvent()
             {
                 Id = EventConstants.Ids.SuccessfulLocalLogin,
-                EventType = Events.EventType.Success,
+                EventType = EventType.Success,
                 Message = Resources.Events.LocalLoginSuccess,
                 SubjectId = authResult.User.GetSubjectId(),
                 SignInMessage = signInMessage,

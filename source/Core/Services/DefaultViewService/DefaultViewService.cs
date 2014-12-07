@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return Render(model, "logout");
         }
 
-        public virtual Task<System.IO.Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model)
+        public virtual Task<Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model)
         {
             return Render(model, "loggedOut");
         }
@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return Render(model, "permissions");
         }
 
-        public virtual Task<System.IO.Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
+        public virtual Task<Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
         {
             return Render(model, "error");
         }

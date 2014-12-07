@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using Thinktecture.IdentityServer.Core.Events;
 /*
  * Copyright 2014 Dominick Baier, Brock Allen
@@ -29,7 +30,6 @@ using Thinktecture.IdentityServer.Core.Events;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {

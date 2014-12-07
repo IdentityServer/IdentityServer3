@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomTokenValidator _customValidator;
         private readonly IClientStore _clients;
 
-        public TokenValidator(IdentityServerOptions options, IUserService users, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
+        public TokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
             _options = options;
             _clients = clients;

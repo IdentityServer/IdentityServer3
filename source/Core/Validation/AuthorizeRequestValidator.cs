@@ -33,7 +33,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
         private readonly IdentityServerOptions _options;
-        private readonly IScopeStore _scopes;
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;

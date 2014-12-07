@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IRedirectUriValidator uriValidator, IClientStore clients)
+        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IRedirectUriValidator uriValidator)
         {
             _tokenValidator = tokenValidator;
             _uriValidator = uriValidator;

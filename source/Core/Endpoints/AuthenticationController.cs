@@ -801,7 +801,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private IHttpActionResult RenderErrorPage(string message = null)
         {
-            message = message ?? Resources.Messages.UnexpectedError;
+            message = message ?? Messages.UnexpectedError;
             var errorModel = new ErrorViewModel
             {
                 SiteName = this._options.SiteName,
