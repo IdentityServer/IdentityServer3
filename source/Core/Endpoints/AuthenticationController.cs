@@ -520,7 +520,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // we need a random ID to resume, and this will be the query string
                 // to match a claim added. the claim added will be the original 
                 // signIn ID. 
-                var resumeId = Guid.NewGuid().ToString("N");
+                var resumeId = CryptoRandom.CreateUniqueId(); 
 
                 var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);

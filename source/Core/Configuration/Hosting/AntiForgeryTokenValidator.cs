@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 }
             }
 
-            var bytes = Guid.NewGuid().ToByteArray();
+            var bytes = CryptoRandom.CreateRandomKey(16);
             var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
             

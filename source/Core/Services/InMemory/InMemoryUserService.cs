@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -83,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 
                 user = new InMemoryUser
                 {
-                    Subject = Guid.NewGuid().ToString("N"),
+                    Subject = CryptoRandom.CreateUniqueId(),
                     Provider = externalUser.Provider,
                     ProviderId = externalUser.ProviderId,
                     Username = name.Value,

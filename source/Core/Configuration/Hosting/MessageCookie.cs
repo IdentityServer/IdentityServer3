@@ -18,6 +18,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -131,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            var id = Guid.NewGuid().ToString("N");
+            var id = CryptoRandom.CreateUniqueId();
             var name = GetCookieName(id);
             var data = Protect(message);
 

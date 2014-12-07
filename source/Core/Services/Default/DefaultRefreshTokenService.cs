@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -70,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 lifetime = client.SlidingRefreshTokenLifetime;
             }
 
-            var handle = Guid.NewGuid().ToString("N");
+            var handle = CryptoRandom.CreateUniqueId();
             var refreshToken = new RefreshToken
             {
                 ClientId = client.ClientId,
@@ -134,7 +135,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 await _store.RemoveAsync(handle);
 
                 // create new one
-                string newHandle = Guid.NewGuid().ToString("N");
+                string newHandle = CryptoRandom.CreateUniqueId();
                 await _store.StoreAsync(newHandle, refreshToken);
 
                 Logger.Debug("Updated refresh token in store");
