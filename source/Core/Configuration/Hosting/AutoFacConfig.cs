@@ -241,6 +241,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.RegisterType<DefaultViewService>().As<IViewService>();
             }
 
+            // hosting services
+            builder.RegisterType<OwinEnvironmentService>();
+
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();

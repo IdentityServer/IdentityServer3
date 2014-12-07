@@ -134,6 +134,7 @@
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
+    <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageValidator.cs" />
