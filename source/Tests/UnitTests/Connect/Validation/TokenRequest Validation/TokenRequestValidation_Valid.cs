@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var code = new AuthorizationCode
             {
                 Client = client,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {
                     new Scope
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var code = new AuthorizationCode
             {
                 Client = client,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {
                     new Scope

@@ -34,9 +34,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         Flow = Flows.AuthorizationCode,
                         RequireConsent = false,
                     
-                        RedirectUris = new List<Uri>
+                        RedirectUris = new List<string>
                         {
-                            new Uri("https://server/cb"),
+                            "https://server/cb",
                         },
 
                         AuthorizationCodeLifetime = 60
@@ -50,9 +50,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         Flow = Flows.Implicit,
                         RequireConsent = false,
                     
-                        RedirectUris = new List<Uri>
+                        RedirectUris = new List<string>
                         {
-                            new Uri("oob://implicit/cb")
+                            "oob://implicit/cb"
                         },
                     },
                     new Client
@@ -69,9 +69,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                             "openid"
                         },
                     
-                        RedirectUris = new List<Uri>
+                        RedirectUris = new List<string>
                         {
-                            new Uri("https://server/cb"),
+                            "https://server/cb",
                         },
                     },
                     new Client

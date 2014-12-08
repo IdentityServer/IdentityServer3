@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Results
         HttpResponseMessage Execute()
         {
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Redirect);
-            var url = _response.RedirectUri.AbsoluteUri;
+            var url = _response.RedirectUri;
 
             var query = _response.ToNameValueCollection().ToQueryString();
 

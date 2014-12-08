@@ -86,17 +86,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
                 if (redirectUri.IsPresent())
                 {
-                    Uri uri;
-                    if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
+                    if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(redirectUri, _validatedRequest.Client) == true)
                     {
-                        if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(uri, _validatedRequest.Client) == true)
-                        {
-                            _validatedRequest.PostLogOutUri = uri;
-                        }
-                        else
-                        {
-                            return Invalid();
-                        }
+                        _validatedRequest.PostLogOutUri = redirectUri;
+                    }
+                    else
+                    {
+                        return Invalid();
                     }
 
                     var state = parameters.Get(Constants.EndSessionRequest.State);

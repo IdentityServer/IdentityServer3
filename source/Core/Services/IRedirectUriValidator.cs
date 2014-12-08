@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IRedirectUriValidator
     {
-        Task<bool> IsRedirecUriValidAsync(Uri requestedUri, Client client);
-        Task<bool> IsPostLogoutRedirecUriValidAsync(Uri requestedUri, Client client);
+        Task<bool> IsRedirecUriValidAsync(string requestedUri, Client client);
+        Task<bool> IsPostLogoutRedirecUriValidAsync(string requestedUri, Client client);
     }
 }

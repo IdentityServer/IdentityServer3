@@ -22,14 +22,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultRedirectUriValidator : IRedirectUriValidator
     {
-        public Task<bool> IsRedirecUriValidAsync(Uri requestedUri, Client client)
+        public Task<bool> IsRedirecUriValidAsync(string requestedUri, Client client)
         {
             var result = client.RedirectUris.Contains(requestedUri);
 
             return Task.FromResult(result);
         }
 
-        public Task<bool> IsPostLogoutRedirecUriValidAsync(Uri requestedUri, Client client)
+        public Task<bool> IsPostLogoutRedirecUriValidAsync(string requestedUri, Client client)
         {
             var result = client.PostLogoutRedirectUris.Contains(requestedUri);
 

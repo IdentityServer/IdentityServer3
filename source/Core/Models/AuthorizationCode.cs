@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     
         public bool IsOpenId { get; set; }
         public IEnumerable<Scope> RequestedScopes { get; set; }
-        public Uri RedirectUri { get; set; }
+        public string RedirectUri { get; set; }
         public string Nonce { get; set; }
 
         public bool WasConsentShown { get; set; }

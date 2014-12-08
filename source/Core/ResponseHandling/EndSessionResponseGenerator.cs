@@ -32,13 +32,13 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
                 if (request.PostLogOutUri != null)
                 {
-                    message.ReturnUrl = request.PostLogOutUri.AbsoluteUri;
+                    message.ReturnUrl = request.PostLogOutUri;
                 }
                 else
                 {
                     if (request.Client.PostLogoutRedirectUris.Any())
                     {
-                        message.ReturnUrl = request.Client.PostLogoutRedirectUris.First().AbsoluteUri;
+                        message.ReturnUrl = request.Client.PostLogoutRedirectUris.First();
                     }
                 }
 

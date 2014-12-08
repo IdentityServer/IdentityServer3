@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -168,7 +168,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client1,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -198,7 +198,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -227,7 +227,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server1/cb"),
+                RedirectUri = "https://server1/cb",
             };
 
             await store.StoreAsync("valid", code);
@@ -257,7 +257,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
                 CreationTime = DateTime.UtcNow.AddSeconds(-100)
             };
 
@@ -288,7 +288,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             {
                 Client = client,
                 IsOpenId = true,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {
                     new Scope
@@ -338,7 +338,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
             var code = new AuthorizationCode
             {
                 Client = client,
-                RedirectUri = new Uri("https://server/cb"),
+                RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {
                     new Scope
