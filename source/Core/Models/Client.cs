@@ -73,17 +73,17 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies allowed URIs to return tokens or authorization codes to
         /// </summary>
-        public ICollection<string> RedirectUris { get; set; }
+        public List<string> RedirectUris { get; set; }
 
         /// <summary>
         /// Specifies allowed URIs to redirect to after logout
         /// </summary>
-        public ICollection<string> PostLogoutRedirectUris { get; set; }
+        public List<string> PostLogoutRedirectUris { get; set; }
         
         /// <summary>
         /// Specifies the scopes that the client is allowed to request. If empty, the client can request all scopes (defaults to empty)
         /// </summary>
-        public ICollection<string> ScopeRestrictions { get; set; }
+        public List<string> ScopeRestrictions { get; set; }
         
         /// <summary>
         /// Lifetime of identity token in seconds (defaults to 300 seconds / 5 minutes)

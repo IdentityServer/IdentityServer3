@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The protocol logout urls.
         /// </value>
-        public ICollection<string> ProtocolLogoutUrls { get; set; }
+        public List<string> ProtocolLogoutUrls { get; set; }
 
         /// <summary>
         /// Gets or sets the CSP options.

@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Type { get; set; }
         public Client Client { get; set; }
 
-        public ICollection<Claim> Claims { get; set; }
+        public List<Claim> Claims { get; set; }
 
         public Token()
         {
