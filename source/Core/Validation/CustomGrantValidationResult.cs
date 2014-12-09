@@ -15,21 +15,12 @@
  */
 
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Validation
 {
-    /// <summary>
-    /// Handles validation of token requests using custom grant types
-    /// </summary>
-    public interface ICustomGrantValidator
+    public class CustomGrantValidationResult
     {
-        /// <summary>
-        /// Validates the custom grant request.
-        /// </summary>
-        /// <param name="request">The validated token request.</param>
-        /// <returns>A principal</returns>
-        Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request);
+        public ClaimsPrincipal Principal { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

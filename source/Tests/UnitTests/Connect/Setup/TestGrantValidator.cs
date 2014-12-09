@@ -24,14 +24,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     class TestGrantValidator : ICustomGrantValidator
     {
-        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
+        public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
             if (request.GrantType == "customGrant")
             {
-                return Task.FromResult(Principal.Create("CustomGrant", new Claim("sub", "bob")));
+                return Task.FromResult(new CustomGrantValidationResult
+                {
+                    Principal = Principal.Create("CustomGrant", new Claim("sub", "bob"))
+                });
+                    
             };
 
-            return Task.FromResult<ClaimsPrincipal>(null);
+            return Task.FromResult<CustomGrantValidationResult>(null);
         }
     }
 }

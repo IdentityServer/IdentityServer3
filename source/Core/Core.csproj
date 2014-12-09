@@ -166,6 +166,7 @@
     <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="Services\IEventService.cs" />
+    <Compile Include="Validation\CustomGrantValidationResult.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -269,7 +270,7 @@
     <Compile Include="ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Results\UserInfoResult.cs" />
-    <Compile Include="Services\Default\DefaultAssertionGrantValidator.cs" />
+    <Compile Include="Services\Default\DefaultCustomGrantValidator.cs" />
     <Compile Include="Services\Default\DefaultCustomRequestValidator.cs" />
     <Compile Include="Services\Default\DefaultCustomTokenValidator.cs" />
     <Compile Include="Services\Default\DefaultTokenService.cs" />
