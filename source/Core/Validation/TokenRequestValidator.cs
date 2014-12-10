@@ -415,14 +415,27 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // validate custom grant type
             /////////////////////////////////////////////
-            var principal = await _customGrantValidator.ValidateAsync(_validatedRequest);
-            if (principal == null)
+            var result = await _customGrantValidator.ValidateAsync(_validatedRequest);
+            
+            if (result == null)
             {
                 Logger.Error("Invalid grant.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            _validatedRequest.Subject = principal;
+            if (result.Principal == null)
+            {
+                if (result.ErrorMessage.IsPresent())
+                {
+                    Logger.Error("Invalid custom grant: " + result.ErrorMessage);
+                    return Invalid(result.ErrorMessage);
+                }
+
+                Logger.Error("Invalid grant.");
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
+            _validatedRequest.Subject = result.Principal;
 
             Logger.Info("Successful validation of custom grant request");
             return Valid();

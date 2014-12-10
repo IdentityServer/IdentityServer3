@@ -32,9 +32,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// A principal
         /// </returns>
-        public Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request)
+        public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            return Task.FromResult<ClaimsPrincipal>(null);
+            return Task.FromResult<CustomGrantValidationResult>(null);
         }
     }
 }

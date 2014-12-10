@@ -179,6 +179,7 @@ namespace Thinktecture.IdentityServer.Core
                                 GrantTypes.AuthorizationCode,
                                 GrantTypes.ClientCredentials,
                                 GrantTypes.Password,
+                                GrantTypes.RefreshToken,
                                 GrantTypes.Implicit
                             };
 
