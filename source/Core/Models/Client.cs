@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
         /// </summary>
-        public IEnumerable<string> IdentityProviderRestrictions { get; set; }
+        public List<string> IdentityProviderRestrictions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether JWT access tokens should include an identifier
@@ -167,6 +167,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             ScopeRestrictions = new List<string>();
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
+            IdentityProviderRestrictions = new List<string>();
             
             // 5 minutes
             AuthorizationCodeLifetime = 300;
@@ -187,7 +188,6 @@ namespace Thinktecture.IdentityServer.Core.Models
             IdentityTokenSigningKeyType = SigningKeyTypes.Default;
             AccessTokenType = AccessTokenType.Jwt;
 
-            IdentityProviderRestrictions = Enumerable.Empty<string>();
             AllowLocalLogin = true;
         }
     }
