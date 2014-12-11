@@ -41,12 +41,12 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             _users.AddRange(users);
         }
 
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message, IDictionary<string, object> env)
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message, IDictionary<string, object> env)
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
             var query =
                 from u in _users
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<AuthenticateResult>(null);
         }
 
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, IDictionary<string, object> env)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
         {
             var query =
                 from u in _users
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(user.Enabled);
         }
 
-        public virtual Task SignOutAsync(ClaimsPrincipal subject, IDictionary<string, object> env)
+        public virtual Task SignOutAsync(ClaimsPrincipal subject)
         {
             return Task.FromResult(0);
         }
