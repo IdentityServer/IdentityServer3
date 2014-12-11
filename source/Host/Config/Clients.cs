@@ -30,6 +30,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                 {
                     ClientName = "Code Flow Client Demo",
                     Enabled = true,
+
                     ClientId = "codeclient",
                     ClientSecret = "secret",
                     Flow = Flows.AuthorizationCode,
@@ -42,25 +43,27 @@ namespace Thinktecture.IdentityServer.Host.Config
                     
                     RedirectUris = new List<string>
                     {
-                        // MVC code client with module
-                        "https://localhost:44320/oidccallback",
-                        
                         // MVC code client manual
                         "https://localhost:44312/callback",
                     },
+
+                    ScopeRestrictions = new List<string>
+                    {
+                        "openid",
+                        "profile",
+                        "email",
+                        "read",
+                        "write"
+                    },
                     
-                    IdentityTokenSigningKeyType = SigningKeyTypes.Default,
                     AccessTokenType = AccessTokenType.Reference,
-                    
-                    IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 3600,
-                    AuthorizationCodeLifetime = 120
                 },
 
                 new Client
                 {
                     ClientName = "Implicit Client Demo",
                     Enabled = true,
+
                     ClientId = "implicitclient",
                     ClientSecret = "secret",
                     Flow = Flows.Implicit,
@@ -89,13 +92,11 @@ namespace Thinktecture.IdentityServer.Host.Config
                         // OWIN middleware client
                         "http://localhost:2671/",
                     },
+
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:23453/index.html",
                     },
-                    
-                    IdentityTokenSigningKeyType = SigningKeyTypes.Default,
-                    AccessTokenType = AccessTokenType.Jwt,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 3600
@@ -103,7 +104,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                 new Client
                 {
-                    ClientName = "Hybrid Client Demo",
+                    ClientName = "Hybrid Native Client Demo",
                     Enabled = true,
                     ClientId = "hybridclient",
                     ClientSecret = "secret",
@@ -117,10 +118,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                     
                     RedirectUris = new List<string>
                     {
-                        // OWIN middleware client
-                        "http://localhost:2672/",
-
-                        // WPF client
                         "oob://localhost/wpfclient"
                     }
                 },
@@ -143,6 +140,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         "http://localhost:2672/",
                     },
+
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:2672/"
@@ -166,6 +164,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 3600,
                 },
+
                 new Client
                 {
                     ClientName = "Resource Owner Flow Client",
