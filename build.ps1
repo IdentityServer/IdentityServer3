@@ -5,7 +5,7 @@ Param(
 
 if(Test-Path Env:\APPVEYOR_BUILD_NUMBER) {
 	$d = Get-Date
-	$preRelease = "pre-" + $d.Year.ToString() + $d.Month.ToString() + $d.Day.ToString() + "-" + [int]$Env:APPVEYOR_BUILD_NUMBER
+	$preRelease = "pre-" + [int]$Env:APPVEYOR_BUILD_NUMBER
 	Write-Host "Using APPVEYOR_BUILD_NUMBER"
 }
 
