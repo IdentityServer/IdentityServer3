@@ -49,12 +49,12 @@ The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v
 * support for WS-Federation
 
 ## Related repositories ##
-* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
+* [Access Token Validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
+* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
 * [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
 * [ASP.Net Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
-* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
 * [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
-
+* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
@@ -64,5 +64,6 @@ IdentityServer is built using the following great open source projects:
 - [Json.Net](http://james.newtonking.com/json)
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
+- [Web Protection Library](https://wpl.codeplex.com/)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
