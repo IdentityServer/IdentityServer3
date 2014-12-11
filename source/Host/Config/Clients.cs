@@ -79,6 +79,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         // OAuthJS client
                         "http://localhost:23453/callback.html",
                         "http://localhost:23453/frame.html",
+                        "http://localhost:23453/modal.html",
 
                         // WPF client
                         "oob://localhost/wpfclient",
