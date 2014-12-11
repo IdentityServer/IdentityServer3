@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Results
     class LogoutActionResult : HtmlStreamActionResult
     {
         public LogoutActionResult(IViewService viewSvc, IDictionary<string, object> env, LogoutViewModel model)
-            : base(async () => await viewSvc.Logout(env, model))
+            : base(async () => await viewSvc.Logout(model))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
             if (env == null) throw new ArgumentNullException("env");
