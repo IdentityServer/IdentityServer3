@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
-            var authResult = await _userService.PreAuthenticateAsync(signInMessage, Request.GetOwinEnvironment());
+            var authResult = await _userService.PreAuthenticateAsync(signInMessage);
             if (authResult != null)
             {
                 if (authResult.IsError)
@@ -168,7 +168,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
-            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage, Request.GetOwinEnvironment());
+            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
@@ -271,7 +271,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
 
-            var authResult = await _userService.AuthenticateExternalAsync(externalIdentity, Request.GetOwinEnvironment());
+            var authResult = await _userService.AuthenticateExternalAsync(externalIdentity);
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
@@ -351,7 +351,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     Claims = user.Claims
                 };
 
-                result = await _userService.AuthenticateExternalAsync(externalId, Request.GetOwinEnvironment());
+                result = await _userService.AuthenticateExternalAsync(externalId);
 
                 if (result == null)
                 {
@@ -400,7 +400,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var user = (ClaimsPrincipal)User;
             if (user != null)
             {
-                await this._userService.SignOutAsync(user, Request.GetOwinEnvironment());
+                await this._userService.SignOutAsync(user);
             }
 
             return await RenderLoggedOutPage(id);
