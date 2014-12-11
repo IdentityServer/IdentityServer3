@@ -833,6 +833,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
                 var path = ctx.Request.Environment.GetIdentityServerBasePath();
                 if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+                if (String.IsNullOrWhiteSpace(path)) path = "/";
 
                 var options = new Microsoft.Owin.CookieOptions
                 {

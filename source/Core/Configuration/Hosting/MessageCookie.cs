@@ -90,6 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             {
                 var path = ctx.Request.Environment.GetIdentityServerBasePath();
                 if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+                if (String.IsNullOrWhiteSpace(path)) path = "/";
                 return path;
             }
         }

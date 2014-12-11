@@ -89,6 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
             var path = ctx.Request.Environment.GetIdentityServerBasePath();
             if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+            if (String.IsNullOrWhiteSpace(path)) path = "/";
             ctx.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
             {
                 HttpOnly = true,
