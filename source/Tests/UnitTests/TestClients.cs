@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "no_external_idps",
                     ClientSecret = "secret",
                     Flow = Flows.AuthorizationCode,
-                    IdentityProviderRestrictions = new string[]{"NotGoogle"},
+                    IdentityProviderRestrictions = new List<string>{"NotGoogle"},
                     
                     RequireConsent = true,
                     AllowRememberConsent = true,
@@ -195,7 +195,7 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "any_external_idps",
                     ClientSecret = "secret",
                     Flow = Flows.AuthorizationCode,
-                    IdentityProviderRestrictions = new string[]{},
+                    IdentityProviderRestrictions = new List<string> {},
                     
                     RequireConsent = true,
                     AllowRememberConsent = true,

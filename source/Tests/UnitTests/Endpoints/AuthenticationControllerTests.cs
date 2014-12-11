@@ -251,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLoginExternal_ClientDoesNotAllowProvider_ShowsErrorPage()
         {
             var clientApp = clients.First();
-            clientApp.IdentityProviderRestrictions = new string[] { "foo" };
+            clientApp.IdentityProviderRestrictions = new List<string> { "foo" };
             var msg = new SignInMessage();
             msg.IdP = "Google";
             msg.ClientId = clientApp.ClientId;
@@ -265,7 +265,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLoginExternal_ClientDoesAllowsProvider_RedirectsToProvider()
         {
             var clientApp = clients.First();
-            clientApp.IdentityProviderRestrictions = new string[] { "Google" };
+            clientApp.IdentityProviderRestrictions = new List<string> { "Google" };
 
             var msg = new SignInMessage();
             msg.IdP = "Google";
