@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     SiteUrl = env.GetIdentityServerBaseUrl(),
                     ErrorMessage = Resources.Messages.UnexpectedError,
                 };
-                var errorResult = new ErrorActionResult(viewSvc, env, errorModel);
+                var errorResult = new ErrorActionResult(viewSvc, errorModel);
                 actionContext.Response = await errorResult.GetResponseMessage();
             }
         }

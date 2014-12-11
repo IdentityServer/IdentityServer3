@@ -23,11 +23,10 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     class ConsentActionResult : HtmlStreamActionResult
     {
-        public ConsentActionResult(IViewService viewSvc, IDictionary<string, object> env, ConsentViewModel model)
+        public ConsentActionResult(IViewService viewSvc, ConsentViewModel model)
             : base(async () => await viewSvc.Consent(model))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
-            if (env == null) throw new ArgumentNullException("env");
             if (model == null) throw new ArgumentNullException("model");
         }
     }

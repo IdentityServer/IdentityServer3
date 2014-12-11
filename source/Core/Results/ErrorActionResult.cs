@@ -23,11 +23,10 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     class ErrorActionResult : HtmlStreamActionResult
     {
-        public ErrorActionResult(IViewService viewSvc, IDictionary<string, object> env, ErrorViewModel model)
+        public ErrorActionResult(IViewService viewSvc, ErrorViewModel model)
             : base(async () => await viewSvc.Error(model))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
-            if (env == null) throw new ArgumentNullException("env");
             if (model == null) throw new ArgumentNullException("model");
         }
     }

@@ -24,11 +24,10 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     class LoginActionResult : HtmlStreamActionResult
     {
-        public LoginActionResult(IViewService viewSvc, IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
+        public LoginActionResult(IViewService viewSvc, LoginViewModel model, SignInMessage message)
             : base(async () => await viewSvc.Login(model, message))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
-            if (env == null) throw new ArgumentNullException("env");
             if (model == null) throw new ArgumentNullException("model");
             if (message == null) throw new ArgumentNullException("message");
         }

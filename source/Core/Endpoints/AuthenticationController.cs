@@ -655,7 +655,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Username = username
             };
 
-            return new LoginActionResult(_viewService, Request.GetOwinEnvironment(), loginModel, message);
+            return new LoginActionResult(_viewService, loginModel, message);
         }
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
@@ -730,7 +730,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
                 ClientName = clientName
             };
-            return new LogoutActionResult(_viewService, env, logoutModel);
+            return new LogoutActionResult(_viewService, logoutModel);
         }
 
         private async Task<IHttpActionResult> RenderLoggedOutPage(string id)
@@ -761,7 +761,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ClientName = clientName,
                 RedirectUrl = redirectUrl
             };
-            return new LoggedOutActionResult(_viewService, env, loggedOutModel);
+            return new LoggedOutActionResult(_viewService, loggedOutModel);
         }
 
         private void ClearSignOutMessage()
@@ -808,7 +808,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteUrl = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl(),
                 ErrorMessage = message
             };
-            var errorResult = new ErrorActionResult(_viewService, Request.GetOwinContext().Environment, errorModel);
+            var errorResult = new ErrorActionResult(_viewService, errorModel);
             return errorResult;
         }
 
