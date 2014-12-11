@@ -222,7 +222,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 CurrentUser = User.GetName(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
-                ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri.AbsoluteUri : null,
+                ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri : null,
                 IdentityScopes = validatedRequest.GetIdentityScopes(),
                 ResourceScopes = validatedRequest.GetResourceScopes(),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,

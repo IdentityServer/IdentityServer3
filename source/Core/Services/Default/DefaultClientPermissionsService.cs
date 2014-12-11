@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                         ClientId = client.ClientId,
                         ClientName = client.ClientName,
                         ClientUrl = client.ClientUri,
-                        ClientLogoUrl = client.LogoUri.AbsoluteUri,
+                        ClientLogoUrl = client.LogoUri,
                         IdentityPermissions = identityScopes,
                         ResourcePermissions = resourceScopes
                     });

@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public Flows Flow { get; set; }
         
         public Client Client { get; set; }
-        public Uri RedirectUri { get; set; }
+        public string RedirectUri { get; set; }
 
         public string ClientId { get; set; }
         public List<string> RequestedScopes { get; set; }

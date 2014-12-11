@@ -15,6 +15,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -22,18 +24,28 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultRedirectUriValidator : IRedirectUriValidator
     {
-        public Task<bool> IsRedirecUriValidAsync(Uri requestedUri, Client client)
+        bool UriCollectionContainsUri(IEnumerable<string> collection, string requestedUri)
         {
-            var result = client.RedirectUris.Contains(requestedUri);
+            bool result = false;
 
-            return Task.FromResult(result);
+            Uri uri;
+            if (Uri.TryCreate(requestedUri, UriKind.Absolute, out uri))
+            {
+                var uris = collection.Select(x => new Uri(x));
+                result = uris.Contains(uri);
+            }
+
+            return result;
         }
 
-        public Task<bool> IsPostLogoutRedirecUriValidAsync(Uri requestedUri, Client client)
+        public Task<bool> IsRedirecUriValidAsync(string requestedUri, Client client)
         {
-            var result = client.PostLogoutRedirectUris.Contains(requestedUri);
+            return Task.FromResult(UriCollectionContainsUri(client.RedirectUris, requestedUri));
+        }
 
-            return Task.FromResult(result);
+        public Task<bool> IsPostLogoutRedirecUriValidAsync(string requestedUri, Client client)
+        {
+            return Task.FromResult(UriCollectionContainsUri(client.PostLogoutRedirectUris, requestedUri));
         }
     }
 }

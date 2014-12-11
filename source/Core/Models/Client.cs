@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// URI to client logo (used on consent screen)
         /// </summary>
-        public Uri LogoUri { get; set; }
+        public string LogoUri { get; set; }
         
         /// <summary>
         /// Specifies whether a consent screen is required (defaults to false)
@@ -73,12 +73,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies allowed URIs to return tokens or authorization codes to
         /// </summary>
-        public List<Uri> RedirectUris { get; set; }
+        public List<string> RedirectUris { get; set; }
 
         /// <summary>
         /// Specifies allowed URIs to redirect to after logout
         /// </summary>
-        public List<Uri> PostLogoutRedirectUris { get; set; }
+        public List<string> PostLogoutRedirectUris { get; set; }
         
         /// <summary>
         /// Specifies the scopes that the client is allowed to request. If empty, the client can request all scopes (defaults to empty)
@@ -165,8 +165,8 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Flow = Flows.Implicit;
             ScopeRestrictions = new List<string>();
-            RedirectUris = new List<Uri>();
-            PostLogoutRedirectUris = new List<Uri>();
+            RedirectUris = new List<string>();
+            PostLogoutRedirectUris = new List<string>();
             
             // 5 minutes
             AuthorizationCodeLifetime = 300;

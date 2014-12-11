@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             Logger.InfoFormat("redirect_uri: {0}", redirectUri);
-            _validatedRequest.RedirectUri = new Uri(redirectUri);
+            _validatedRequest.RedirectUri = redirectUri;
 
 
             //////////////////////////////////////////////////////////

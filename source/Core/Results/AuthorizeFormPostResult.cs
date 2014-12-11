@@ -41,14 +41,14 @@ namespace Thinktecture.IdentityServer.Core.Results
             var root = _request.GetIdentityServerBaseUrl();
             if (root.EndsWith("/")) root = root.Substring(0, root.Length - 1);
             var fields = _response.ToNameValueCollection().ToFormPost();
-            var redirect = _response.RedirectUri.AbsoluteUri;
+            var redirect = _response.RedirectUri;
 
             return AssetManager.LoadFormPost(root, redirect, fields);
         }
 
         public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
-            Logger.Info("Posting to " + _response.RedirectUri.AbsoluteUri);
+            Logger.Info("Posting to " + _response.RedirectUri);
             return base.ExecuteAsync(cancellationToken);
         }
     }
