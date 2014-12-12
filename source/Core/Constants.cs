@@ -401,6 +401,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
             public const string Role             = "role";
+            public const string ReferenceTokenId = "reference_token_id";
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";

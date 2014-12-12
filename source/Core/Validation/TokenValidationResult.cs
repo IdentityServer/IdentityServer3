@@ -25,6 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public IEnumerable<Claim> Claims { get; set; }
         public string Jwt { get; set; }
         public Token ReferenceToken { get; set; }
+        public string ReferenceTokenId { get; set; }
         public Client Client { get; set; }
 
         public string Error { get; set; }

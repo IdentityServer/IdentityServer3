@@ -209,7 +209,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return new TokenValidationResult
             {
                 Claims = ReferenceTokenToClaims(token),
-                ReferenceToken = token
+                ReferenceToken = token,
+                ReferenceTokenId = tokenHandle
             };
         }
 
