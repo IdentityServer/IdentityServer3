@@ -409,8 +409,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 Logger.Error("Error in custom validation: " + customResult.Error);
             }
+            else
+            {
+                Logger.Info("Client validation successful");
+            }
 
-            Logger.Info("Client validation successful");
             return customResult;
         }
 
