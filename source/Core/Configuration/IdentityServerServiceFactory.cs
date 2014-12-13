@@ -261,7 +261,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentStore == null) Logger.Warn("ConsentStore not configured - falling back to InMemory");
             if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
-            if (ViewService == null) Logger.Info("ViewService not configured - falling back to EmbeddedAssets");
             if (RedirectUriValidator != null) Logger.Warn("Using custom redirect URI validator - you are running with scissors.");
         }
 
