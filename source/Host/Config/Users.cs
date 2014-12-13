@@ -22,9 +22,9 @@ namespace Thinktecture.IdentityServer.Host.Config
 {
     static class Users
     {
-        public static IEnumerable<InMemoryUser> Get()
+        public static List<InMemoryUser> Get()
         {
-            var users = new InMemoryUser[]
+            var users = new List<InMemoryUser>
             {
                 new InMemoryUser{Subject = "818727", Username = "alice", Password = "alice", 
                     Claims = new Claim[]

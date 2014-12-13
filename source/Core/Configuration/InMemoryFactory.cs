@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public static class InMemoryFactory
     {
         public static IdentityServerServiceFactory Create(
-            IEnumerable<InMemoryUser> users = null,
+            List<InMemoryUser> users = null,
             IEnumerable<Client> clients = null,
             IEnumerable<Scope> scopes = null)
         {
@@ -32,20 +32,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             
             if (users != null)
             {
-                var userService = new InMemoryUserService(users);
-                factory.UserService = Registration.RegisterFactory<IUserService>(() => userService);
+                factory.Register(Registration.RegisterSingleton<List<InMemoryUser>>(users));
+                factory.UserService = Registration.RegisterType<IUserService>(typeof(InMemoryUserService));
             }
 
             if (clients != null)
             {
-                var clientStore = new InMemoryClientStore(clients);
-                factory.ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore);
+                factory.Register(Registration.RegisterSingleton<IEnumerable<Client>>(clients));
+                factory.ClientStore = Registration.RegisterType<IClientStore>(typeof(InMemoryClientStore));
             }
 
             if (scopes != null)
             {
-                var scopeStore = new InMemoryScopeStore(scopes);
-                factory.ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore);
+                factory.Register(Registration.RegisterSingleton<IEnumerable<Scope>>(scopes));
+                factory.ScopeStore = Registration.RegisterType<IScopeStore>(typeof(InMemoryScopeStore));
             }
 
             return factory;
