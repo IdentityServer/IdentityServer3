@@ -22,9 +22,9 @@ namespace Thinktecture.IdentityServer.Tests
 {
     public class TestUsers
     {
-        public static IEnumerable<InMemoryUser> Get()
+        public static List<InMemoryUser> Get()
         {
-            return new InMemoryUser[]
+            return new List<InMemoryUser>
                 {
                     new InMemoryUser{Subject = "818727", Username = "alice", Password = "alice", 
                         Claims = new Claim[]
