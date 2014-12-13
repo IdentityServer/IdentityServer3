@@ -42,32 +42,32 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.config = config;
         }
 
-        public virtual Task<Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message)
+        public virtual Task<Stream> Login(LoginViewModel model, SignInMessage message)
         {
             return Render(model, "login");
         }
 
-        public virtual Task<Stream> Logout(IDictionary<string, object> env, LogoutViewModel model)
+        public virtual Task<Stream> Logout(LogoutViewModel model)
         {
             return Render(model, "logout");
         }
 
-        public virtual Task<Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model)
+        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model)
         {
             return Render(model, "loggedOut");
         }
 
-        public virtual Task<Stream> Consent(IDictionary<string, object> env, ConsentViewModel model)
+        public virtual Task<Stream> Consent(ConsentViewModel model)
         {
             return Render(model, "consent");
         }
 
-        public Task<Stream> ClientPermissions(IDictionary<string, object> env, ClientPermissionsViewModel model)
+        public Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
         {
             return Render(model, "permissions");
         }
 
-        public virtual Task<Stream> Error(IDictionary<string, object> env, ErrorViewModel model)
+        public virtual Task<Stream> Error(ErrorViewModel model)
         {
             return Render(model, "error");
         }

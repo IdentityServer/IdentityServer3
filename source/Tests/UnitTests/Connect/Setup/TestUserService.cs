@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     class TestUserService : IUserService
     {
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message, IDictionary<string, object> env)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
             if (username == password)
             {
@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user, IDictionary<string, object> env)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user)
         {
             throw new NotImplementedException();
         }
@@ -52,12 +52,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             return Task.FromResult(true);
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message, IDictionary<string, object> env)
+        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
             throw new NotImplementedException();
         }
         
-        public Task SignOutAsync(ClaimsPrincipal subject, IDictionary<string, object> env)
+        public Task SignOutAsync(ClaimsPrincipal subject)
         {
             throw new NotImplementedException();
         }

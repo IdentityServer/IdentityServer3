@@ -310,7 +310,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            var authnResult = await _users.AuthenticateLocalAsync(userName, password, null, null);
+            var authnResult = await _users.AuthenticateLocalAsync(userName, password, null);
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 return Invalid(Constants.TokenErrors.InvalidGrant);

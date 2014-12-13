@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Results
     class ClientPermissionsActionResult : HtmlStreamActionResult
     {
         public ClientPermissionsActionResult(IViewService viewSvc, IDictionary<string, object> env, ClientPermissionsViewModel model)
-            : base(async () => await viewSvc.ClientPermissions(env, model))
+            : base(async () => await viewSvc.ClientPermissions(model))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
             if (env == null) throw new ArgumentNullException("env");

@@ -32,20 +32,20 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.inner = inner;
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message, IDictionary<string, object> env)
+        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
-            return inner.PreAuthenticateAsync(message, env);
+            return inner.PreAuthenticateAsync(message);
         }
 
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null, IDictionary<string, object> env = null)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
         {
-            return inner.AuthenticateLocalAsync(username, password, message, env);
+            return inner.AuthenticateLocalAsync(username, password, message);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, IDictionary<string, object> env)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
         {
             externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser, env);
+            return inner.AuthenticateExternalAsync(externalUser);
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
@@ -58,9 +58,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return inner.IsActiveAsync(subject);
         }
 
-        public Task SignOutAsync(ClaimsPrincipal subject, IDictionary<string, object> env)
+        public Task SignOutAsync(ClaimsPrincipal subject)
         {
-            return inner.SignOutAsync(subject, env);
+            return inner.SignOutAsync(subject);
         }
     }
 }

@@ -232,7 +232,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment())
             };
-            return new ConsentActionResult(_viewService, env, consentModel);
+
+            return new ConsentActionResult(_viewService, consentModel);
         }
 
         IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters)
@@ -263,7 +264,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     ErrorMessage = LookupErrorMessage(error)
                 };
 
-                var errorResult = new ErrorActionResult(_viewService, env, errorModel);
+                var errorResult = new ErrorActionResult(_viewService, errorModel);
                 return errorResult;
             }
 
