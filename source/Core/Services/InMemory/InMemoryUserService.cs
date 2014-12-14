@@ -36,9 +36,9 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         /// Initializes a new instance of the <see cref="InMemoryUserService"/> class.
         /// </summary>
         /// <param name="users">The users.</param>
-        public InMemoryUserService(List<InMemoryUser> users)
+        public InMemoryUserService(IEnumerable<InMemoryUser> users)
         {
-            _users = users;
+            _users = users.ToList();
         }
 
         /// <summary>
