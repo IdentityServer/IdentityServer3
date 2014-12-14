@@ -20,8 +20,11 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Host;
 using Thinktecture.IdentityServer.Host.Config;
 
@@ -50,7 +53,7 @@ namespace Thinktecture.IdentityServer.Host
                     var idsrvOptions = new IdentityServerOptions
                     {
                         IssuerUri = "https://idsrv3.com",
-                        SiteName = "Thinktecture IdentityServer v3 - beta 3",
+                        SiteName = "Thinktecture IdentityServer v3",
                         Factory = factory,
                         SigningCertificate = Cert.Load(),
 

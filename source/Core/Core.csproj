@@ -138,7 +138,9 @@
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
+    <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
+    <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />

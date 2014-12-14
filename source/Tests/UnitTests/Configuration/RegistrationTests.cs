@@ -17,6 +17,7 @@
 using FluentAssertions;
 using System;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Services;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
@@ -38,7 +39,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         {
             object theSingleton = new object();
             var reg = Registration.RegisterSingleton(theSingleton);
-            var result = reg.ImplementationFactory();
+            var result = reg.ImplementationFactory(null);
             result.Should().BeSameAs(theSingleton);
         }
 
@@ -55,9 +56,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterFactory_FactoryInvokesFunc()
         {
             var wasCalled = false;
-            Func<object> f = () => { wasCalled = true; return new object(); };
+            Func<IDependencyResolver, object> f = (resolver) => { wasCalled = true; return new object(); };
             var reg = Registration.RegisterFactory(f);
-            var result = reg.ImplementationFactory();
+            var result = reg.ImplementationFactory(null);
             wasCalled.Should().BeTrue();
         }
 

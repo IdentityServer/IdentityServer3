@@ -292,7 +292,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             }
             else if (registration.ImplementationFactory != null)
             {
-                var reg = builder.Register(ctx => registration.ImplementationFactory());
+                var reg = builder.Register(ctx => registration.ImplementationFactory(new AutofacDependencyResolver(ctx)));
                 if (name != null)
                 {
                     reg.Named(name, registration.InterfaceType);

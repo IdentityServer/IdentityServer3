@@ -22,12 +22,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         public DefaultViewServiceRegistration()
         {
-            this.TypeFactory = () => new DefaultViewService();
+            this.TypeFactory = (resolver) => new DefaultViewService();
         }
 
         public DefaultViewServiceRegistration(DefaultViewServiceConfiguration config)
         {
-            this.TypeFactory = () => new DefaultViewService(config);
+            this.TypeFactory = (resolver) => new DefaultViewService(config);
         }
     }
 

@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Microsoft.Owin;
+using Autofac;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class OwinEnvironmentService
+    class AutofacDependencyResolver : IDependencyResolver
     {
-        readonly IOwinContext _context;
-
-        public OwinEnvironmentService(IOwinContext context)
+        IComponentContext ctx;
+        public AutofacDependencyResolver(IComponentContext ctx)
         {
-            _context = context;
+            this.ctx = ctx;
         }
-
-        public IDictionary<string, object> Environment 
-        { 
-            get
-            {
-                return _context.Environment;
-            }
+        
+        public T Resolve<T>()
+        {
+            return ctx.Resolve<T>();
         }
     }
 }
