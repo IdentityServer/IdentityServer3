@@ -7293,6 +7293,9 @@ td.visible-print {
 body {
   margin-top: 65px;
 }
+[ng-cloak] {
+  display: none;
+}
 .error-page .request-id {
   margin-left: 20px;
   font-size: 80%;
