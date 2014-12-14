@@ -24,26 +24,36 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var collection = new NameValueCollection();
 
-            if (response.Code.IsPresent())
+            if (response.IsError)
             {
-                collection.Add("code", response.Code);
+                if (response.Error.IsPresent())
+                {
+                    collection.Add("error", response.Error);
+                }
             }
-
-            if (response.IdentityToken.IsPresent())
+            else
             {
-                collection.Add("id_token", response.IdentityToken);
-            }
+                if (response.Code.IsPresent())
+                {
+                    collection.Add("code", response.Code);
+                }
 
-            if (response.AccessToken.IsPresent())
-            {
-                collection.Add("access_token", response.AccessToken);
-                collection.Add("token_type", "Bearer");
-                collection.Add("expires_in", response.AccessTokenLifetime.ToString());
-            }
+                if (response.IdentityToken.IsPresent())
+                {
+                    collection.Add("id_token", response.IdentityToken);
+                }
 
-            if (response.Scope.IsPresent())
-            {
-                collection.Add("scope", response.Scope);
+                if (response.AccessToken.IsPresent())
+                {
+                    collection.Add("access_token", response.AccessToken);
+                    collection.Add("token_type", "Bearer");
+                    collection.Add("expires_in", response.AccessTokenLifetime.ToString());
+                }
+
+                if (response.Scope.IsPresent())
+                {
+                    collection.Add("scope", response.Scope);
+                }
             }
 
             if (response.State.IsPresent())

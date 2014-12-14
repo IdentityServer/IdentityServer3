@@ -21,12 +21,54 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// This interface connects identity server to your user and profile store
+    /// </summary>
     public interface IUserService
     {
-        Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message);
+        /// <summary>
+        /// This methods gets called before the login page is shown. This allows you to authenticate the user somehow based on data coming from the host (e.g. client certificates or trusted headers)
+        /// </summary>
+        /// <param name="message">The signin message.</param>
+        /// <returns>The authentication result or null to continue the flow</returns>
+        Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message);
+
+        /// <summary>
+        /// This methods gets called for local authentication (whenever the user uses the username and password dialog).
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="message">The signin message.</param>
+        /// <returns>The authentication result</returns>
         Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null);
+
+        /// <summary>
+        /// This method gets called when the user uses an external identity provider to authenticate.
+        /// </summary>
+        /// <param name="externalUser">The external user.</param>
+        /// <returns>The authentication result.</returns>
         Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser);
+
+        /// <summary>
+        /// This method gets called when the user signs out (allows to cleanup resources)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns></returns>
+        Task SignOutAsync(ClaimsPrincipal subject);
+
+        /// <summary>
+        /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="requestedClaimTypes">The requested claim types.</param>
+        /// <returns>Claims</returns>
         Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
+
+        /// <summary>
+        /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>true or false</returns>
         Task<bool> IsActiveAsync(ClaimsPrincipal subject);
     }
 }

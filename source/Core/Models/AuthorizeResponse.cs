@@ -22,12 +22,15 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class AuthorizeResponse
     {
         public ValidatedAuthorizeRequest Request { get; set; }
-        public Uri RedirectUri { get; set; }
+        public string RedirectUri { get; set; }
         public string IdentityToken { get; set; }
         public string AccessToken { get; set; }
         public int AccessTokenLifetime { get; set; }
         public string Code { get; set; }
         public string State { get; set; }
         public string Scope { get; set; }
+
+        public string Error { get; set; }
+        public bool IsError { get; set; }
     }
 }

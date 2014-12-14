@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -29,22 +30,38 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     /// </summary>
     public class InMemoryUserService : IUserService
     {
-        readonly List<InMemoryUser> _users = new List<InMemoryUser>();
+        readonly List<InMemoryUser> _users;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryUserService"/> class.
         /// </summary>
         /// <param name="users">The users.</param>
-        public InMemoryUserService(IEnumerable<InMemoryUser> users)
+        public InMemoryUserService(List<InMemoryUser> users)
         {
-            _users.AddRange(users);
+            _users = users;
         }
 
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(IDictionary<string, object> env, SignInMessage message)
+        /// <summary>
+        /// This methods gets called before the login page is shown. This allows you to authenticate the user somehow based on data coming from the host (e.g. client certificates or trusted headers)
+        /// </summary>
+        /// <param name="message">The signin message.</param>
+        /// <returns>
+        /// The authentication result or null to continue the flow
+        /// </returns>
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
             return Task.FromResult<AuthenticateResult>(null);
         }
 
+        /// <summary>
+        /// This methods gets called for local authentication (whenever the user uses the username and password dialog).
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="message">The signin message.</param>
+        /// <returns>
+        /// The authentication result
+        /// </returns>
         public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
         {
             var query =
@@ -63,6 +80,13 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<AuthenticateResult>(null);
         }
 
+        /// <summary>
+        /// This method gets called when the user uses an external identity provider to authenticate.
+        /// </summary>
+        /// <param name="externalUser">The external user.</param>
+        /// <returns>
+        /// The authentication result.
+        /// </returns>
         public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
         {
             var query =
@@ -83,7 +107,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
 
                 user = new InMemoryUser
                 {
-                    Subject = Guid.NewGuid().ToString("N"),
+                    Subject = CryptoRandom.CreateUniqueId(),
                     Provider = externalUser.Provider,
                     ProviderId = externalUser.ProviderId,
                     Username = name.Value,
@@ -97,17 +121,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(result);
         }
 
-        protected virtual string GetDisplayName(InMemoryUser user)
-        {
-            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
-            if (nameClaim != null)
-            {
-                return nameClaim.Value;
-            }
-
-            return user.Username;
-        }
-
+        /// <summary>
+        /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="requestedClaimTypes">The requested claim types.</param>
+        /// <returns>
+        /// Claims
+        /// </returns>
         public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var query =
@@ -129,6 +150,14 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult<IEnumerable<Claim>>(claims);
         }
 
+        /// <summary>
+        /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>
+        /// true or false
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">subject</exception>
         public virtual Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
             if (subject == null) throw new ArgumentNullException("subject");
@@ -147,6 +176,27 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             }
 
             return Task.FromResult(user.Enabled);
+        }
+
+        /// <summary>
+        /// This method gets called when the user signs out (allows to cleanup resources)
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns></returns>
+        public virtual Task SignOutAsync(ClaimsPrincipal subject)
+        {
+            return Task.FromResult(0);
+        }
+
+        protected virtual string GetDisplayName(InMemoryUser user)
+        {
+            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+            if (nameClaim != null)
+            {
+                return nameClaim.Value;
+            }
+
+            return user.Username;
         }
     }
 }

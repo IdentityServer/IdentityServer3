@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     StandardScopes.OpenId,
                     StandardScopes.Profile,
                     StandardScopes.Email,
+                    StandardScopes.Address,
                     StandardScopes.OfflineAccess,
                     StandardScopes.RolesAlwaysInclude,
                     StandardScopes.AllClaims,

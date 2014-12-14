@@ -179,6 +179,7 @@ namespace Thinktecture.IdentityServer.Core
                                 GrantTypes.AuthorizationCode,
                                 GrantTypes.ClientCredentials,
                                 GrantTypes.Password,
+                                GrantTypes.RefreshToken,
                                 GrantTypes.Implicit
                             };
 
@@ -391,6 +392,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string AccessTokenHash                     = "at_hash";
             public const string AuthorizationCodeHash               = "c_hash";
             public const string Nonce                               = "nonce";
+            public const string JwtId                               = "jti";
 
             // more claims
             public const string ClientId         = "client_id";
@@ -399,6 +401,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
             public const string Role             = "role";
+            public const string ReferenceTokenId = "reference_token_id";
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
@@ -409,6 +412,33 @@ namespace Thinktecture.IdentityServer.Core
             public const string ExternalProviderUserId = "external_provider_user_id";
             public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
+
+        public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]{
+            ClaimTypes.Audience,
+            ClaimTypes.Issuer,
+            ClaimTypes.NotBefore,
+            ClaimTypes.Expiration,
+            ClaimTypes.UpdatedAt,
+            ClaimTypes.IssuedAt,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.AuthenticationContextClassReference,
+            ClaimTypes.AuthenticationTime,
+            ClaimTypes.AuthorizedParty,
+            ClaimTypes.AccessTokenHash,
+            ClaimTypes.AuthorizationCodeHash,
+            ClaimTypes.Nonce,
+            ClaimTypes.JwtId,
+            ClaimTypes.Scope,
+            ClaimTypes.IdentityProvider,
+        };
+
+        public static readonly string[] AuthenticateResultClaimTypes = new string[]{
+            ClaimTypes.Subject,
+            ClaimTypes.Name,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
+        };
 
         public static class AuthenticationMethods
         {
@@ -475,7 +505,8 @@ namespace Thinktecture.IdentityServer.Core
                 Oidc.DiscoveryConfiguration,
                 Oidc.DiscoveryWebKeys,
                 Oidc.Token,
-                Oidc.UserInfo
+                Oidc.UserInfo,
+                Oidc.IdentityTokenValidation
             };
         }
 

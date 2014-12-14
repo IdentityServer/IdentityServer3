@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-using System;
-using System.Diagnostics;
+using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace Thinktecture.IdentityServer.Core.Validation
 {
-    public static class DateTimeExtensions
+    public class CustomGrantValidationResult
     {
-        [DebuggerStepThrough]
-        public static bool HasExceeded(this DateTime creationTime, int seconds)
-        {
-            return (DateTime.UtcNow > creationTime.AddSeconds(seconds));
-        }
-
-        [DebuggerStepThrough]
-        public static int GetLifetimeInSeconds(this DateTime creationTime)
-        {
-            return ((int)(DateTime.UtcNow- creationTime).TotalSeconds);
-        }
+        public ClaimsPrincipal Principal { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

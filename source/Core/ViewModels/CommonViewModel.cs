@@ -20,6 +20,19 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     {
         public string SiteUrl { get; set; }
         public string SiteName { get; set; }
-        public string CurrentUser { get; set; }
+        
+        string _CurrentUser { get; set; }
+        public string CurrentUser
+        {
+            get
+            {
+                return Microsoft.Security.Application.Encoder.JavaScriptEncode(_CurrentUser, false);
+            }
+
+            set
+            {
+                _CurrentUser = value;
+            }
+        }
     }
 }

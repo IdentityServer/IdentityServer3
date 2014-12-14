@@ -15,10 +15,7 @@
  */
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {

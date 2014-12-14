@@ -29,8 +29,8 @@ namespace Thinktecture.IdentityServer.Tests
             
             var fact = new IdentityServerServiceFactory
             {
-                ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopes),
-                ClientStore = Registration.RegisterFactory<IClientStore>(() => clients)
+                ScopeStore = Registration.RegisterFactory<IScopeStore>((resolver) => scopes),
+                ClientStore = Registration.RegisterFactory<IClientStore>((resolver) => clients)
             };
 
             return fact;

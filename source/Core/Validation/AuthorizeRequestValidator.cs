@@ -33,9 +33,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private readonly ValidatedAuthorizeRequest _validatedRequest;
         private readonly IdentityServerOptions _options;
-        private readonly IScopeStore _scopes;
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
+        private readonly IRedirectUriValidator _uriValidator;
+        private readonly ScopeValidator _scopeValidator;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -45,12 +46,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IScopeStore scopes, IClientStore clients, ICustomRequestValidator customValidator, IOwinContext context)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, IOwinContext context)
         {
             _options = options;
-            _scopes = scopes;
             _clients = clients;
             _customValidator = customValidator;
+            _uriValidator = uriValidator;
+            _scopeValidator = scopeValidator;
 
             _validatedRequest = new ValidatedAuthorizeRequest
             {
@@ -106,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             Logger.InfoFormat("redirect_uri: {0}", redirectUri);
-            _validatedRequest.RedirectUri = new Uri(redirectUri);
+            _validatedRequest.RedirectUri = redirectUri;
 
 
             //////////////////////////////////////////////////////////
@@ -147,6 +149,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check response_mode parameter and set response_mode
             //////////////////////////////////////////////////////////
+
+            // set default response mode for flow first
+            _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
+            
+            // check if response_mode parameter is present and valid
             var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
             if (responseMode.IsPresent())
             {
@@ -159,20 +166,29 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     else
                     {
                         Logger.Info("Invalid response_mode for flow: " + responseMode);
-                        return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                        return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                     }
                 }
                 else
                 {
                     Logger.InfoFormat("Unsupported response_mode: {0}", responseMode);
-                    return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                 }
+            }
+
+            //////////////////////////////////////////////////////////
+            // check state
+            //////////////////////////////////////////////////////////
+            var state = parameters.Get(Constants.AuthorizeRequest.State);
+            if (state.IsPresent())
+            {
+                Logger.InfoFormat("State: {0}", state);
+                _validatedRequest.State = state;
             }
             else
             {
-                _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
+                Logger.Info("No state supplied");
             }
-
 
             //////////////////////////////////////////////////////////
             // scope must be present
@@ -206,20 +222,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
             }
 
-
-            //////////////////////////////////////////////////////////
-            // check state
-            //////////////////////////////////////////////////////////
-            var state = parameters.Get(Constants.AuthorizeRequest.State);
-            if (state.IsPresent())
-            {
-                Logger.InfoFormat("State: {0}", state);
-                _validatedRequest.State = state;
-            }
-            else
-            {
-                Logger.Info("No state supplied");
-            }
 
             //////////////////////////////////////////////////////////
             // check nonce
@@ -349,7 +351,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check if redirect_uri is valid
             //////////////////////////////////////////////////////////
-            if (!_validatedRequest.Client.RedirectUris.Contains(_validatedRequest.RedirectUri))
+            if (await _uriValidator.IsRedirecUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
             {
                 Logger.ErrorFormat("Invalid redirect_uri: {0}", _validatedRequest.RedirectUri);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
@@ -364,22 +366,21 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            var scopeValidator = new ScopeValidator();
             //////////////////////////////////////////////////////////
             // check if scopes are valid/supported and check for resource scopes
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesValid(_validatedRequest.RequestedScopes, await _scopes.GetScopesAsync()))
+            if (await _scopeValidator.AreScopesValidAsync(_validatedRequest.RequestedScopes) == false)
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
+            if (_scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
             {
                 Logger.Error("Identity related scope requests, but no openid scope");
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
-            if (scopeValidator.ContainsResourceScopes)
+            if (_scopeValidator.ContainsResourceScopes)
             {
                 _validatedRequest.IsResourceRequest = true;
             }
@@ -387,17 +388,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check scopes and scope restrictions
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
+            if (!_scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
             {
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            _validatedRequest.ValidatedScopes = scopeValidator;
+            _validatedRequest.ValidatedScopes = _scopeValidator;
 
             //////////////////////////////////////////////////////////
             // check id vs resource scopes and response types plausability
             //////////////////////////////////////////////////////////
-            if (!scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
+            if (!_scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
@@ -408,8 +409,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 Logger.Error("Error in custom validation: " + customResult.Error);
             }
+            else
+            {
+                Logger.Info("Client validation successful");
+            }
 
-            Logger.Info("Client validation successful");
             return customResult;
         }
 

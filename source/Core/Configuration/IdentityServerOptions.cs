@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Extensions;
+using Owin;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -42,11 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         }
 
         internal void Validate()
-        {
-            if (IssuerUri.IsMissing())
-            {
-                throw new ArgumentException("IssuerUri Is Missing");
-            }
+        {            
             if (AuthenticationOptions == null)
             {
                 throw new ArgumentException("AuthenticationOptions is missing");
@@ -172,6 +167,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The CSP options.
         /// </value>
         public CspOptions CspOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether web API diagnostics should be enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if web API diagnostics should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableWebApiDiagnostics { get; set; }
 
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {

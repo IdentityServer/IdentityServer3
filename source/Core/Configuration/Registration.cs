@@ -15,6 +15,7 @@
  */
 
 using System;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -31,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             };
         }
 
-        public static Registration<T> RegisterFactory<T>(Func<T> typeFunc)
+        public static Registration<T> RegisterFactory<T>(Func<IDependencyResolver, T> typeFunc)
             where T : class
         {
             if (typeFunc == null) throw new ArgumentNullException("typeFunc");
@@ -46,19 +47,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             where T : class
         {
             if (instance == null) throw new ArgumentNullException("instance");
-            return RegisterFactory<T>(() => instance);
+            return RegisterFactory<T>((resolver) => instance);
         }
 
         public abstract Type InterfaceType { get; }
         public abstract Type ImplementationType { get; }
-        public abstract Func<object> ImplementationFactory { get; }
+        public abstract Func<IDependencyResolver, object> ImplementationFactory { get; }
     }
 
     public class Registration<T> : Registration
         where T : class
     {
         public Type Type { get; set; }
-        public Func<T> TypeFactory { get; set; }
+        public Func<IDependencyResolver, T> TypeFactory { get; set; }
 
         public override Type InterfaceType
         {
@@ -70,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             get { return Type; }
         }
 
-        public override Func<object> ImplementationFactory
+        public override Func<IDependencyResolver, object> ImplementationFactory
         {
             get { return TypeFactory; }
         }

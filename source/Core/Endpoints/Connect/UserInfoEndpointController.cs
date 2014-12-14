@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
@@ -28,6 +27,9 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OpenID Connect userinfo endpoint
+    /// </summary>
     [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
     public class UserInfoEndpointController : ApiController
@@ -39,6 +41,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly BearerTokenUsageValidator _tokenUsageValidator;
         private readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserInfoEndpointController"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="tokenValidator">The token validator.</param>
+        /// <param name="generator">The generator.</param>
+        /// <param name="tokenUsageValidator">The token usage validator.</param>
         public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator, BearerTokenUsageValidator tokenUsageValidator)
         {
             _tokenValidator = tokenValidator;
@@ -47,6 +56,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _tokenUsageValidator = tokenUsageValidator;
         }
 
+        /// <summary>
+        /// Gets the user information.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>userinfo response</returns>
         [Route]
         [HttpGet, HttpPost]
         public async Task<IHttpActionResult> GetUserInfo(HttpRequestMessage request)

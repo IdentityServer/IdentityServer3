@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         protected string Hash(string value)
         {
-            if (String.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("inner");
+            if (String.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("value");
 
             var bytes = Encoding.UTF8.GetBytes(value);
             var hashedBytes = hash.ComputeHash(bytes);

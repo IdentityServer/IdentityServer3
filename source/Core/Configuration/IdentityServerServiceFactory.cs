@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         static IdentityServerServiceFactory()
         {
-            DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>(() =>
+            DefaultClaimsFilter = Registration.RegisterFactory<IExternalClaimsFilter>((resolver) =>
             {
                 var aggregateFilter = new AggregateExternalClaimsFilter(
                     new NormalizingClaimsFilter(),
@@ -243,6 +243,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public Registration<ICustomTokenValidator> CustomTokenValidator { get; set; }
 
+        /// <summary>
+        /// Gets or sets the redirect URI validator.
+        /// </summary>
+        /// <value>
+        /// The redirect URI validator.
+        /// </value>
+        public Registration<IRedirectUriValidator> RedirectUriValidator { get; set; }
+
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");
@@ -253,7 +261,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (TokenHandleStore == null) Logger.Warn("TokenHandleStore not configured - falling back to InMemory");
             if (ConsentStore == null) Logger.Warn("ConsentStore not configured - falling back to InMemory");
             if (RefreshTokenStore == null) Logger.Warn("RefreshTokenStore not configured - falling back to InMemory");
-            if (ViewService == null) Logger.Info("ViewService not configured - falling back to EmbeddedAssets");
+            if (RedirectUriValidator != null) Logger.Warn("Using custom redirect URI validator - you are running with scissors.");
         }
 
         private void LogAndStop(string message)

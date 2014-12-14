@@ -60,7 +60,9 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             foreach (string name in collection)
             {
                 var values = collection.GetValues(name);
-                builder.AppendFormat(inputFieldFormat, name, values.First());
+                var value = values.First();
+                value = Microsoft.Security.Application.Encoder.HtmlEncode(value);
+                builder.AppendFormat(inputFieldFormat, name, value);
             }
 
             return builder.ToString();

@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             AllowedOrigins = new List<string>();
         }
         
-        public ICollection<string> AllowedOrigins { get; private set; }
+        public ICollection<string> AllowedOrigins { get; set; }
         public Func<string, Task<bool>> PolicyCallback { get; set; }
 
         public static readonly CorsPolicy AllowAll = new CorsPolicy

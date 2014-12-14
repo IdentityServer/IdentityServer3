@@ -19,6 +19,9 @@ using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
+using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 {
@@ -74,12 +77,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
                 }
             };
 
+        IScopeStore _store;
+
+        public ScopeValidation()
+        {
+            _store = new InMemoryScopeStore(_allScopes);
+        }
+
         [Fact]
         [Trait("Category", Category)]
         public void Parse_Scopes_with_Empty_Scope_List()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("");
+            var scopes = ScopeValidator.ParseScopesString("");
 
             scopes.Should().BeNull();
         }
@@ -88,8 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void Parse_Scopes_with_Sorting()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("scope3 scope2 scope1");
+            var scopes = ScopeValidator.ParseScopesString("scope3 scope2 scope1");
 
             scopes.Count.Should().Be(3);
 
@@ -102,8 +110,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void Parse_Scopes_with_Extra_Spaces()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("   scope3     scope2     scope1   ");
+            var scopes = ScopeValidator.ParseScopesString("   scope3     scope2     scope1   ");
 
             scopes.Count.Should().Be(3);
 
@@ -116,8 +123,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void Parse_Scopes_with_Duplicate_Scope()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("scope2 scope1 scope2");
+            var scopes = ScopeValidator.ParseScopesString("scope2 scope1 scope2");
 
             scopes.Count.Should().Be(2);
 
@@ -127,36 +133,36 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
         [Fact]
         [Trait("Category", Category)]
-        public void All_Scopes_Valid()
+        public async Task All_Scopes_Valid()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2");
-
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2");
+            
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeTrue();
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public void Invalid_Scope()
+        public async Task Invalid_Scope()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2 unknown");
-
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2 unknown");
+            
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeFalse();
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public void Disabled_Scope()
+        public async Task Disabled_Scope()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2 disabled");
-
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2 disabled");
+            
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeFalse();
         }
@@ -165,9 +171,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Unrestricted_Client()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2");
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2");
 
+            var validator = new ScopeValidator(_store);
             var result = validator.AreScopesAllowed(_unrestrictedClient, scopes);
 
             result.Should().BeTrue();
@@ -177,9 +183,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void All_Scopes_Allowed_For_Restricted_Client()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid resource1");
+            var scopes = ScopeValidator.ParseScopesString("openid resource1");
 
+            var validator = new ScopeValidator(_store);
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
             result.Should().BeTrue();
@@ -189,9 +195,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
         [Trait("Category", Category)]
         public void Restricted_Scopes()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2");
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2");
 
+            var validator = new ScopeValidator(_store);
             var result = validator.AreScopesAllowed(_restrictedClient, scopes);
 
             result.Should().BeFalse();
@@ -199,12 +205,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
         [Fact]
         [Trait("Category", Category)]
-        public void Contains_Resource_and_Identity_Scopes()
+        public async Task Contains_Resource_and_Identity_Scopes()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email resource1 resource2");
-
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var scopes = ScopeValidator.ParseScopesString("openid email resource1 resource2");
+            
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeTrue();
             validator.ContainsOpenIdScopes.Should().BeTrue();
@@ -213,12 +219,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
         [Fact]
         [Trait("Category", Category)]
-        public void Contains_Resource_Scopes_Only()
+        public async Task Contains_Resource_Scopes_Only()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("resource1 resource2");
+            var scopes = ScopeValidator.ParseScopesString("resource1 resource2");
 
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeTrue();
             validator.ContainsOpenIdScopes.Should().BeFalse();
@@ -227,12 +233,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Scopes
 
         [Fact]
         [Trait("Category", Category)]
-        public void Contains_Identity_Scopes_Only()
+        public async Task Contains_Identity_Scopes_Only()
         {
-            var validator = new ScopeValidator();
-            var scopes = validator.ParseScopes("openid email");
-
-            var result = validator.AreScopesValid(scopes, _allScopes);
+            var scopes = ScopeValidator.ParseScopesString("openid email");
+            
+            var validator = new ScopeValidator(_store);
+            var result = await validator.AreScopesValidAsync(scopes);
 
             result.Should().BeTrue();
             validator.ContainsOpenIdScopes.Should().BeTrue();

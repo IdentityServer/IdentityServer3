@@ -28,6 +28,9 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OpenID Connect discovery document endpoint
+    /// </summary>
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -40,6 +43,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _scopes = scopes;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <returns>Discovery document</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
         public async Task<IHttpActionResult> GetConfiguration()
         {
@@ -52,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var baseUrl = Request.GetIdentityServerBaseUrl();
-            var scopes = await _scopes.GetScopesAsync();
+            var scopes = await _scopes.GetScopesAsync(publicOnly: true);
 
             var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
             if (this._options.AuthenticationOptions.EnableLocalLogin == false)
@@ -72,11 +79,15 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
                 grant_types_supported = supportedGrantTypes,
-                subject_types_supported = new string[] { "public" },
-                id_token_signing_alg_values_supported = new string[] { Constants.SigningAlgorithms.RSA_SHA_256 }
+                subject_types_supported = new[] { "public" },
+                id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 }
             });
         }
 
+        /// <summary>
+        /// GET for JWKs
+        /// </summary>
+        /// <returns>JSON Web Key set</returns>
         [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
         public IHttpActionResult GetKeyData()
         {

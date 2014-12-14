@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Logging;
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     public class ErrorViewModel : CommonViewModel
     {
+        public ErrorViewModel()
+        {
+            this.RequestId = ActivityId.GetCurrentId();
+        }
+
         public string ErrorMessage { get; set; }
+        public string RequestId { get; set; }
     }
 }

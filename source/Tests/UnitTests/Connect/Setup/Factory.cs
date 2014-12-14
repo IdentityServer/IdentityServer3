@@ -50,6 +50,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             IUserService userService = null,
             ICustomGrantValidator customGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null,
+            ScopeValidator scopeValidator = null,
             IDictionary<string, object> environment = null)
         {
             if (options == null)
@@ -82,6 +83,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 refreshTokens = new InMemoryRefreshTokenStore();
             }
 
+            if (scopeValidator == null)
+            {
+                scopeValidator = new ScopeValidator(scopes);
+            }
+
             IOwinContext context;
             if (environment == null)
             {
@@ -93,7 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             }
 
 
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator, context);
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator, scopeValidator, context);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeRequestValidator(
@@ -102,6 +108,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             IClientStore clients = null,
             IUserService users = null,
             ICustomRequestValidator customValidator = null,
+            IRedirectUriValidator uriValidator = null,
+            ScopeValidator scopeValidator = null,
             IDictionary<string, object> environment = null)
         {
             if (options == null)
@@ -124,6 +132,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 customValidator = new DefaultCustomRequestValidator();
             }
 
+            if (uriValidator == null)
+            {
+                uriValidator = new DefaultRedirectUriValidator();
+            }
+
+            if (scopeValidator == null)
+            {
+                scopeValidator = new ScopeValidator(scopes);
+            }
+
             IOwinContext context;
             if (environment == null)
             {
@@ -134,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 context = new OwinContext(environment);
             }
 
-            return new AuthorizeRequestValidator(options, scopes, clients, customValidator, context);
+            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, context);
         }
 
         public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null, IUserService users = null)
@@ -148,7 +166,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
             var validator = new TokenValidator(
                 options: TestIdentityServerOptions.Create(),
-                users: users,
                 clients: clients,
                 tokenHandles: tokenStore,
                 customValidator: new DefaultCustomTokenValidator(

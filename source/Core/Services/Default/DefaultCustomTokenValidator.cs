@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Core.Extensions;
+using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -65,9 +67,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                var principal = Principal.Create("tokenvalidator", subClaim);
+                var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (! await _users.IsActiveAsync(principal))
+                if (result.ReferenceTokenId.IsPresent())
+                {
+                    principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
+                }
+
+                if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
@@ -108,9 +115,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                var principal = Principal.Create("tokenvalidator", subClaim);
+                var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (!await _users.IsActiveAsync(principal))
+                if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.ExpiredToken;

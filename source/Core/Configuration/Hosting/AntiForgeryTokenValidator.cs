@@ -64,7 +64,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var options = env.ResolveDependency<IdentityServerOptions>();
 
             var ctx = new OwinContext(env);
-            var cookie = ctx.Request.Cookies[TokenName];
+            var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + TokenName;
+            var cookie = ctx.Request.Cookies[cookieName];
 
             if (cookie != null)
             {
@@ -81,11 +82,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 }
             }
 
-            var bytes = Guid.NewGuid().ToByteArray();
-
+            var bytes = CryptoRandom.CreateRandomKey(16);
             var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
-            ctx.Response.Cookies.Append(TokenName, token);
+            
+            var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
+            var path = ctx.Request.Environment.GetIdentityServerBasePath();
+            if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+            if (String.IsNullOrWhiteSpace(path)) path = "/";
+            ctx.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
+            {
+                HttpOnly = true,
+                Secure = secure,
+                Path = path
+            });
 
             return bytes;
         }

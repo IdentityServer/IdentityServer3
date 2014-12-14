@@ -119,7 +119,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsError_ShowsErrorPage()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
                 .ReturnsAsync(new AuthenticateResult("SomeError"));
 
             var resp = GetLoginPage();
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
 
             var resp = GetLoginPage();
@@ -143,7 +143,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsFullLogin_RedirectsToReturnUrl()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
 
             var resp = GetLoginPage();
@@ -155,8 +155,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             var resp = GetLoginPage();
             resp.AssertCookie(Constants.PartialSignInAuthenticationType);
@@ -166,12 +166,30 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesRedirect()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<IDictionary<string, object>>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             var resp = GetLoginPage();
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.AbsoluteUri.Should().Be(Url("foo"));
+        }
+
+        [Fact]
+        public void GetLogin_PublicHostNameConfigured_PreAuthenticateReturnsParialLogin_IssuesRedirectToCustomHost()
+        {
+            ConfigureIdentityServerOptions = opts =>
+            {
+                opts.PublicHostName = "http://somehost";
+            };
+            Init();
+            
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
+
+            var resp = GetLoginPage();
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.Should().Be("http://somehost/foo");
         }
 
         [Fact]
@@ -233,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLoginExternal_ClientDoesNotAllowProvider_ShowsErrorPage()
         {
             var clientApp = clients.First();
-            clientApp.IdentityProviderRestrictions = new string[] { "foo" };
+            clientApp.IdentityProviderRestrictions = new List<string> { "foo" };
             var msg = new SignInMessage();
             msg.IdP = "Google";
             msg.ClientId = clientApp.ClientId;
@@ -247,7 +265,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void GetLoginExternal_ClientDoesAllowsProvider_RedirectsToProvider()
         {
             var clientApp = clients.First();
-            clientApp.IdentityProviderRestrictions = new string[] { "Google" };
+            clientApp.IdentityProviderRestrictions = new List<string> { "Google" };
 
             var msg = new SignInMessage();
             msg.IdP = "Google";
@@ -336,7 +354,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
@@ -347,7 +365,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesRedirect()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
@@ -406,7 +424,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
             
             options.AuthenticationOptions.CookieOptions.IsPersistent = true;
             GetLoginPage();
@@ -420,7 +438,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
             var resp1 = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
@@ -433,7 +451,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
             var resp1 = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
@@ -448,7 +466,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void ResumeLoginFromRedirect_WithoutPartialCookie_ShowsError()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
-                .Returns(Task.FromResult(new AuthenticateResult("/foo", IdentityServerPrincipal.Create("tempsub", "tempname"))));
+                .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
             var resp1 = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
@@ -464,11 +482,19 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
         
         [Fact]
-        public void Logout_DisableSignOutPrompt_SkipsLogoutPromptPage()
+        public void Logout_EnableSignOutPromptSetToFalse_SkipsLogoutPromptPage()
         {
-            options.AuthenticationOptions.DisableSignOutPrompt = true;
+            options.AuthenticationOptions.EnableSignOutPrompt = false;
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("loggedOut");
+        }
+
+        [Fact]
+        public void PostToLogout_InvokesUserServiceSignOut()
+        {
+            GetLoginPage();
+            var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
+            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()));
         }
 
         [Fact]
@@ -744,11 +770,11 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void Login_InvalidClientId_ShowsErrorPage()
+        public void Login_InvalidClientId_ShowsLoginPage()
         {
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "bad_id" };
             var resp = GetLoginPage(msg);
-            resp.AssertPage("error");
+            resp.AssertPage("login");
         }
 
         [Fact]

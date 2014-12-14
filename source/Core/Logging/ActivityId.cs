@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using System;
+using System.Diagnostics;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Logging
 {
-    public class IgnoreClaimsFilter : IExternalClaimsFilter
+    internal class ActivityId
     {
-        readonly string[] claimTypesToIgnore;
+        internal static string GetCurrentId()
+        {
+            if (Trace.CorrelationManager.ActivityId == Guid.Empty)
+            {
+                Trace.CorrelationManager.ActivityId = Guid.NewGuid();
+            }
 
-        public IgnoreClaimsFilter(params string[] claimTypesToIgnore)
-        {
-            this.claimTypesToIgnore = claimTypesToIgnore;
+            return Trace.CorrelationManager.ActivityId.ToString("N");
         }
-        
-        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
-        {
-            return claims.Where(x => !claimTypesToIgnore.Contains(x.Type));
-        }
+
     }
 }

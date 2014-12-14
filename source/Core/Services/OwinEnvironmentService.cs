@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Microsoft.Owin;
+using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Services
 {
-    public static class EventConstants
+    public class OwinEnvironmentService
     {
-        public static class Categories
-        {
-            public const string Authentication = "Authentication";
-        }
-        
-        public static class Ids
-        {
-            internal const int AuthenticationEventsStart = 1000;
+        readonly IOwinContext _context;
 
-            public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
-            public const int FailedLocalLogin = AuthenticationEventsStart + 1;
-            public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
-            public const int FailedExternalLogin = AuthenticationEventsStart + 3;
+        public OwinEnvironmentService(IOwinContext context)
+        {
+            _context = context;
+        }
+
+        public IDictionary<string, object> Environment 
+        { 
+            get
+            {
+                return _context.Environment;
+            }
         }
     }
 }

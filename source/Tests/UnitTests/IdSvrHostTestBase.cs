@@ -56,6 +56,8 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected List<Client> clients;
 
+        protected Action<IdentityServerOptions> ConfigureIdentityServerOptions;
+
         
         public IdSvrHostTestBase()
         {
@@ -70,8 +72,8 @@ namespace Thinktecture.IdentityServer.Tests
 
             var factory = new IdentityServerServiceFactory
             {
-                ScopeStore = Registration.RegisterFactory<IScopeStore>(() => scopeStore),
-                ClientStore = Registration.RegisterFactory<IClientStore>(() => clientStore)
+                ScopeStore = Registration.RegisterFactory<IScopeStore>((resolver) => scopeStore),
+                ClientStore = Registration.RegisterFactory<IClientStore>((resolver) => clientStore)
             };
 
             server = TestServer.Create(app =>
@@ -80,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;
-                factory.UserService = Registration.RegisterFactory<IUserService>(() => mockUserService.Object);
+                factory.UserService = Registration.RegisterFactory<IUserService>((resolver) => mockUserService.Object);
 
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;
@@ -88,6 +90,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 protector = options.DataProtector;
 
+                if (ConfigureIdentityServerOptions != null) ConfigureIdentityServerOptions(options);
                 app.UseIdentityServer(options);
 
                 ticketFormatter = new TicketDataFormat(

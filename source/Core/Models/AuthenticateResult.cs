@@ -15,6 +15,8 @@
  */
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Extensions;
 
@@ -26,30 +28,78 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string ErrorMessage { get; private set; }
         
         public string PartialSignInRedirectPath { get; private set; }
-        
+
         public AuthenticateResult(string errorMessage)
         {
             if (errorMessage.IsMissing()) throw new ArgumentNullException("errorMessage");
             ErrorMessage = errorMessage;
         }
-
-        public AuthenticateResult(ClaimsPrincipal user)
+        
+        internal AuthenticateResult(ClaimsPrincipal user)
         {
             if (user == null) throw new ArgumentNullException("user");
-            User = IdentityServerPrincipal.CreateFromPrincipal(user,  Constants.PrimaryAuthenticationType);
+
+            this.User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PrimaryAuthenticationType);
         }
 
-        public AuthenticateResult(string redirectPath, ClaimsPrincipal user)
+        void Init(string subject, string name,
+            IEnumerable<Claim> claims = null,
+            string identityProvider = Constants.BuiltInIdentityProvider,
+            string authenticationMethod = null,
+            string authenticationType = Constants.PrimaryAuthenticationType
+        )
+        {
+            if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
+            if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException("name");
+            if (String.IsNullOrWhiteSpace(identityProvider)) throw new ArgumentNullException("identityProvider");
+
+            if (String.IsNullOrWhiteSpace(authenticationMethod))
+            {
+                if (identityProvider == Constants.BuiltInIdentityProvider)
+                {
+                    authenticationMethod = Constants.AuthenticationMethods.Password;
+                }
+                else
+                {
+                    authenticationMethod = Constants.AuthenticationMethods.External;
+                }
+            }
+
+            var user = IdentityServerPrincipal.Create(subject, name, authenticationMethod, identityProvider, authenticationType);
+            if (claims != null && claims.Any())
+            {
+                claims = claims.Where(x => !Constants.ExternalAuthenticationType.Contains(x.Type));
+                claims = claims.Where(x => !Constants.AuthenticateResultClaimTypes.Contains(x.Type));
+                user.Identities.First().AddClaims(claims);
+            }
+
+            this.User = user;
+        }
+
+        public AuthenticateResult(string subject, string name,
+            IEnumerable<Claim> claims = null,
+            string identityProvider = Constants.BuiltInIdentityProvider,
+            string authenticationMethod = null
+        )
+        {
+            Init(subject, name, claims, identityProvider, authenticationMethod);
+        }
+        
+        public AuthenticateResult(string redirectPath, string subject, string name, 
+            IEnumerable<Claim> claims = null,
+            string identityProvider = Constants.BuiltInIdentityProvider,
+            string authenticationMethod = null
+        )
+            : this(subject, name, claims, identityProvider, authenticationMethod)
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
             if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
             {
                 throw new ArgumentException("redirectPath must start with / or ~/");
             }
-            if (user == null) throw new ArgumentNullException("user");
 
+            Init(subject, name, claims, identityProvider, authenticationMethod, Constants.PartialSignInAuthenticationType);
             this.PartialSignInRedirectPath = redirectPath;
-            User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PartialSignInAuthenticationType);
         }
 
         public AuthenticateResult(string redirectPath, ExternalIdentity externalId)

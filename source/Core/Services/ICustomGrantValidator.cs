@@ -30,6 +30,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="request">The validated token request.</param>
         /// <returns>A principal</returns>
-        Task<ClaimsPrincipal> ValidateAsync(ValidatedTokenRequest request);
+        Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request);
     }
 }

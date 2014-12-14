@@ -29,6 +29,13 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Gets all scopes.
         /// </summary>
         /// <returns>List of scopes</returns>
-        Task<IEnumerable<Scope>> GetScopesAsync();
+        Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames);
+
+        /// <summary>
+        /// Gets all defined scopes.
+        /// </summary>
+        /// <param name="publicOnly">if set to <c>true</c> only public scopes are returned.</param>
+        /// <returns></returns>
+        Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true);
     }
 }

@@ -17,15 +17,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class ScopeValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
+        private readonly IScopeStore _store;
 
         public bool ContainsOpenIdScopes { get; private set; }
         public bool ContainsResourceScopes { get; private set; }
@@ -34,10 +38,33 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
 
-        public ScopeValidator()
+        public ScopeValidator(IScopeStore store)
         {
             RequestedScopes = new List<Scope>();
             GrantedScopes = new List<Scope>();
+
+            _store = store;
+        }
+
+        public static List<string> ParseScopesString(string scopes)
+        {
+            if (scopes.IsMissing())
+            {
+                return null;
+            }
+
+            Logger.InfoFormat("scopes: {0}", scopes);
+
+            scopes = scopes.Trim();
+            var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+
+            if (parsedScopes.Count > 0)
+            {
+                parsedScopes.Sort();
+                return parsedScopes;
+            }
+
+            return null;
         }
 
         public void SetConsentedScopes(IEnumerable<string> consentedScopes)
@@ -47,8 +74,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             GrantedScopes.RemoveAll(scope => !scope.Required && !consentedScopes.Contains(scope.Name));
         }
 
-        public bool AreScopesValid(IEnumerable<string> requestedScopes, IEnumerable<Scope> availableScopes)
+        public async Task<bool> AreScopesValidAsync(IEnumerable<string> requestedScopes)
         {
+            var availableScopes = await  _store.FindScopesAsync(requestedScopes);
+
             foreach (var requestedScope in requestedScopes)
             {
                 var scopeDetail = availableScopes.FirstOrDefault(s => s.Name == requestedScope);
@@ -85,27 +114,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
             RequestedScopes.AddRange(GrantedScopes);
 
             return true;
-        }
-
-        public List<string> ParseScopes(string scopes)
-        {
-            if (scopes.IsMissing())
-            {
-                return null;
-            }
-
-            Logger.InfoFormat("scopes: {0}", scopes);
-
-            scopes = scopes.Trim();
-            var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-
-            if (parsedScopes.Count > 0)
-            {
-                parsedScopes.Sort();
-                return parsedScopes;
-            }
-
-            return null;
         }
 
         public bool AreScopesAllowed(Client client, IEnumerable<string> requestedScopes)

@@ -29,6 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         private readonly ValidatedEndSessionRequest _validatedRequest;
         private readonly TokenValidator _tokenValidator;
+        private readonly IRedirectUriValidator _uriValidator;
 
         public ValidatedEndSessionRequest ValidatedRequest
         {
@@ -38,9 +39,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IClientStore clients)
+        public EndSessionRequestValidator(IdentityServerOptions options, IOwinContext context, TokenValidator tokenValidator, IRedirectUriValidator uriValidator)
         {
             _tokenValidator = tokenValidator;
+            _uriValidator = uriValidator;
 
             _validatedRequest = new ValidatedEndSessionRequest
             {
@@ -84,17 +86,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
                 if (redirectUri.IsPresent())
                 {
-                    Uri uri;
-                    if (Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
+                    if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(redirectUri, _validatedRequest.Client) == true)
                     {
-                        if (_validatedRequest.Client.PostLogoutRedirectUris.Contains(uri))
-                        {
-                            _validatedRequest.PostLogOutUri = uri;
-                        }
-                        else
-                        {
-                            return Invalid();
-                        }
+                        _validatedRequest.PostLogOutUri = redirectUri;
+                    }
+                    else
+                    {
+                        return Invalid();
                     }
 
                     var state = parameters.Get(Constants.EndSessionRequest.State);

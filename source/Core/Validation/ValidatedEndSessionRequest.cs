@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
     public class ValidatedEndSessionRequest : ValidatedRequest
     {
         public Client Client { get; set; }
-        public Uri PostLogOutUri { get; set; }
+        public string PostLogOutUri { get; set; }
         public string State { get; set; }
     }
 }

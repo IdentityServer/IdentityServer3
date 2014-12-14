@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
-{
-    public static class EventConstants
-    {
-        public static class Categories
-        {
-            public const string Authentication = "Authentication";
-        }
-        
-        public static class Ids
-        {
-            internal const int AuthenticationEventsStart = 1000;
+using System;
+using System.Diagnostics;
 
-            public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
-            public const int FailedLocalLogin = AuthenticationEventsStart + 1;
-            public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
-            public const int FailedExternalLogin = AuthenticationEventsStart + 3;
+namespace Thinktecture.IdentityServer.Core.Extensions
+{
+    public static class DateTimeOffsetExtensions
+    {
+        [DebuggerStepThrough]
+        public static bool HasExceeded(this DateTimeOffset creationTime, int seconds)
+        {
+            return (DateTimeOffset.UtcNow > creationTime.AddSeconds(seconds));
+        }
+
+        [DebuggerStepThrough]
+        public static int GetLifetimeInSeconds(this DateTimeOffset creationTime)
+        {
+            return ((int)(DateTimeOffset.UtcNow - creationTime).TotalSeconds);
         }
     }
 }

@@ -21,8 +21,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
@@ -88,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
-            var authResult = await _userService.PreAuthenticateAsync(Request.GetOwinEnvironment(), signInMessage);
+            var authResult = await _userService.PreAuthenticateAsync(signInMessage);
             if (authResult != null)
             {
                 if (authResult.IsError)
@@ -180,6 +182,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             RaiseLocalLoginSuccessEvent(model.Username, signInMessage, authResult);
+
+            IssueLastUsernameCookie(model.Username);
 
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
@@ -372,7 +376,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            if (!this._options.AuthenticationOptions.DisableSignOutPrompt)
+            if (this._options.AuthenticationOptions.EnableSignOutPrompt)
             {
                 return await RenderLogoutPromptPage(id);
             }
@@ -392,6 +396,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             ClearAuthenticationCookies();
             ClearSignInCookies();
             await SignOutOfExternalIdP();
+
+            var user = (ClaimsPrincipal)User;
+            if (user != null)
+            {
+                await this._userService.SignOutAsync(user);
+            }
 
             return await RenderLoggedOutPage(id);
         }
@@ -510,7 +520,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // we need a random ID to resume, and this will be the query string
                 // to match a claim added. the claim added will be the original 
                 // signIn ID. 
-                var resumeId = Guid.NewGuid().ToString("N");
+                var resumeId = CryptoRandom.CreateUniqueId(); 
 
                 var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
@@ -559,13 +569,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (authResult.IsPartialSignIn)
             {
-                var url = authResult.PartialSignInRedirectPath;
-                if (url.StartsWith("~/"))
+                var path = authResult.PartialSignInRedirectPath;
+                if (path.StartsWith("~/"))
                 {
-                    url = url.Substring(2);
-                    url = Request.GetIdentityServerBaseUrl() + url;
+                    path = path.Substring(2);
+                    path = Request.GetIdentityServerBaseUrl() + path;
                 }
-                return new Uri(Request.RequestUri, url);
+                var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
+                return new Uri(host, path);
             }
             else
             {
@@ -601,6 +612,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private async Task<IHttpActionResult> RenderLoginPage(SignInMessage message, string signInMessageId, string errorMessage = null, string username = null, bool rememberMe = false)
         {
             if (message == null) throw new ArgumentNullException("message");
+
+            username = username ?? GetLastUsernameFromCookie();
 
             var providers = await GetExternalProviders(message, signInMessageId);
 
@@ -642,7 +655,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Username = username
             };
 
-            return new LoginActionResult(_viewService, Request.GetOwinEnvironment(), loginModel, message);
+            return new LoginActionResult(_viewService, loginModel, message);
         }
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
@@ -669,8 +682,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!String.IsNullOrWhiteSpace(message.ClientId))
             {
                 var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-                if (client == null) throw new InvalidOperationException("Invalid client: " + message.ClientId);
-                filter = client.IdentityProviderRestrictions ?? filter;
+                if (client != null)
+                {
+                    filter = client.IdentityProviderRestrictions;
+                }
             }
             filter = filter ?? Enumerable.Empty<string>();
             return filter;
@@ -715,7 +730,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
                 ClientName = clientName
             };
-            return new LogoutActionResult(_viewService, env, logoutModel);
+            return new LogoutActionResult(_viewService, logoutModel);
         }
 
         private async Task<IHttpActionResult> RenderLoggedOutPage(string id)
@@ -746,7 +761,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ClientName = clientName,
                 RedirectUrl = redirectUrl
             };
-            return new LoggedOutActionResult(_viewService, env, loggedOutModel);
+            return new LoggedOutActionResult(_viewService, loggedOutModel);
         }
 
         private void ClearSignOutMessage()
@@ -786,14 +801,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private IHttpActionResult RenderErrorPage(string message = null)
         {
-            message = message ?? Resources.Messages.UnexpectedError;
+            message = message ?? Messages.UnexpectedError;
             var errorModel = new ErrorViewModel
             {
                 SiteName = this._options.SiteName,
                 SiteUrl = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl(),
                 ErrorMessage = message
             };
-            var errorResult = new ErrorActionResult(_viewService, Request.GetOwinContext().Environment, errorModel);
+            var errorResult = new ErrorActionResult(_viewService, errorModel);
             return errorResult;
         }
 
@@ -809,5 +824,62 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             cookie.Clear(signin);
         }
 
+        private void IssueLastUsernameCookie(string username)
+        {
+            if (this._options.AuthenticationOptions.RememberLastUsername)
+            {
+                var ctx = Request.GetOwinContext();
+                var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
+                var path = ctx.Request.Environment.GetIdentityServerBasePath();
+                if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+                if (String.IsNullOrWhiteSpace(path)) path = "/";
+
+                var options = new Microsoft.Owin.CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = secure,
+                    Path = path
+                };
+                
+                if (!String.IsNullOrWhiteSpace(username))
+                {
+                    var bytes = Encoding.UTF8.GetBytes(username);
+                    bytes = _options.DataProtector.Protect(bytes, cookieName);
+                    username = Base64Url.Encode(bytes);
+                    options.Expires = DateTime.UtcNow.AddYears(1);
+                }
+                else
+                {
+                    username = ".";
+                    options.Expires = DateTime.UtcNow.AddYears(-1);
+                }
+
+                ctx.Response.Cookies.Append(cookieName, username, options);
+            }
+        }
+
+        private string GetLastUsernameFromCookie()
+        {
+            if (this._options.AuthenticationOptions.RememberLastUsername)
+            {
+                try
+                {
+                    var ctx = Request.GetOwinContext();
+                    var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                    var value = ctx.Request.Cookies[cookieName];
+
+                    var bytes = Base64Url.Decode(value);
+                    bytes = _options.DataProtector.Unprotect(bytes, cookieName);
+                    value = Encoding.UTF8.GetString(bytes);
+
+                    return value;
+                }
+                catch {
+                    IssueLastUsernameCookie(null);
+                }
+            }
+            return null;
+        }
     }
 }

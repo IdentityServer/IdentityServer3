@@ -197,6 +197,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.RegisterType<DefaultEventService>().As<IEventService>();
             }
 
+            if (fact.RedirectUriValidator != null)
+            {
+                builder.Register(fact.RedirectUriValidator);
+            }
+            else
+            {
+                builder.RegisterType<DefaultRedirectUriValidator>().As<IRedirectUriValidator>();
+            }
+
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
             // by a custom IClientPermissionsService
@@ -232,6 +241,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.RegisterType<DefaultViewService>().As<IViewService>();
             }
 
+            // hosting services
+            builder.RegisterType<OwinEnvironmentService>();
+
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();
@@ -239,6 +251,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterType<TokenValidator>();
             builder.RegisterType<EndSessionRequestValidator>();
             builder.RegisterType<BearerTokenUsageValidator>();
+            builder.RegisterType<ScopeValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
@@ -279,7 +292,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             }
             else if (registration.ImplementationFactory != null)
             {
-                var reg = builder.Register(ctx => registration.ImplementationFactory());
+                var reg = builder.Register(ctx => registration.ImplementationFactory(new AutofacDependencyResolver(ctx)));
                 if (name != null)
                 {
                     reg.Named(name, registration.InterfaceType);

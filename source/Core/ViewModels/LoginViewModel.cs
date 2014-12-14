@@ -27,7 +27,18 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         public bool AllowRememberMe { get; set; }
         public bool RememberMe { get; set; }
         public string LogoutUrl { get; set; }
-        public string Username { get; set; }
+        string _Username { get; set; }
+        public string Username
+        {
+            get
+            {
+                return Microsoft.Security.Application.Encoder.JavaScriptEncode(_Username, false);
+            }
+            set
+            {
+                _Username = value;
+            }
+        }
         public IEnumerable<LoginPageLink> ExternalProviders { get; set; }
         public IEnumerable<LoginPageLink> AdditionalLinks { get; set; }
     }

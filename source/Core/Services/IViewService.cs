@@ -24,11 +24,11 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IViewService
     {
-        Task<Stream> Login(IDictionary<string, object> env, LoginViewModel model, SignInMessage message);
-        Task<Stream> Logout(IDictionary<string, object> env, LogoutViewModel model);
-        Task<Stream> LoggedOut(IDictionary<string, object> env, LoggedOutViewModel model);
-        Task<Stream> Consent(IDictionary<string, object> env, ConsentViewModel model);
-        Task<Stream> ClientPermissions(IDictionary<string, object> env, ClientPermissionsViewModel model);
-        Task<Stream> Error(IDictionary<string, object> env, ErrorViewModel model);
+        Task<Stream> Login(LoginViewModel model, SignInMessage message);
+        Task<Stream> Logout(LogoutViewModel model);
+        Task<Stream> LoggedOut(LoggedOutViewModel model);
+        Task<Stream> Consent(ConsentViewModel model);
+        Task<Stream> ClientPermissions(ClientPermissionsViewModel model);
+        Task<Stream> Error(ErrorViewModel model);
     }
 }

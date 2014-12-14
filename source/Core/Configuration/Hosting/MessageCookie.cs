@@ -18,6 +18,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -77,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public string GetCookieName(string id = null)
         {
-            return String.Format("{0}.{1}.{2}", 
+            return String.Format("{0}{1}.{2}", 
                 options.AuthenticationOptions.CookieOptions.Prefix, 
                 MessageType, 
                 id);
@@ -87,7 +88,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             get
             {
-                return ctx.Request.Environment.GetIdentityServerBasePath();
+                var path = ctx.Request.Environment.GetIdentityServerBasePath();
+                if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
+                if (String.IsNullOrWhiteSpace(path)) path = "/";
+                return path;
             }
         }
         
@@ -129,7 +133,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            var id = Guid.NewGuid().ToString("N");
+            var id = CryptoRandom.CreateUniqueId();
             var name = GetCookieName(id);
             var data = Protect(message);
 

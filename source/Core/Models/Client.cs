@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// URI to client logo (used on consent screen)
         /// </summary>
-        public Uri LogoUri { get; set; }
+        public string LogoUri { get; set; }
         
         /// <summary>
         /// Specifies whether a consent screen is required (defaults to false)
@@ -73,12 +73,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies allowed URIs to return tokens or authorization codes to
         /// </summary>
-        public List<Uri> RedirectUris { get; set; }
+        public List<string> RedirectUris { get; set; }
 
         /// <summary>
         /// Specifies allowed URIs to redirect to after logout
         /// </summary>
-        public List<Uri> PostLogoutRedirectUris { get; set; }
+        public List<string> PostLogoutRedirectUris { get; set; }
         
         /// <summary>
         /// Specifies the scopes that the client is allowed to request. If empty, the client can request all scopes (defaults to empty)
@@ -140,7 +140,15 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
         /// </summary>
-        public IEnumerable<string> IdentityProviderRestrictions { get; set; }
+        public List<string> IdentityProviderRestrictions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether JWT access tokens should include an identifier
+        /// </summary>
+        /// <value>
+        /// <c>true</c> to add an id; otherwise, <c>false</c>.
+        /// </value>
+        public bool IncludeJwtId { get; set; }
 
         // not implemented yet
 
@@ -157,8 +165,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Flow = Flows.Implicit;
             ScopeRestrictions = new List<string>();
-            RedirectUris = new List<Uri>();
-            PostLogoutRedirectUris = new List<Uri>();
+            RedirectUris = new List<string>();
+            PostLogoutRedirectUris = new List<string>();
+            IdentityProviderRestrictions = new List<string>();
             
             // 5 minutes
             AuthorizationCodeLifetime = 300;
@@ -179,7 +188,6 @@ namespace Thinktecture.IdentityServer.Core.Models
             IdentityTokenSigningKeyType = SigningKeyTypes.Default;
             AccessTokenType = AccessTokenType.Jwt;
 
-            IdentityProviderRestrictions = Enumerable.Empty<string>();
             AllowLocalLogin = true;
         }
     }

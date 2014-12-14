@@ -142,11 +142,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             Logger.Debug("Creating access token");
             request.Validate();
 
-            var claims = await _claimsProvider.GetAccessTokenClaimsAsync(
+            var claims = new List<Claim>();
+            claims.AddRange(await _claimsProvider.GetAccessTokenClaimsAsync(
                 request.Subject,
                 request.Client,
                 request.Scopes,
-                request.ValidatedRequest);
+                request.ValidatedRequest));
+
+            if (request.Client.IncludeJwtId)
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.JwtId, CryptoRandom.CreateUniqueId()));
+            }
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
@@ -181,7 +187,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 
                 Logger.Debug("Creating reference access token");
 
-                var handle = Guid.NewGuid().ToString("N");
+                var handle = CryptoRandom.CreateUniqueId();
                 await _tokenHandles.StoreAsync(handle, token);
 
                 return handle;

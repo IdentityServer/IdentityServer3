@@ -26,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
@@ -83,7 +84,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Consent
             }; 
             var result = subject.ProcessConsentAsync(request, null).Result;
@@ -97,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Login
             };
 
@@ -115,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.SelectAccount
             };
 
@@ -134,7 +135,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.None
             };
             var result = subject.ProcessConsentAsync(request).Result;
@@ -153,7 +154,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Consent
             };
             var result = subject.ProcessConsentAsync(request).Result;
@@ -170,7 +171,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Consent
             };
             var result = subject.ProcessConsentAsync(request).Result;
@@ -186,7 +187,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Consent
             };
             var consent = new UserConsent
@@ -212,7 +213,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
             };
             var consent = new UserConsent
             {
@@ -238,9 +239,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
+                RedirectUri = "https://client.com/callback",
                 PromptMode = Constants.PromptModes.Consent,
-                ValidatedScopes = new ScopeValidator(),
+                ValidatedScopes = new ScopeValidator(null),
                 Client = new Client { }
             };
             var consent = new UserConsent
@@ -264,8 +265,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
-                ValidatedScopes = new ScopeValidator(),
+                RedirectUri = "https://client.com/callback",
+                ValidatedScopes = new ScopeValidator(null),
                 Client = new Client { }
             };
             var consent = new UserConsent
@@ -282,18 +283,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Fact]
-        public void ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
+        public async Task ProcessConsentAsync_NoPromptMode_ConsentServiceRequiresConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
-                ValidatedScopes = new ScopeValidator(),
+                RedirectUri = "https://client.com/callback",
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
                 Client = new Client { }
             };
-            request.ValidatedScopes.AreScopesValid(new string[] { "read", "write" }, TestScopes.Get());
+            await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
             var consent = new UserConsent
             {
                 Button = "yes",
@@ -309,18 +310,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
         
         [Fact]
-        public void ProcessConsentAsync_PromptModeConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
+        public async Task ProcessConsentAsync_PromptModeConsent_ConsentGranted_ScopesSelected_ReturnsConsentResult()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
-                ValidatedScopes = new ScopeValidator(),
+                RedirectUri = "https://client.com/callback",
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
                 Client = new Client { }
             };
-            request.ValidatedScopes.AreScopesValid(new string[] { "read", "write" }, TestScopes.Get());
+            await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
             var consent = new UserConsent
             {
                 Button = "yes",
@@ -336,7 +337,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         }
 
         [Fact]
-        public void ProcessConsentAsync_AllowConsentSelected_SavesConsent()
+        public async Task ProcessConsentAsync_AllowConsentSelected_SavesConsent()
         {
             RequiresConsent(true);
             var client = new Client { AllowRememberConsent = true };
@@ -345,12 +346,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             {
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
-                RedirectUri = new Uri("https://client.com/callback"),
-                ValidatedScopes = new ScopeValidator(),
+                RedirectUri = "https://client.com/callback",
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
                 Client = client,
                 Subject = user
             };
-            request.ValidatedScopes.AreScopesValid(new string[] { "read", "write" }, TestScopes.Get());
+            await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
             var consent = new UserConsent
             {
                 Button = "yes",

@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using Autofac;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public static class EventConstants
+    class AutofacDependencyResolver : IDependencyResolver
     {
-        public static class Categories
+        IComponentContext ctx;
+        public AutofacDependencyResolver(IComponentContext ctx)
         {
-            public const string Authentication = "Authentication";
+            this.ctx = ctx;
         }
         
-        public static class Ids
+        public T Resolve<T>()
         {
-            internal const int AuthenticationEventsStart = 1000;
-
-            public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
-            public const int FailedLocalLogin = AuthenticationEventsStart + 1;
-            public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
-            public const int FailedExternalLogin = AuthenticationEventsStart + 3;
+            return ctx.Resolve<T>();
         }
     }
 }

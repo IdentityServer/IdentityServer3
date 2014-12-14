@@ -27,6 +27,9 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    /// <summary>
+    /// OpenID Connect end session endpoint
+    /// </summary>
     [SecurityHeaders]
     [NoCache]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
@@ -38,6 +41,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly EndSessionRequestValidator _validator;
         private readonly EndSessionResponseGenerator _generator;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndSessionController"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="validator">The validator.</param>
+        /// <param name="generator">The generator.</param>
         public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator)
         {
             _options = options;
@@ -45,6 +54,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _generator = generator;
         }
 
+        /// <summary>
+        /// GET
+        /// </summary>
+        /// <returns></returns>
         [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
         [HttpGet]
         public async Task<IHttpActionResult> Logout()
@@ -68,6 +81,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
         }
 
+        /// <summary>
+        /// Logout callback
+        /// </summary>
+        /// <returns></returns>
         [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
         [HttpGet]
         public IHttpActionResult LogoutCallback()
