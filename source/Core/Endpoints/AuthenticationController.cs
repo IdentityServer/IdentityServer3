@@ -376,7 +376,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            if (!this._options.AuthenticationOptions.DisableSignOutPrompt)
+            if (this._options.AuthenticationOptions.EnableSignOutPrompt)
             {
                 return await RenderLogoutPromptPage(id);
             }

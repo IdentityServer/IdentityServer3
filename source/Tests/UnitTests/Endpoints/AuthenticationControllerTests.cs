@@ -482,9 +482,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
         
         [Fact]
-        public void Logout_DisableSignOutPrompt_SkipsLogoutPromptPage()
+        public void Logout_EnableSignOutPromptSetToFalse_SkipsLogoutPromptPage()
         {
-            options.AuthenticationOptions.DisableSignOutPrompt = true;
+            options.AuthenticationOptions.EnableSignOutPrompt = false;
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("loggedOut");
         }
