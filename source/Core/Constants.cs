@@ -505,7 +505,8 @@ namespace Thinktecture.IdentityServer.Core
                 Oidc.DiscoveryConfiguration,
                 Oidc.DiscoveryWebKeys,
                 Oidc.Token,
-                Oidc.UserInfo
+                Oidc.UserInfo,
+                Oidc.IdentityTokenValidation
             };
         }
 
