@@ -37,15 +37,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (options.DiagnosticsOptions.EnableWebApiDiagnostics)
             {
-                var diag = config.EnableSystemDiagnosticsTracing();
-                
                 var liblog = new TraceSource("LibLog");
                 liblog.Switch.Level = SourceLevels.All;
-                
                 liblog.Listeners.Add(new LibLogTraceListener());
-                diag.TraceSource = liblog;
 
+                var diag = config.EnableSystemDiagnosticsTracing();
                 diag.IsVerbose = options.DiagnosticsOptions.WebApiDiagnosticsIsVerbose;
+                diag.TraceSource = liblog;                
             }
 
             return config;
