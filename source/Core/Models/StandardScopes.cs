@@ -35,6 +35,21 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        public static IEnumerable<Scope> AllAlwaysInclude
+        {
+            get
+            {
+                return new[]
+                {
+                    OpenId,
+                    ProfileAlwaysInclude,
+                    EmailAlwaysInclude,
+                    PhoneAlwaysInclude,
+                    AddressAlwaysInclude
+                };
+            }
+        }
+
         public static Scope OpenId
         {
             get
