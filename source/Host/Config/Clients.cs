@@ -49,9 +49,10 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     ScopeRestrictions = new List<string>
                     {
-                        "openid",
-                        "profile",
-                        "email",
+                        Constants.StandardScopes.OpenId,
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.Email,
+                        Constants.StandardScopes.OfflineAccess,
                         "read",
                         "write"
                     },
@@ -73,7 +74,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     RequireConsent = true,
                     AllowRememberConsent = true,
-                    
+
                     RedirectUris = new List<string>
                     {
                         // OAuthJS client
