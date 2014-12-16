@@ -58,6 +58,7 @@ namespace Thinktecture.IdentityServer.Host
                         SigningCertificate = Cert.Load(),
 
                         CorsPolicy = CorsPolicy.AllowAll,
+                        
                         CspOptions = new CspOptions 
                         {
                             ReportEndpoint = EndpointSettings.Enabled,
@@ -66,6 +67,11 @@ namespace Thinktecture.IdentityServer.Host
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,
+                        },
+
+                        DiagnosticsOptions = new DiagnosticsOptions
+                        {
+                            EnableWebApiDiagnostics = true
                         }
                     };
 

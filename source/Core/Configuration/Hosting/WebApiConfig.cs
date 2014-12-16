@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System.Diagnostics;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
@@ -33,9 +35,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
-            if (options.EnableWebApiDiagnostics)
+            if (options.DiagnosticsOptions.EnableWebApiDiagnostics)
             {
-                config.EnableSystemDiagnosticsTracing();
+                var diag = config.EnableSystemDiagnosticsTracing();
+                
+                var liblog = new TraceSource("LibLog");
+                liblog.Switch.Level = SourceLevels.All;
+                
+                liblog.Listeners.Add(new LibLogTraceListener());
+                diag.TraceSource = liblog;
+
+                diag.IsVerbose = options.DiagnosticsOptions.WebApiDiagnosticsIsVerbose;
             }
 
             return config;

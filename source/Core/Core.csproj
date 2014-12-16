@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
+    <Compile Include="Configuration\DiagnosticsOptions.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\EventIds.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
+    <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />

@@ -32,12 +32,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public IdentityServerOptions()
         {
             SiteName = Constants.IdentityServerName;
+
             this.ProtocolLogoutUrls = new List<string>();
             this.RequireSsl = true;
             this.Endpoints = new Endpoints();
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
+            this.DiagnosticsOptions = new DiagnosticsOptions();
         }
 
         internal void Validate()
@@ -169,12 +171,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public CspOptions CspOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether web API diagnostics should be enabled.
+        /// Gets or sets the diagnostics options.
         /// </summary>
         /// <value>
-        /// <c>true</c> if web API diagnostics should be enabled; otherwise, <c>false</c>.
+        /// The diagnostics options.
         /// </value>
-        public bool EnableWebApiDiagnostics { get; set; }
+        public DiagnosticsOptions DiagnosticsOptions { get; set; }
 
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {
