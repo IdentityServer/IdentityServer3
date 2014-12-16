@@ -11,7 +11,7 @@ IdentityServer is a framework and a hostable component that allows implementing 
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
-Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC London.
+Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC Oslo 2014.
 
 ## Getting started ##
 We currently don't provide a setup tool or a UI, but IdentityServer is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples) repository to exercise the various flows. Also check the wiki for more information.
