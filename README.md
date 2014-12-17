@@ -1,6 +1,6 @@
 # Thinktecture IdentityServer v3 #
 
-**Current status: Beta 3**
+**Current status: Beta 4**
 
 [![Build status](https://ci.appveyor.com/api/projects/status/p3w7grusyd7cnctw?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture-identityserver-v3)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
