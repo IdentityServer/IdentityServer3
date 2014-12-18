@@ -87,10 +87,6 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 url += "#";
             }
-            else if (!url.EndsWith("&"))
-            {
-                url += "&";
-            }
 
             return url + query;
         }
