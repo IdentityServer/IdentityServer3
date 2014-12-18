@@ -25,7 +25,7 @@ namespace Owin
             if (app == null) throw new ArgumentNullException("app");
             if (duration < TimeSpan.Zero) throw new ArgumentException("duration cannot be below zero");
 
-            if (duration > TimeSpan.Zero)
+            if (duration >= TimeSpan.Zero)
             {
                 var seconds = (int)duration.TotalSeconds;
                 app.Use(async (ctx, next) =>
