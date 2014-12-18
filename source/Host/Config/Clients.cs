@@ -15,6 +15,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 
@@ -165,6 +166,12 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 3600,
+
+                    Claims = new List<Claim>
+                    {
+                        new Claim("client_type", "headless")
+                    },
+                    PrefixClientClaims = false
                 },
 
                 new Client
