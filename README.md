@@ -1,7 +1,8 @@
 # Thinktecture IdentityServer v3 #
 
-**Current status: Beta 3**
+**Current status: Beta 4**
 
+[![Build status](https://ci.appveyor.com/api/projects/status/p3w7grusyd7cnctw?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture-identityserver-v3)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview ##
@@ -10,7 +11,7 @@ IdentityServer is a framework and a hostable component that allows implementing 
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
-Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC Oslo.
+Also check out my [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/97344501) talk from NDC Oslo 2014.
 
 ## Getting started ##
 We currently don't provide a setup tool or a UI, but IdentityServer is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples) repository to exercise the various flows. Also check the wiki for more information.
@@ -47,12 +48,12 @@ The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v
 * support for WS-Federation
 
 ## Related repositories ##
-* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
+* [Access Token Validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
+* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
 * [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
 * [ASP.Net Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
-* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
 * [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
-
+* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
@@ -62,5 +63,6 @@ IdentityServer is built using the following great open source projects:
 - [Json.Net](http://james.newtonking.com/json)
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
+- [Web Protection Library](https://wpl.codeplex.com/)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
