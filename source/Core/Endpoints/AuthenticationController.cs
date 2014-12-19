@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             if (model == null)
@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
@@ -252,7 +252,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var user = await GetIdentityFromExternalProvider();
@@ -326,7 +326,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             AuthenticateResult result = null;

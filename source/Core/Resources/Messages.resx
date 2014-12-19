@@ -162,4 +162,7 @@
   <data name="UsernameRequired" xml:space="preserve">
     <value>Username is required</value>
   </data>
+  <data name="NoSignInCookie" xml:space="preserve">
+    <value>There is an error determining which application you are signing into. Return to the application and try again.</value>
+  </data>
 </root>
