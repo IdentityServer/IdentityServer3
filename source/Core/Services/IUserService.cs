@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="message">The signin message. Might be null if called from the token endpoint.</param>
         /// <returns>The authentication result</returns>
         Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null);
 
@@ -46,8 +46,11 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
         /// <param name="externalUser">The external user.</param>
-        /// <returns>The authentication result.</returns>
-        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser);
+        /// <param name="message">The signin message.</param>
+        /// <returns>
+        /// The authentication result.
+        /// </returns>
+        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message);
 
         /// <summary>
         /// This method gets called when the user signs out (allows to cleanup resources)
@@ -60,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
         /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types.</param>
+        /// <param name="requestedClaimTypes">The requested claim types. The user service is expected to filter based upon the requested claim types. Null is passed if there is no filtering to be performed.</param>
         /// <returns>Claims</returns>
         Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
 
@@ -68,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
         /// </summary>
         /// <param name="subject">The subject.</param>
-        /// <returns>true or false</returns>
+        /// <returns>true is the user is still allowed to receive tokens, false otherwise.</returns>
         Task<bool> IsActiveAsync(ClaimsPrincipal subject);
     }
 }

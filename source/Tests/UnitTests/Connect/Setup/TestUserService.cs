@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user, SignInMessage message)
         {
             throw new NotImplementedException();
         }

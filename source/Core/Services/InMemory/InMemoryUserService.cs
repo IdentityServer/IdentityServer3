@@ -84,10 +84,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
         /// <param name="externalUser">The external user.</param>
+        /// <param name="message">The signin message.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
         {
             var query =
                 from u in _users

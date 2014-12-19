@@ -42,10 +42,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return inner.AuthenticateLocalAsync(username, password, message);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
         {
             externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser);
+            return inner.AuthenticateExternalAsync(externalUser, message);
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
