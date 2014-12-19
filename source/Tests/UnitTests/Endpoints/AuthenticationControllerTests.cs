@@ -622,7 +622,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         [Fact]
         public void LoginExternalCallback_UserServiceReturnsError_ShowsError()
         {
-            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("foo bad")));
             
             var msg = new SignInMessage();
@@ -644,7 +644,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         [Fact]
         public void LoginExternalCallback_UserServiceReturnsNull_ShowError()
         {
-            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()))
+            mockUserService.Setup(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>(), It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult((AuthenticateResult)null));
 
             var msg = new SignInMessage();
@@ -678,7 +678,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
             Get(Constants.RoutePaths.LoginExternalCallback);
 
-            mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>()));
+            mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>(), It.IsAny<SignInMessage>()));
         }
 
         [Fact]
