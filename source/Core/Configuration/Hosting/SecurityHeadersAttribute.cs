@@ -62,11 +62,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
                     if (options.CspOptions.Enabled)
                     {
+                        // img-src as * due to client logos
                         var value = "default-src 'self'; script-src 'self' {0}; style-src 'self' 'unsafe-inline' {1}; img-src *;";
-                        
+
                         if (!String.IsNullOrWhiteSpace(options.CspOptions.FontSrc))
                         {
                             value += String.Format("font-src {0};", options.CspOptions.FontSrc);
+                        }
+                        if (!String.IsNullOrWhiteSpace(options.CspOptions.ConnectSrc))
+                        {
+                            value += String.Format("connect-src {0};", options.CspOptions.ConnectSrc);
                         }
 
                         value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
