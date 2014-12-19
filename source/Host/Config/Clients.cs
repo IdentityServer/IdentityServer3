@@ -86,6 +86,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                         // WPF client
                         "oob://localhost/wpfclient",
                         
+                        // WinRT client
+                        "ms-app://s-1-15-2-1677770454-1667073387-2045065244-1646983296-4049597744-3433330513-3528227871/",
+
                         // JavaScript client
                         "http://localhost:21575/index.html",
 
