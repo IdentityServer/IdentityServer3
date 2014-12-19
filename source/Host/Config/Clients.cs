@@ -158,15 +158,6 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientSecret = "secret",
                     Flow = Flows.ClientCredentials,
                     
-                    ScopeRestrictions = new List<string>
-                    { 
-                        "read",
-                        "write"
-                    },
-
-                    AccessTokenType = AccessTokenType.Jwt,
-                    AccessTokenLifetime = 3600,
-
                     Claims = new List<Claim>
                     {
                         new Claim("client_type", "headless")
