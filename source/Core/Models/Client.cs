@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -150,6 +151,30 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public bool IncludeJwtId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the client claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
+        public List<Claim> Claims { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether client claims should be always included in the access tokens - or only for client credentials flow.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if claims should always be sent; otherwise, <c>false</c>.
+        /// </value>
+        public bool AlwaysSendClientClaims { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether all client claims should be prefixed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if client claims should be prefixed; otherwise, <c>false</c>.
+        /// </value>
+        public bool PrefixClientClaims { get; set; }
+
         // not implemented yet
 
         //public bool RefreshClaimsOnRefreshToken { get; set; }
@@ -168,6 +193,11 @@ namespace Thinktecture.IdentityServer.Core.Models
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
+            
+            // client claims settings
+            Claims = new List<Claim>();
+            AlwaysSendClientClaims = false;
+            PrefixClientClaims = true;
             
             // 5 minutes
             AuthorizationCodeLifetime = 300;

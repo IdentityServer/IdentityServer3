@@ -120,16 +120,38 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             Logger.Debug("Getting claims for access token");
 
+            // add client_id
             var outputClaims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
             };
 
+            // check for client claims
+            if (client.Claims != null && client.Claims.Any())
+            {
+                if (subject == null || client.AlwaysSendClientClaims == true)
+                {
+                    foreach (var claim in client.Claims)
+                    {
+                        var claimType = claim.Type;
+
+                        if (client.PrefixClientClaims)
+                        {
+                            claimType = "client_" + claimType;
+                        }
+
+                        outputClaims.Add(new Claim(claimType, claim.Value));
+                    }
+                }
+            }
+
+            // add scopes
             foreach (var scope in scopes)
             {
                 outputClaims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
             }
 
+            // a user is involved
             if (subject != null)
             {
                 outputClaims.AddRange(GetStandardSubjectClaims(subject));
