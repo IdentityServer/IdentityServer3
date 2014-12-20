@@ -24,11 +24,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 {
     static class TokenFactory
     {
-        public static Token CreateAccessToken(string clientId, string subjectId, int lifetime, params string[] scopes)
+        public static Token CreateAccessToken(Client client, string subjectId, int lifetime, params string[] scopes)
         {
             var claims = new List<Claim> 
             {
-                new Claim("client_id", clientId),
+                new Claim("client_id", client.ClientId),
                 new Claim("sub", subjectId)
             };
 
@@ -39,7 +39,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 Audience = "https://idsrv3.com/resources",
                 Issuer = "https://idsrv3.com",
                 Lifetime = lifetime,
-                Claims = claims
+                Claims = claims,
+                Client = client
             };
 
             return token;

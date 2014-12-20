@@ -30,7 +30,7 @@ using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_RefreshToken_Invalid
     {
         const string Category = "TokenRequest Validation - RefreshToken - Invalid";
@@ -63,8 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         {
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token"),
-                ClientId = "roclient",
+                AccessToken = new Token("access_token") { Client = new Client() { ClientId = "roclient" } },
                 LifeTime = 10,
                 CreationTime = DateTime.UtcNow.AddSeconds(-15)
             };
@@ -94,10 +93,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         {
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token"),
-                ClientId = "otherclient",
-                LifeTime = 600,
-                CreationTime = DateTime.UtcNow
+                AccessToken = new Token("access_token")
+                {
+                    Client = new Client
+                    {
+                        ClientId = "otherclient"
+                    },
+                    Lifetime = 600,
+                    CreationTime = DateTime.UtcNow
+                }
             };
             var handle = Guid.NewGuid().ToString();
 
@@ -125,8 +129,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
         {
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token"),
-                ClientId = "roclient_restricted",
+                AccessToken = new Token("access_token")
+                {
+                    Client = new Client
+                    {
+                        ClientId = "roclient_restricted"
+                    },
+                },
                 LifeTime = 600,
                 CreationTime = DateTime.UtcNow
             };
@@ -161,8 +170,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token") { Claims = new List<Claim> { subjectClaim } },
-                ClientId = "roclient",
+                AccessToken = new Token("access_token")
+                {
+                    Claims = new List<Claim> { subjectClaim },
+                    Client = new Client() { ClientId = "roclient" }
+                },
                 LifeTime = 600,
                 CreationTime = DateTime.UtcNow
             };

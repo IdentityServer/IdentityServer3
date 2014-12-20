@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 {
     public class RefreshToken : ITokenMetadata
     {
-        public string ClientId { get; set; }
+        public string ClientId { get { return AccessToken.ClientId; } }
         public DateTimeOffset CreationTime { get; set; }
         public int LifeTime { get; set; }
 

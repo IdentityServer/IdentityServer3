@@ -22,6 +22,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -48,7 +49,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -67,7 +68,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -84,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -115,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 2, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 2, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -145,7 +146,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         public async Task Valid_JWT_Token()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
-            var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write"));
+            var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write"));
 
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
@@ -158,7 +159,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         public async Task JWT_Token_invalid_Issuer()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             token.Issuer = "invalid";
             var jwt = await signer.SignTokenAsync(token);
 
@@ -174,7 +175,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
         public async Task JWT_Token_invalid_Audience()
         {
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
-            var token = TokenFactory.CreateAccessToken("roclient", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             token.Audience = "invalid";
             var jwt = await signer.SignTokenAsync(token);
 
@@ -195,7 +196,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(tokenStore: store, users: mock.Object);
 
-            var token = TokenFactory.CreateAccessToken("roclient", "invalid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "invalid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
@@ -212,7 +213,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
-            var token = TokenFactory.CreateAccessToken("unknown", "valid", 600, "read", "write");
+            var token = TokenFactory.CreateAccessToken(new Client { ClientId = "unknown" }, "valid", 600, "read", "write");
             var handle = "123";
 
             await store.StoreAsync(handle, token);
