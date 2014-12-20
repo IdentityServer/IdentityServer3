@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
@@ -24,30 +25,31 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 {
     static class ValidatedAuthorizeRequestExtensions
     {
-        public static IEnumerable<ConsentScopeViewModel> GetIdentityScopes(this ValidatedAuthorizeRequest validatedRequest)
+        public static IEnumerable<ConsentScopeViewModel> GetIdentityScopes(this ValidatedAuthorizeRequest validatedRequest, ILocalizationService localizationService)
         {
             var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x => x.Type == ScopeType.Identity);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
-            return requestedScopes.ToConsentScopeViewModel(consentedScopeNames);
+            return requestedScopes.ToConsentScopeViewModel(consentedScopeNames, localizationService);
         }
 
-        public static IEnumerable<ConsentScopeViewModel> GetResourceScopes(this ValidatedAuthorizeRequest validatedRequest)
+        public static IEnumerable<ConsentScopeViewModel> GetResourceScopes(this ValidatedAuthorizeRequest validatedRequest, ILocalizationService localizationService)
         {
             var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=> x.Type == ScopeType.Resource);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
-            return requestedScopes.ToConsentScopeViewModel(consentedScopeNames);
+            return requestedScopes.ToConsentScopeViewModel(consentedScopeNames, localizationService);
         }
 
-        public static IEnumerable<ConsentScopeViewModel> ToConsentScopeViewModel(this IEnumerable<Scope> scopes, IEnumerable<string> selected)
+        public static IEnumerable<ConsentScopeViewModel> ToConsentScopeViewModel(this IEnumerable<Scope> scopes, IEnumerable<string> selected, ILocalizationService localizationService)
         {
             var values =
                 from s in scopes
+                let scopeString = localizationService.GetScopeStrings(s.Name)
                 select new ConsentScopeViewModel
                 {
                     Selected = selected.Contains(s.Name),
                     Name = s.Name,
-                    DisplayName = s.DisplayName,
-                    Description = s.Description,
+                    DisplayName = s.DisplayName ?? scopeString.DisplayName,
+                    Description = s.Description ?? scopeString.Description,
                     Emphasize = s.Emphasize,
                     Required = s.Required
                 };

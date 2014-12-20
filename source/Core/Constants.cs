@@ -41,6 +41,9 @@ namespace Thinktecture.IdentityServer.Core
 
         public const string DefaultHashAlgorithm = "SHA256";
 
+        public const string ScopeDisplayNameSuffix = "_DisplayName";
+        public const string ScopeDescriptionSuffix = "_Description";
+
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";

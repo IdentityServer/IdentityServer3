@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
@@ -35,11 +36,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
             var options = env.ResolveDependency<IdentityServerOptions>();
             var viewSvc = env.ResolveDependency<IViewService>();
+            var localization = env.ResolveDependency<ILocalizationService>();
             var errorModel = new ErrorViewModel
             {
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
-                ErrorMessage = Resources.Messages.UnexpectedError,
+                ErrorMessage = localization.GetMessage(MessageIds.UnexpectedError),
             };
             var errorResult = new ErrorActionResult(viewSvc, errorModel);
             actionExecutedContext.Response = await errorResult.GetResponseMessage();

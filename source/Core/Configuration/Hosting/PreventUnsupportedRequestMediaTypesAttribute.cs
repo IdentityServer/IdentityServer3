@@ -19,6 +19,8 @@ using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using Thinktecture.IdentityServer.Core.Resources;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
@@ -50,7 +52,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     return;
                 }
 
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.UnsupportedMediaType, new { ErrorMessage = Messages.UnsupportedMediaType });
+                var env = actionContext.Request.GetOwinEnvironment();
+                var localization = env.ResolveDependency<ILocalizationService>();
+
+                actionContext.Response = actionContext.Request.CreateResponse(
+                    HttpStatusCode.UnsupportedMediaType, 
+                    new { ErrorMessage = localization.GetMessage(MessageIds.UnsupportedMediaType) }
+                );
             }
         }
     }

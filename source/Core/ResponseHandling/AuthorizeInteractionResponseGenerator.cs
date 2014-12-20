@@ -31,12 +31,14 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
         private readonly SignInMessage _signIn;
         private readonly IConsentService _consent;
         private readonly IUserService _users;
+        private readonly ILocalizationService _localizationService;
 
-        public AuthorizeInteractionResponseGenerator(IConsentService consent, IUserService users)
+        public AuthorizeInteractionResponseGenerator(IConsentService consent, IUserService users, ILocalizationService localizationService)
         {
             _signIn = new SignInMessage();
             _consent = consent;
             _users = users;
+            _localizationService = localizationService;
         }
 
         public async Task<LoginInteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request, ClaimsPrincipal user)
@@ -228,7 +230,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                             // they said yes, but didn't pick any scopes
                             // show consent again and provide error message
                             response.IsConsent = true;
-                            response.ConsentError = Messages.MustSelectAtLeastOnePermission;
+                            response.ConsentError = _localizationService.GetMessage(MessageIds.MustSelectAtLeastOnePermission);
                         }
                         else if (request.Client.AllowRememberConsent)
                         {

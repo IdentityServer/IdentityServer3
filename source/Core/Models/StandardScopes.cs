@@ -57,7 +57,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.OpenId,
-                    DisplayName = Resources.Scopes.OpenIdDisplayName,
                     Required = true,
                     Type = ScopeType.Identity,
                     Claims = new List<ScopeClaim>
@@ -75,8 +74,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Profile,
-                    DisplayName = Resources.Scopes.ProfileDisplayName,
-                    Description = Resources.Scopes.ProfileDescription,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim)))
@@ -91,8 +88,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Profile,
-                    DisplayName = Resources.Scopes.ProfileDisplayName,
-                    Description = Resources.Scopes.ProfileDescription,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
@@ -107,7 +102,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Email,
-                    DisplayName = Resources.Scopes.EmailDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim)))
@@ -122,7 +116,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Email,
-                    DisplayName = Resources.Scopes.EmailDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
@@ -137,7 +130,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Phone,
-                    DisplayName = Resources.Scopes.ProfileDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim)))
@@ -152,7 +144,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Phone,
-                    DisplayName = Resources.Scopes.ProfileDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
@@ -167,7 +158,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Address,
-                    DisplayName = Resources.Scopes.AddressDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim)))
@@ -182,7 +172,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Address,
-                    DisplayName = Resources.Scopes.AddressDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim, alwaysInclude: true)))
@@ -197,7 +186,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.AllClaims,
-                    DisplayName = Resources.Scopes.AllClaimsDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     IncludeAllClaimsForUser = true
@@ -212,7 +200,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Roles,
-                    DisplayName = Resources.Scopes.RolesDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = new [] 
@@ -230,7 +217,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.Roles,
-                    DisplayName = Resources.Scopes.RolesDisplayName,
                     Type = ScopeType.Identity,
                     Emphasize = true,
                     Claims = new[] 
@@ -248,7 +234,6 @@ namespace Thinktecture.IdentityServer.Core.Models
                 return new Scope
                 {
                     Name = Constants.StandardScopes.OfflineAccess,
-                    DisplayName = Resources.Scopes.OfflineAccessDisplayName,
                     Type = ScopeType.Resource,
                     Emphasize = true
                 };

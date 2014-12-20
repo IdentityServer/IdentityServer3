@@ -205,6 +205,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             {
                 builder.RegisterType<DefaultRedirectUriValidator>().As<IRedirectUriValidator>();
             }
+            
+            if (fact.LocalizationService != null)
+            {
+                builder.Register(fact.LocalizationService);
+            }
+            else
+            {
+                builder.RegisterType<DefaultLocalizationService>().As<ILocalizationService>();
+            }
 
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used

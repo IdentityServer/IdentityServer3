@@ -77,11 +77,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
                 var options = env.ResolveDependency<IdentityServerOptions>();
                 var viewSvc = env.ResolveDependency<IViewService>();
+                var localization = env.ResolveDependency<ILocalizationService>();
+
                 var errorModel = new ErrorViewModel
                 {
                     SiteName = options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    ErrorMessage = Resources.Messages.UnexpectedError,
+                    ErrorMessage = localization.GetMessage(Resources.MessageIds.UnexpectedError),
                 };
                 var errorResult = new ErrorActionResult(viewSvc, errorModel);
                 actionContext.Response = await errorResult.GetResponseMessage();

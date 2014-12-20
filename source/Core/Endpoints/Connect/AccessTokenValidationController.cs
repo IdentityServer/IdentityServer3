@@ -23,6 +23,7 @@ using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Resources;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
@@ -37,11 +38,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly TokenValidator _validator;
         private readonly IdentityServerOptions _options;
+        private readonly ILocalizationService _localizationService;
 
-        public AccessTokenValidationController(TokenValidator validator, IdentityServerOptions options)
+        public AccessTokenValidationController(TokenValidator validator, IdentityServerOptions options, ILocalizationService localizationService)
         {
             _validator = validator;
             _options = options;
+            _localizationService = localizationService;
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (token.IsMissing())
             {
                 Logger.Error("token is missing.");
-                return BadRequest(Messages.MissingToken);
+                return BadRequest(_localizationService.GetMessage(MessageIds.MissingToken));
             }
 
             var result = await _validator.ValidateAccessTokenAsync(token, parameters.Get("expectedScope"));

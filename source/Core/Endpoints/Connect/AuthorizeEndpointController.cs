@@ -50,21 +50,24 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthorizeResponseGenerator _responseGenerator;
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
         private readonly IdentityServerOptions _options;
+        private readonly ILocalizationService _localizationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorizeEndpointController"/> class.
+        /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.
         /// </summary>
         /// <param name="viewService">The view service.</param>
         /// <param name="validator">The validator.</param>
         /// <param name="responseGenerator">The response generator.</param>
         /// <param name="interactionGenerator">The interaction generator.</param>
         /// <param name="options">The options.</param>
+        /// <param name="localizationService">The localization service.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,
             AuthorizeResponseGenerator responseGenerator,
             AuthorizeInteractionResponseGenerator interactionGenerator,
-            IdentityServerOptions options)
+            IdentityServerOptions options,
+            ILocalizationService localizationService)
         {
             _viewService = viewService;
             _options = options;
@@ -72,6 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _responseGenerator = responseGenerator;
             _interactionGenerator = interactionGenerator;
             _validator = validator;
+            _localizationService = localizationService;
         }
 
         /// <summary>
@@ -223,8 +227,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
                 ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri : null,
-                IdentityScopes = validatedRequest.GetIdentityScopes(),
-                ResourceScopes = validatedRequest.GetResourceScopes(),
+                IdentityScopes = validatedRequest.GetIdentityScopes(this._localizationService),
+                ResourceScopes = validatedRequest.GetResourceScopes(this._localizationService),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
@@ -292,7 +296,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private string LookupErrorMessage(string error)
         {
-            var msg = Resources.Messages.ResourceManager.GetString(error);
+            var msg = _localizationService.GetMessage(error);
             if (msg.IsMissing())
             {
                 msg = error;

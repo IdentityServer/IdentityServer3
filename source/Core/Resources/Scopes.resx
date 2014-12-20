@@ -117,31 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddressDisplayName" xml:space="preserve">
+  <data name="address_DisplayName" xml:space="preserve">
     <value>Your postal address</value>
   </data>
-  <data name="AllClaimsDisplayName" xml:space="preserve">
+  <data name="all_claims_DisplayName" xml:space="preserve">
     <value>All user information</value>
   </data>
-  <data name="EmailDisplayName" xml:space="preserve">
+  <data name="email_DisplayName" xml:space="preserve">
     <value>Your email address</value>
   </data>
-  <data name="OfflineAccessDisplayName" xml:space="preserve">
+  <data name="offline_access_DisplayName" xml:space="preserve">
     <value>Offline access</value>
   </data>
-  <data name="OpenIdDisplayName" xml:space="preserve">
+  <data name="openid_DisplayName" xml:space="preserve">
     <value>Your user identifier</value>
   </data>
-  <data name="PhoneDisplayName" xml:space="preserve">
+  <data name="phone_DisplayName" xml:space="preserve">
     <value>Your phone number</value>
   </data>
-  <data name="ProfileDescription" xml:space="preserve">
+  <data name="profile_Description" xml:space="preserve">
     <value>Your user profile information (first name, last name, etc.)</value>
   </data>
-  <data name="ProfileDisplayName" xml:space="preserve">
+  <data name="profile_DisplayName" xml:space="preserve">
     <value>User profile</value>
   </data>
-  <data name="RolesDisplayName" xml:space="preserve">
+  <data name="roles_DisplayName" xml:space="preserve">
     <value>User roles</value>
   </data>
 </root>

@@ -26,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
@@ -65,7 +66,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         {
             mockConsent = new Mock<IConsentService>();
             mockUserService = new Mock<IUserService>();
-            subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object);
+            subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object, new DefaultLocalizationService());
         }
 
         [Fact]

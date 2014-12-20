@@ -24,6 +24,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
@@ -35,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Fact]
         public async Task Anonymous_User_must_SignIn()
         {
-            var generator = new AuthorizeInteractionResponseGenerator(null, null);
+            var generator = new AuthorizeInteractionResponseGenerator(null, null, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -53,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object);
+            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -72,7 +73,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object);
+            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -98,7 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object);
+            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -124,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object);
+            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -144,7 +145,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object);
+            var generator = new AuthorizeInteractionResponseGenerator(null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
