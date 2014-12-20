@@ -140,6 +140,7 @@
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />

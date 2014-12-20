@@ -35,6 +35,9 @@ namespace Thinktecture.IdentityServer.Core
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
         public static readonly TimeSpan DefaultRememberMeDuration = TimeSpan.FromDays(30);
+        
+        // the limit after which old messages are purged
+        public const int SignInMessageThreshold = 5;
 
         public const string DefaultHashAlgorithm = "SHA256";
 

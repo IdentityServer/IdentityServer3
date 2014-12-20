@@ -17,15 +17,17 @@
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     public class MessageCookie<TMessage>
-        where TMessage : class
+        where TMessage : Message
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -94,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 return path;
             }
         }
-        
+
         private IEnumerable<string> GetCookieNames()
         {
             var key = GetCookieName();
@@ -131,6 +133,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public string Write(TMessage message)
         {
+            ClearOverflow();
+
             if (message == null) throw new ArgumentNullException("message");
 
             var id = CryptoRandom.CreateUniqueId();
@@ -152,6 +156,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         public TMessage Read(string id)
         {
             var name = GetCookieName(id);
+            return ReadByCookieName(name);
+        }
+
+        TMessage ReadByCookieName(string name)
+        {
             var data = ctx.Request.Cookies[name];
             if (!String.IsNullOrWhiteSpace(data))
             {
@@ -163,7 +172,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         public void Clear(string id)
         {
             var name = GetCookieName(id);
+            ClearByCookieName(name);
+        }
 
+        public void ClearAll()
+        {
+            var names = GetCookieNames();
+            foreach (var name in names)
+            {
+                ClearByCookieName(name);
+            }
+        }
+        
+        void ClearByCookieName(string name)
+        {
             ctx.Response.Cookies.Append(
                 name,
                 ".",
@@ -176,21 +198,23 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 });
         }
 
-        public void ClearAll()
+        private void ClearOverflow()
         {
             var names = GetCookieNames();
-            foreach (var name in names)
+            if (names.Count() > Constants.SignInMessageThreshold)
             {
-                ctx.Response.Cookies.Append(
-                    name,
-                    ".",
-                    new Microsoft.Owin.CookieOptions
-                    {
-                        Expires = DateTime.UtcNow.AddYears(-1),
-                        HttpOnly = true,
-                        Secure = Secure,
-                        Path = CookiePath
-                    });
+                var messages =
+                    from name in names
+                    let m = ReadByCookieName(name)
+                    where m != null
+                    orderby m.Requested descending
+                    select new { name = name, message = m };
+
+                var purge = messages.Skip(Constants.SignInMessageThreshold);
+                foreach (var item in purge)
+                {
+                    ClearByCookieName(item.name);
+                }
             }
         }
     }

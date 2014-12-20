@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
-    public class SignInMessage
+    public class SignInMessage : Message
     {
         public string ReturnUrl { get; set; }
         public string ClientId { get; set; }

@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+
 namespace Thinktecture.IdentityServer.Core.Models
 {
-    public class SignOutMessage : Message
+    public class Message
     {
-        public string ReturnUrl { get; set; }
-        public string ClientId { get; set; }
+        public Message()
+        {
+            Requested = DateTime.UtcNow.Ticks;
+        }
+
+        public long Requested { get; set; }
     }
 }

@@ -224,13 +224,15 @@ namespace Thinktecture.IdentityServer.Tests
         }
 
         protected string WriteMessageToCookie<T>(T msg)
-            where T : class
+            where T : Message
         {
-            var headers = new Dictionary<string, string[]>();
+            var request_headers = new Dictionary<string, string[]>();
+            var response_headers = new Dictionary<string, string[]>();
             var env = new Dictionary<string, object>()
             {
                 {"owin.RequestScheme", "https"},
-                {"owin.ResponseHeaders", headers},
+                {"owin.RequestHeaders", request_headers},
+                {"owin.ResponseHeaders", response_headers},
                 {Constants.OwinEnvironment.IdentityServerBasePath, "/"},
             };
 
@@ -238,7 +240,7 @@ namespace Thinktecture.IdentityServer.Tests
             var signInCookie = new MessageCookie<T>(ctx, options);
             var id = signInCookie.Write(msg);
 
-            client.SetCookies(headers["Set-Cookie"]);
+            client.SetCookies(response_headers["Set-Cookie"]);
 
             return id;
         }
