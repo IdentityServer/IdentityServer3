@@ -30,7 +30,7 @@ namespace Owin
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.PageAssetsNamespace)
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.HttpAssetsNamespace)
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 

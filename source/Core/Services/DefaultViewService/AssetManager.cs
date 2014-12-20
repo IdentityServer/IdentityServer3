@@ -23,10 +23,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     class AssetManager
     {
-        public const string PageAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.Assets";
-        public const string FontAssetsNamespace = PageAssetsNamespace + ".libs.bootstrap.fonts";
+        public const string HttpAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.HttpAssets";
+        public const string FontAssetsNamespace = HttpAssetsNamespace + ".libs.bootstrap.fonts";
 
-        const string PagesPrefix = PageAssetsNamespace + ".app.";
+        public const string PageAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.PageAssets";
+        const string PagesPrefix = PageAssetsNamespace + ".";
         const string Layout = PagesPrefix + "layout.html";
         const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
 
