@@ -115,6 +115,15 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The external login provider was not provided..
+        /// </summary>
+        public static string NoExternalProvider {
+            get {
+                return ResourceManager.GetString("NoExternalProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Account.
         /// </summary>
         public static string NoMatchingExternalAccount {

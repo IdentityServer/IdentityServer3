@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -128,7 +128,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -197,13 +197,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (provider.IsMissing())
             {
                 Logger.Error("No provider passed");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoExternalProvider);
             }
 
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -244,7 +244,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInId.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage();
+                return RenderErrorPage(Messages.NoSignInCookie);
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);

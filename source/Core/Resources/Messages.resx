@@ -165,4 +165,7 @@
   <data name="NoSignInCookie" xml:space="preserve">
     <value>There is an error determining which application you are signing into. Return to the application and try again.</value>
   </data>
+  <data name="NoExternalProvider" xml:space="preserve">
+    <value>The external login provider was not provided.</value>
+  </data>
 </root>
