@@ -124,7 +124,7 @@
     <value>Invalid Username or Password</value>
   </data>
   <data name="invalid_scope" xml:space="preserve">
-    <value>The client application tried to access a resource it does not have access to</value>
+    <value>The client application tried to access a resource it does not have access to.</value>
   </data>
   <data name="MissingClientId" xml:space="preserve">
     <value>client_id is missing</value>
@@ -148,7 +148,7 @@
     <value>SSL is required</value>
   </data>
   <data name="unauthorized_client" xml:space="preserve">
-    <value>The client application tried to access a resource it does not have access to</value>
+    <value>The client application tried to access a resource it does not have access to.</value>
   </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>There was an unexpected error</value>
@@ -157,7 +157,7 @@
     <value>Unsupported Media Type</value>
   </data>
   <data name="unsupported_response_type" xml:space="preserve">
-    <value>The authorization server does not support the requested response type</value>
+    <value>The authorization server does not support the requested response type.</value>
   </data>
   <data name="UsernameRequired" xml:space="preserve">
     <value>Username is required</value>

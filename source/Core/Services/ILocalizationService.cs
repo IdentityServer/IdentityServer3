@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-using System.ComponentModel.DataAnnotations;
+using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace Thinktecture.IdentityServer.Core.Services
 {
-    public class LoginCredentials
+    public interface ILocalizationService
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool? RememberMe { get; set; }
+        string GetString(string category, string id);
     }
 }

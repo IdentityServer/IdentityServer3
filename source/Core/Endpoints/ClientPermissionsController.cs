@@ -22,6 +22,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
@@ -38,12 +39,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         readonly IClientPermissionsService clientPermissionsService;
         readonly IdentityServerOptions options;
         readonly IViewService viewSvc;
+        readonly ILocalizationService localizationService;
 
-        public ClientPermissionsController(IClientPermissionsService clientPermissionsService, IdentityServerOptions options, IViewService viewSvc)
+        public ClientPermissionsController(IClientPermissionsService clientPermissionsService, IdentityServerOptions options, IViewService viewSvc, ILocalizationService localizationService)
         {
             this.clientPermissionsService = clientPermissionsService;
             this.options = options;
             this.viewSvc = viewSvc;
+            this.localizationService = localizationService;
         }
 
         [Route(Constants.RoutePaths.ClientPermissions)]
@@ -75,6 +78,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (User == null || User.Identity == null || User.Identity.IsAuthenticated == false)
             {
                 return RedirectToLogin();
+            }
+
+            if (model != null && String.IsNullOrWhiteSpace(model.ClientId))
+            {
+                ModelState.AddModelError("ClientId", localizationService.GetMessage(MessageIds.ClientIdRequired));
             }
 
             if (model == null || ModelState.IsValid == false)

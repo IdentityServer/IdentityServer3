@@ -250,6 +250,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The redirect URI validator.
         /// </value>
         public Registration<IRedirectUriValidator> RedirectUriValidator { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the localization service.
+        /// </summary>
+        /// <value>
+        /// The localization service.
+        /// </value>
+        public Registration<ILocalizationService> LocalizationService { get; set; }
 
         internal void Validate()
         {

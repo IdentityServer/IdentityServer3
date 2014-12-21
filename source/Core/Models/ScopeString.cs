@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-using System.ComponentModel.DataAnnotations;
-
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace Thinktecture.IdentityServer.Core.Models
 {
-    public class LoginCredentials
+    public class ScopeStrings
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool? RememberMe { get; set; }
+        public string DisplayName { get; set; }
+        public string Description { get; set; }
     }
 }

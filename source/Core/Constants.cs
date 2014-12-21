@@ -41,6 +41,9 @@ namespace Thinktecture.IdentityServer.Core
 
         public const string DefaultHashAlgorithm = "SHA256";
 
+        public const string ScopeDisplayNameSuffix = "_DisplayName";
+        public const string ScopeDescriptionSuffix = "_Description";
+
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
@@ -526,5 +529,14 @@ namespace Thinktecture.IdentityServer.Core
             public const string SigninId = "signinid";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
         }
+
+        public static class LocalizationCategories
+        {
+            public const string Messages = "Messages";
+            public const string Events = "Events";
+            public const string Scopes = "Scopes";
+        }
+
+
     }
 }

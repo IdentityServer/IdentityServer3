@@ -19,7 +19,6 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     public class RevokeClientPermission
     {
-        [Required(ErrorMessageResourceType = typeof(Resources.Messages), ErrorMessageResourceName = "ClientIdRequired")]
         public string ClientId { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly IClientStore _clientStore;
         private readonly IEventService _events;
+        private readonly ILocalizationService _localizationService;
 
         public AuthenticationController(
             IViewService viewService, 
@@ -58,7 +59,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             AuthenticationOptions authenticationOptions, 
             IdentityServerOptions idSvrOptions, 
             IClientStore clientStore, 
-            IEventService events)
+            IEventService events,
+            ILocalizationService localizationService)
         {
             _viewService = viewService;
             _userService = userService;
@@ -66,6 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _options = idSvrOptions;
             _clientStore = clientStore;
             _events = events;
+            _localizationService = localizationService; 
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -77,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -85,7 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(
+                    _localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
@@ -128,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -136,13 +140,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             if (model == null)
             {
                 Logger.Error("no data submitted");
-                return await RenderLoginPage(signInMessage, signin, Messages.InvalidUsernameOrPassword);
+                return await RenderLoginPage(signInMessage, signin, _localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword));
+            }
+
+            if (String.IsNullOrWhiteSpace(model.Username))
+            {
+                ModelState.AddModelError("Username", _localizationService.GetMessage(MessageIds.UsernameRequired));
+            }
+            
+            if (String.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError("Password", _localizationService.GetMessage(MessageIds.PasswordRequired));
             }
 
             // the browser will only send 'true' if ther user has checked the checkbox
@@ -172,7 +186,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
-                return await RenderLoginPage(signInMessage, signin, Messages.InvalidUsernameOrPassword, model.Username, model.RememberMe == true);
+                return await RenderLoginPage(signInMessage, signin, _localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword), model.Username, model.RememberMe == true);
             }
 
             if (authResult.IsError)
@@ -197,13 +211,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (provider.IsMissing())
             {
                 Logger.Error("No provider passed");
-                return RenderErrorPage(Messages.NoExternalProvider);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoExternalProvider));
             }
 
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -211,7 +225,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
@@ -244,7 +258,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInId.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
@@ -252,21 +266,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             var user = await GetIdentityFromExternalProvider();
             if (user == null)
             {
                 Logger.Error("no identity from external identity provider");
-                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
             var externalIdentity = ExternalIdentity.FromClaims(user.Claims);
             if (externalIdentity == null)
             {
                 Logger.Error("no subject or unique identifier claims from external identity provider");
-                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
@@ -275,7 +289,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
-                return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
+                return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
             if (authResult.IsError)
@@ -326,7 +340,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(Messages.NoSignInCookie);
+                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             AuthenticateResult result = null;
@@ -356,7 +370,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 if (result == null)
                 {
                     Logger.Warn("user service failed to authenticate external identity");
-                    return await RenderLoginPage(signInMessage, signInId, Messages.NoMatchingExternalAccount);
+                    return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
                 }
 
                 if (result.IsError)
@@ -801,7 +815,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private IHttpActionResult RenderErrorPage(string message = null)
         {
-            message = message ?? Messages.UnexpectedError;
+            message = message ?? _localizationService.GetMessage(MessageIds.UnexpectedError);
             var errorModel = new ErrorViewModel
             {
                 SiteName = this._options.SiteName,

@@ -139,12 +139,21 @@
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\ClaimExtensions.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
+    <Compile Include="Models\ScopeString.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Resources\T4resx.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>T4resx.tt</DependentUpon>
+    </Compile>
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
+    <Compile Include="Services\Default\DefaultLocalizationService.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
+    <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
@@ -357,7 +366,9 @@
     <Compile Include="Services\IViewService.cs" />
     <Compile Include="ViewModels\ClientPermissionsViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Events.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -371,6 +382,10 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <None Include="Resources\T4resx.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4resx.cs</LastGenOutput>
+    </None>
     <None Include="Services\DefaultViewService\HttpAssets\app\app.less" />
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\custom.less" />
     <EmbeddedResource Include="Resources\Scopes.resx">

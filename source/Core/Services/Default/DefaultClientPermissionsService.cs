@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -30,32 +31,35 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         readonly IPermissionsStore permissionsStore;
         readonly IClientStore clientStore;
         readonly IScopeStore scopeStore;
+        readonly ILocalizationService localizationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultClientPermissionsService"/> class.
+        /// Initializes a new instance of the <see cref="DefaultClientPermissionsService" /> class.
         /// </summary>
         /// <param name="permissionsStore">The permissions store.</param>
         /// <param name="clientStore">The client store.</param>
         /// <param name="scopeStore">The scope store.</param>
-        /// <exception cref="System.ArgumentNullException">
-        /// permissionsStore
+        /// <param name="localizationService">The localization service.</param>
+        /// <exception cref="System.ArgumentNullException">permissionsStore
         /// or
         /// clientStore
         /// or
-        /// scopeStore
-        /// </exception>
+        /// scopeStore</exception>
         public DefaultClientPermissionsService(
             IPermissionsStore permissionsStore, 
             IClientStore clientStore, 
-            IScopeStore scopeStore)
+            IScopeStore scopeStore,
+            ILocalizationService localizationService)
         {
             if (permissionsStore == null) throw new ArgumentNullException("permissionsStore");
             if (clientStore == null) throw new ArgumentNullException("clientStore");
             if (scopeStore == null) throw new ArgumentNullException("scopeStore");
+            if (localizationService == null) throw new ArgumentNullException("localizationService");
 
             this.permissionsStore = permissionsStore;
             this.clientStore = clientStore;
             this.scopeStore = scopeStore;
+            this.localizationService = localizationService;
         }
 
         /// <summary>
@@ -84,8 +88,23 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 var client = await clientStore.FindClientByIdAsync(consent.ClientId);
                 if (client != null)
                 {
-                    var identityScopes = scopes.Where(x=>x.Type == ScopeType.Identity && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
-                    var resourceScopes = scopes.Where(x=>x.Type == ScopeType.Resource && consent.Scopes.Contains(x.Name)).Select(x=>new PermissionDescription{DisplayName = x.DisplayName, Description = x.Description});
+                    var identityScopes =
+                        from s in scopes
+                        where s.Type == ScopeType.Identity && consent.Scopes.Contains(s.Name)
+                        select new PermissionDescription
+                        {
+                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
+                        };
+
+                    var resourceScopes =
+                        from s in scopes
+                        where s.Type == ScopeType.Resource && consent.Scopes.Contains(s.Name)
+                        select new PermissionDescription
+                        {
+                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
+                        };
 
                     list.Add(new ClientPermission
                     {

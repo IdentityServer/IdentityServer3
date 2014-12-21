@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Resources;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
@@ -36,10 +38,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (context.Request.Uri.Scheme != Uri.UriSchemeHttps)
             {
+                var localization = env.ResolveDependency<ILocalizationService>();
+                
                 context.Response.StatusCode = 403;
-                context.Response.ReasonPhrase = Messages.SslRequired;
+                context.Response.ReasonPhrase = localization.GetMessage(MessageIds.SslRequired);
 
-                await context.Response.WriteAsync(Messages.SslRequired);
+                await context.Response.WriteAsync(context.Response.ReasonPhrase);
 
                 return;
             }
