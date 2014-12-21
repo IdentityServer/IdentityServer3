@@ -529,5 +529,14 @@ namespace Thinktecture.IdentityServer.Core
             public const string SigninId = "signinid";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
         }
+
+        public static class LocalizationCategories
+        {
+            public const string Messages = "Messages";
+            public const string Events = "Events";
+            public const string Scopes = "Scopes";
+        }
+
+
     }
 }

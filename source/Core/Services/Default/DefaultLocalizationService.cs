@@ -15,24 +15,25 @@
  */
 
 using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Resources;
+using System;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultLocalizationService : ILocalizationService
     {
-        public string GetMessage(string id)
+        public string GetString(string category, string id)
         {
-            return Messages.ResourceManager.GetString(id);
-        }
-
-        public ScopeStrings GetScopeStrings(string scope)
-        {
-            return new ScopeStrings
+            switch(category)
             {
-                DisplayName = Scopes.ResourceManager.GetString(scope + Constants.ScopeDisplayNameSuffix),
-                Description = Scopes.ResourceManager.GetString(scope + Constants.ScopeDescriptionSuffix),
-            };
+                case Constants.LocalizationCategories.Messages:
+                    return Thinktecture.IdentityServer.Core.Resources.Messages.ResourceManager.GetString(id);
+                case Constants.LocalizationCategories.Events:
+                    return Thinktecture.IdentityServer.Core.Resources.Events.ResourceManager.GetString(id);
+                case Constants.LocalizationCategories.Scopes:
+                    return Thinktecture.IdentityServer.Core.Resources.Scopes.ResourceManager.GetString(id);
+            }
+            
+            return null;
         }
     }
 }

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -90,21 +91,19 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     var identityScopes =
                         from s in scopes
                         where s.Type == ScopeType.Identity && consent.Scopes.Contains(s.Name)
-                        let scopeString = localizationService.GetScopeStrings(s.Name)
                         select new PermissionDescription
                         {
-                            DisplayName = s.DisplayName ?? scopeString.DisplayName,
-                            Description = s.Description ?? scopeString.Description
+                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
                         };
 
                     var resourceScopes =
                         from s in scopes
                         where s.Type == ScopeType.Resource && consent.Scopes.Contains(s.Name)
-                        let scopeString = localizationService.GetScopeStrings(s.Name)
                         select new PermissionDescription
                         {
-                            DisplayName = s.DisplayName ?? scopeString.DisplayName,
-                            Description = s.Description ?? scopeString.Description
+                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
                         };
 
                     list.Add(new ClientPermission

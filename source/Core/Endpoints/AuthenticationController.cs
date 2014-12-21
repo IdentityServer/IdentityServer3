@@ -88,7 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(
+                    _localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));

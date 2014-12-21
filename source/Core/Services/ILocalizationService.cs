@@ -20,7 +20,6 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ILocalizationService
     {
-        string GetMessage(string id);
-        ScopeStrings GetScopeStrings(string scope);
+        string GetString(string category, string id);
     }
 }

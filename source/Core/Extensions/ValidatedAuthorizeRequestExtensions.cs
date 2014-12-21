@@ -43,13 +43,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var values =
                 from s in scopes
-                let scopeString = localizationService.GetScopeStrings(s.Name)
                 select new ConsentScopeViewModel
                 {
                     Selected = selected.Contains(s.Name),
                     Name = s.Name,
-                    DisplayName = s.DisplayName ?? scopeString.DisplayName,
-                    Description = s.Description ?? scopeString.Description,
+                    DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
+                    Description = s.Description ?? localizationService.GetScopeDescription(s.Name),
                     Emphasize = s.Emphasize,
                     Required = s.Required
                 };

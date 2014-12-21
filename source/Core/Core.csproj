@@ -138,6 +138,7 @@
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
+    <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ScopeString.cs" />

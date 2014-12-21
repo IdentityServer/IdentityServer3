@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The client application tried to access a resource it does not have access to.
+        ///   Looks up a localized string similar to The client application tried to access a resource it does not have access to..
         /// </summary>
         public static string invalid_scope {
             get {
@@ -169,7 +169,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The client application tried to access a resource it does not have access to.
+        ///   Looks up a localized string similar to The client application tried to access a resource it does not have access to..
         /// </summary>
         public static string unauthorized_client {
             get {
@@ -187,7 +187,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The authorization server does not support the requested response type.
+        ///   Looks up a localized string similar to The authorization server does not support the requested response type..
         /// </summary>
         public static string unsupported_response_type {
             get {
