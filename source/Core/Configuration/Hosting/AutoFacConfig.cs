@@ -49,15 +49,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
             
             // optional from factory
-            builder.RegisterDefaultInstance<IAuthorizationCodeStore, InMemoryAuthorizationCodeStore>(fact.AuthorizationCodeStore, "inner");
-            builder.RegisterDecorator<IAuthorizationCodeStore, KeyHashingAuthorizationCodeStore>("inner");
-
-            builder.RegisterDefaultInstance<ITokenHandleStore, InMemoryTokenHandleStore>(fact.TokenHandleStore, "inner");
-            builder.RegisterDecorator<ITokenHandleStore, KeyHashingTokenHandleStore>("inner");
-
-            builder.RegisterDefaultInstance<IRefreshTokenStore, InMemoryRefreshTokenStore>(fact.RefreshTokenStore, "inner");
-            builder.RegisterDecorator<IRefreshTokenStore, KeyHashingRefreshTokenStore>("inner");
-
+            builder.RegisterDecoratorDefaultInstance<IAuthorizationCodeStore, KeyHashingAuthorizationCodeStore, InMemoryAuthorizationCodeStore>(fact.AuthorizationCodeStore);
+            builder.RegisterDecoratorDefaultInstance<ITokenHandleStore, KeyHashingTokenHandleStore, InMemoryTokenHandleStore>(fact.TokenHandleStore);
+            builder.RegisterDecoratorDefaultInstance<IRefreshTokenStore, KeyHashingRefreshTokenStore, InMemoryRefreshTokenStore>(fact.RefreshTokenStore);
             builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
             builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
             builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
@@ -178,6 +172,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(name);
                 return ctx.Resolve<TDecorator>(inner);
             });
+        }
+        
+        private static void RegisterDecoratorDefaultInstance<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
+            where T : class
+            where TDefault : class, T, new()
+        {
+            builder.RegisterDefaultInstance<T, TDefault>(registration, "inner");
+            builder.RegisterDecorator<T, TDefault>("inner");
         }
 
         private static void RegisterDecorator<T, TDecorator>(this ContainerBuilder builder, Registration<T> registration)
