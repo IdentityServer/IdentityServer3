@@ -72,8 +72,8 @@ namespace Thinktecture.IdentityServer.Tests
 
             var factory = new IdentityServerServiceFactory
             {
-                ScopeStore = Registration.RegisterFactory<IScopeStore>((resolver) => scopeStore),
-                ClientStore = Registration.RegisterFactory<IClientStore>((resolver) => clientStore)
+                ScopeStore = new Registration<IScopeStore>((resolver) => scopeStore),
+                ClientStore = new Registration<IClientStore>((resolver) => clientStore)
             };
 
             server = TestServer.Create(app =>
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests
 
                 mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
                 mockUserService.CallBase = true;
-                factory.UserService = Registration.RegisterFactory<IUserService>((resolver) => mockUserService.Object);
+                factory.UserService = new Registration<IUserService>((resolver) => mockUserService.Object);
 
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;

@@ -21,13 +21,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class DefaultViewServiceRegistration : Registration<IViewService>
     {
         public DefaultViewServiceRegistration()
+            : base(typeof(DefaultViewService))
         {
-            this.TypeFactory = (resolver) => new DefaultViewService();
         }
 
         public DefaultViewServiceRegistration(DefaultViewServiceConfiguration config)
+            : base(resolver => new DefaultViewService(config))
         {
-            this.TypeFactory = (resolver) => new DefaultViewService(config);
         }
     }
 

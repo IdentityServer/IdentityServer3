@@ -21,35 +21,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public abstract class Registration
     {
-        public static Registration<T> RegisterType<T>(Type type)
-            where T: class
-        {
-            if (type == null) throw new ArgumentNullException("type");
-
-            return new Registration<T>
-            {
-                Type = type
-            };
-        }
-
-        public static Registration<T> RegisterFactory<T>(Func<IDependencyResolver, T> typeFunc)
-            where T : class
-        {
-            if (typeFunc == null) throw new ArgumentNullException("typeFunc");
-
-            return new Registration<T>
-            {
-                TypeFactory = typeFunc
-            };
-        }
-        
-        public static Registration<T> RegisterSingleton<T>(T instance)
-            where T : class
-        {
-            if (instance == null) throw new ArgumentNullException("instance");
-            return RegisterFactory<T>((resolver) => instance);
-        }
-
         public abstract Type InterfaceType { get; }
         public abstract Type ImplementationType { get; }
         public abstract Func<IDependencyResolver, object> ImplementationFactory { get; }
@@ -58,8 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public class Registration<T> : Registration
         where T : class
     {
-        public Type Type { get; set; }
-        public Func<IDependencyResolver, T> TypeFactory { get; set; }
+        public Type Type { get; protected set; }
+        public Func<IDependencyResolver, T> TypeFactory { get; protected set; }
 
         public override Type InterfaceType
         {
@@ -74,6 +45,37 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public override Func<IDependencyResolver, object> ImplementationFactory
         {
             get { return TypeFactory; }
+        }
+
+        public Registration(Type type)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+
+            this.Type = type;
+        }
+
+        public Registration(Func<IDependencyResolver, T> factoryFunc)
+        {
+            if (factoryFunc == null) throw new ArgumentNullException("factoryFunc");
+
+            this.TypeFactory = factoryFunc;
+        }
+
+        public Registration(T instance)
+        {
+            if (instance == null) throw new ArgumentNullException("instance");
+
+            this.TypeFactory = resolver => instance;
+        }
+    }
+
+    public class Registration<T, TImpl> : Registration<T>
+        where T : class
+        where TImpl : T
+    {
+        public Registration()
+            : base(typeof(TImpl))
+        {
         }
     }
 }
