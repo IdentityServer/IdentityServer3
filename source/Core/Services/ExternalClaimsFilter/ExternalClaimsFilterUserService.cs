@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,6 +29,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public ExternalClaimsFilterUserService(IExternalClaimsFilter filter, IUserService inner)
         {
+            if (filter == null) throw new ArgumentNullException("filter");
+            if (inner == null) throw new ArgumentNullException("inner");
+
             this.filter = filter;
             this.inner = inner;
         }
