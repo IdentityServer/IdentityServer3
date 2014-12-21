@@ -65,6 +65,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             Logger.Debug("Getting claims for identity token");
 
             var outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
+            outputClaims.AddRange(GetOptionalClaims(subject));
+            
             var additionalClaims = new List<string>();
 
             // if a include all claims rule exists, call the user service without a claims filter
@@ -155,6 +157,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (subject != null)
             {
                 outputClaims.AddRange(GetStandardSubjectClaims(subject));
+                outputClaims.AddRange(GetOptionalClaims(subject));
 
                 // if a include all claims rule exists, call the user service without a claims filter
                 if (scopes.IncludesAllClaimsForUserRule(ScopeType.Resource))
@@ -212,6 +215,21 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 subject.FindFirst(Constants.ClaimTypes.AuthenticationTime),
                 subject.FindFirst(Constants.ClaimTypes.IdentityProvider),
             };
+
+            return claims;
+        }
+
+        /// <summary>
+        /// Gets additional (and optional) claims from the cookie or incoming subject.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>Additional claims</returns>
+        protected virtual IEnumerable<Claim> GetOptionalClaims(ClaimsPrincipal subject)
+        {
+            var claims = new List<Claim>();
+
+            var acr = subject.FindFirst(Constants.ClaimTypes.AuthenticationContextClassReference);
+            if (acr.HasValue()) claims.Add(acr);
 
             return claims;
         }
