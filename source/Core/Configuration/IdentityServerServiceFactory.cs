@@ -233,6 +233,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public Registration<IExternalClaimsFilter> ExternalClaimsFilter { get; set; }
 
+        /// <summary>
+        /// Gets or sets the event service.
+        /// </summary>
+        /// <value>
+        /// The event service.
+        /// </value>
         public Registration<IEventService> EventService { get; set; }
 
         /// <summary>
