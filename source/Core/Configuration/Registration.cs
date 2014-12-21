@@ -21,6 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public abstract class Registration
     {
+        public string Name { get; protected set; }
         public abstract Type InterfaceType { get; }
         public abstract Type ImplementationType { get; }
         public abstract Func<IDependencyResolver, object> ImplementationFactory { get; }
@@ -47,25 +48,34 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             get { return TypeFactory; }
         }
 
-        public Registration(Type type)
+        public Registration(string name = null)
+        {
+            this.Type = typeof(T);
+            this.Name = name;
+        }
+
+        public Registration(Type type, string name = null)
         {
             if (type == null) throw new ArgumentNullException("type");
 
             this.Type = type;
+            this.Name = name;
         }
 
-        public Registration(Func<IDependencyResolver, T> factoryFunc)
+        public Registration(Func<IDependencyResolver, T> factoryFunc, string name = null)
         {
             if (factoryFunc == null) throw new ArgumentNullException("factoryFunc");
 
             this.TypeFactory = factoryFunc;
+            this.Name = name;
         }
 
-        public Registration(T instance)
+        public Registration(T instance, string name = null)
         {
             if (instance == null) throw new ArgumentNullException("instance");
 
             this.TypeFactory = resolver => instance;
+            this.Name = name;
         }
     }
 
@@ -73,8 +83,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         where T : class
         where TImpl : T
     {
-        public Registration()
-            : base(typeof(TImpl))
+        public Registration(string name = null)
+            : base(typeof(TImpl), name)
         {
         }
     }

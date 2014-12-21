@@ -30,8 +30,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.ctx = ctx;
         }
         
-        public T Resolve<T>()
+        public T Resolve<T>(string name)
         {
+            if (name != null)
+            {
+                return ctx.ResolveNamed<T>(name);
+            }
+
             return ctx.Resolve<T>();
         }
     }

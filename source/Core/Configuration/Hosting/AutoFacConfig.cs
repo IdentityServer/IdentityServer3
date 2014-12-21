@@ -114,7 +114,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             // add any additional dependencies from hosting application
             foreach(var registration in fact.Registrations)
             {
-                builder.Register(registration);
+                builder.Register(registration, registration.Name);
             }
 
             return builder.Build();

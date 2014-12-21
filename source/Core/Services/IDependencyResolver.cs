@@ -23,6 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface IDependencyResolver
     {
-        T Resolve<T>();
+        T Resolve<T>(string name = null);
     }
 }
