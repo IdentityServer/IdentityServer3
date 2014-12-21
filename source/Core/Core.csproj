@@ -137,6 +137,7 @@
     <Compile Include="Events\EventType.cs" />
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
+    <Compile Include="Extensions\ClaimExtensions.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
