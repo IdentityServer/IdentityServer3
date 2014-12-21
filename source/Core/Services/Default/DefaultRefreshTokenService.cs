@@ -74,7 +74,6 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var handle = CryptoRandom.CreateUniqueId();
             var refreshToken = new RefreshToken
             {
-                ClientId = client.ClientId,
                 CreationTime = DateTimeOffset.UtcNow,
                 LifeTime = lifetime,
                 AccessToken = accessToken

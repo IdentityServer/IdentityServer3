@@ -230,8 +230,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token") { Claims = new List<Claim> { subjectClaim } },
-                ClientId = "roclient",
+                AccessToken = new Token("access_token")
+                {
+                    Claims = new List<Claim> { subjectClaim },
+                    Client =new Client{ClientId = "roclient"}
+                },
                 LifeTime = 600,
                 CreationTime = DateTime.UtcNow
             };
@@ -266,8 +269,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.TokenRequest
 
             var refreshToken = new RefreshToken
             {
-                AccessToken = new Token("access_token") { Claims = new List<Claim> { subjectClaim } },
-                ClientId = "roclient_restricted_refresh",
+                AccessToken = new Token("access_token")
+                {
+                    Claims = new List<Claim> { subjectClaim },
+                    Client = new Client { ClientId = "roclient_restricted_refresh"}
+                },
+                
                 LifeTime = 600,
                 CreationTime = DateTime.UtcNow
             };
