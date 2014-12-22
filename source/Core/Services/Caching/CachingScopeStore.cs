@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
     public class CachingScopeStore : IScopeStore
     {
-        readonly IScopeStore inner;
-        readonly ICache<IEnumerable<Scope>> cache;
+        const string AllScopes = "CachingScopeStore.allscopes";
+        const string AllScopesPublic = AllScopes + ".public";
+
+        IScopeStore inner;
+        ICache<IEnumerable<Scope>> cache;
 
         public CachingScopeStore(IScopeStore inner, ICache<IEnumerable<Scope>> cache)
         {
@@ -43,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             return await cache.GetAsync(key, async () => await inner.FindScopesAsync(scopeNames));
         }
 
-        public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
+        public async Task<IEnumerable<Models.Scope>> GetScopesAsync(bool publicOnly = true)
         {
             var key = GetKey(publicOnly);
             return await cache.GetAsync(key, async () => await inner.GetScopesAsync(publicOnly));
@@ -51,14 +53,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
 
         private string GetKey(IEnumerable<string> scopeNames)
         {
-            if (scopeNames == null) return "";
+            if (scopeNames == null || !scopeNames.Any()) return "";
             return scopeNames.OrderBy(x => x).Aggregate((x, y) => x + "," + y);
         }
 
         private string GetKey(bool publicOnly)
         {
-            if (publicOnly) return "__all__.public";
-            return "__all__";
+            if (publicOnly) return AllScopesPublic;
+            return AllScopes;
         }
     }
 }

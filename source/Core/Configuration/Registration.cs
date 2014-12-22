@@ -21,31 +21,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public abstract class Registration
     {
-        public string Name { get; protected set; }
         public abstract Type InterfaceType { get; }
-        public abstract Type ImplementationType { get; }
-        public abstract Func<IDependencyResolver, object> ImplementationFactory { get; }
+
+        public string Name { get; protected set; }
+        
+        public object Instance { get; protected set; }
+        public Type Type { get; protected set; }
+        public Func<IDependencyResolver, object> Factory { get; protected set; }
     }
 
     public class Registration<T> : Registration
         where T : class
     {
-        public Type Type { get; protected set; }
-        public Func<IDependencyResolver, T> TypeFactory { get; protected set; }
-
         public override Type InterfaceType
         {
             get { return typeof(T); }
-        }
-
-        public override Type ImplementationType
-        {
-            get { return Type; }
-        }
-
-        public override Func<IDependencyResolver, object> ImplementationFactory
-        {
-            get { return TypeFactory; }
         }
 
         public Registration(string name = null)
@@ -62,11 +52,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.Name = name;
         }
 
-        public Registration(Func<IDependencyResolver, T> factoryFunc, string name = null)
+        public Registration(Func<IDependencyResolver, T> factory, string name = null)
         {
-            if (factoryFunc == null) throw new ArgumentNullException("factoryFunc");
+            if (factory == null) throw new ArgumentNullException("factory");
 
-            this.TypeFactory = factoryFunc;
+            this.Factory = factory;
             this.Name = name;
         }
 
@@ -74,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             if (instance == null) throw new ArgumentNullException("instance");
 
-            this.TypeFactory = resolver => instance;
+            this.Instance = instance;
             this.Name = name;
         }
         
@@ -84,7 +74,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (name == null) throw new ArgumentNullException("name");
 
             this.Type = registration.Type;
-            this.TypeFactory = registration.TypeFactory;
+            this.Factory = registration.Factory;
+            this.Instance = registration.Instance;
             this.Name = name;
         }
     }

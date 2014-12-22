@@ -35,11 +35,11 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         }
 
         [Fact]
-        public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
+        public void RegisterSingleton_Instance_ReturnsSingleton()
         {
             object theSingleton = new object();
             var reg = new Registration<object>((object)theSingleton);
-            var result = reg.ImplementationFactory(null);
+            var result = reg.Instance;
             result.Should().BeSameAs(theSingleton);
         }
 
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             Action act = () => new Registration<object>((Func<IDependencyResolver, object>)null);
 
             act.ShouldThrow<ArgumentNullException>()
-                .And.ParamName.Should().Be("factoryFunc");
+                .And.ParamName.Should().Be("factory");
         }
         
         [Fact]
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             var wasCalled = false;
             Func<IDependencyResolver, object> f = (resolver) => { wasCalled = true; return new object(); };
             var reg = new Registration<object>(f);
-            var result = reg.ImplementationFactory(null);
+            var result = reg.Factory(null);
             wasCalled.Should().BeTrue();
         }
 
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterType_SetsTypeOnRegistration()
         {
             var result = new Registration<object>(typeof(string));
-            result.ImplementationType.Should().Be(typeof(string));
+            result.Type.Should().Be(typeof(string));
         }
     }
 }
