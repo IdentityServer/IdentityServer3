@@ -54,8 +54,8 @@ namespace Thinktecture.IdentityServer.Host
                         clients: Clients.Get(),
                         scopes:  Scopes.Get());
 
-                    factory.ConfigureScopeStoreCache();
                     factory.ConfigureClientStoreCache();
+                    factory.ConfigureScopeStoreCache();
 
                     var idsrvOptions = new IdentityServerOptions
                     {
