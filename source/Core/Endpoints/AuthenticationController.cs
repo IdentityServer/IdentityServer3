@@ -506,7 +506,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
-            IssueAuthenticationCookie(signInMessage, signInMessageId, authResult, rememberMe);
+            IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
@@ -518,9 +518,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _events.RaiseLocalLoginSuccessEvent(Request.GetOwinEnvironment(), username, signInMessage, authResult);
         }
 
-        private void IssueAuthenticationCookie(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
+        private void IssueAuthenticationCookie(string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
-            if (signInMessage == null) throw new ArgumentNullException("signInId");
             if (authResult == null) throw new ArgumentNullException("authResult");
 
             Logger.InfoFormat("issuing cookie{0}", authResult.IsPartialSignIn ? " (partial login)" : "");

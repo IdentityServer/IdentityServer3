@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using Autofac;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     class AutofacDependencyResolver : IDependencyResolver
     {
-        IComponentContext ctx;
+        readonly IComponentContext ctx;
         public AutofacDependencyResolver(IComponentContext ctx)
         {
             this.ctx = ctx;

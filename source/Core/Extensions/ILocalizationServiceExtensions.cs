@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -28,28 +25,28 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (localization == null) throw new ArgumentNullException("localization");
 
-            return localization.GetString(Thinktecture.IdentityServer.Core.Constants.LocalizationCategories.Messages, id);
+            return localization.GetString(Constants.LocalizationCategories.Messages, id);
         }
 
         public static string GetEvent(this ILocalizationService localization, string id)
         {
             if (localization == null) throw new ArgumentNullException("localization");
 
-            return localization.GetString(Thinktecture.IdentityServer.Core.Constants.LocalizationCategories.Events, id);
+            return localization.GetString(Constants.LocalizationCategories.Events, id);
         }
         
         public static string GetScopeDisplayName(this ILocalizationService localization, string scope)
         {
             if (localization == null) throw new ArgumentNullException("localization");
             
-            return localization.GetString(Thinktecture.IdentityServer.Core.Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDisplayNameSuffix);
+            return localization.GetString(Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDisplayNameSuffix);
         }
         
         public static string GetScopeDescription(this ILocalizationService localization, string scope)
         {
             if (localization == null) throw new ArgumentNullException("localization");
             
-            return localization.GetString(Thinktecture.IdentityServer.Core.Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDescriptionSuffix);
+            return localization.GetString(Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDescriptionSuffix);
         }
     }
 }

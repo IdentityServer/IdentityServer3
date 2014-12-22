@@ -26,11 +26,11 @@
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    using System.Collections.Generic;
-    using Thinktecture.IdentityServer.Core.Logging.LogProviders;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using Thinktecture.IdentityServer.Core.Logging.LogProviders;
 
     /// <summary>
     /// Simple interface that represent a logger.
@@ -497,7 +497,6 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text;
-    using System.Threading;
 
     public class NLogLogProvider : ILogProvider
     {

@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         static IdentityServerServiceFactory()
         {
-            DefaultClaimsFilter = new Registration<IExternalClaimsFilter>((resolver) =>
+            DefaultClaimsFilter = new Registration<IExternalClaimsFilter>(resolver =>
             {
                 var aggregateFilter = new AggregateExternalClaimsFilter(
                     new NormalizingClaimsFilter(),

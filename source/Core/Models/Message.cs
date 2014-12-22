@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {

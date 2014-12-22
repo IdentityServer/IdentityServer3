@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core
             long authenticationTime = 0)
         {
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
-            if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentNullException("displayname");
+            if (String.IsNullOrWhiteSpace(displayName)) throw new ArgumentNullException("displayName");
             if (String.IsNullOrWhiteSpace(authenticationMethod)) throw new ArgumentNullException("authenticationMethod");
             if (String.IsNullOrWhiteSpace(idp)) throw new ArgumentNullException("idp");
             if (String.IsNullOrWhiteSpace(authenticationType)) throw new ArgumentNullException("authenticationType");

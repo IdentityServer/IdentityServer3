@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -26,8 +23,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class DefaultCache<T> : ICache<T>
         where T : class
     {
-        MemoryCache cache;
-        TimeSpan duration;
+        readonly MemoryCache cache;
+        readonly TimeSpan duration;
 
         public DefaultCache()
             : this(Constants.DefaultCacheDuration)
