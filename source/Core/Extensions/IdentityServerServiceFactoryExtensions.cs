@@ -27,21 +27,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class IdentityServerServiceFactoryExtensions
     {
-        public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory, 
-            Registration<ICache<IEnumerable<Scope>>> cacheRegistration = null)
+        public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory,
+            Registration<ICache<IEnumerable<Scope>>> cacheRegistration)
         {
             if (factory == null) throw new ArgumentNullException("factory");
+            if (cacheRegistration == null) throw new ArgumentNullException("cacheRegistration");
             if (factory.ScopeStore == null) throw new ArgumentNullException("ScopeStore needs to be configured on the factory");
-
-            if (cacheRegistration == null)
-            {
-                var cache = new DefaultCache<IEnumerable<Scope>>();
-                cacheRegistration = new Registration<ICache<IEnumerable<Scope>>>(cache);
-            }
 
             factory.Register(new Registration<ICache<IEnumerable<Scope>>>(cacheRegistration, "cache"));
             factory.Register(new Registration<IScopeStore>(factory.ScopeStore, "inner"));
-            
+
             factory.ScopeStore = new Registration<IScopeStore>(resolver =>
             {
                 var inner = resolver.Resolve<IScopeStore>("inner");
@@ -50,17 +45,26 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             });
         }
 
+        public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory, TimeSpan cacheDuration)
+        {
+            var cache = new DefaultCache<IEnumerable<Scope>>(cacheDuration);
+            var cacheRegistration = new Registration<ICache<IEnumerable<Scope>>>(cache);
+            factory.ConfigureScopeStoreCache(cacheRegistration);
+        }
+        
+        public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory)
+        {
+            var cache = new DefaultCache<IEnumerable<Scope>>();
+            var cacheRegistration = new Registration<ICache<IEnumerable<Scope>>>(cache);
+            factory.ConfigureScopeStoreCache(cacheRegistration);
+        }
+
         public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory,
-            Registration<ICache<Client>> cacheRegistration = null)
+            Registration<ICache<Client>> cacheRegistration)
         {
             if (factory == null) throw new ArgumentNullException("factory");
+            if (cacheRegistration == null) throw new ArgumentNullException("cacheRegistration");
             if (factory.ClientStore == null) throw new ArgumentNullException("ClientStore needs to be configured on the factory");
-
-            if (cacheRegistration == null)
-            {
-                var cache = new DefaultCache<Client>();
-                cacheRegistration = new Registration<ICache<Client>>(cache);
-            }
 
             factory.Register(new Registration<ICache<Client>>(cacheRegistration, "cache"));
             factory.Register(new Registration<IClientStore>(factory.ClientStore, "inner"));
@@ -72,6 +76,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 return new CachingClientStore(inner, cache);
             });
         }
+
+        public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory, TimeSpan cacheDuration)
+        {
+            var cache = new DefaultCache<Client>(cacheDuration);
+            var cacheRegistration = new Registration<ICache<Client>>(cache);
+            factory.ConfigureClientStoreCache(cacheRegistration);
+        }
+        
+        public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory)
+        {
+            var cache = new DefaultCache<Client>();
+            var cacheRegistration = new Registration<ICache<Client>>(cache);
+            factory.ConfigureClientStoreCache(cacheRegistration);
+        }
+
+
     }
 
    
