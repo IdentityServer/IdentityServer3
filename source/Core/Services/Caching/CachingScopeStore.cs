@@ -24,6 +24,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
     public class CachingScopeStore : IScopeStore
     {
+        const string AllScopes = "CachingScopeStore.allscopes";
+        const string AllScopesPublic = AllScopes + ".public";
+
         IScopeStore inner;
         ICache<IEnumerable<Scope>> cache;
 
@@ -50,14 +53,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
 
         private string GetKey(IEnumerable<string> scopeNames)
         {
-            if (scopeNames == null) return "";
+            if (scopeNames == null || !scopeNames.Any()) return "";
             return scopeNames.OrderBy(x => x).Aggregate((x, y) => x + "," + y);
         }
 
         private string GetKey(bool publicOnly)
         {
-            if (publicOnly) return "__all__.public";
-            return "__all__";
+            if (publicOnly) return AllScopesPublic;
+            return AllScopes;
         }
     }
 }
