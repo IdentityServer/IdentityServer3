@@ -158,8 +158,6 @@
     <Compile Include="Connect\Setup\TestScopes.cs" />
     <Compile Include="Connect\Setup\TestUserService.cs" />
     <Compile Include="Connect\Setup\Factory.cs" />
-    <Compile Include="Services\Caching\InMemoryCacheTests.cs" />
-    <Compile Include="Services\Caching\TimeoutCacheTests.cs" />
     <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
     <Compile Include="Services\Default\AggregatePermissionsStoreTests.cs" />
@@ -203,7 +201,9 @@
     <EmbeddedResource Include="idsrv3test.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\Caching\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

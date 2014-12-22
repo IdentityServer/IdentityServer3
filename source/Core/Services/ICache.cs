@@ -22,8 +22,9 @@ using System.Threading.Tasks;
 namespace Thinktecture.IdentityServer.Core.Services
 {
     public interface ICache<T>
+        where T : class
     {
-        bool TryGet(string key, out T item);
-        void Set(string key, T item);
+        Task<T> GetAsync(string key);
+        Task SetAsync(string key, T item);
     }
 }

@@ -24,17 +24,19 @@ namespace Thinktecture.IdentityServer.Core.Services
     public static class ICacheExtensions
     {
         public static async Task<T> GetAsync<T>(this ICache<T> cache, string key, Func<Task<T>> get)
+            where T : class
         {
             if (cache == null) throw new ArgumentNullException("cache");
             if (key == null) throw new ArgumentNullException("key");
             if (get == null) throw new ArgumentNullException("get");
 
-            T item;
-            if (!cache.TryGet(key, out item))
+            T item = await cache.GetAsync(key);
+            if (item == null)
             {
                 item = await get();
-                cache.Set(key, item);
+                await cache.SetAsync(key, item);
             }
+            
             return item;
         }
     }
