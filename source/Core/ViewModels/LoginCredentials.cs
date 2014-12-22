@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using System.ComponentModel.DataAnnotations;
-
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     public class LoginCredentials

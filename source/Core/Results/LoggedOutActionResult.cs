@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
 

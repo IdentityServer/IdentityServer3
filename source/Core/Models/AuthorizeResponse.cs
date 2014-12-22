@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Models

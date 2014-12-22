@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;

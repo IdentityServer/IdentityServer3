@@ -99,7 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             }
 
 
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, scopes, customGrantValidator, customRequestValidator, scopeValidator, context);
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, customGrantValidator, customRequestValidator, scopeValidator, context);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeRequestValidator(

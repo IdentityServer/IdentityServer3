@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
-using System;
+using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -26,11 +25,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             switch(category)
             {
                 case Constants.LocalizationCategories.Messages:
-                    return Thinktecture.IdentityServer.Core.Resources.Messages.ResourceManager.GetString(id);
+                    return Messages.ResourceManager.GetString(id);
                 case Constants.LocalizationCategories.Events:
-                    return Thinktecture.IdentityServer.Core.Resources.Events.ResourceManager.GetString(id);
+                    return Resources.Events.ResourceManager.GetString(id);
                 case Constants.LocalizationCategories.Scopes:
-                    return Thinktecture.IdentityServer.Core.Resources.Scopes.ResourceManager.GetString(id);
+                    return Scopes.ResourceManager.GetString(id);
             }
             
             return null;

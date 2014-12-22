@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
     public class CachingUserService : IUserService
     {
-        IUserService inner;
-        ICache<IEnumerable<Claim>> cache;
+        readonly IUserService inner;
+        readonly ICache<IEnumerable<Claim>> cache;
 
         public CachingUserService(IUserService inner, ICache<IEnumerable<Claim>> cache)
         {

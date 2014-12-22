@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         
         public static string LoadLayoutWithContent(string content)
         {
-            var layout = LoadResourceString(AssetManager.Layout);
+            var layout = LoadResourceString(Layout);
             return ApplyContentToLayout(layout, content);
         }
 
@@ -57,12 +57,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return LoadLayoutWithContent(pageContent);
         }
         
-        public static string LoadFormPost(string rootUrl, string redirect_uri, string fields)
+        public static string LoadFormPost(string rootUrl, string redirectUri, string fields)
         {
-            return LoadResourceString(AssetManager.FormPostResponse, 
+            return LoadResourceString(FormPostResponse, 
                 new{
                     rootUrl,
-                    redirect_uri,
+                    redirect_uri = redirectUri,
                     fields
                 }
             );

@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services
+using System;
+using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Services;
+
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     public static class ICacheExtensions
     {

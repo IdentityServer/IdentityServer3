@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Owin;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
