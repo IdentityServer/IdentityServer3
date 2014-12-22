@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
-    public class ExternalClaimsFilterUserService : IUserService
+    public class CachingUserService : IUserService
     {
-        readonly IExternalClaimsFilter filter;
-        readonly IUserService inner;
+        IUserService inner;
+        ICache<IEnumerable<Claim>> cache;
 
-        public ExternalClaimsFilterUserService(IExternalClaimsFilter filter, IUserService inner)
+        public CachingUserService(IUserService inner, ICache<IEnumerable<Claim>> cache)
         {
-            if (filter == null) throw new ArgumentNullException("filter");
             if (inner == null) throw new ArgumentNullException("inner");
+            if (cache == null) throw new ArgumentNullException("cache");
 
-            this.filter = filter;
             this.inner = inner;
+            this.cache = cache;
         }
 
         public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
@@ -48,13 +50,18 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
         {
-            externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
             return inner.AuthenticateExternalAsync(externalUser, message);
+        }
+
+        public Task SignOutAsync(ClaimsPrincipal subject)
+        {
+            return inner.SignOutAsync(subject);
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
-            return inner.GetProfileDataAsync(subject, requestedClaimTypes);
+            var key = GetKey(subject, requestedClaimTypes);
+            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(subject, requestedClaimTypes));
         }
 
         public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
@@ -62,9 +69,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return inner.IsActiveAsync(subject);
         }
 
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        private string GetKey(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes)
         {
-            return inner.SignOutAsync(subject);
+            var sub = subject.GetSubjectId();
+            if (requestedClaimTypes == null) return sub;
+
+            return sub + ":" + requestedClaimTypes.OrderBy(x => x).Aggregate((x, y) => x + "," + y);
         }
     }
 }

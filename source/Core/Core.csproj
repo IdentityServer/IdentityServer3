@@ -104,6 +104,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.Cors, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.2\lib\net45\System.Web.Cors.dll</HintPath>
@@ -138,6 +139,8 @@
     <Compile Include="Events\AuthenticationEvent.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\ClaimExtensions.cs" />
+    <Compile Include="Extensions\ICacheExtensions.cs" />
+    <Compile Include="Extensions\IdentityServerServiceFactoryExtensions.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
@@ -149,9 +152,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
+    <Compile Include="Services\Caching\CachingClientStore.cs" />
+    <Compile Include="Services\Caching\CachingUserService.cs" />
+    <Compile Include="Services\Caching\CachingScopeStore.cs" />
+    <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultLocalizationService.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
+    <Compile Include="Services\ICache.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
@@ -487,6 +495,7 @@
       <DependentUpon>styles.css</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

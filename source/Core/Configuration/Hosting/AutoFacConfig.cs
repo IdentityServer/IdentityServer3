@@ -29,6 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal static class AutofacConfig
     {
+        const string DecoratorRegistrationName = "decorator.inner";
+
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public static IContainer Configure(IdentityServerOptions options)
@@ -44,177 +46,30 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterInstance(options).AsSelf();
 
             // mandatory from factory
-            builder.Register(fact.UserService, "inner");
-            builder.RegisterDecorator<IUserService>((s, inner) =>
-            {
-                var filter = s.Resolve<IExternalClaimsFilter>();
-                return new ExternalClaimsFilterUserService(filter, inner);
-            }, "inner");
-
             builder.Register(fact.ScopeStore);
             builder.Register(fact.ClientStore);
+            builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
             
             // optional from factory
-            if (fact.AuthorizationCodeStore != null)
-            {
-                builder.Register(fact.AuthorizationCodeStore, "inner");
-            }
-            else
-            {
-                var inmemCodeStore = new InMemoryAuthorizationCodeStore();
-                builder.RegisterInstance(inmemCodeStore).Named<IAuthorizationCodeStore>("inner");
-            }
-            builder.RegisterDecorator<IAuthorizationCodeStore>((s, inner) =>
-            {
-                return new KeyHashingAuthorizationCodeStore(inner);
-            }, "inner");
-
-            if (fact.TokenHandleStore != null)
-            {
-                builder.Register(fact.TokenHandleStore, "inner");
-            }
-            else
-            {
-                var inmemTokenHandleStore = new InMemoryTokenHandleStore();
-                builder.RegisterInstance(inmemTokenHandleStore).Named<ITokenHandleStore>("inner");
-            }
-            builder.RegisterDecorator<ITokenHandleStore>((s, inner) =>
-            {
-                return new KeyHashingTokenHandleStore(inner);
-            }, "inner");
-
-            if (fact.RefreshTokenStore != null)
-            {
-                builder.Register(fact.RefreshTokenStore, "inner");
-            }
-            else
-            {
-                var inmemRefreshTokenStore = new InMemoryRefreshTokenStore();
-                builder.RegisterInstance(inmemRefreshTokenStore).Named<IRefreshTokenStore>("inner");
-            }
-            builder.RegisterDecorator<IRefreshTokenStore>((s, inner) =>
-            {
-                return new KeyHashingRefreshTokenStore(inner);
-            }, "inner");
-
-            if (fact.ConsentStore != null)
-            {
-                builder.Register(fact.ConsentStore);
-            }
-            else
-            {
-                var inmemConsentStore = new InMemoryConsentStore();
-                builder.RegisterInstance(inmemConsentStore).As<IConsentStore>();
-            }
-
-            if (fact.ClaimsProvider != null)
-            {
-                builder.Register(fact.ClaimsProvider);
-            }
-            else
-            {
-                builder.RegisterType<DefaultClaimsProvider>().As<IClaimsProvider>();
-            }
-
-            if (fact.TokenService != null)
-            {
-                builder.Register(fact.TokenService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultTokenService>().As<ITokenService>();
-            }
-
-            if (fact.RefreshTokenService != null)
-            {
-                builder.Register(fact.RefreshTokenService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultRefreshTokenService>().As<IRefreshTokenService>();
-            }
-
-            if (fact.TokenSigningService != null)
-            {
-                builder.Register(fact.TokenSigningService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultTokenSigningService>().As<ITokenSigningService>();
-            }
-
-            if (fact.CustomRequestValidator != null)
-            {
-                builder.Register(fact.CustomRequestValidator);
-            }
-            else
-            {
-                builder.RegisterType<DefaultCustomRequestValidator>().As<ICustomRequestValidator>();
-            }
-
-            if (fact.CustomGrantValidator != null)
-            {
-                builder.Register(fact.CustomGrantValidator);
-            }
-            else
-            {
-                builder.RegisterType<DefaultCustomGrantValidator>().As<ICustomGrantValidator>();
-            }
-
-            if (fact.ExternalClaimsFilter != null)
-            {
-                builder.Register(fact.ExternalClaimsFilter);
-            }
-            else
-            {
-                builder.RegisterType<NopClaimsFilter>().As<IExternalClaimsFilter>();
-            }
-
-            if (fact.CustomTokenValidator != null)
-            {
-                builder.Register(fact.CustomTokenValidator);
-            }
-            else
-            {
-                builder.RegisterType<DefaultCustomTokenValidator>().As<ICustomTokenValidator>();
-            }
-
-            if (fact.ConsentService != null)
-            {
-                builder.Register(fact.ConsentService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultConsentService>().As<IConsentService>();
-            }
-
-            if (fact.EventService != null)
-            {
-                builder.Register(fact.EventService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultEventService>().As<IEventService>();
-            }
-
-            if (fact.RedirectUriValidator != null)
-            {
-                builder.Register(fact.RedirectUriValidator);
-            }
-            else
-            {
-                builder.RegisterType<DefaultRedirectUriValidator>().As<IRedirectUriValidator>();
-            }
+            builder.RegisterDecoratorDefaultInstance<IAuthorizationCodeStore, KeyHashingAuthorizationCodeStore, InMemoryAuthorizationCodeStore>(fact.AuthorizationCodeStore);
+            builder.RegisterDecoratorDefaultInstance<ITokenHandleStore, KeyHashingTokenHandleStore, InMemoryTokenHandleStore>(fact.TokenHandleStore);
+            builder.RegisterDecoratorDefaultInstance<IRefreshTokenStore, KeyHashingRefreshTokenStore, InMemoryRefreshTokenStore>(fact.RefreshTokenStore);
+            builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
+            builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
+            builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
+            builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);
+            builder.RegisterDefaultType<ITokenSigningService, DefaultTokenSigningService>(fact.TokenSigningService);
+            builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
+            builder.RegisterDefaultType<ICustomGrantValidator, DefaultCustomGrantValidator>(fact.CustomGrantValidator);
+            builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
+            builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
+            builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
+            builder.RegisterDefaultType<IEventService, DefaultEventService>(fact.EventService);
+            builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
+            builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
+            builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
+            builder.RegisterDefaultType<IViewService, DefaultViewService>(fact.ViewService);
             
-            if (fact.LocalizationService != null)
-            {
-                builder.Register(fact.LocalizationService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultLocalizationService>().As<ILocalizationService>();
-            }
-
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
             // by a custom IClientPermissionsService
@@ -231,24 +86,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     new TokenMetadataPermissionsStoreAdapter(access.GetAllAsync, access.RevokeAsync)
                 );
             }).As<IPermissionsStore>();
-
-            if (fact.ClientPermissionsService != null)
-            {
-                builder.Register(fact.ClientPermissionsService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultClientPermissionsService>().As<IClientPermissionsService>();
-            }
-
-            if (fact.ViewService != null)
-            {
-                builder.Register(fact.ViewService);
-            }
-            else
-            {
-                builder.RegisterType<DefaultViewService>().As<IViewService>();
-            }
 
             // hosting services
             builder.RegisterType<OwinEnvironmentService>();
@@ -279,12 +116,88 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             // add any additional dependencies from hosting application
             foreach(var registration in fact.Registrations)
             {
-                builder.Register(registration);
+                builder.Register(registration, registration.Name);
             }
 
             return builder.Build();
         }
 
+        private static void RegisterDefaultType<T, TDefault>(this ContainerBuilder builder, Registration<T> registration, string name = null)
+            where T : class
+            where TDefault : T
+        {
+            if (registration != null)
+            {
+                builder.Register(registration, name);
+            }
+            else
+            {
+                if (name == null)
+                {
+                    builder.RegisterType<TDefault>().As<T>();
+                }
+                else
+                {
+                    builder.RegisterType<TDefault>().Named<T>(name);
+                }
+            }
+        }
+        
+        private static void RegisterDefaultInstance<T, TDefault>(this ContainerBuilder builder, Registration<T> registration, string name = null)
+            where T : class
+            where TDefault : class, T, new()
+        {
+            if (registration != null)
+            {
+                builder.Register(registration, name);
+            }
+            else
+            {
+                if (name == null)
+                {
+                    builder.RegisterInstance(new TDefault()).As<T>();
+                }
+                else
+                {
+                    builder.RegisterInstance(new TDefault()).Named<T>(name);
+                }
+            }
+        }
+
+        private static void RegisterDecorator<T, TDecorator>(this ContainerBuilder builder, string name)
+            where T : class
+            where TDecorator : T
+        {
+            builder.RegisterType<TDecorator>();
+            builder.Register<T>(ctx =>
+            {
+                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(name);
+                return ctx.Resolve<TDecorator>(inner);
+            });
+        }
+        
+        private static void RegisterDecoratorDefaultInstance<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
+            where T : class
+            where TDecorator : T
+            where TDefault : class, T, new()
+        {
+            builder.RegisterDefaultInstance<T, TDefault>(registration, DecoratorRegistrationName);
+            builder.RegisterDecorator<T, TDecorator>(DecoratorRegistrationName);
+        }
+
+        private static void RegisterDecorator<T, TDecorator>(this ContainerBuilder builder, Registration<T> registration)
+            where T : class
+            where TDecorator : T
+        {
+            builder.Register(registration, DecoratorRegistrationName);
+            builder.RegisterType<TDecorator>();
+            builder.Register<T>(ctx =>
+            {
+                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(DecoratorRegistrationName);
+                return ctx.Resolve<TDecorator>(inner);
+            });
+        }
+        
         private static void Register(this ContainerBuilder builder, Registration registration, string name = null)
         {
             if (registration.ImplementationType != null)

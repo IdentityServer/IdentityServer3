@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void RegisterSingleton_NullInstance_Throws()
         {
-            Action act = () => Registration.RegisterSingleton<object>(null);
+            Action act = () => new Registration<object>((object)null);
 
             act.ShouldThrow<ArgumentNullException>()
                 .And.ParamName.Should().Be("instance");
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         public void RegisterSingleton_Instance_FactoryReturnsSameInstance()
         {
             object theSingleton = new object();
-            var reg = Registration.RegisterSingleton(theSingleton);
+            var reg = new Registration<object>((object)theSingleton);
             var result = reg.ImplementationFactory(null);
             result.Should().BeSameAs(theSingleton);
         }
@@ -46,10 +46,10 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void RegisterFactory_NullFunc_Throws()
         {
-            Action act = () => Registration.RegisterFactory<object>(null); ;
+            Action act = () => new Registration<object>((Func<IDependencyResolver, object>)null);
 
             act.ShouldThrow<ArgumentNullException>()
-                .And.ParamName.Should().Be("typeFunc");
+                .And.ParamName.Should().Be("factoryFunc");
         }
         
         [Fact]
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         {
             var wasCalled = false;
             Func<IDependencyResolver, object> f = (resolver) => { wasCalled = true; return new object(); };
-            var reg = Registration.RegisterFactory(f);
+            var reg = new Registration<object>(f);
             var result = reg.ImplementationFactory(null);
             wasCalled.Should().BeTrue();
         }
@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void RegisterType_NullType_Throws()
         {
-            Action act = () => Registration.RegisterType<object>(null);
+            Action act = () => new Registration<object>((Type)null);
 
             act.ShouldThrow<ArgumentNullException>()
                 .And.ParamName.Should().Be("type");
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void RegisterType_SetsTypeOnRegistration()
         {
-            var result = Registration.RegisterType<object>(typeof(string));
+            var result = new Registration<object>(typeof(string));
             result.ImplementationType.Should().Be(typeof(string));
         }
     }

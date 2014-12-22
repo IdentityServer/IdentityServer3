@@ -32,20 +32,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             
             if (users != null)
             {
-                factory.Register(Registration.RegisterSingleton<List<InMemoryUser>>(users));
-                factory.UserService = Registration.RegisterType<IUserService>(typeof(InMemoryUserService));
+                factory.Register(new Registration<List<InMemoryUser>>(users));
+                factory.UserService = new Registration<IUserService, InMemoryUserService>();
             }
 
             if (clients != null)
             {
-                factory.Register(Registration.RegisterSingleton<IEnumerable<Client>>(clients));
-                factory.ClientStore = Registration.RegisterType<IClientStore>(typeof(InMemoryClientStore));
+                factory.Register(new Registration<IEnumerable<Client>>(clients));
+                factory.ClientStore = new Registration<IClientStore>(typeof(InMemoryClientStore));
             }
 
             if (scopes != null)
             {
-                factory.Register(Registration.RegisterSingleton<IEnumerable<Scope>>(scopes));
-                factory.ScopeStore = Registration.RegisterType<IScopeStore>(typeof(InMemoryScopeStore));
+                factory.Register(new Registration<IEnumerable<Scope>>(scopes));
+                factory.ScopeStore = new Registration<IScopeStore>(typeof(InMemoryScopeStore));
             }
 
             return factory;

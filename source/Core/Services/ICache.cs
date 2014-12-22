@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using Autofac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services
 {
-    class AutofacDependencyResolver : IDependencyResolver
+    public interface ICache<T>
+        where T : class
     {
-        IComponentContext ctx;
-        public AutofacDependencyResolver(IComponentContext ctx)
-        {
-            this.ctx = ctx;
-        }
-        
-        public T Resolve<T>(string name)
-        {
-            if (name != null)
-            {
-                return ctx.ResolveNamed<T>(name);
-            }
-
-            return ctx.Resolve<T>();
-        }
+        Task<T> GetAsync(string key);
+        Task SetAsync(string key, T item);
     }
 }
