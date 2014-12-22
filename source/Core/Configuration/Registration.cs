@@ -77,6 +77,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.TypeFactory = resolver => instance;
             this.Name = name;
         }
+        
+        public Registration(Registration<T> registration, string name)
+        {
+            if (registration == null) throw new ArgumentNullException("registration");
+            if (name == null) throw new ArgumentNullException("name");
+
+            this.Type = registration.Type;
+            this.TypeFactory = registration.TypeFactory;
+            this.Name = name;
+        }
     }
 
     public class Registration<T, TImpl> : Registration<T>

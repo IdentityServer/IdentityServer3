@@ -82,6 +82,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Owin.Testing.3.0.0\lib\net45\Microsoft.Owin.Testing.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.2.1409.1722, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
@@ -157,6 +158,8 @@
     <Compile Include="Connect\Setup\TestScopes.cs" />
     <Compile Include="Connect\Setup\TestUserService.cs" />
     <Compile Include="Connect\Setup\Factory.cs" />
+    <Compile Include="Services\Caching\InMemoryCacheTests.cs" />
+    <Compile Include="Services\Caching\TimeoutCacheTests.cs" />
     <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
     <Compile Include="Services\Default\AggregatePermissionsStoreTests.cs" />
