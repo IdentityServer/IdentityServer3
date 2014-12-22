@@ -56,6 +56,7 @@ namespace Thinktecture.IdentityServer.Host
 
                     factory.ConfigureClientStoreCache();
                     factory.ConfigureScopeStoreCache();
+                    factory.ConfigureUserServiceCache();
 
                     var idsrvOptions = new IdentityServerOptions
                     {

@@ -153,6 +153,7 @@
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
     <Compile Include="Services\Caching\CachingClientStore.cs" />
+    <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />

@@ -29,6 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal static class AutofacConfig
     {
+        const string DecoratorRegistrationName = "decorator.inner";
+
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public static IContainer Configure(IdentityServerOptions options)
@@ -176,21 +178,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         
         private static void RegisterDecoratorDefaultInstance<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
             where T : class
+            where TDecorator : T
             where TDefault : class, T, new()
         {
-            builder.RegisterDefaultInstance<T, TDefault>(registration, "inner");
-            builder.RegisterDecorator<T, TDefault>("inner");
+            builder.RegisterDefaultInstance<T, TDefault>(registration, DecoratorRegistrationName);
+            builder.RegisterDecorator<T, TDecorator>(DecoratorRegistrationName);
         }
 
         private static void RegisterDecorator<T, TDecorator>(this ContainerBuilder builder, Registration<T> registration)
             where T : class
             where TDecorator : T
         {
-            builder.Register(registration, "inner");
+            builder.Register(registration, DecoratorRegistrationName);
             builder.RegisterType<TDecorator>();
             builder.Register<T>(ctx =>
             {
-                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>("inner");
+                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(DecoratorRegistrationName);
                 return ctx.Resolve<TDecorator>(inner);
             });
         }
