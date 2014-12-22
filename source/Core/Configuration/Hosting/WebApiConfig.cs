@@ -35,6 +35,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.LocalOnly;
+
             if (options.DiagnosticsOptions.EnableWebApiDiagnostics)
             {
                 var liblog = new TraceSource("LibLog");
