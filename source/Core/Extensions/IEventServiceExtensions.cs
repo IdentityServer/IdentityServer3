@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class IEventServiceExtensions
     {
-        public static void RaiseLocalLoginSuccessEvent(this IEventService events, IDictionary<string, object> env, string username, SignInMessage signInMessage, AuthenticateResult authResult)
+        public static void RaiseLocalLoginSuccessEvent(this IEventService events, string username, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             if (events == null) throw new ArgumentNullException("events");
 
@@ -40,21 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 SignInMessage = signInMessage,
                 LoginUserName = username
             };
-            evt.ApplyEnvironment(env);
             events.Raise(evt);
-        }
-
-        internal static void ApplyEnvironment(this EventBase evt, IDictionary<string, object> env)
-        {
-            if (env == null) throw new ArgumentNullException("env");
-
-            var ctx = new OwinContext(env);
-
-            evt.ActivityId = ActivityId.GetCurrentId();
-            evt.TimeStamp = DateTime.UtcNow;
-            evt.ProcessId = Process.GetCurrentProcess().Id;
-            evt.MachineName = Environment.MachineName; 
-            evt.RemoteIpAddress = ctx.Request.RemoteIpAddress;
         }
     }
 }

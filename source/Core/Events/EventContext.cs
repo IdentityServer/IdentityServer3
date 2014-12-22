@@ -18,14 +18,12 @@ using System;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class EventBase
+    public class EventContext
     {
-        public EventContext Context { get; set; }
-
-        public int Id { get; set; }
-        public EventType EventType { get; set; }
-        public string Category { get; set; }
-        public string Message { get; set; }
-        public string Details { get; set; }
+        public string ActivityId { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public int ProcessId { get; set; }
+        public string MachineName { get; set; }
+        public string RemoteIpAddress { get; set; }
     }
 }

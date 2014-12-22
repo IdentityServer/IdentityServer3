@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
+using System.Diagnostics;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -25,18 +28,42 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
+        static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+        {
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
+            Formatting = Formatting.Indented,
+        };
+
+        static DefaultEventService()
+        {
+            jsonSettings.Converters.Add(new StringEnumConverter());
+        }
+
+        readonly OwinContext context;
+
+        public DefaultEventService(OwinEnvironmentService owinEnvironment)
+        {
+            if (owinEnvironment == null) throw new ArgumentNullException("owinEnvironment");
+
+            this.context = new OwinContext(owinEnvironment.Environment);
+        }
+
         public void Raise(EventBase evt)
         {
-            var settings = new JsonSerializerSettings
-            {
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore,
-                DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                Formatting = Formatting.Indented,
-            };
-            settings.Converters.Add(new StringEnumConverter());
+            if (evt == null) throw new ArgumentNullException("evt");
 
-            var json = JsonConvert.SerializeObject(evt, settings);
+            evt.Context = new EventContext
+            {
+                ActivityId = ActivityId.GetCurrentId(),
+                TimeStamp = DateTime.UtcNow,
+                ProcessId = Process.GetCurrentProcess().Id,
+                MachineName = Environment.MachineName,
+                RemoteIpAddress = context.Request.RemoteIpAddress
+            };
+            
+            var json = JsonConvert.SerializeObject(evt, jsonSettings);
             Logger.Info(json);
         }
     }
