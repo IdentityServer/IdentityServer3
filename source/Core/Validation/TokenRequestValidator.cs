@@ -15,6 +15,7 @@
  */
 
 using Microsoft.Owin;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -25,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Validation.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -38,7 +40,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomGrantValidator _customGrantValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
-        //private readonly IDictionary<string, object> _environment;
         private readonly ScopeValidator _scopeValidator;
 
         private ValidatedTokenRequest _validatedRequest;
@@ -60,12 +61,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
             _scopeValidator = scopeValidator;
-            //_environment = context.Environment;
         }
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
-            Logger.Info("Starting request validation");
+            Logger.Info("Start token request validation");
 
             _validatedRequest = new ValidatedTokenRequest();
             
@@ -89,11 +89,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var grantType = parameters.Get(Constants.TokenRequest.GrantType);
             if (grantType.IsMissing())
             {
-                Logger.Error("Grant type is missing.");
+                LogError("Grant type is missing.");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            Logger.InfoFormat("Grant type: {0}", grantType);
             _validatedRequest.GrantType = grantType;
 
             // standard grant types
@@ -119,7 +118,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     return result;
                 }
 
-                Logger.ErrorFormat("Unsupported grant_type: {0}", grantType);
+                LogError("Unsupported grant_type: " + grantType);
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
@@ -136,7 +135,23 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             // run custom validation
-            return await _customRequestValidator.ValidateTokenRequestAsync(_validatedRequest);
+            var customResult = await _customRequestValidator.ValidateTokenRequestAsync(_validatedRequest);
+
+            if (customResult.IsError)
+            {
+                var message = "Custom request validator error";
+
+                if (customResult.Error.IsPresent())
+                {
+                    message += ": " + customResult.Error;
+                }
+
+                LogError(message);
+                return customResult;
+            }
+
+            LogSuccess();
+            return customResult;
         }
 
         private async Task<ValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
@@ -233,12 +248,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<ValidationResult> ValidateClientCredentialsRequestAsync(NameValueCollection parameters)
         {
+            Logger.Info("Start client credentials token request validation");
+
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
             {
-                Logger.Error("Client not authorized for client credentials flow");
+                LogError("Client not authorized for client credentials flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -247,23 +264,25 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (! (await ValidateRequestedScopesAsync(parameters)))
             {
-                Logger.Error("Invalid scopes.");
+                LogError("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
             if (_validatedRequest.ValidatedScopes.ContainsOpenIdScopes)
             {
-                Logger.Error("Client cannot request OpenID scopes in client credentials flow");
+                LogError("Client cannot request OpenID scopes in client credentials flow");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
             if (_validatedRequest.ValidatedScopes.ContainsOfflineAccessScope)
             {
-                Logger.Error("Client cannot request a refresh token in client credentials flow");
+                LogError("Client cannot request a refresh token in client credentials flow");
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
-            Logger.Info("Successful validation of client_credentials request");
+            //LogSuccess("Successful validation of client_credentials request");
+            Logger.Info("Client credentials token request validation success");
+            
             return Valid();
         }
 
@@ -476,6 +495,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 ErrorType = ErrorTypes.Client,
                 Error = error
             };
+        }
+
+        private void LogError(string message)
+        {
+            var validationLog = new TokenValidationLog(_validatedRequest);
+            var json = ValidationLogSerializer.Serialize(validationLog);
+
+            Logger.ErrorFormat("{0}\n {1}", message, json);
+        }
+
+        private void LogSuccess()
+        {
+            var validationLog = new TokenValidationLog(_validatedRequest);
+            var json = ValidationLogSerializer.Serialize(validationLog);
+
+            Logger.InfoFormat("{0}\n {1}", "Token request validation successful", json);
         }
     }
 }
