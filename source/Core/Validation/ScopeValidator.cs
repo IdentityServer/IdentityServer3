@@ -53,8 +53,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return null;
             }
 
-            Logger.InfoFormat("scopes: {0}", scopes);
-
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 
@@ -120,11 +118,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             if (client.ScopeRestrictions == null || client.ScopeRestrictions.Count == 0)
             {
-                Logger.Info("All scopes allowed for client");
                 return true;
             }
-
-            Logger.Info("Allowed scopes for client client: " + client.ScopeRestrictions.ToSpaceSeparatedString());
 
             foreach (var scope in requestedScopes)
             {
@@ -171,36 +166,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     return false;
                 }
             }
-
-
-            //if (responseType == Constants.ResponseTypes.IdToken)
-            //{
-            //    // must include identity scopes, but no resource scopes
-            //    if (!ContainsOpenIdScopes || ContainsResourceScopes)
-            //    {
-            //        Logger.Error("Requests for id_token or id_token token response types must include identity scopes, but no resource scopes");
-            //        return false;
-            //    }
-
-            //}
-            //else if (responseType == Constants.ResponseTypes.IdTokenToken)
-            //{
-            //    // must include identity scopes
-            //    if (!ContainsOpenIdScopes)
-            //    {
-            //        Logger.Error("Requests for id_token response type must include identity scopes");
-            //        return false;
-            //    }
-            //}
-            //else if (responseType == Constants.ResponseTypes.Token)
-            //{
-            //    // must include resource scopes, but no identity scopes
-            //    if (ContainsOpenIdScopes || !ContainsResourceScopes)
-            //    {
-            //        Logger.Error("Requests for token response type must include resource scopes, but no identity scopes.");
-            //        return false;
-            //    }
-            //}
 
             return true;
         }
