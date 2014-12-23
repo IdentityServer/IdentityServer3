@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, IOwinContext context)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator)
         {
             _options = options;
             _clients = clients;
@@ -57,7 +57,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _validatedRequest = new ValidatedAuthorizeRequest
             {
                 Options = _options, 
-                Environment = context.Environment
             };
         }
 

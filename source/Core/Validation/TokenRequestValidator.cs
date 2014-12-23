@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomGrantValidator _customGrantValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
-        private readonly IDictionary<string, object> _environment;
+        //private readonly IDictionary<string, object> _environment;
         private readonly ScopeValidator _scopeValidator;
 
         private ValidatedTokenRequest _validatedRequest;
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator, IOwinContext context)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
@@ -60,18 +60,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
             _scopeValidator = scopeValidator;
-            _environment = context.Environment;
+            //_environment = context.Environment;
         }
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
             Logger.Info("Starting request validation");
 
-            _validatedRequest = new ValidatedTokenRequest
-            {
-                Environment = _environment
-            };
-
+            _validatedRequest = new ValidatedTokenRequest();
+            
             if (client == null)
             {
                 throw new ArgumentNullException("client");

@@ -50,8 +50,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
             IUserService userService = null,
             ICustomGrantValidator customGrantValidator = null,
             ICustomRequestValidator customRequestValidator = null,
-            ScopeValidator scopeValidator = null,
-            IDictionary<string, object> environment = null)
+            ScopeValidator scopeValidator = null)
         {
             if (options == null)
             {
@@ -88,18 +87,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 scopeValidator = new ScopeValidator(scopes);
             }
 
-            IOwinContext context;
-            if (environment == null)
-            {
-                context = new OwinContext(new Dictionary<string, object>());
-            }
-            else
-            {
-                context = new OwinContext(environment);
-            }
-
-
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, customGrantValidator, customRequestValidator, scopeValidator, context);
+            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, customGrantValidator, customRequestValidator, scopeValidator);
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeRequestValidator(
@@ -142,17 +130,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 scopeValidator = new ScopeValidator(scopes);
             }
 
-            IOwinContext context;
-            if (environment == null)
-            {
-                context = new OwinContext(new Dictionary<string, object>());
-            }
-            else
-            {
-                context = new OwinContext(environment);
-            }
-
-            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, context);
+            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator);
         }
 
         public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null, IUserService users = null)

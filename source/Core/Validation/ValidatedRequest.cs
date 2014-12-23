@@ -24,7 +24,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         public NameValueCollection Raw { get; set; }
         public ClaimsPrincipal Subject { get; set; }
-        public IDictionary<string, object> Environment { get; set; }
         public IdentityServerOptions Options { get; set; }
         public ScopeValidator ValidatedScopes { get; set; }
     }
