@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
@@ -66,6 +67,28 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             return builder.ToString();
+        }
+
+
+        public static Dictionary<string, string> ToDictionary(this NameValueCollection collection)
+        {
+            var dict = new Dictionary<string, string>();
+            
+            if (collection == null || collection.Count == 0)
+            {
+                return dict;
+            }
+
+            foreach (string name in collection)
+            {
+                var value = collection.Get(name);
+                if (value != null)
+                {
+                    dict.Add(name, value);
+                }
+            }
+
+            return dict;
         }
 
         internal static string ConvertFormUrlEncodedSpacesToUrlEncodedSpaces(string str)
