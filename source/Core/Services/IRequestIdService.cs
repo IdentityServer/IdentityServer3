@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Services.Default;
-
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace Thinktecture.IdentityServer.Core.Services
 {
-    // todo: remove at some point and replace with DI
-    internal class ActivityId
+    /// <summary>
+    /// Abstraction for dealing with request IDs (logging, events, error pages etc)
+    /// </summary>
+    public interface IRequestIdService
     {
-        internal static string GetCurrentId()
-        {
-            return new CorrelationManagerRequestIdService().GetRequestId();
-        }
+        /// <summary>
+        /// Gets the request identifier.
+        /// </summary>
+        /// <returns>Request id</returns>
+        string GetRequestId();
     }
 }

@@ -28,12 +28,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
+        private readonly IRequestIdService _reqId;
+        private readonly OwinContext context;
+        
         static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
             DefaultValueHandling = DefaultValueHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            Formatting = Formatting.Indented,
+            Formatting = Formatting.Indented
         };
 
         static DefaultEventService()
@@ -41,13 +44,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             jsonSettings.Converters.Add(new StringEnumConverter());
         }
 
-        readonly OwinContext context;
-
-        public DefaultEventService(OwinEnvironmentService owinEnvironment)
+        public DefaultEventService(OwinEnvironmentService owinEnvironment, IRequestIdService reqId)
         {
             if (owinEnvironment == null) throw new ArgumentNullException("owinEnvironment");
-
             this.context = new OwinContext(owinEnvironment.Environment);
+
+            _reqId = reqId;
         }
 
         public void Raise(EventBase evt)
@@ -56,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             evt.Context = new EventContext
             {
-                ActivityId = ActivityId.GetCurrentId(),
+                ActivityId = _reqId.GetRequestId(),
                 TimeStamp = DateTime.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,

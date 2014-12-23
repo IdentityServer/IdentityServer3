@@ -89,6 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             // hosting services
             builder.RegisterType<OwinEnvironmentService>();
+            builder.RegisterType<CorrelationManagerRequestIdService>().As<IRequestIdService>();
 
             // validators
             builder.RegisterType<TokenRequestValidator>();

@@ -156,6 +156,7 @@
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
+    <Compile Include="Services\Default\CorrelationManagerRequestIdService.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultLocalizationService.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
+    <Compile Include="Services\IRequestIdService.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
