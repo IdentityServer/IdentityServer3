@@ -85,6 +85,12 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                         // WPF client
                         "oob://localhost/wpfclient",
+
+                        // WinRT (Windows 8.1) client
+                        "ms-app://s-1-15-2-1677770454-1667073387-2045065244-1646983296-4049597744-3433330513-3528227871/",
+
+                        // WinRT (Windows Phone 8.1) client
+                        "ms-app://s-1-15-2-1430937046-597358894-4064669721-1685318026-2712882764-3308041892-684177332/",
                         
                         // WinRT client
                         "ms-app://s-1-15-2-1677770454-1667073387-2045065244-1646983296-4049597744-3433330513-3528227871/",
