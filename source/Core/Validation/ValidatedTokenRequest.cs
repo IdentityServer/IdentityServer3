@@ -23,11 +23,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         public Client Client { get; set; }
         public string GrantType { get; set; }
-        public AuthorizationCode AuthorizationCode { get; set; }
         public IEnumerable<string> Scopes { get; set; }
+        
         public string UserName { get; set; }
 
         public RefreshToken RefreshToken { get; set; }
         public string RefreshTokenHandle { get; set; }
+
+        public AuthorizationCode AuthorizationCode { get; set; }
+        public string AuthorizationCodeHandle { get; set; }
     }
 }

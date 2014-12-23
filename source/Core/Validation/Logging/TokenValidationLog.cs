@@ -9,8 +9,6 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
 {
     class TokenValidationLog
     {
-        public Dictionary<string, string> Raw { get; set; }
-
         public string ClientId { get; set; }
         public string ClientName { get; set; }
 
@@ -23,29 +21,21 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
 
         public TokenValidationLog(ValidatedTokenRequest request)
         {
-            if (request.Raw != null)
-            {
-                Raw = request.Raw.ToDictionary();
-            }
-
             if (request.Client != null)
             {
                 ClientId = request.Client.ClientId;
                 ClientName = request.Client.ClientName;
             }
 
-            GrantType = request.GrantType;
-            
-            //AuthorizationCode = request.AuthorizationCode.
-
-            RefreshToken = request.RefreshTokenHandle;
-
-            UserName = request.UserName;
-
             if (request.Scopes != null)
             {
                 Scopes = request.Scopes.ToSpaceSeparatedString();
             }
+
+            GrantType = request.GrantType;
+            AuthorizationCode = request.AuthorizationCodeHandle;
+            RefreshToken = request.RefreshTokenHandle;
+            UserName = request.UserName;
         }
     }
 }
