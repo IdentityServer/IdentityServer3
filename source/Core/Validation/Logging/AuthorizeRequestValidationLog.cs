@@ -15,6 +15,8 @@
  */
 
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Extensions;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Validation.Logging
 {
@@ -28,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public string ResponseType { get; set; }
         public string ResponseMode { get; set; }
         public Flows Flow { get; set; }
-        public string Scopes { get; set; }
+        public string RequestedScopes { get; set; }
         
         public string State { get; set; }
         public string UiLocales { get; set; }
@@ -38,5 +40,46 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public string PromptMode { get; set; }
         public int? MaxAge { get; set; }
         public string LoginHint { get; set; }
+
+        public AuthorizeRequestValidationLog(ValidatedAuthorizeRequest request)
+        {
+            if (request.Client != null)
+            {
+                ClientId = request.Client.ClientId;
+                ClientName = request.Client.ClientName;
+            }
+
+            if (request.Subject != null)
+            {
+                var subjectClaim = request.Subject.FindFirst(Constants.ClaimTypes.Subject);
+                if (subjectClaim != null)
+                {
+                    SubjectId = subjectClaim.Value;
+                }
+                else
+                {
+                    SubjectId = "unknown";
+                }
+            }
+
+            if (request.AuthenticationContextReferenceClasses.Any())
+            {
+                AuthenticationContextReferenceClasses = request.AuthenticationContextReferenceClasses.ToSpaceSeparatedString();
+            }
+                
+            RedirectUri = request.RedirectUri;
+            ResponseType = request.ResponseType;
+            ResponseMode = request.ResponseMode;
+            Flow = request.Flow;
+            RequestedScopes = request.RequestedScopes.ToSpaceSeparatedString();
+            State = request.State;
+            UiLocales = request.UiLocales;
+            Nonce = request.Nonce;
+            
+            DisplayMode = request.DisplayMode;
+            PromptMode = request.PromptMode;
+            LoginHint = request.LoginHint;
+            MaxAge = request.MaxAge;
+        }
     }
 }

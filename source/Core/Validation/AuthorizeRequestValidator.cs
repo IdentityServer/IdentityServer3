@@ -24,6 +24,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Validation.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -63,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         // basic protocol validation
         public ValidationResult ValidateProtocol(NameValueCollection parameters)
         {
-            Logger.Info("Start protocol validation");
+            Logger.Info("Start authorize request protocol validation");
 
             if (parameters == null)
             {
@@ -80,11 +81,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var clientId = parameters.Get(Constants.AuthorizeRequest.ClientId);
             if (clientId.IsMissing())
             {
-                Logger.Error("client_id is missing");
+                LogError("client_id is missing");
                 return Invalid();
             }
 
-            Logger.InfoFormat("client_id: {0}", clientId);
             _validatedRequest.ClientId = clientId;
 
 
@@ -95,18 +95,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (redirectUri.IsMissing())
             {
-                Logger.Error("redirect_uri is missing");
+                LogError("redirect_uri is missing");
                 return Invalid();
             }
 
             Uri uri;
             if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
             {
-                Logger.ErrorFormat("invalid redirect_uri: {0}", redirectUri);
+                LogError("invalid redirect_uri: " + redirectUri);
                 return Invalid();
             }
 
-            Logger.InfoFormat("redirect_uri: {0}", redirectUri);
             _validatedRequest.RedirectUri = redirectUri;
 
 
@@ -116,17 +115,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var responseType = parameters.Get(Constants.AuthorizeRequest.ResponseType);
             if (responseType.IsMissing())
             {
-                Logger.Error("Missing response_type");
+                LogError("Missing response_type");
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             if (!Constants.SupportedResponseTypes.Contains(responseType))
             {
-                Logger.ErrorFormat("Response type not supported: {0}", responseType);
+                LogError("Response type not supported: " + responseType);
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            Logger.InfoFormat("response_type: {0}", responseType);
             _validatedRequest.ResponseType = responseType;
 
 
@@ -134,14 +132,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             // match response_type to flow
             //////////////////////////////////////////////////////////
             _validatedRequest.Flow = Constants.ResponseTypeToFlowMapping[_validatedRequest.ResponseType];
-            Logger.Info("Flow: " + _validatedRequest.Flow.ToString());
-
+            
 
             //////////////////////////////////////////////////////////
             // check if flow is allowed at authorize endpoint
             //////////////////////////////////////////////////////////
             if (!Constants.AllowedFlowsForAuthorizeEndpoint.Contains(_validatedRequest.Flow))
             {
+                LogError("Invalid flow");
                 return Invalid();
             }
 
@@ -164,13 +162,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     }
                     else
                     {
-                        Logger.Info("Invalid response_mode for flow: " + responseMode);
+                        LogError("Invalid response_mode for flow: " + responseMode);
                         return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                     }
                 }
                 else
                 {
-                    Logger.InfoFormat("Unsupported response_mode: {0}", responseMode);
+                    LogError("Unsupported response_mode: " + responseMode);
                     return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                 }
             }
@@ -181,27 +179,21 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var state = parameters.Get(Constants.AuthorizeRequest.State);
             if (state.IsPresent())
             {
-                Logger.InfoFormat("State: {0}", state);
                 _validatedRequest.State = state;
             }
-            else
-            {
-                Logger.Info("No state supplied");
-            }
-
+           
             //////////////////////////////////////////////////////////
             // scope must be present
             //////////////////////////////////////////////////////////
             var scope = parameters.Get(Constants.AuthorizeRequest.Scope);
             if (scope.IsMissing())
             {
-                Logger.Error("scope is missing");
+                LogError("scope is missing");
                 return Invalid(ErrorTypes.Client);
             }
 
             _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
-            Logger.InfoFormat("scopes: {0}", scope);
-
+            
             if (_validatedRequest.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
             {
                 _validatedRequest.IsOpenIdRequest = true;
@@ -216,7 +208,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 if (_validatedRequest.IsOpenIdRequest == false)
                 {
-                    Logger.Error("response_type requires the openid scope");
+                    LogError("response_type requires the openid scope");
                     return Invalid(ErrorTypes.Client);
                 }
             }
@@ -228,19 +220,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var nonce = parameters.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
-                Logger.InfoFormat("Nonce: {0}", nonce);
                 _validatedRequest.Nonce = nonce;
             }
             else
             {
-                Logger.Info("No nonce supplied");
-
                 if (_validatedRequest.Flow == Flows.Implicit)
                 {
                     // only openid requests require nonce
                     if (_validatedRequest.IsOpenIdRequest)
                     {
-                        Logger.Error("Nonce required for implicit flow with openid scope");
+                        LogError("Nonce required for implicit flow with openid scope");
                         return Invalid(ErrorTypes.Client);
                     }
                 }
@@ -252,15 +241,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var prompt = parameters.Get(Constants.AuthorizeRequest.Prompt);
             if (prompt.IsPresent())
             {
-                Logger.InfoFormat("prompt: {0}", prompt);
-
                 if (Constants.SupportedPromptModes.Contains(prompt))
                 {
                     _validatedRequest.PromptMode = prompt;
                 }
                 else
                 {
-                    Logger.Info("Unsupported prompt mode - ignored.");
+                    Logger.Info("Unsupported prompt mode - ignored: " + prompt);
                 }
             }
 
@@ -290,13 +277,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     }
                     else
                     {
-                        Logger.Error("Invalid max_age.");
+                        LogError("Invalid max_age.");
                         return Invalid(ErrorTypes.Client);
                     }
                 }
                 else
                 {
-                    Logger.Error("Invalid max_age.");
+                    LogError("Invalid max_age.");
                     return Invalid(ErrorTypes.Client);
                 }
             }
@@ -307,7 +294,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
             if (loginHint.IsPresent())
             {
-                Logger.InfoFormat("login_hint: {0}", loginHint);
                 _validatedRequest.LoginHint = loginHint;
             }
 
@@ -317,17 +303,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
             if (acrValues.IsPresent())
             {
-                Logger.InfoFormat("acr_values: {0}", acrValues);
                 _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
             }
 
-            Logger.Info("Protocol validation successful");
+            LogSuccess();
             return Valid();
         }
 
         public async Task<ValidationResult> ValidateClientAsync()
         {
-            Logger.Info("Start client validation");
+            Logger.Info("Start authorize request client validation");
 
             if (_validatedRequest.ClientId.IsMissing())
             {
@@ -340,11 +325,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var client = await _clients.FindClientByIdAsync(_validatedRequest.ClientId);
             if (client == null || client.Enabled == false)
             {
-                Logger.ErrorFormat("Unknown client or not enabled: {0}", _validatedRequest.ClientId);
+                LogError("Unknown client or not enabled: " + _validatedRequest.ClientId);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
-            Logger.InfoFormat("Client found in registry: {0} / {1}", client.ClientId, client.ClientName);
             _validatedRequest.Client = client;
 
             //////////////////////////////////////////////////////////
@@ -352,7 +336,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             if (await _uriValidator.IsRedirecUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
             {
-                Logger.ErrorFormat("Invalid redirect_uri: {0}", _validatedRequest.RedirectUri);
+                LogError("Invalid redirect_uri: " + _validatedRequest.RedirectUri);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
@@ -361,7 +345,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             if (_validatedRequest.Flow != _validatedRequest.Client.Flow)
             {
-                Logger.ErrorFormat("Invalid flow for client: {0}", _validatedRequest.Flow);
+                LogError("Invalid flow for client: " + _validatedRequest.Flow);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
             }
 
@@ -375,7 +359,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (_scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
             {
-                Logger.Error("Identity related scope requests, but no openid scope");
+                LogError("Identity related scope requests, but no openid scope");
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
             }
 
@@ -406,11 +390,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (customResult.IsError)
             {
-                Logger.Error("Error in custom validation: " + customResult.Error);
+                LogError("Error in custom validation: " + customResult.Error);
             }
             else
             {
-                Logger.Info("Client validation successful");
+                LogSuccess();
             }
 
             return customResult;
@@ -436,6 +420,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
             };
 
             return result;
+        }
+
+        private void LogError(string message)
+        {
+            var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
+            var json = ValidationLogSerializer.Serialize(validationLog);
+
+            Logger.ErrorFormat("{0}\n {1}", message, json);
+        }
+
+        private void LogSuccess()
+        {
+            var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
+            var json = ValidationLogSerializer.Serialize(validationLog);
+
+            Logger.InfoFormat("{0}\n {1}", "Authorize request validation success", json);
         }
     }
 }
