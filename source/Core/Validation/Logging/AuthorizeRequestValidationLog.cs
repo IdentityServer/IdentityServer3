@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Validation.Logging
 {
-    class ClientValidationLog
+    class AuthorizeRequestValidationLog
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }
-        public string ClientCredentialType { get; set; }
+        public string RedirectUri { get; set; }
+        public string SubjectId { get; set; }
+
+        public string ResponseType { get; set; }
+        public string ResponseMode { get; set; }
+        public Flows Flow { get; set; }
+        public string Scopes { get; set; }
+        
+        public string State { get; set; }
+        public string UiLocales { get; set; }
+        public string Nonce { get; set; }
+        public string AuthenticationContextReferenceClasses { get; set; }
+        public string DisplayMode { get; set; }
+        public string PromptMode { get; set; }
+        public int? MaxAge { get; set; }
+        public string LoginHint { get; set; }
     }
 }
