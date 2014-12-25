@@ -133,6 +133,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\DiagnosticsOptions.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
+    <Compile Include="Configuration\Hosting\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\EventContext.cs" />
     <Compile Include="Events\EventIds.cs" />
@@ -195,7 +196,7 @@
     <Compile Include="Validation\CustomGrantValidationResult.cs" />
     <Compile Include="Validation\Logging\AuthorizeRequestValidationLog.cs" />
     <Compile Include="Validation\Logging\ClientValidationLog.cs" />
-    <Compile Include="Validation\Logging\ValidationLogSerializer.cs" />
+    <Compile Include="Logging\LogSerializer.cs" />
     <Compile Include="Validation\Logging\TokenRequestValidationLog.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />

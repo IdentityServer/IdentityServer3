@@ -77,6 +77,11 @@ namespace Thinktecture.IdentityServer.Host
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,
+                        },
+
+                        DiagnosticsOptions = new DiagnosticsOptions
+                        {
+                            EnableHttpLogging = true
                         }
                     };
 

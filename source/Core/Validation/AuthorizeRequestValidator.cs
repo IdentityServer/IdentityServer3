@@ -425,7 +425,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private void LogError(string message)
         {
             var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
-            var json = ValidationLogSerializer.Serialize(validationLog);
+            var json = LogSerializer.Serialize(validationLog);
 
             Logger.ErrorFormat("{0}\n {1}", message, json);
         }
@@ -433,7 +433,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private void LogSuccess()
         {
             var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
-            var json = ValidationLogSerializer.Serialize(validationLog);
+            var json = LogSerializer.Serialize(validationLog);
 
             Logger.InfoFormat("{0}\n {1}", "Authorize request validation success", json);
         }
