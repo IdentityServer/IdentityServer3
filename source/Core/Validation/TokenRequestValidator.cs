@@ -421,7 +421,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<ValidationResult> ValidateCustomGrantRequestAsync(NameValueCollection parameters)
         {
-            Logger.Info("Start validation of custom grant token request: " + _validatedRequest.GrantType);
+            Logger.Info("Start validation of custom grant token request");
 
             /////////////////////////////////////////////
             // check if client is authorized for custom grant type
