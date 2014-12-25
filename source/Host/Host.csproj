@@ -141,6 +141,7 @@
     </Compile>
     <Compile Include="Config\Clients.cs" />
     <Compile Include="Config\Cert.cs" />
+    <Compile Include="Config\CustomGrantValidator.cs" />
     <Compile Include="Config\Scopes.cs" />
     <Compile Include="Config\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

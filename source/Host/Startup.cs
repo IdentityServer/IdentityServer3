@@ -54,6 +54,9 @@ namespace Thinktecture.IdentityServer.Host
                         clients: Clients.Get(),
                         scopes:  Scopes.Get());
 
+                    factory.CustomGrantValidator = 
+                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
+
                     factory.ConfigureClientStoreCache();
                     factory.ConfigureScopeStoreCache();
                     factory.ConfigureUserServiceCache();

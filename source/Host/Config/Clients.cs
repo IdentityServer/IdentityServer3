@@ -170,6 +170,15 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                 new Client
                 {
+                    ClientName = "Custom Grant Client",
+                    Enabled = true,
+                    ClientId = "customclient",
+                    ClientSecret = "secret",
+                    Flow = Flows.Custom
+                },
+
+                new Client
+                {
                     ClientName = "Resource Owner Flow Client",
                     Enabled = true,
                     ClientId = "roclient",
