@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Security.Claims;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -22,5 +24,29 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         public ClaimsPrincipal Principal { get; set; }
         public string ErrorMessage { get; set; }
+
+        public CustomGrantValidationResult(string errorMessage)
+        {
+            ErrorMessage = errorMessage;
+        }
+
+        public CustomGrantValidationResult(
+            string subject, 
+            string authenticationMethod,
+            IEnumerable<Claim> claims = null,
+            string identityProvider = Constants.BuiltInIdentityProvider)
+        {
+            var id = new ClaimsIdentity("CustomGrant");
+            id.AddClaim(new Claim(Constants.ClaimTypes.Subject, subject));
+            id.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod));
+            id.AddClaim(new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider));
+
+            if (claims != null && claims.Any())
+            {
+                id.AddClaims(claims);
+            }
+
+            Principal = new ClaimsPrincipal(id);
+        }
     }
 }

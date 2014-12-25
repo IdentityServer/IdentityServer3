@@ -28,11 +28,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (request.GrantType == "customGrant")
             {
-                return Task.FromResult(new CustomGrantValidationResult
-                {
-                    Principal = Principal.Create("CustomGrant", new Claim("sub", "bob"))
-                });
-                    
+                return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));    
             };
 
             return Task.FromResult<CustomGrantValidationResult>(null);
