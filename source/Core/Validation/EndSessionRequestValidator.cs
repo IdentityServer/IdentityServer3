@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<ValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject)
         {
-            Logger.Info("Start logout request validation");
+            Logger.Info("Start end session request validation");
 
             _validatedRequest.Raw = parameters;
             _validatedRequest.Subject = subject;
