@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 
-            if (parsedScopes.Count > 0)
+            if (parsedScopes.Any())
             {
                 parsedScopes.Sort();
                 return parsedScopes;
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<bool> AreScopesValidAsync(IEnumerable<string> requestedScopes)
         {
-            var availableScopes = await  _store.FindScopesAsync(requestedScopes);
+            var availableScopes = await _store.FindScopesAsync(requestedScopes);
 
             foreach (var requestedScope in requestedScopes)
             {
