@@ -801,7 +801,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<string> GetClientNameFromSignOutMessage(SignOutMessage signOutMessage)
         {
-            if (signOutMessage != null)
+            if (signOutMessage != null && signOutMessage.ClientId.IsPresent())
             {
                 var client = await _clientStore.FindClientByIdAsync(signOutMessage.ClientId);
                 if (client != null)
