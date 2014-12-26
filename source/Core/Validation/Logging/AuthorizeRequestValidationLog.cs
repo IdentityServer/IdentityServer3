@@ -17,6 +17,7 @@
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Validation.Logging
 {
@@ -41,8 +42,12 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public int? MaxAge { get; set; }
         public string LoginHint { get; set; }
 
+        public Dictionary<string, string> Raw { get; set; }
+
         public AuthorizeRequestValidationLog(ValidatedAuthorizeRequest request)
         {
+            Raw = request.Raw.ToDictionary();
+
             if (request.Client != null)
             {
                 ClientId = request.Client.ClientId;

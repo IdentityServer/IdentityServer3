@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Validation.Logging
@@ -29,8 +30,15 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public string RefreshToken { get; set; }
         public string UserName { get; set; }
 
+        public Dictionary<string, string> Raw { get; set; }
+
         public TokenRequestValidationLog(ValidatedTokenRequest request)
         {
+            if (request.Options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                Raw = request.Raw.ToDictionary();
+            }
+
             if (request.Client != null)
             {
                 ClientId = request.Client.ClientId;
