@@ -212,13 +212,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private void LogError(string message)
         {
-            var json = ValidationLogSerializer.Serialize(_log);
+            var json = LogSerializer.Serialize(_log);
             Logger.ErrorFormat("{0}\n {1}", message, json);
         }
 
         private void LogSuccess()
         {
-            var json = ValidationLogSerializer.Serialize(_log);
+            var json = LogSerializer.Serialize(_log);
             Logger.InfoFormat("{0}\n {1}", "Client validation success", json);
         }
     }

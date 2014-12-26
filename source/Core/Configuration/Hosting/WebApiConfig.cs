@@ -48,6 +48,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 diag.TraceSource = liblog;                
             }
 
+            if (options.DiagnosticsOptions.EnableHttpLogging)
+            {
+                config.MessageHandlers.Add(new RequestResponseLogger());
+            }
+
             return config;
         }
     }

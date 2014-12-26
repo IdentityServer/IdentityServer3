@@ -17,9 +17,9 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Thinktecture.IdentityServer.Core.Validation.Logging
+namespace Thinktecture.IdentityServer.Core.Logging
 {
-    static class ValidationLogSerializer
+    static class LogSerializer
     {
         static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
             Formatting = Formatting.Indented
         };
 
-        static ValidationLogSerializer()
+        static LogSerializer()
         {
             jsonSettings.Converters.Add(new StringEnumConverter());
         }
