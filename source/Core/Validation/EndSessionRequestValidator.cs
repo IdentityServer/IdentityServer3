@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Validation.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
     public class EndSessionRequestValidator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly ValidatedEndSessionRequest _validatedRequest;
         private readonly TokenValidator _tokenValidator;
         private readonly IRedirectUriValidator _uriValidator;
@@ -52,11 +55,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<ValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject)
         {
+            Logger.Info("Start logout request validation");
+
             _validatedRequest.Raw = parameters;
             _validatedRequest.Subject = subject;
 
             if (!subject.Identity.IsAuthenticated)
             {
+                Logger.Error("User is anonymous. Aborting logout.");
                 return Invalid();
             }
 
@@ -67,6 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var tokenValidationResult = await _tokenValidator.ValidateIdentityTokenAsync(idTokenHint, null, false);
                 if (tokenValidationResult.IsError)
                 {
+                    LogError("Error validating id token hint.");
                     return Invalid();
                 }
 
@@ -78,6 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     if (subject.GetSubjectId() != subClaim.Value)
                     {
+                        LogError("Current user does not match identity token");
                         return Invalid();
                     }
                 }
@@ -85,12 +93,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
                 if (redirectUri.IsPresent())
                 {
-                    if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(redirectUri, _validatedRequest.Client) == true)
+                    _validatedRequest.PostLogOutUri = redirectUri;
+
+                    if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(redirectUri, _validatedRequest.Client) == false)
                     {
-                        _validatedRequest.PostLogOutUri = redirectUri;
-                    }
-                    else
-                    {
+                        LogError("Invalid post logout URI");
                         return Invalid();
                     }
 
@@ -102,6 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
             }
 
+            LogSuccess();
             return Valid();
         }
 
@@ -120,6 +128,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 IsError = true,
                 Error = "Invalid request"
             };
+        }
+
+        private void LogError(string message)
+        {
+            var log = new EndSessionRequestValidationLog(_validatedRequest);
+            var json = LogSerializer.Serialize(log);
+            
+            Logger.ErrorFormat("{0}\n{1}", message, json);
+        }
+
+        private void LogSuccess()
+        {
+            var log = new EndSessionRequestValidationLog(_validatedRequest);
+            var json = LogSerializer.Serialize(log);
+
+            Logger.InfoFormat("{0}\n{1}", "End session request validation success", json);
         }
     }
 }

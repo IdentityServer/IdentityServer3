@@ -23,7 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Logging
     {
         static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             Formatting = Formatting.Indented
