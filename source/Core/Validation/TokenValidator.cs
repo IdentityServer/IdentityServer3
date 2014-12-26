@@ -68,6 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             _log.ClientId = clientId;
+            _log.ValidateLifetime = validateLifetime;
 
             var client = await _clients.FindClientByIdAsync(clientId);
             if (client == null)
