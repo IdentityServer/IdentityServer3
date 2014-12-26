@@ -197,6 +197,7 @@
     <Compile Include="Validation\Logging\AuthorizeRequestValidationLog.cs" />
     <Compile Include="Validation\Logging\ClientValidationLog.cs" />
     <Compile Include="Logging\LogSerializer.cs" />
+    <Compile Include="Validation\Logging\TokenValidationLog.cs" />
     <Compile Include="Validation\Logging\TokenRequestValidationLog.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />

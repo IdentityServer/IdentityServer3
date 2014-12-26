@@ -87,9 +87,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var response = result.Claims.ToClaimsDictionary();
-            Logger.Debug(JsonConvert.SerializeObject(response, Formatting.Indented));
 
-            Logger.Info("Returning identity token claims");
+            Logger.Info("Start identity token validation request");
             return Json(response);
         }
     }
