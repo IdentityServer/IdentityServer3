@@ -34,5 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public string AccessTokenType { get; set; }
         public string ExpectedScope { get; set; }
         public string TokenHandle { get; set; }
+
+        // both
+        public Dictionary<string, object> Claims { get; set; }
     }
 }

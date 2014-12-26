@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             EnableWebApiDiagnostics = false;
             WebApiDiagnosticsIsVerbose = false;
             EnableHttpLogging = false;
+            IncludeSensitiveDataInLogs = false;
         }
 
         /// <summary>
@@ -48,5 +49,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         ///   <c>true</c> if HTTP logging is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableHttpLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include (potentially) personally identifiable information or other sensitive data in logs.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if PII data should be included in logs; otherwise, <c>false</c>.
+        /// </value>
+        public bool IncludeSensitiveDataInLogs { get; set; }
     }
 }

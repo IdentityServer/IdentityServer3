@@ -18,6 +18,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -26,6 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     /// </summary>
     public class IdentityServerOptions
     {
+        static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServerOptions"/> class with default values.
         /// </summary>
@@ -55,6 +58,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (Endpoints == null)
             {
                 throw new ArgumentException("Endpoints is missing");
+            }
+            
+            if (DiagnosticsOptions.EnableHttpLogging || DiagnosticsOptions.EnableWebApiDiagnostics || DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                Logger.Warn("Detailed logging is enabled, potentially sensitive data will be exposed in log files.");
             }
         }
 

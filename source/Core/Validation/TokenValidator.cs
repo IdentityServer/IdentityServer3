@@ -98,12 +98,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return result;
             }
 
+            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                _log.Claims = result.Claims.ToClaimsDictionary();
+            }
+
             var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
 
             if (customResult.IsError)
             {
                 LogError("Custom validator failed: " + customResult.Error ?? "unknown");
                 return customResult;
+            }
+
+            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                _log.Claims = customResult.Claims.ToClaimsDictionary();
             }
 
             LogSuccess();
@@ -131,6 +141,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
+            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                _log.Claims = result.Claims.ToClaimsDictionary();
+            }
+
             if (result.IsError)
             {
                 return result;
@@ -152,6 +167,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 LogError("Custom validator failed: " + customResult.Error ?? "unknown");
                 return customResult;
+            }
+
+            // add claims again after custom validation
+            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            {
+                _log.Claims = customResult.Claims.ToClaimsDictionary();
             }
 
             LogSuccess();
