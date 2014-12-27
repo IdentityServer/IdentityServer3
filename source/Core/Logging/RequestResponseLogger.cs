@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Validation.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace Thinktecture.IdentityServer.Core.Logging
 {
     class RequestResponseLogger : DelegatingHandler
     {
