@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             var response = result.Claims.ToClaimsDictionary();
 
-            Logger.Info("Start identity token validation request");
+            Logger.Info("End identity token validation request");
             return Json(response);
         }
     }

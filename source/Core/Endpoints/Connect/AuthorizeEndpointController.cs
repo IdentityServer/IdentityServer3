@@ -88,7 +88,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start authorize request");
 
-            return await ProcessRequestAsync(request.RequestUri.ParseQueryString());
+            var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
+            
+            Logger.Info("End authorize request");
+            return response;
         }
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)

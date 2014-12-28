@@ -93,6 +93,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
             var payload = await _generator.ProcessAsync(subject, scopes);
+
+            Logger.Info("End userinfo request");
             return new UserInfoResult(payload);
         }
 
