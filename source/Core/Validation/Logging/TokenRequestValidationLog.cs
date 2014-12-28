@@ -28,7 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
 
         public string AuthorizationCode { get; set; }
         public string RefreshToken { get; set; }
+        
         public string UserName { get; set; }
+        public IEnumerable<string> AuthenticationContextReferenceClasses { get; set; }
+        public string Tenant { get; set; }
+        public string IdP { get; set; }
 
         public Dictionary<string, string> Raw { get; set; }
 
@@ -48,6 +52,13 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
             if (request.Scopes != null)
             {
                 Scopes = request.Scopes.ToSpaceSeparatedString();
+            }
+
+            if (request.SignInMessage != null)
+            {
+                IdP = request.SignInMessage.IdP;
+                Tenant = request.SignInMessage.Tenant;
+                AuthenticationContextReferenceClasses = request.SignInMessage.AcrValues;
             }
 
             GrantType = request.GrantType;

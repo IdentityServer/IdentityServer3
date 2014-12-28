@@ -26,6 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public IEnumerable<string> Scopes { get; set; }
         
         public string UserName { get; set; }
+        public SignInMessage SignInMessage { get; set; }
 
         public RefreshToken RefreshToken { get; set; }
         public string RefreshTokenHandle { get; set; }

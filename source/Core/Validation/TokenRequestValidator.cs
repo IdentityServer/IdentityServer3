@@ -333,9 +333,35 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _validatedRequest.UserName = userName;
 
             /////////////////////////////////////////////
+            // check optional parameters and populate SignInMessage
+            /////////////////////////////////////////////
+            var signInMessage = new SignInMessage();
+
+            var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
+            if (loginHint.IsPresent())
+            {
+                if (loginHint.StartsWith(Constants.LoginHints.HomeRealm))
+                {
+                    signInMessage.IdP = loginHint.Substring(Constants.LoginHints.HomeRealm.Length);
+                }
+                else if (loginHint.StartsWith(Constants.LoginHints.Tenant))
+                {
+                    signInMessage.Tenant = loginHint.Substring(Constants.LoginHints.Tenant.Length);
+                }
+            }
+
+            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            if (acrValues.IsPresent())
+            {
+                signInMessage.AcrValues = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+            }
+
+            _validatedRequest.SignInMessage = signInMessage;
+
+            /////////////////////////////////////////////
             // authenticate user
             /////////////////////////////////////////////
-            var authnResult = await _users.AuthenticateLocalAsync(userName, password, null);
+            var authnResult = await _users.AuthenticateLocalAsync(userName, password, signInMessage);
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 LogError("User authentication failed");

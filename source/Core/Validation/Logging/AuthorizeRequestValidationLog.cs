@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
         public string State { get; set; }
         public string UiLocales { get; set; }
         public string Nonce { get; set; }
-        public string AuthenticationContextReferenceClasses { get; set; }
+        public IEnumerable<string> AuthenticationContextReferenceClasses { get; set; }
         public string DisplayMode { get; set; }
         public string PromptMode { get; set; }
         public int? MaxAge { get; set; }
@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Validation.Logging
 
             if (request.AuthenticationContextReferenceClasses.Any())
             {
-                AuthenticationContextReferenceClasses = request.AuthenticationContextReferenceClasses.ToSpaceSeparatedString();
+                AuthenticationContextReferenceClasses = request.AuthenticationContextReferenceClasses;
             }
                 
             RedirectUri = request.RedirectUri;
