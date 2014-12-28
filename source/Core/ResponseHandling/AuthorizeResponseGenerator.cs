@@ -73,13 +73,20 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
         {
             var code = await CreateCodeAsync(request);
 
-            return new AuthorizeResponse
+            var response = new AuthorizeResponse
             {
                 Request = request,
                 RedirectUri = request.RedirectUri,
                 Code = code,
                 State = request.State
             };
+
+            if (request.IsOpenIdRequest)
+            {
+                response.SessionState = GenerateSessionStateValue(request);
+            }
+
+            return response;
         }
 
         private async Task<string> CreateCodeAsync(ValidatedAuthorizeRequest request)
@@ -148,7 +155,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
             }
 
-            return new AuthorizeResponse
+            var response = new AuthorizeResponse
             {
                 Request = request,
                 RedirectUri = request.RedirectUri,
@@ -157,8 +164,14 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 IdentityToken = jwt,
                 State = request.State,
                 Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString(),
-                SessionState = GenerateSessionStateValue(request)
             };
+
+            if (request.IsOpenIdRequest)
+            {
+                response.SessionState = GenerateSessionStateValue(request);
+            }
+
+            return response;
         }
 
         private string GenerateSessionStateValue(ValidatedAuthorizeRequest request)
