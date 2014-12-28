@@ -75,6 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token,
                 userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo,
                 end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession,
+                check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CheckSession,
                 scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name),
                 response_types_supported = Constants.SupportedResponseTypes,
                 response_modes_supported = Constants.SupportedResponseModes,
