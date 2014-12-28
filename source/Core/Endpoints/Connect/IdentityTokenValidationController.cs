@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;

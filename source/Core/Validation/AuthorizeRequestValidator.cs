@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.Collections.Specialized;
 using System.Linq;

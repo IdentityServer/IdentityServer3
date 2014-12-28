@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Extensions;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Validation.Logging
 {

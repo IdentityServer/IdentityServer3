@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;

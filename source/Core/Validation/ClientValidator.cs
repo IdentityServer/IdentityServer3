@@ -19,7 +19,6 @@ using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
