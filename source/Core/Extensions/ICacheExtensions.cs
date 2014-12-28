@@ -26,8 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             where T : class
         {
             if (cache == null) throw new ArgumentNullException("cache");
-            if (key == null) throw new ArgumentNullException("key");
             if (get == null) throw new ArgumentNullException("get");
+            if (key == null) return null;
 
             T item = await cache.GetAsync(key);
             if (item == null)
