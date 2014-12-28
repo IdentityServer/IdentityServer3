@@ -135,6 +135,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     token, 
                     string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
                     new X509SecurityKey(_options.SigningCertificate));
+
+                // if access token contains an ID, log it
+                var jwtId = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.JwtId);
+                if (jwtId != null)
+                {
+                    _log.JwtId = jwtId.Value;
+                }
             }
             else
             {
