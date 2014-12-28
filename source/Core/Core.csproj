@@ -133,12 +133,13 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\DiagnosticsOptions.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
+    <Compile Include="Events\LocalAuthenticationEvent.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
-    <Compile Include="Events\EventContext.cs" />
-    <Compile Include="Events\EventIds.cs" />
-    <Compile Include="Events\EventType.cs" />
-    <Compile Include="Events\AuthenticationEvent.cs" />
+    <Compile Include="Events\Plumbing\EventContext.cs" />
+    <Compile Include="Events\Plumbing\EventIds.cs" />
+    <Compile Include="Events\Plumbing\EventType.cs" />
+    <Compile Include="Events\AuthenticationEventBase.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\ClaimExtensions.cs" />
     <Compile Include="Extensions\ICacheExtensions.cs" />
@@ -185,7 +186,7 @@
     <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
-    <Compile Include="Events\EventBase.cs" />
+    <Compile Include="Events\Plumbing\EventBase.cs" />
     <Compile Include="Services\Default\DefaultEventService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\IgnoreClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />

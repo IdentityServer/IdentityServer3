@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class ExternalAuthenticationEvent : AuthenticationEventBase
+    public class LocalAuthenticationEvent : AuthenticationEventBase
     {
-        public string Provider { get; set; }
-        public string ProviderId { get; set; }
+        public string LoginUserName { get; set; }
     }
 }
