@@ -24,6 +24,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
@@ -56,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
-            return Ok();
+            return new CheckSessionResult();
         }
    }
 }

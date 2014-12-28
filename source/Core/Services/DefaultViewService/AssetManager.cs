@@ -30,6 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         const string PagesPrefix = PageAssetsNamespace + ".";
         const string Layout = PagesPrefix + "layout.html";
         const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
+        const string CheckSession = PagesPrefix + "checksession.html";
 
         static readonly ResourceCache cache = new ResourceCache();
 
@@ -56,16 +57,22 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var pageContent = LoadPage(pageName);
             return LoadLayoutWithContent(pageContent);
         }
-        
+
         public static string LoadFormPost(string rootUrl, string redirectUri, string fields)
         {
-            return LoadResourceString(FormPostResponse, 
-                new{
+            return LoadResourceString(FormPostResponse,
+                new
+                {
                     rootUrl,
                     redirect_uri = redirectUri,
                     fields
                 }
             );
+        }
+        
+        public static string LoadCheckSession()
+        {
+            return LoadResourceString(CheckSession);
         }
         
         static string LoadResourceString(string name)
