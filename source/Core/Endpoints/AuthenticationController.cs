@@ -52,6 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IClientStore _clientStore;
         private readonly IEventService _events;
         private readonly ILocalizationService _localizationService;
+        private readonly SessionCookie _sessionCookie;
 
         public AuthenticationController(
             IViewService viewService, 
@@ -60,7 +61,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             IdentityServerOptions idSvrOptions, 
             IClientStore clientStore, 
             IEventService events,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            SessionCookie sessionCookie)
         {
             _viewService = viewService;
             _userService = userService;
@@ -68,7 +70,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _options = idSvrOptions;
             _clientStore = clientStore;
             _events = events;
-            _localizationService = localizationService; 
+            _localizationService = localizationService;
+            _sessionCookie = sessionCookie;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -408,6 +411,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             Logger.InfoFormat("Logout requested for subject: {0}", sub);
 
             ClearAuthenticationCookies();
+            _sessionCookie.ClearSessionId();
             ClearSignInCookies();
             await SignOutOfExternalIdP();
 
@@ -507,6 +511,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
+            _sessionCookie.IssueSessionId();
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);

@@ -115,6 +115,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // other internal
+            builder.RegisterType<SessionCookie>();
+
             // add any additional dependencies from hosting application
             foreach(var registration in fact.Registrations)
             {
