@@ -132,16 +132,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 _log.AccessTokenType = AccessTokenType.Jwt.ToString();
                 result = await ValidateJwtAsync(
-                    token, 
+                    token,
                     string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
                     new X509SecurityKey(_options.SigningCertificate));
-
-                // if access token contains an ID, log it
-                var jwtId = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.JwtId);
-                if (jwtId != null)
-                {
-                    _log.JwtId = jwtId.Value;
-                }
             }
             else
             {
@@ -211,6 +204,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 SecurityToken jwtToken;
                 var id = handler.ValidateToken(jwt, parameters, out jwtToken);
+
+                // if access token contains an ID, log it
+                var jwtId = id.FindFirst(Constants.ClaimTypes.JwtId);
+                if (jwtId != null)
+                {
+                    _log.JwtId = jwtId.Value;
+                }
 
                 return Task.FromResult(new TokenValidationResult
                 {
