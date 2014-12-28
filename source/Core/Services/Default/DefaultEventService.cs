@@ -31,28 +31,21 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         private readonly IRequestIdService _reqId;
         private readonly OwinContext context;
         
-        static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
-        {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore,
-            DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            Formatting = Formatting.Indented
-        };
-
-        static DefaultEventService()
-        {
-            jsonSettings.Converters.Add(new StringEnumConverter());
-        }
-
         public DefaultEventService(OwinEnvironmentService owinEnvironment, IRequestIdService reqId)
         {
-            if (owinEnvironment == null) throw new ArgumentNullException("owinEnvironment");
             this.context = new OwinContext(owinEnvironment.Environment);
-
             _reqId = reqId;
         }
 
         public void Raise(EventBase evt)
+        {
+            evt = PrepareEvent(evt);
+
+            var json = LogSerializer.Serialize(evt);
+            Logger.Info(json);
+        }
+
+        protected virtual EventBase PrepareEvent(EventBase evt)
         {
             if (evt == null) throw new ArgumentNullException("evt");
 
@@ -64,9 +57,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 MachineName = Environment.MachineName,
                 RemoteIpAddress = context.Request.RemoteIpAddress
             };
-            
-            var json = JsonConvert.SerializeObject(evt, jsonSettings);
-            Logger.Info(json);
+
+            return evt;
         }
     }
 }
