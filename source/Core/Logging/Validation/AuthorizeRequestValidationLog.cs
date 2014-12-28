@@ -18,8 +18,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Validation.Logging
+namespace Thinktecture.IdentityServer.Core.Logging
 {
     class AuthorizeRequestValidationLog
     {

@@ -197,12 +197,12 @@
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="Validation\CustomGrantValidationResult.cs" />
-    <Compile Include="Validation\Logging\AuthorizeRequestValidationLog.cs" />
-    <Compile Include="Validation\Logging\ClientValidationLog.cs" />
+    <Compile Include="Logging\Validation\AuthorizeRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\ClientValidationLog.cs" />
     <Compile Include="Logging\LogSerializer.cs" />
-    <Compile Include="Validation\Logging\EndSessionRequestValidationLog.cs" />
-    <Compile Include="Validation\Logging\TokenValidationLog.cs" />
-    <Compile Include="Validation\Logging\TokenRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\EndSessionRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\TokenValidationLog.cs" />
+    <Compile Include="Logging\Validation\TokenRequestValidationLog.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />

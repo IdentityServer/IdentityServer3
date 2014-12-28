@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Validation.Logging
+namespace Thinktecture.IdentityServer.Core.Logging
 {
     class ClientValidationLog
     {
