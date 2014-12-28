@@ -19,6 +19,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -37,6 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;
         private readonly ScopeValidator _scopeValidator;
+        private readonly SessionCookie _sessionCookie;
 
         public ValidatedAuthorizeRequest ValidatedRequest
         {
@@ -46,13 +48,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
             _options = options;
             _clients = clients;
             _customValidator = customValidator;
             _uriValidator = uriValidator;
             _scopeValidator = scopeValidator;
+            _sessionCookie = sessionCookie;
 
             _validatedRequest = new ValidatedAuthorizeRequest
             {
@@ -303,6 +306,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (acrValues.IsPresent())
             {
                 _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+            }
+
+            //////////////////////////////////////////////////////////
+            // check session cookie
+            //////////////////////////////////////////////////////////
+            var sessionId = _sessionCookie.GetSessionId();
+            // TODO what to do if not present?
+            if (sessionId.IsPresent())
+            {
+                _validatedRequest.SessionId = sessionId;
             }
 
             LogSuccess();

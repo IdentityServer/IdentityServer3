@@ -16,6 +16,8 @@
 
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -154,8 +156,30 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 AccessTokenLifetime = accessTokenLifetime,
                 IdentityToken = jwt,
                 State = request.State,
-                Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString()
+                Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString(),
+                SessionState = GenerateSessionStateValue(request)
             };
+        }
+
+        private string GenerateSessionStateValue(ValidatedAuthorizeRequest request)
+        {
+            var sessionId = request.SessionId;
+            if (sessionId.IsMissing()) return null;
+
+            var salt = CryptoRandom.CreateUniqueId();
+            var clientId = request.ClientId;
+            
+            var uri = new Uri(request.RedirectUri);
+            var origin = uri.Scheme + "://" + uri.Host;
+            if (!uri.IsDefaultPort)
+            {
+                origin += ":" + uri.Port;
+            }
+
+            var bytes = Encoding.UTF8.GetBytes(clientId + origin + sessionId + salt);
+            var hash = SHA256.Create().ComputeHash(bytes);
+
+            return Base64Url.Encode(hash) + "." + salt;
         }
     }
 }

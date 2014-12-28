@@ -44,6 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public int? MaxAge { get; set; }
         public string LoginHint { get; set; }
 
+        public string SessionId { get; set; }
+
         public bool AccessTokenRequested
         {
             get

@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 scopeValidator = new ScopeValidator(scopes);
             }
 
-            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator);
+            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, null);
         }
 
         public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null, IUserService users = null)
