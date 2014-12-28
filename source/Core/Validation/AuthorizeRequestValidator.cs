@@ -313,7 +313,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             var sessionId = _sessionCookie.GetSessionId();
             // TODO what to do if not present?
-            if (sessionId.IsPresent())
+            if (sessionId.IsPresent() && _options.Endpoints.CheckSessionEndpoint.IsEnabled)
             {
                 _validatedRequest.SessionId = sessionId;
             }
