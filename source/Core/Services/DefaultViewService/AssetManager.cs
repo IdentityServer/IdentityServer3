@@ -70,9 +70,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             );
         }
         
-        public static string LoadCheckSession()
+        public static string LoadCheckSession(string cookieName)
         {
-            return LoadResourceString(CheckSession);
+            return LoadResourceString(CheckSession, new
+            {
+                cookieName
+            });
         }
         
         static string LoadResourceString(string name)

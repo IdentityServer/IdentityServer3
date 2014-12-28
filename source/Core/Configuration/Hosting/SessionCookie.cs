@@ -27,10 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     public class SessionCookie
     {
-        const string SessionCookieName = "idsvr.session";
-
         IOwinContext context;
         IdentityServerOptions identityServerOptions;
+
         public SessionCookie(IOwinContext ctx, IdentityServerOptions options)
         {
             this.context = ctx;
@@ -39,9 +38,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public void IssueSessionId()
         {
-            var options = CreateCookieOptions();
-            var name = GetCookieName();
-            context.Response.Cookies.Append(name, CryptoRandom.CreateUniqueId(), options);
+            context.Response.Cookies.Append("foo", "foo-value");
+
+            context.Response.Cookies.Append(
+                GetCookieName(), CryptoRandom.CreateUniqueId(), 
+                CreateCookieOptions());
+            
+            context.Response.Cookies.Append("bar", "bar-value");
         }
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions()
@@ -61,14 +64,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         private string GetCookieName()
         {
-            var name = identityServerOptions.AuthenticationOptions.CookieOptions.Prefix + SessionCookieName;
-            return name;
+            return identityServerOptions.AuthenticationOptions.CookieOptions.GetSessionCookieName();
         }
 
         public string GetSessionId()
         {
-            var cookie = context.Request.Cookies[GetCookieName()];
-            return cookie;
+            return context.Request.Cookies[GetCookieName()];
         }
 
         internal void ClearSessionId()

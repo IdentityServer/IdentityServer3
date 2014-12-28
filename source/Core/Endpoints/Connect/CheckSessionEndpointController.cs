@@ -47,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// </summary>
         /// <returns>Check session iframe page</returns>
         [Route(Constants.RoutePaths.Oidc.CheckSession, Name=Constants.RouteNames.Oidc.CheckSession)]
-        public async Task<IHttpActionResult> Get()
+        public IHttpActionResult Get()
         {
             Logger.Info("Check session iframe request");
 
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
-            return new CheckSessionResult();
+            return new CheckSessionResult(this._options);
         }
    }
 }

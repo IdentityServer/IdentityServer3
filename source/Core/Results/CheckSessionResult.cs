@@ -16,6 +16,7 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -27,9 +28,16 @@ namespace Thinktecture.IdentityServer.Core.Results
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        private readonly IdentityServerOptions options;
+
+        public CheckSessionResult(IdentityServerOptions options)
+        {
+            this.options = options;
+        }
+
         protected override string GetHtml()
         {
-            return AssetManager.LoadCheckSession();
+            return AssetManager.LoadCheckSession(options.AuthenticationOptions.CookieOptions.GetSessionCookieName());
         }
     }
 }
