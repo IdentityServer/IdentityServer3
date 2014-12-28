@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -27,5 +28,10 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string DisplayMode { get; set; }
         public string UiLocales { get; set; }
         public IEnumerable<string> AcrValues { get; set; }
+
+        public SignInMessage()
+        {
+            AcrValues = Enumerable.Empty<string>();
+        }
     }
 }
