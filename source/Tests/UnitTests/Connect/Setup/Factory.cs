@@ -15,8 +15,10 @@
  */
 
 using Microsoft.Owin;
+using Moq;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -130,7 +132,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                 scopeValidator = new ScopeValidator(scopes);
             }
 
-            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, null);
+            var mockSessionCookie = new Mock<SessionCookie>((IOwinContext)null, (IdentityServerOptions)null);
+            mockSessionCookie.CallBase = false;
+            mockSessionCookie.Setup(x => x.GetSessionId()).Returns((string)null);
+
+            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, mockSessionCookie.Object);
+
         }
 
         public static TokenValidator CreateTokenValidator(ITokenHandleStore tokenStore = null, IUserService users = null)
