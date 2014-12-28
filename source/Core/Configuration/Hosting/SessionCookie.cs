@@ -38,13 +38,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public virtual void IssueSessionId()
         {
-            context.Response.Cookies.Append("foo", "foo-value");
-
             context.Response.Cookies.Append(
                 GetCookieName(), CryptoRandom.CreateUniqueId(), 
                 CreateCookieOptions());
-            
-            context.Response.Cookies.Append("bar", "bar-value");
         }
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions()
