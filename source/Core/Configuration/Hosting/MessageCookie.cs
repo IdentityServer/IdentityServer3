@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
@@ -195,22 +196,43 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 });
         }
 
+        private long GetCookieRank(string name)
+        {   
+            // empty and invalid cookies are considered to be the oldest:
+            var rank = DateTime.MinValue.Ticks;
+
+            try
+            {
+                var message = ReadByCookieName(name);
+                if (message != null)
+                {   // valid cookies are ranked based on their creation time:
+                    rank = message.Created;
+                }
+            }
+            catch (CryptographicException e)
+            {   
+                // cookie was protected with a different key/algorithm
+                Logger.DebugFormat("Unable to decrypt cookie {0}: {1}", name, e.Message);
+            }
+            
+            return rank;
+        }
+
         private void ClearOverflow()
         {
             var names = GetCookieNames();
             if (names.Count() > Constants.SignInMessageThreshold)
             {
-                var messages =
+                var rankedCookieNames =
                     from name in names
-                    let m = ReadByCookieName(name)
-                    where m != null
-                    orderby m.Created descending
-                    select new { name = name, message = m };
+                    let rank = GetCookieRank(name)
+                    orderby rank descending
+                    select name;
 
-                var purge = messages.Skip(Constants.SignInMessageThreshold);
-                foreach (var item in purge)
+                var purge = rankedCookieNames.Skip(Constants.SignInMessageThreshold);
+                foreach (var name in purge)
                 {
-                    ClearByCookieName(item.name);
+                    ClearByCookieName(name);
                 }
             }
         }
