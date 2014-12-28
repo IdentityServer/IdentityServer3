@@ -265,6 +265,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public Registration<ILocalizationService> LocalizationService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the client secret validator.
+        /// </summary>
+        /// <value>
+        /// The client secret validator.
+        /// </value>
+        public Registration<IClientSecretValidator> ClientSecretValidator { get; set; }
+
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");

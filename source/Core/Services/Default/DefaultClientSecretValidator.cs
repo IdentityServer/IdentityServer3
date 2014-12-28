@@ -1,5 +1,4 @@
-extensions: .cs
-/*
+﻿/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,3 +13,21 @@ extensions: .cs
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Models;
+
+namespace Thinktecture.IdentityServer.Core.Services.Default
+{
+    public class DefaultClientSecretValidator : IClientSecretValidator
+    {
+        public Task<bool> ValidateClientSecretAsync(Client client, string secret)
+        {
+            // use time constant string comparison
+            var isValid = ObfuscatingComparer.IsEqual(client.ClientSecret, secret);
+            
+            return Task.FromResult(isValid);
+        }
+    }
+}

@@ -31,13 +31,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
     public class ClientValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         private readonly IClientStore _clients;
+        private readonly IClientSecretValidator _secretValidator;
 
         private readonly ClientValidationLog _log;
-
-        public ClientValidator(IClientStore clients)
+        
+        public ClientValidator(IClientStore clients, IClientSecretValidator secretValidator)
         {
             _clients = clients;
+            _secretValidator = secretValidator;
+
             _log = new ClientValidationLog();
         }
 
@@ -101,7 +105,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return null;
             }
 
-            if (!ObfuscatingComparer.IsEqual(client.ClientSecret, credential.Secret))
+            var secretValid = await _secretValidator.ValidateClientSecretAsync(client, credential.Secret);
+            if (secretValid == false)
             {
                 LogError("Invalid client secret");
                 return null;

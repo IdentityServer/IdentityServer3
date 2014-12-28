@@ -69,7 +69,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
             builder.RegisterDefaultType<IViewService, DefaultViewService>(fact.ViewService);
-            
+            builder.RegisterDefaultType<IClientSecretValidator, DefaultClientSecretValidator>(fact.ClientSecretValidator);
+
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
             // by a custom IClientPermissionsService
