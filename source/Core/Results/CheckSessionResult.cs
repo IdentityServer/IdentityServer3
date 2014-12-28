@@ -29,15 +29,20 @@ namespace Thinktecture.IdentityServer.Core.Results
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly IdentityServerOptions options;
+        private readonly HttpRequestMessage request;
 
-        public CheckSessionResult(IdentityServerOptions options)
+        public CheckSessionResult(IdentityServerOptions options, HttpRequestMessage request)
         {
             this.options = options;
+            this.request = request;
         }
 
         protected override string GetHtml()
         {
-            return AssetManager.LoadCheckSession(options.AuthenticationOptions.CookieOptions.GetSessionCookieName());
+            var root = request.GetIdentityServerBaseUrl();
+            if (root.EndsWith("/")) root = root.Substring(0, root.Length - 1);
+
+            return AssetManager.LoadCheckSession(root, options.AuthenticationOptions.CookieOptions.GetSessionCookieName());
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
-            return new CheckSessionResult(this._options);
+            return new CheckSessionResult(this._options, Request);
         }
    }
 }

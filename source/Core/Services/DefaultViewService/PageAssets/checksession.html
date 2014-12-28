@@ -6,6 +6,7 @@
 </head>
 <body>
     <script id="cookie-name" type="application/json">{cookieName}</script>
+    <script src="{rootUrl}/assets/app.crypto.js"></script>
     <script>
         var cookieName = document.getElementById("cookie-name").textContent.trim();
         
@@ -30,6 +31,11 @@
                 return (cookie.name == cookieName);
             });
             return cookies[0] && cookies[0].value;
+        }
+
+        function hash(value) {
+            var hash = CryptoJS.SHA256(value);
+            return hextob64u(hash);
         }
 
         window.addEventListener("message", function (e) {

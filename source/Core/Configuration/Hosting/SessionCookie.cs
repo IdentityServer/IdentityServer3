@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             this.identityServerOptions = options;
         }
 
-        public void IssueSessionId()
+        public virtual void IssueSessionId()
         {
             context.Response.Cookies.Append("foo", "foo-value");
 
@@ -67,12 +67,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             return identityServerOptions.AuthenticationOptions.CookieOptions.GetSessionCookieName();
         }
 
-        public string GetSessionId()
+        public virtual string GetSessionId()
         {
             return context.Request.Cookies[GetCookieName()];
         }
 
-        internal void ClearSessionId()
+        public virtual void ClearSessionId()
         {
             var options = CreateCookieOptions();
             options.Expires = DateTime.UtcNow.AddYears(-1);
