@@ -16,9 +16,9 @@
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public class DiagnosticsOptions
+    public class LoggingOptions
     {
-        public DiagnosticsOptions()
+        public LoggingOptions()
         {
             EnableWebApiDiagnostics = false;
             WebApiDiagnosticsIsVerbose = false;

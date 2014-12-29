@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Host
                             IdentityProviders = ConfigureIdentityProviders,
                         },
 
-                        DiagnosticsOptions = new DiagnosticsOptions
+                        DiagnosticsOptions = new LoggingOptions
                         {
                             EnableHttpLogging = false,
                             IncludeSensitiveDataInLogs = true
