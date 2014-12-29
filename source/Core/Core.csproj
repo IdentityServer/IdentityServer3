@@ -493,6 +493,8 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.css" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.min.css" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.js">
