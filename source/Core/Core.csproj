@@ -289,7 +289,7 @@
     <Compile Include="Configuration\Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\EndpointSettings.cs" />
-    <Compile Include="Configuration\HostDataProtector.cs" />
+    <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
