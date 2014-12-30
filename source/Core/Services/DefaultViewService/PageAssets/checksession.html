@@ -6,7 +6,7 @@
 </head>
 <body>
     <script id="cookie-name" type="application/json">{cookieName}</script>
-    <script src="{rootUrl}/assets/app.crypto.js"></script>
+    <script src="{rootUrl}/assets/app.crypto.min.js"></script>
     <script>
         var cookieName = document.getElementById("cookie-name").textContent.trim();
         
@@ -34,7 +34,9 @@
         }
 
         function hash(value) {
-            var hash = CryptoJS.SHA256(value);
+            var hash = KJUR.crypto.Util.sha256(value);
+            console.log(hash);
+            //var hash = CryptoJS.SHA256(value);
             return hextob64u(hash);
         }
 

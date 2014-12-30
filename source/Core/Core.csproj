@@ -501,7 +501,7 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.css" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.min.css" />
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\crypto.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\app\crypto.js" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js">
       <DependentUpon>crypto.js</DependentUpon>
     </EmbeddedResource>
