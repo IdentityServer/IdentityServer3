@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     {
         readonly IOwinContext _context;
 
-        public OwinEnvironmentService(IOwinContext context)
+        internal OwinEnvironmentService(IOwinContext context)
         {
             _context = context;
         }

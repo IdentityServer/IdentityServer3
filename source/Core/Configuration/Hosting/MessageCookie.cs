@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             this.options = options;
         }
 
-        public MessageCookie(IOwinContext ctx, IdentityServerOptions options)
+        internal MessageCookie(IOwinContext ctx, IdentityServerOptions options)
         {
             if (ctx == null) throw new ArgumentNullException("ctx");
             if (options == null) throw new ArgumentNullException("options");
