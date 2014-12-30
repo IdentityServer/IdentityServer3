@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                         Emphasize = true,
                         ShowInDiscoveryDocument = false,
                         
-                        Claims = new[]
+                        Claims = new List<ScopeClaim>
                         {
                             new ScopeClaim(Constants.ClaimTypes.Name),
                             new ScopeClaim(Constants.ClaimTypes.Role)
