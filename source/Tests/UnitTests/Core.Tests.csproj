@@ -140,6 +140,7 @@
     <Compile Include="..\..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ClassVisibilityTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
     <Compile Include="Connect\Endpoints\TokenEndpointControllerTests.cs" />
     <Compile Include="Connect\BearerTokenUsageValidation.cs" />

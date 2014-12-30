@@ -19,7 +19,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public static class ResultExtensions
+    internal static class ResultExtensions
     {
         public static IHttpActionResult TokenResponse(this ApiController controller, TokenResponse response)
         {
