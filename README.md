@@ -28,7 +28,7 @@ public void Configuration(IAppBuilder app)
 
     var options = new IdentityServerOptions
     {
-        SiteName = "Thinktecture IdentityServer v3,
+        SiteName = "Thinktecture IdentityServer v3",
         SigningCertificate = Certificate.Get(),
         
         Factory = factory
