@@ -8,8 +8,6 @@
     <script id="cookie-name" type="application/json">{cookieName}</script>
     <script src="{rootUrl}/assets/app.crypto.min.js"></script>
     <script>
-        var cookieName = document.getElementById("cookie-name").textContent.trim();
-        
         function getCookies() {
             var allCookies = document.cookie;
             var cookies = allCookies.split(';');
@@ -72,7 +70,6 @@
 
                 var currentSessionId = getBrowserSessionId();
                 var expectedHash = computeSessionStateHash(clientId, origin, currentSessionId, salt);
-                //console.log('current session id', currentSessionId, 'expected hash', expectedHash);
                 return clientHash === expectedHash ? "unchanged" : "changed";
             }
             catch(e) {
@@ -80,11 +77,14 @@
             }
         }
 
-        window.addEventListener("message", function (e) {
-            //console.log("message", e.origin, e.data);
-            var result = calculateSessionStateResult(e.origin, e.data);
-            e.source.postMessage(result, e.origin);
-        }, false);
+        var cookieName = document.getElementById("cookie-name").textContent.trim();
+
+        if (cookieName && window.parent !== window) {
+            window.addEventListener("message", function (e) {
+                var result = calculateSessionStateResult(e.origin, e.data);
+                e.source.postMessage(result, e.origin);
+            }, false);
+        }
     </script>
 </body>
 </html>
