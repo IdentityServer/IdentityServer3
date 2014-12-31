@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    public class MessageCookie<TMessage>
+    internal class MessageCookie<TMessage>
         where TMessage : Message
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
