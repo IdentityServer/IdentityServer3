@@ -25,14 +25,14 @@ namespace Thinktecture.IdentityServer.Core.Services
     public interface IClientPermissionsService
     {
         /// <summary>
-        /// Gets the client permissions asynchronous.
+        /// Gets the client permissions for a subject.
         /// </summary>
         /// <param name="subject">The subject identifier.</param>
         /// <returns>A list of client permissions</returns>
         Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject);
 
         /// <summary>
-        /// Revokes the client permissions asynchronous.
+        /// Revokes the subject's permissions for a client.
         /// </summary>
         /// <param name="subject">The subject identifier.</param>
         /// <param name="clientId">The client identifier.</param>

@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     _validatedRequest.PostLogOutUri = redirectUri;
 
-                    if (await _uriValidator.IsPostLogoutRedirecUriValidAsync(redirectUri, _validatedRequest.Client) == false)
+                    if (await _uriValidator.IsPostLogoutRedirectUriValidAsync(redirectUri, _validatedRequest.Client) == false)
                     {
                         LogError("Invalid post logout URI");
                         return Invalid();

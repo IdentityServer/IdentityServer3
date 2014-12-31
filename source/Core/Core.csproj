@@ -271,7 +271,7 @@
     <Compile Include="Configuration\Hosting\AutofacConfig.cs" />
     <Compile Include="Configuration\CookieOptions.cs" />
     <Compile Include="Configuration\CorsPolicy.cs" />
-    <Compile Include="Configuration\CorsPolicyProvider.cs" />
+    <Compile Include="Configuration\Hosting\CorsPolicyProvider.cs" />
     <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />

@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         readonly IOwinContext ctx;
         readonly IdentityServerOptions options;
 
-        public MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
+        internal MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");

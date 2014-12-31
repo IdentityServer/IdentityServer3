@@ -19,9 +19,25 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Models an abstraction for querying and revoking a subject's permissions for clients. This abstraction
+    /// aggregates permissions for access tokens, refresh tokens, codes, and consent.
+    /// </summary>
     public interface IPermissionsStore
     {
+        /// <summary>
+        /// Loads all permissions the subject has granted to all clients.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>The permissions.</returns>
         Task<IEnumerable<Consent>> LoadAllAsync(string subject);
+        
+        /// <summary>
+        /// Revokes all permissions the subject has given to a client.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="client">The client.</param>
+        /// <returns></returns>
         Task RevokeAsync(string subject, string client);
     }
 }

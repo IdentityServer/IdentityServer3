@@ -26,6 +26,17 @@ namespace Owin
 {
     public static class UseIdentityServerExtension
     {
+        /// <summary>
+        /// Extension method to configure IdentityServer in the hosting application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="options">The <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerOptions"/>.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// app
+        /// or
+        /// options
+        /// </exception>
         public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
         {
             if (app == null) throw new ArgumentNullException("app");

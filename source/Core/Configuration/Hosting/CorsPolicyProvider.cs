@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     class CorsPolicyProvider : ICorsPolicyProvider
     {

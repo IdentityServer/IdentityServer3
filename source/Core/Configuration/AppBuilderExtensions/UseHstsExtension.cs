@@ -20,6 +20,14 @@ namespace Owin
 {
     public static class UseHstsExtension
     {
+        /// <summary>
+        /// Enables HTTP Strict Transport Security (HSTS) for the hosting application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="duration">The duration the HSTS header should be cached in the client browser. <c>TimeSpan.Zero</c> will clear the cached value.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">app</exception>
+        /// <exception cref="System.ArgumentException">duration cannot be below zero</exception>
         public static IAppBuilder UseHsts(this IAppBuilder app, TimeSpan duration)
         {
             if (app == null) throw new ArgumentNullException("app");
@@ -41,6 +49,14 @@ namespace Owin
             return app;
         }
 
+        /// <summary>
+        /// Enables HTTP Strict Transport Security (HSTS) for the hosting application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="days">The number of days the HSTS header should be cached in the client browser. A value of zero will clear the cached value.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">days cannot be below zero</exception>
+        /// <exception cref="System.ArgumentNullException">app</exception>
         public static IAppBuilder UseHsts(this IAppBuilder app, int days = 30)
         {
             if (days < 0) throw new ArgumentException("days cannot be below zero");

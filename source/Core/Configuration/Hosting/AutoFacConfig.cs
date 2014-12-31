@@ -210,11 +210,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.Register(ctx=>registration.Instance).SingleInstance();
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else if (registration.Type != null)
@@ -222,11 +222,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.RegisterType(registration.Type);
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else if (registration.Factory != null)
@@ -234,11 +234,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.Register(ctx => registration.Factory(new AutofacDependencyResolver(ctx)));
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else

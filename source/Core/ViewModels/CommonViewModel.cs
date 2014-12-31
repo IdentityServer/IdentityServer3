@@ -16,10 +16,33 @@
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models common data needed to render pages in IdentityServer.
+    /// </summary>
     public class CommonViewModel
     {
+        /// <summary>
+        /// The site URL.
+        /// </summary>
+        /// <value>
+        /// The site URL.
+        /// </value>
         public string SiteUrl { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the name of the site.
+        /// </summary>
+        /// <value>
+        /// The name of the site.
+        /// </value>
         public string SiteName { get; set; }
+        
+        /// <summary>
+        /// The current logged in display name.
+        /// </summary>
+        /// <value>
+        /// The current user.
+        /// </value>
         public string CurrentUser { get; set; }
     }
 }

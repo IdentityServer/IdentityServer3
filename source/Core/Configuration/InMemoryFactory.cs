@@ -23,6 +23,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 {
     public static class InMemoryFactory
     {
+        /// <summary>
+        /// Convenience method to create an instance of <see cref="IdentityServerServiceFactory" /> and
+        /// configure it to use in-memory implementations of the <see cref="IUserService"/>, <see cref="IClientStore"/>, 
+        /// and <see cref="IScopeStore"/>.
+        /// </summary>
+        /// <param name="users">The users.</param>
+        /// <param name="clients">The clients.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns></returns>
         public static IdentityServerServiceFactory Create(
             List<InMemoryUser> users = null,
             IEnumerable<Client> clients = null,

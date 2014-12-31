@@ -332,7 +332,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check if redirect_uri is valid
             //////////////////////////////////////////////////////////
-            if (await _uriValidator.IsRedirecUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
+            if (await _uriValidator.IsRedirectUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
             {
                 LogError("Invalid redirect_uri: " + _validatedRequest.RedirectUri);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);

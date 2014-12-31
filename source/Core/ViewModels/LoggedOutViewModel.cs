@@ -18,10 +18,34 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models the data needed to render the logged out page.
+    /// </summary>
     public class LoggedOutViewModel : CommonViewModel
     {
+        /// <summary>
+        /// A list of URLs that must be displayed in hidden iframes in the rendered page. These are
+        /// needed to trigger logout of other endpoints.
+        /// </summary>
+        /// <value>
+        /// The iframe urls.
+        /// </value>
         public IEnumerable<string> IFrameUrls { get; set; }
+
+        /// <summary>
+        /// The name of the client that requested the logout.
+        /// </summary>
+        /// <value>
+        /// The name of the client.
+        /// </value>
         public string ClientName { get; set; }
+        
+        /// <summary>
+        /// The URL to allow the user to return the the <see cref="ClientName"/>.
+        /// </summary>
+        /// <value>
+        /// The redirect URL.
+        /// </value>
         public string RedirectUrl { get; set; }
     }
 }

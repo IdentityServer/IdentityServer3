@@ -18,8 +18,15 @@ using Thinktecture.IdentityServer.Core.Events;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Models a recipient of notification of events
+    /// </summary>
     public interface IEventService
     {
+        /// <summary>
+        /// Raises the specified event.
+        /// </summary>
+        /// <param name="evt">The event.</param>
         void Raise(EventBase evt);
     }
 }

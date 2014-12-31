@@ -19,9 +19,24 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Models persisting user consent
+    /// </summary>
     public interface IConsentStore : IPermissionsStore
     {
+        /// <summary>
+        /// Loads the subject's prior consent for the client.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>The persisted consent.</returns>
         Task<Consent> LoadAsync(string subject, string client);
+
+        /// <summary>
+        /// Persists the subject's consent.
+        /// </summary>
+        /// <param name="consent">The consent.</param>
+        /// <returns></returns>
         Task UpdateAsync(Consent consent);
     }
 }

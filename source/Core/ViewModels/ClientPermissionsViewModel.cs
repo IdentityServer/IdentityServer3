@@ -18,11 +18,41 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models the data needed to render the client permissions page.
+    /// </summary>
     public class ClientPermissionsViewModel : ErrorViewModel
     {
+        /// <summary>
+        /// The URL to allow a user to logout.
+        /// </summary>
+        /// <value>
+        /// The logout URL.
+        /// </value>
         public string LogoutUrl { get; set; }
+        
+        /// <summary>
+        /// The URL to POST to revoke client permissions.
+        /// </summary>
+        /// <value>
+        /// The revoke permission URL.
+        /// </value>
         public string RevokePermissionUrl { get; set; }
+
+        /// <summary>
+        /// The list of clients and their permissions for the current logged in user.
+        /// </summary>
+        /// <value>
+        /// The clients.
+        /// </value>
         public IEnumerable<ClientPermission> Clients { get; set; }
+
+        /// <summary>
+        /// The anti forgery values.
+        /// </summary>
+        /// <value>
+        /// The anti forgery.
+        /// </value>
         public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
     }
 }

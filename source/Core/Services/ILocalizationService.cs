@@ -16,8 +16,17 @@
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Models loading localizable strings.
+    /// </summary>
     public interface ILocalizationService
     {
+        /// <summary>
+        /// Gets a localized string based upon the string's category and identifier.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         string GetString(string category, string id);
     }
 }
