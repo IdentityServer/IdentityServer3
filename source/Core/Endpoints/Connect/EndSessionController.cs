@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> Logout()
         {
-            Logger.Info("End session request");
+            Logger.Info("Start end session request");
 
             if (!_options.Endpoints.EndSessionEndpoint.IsEnabled)
             {
@@ -78,6 +78,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
         
             var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
+
+            Logger.Info("End end session request");
             return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
         }
 

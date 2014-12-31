@@ -131,7 +131,7 @@
     </Compile>
     <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
-    <Compile Include="Configuration\DiagnosticsOptions.cs" />
+    <Compile Include="Configuration\LoggingOptions.cs" />
     <Compile Include="Configuration\Endpoints.cs" />
     <Compile Include="Configuration\Hosting\SessionCookie.cs" />
     <Compile Include="Endpoints\Connect\CheckSessionEndpointController.cs" />
@@ -139,9 +139,9 @@
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
-    <Compile Include="Events\Plumbing\EventContext.cs" />
-    <Compile Include="Events\Plumbing\EventIds.cs" />
-    <Compile Include="Events\Plumbing\EventType.cs" />
+    <Compile Include="Events\Base\EventContext.cs" />
+    <Compile Include="Events\Base\EventIds.cs" />
+    <Compile Include="Events\Base\EventType.cs" />
     <Compile Include="Events\AuthenticationEventBase.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
     <Compile Include="Extensions\ClaimExtensions.cs" />
@@ -190,7 +190,7 @@
     <Compile Include="Configuration\Hosting\DataProtectorAdapter.cs" />
     <Compile Include="Endpoints\ClientPermissionsController.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationController.cs" />
-    <Compile Include="Events\Plumbing\EventBase.cs" />
+    <Compile Include="Events\Base\EventBase.cs" />
     <Compile Include="Services\Default\DefaultEventService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\IgnoreClaimsFilter.cs" />
     <Compile Include="Services\ExternalClaimsFilter\NopClaimsFilter.cs" />
@@ -201,12 +201,12 @@
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="Services\IEventService.cs" />
     <Compile Include="Validation\CustomGrantValidationResult.cs" />
-    <Compile Include="Validation\Logging\AuthorizeRequestValidationLog.cs" />
-    <Compile Include="Validation\Logging\ClientValidationLog.cs" />
+    <Compile Include="Logging\Validation\AuthorizeRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\ClientValidationLog.cs" />
     <Compile Include="Logging\LogSerializer.cs" />
-    <Compile Include="Validation\Logging\EndSessionRequestValidationLog.cs" />
-    <Compile Include="Validation\Logging\TokenValidationLog.cs" />
-    <Compile Include="Validation\Logging\TokenRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\EndSessionRequestValidationLog.cs" />
+    <Compile Include="Logging\Validation\TokenValidationLog.cs" />
+    <Compile Include="Logging\Validation\TokenRequestValidationLog.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -293,7 +293,7 @@
     <Compile Include="Configuration\Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\EndpointSettings.cs" />
-    <Compile Include="Configuration\HostDataProtector.cs" />
+    <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
@@ -505,6 +505,8 @@
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js">
       <DependentUpon>crypto.js</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.js">

@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// List of user claims that should be included in the identity (identity scope) or access token (resource scope). 
         /// </summary>
-        public IEnumerable<ScopeClaim> Claims { get; set; }
+        public List<ScopeClaim> Claims { get; set; }
         
         /// <summary>
         /// If enabled, all claims for the user will be included in the token
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Scope()
         {
             Type = ScopeType.Resource;
-            Claims = new ScopeClaim[] { };
+            Claims = new List<ScopeClaim>();
             IncludeAllClaimsForUser = false;
             Enabled = true;
             ShowInDiscoveryDocument = true;

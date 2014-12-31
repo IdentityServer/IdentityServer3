@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using System.Web;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests
@@ -91,9 +92,12 @@ namespace Thinktecture.IdentityServer.Tests
 
         static T GetModel<T>(string html)
         {
-            var match = Regex.Match(html, "<script id='modelJson' type='application/json'>(.|\n)*?</script>");
-            match = Regex.Match(match.Value, "{(.)*}");
-            return JsonConvert.DeserializeObject<T>(match.Value);
+            var match = "<script id='modelJson' type='application/json'>";
+            var start = html.IndexOf(match);
+            var end = html.IndexOf("</script>", start);
+            var content = html.Substring(start + match.Length, end - start - match.Length);
+            var json = HttpUtility.HtmlDecode(content);
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         public static T GetModel<T>(this HttpResponseMessage resp)

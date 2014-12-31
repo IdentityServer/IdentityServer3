@@ -75,11 +75,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
 
-        public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
+        internal static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
             return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
         }
-        public static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
+        internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
             new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
         }

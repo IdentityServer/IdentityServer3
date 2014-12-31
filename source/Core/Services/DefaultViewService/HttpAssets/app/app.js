@@ -8,26 +8,30 @@
 (function () {
     "use strict";
 
-    var app = angular.module("app", []);
+    (function () {
+        var app = angular.module("app", []);
 
-    app.controller("LayoutCtrl", function ($scope, Model) {
-        $scope.model = Model;
-    });
+        app.controller("LayoutCtrl", function ($scope, Model) {
+            $scope.model = Model;
+        });
 
-    app.directive("antiForgeryToken", function () {
-        return {
-            restrict: 'E',
-            replace:true,
-            scope:{
-                token:"="
-            },
-            template: "<input type='hidden' name='{{token.name}}' value='{{token.value}}'>"
-        };
-    });
-})();
+        app.directive("antiForgeryToken", function () {
+            return {
+                restrict: 'E',
+                replace: true,
+                scope: {
+                    token: "="
+                },
+                template: "<input type='hidden' name='{{token.name}}' value='{{token.value}}'>"
+            };
+        });
+    })();
 
-(function () {
-    var json = document.getElementById("modelJson").textContent;
-    var model = JSON.parse(json);
-    angular.module("app").constant("Model", model);
+    (function () {
+        var encodedJson = document.getElementById("modelJson").textContent;
+        var json = Encoder.htmlDecode(encodedJson);
+        var model = JSON.parse(json);
+        angular.module("app").constant("Model", model);
+    })();
+
 })();

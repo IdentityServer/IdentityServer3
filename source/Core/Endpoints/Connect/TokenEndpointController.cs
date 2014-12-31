@@ -66,7 +66,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start token request");
 
-            return await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
+            var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
+
+            Logger.Info("End token request");
+            return response;
         }
 
         /// <summary>

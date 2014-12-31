@@ -13,6 +13,7 @@
     <file>libs/jquery/jquery-1.11.0.min.js</file>
     <file>libs/bootstrap/js/bootstrap.min.js</file>
     <file>libs/angular/angular.1.2.13.min.js</file>
+    <file>libs/encoder/encoder.min.js</file>
     <file>app/app.js</file>
   </files>
 </bundle>

@@ -16,8 +16,9 @@
 
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Validation.Logging
+namespace Thinktecture.IdentityServer.Core.Logging
 {
     class EndSessionRequestValidationLog
     {

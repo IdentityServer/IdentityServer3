@@ -17,6 +17,7 @@
 using Autofac;
 using Autofac.Integration.WebApi;
 using System;
+using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Endpoints;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
@@ -123,6 +124,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             {
                 builder.Register(registration, registration.Name);
             }
+
+            builder.Register(c => new OwinEnvironmentService(c.Resolve<IOwinContext>()));
 
             return builder.Build();
         }

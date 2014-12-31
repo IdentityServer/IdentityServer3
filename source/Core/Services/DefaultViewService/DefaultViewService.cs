@@ -28,6 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     public class DefaultViewService : IViewService
     {
+        static Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings()
+        {
+            ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+        };
+
         private readonly DefaultViewServiceConfiguration config;
 
         public DefaultViewService()
@@ -91,20 +96,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var applicationPath = new Uri(model.SiteUrl).AbsolutePath;
             if (applicationPath.EndsWith("/")) applicationPath = applicationPath.Substring(0, applicationPath.Length - 1);
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, 
-                Newtonsoft.Json.Formatting.None, 
-                new Newtonsoft.Json.JsonSerializerSettings() { 
-                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() 
-                }
-            );
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, settings);
 
             var additionalStylesheets = BuildTags("<link href='{0}' rel='stylesheet'>", applicationPath, stylesheets);
             var additionalScripts = BuildTags("<script src='{0}'></script>", applicationPath, scripts);
 
             return new {
-                siteName = model.SiteName,
+                siteName = Microsoft.Security.Application.Encoder.HtmlEncode(model.SiteName),
                 applicationPath,
-                model = json,
+                model = Microsoft.Security.Application.Encoder.HtmlEncode(json),
                 page,
                 stylesheets = additionalStylesheets,
                 scripts = additionalScripts

@@ -22,7 +22,6 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Validation.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {

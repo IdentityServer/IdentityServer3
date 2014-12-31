@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
-            this.DiagnosticsOptions = new DiagnosticsOptions();
+            this.DiagnosticsOptions = new LoggingOptions();
         }
 
         internal void Validate()
@@ -184,7 +184,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The diagnostics options.
         /// </value>
-        public DiagnosticsOptions DiagnosticsOptions { get; set; }
+        public LoggingOptions DiagnosticsOptions { get; set; }
 
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {
