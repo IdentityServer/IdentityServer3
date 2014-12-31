@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         IOwinContext context;
         IdentityServerOptions identityServerOptions;
 
-        public SessionCookie(IOwinContext ctx, IdentityServerOptions options)
+        protected internal SessionCookie(IOwinContext ctx, IdentityServerOptions options)
         {
             this.context = ctx;
             this.identityServerOptions = options;
