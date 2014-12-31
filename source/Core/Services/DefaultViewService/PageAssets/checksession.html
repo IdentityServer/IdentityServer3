@@ -26,7 +26,7 @@
             });
         }
 
-        function getBrowserState() {
+        function getBrowserSessionId() {
             var cookies = getCookies().filter(function (cookie) {
                 return (cookie.name == cookieName);
             });
@@ -42,40 +42,48 @@
             return hash(clientId + origin + sessionId + salt);
         }
 
-        function calculateSessionStateResult(clientId, origin, sessionState) {
-            var parts = sessionState.split('.');
-            if (parts.length !== 2) {
+        function calculateSessionStateResult(origin, message) {
+            try {
+                if (!origin || !message) {
+                    return "error";
+                }
+
+                var messageParts = message.split(' ');
+                if (messageParts.length !== 2) {
+                    return "error";
+                }
+
+                var clientId = messageParts[0];
+                var sessionState = messageParts[1];
+                if (!clientId || !sessionState) {
+                    return "error";
+                }
+
+                var sessionStateParts = sessionState.split('.');
+                if (sessionStateParts.length !== 2) {
+                    return "error";
+                }
+
+                var clientHash = sessionStateParts[0];
+                var salt = sessionStateParts[1];
+                if (!clientHash || !salt) {
+                    return "error";
+                }
+
+                var currentSessionId = getBrowserSessionId();
+                var expectedHash = computeSessionStateHash(clientId, origin, currentSessionId, salt);
+                //console.log('current session id', currentSessionId, 'expected hash', expectedHash);
+                return clientHash === expectedHash ? "unchanged" : "changed";
+            }
+            catch(e) {
                 return "error";
             }
-
-            var clientHash = parts[0];
-
-            var salt = parts[1];
-            var currentSessionId = getBrowserState();
-            var expectedHash = computeSessionStateHash(clientId, origin, currentSessionId, salt);
-
-            return clientHash === expectedHash ? "unchanged" : "changed";
         }
 
         window.addEventListener("message", function (e) {
-            try{
-                console.log("message", e.origin, e.data);
-                var parts = e.data.split(' ');
-                if (parts.length === 2) {
-                    var clientId = parts[0];
-                    var sessionState = parts[1];
-                    var origin = e.origin;
-
-                    var result = calculateSessionStateResult(clientId, origin, sessionState);
-                    e.source.postMessage(result, e.origin);
-                }
-                else {
-                    e.source.postMessage("error", e.origin);
-                }
-            }
-            catch(ex){
-                e.source.postMessage("error", e.origin);
-            }
+            //console.log("message", e.origin, e.data);
+            var result = calculateSessionStateResult(e.origin, e.data);
+            e.source.postMessage(result, e.origin);
         }, false);
     </script>
 </body>
