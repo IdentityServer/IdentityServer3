@@ -166,6 +166,7 @@
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultClientSecretValidator.cs" />
+    <Compile Include="Services\Default\EventServiceDecorator.cs" />
     <Compile Include="Services\Default\DefaultLocalizationService.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\ICache.cs" />

@@ -20,6 +20,9 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default client secret validator.
+    /// </summary>
     public class DefaultClientSecretValidator : IClientSecretValidator
     {
         public Task<bool> ValidateClientSecretAsync(Client client, string secret)

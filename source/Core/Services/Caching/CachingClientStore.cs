@@ -21,11 +21,24 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
+    /// <summary>
+    /// <see cref="IClientStore"/> decorator implementation that uses the provided <see cref="ICache{T}"/> for caching clients.
+    /// </summary>
     public class CachingClientStore : IClientStore
     {
         readonly IClientStore inner;
         readonly ICache<Client> cache;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CachingClientStore"/> class.
+        /// </summary>
+        /// <param name="inner">The inner <see cref="IClientStore"/>.</param>
+        /// <param name="cache">The cache.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// inner
+        /// or
+        /// cache
+        /// </exception>
         public CachingClientStore(IClientStore inner, ICache<Client> cache)
         {
             if (inner == null) throw new ArgumentNullException("inner");
@@ -35,6 +48,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             this.cache = cache;
         }
 
+        /// <summary>
+        /// Finds a client by id
+        /// </summary>
+        /// <param name="clientId">The client id</param>
+        /// <returns>
+        /// The client
+        /// </returns>
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
             return await cache.GetAsync(clientId, async () => await inner.FindClientByIdAsync(clientId));

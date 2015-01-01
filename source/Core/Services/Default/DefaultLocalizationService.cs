@@ -18,8 +18,18 @@ using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default localization services. Uses embedded resource files for strings.
+    /// The category is used to identify which resource file from which to read.
+    /// </summary>
     public class DefaultLocalizationService : ILocalizationService
     {
+        /// <summary>
+        /// Gets a localized string based upon the string's category and identifier.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         public string GetString(string category, string id)
         {
             switch(category)

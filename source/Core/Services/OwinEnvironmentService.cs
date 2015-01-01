@@ -18,6 +18,9 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Container for the OWIN environment.
+    /// </summary>
     public class OwinEnvironmentService
     {
         readonly IOwinContext _context;
@@ -27,6 +30,12 @@ namespace Thinktecture.IdentityServer.Core.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Gets the OWIN environment.
+        /// </summary>
+        /// <value>
+        /// The environment.
+        /// </value>
         public IDictionary<string, object> Environment 
         { 
             get

@@ -18,7 +18,7 @@ using Autofac;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    class AutofacDependencyResolver : IDependencyResolver
+    internal class AutofacDependencyResolver : IDependencyResolver
     {
         readonly IComponentContext ctx;
         public AutofacDependencyResolver(IComponentContext ctx)

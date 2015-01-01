@@ -22,24 +22,41 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    /// <summary>
-    /// Default implementation of the event service. Write events raised to the log.
-    /// </summary>
-    public class DefaultEventService : IEventService
+    internal class EventServiceDecorator : IEventService
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
-        /// <summary>
-        /// Raises the specified event.
-        /// </summary>
-        /// <param name="evt">The event.</param>
-        /// <exception cref="System.ArgumentNullException">evt</exception>
+        private readonly IRequestIdService _reqId;
+        private readonly OwinContext context;
+        private readonly IEventService inner;
+
+        public EventServiceDecorator(OwinEnvironmentService owinEnvironment, IRequestIdService reqId, IEventService inner)
+        {
+            this.context = new OwinContext(owinEnvironment.Environment);
+            _reqId = reqId;
+            this.inner = inner;
+        }
+
         public void Raise(EventBase evt)
+        {
+            evt = PrepareEvent(evt);
+            inner.Raise(evt);
+        }
+
+        protected virtual EventBase PrepareEvent(EventBase evt)
         {
             if (evt == null) throw new ArgumentNullException("evt");
 
-            var json = LogSerializer.Serialize(evt);
-            Logger.Info(json);
+            evt.Context = new EventContext
+            {
+                ActivityId = _reqId.GetRequestId(),
+                TimeStamp = DateTimeOffset.UtcNow,
+                ProcessId = Process.GetCurrentProcess().Id,
+                MachineName = Environment.MachineName,
+                RemoteIpAddress = context.Request.RemoteIpAddress
+            };
+
+            return evt;
         }
     }
 }

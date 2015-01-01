@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
+    internal class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
     {
         readonly Func<string, Task<IEnumerable<ITokenMetadata>>> get;
         readonly Func<string, string, Task> delete;

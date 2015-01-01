@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class AggregatePermissionsStore : IPermissionsStore
+    internal class AggregatePermissionsStore : IPermissionsStore
     {
         readonly IPermissionsStore[] stores;
 

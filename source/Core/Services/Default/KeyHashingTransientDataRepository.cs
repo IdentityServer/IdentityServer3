@@ -23,21 +23,23 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class KeyHashingRefreshTokenStore : KeyHashingTransientDataRepository<RefreshToken>, IRefreshTokenStore
+    internal class KeyHashingRefreshTokenStore : KeyHashingTransientDataRepository<RefreshToken>, IRefreshTokenStore
     {
         public KeyHashingRefreshTokenStore(IRefreshTokenStore inner)
             : base(inner)
         {
         }
     }
-    public class KeyHashingAuthorizationCodeStore : KeyHashingTransientDataRepository<AuthorizationCode>, IAuthorizationCodeStore
+    
+    internal class KeyHashingAuthorizationCodeStore : KeyHashingTransientDataRepository<AuthorizationCode>, IAuthorizationCodeStore
     {
         public KeyHashingAuthorizationCodeStore(IAuthorizationCodeStore inner)
             : base(inner)
         {
         }
     }
-    public class KeyHashingTokenHandleStore : KeyHashingTransientDataRepository<Token>, ITokenHandleStore
+    
+    internal class KeyHashingTokenHandleStore : KeyHashingTransientDataRepository<Token>, ITokenHandleStore
     {
         public KeyHashingTokenHandleStore(ITokenHandleStore inner)
             : base(inner)
@@ -45,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         }
     }
 
-    public class KeyHashingTransientDataRepository<T> : ITransientDataRepository<T>
+    internal class KeyHashingTransientDataRepository<T> : ITransientDataRepository<T>
         where T : ITokenMetadata
     {
         readonly HashAlgorithm hash;

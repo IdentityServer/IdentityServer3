@@ -22,6 +22,9 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Caching
 {
+    /// <summary>
+    /// <see cref="IScopeStore"/> decorator implementation that uses the provided <see cref="ICache{T}"/> for caching the scopes.
+    /// </summary>
     public class CachingScopeStore : IScopeStore
     {
         const string AllScopes = "CachingScopeStore.allscopes";
@@ -30,6 +33,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         IScopeStore inner;
         ICache<IEnumerable<Scope>> cache;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CachingScopeStore"/> class.
+        /// </summary>
+        /// <param name="inner">The inner <see cref="IScopeStore"/>.</param>
+        /// <param name="cache">The cache.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// inner
+        /// or
+        /// cache
+        /// </exception>
         public CachingScopeStore(IScopeStore inner, ICache<IEnumerable<Scope>> cache)
         {
             if (inner == null) throw new ArgumentNullException("inner");
@@ -39,12 +52,24 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             this.cache = cache;
         }
 
+        /// <summary>
+        /// Gets all scopes.
+        /// </summary>
+        /// <param name="scopeNames"></param>
+        /// <returns>
+        /// List of scopes
+        /// </returns>
         public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
             var key = GetKey(scopeNames);
             return await cache.GetAsync(key, async () => await inner.FindScopesAsync(scopeNames));
         }
 
+        /// <summary>
+        /// Gets all defined scopes.
+        /// </summary>
+        /// <param name="publicOnly">if set to <c>true</c> only public scopes are returned.</param>
+        /// <returns></returns>
         public async Task<IEnumerable<Models.Scope>> GetScopesAsync(bool publicOnly = true)
         {
             var key = GetKey(publicOnly);
