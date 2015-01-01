@@ -70,11 +70,6 @@ namespace Thinktecture.IdentityServer.Host
 
                         CorsPolicy = CorsPolicy.AllowAll,
                         
-                        CspOptions = new CspOptions 
-                        {
-                            ReportEndpoint = EndpointSettings.Enabled,
-                        },
-                        
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,

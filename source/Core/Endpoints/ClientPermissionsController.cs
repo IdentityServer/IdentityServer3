@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
-            if (options.Endpoints.ClientPermissionsEndpoint.IsEnabled == false)
+            if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 return NotFound();
             }
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpPost]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
-            if (options.Endpoints.ClientPermissionsEndpoint.IsEnabled == false)
+            if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 return NotFound();
             }

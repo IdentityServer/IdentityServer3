@@ -27,7 +27,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class UserInfoResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

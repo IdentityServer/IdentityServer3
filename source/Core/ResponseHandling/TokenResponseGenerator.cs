@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
-    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

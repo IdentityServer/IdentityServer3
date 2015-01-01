@@ -27,7 +27,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public CspOptions()
         {
             Enabled = true;
-            ReportEndpoint = EndpointSettings.Disabled;
         }
 
         /// <summary>
@@ -38,14 +37,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public bool Enabled { get; set; }
         
-        /// <summary>
-        /// Gets or sets the report endpoint.
-        /// </summary>
-        /// <value>
-        /// The report endpoint.
-        /// </value>
-        public EndpointSettings ReportEndpoint { get; set; }
-
         /// <summary>
         /// Allows additional script sources to be indicated.
         /// </summary>

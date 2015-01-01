@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         [Fact]
         public void GetAuthorize_AuthorizeEndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.AuthorizeEndpoint.IsEnabled = false;
+            base.options.Endpoints.EnableAuthorizeEndpoint = false;
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

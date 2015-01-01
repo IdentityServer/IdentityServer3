@@ -132,7 +132,7 @@
     <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
-    <Compile Include="Configuration\Endpoints.cs" />
+    <Compile Include="Configuration\EndpointOptions.cs" />
     <Compile Include="Events\LocalAuthenticationEvent.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
@@ -288,7 +288,6 @@
     <Compile Include="Services\ITokenSigningService.cs" />
     <Compile Include="Configuration\Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
-    <Compile Include="Configuration\EndpointSettings.cs" />
     <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />

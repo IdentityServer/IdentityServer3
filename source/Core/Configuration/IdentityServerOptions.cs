@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             this.ProtocolLogoutUrls = new List<string>();
             this.RequireSsl = true;
-            this.Endpoints = new Endpoints();
+            this.Endpoints = new EndpointOptions();
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The endpoints configuration.
         /// </value>
-        public Endpoints Endpoints { get; set; }
+        public EndpointOptions Endpoints { get; set; }
 
         /// <summary>
         /// Gets or sets the authentication options.

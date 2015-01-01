@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                         }
 
                         value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
-                        if (options.CspOptions.ReportEndpoint.IsEnabled)
+                        if (options.Endpoints.EnableCspReportEndpoint)
                         {
                             var cspReportUrl = actionExecutedContext.ActionContext.RequestContext.Url.Link(Constants.RouteNames.CspReport, null);
                             value += " report-uri " + cspReportUrl;

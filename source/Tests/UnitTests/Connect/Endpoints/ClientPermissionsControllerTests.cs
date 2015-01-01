@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         [Fact]
         public void ShowPermissions_EndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
+            base.options.Endpoints.EnableClientPermissionsEndpoint = false;
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         [Fact]
         public void RevokePermission_EndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.ClientPermissionsEndpoint.IsEnabled = false;
+            base.options.Endpoints.EnableClientPermissionsEndpoint = false;
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);

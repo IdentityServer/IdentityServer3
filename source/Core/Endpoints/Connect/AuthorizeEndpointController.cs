@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            if (!_options.Endpoints.AuthorizeEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableAuthorizeEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
-            if (!options.CspOptions.ReportEndpoint.IsEnabled)
+            if (!options.Endpoints.EnableCspReportEndpoint)
             {
                 return NotFound();
             }
