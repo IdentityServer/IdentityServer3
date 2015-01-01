@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return instance;
         }
 
-        public static string CreateLoginRequest(this IDictionary<string, object> env, SignInMessage message)
+        public static string CreateSignInRequest(this IDictionary<string, object> env, SignInMessage message)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (message == null) throw new ArgumentNullException("message");
