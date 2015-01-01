@@ -395,13 +395,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var sub = await GetSubjectFromPrimaryAuthenticationType();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            if (this._options.AuthenticationOptions.EnableSignOutPrompt)
+            var message = GetSignOutMessage(id);
+            if (message != null)
             {
-                return await RenderLogoutPromptPage(id);
+                Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
+                return await Logout(id);
             }
 
-            Logger.InfoFormat("DisableSignOutPrompt set to true, performing logout");
-            return await Logout(id);
+            if (!this._options.AuthenticationOptions.EnableSignOutPrompt)
+            {
+                Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
+                return await Logout(id);
+            }
+
+            Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
+            return await RenderLogoutPromptPage(id);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
