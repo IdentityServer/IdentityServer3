@@ -16,8 +16,16 @@
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// View loaded that loads HTML templates from the embedded assets.
+    /// </summary>
     public class EmbeddedAssetsViewLoader : IViewLoader
     {
+        /// <summary>
+        /// Loads the HTML for the named view.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public string Load(string name)
         {
             return AssetManager.LoadLayoutWithPage(name);

@@ -17,18 +17,27 @@
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     /// <summary>
-    /// <see cref="IViewLoader"/> implementation that caches HTML in-memory.
+    /// <see cref="IViewLoader"/> decorator implementation that caches HTML templates in-memory.
     /// </summary>
     public class CachingLoader : IViewLoader
     {
         readonly ResourceCache cache = new ResourceCache();
         readonly IViewLoader inner;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CachingLoader"/> class.
+        /// </summary>
+        /// <param name="inner">The inner.</param>
         public CachingLoader(IViewLoader inner)
         {
             this.inner = inner;
         }
 
+        /// <summary>
+        /// Loads the HTML for the named view.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public string Load(string name)
         {
             var value = cache.Read(name);

@@ -18,55 +18,26 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Convenience class to encapsulate the default view service registration.
+    /// </summary>
     public class DefaultViewServiceRegistration : Registration<IViewService>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultViewServiceRegistration"/> class.
+        /// </summary>
         public DefaultViewServiceRegistration()
             : base(typeof(DefaultViewService))
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultViewServiceRegistration"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
         public DefaultViewServiceRegistration(DefaultViewServiceConfiguration config)
             : base(resolver => new DefaultViewService(config))
         {
         }
-    }
-
-    public class DefaultViewServiceConfiguration
-    {
-        internal static readonly DefaultViewServiceConfiguration Default = 
-            new DefaultViewServiceConfiguration();
-
-        public DefaultViewServiceConfiguration()
-        {
-            // adding default CSS here so hosting application can choose to remove it
-            Stylesheets = new HashSet<string>
-            {
-                "~/assets/styles.min.css"
-            };
-
-            
-            Scripts = new HashSet<string>();
-            CacheViews = true;
-        }
-
-        static volatile IViewLoader _loader = null;
-        internal IViewLoader GetLoader()
-        {
-            if (_loader == null)
-            {
-                IViewLoader loader = ViewLoader ?? new FileSystemWithEmbeddedFallbackViewLoader();
-                if (CacheViews)
-                {
-                    loader = new CachingLoader(loader);
-                }
-                _loader = loader;
-            }
-            return _loader;
-        }
-        
-        public ICollection<string> Stylesheets { get; set; }
-        public ICollection<string> Scripts { get; set; }
-        public IViewLoader ViewLoader { get; set; }
-        public bool CacheViews { get; set; }
     }
 }

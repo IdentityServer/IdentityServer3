@@ -162,6 +162,7 @@
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
+    <Compile Include="Services\DefaultViewService\DefaultViewServiceConfiguration.cs" />
     <Compile Include="Services\Default\CorrelationManagerRequestIdService.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />

@@ -38,11 +38,19 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         private readonly DefaultViewServiceConfiguration config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
+        /// </summary>
         public DefaultViewService()
             : this(DefaultViewServiceConfiguration.Default)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
+        /// </summary>
+        /// <param name="config">The configuration.</param>
+        /// <exception cref="System.ArgumentNullException">config</exception>
         public DefaultViewService(DefaultViewServiceConfiguration config)
         {
             if (config == null) throw new ArgumentNullException("config");
@@ -50,36 +58,85 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.config = config;
         }
 
+        /// <summary>
+        /// Loads the HTML for the login page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public virtual Task<Stream> Login(LoginViewModel model, SignInMessage message)
         {
             return Render(model, "login");
         }
 
+        /// <summary>
+        /// Loads the HTML for the logout prompt page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public virtual Task<Stream> Logout(LogoutViewModel model)
         {
             return Render(model, "logout");
         }
 
+        /// <summary>
+        /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public virtual Task<Stream> LoggedOut(LoggedOutViewModel model)
         {
             return Render(model, "loggedOut");
         }
 
+        /// <summary>
+        /// Loads the HTML for the user consent page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public virtual Task<Stream> Consent(ConsentViewModel model)
         {
             return Render(model, "consent");
         }
 
+        /// <summary>
+        /// Loads the HTML for the client permissions page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
         {
             return Render(model, "permissions");
         }
 
+        /// <summary>
+        /// Loads the HTML for the error page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
         public virtual Task<Stream> Error(ErrorViewModel model)
         {
             return Render(model, "error");
         }
 
+        /// <summary>
+        /// Renders the specified page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="page">The page.</param>
+        /// <returns></returns>
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
             string html = this.config.GetLoader().Load(page);

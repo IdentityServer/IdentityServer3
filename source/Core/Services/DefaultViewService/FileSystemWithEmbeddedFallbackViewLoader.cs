@@ -18,16 +18,28 @@ using System.IO;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// View loader implementation that uses a combination of the file system view loader 
+    /// and the embedded assets view loader. This allows for some templates to be defined 
+    /// via the file system, while using the embedded assets templates for all others.
+    /// </summary>
     public class FileSystemWithEmbeddedFallbackViewLoader : IViewLoader
     {
         readonly FileSystemViewLoader file;
         readonly EmbeddedAssetsViewLoader embedded;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemWithEmbeddedFallbackViewLoader"/> class.
+        /// </summary>
         public FileSystemWithEmbeddedFallbackViewLoader()
             : this(GetDefaultDirectory())
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemWithEmbeddedFallbackViewLoader"/> class.
+        /// </summary>
+        /// <param name="directory">The directory.</param>
         public FileSystemWithEmbeddedFallbackViewLoader(string directory)
         {
             this.file = new FileSystemViewLoader(directory);
@@ -40,7 +52,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             path = Path.Combine(path, "assets");
             return path;
         }
-        
+
+        /// <summary>
+        /// Loads the HTML for the named view.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public string Load(string name)
         {
             var value = file.Load(name);

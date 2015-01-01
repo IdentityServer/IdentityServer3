@@ -18,10 +18,18 @@ using System.IO;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// View loader that loads HTML templates from the file system.
+    /// </summary>
     public class FileSystemViewLoader : IViewLoader
     {
         readonly string directory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemViewLoader"/> class.
+        /// </summary>
+        /// <param name="directory">The directory from which to load HTML templates.</param>
+        /// <exception cref="System.ArgumentNullException">directory</exception>
         public FileSystemViewLoader(string directory)
         {
             if (String.IsNullOrWhiteSpace(directory)) throw new ArgumentNullException("directory");
@@ -29,6 +37,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.directory = directory;
         }
 
+        /// <summary>
+        /// Loads the specified page.
+        /// If the file "page.html" exists, then that will be used for the entire template.
+        /// If the file "_layout.html" exists, then that will be used for the layout template.
+        /// If the file "_page.html" exists, then that will be used for the inner template.
+        /// If only one of "_layout.html" or "_page.html" exists, then the embedded assets template is used for the template missing from the file system.
+        /// If none of the above files exist, then <c>null</c> is returned.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <returns></returns>
         public string Load(string page)
         {
             if (Directory.Exists(directory))

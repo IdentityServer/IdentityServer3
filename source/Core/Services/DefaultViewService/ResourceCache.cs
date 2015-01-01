@@ -17,7 +17,7 @@ using System.Collections.Concurrent;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    class ResourceCache
+    internal class ResourceCache
     {
         readonly ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
 
