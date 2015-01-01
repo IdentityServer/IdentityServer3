@@ -16,7 +16,10 @@
 
 using Autofac;
 using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -86,6 +89,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
+        }
+
+        public static string CreateLoginRequest(this IDictionary<string, object> env, SignInMessage message)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (message == null) throw new ArgumentNullException("message");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            return Thinktecture.IdentityServer.Core.Results.LoginResult.GetRedirectUrl(message, env, options);
         }
     }
 }
