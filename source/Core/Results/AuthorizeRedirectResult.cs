@@ -24,7 +24,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class AuthorizeRedirectResult : IHttpActionResult
+    internal class AuthorizeRedirectResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

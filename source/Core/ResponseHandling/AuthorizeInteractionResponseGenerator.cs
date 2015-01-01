@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,9 +24,11 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AuthorizeInteractionResponseGenerator
     {
         private readonly SignInMessage _signIn;

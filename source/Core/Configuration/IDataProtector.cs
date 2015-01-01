@@ -16,9 +16,25 @@
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Models protecting data needed by the server (e.g. cookies).
+    /// </summary>
     public interface IDataProtector
     {
+        /// <summary>
+        /// Protects the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="entropy">The entropy.</param>
+        /// <returns></returns>
+        
         byte[] Protect(byte[] data, string entropy = "");
+        /// <summary>
+        /// Unprotects the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="entropy">The entropy.</param>
+        /// <returns></returns>
         byte[] Unprotect(byte[] data, string entropy = "");
     }
 }

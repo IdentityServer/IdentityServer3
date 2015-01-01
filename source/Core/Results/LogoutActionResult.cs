@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class LogoutActionResult : HtmlStreamActionResult
+    internal class LogoutActionResult : HtmlStreamActionResult
     {
         public LogoutActionResult(IViewService viewSvc, LogoutViewModel model)
             : base(async () => await viewSvc.Logout(model))

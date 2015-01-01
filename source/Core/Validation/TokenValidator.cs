@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IdentityModel.Selectors;
 using System.IdentityModel.Tokens;
 using System.Linq;
@@ -31,6 +32,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Check session iframe request");
 
-            if (!_options.Endpoints.CheckSessionEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableCheckSessionEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

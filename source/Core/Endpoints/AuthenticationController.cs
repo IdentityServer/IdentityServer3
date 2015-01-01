@@ -17,6 +17,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -38,6 +39,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [ErrorPageFilter]
     [SecurityHeaders]
     [NoCache]

@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     var identityScopes =
                         from s in scopes
                         where s.Type == ScopeType.Identity && consent.Scopes.Contains(s.Name)
-                        select new PermissionDescription
+                        select new ClientPermissionDescription
                         {
                             DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
                             Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     var resourceScopes =
                         from s in scopes
                         where s.Type == ScopeType.Resource && consent.Scopes.Contains(s.Name)
-                        select new PermissionDescription
+                        select new ClientPermissionDescription
                         {
                             DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
                             Description = s.Description ?? localizationService.GetScopeDescription(s.Name)

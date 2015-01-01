@@ -16,12 +16,36 @@
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    /// <summary>
+    /// Models the validation result of authorize and token requests.
+    /// </summary>
     public class ValidationResult
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is error.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is error; otherwise, <c>false</c>.
+        /// </value>
         public bool IsError { get; set; }
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>
+        /// The error.
+        /// </value>
         public string Error { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the error.
+        /// </summary>
+        /// <value>
+        /// The type of the error.
+        /// </value>
         public ErrorTypes ErrorType { get; set; }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationResult"/> class.
+        /// </summary>
         public ValidationResult()
         {
             IsError = true;
@@ -29,6 +53,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
         }
     }
 
+    /// <summary>
+    /// Indicates if a <see cref="ValidationResult"/> is an error to be displayed to the user or returned to the client.
+    /// </summary>
     public enum ErrorTypes
     {
         Client,

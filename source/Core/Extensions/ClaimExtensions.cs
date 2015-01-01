@@ -18,7 +18,7 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class ClaimExtensions
+    internal static class ClaimExtensions
     {
         public static bool HasValue(this Claim claim)
         {

@@ -17,6 +17,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OpenID Connect discovery document endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -58,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start discovery request");
 
-            if (!_options.Endpoints.DiscoveryEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableDiscoveryEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();
@@ -84,27 +86,27 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 }
             };
 
-            if (_options.Endpoints.AuthorizeEndpoint.IsEnabled)
+            if (_options.Endpoints.EnableAuthorizeEndpoint)
             {
                 dto.authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize;
             }
 
-            if (_options.Endpoints.TokenEndpoint.IsEnabled)
+            if (_options.Endpoints.EnableTokenEndpoint)
             {
                 dto.token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token;
             }
 
-            if (_options.Endpoints.UserInfoEndpoint.IsEnabled)
+            if (_options.Endpoints.EnableUserInfoEndpoint)
             {
                 dto.userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo;
             }
 
-            if (_options.Endpoints.EndSessionEndpoint.IsEnabled)
+            if (_options.Endpoints.EnableEndSessionEndpoint)
             {
                 dto.end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession;
             }
 
-            if (_options.Endpoints.CheckSessionEndpoint.IsEnabled)
+            if (_options.Endpoints.EnableCheckSessionEndpoint)
             {
                 dto.check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CheckSession;
             }
@@ -126,7 +128,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start key discovery request");
 
-            if (!_options.Endpoints.DiscoveryEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableDiscoveryEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

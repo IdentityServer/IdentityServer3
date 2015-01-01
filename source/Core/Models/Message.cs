@@ -18,13 +18,25 @@ using System;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Base class for data that needs to be written out as cookies.
+    /// </summary>
     public class Message
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Message"/> class.
+        /// </summary>
         public Message()
         {
-            Requested = DateTime.UtcNow.Ticks;
+            Created = DateTime.UtcNow.Ticks;
         }
 
-        public long Requested { get; set; }
+        /// <summary>
+        /// Gets or sets the UTC ticks the <see cref="Message"/> was created.
+        /// </summary>
+        /// <value>
+        /// The created UTC ticks.
+        /// </value>
+        public long Created { get; set; }
     }
 }

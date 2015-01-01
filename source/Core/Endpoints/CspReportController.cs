@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class CspReportController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -37,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
-            if (!options.CspOptions.ReportEndpoint.IsEnabled)
+            if (!options.Endpoints.EnableCspReportEndpoint)
             {
                 return NotFound();
             }

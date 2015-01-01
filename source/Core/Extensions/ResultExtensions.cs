@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Models
+using System.Web.Http;
+using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Results;
+
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public class ScopeStrings
+    internal static class ResultExtensions
     {
-        public string DisplayName { get; set; }
-        public string Description { get; set; }
+        public static IHttpActionResult TokenResponse(this ApiController controller, TokenResponse response)
+        {
+            return new TokenResult(response);
+        }
+
+        public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error)
+        {
+            return new TokenErrorResult(error);
+        }
     }
 }

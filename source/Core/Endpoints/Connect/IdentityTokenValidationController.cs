@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -30,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// Endpoint for validating identity tokens
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.IdentityTokenValidation)]
     [NoCache]
     public class IdentityTokenValidationController : ApiController
@@ -55,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start identity token validation request");
 
-            if (!_options.Endpoints.IdentityTokenValidationEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

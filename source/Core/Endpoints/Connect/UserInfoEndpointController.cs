@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OpenID Connect userinfo endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
     public class UserInfoEndpointController : ApiController
@@ -67,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start userinfo request");
 
-            if (!_options.Endpoints.UserInfoEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableUserInfoEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

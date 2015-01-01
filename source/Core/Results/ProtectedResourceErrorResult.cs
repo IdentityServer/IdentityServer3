@@ -25,7 +25,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class ProtectedResourceErrorResult : IHttpActionResult
+    internal class ProtectedResourceErrorResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly string _error;

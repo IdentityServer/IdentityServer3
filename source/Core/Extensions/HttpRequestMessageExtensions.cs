@@ -18,7 +18,7 @@ using System.Net.Http;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class HttpRequestMessageExtensions
+    internal static class HttpRequestMessageExtensions
     {
         public static string GetIdentityServerBaseUrl(this HttpRequestMessage request)
         {

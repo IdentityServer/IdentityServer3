@@ -16,8 +16,8 @@
 
 using Autofac;
 using Autofac.Integration.WebApi;
-using System;
 using Microsoft.Owin;
+using System;
 using Thinktecture.IdentityServer.Core.Endpoints;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
@@ -65,7 +65,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
+            
             builder.RegisterDefaultType<IEventService, DefaultEventService>(fact.EventService);
+            //builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
+
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
@@ -212,11 +215,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.Register(ctx=>registration.Instance).SingleInstance();
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else if (registration.Type != null)
@@ -224,11 +227,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.RegisterType(registration.Type);
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else if (registration.Factory != null)
@@ -236,11 +239,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var reg = builder.Register(ctx => registration.Factory(new AutofacDependencyResolver(ctx)));
                 if (name != null)
                 {
-                    reg.Named(name, registration.InterfaceType);
+                    reg.Named(name, registration.DependencyType);
                 }
                 else
                 {
-                    reg.As(registration.InterfaceType);
+                    reg.As(registration.DependencyType);
                 }
             }
             else

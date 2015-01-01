@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -25,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

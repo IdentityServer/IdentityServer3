@@ -16,6 +16,9 @@
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Configures logging within IdentityServer.
+    /// </summary>
     public class LoggingOptions
     {
         public LoggingOptions()

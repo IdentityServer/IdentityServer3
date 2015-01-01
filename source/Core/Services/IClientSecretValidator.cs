@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="secret">The secret.</param>
-        /// <returns></returns>
+        /// <returns><c>true</c> if the secret is valid; <c>false</c> otherwise.</returns>
         Task<bool> ValidateClientSecretAsync(Client client, string secret);
     }
 }

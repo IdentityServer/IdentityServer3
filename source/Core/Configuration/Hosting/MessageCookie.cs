@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    public class MessageCookie<TMessage>
+    internal class MessageCookie<TMessage>
         where TMessage : Message
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         readonly IOwinContext ctx;
         readonly IdentityServerOptions options;
 
-        public MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
+        internal MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");
@@ -207,7 +207,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     from name in names
                     let m = ReadByCookieName(name)
                     where m != null
-                    orderby m.Requested descending
+                    orderby m.Created descending
                     select new { name = name, message = m };
 
                 var purge = messages.Skip(Constants.SignInMessageThreshold);

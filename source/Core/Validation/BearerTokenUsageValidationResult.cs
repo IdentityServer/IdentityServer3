@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class BearerTokenUsageValidationResult
     {
         public bool TokenFound { get; set; }

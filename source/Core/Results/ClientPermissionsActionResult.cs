@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class ClientPermissionsActionResult : HtmlStreamActionResult
+    internal class ClientPermissionsActionResult : HtmlStreamActionResult
     {
         public ClientPermissionsActionResult(IViewService viewSvc, IDictionary<string, object> env, ClientPermissionsViewModel model)
             : base(async () => await viewSvc.ClientPermissions(model))

@@ -23,7 +23,7 @@ using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class NameValueCollectionExtensions
+    internal static class NameValueCollectionExtensions
     {
         public static string ToQueryString(this NameValueCollection collection)
         {

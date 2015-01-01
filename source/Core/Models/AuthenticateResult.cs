@@ -22,13 +22,41 @@ using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// AuthenticateResult models the result from the various authentication methods 
+    /// on the <see cref="Thinktecture.IdentityServer.Core.Services.IUserService"/>
+    /// </summary>
     public class AuthenticateResult
     {
+        /// <summary>
+        /// The user created from the authentication.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
         public ClaimsPrincipal User { get; private set; }
+
+        /// <summary>
+        /// The error message.
+        /// </summary>
+        /// <value>
+        /// The error message.
+        /// </value>
         public string ErrorMessage { get; private set; }
-        
+
+        /// <summary>
+        /// The partial sign in redirect path.
+        /// </summary>
+        /// <value>
+        /// The partial sign in redirect path.
+        /// </value>
         public string PartialSignInRedirectPath { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult"/> class.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        /// <exception cref="System.ArgumentNullException">errorMessage</exception>
         public AuthenticateResult(string errorMessage)
         {
             if (errorMessage.IsMissing()) throw new ArgumentNullException("errorMessage");
@@ -76,6 +104,21 @@ namespace Thinktecture.IdentityServer.Core.Models
             this.User = user;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult"/> class. This
+        /// version of the constructor indicates a full login.
+        /// </summary>
+        /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
+        /// <param name="name">The name claim used as the display name.</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
+        /// <param name="identityProvider">The identity provider. This should used when an external 
+        /// identity provider is used and will typically match the <c>AuthenticationType</c> as configured
+        /// on the Katana authentication middleware.</param>
+        /// <param name="authenticationMethod">The authentication method. This should be used when 
+        /// local authentication is performed as some other means other than password has been 
+        /// used to authenticate the user (e.g. '2fa' for two-factor, or 'certificate' for client 
+        /// certificates).
+        /// </param>
         public AuthenticateResult(string subject, string name,
             IEnumerable<Claim> claims = null,
             string identityProvider = Constants.BuiltInIdentityProvider,
@@ -84,7 +127,27 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Init(subject, name, claims, identityProvider, authenticationMethod);
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult" /> class. This
+        /// version of the constructor indicates a partial login (with a redirect) with
+        /// knowledge of the subject claim.
+        /// </summary>
+        /// <param name="redirectPath">The redirect path. This should be relative to the 
+        /// current web server. The <c>"~/"</c> prefix is supported to allow application-relative
+        /// paths to be used (e.g. "~/path").
+        /// </param>
+        /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
+        /// <param name="name">The name claim used as the display name.</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
+        /// <param name="identityProvider">The identity provider. This should used when an external 
+        /// identity provider is used and will typically match the <c>AuthenticationType</c> as configured
+        /// on the Katana authentication middleware.</param>
+        /// <param name="authenticationMethod">The authentication method. This should be used when
+        /// local authentication is performed as some other means other than password has been
+        /// used to authenticate the user (e.g. '2fa' for two-factor, or 'certificate' for client</param>
+        /// <exception cref="System.ArgumentNullException">redirectPath</exception>
+        /// <exception cref="System.ArgumentException">redirectPath must start with / or ~/</exception>
         public AuthenticateResult(string redirectPath, string subject, string name, 
             IEnumerable<Claim> claims = null,
             string identityProvider = Constants.BuiltInIdentityProvider,
@@ -102,6 +165,24 @@ namespace Thinktecture.IdentityServer.Core.Models
             this.PartialSignInRedirectPath = redirectPath;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult" /> class. This
+        /// version of the constructor indicates a partial login (with a redirect) without
+        /// knowledge of the subject claim.
+        /// </summary>
+        /// <param name="redirectPath">The redirect path. This should be relative to the 
+        /// current web server. The <c>"~/"</c> prefix is supported to allow application-relative
+        /// paths to be used (e.g. "~/path").
+        /// </param>
+        /// <param name="externalId">The external identifier that represents the external identity
+        /// provider the partial login is created from. This will be re-presented to correlate the request
+        /// when the user resumes from the redirect.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// redirectPath
+        /// or
+        /// externalId
+        /// </exception>
+        /// <exception cref="System.ArgumentException">redirectPath must start with / or ~/</exception>
         public AuthenticateResult(string redirectPath, ExternalIdentity externalId)
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
@@ -120,11 +201,23 @@ namespace Thinktecture.IdentityServer.Core.Models
             User = new ClaimsPrincipal(id);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the authentication resulted in an error.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is error; otherwise, <c>false</c>.
+        /// </value>
         public bool IsError
         {
             get { return ErrorMessage.IsPresent(); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the authentication resulted in a partial sign in.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is partial sign in; otherwise, <c>false</c>.
+        /// </value>
         public bool IsPartialSignIn
         {
             get

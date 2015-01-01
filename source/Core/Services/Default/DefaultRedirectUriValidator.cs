@@ -38,12 +38,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return result;
         }
 
-        public Task<bool> IsRedirecUriValidAsync(string requestedUri, Client client)
+        public Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
         {
             return Task.FromResult(UriCollectionContainsUri(client.RedirectUris, requestedUri));
         }
 
-        public Task<bool> IsPostLogoutRedirecUriValidAsync(string requestedUri, Client client)
+        public Task<bool> IsPostLogoutRedirectUriValidAsync(string requestedUri, Client client)
         {
             return Task.FromResult(UriCollectionContainsUri(client.PostLogoutRedirectUris, requestedUri));
         }

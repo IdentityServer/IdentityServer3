@@ -16,8 +16,17 @@
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models data submitted to revoke a subject's permissions to a client 
+    /// </summary>
     public class RevokeClientPermission
     {
+        /// <summary>
+        /// The client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         public string ClientId { get; set; }
     }
 }

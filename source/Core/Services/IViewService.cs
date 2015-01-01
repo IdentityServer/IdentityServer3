@@ -21,13 +21,52 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Models loading the necessary HTML pages displayed by IdentityServer.
+    /// </summary>
     public interface IViewService
     {
+        /// <summary>
+        /// Loads the HTML for the login page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> Login(LoginViewModel model, SignInMessage message);
+
+        /// <summary>
+        /// Loads the HTML for the logout prompt page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> Logout(LogoutViewModel model);
+
+        /// <summary>
+        /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> LoggedOut(LoggedOutViewModel model);
+
+        /// <summary>
+        /// Loads the HTML for the user consent page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> Consent(ConsentViewModel model);
+
+        /// <summary>
+        /// Loads the HTML for the client permissions page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> ClientPermissions(ClientPermissionsViewModel model);
+
+        /// <summary>
+        /// Loads the HTML for the error page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Stream for the HTML</returns>
         Task<Stream> Error(ErrorViewModel model);
     }
 }

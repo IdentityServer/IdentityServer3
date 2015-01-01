@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OpenID Connect end session endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [SecurityHeaders]
     [NoCache]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
@@ -64,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start end session request");
 
-            if (!_options.Endpoints.EndSessionEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableEndSessionEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

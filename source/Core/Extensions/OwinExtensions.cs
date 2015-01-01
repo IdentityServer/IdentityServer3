@@ -16,7 +16,10 @@
 
 using Autofac;
 using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -38,11 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetBasePath(this IDictionary<string, object> env)
         {
             var ctx = new OwinContext(env);
-            
-            var path = ctx.Request.PathBase.Value;
-            if (!path.EndsWith("/")) path += "/";
-
-            return path;
+            return ctx.Request.PathBase.Value.EnsureTrailingSlash();
         }
 
         public static string GetIdentityServerLogoutUrl(this IDictionary<string, object> env)
@@ -60,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
         }
 
-        public static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
+        internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
         }
@@ -70,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return env[Constants.OwinEnvironment.IdentityServerHost] as string;
         }
 
-        public static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
+        internal static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
@@ -79,16 +78,26 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
         }
+
         internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
             new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
         }
 
-        public static T ResolveDependency<T>(this IDictionary<string, object> env)
+        internal static T ResolveDependency<T>(this IDictionary<string, object> env)
         {
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
+        }
+
+        public static string CreateSignInRequest(this IDictionary<string, object> env, SignInMessage message)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (message == null) throw new ArgumentNullException("message");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            return Thinktecture.IdentityServer.Core.Results.LoginResult.GetRedirectUrl(message, env, options);
         }
     }
 }

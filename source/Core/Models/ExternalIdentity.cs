@@ -21,13 +21,38 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+
+    /// <summary>
+    /// Models the identity of a user authenticating from an external identity provider.
+    /// </summary>
     public class ExternalIdentity
     {
+        /// <summary>
+        /// Identifier of the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
         public string Provider { get; set; }
+
+
+        /// <summary>
+        /// User's unique identifier provided by the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The provider identifier.
+        /// </value>
         public string ProviderId { get; set; }
+
+        /// <summary>
+        /// Claims supplied for the user from the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
         public IEnumerable<Claim> Claims { get; set; }
 
-        public static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
+        internal static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
         {
             if (claims == null) throw new ArgumentNullException("claims");
 

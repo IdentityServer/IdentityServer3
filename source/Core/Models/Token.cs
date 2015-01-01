@@ -21,43 +21,115 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models the permissions contained within a token.
+    /// </summary>
     public interface ITokenMetadata
     {
+        /// <summary>
+        /// Gets the subject identifier.
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
         string SubjectId { get; }
+        /// <summary>
+        /// Gets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         string ClientId { get; }
+        /// <summary>
+        /// Gets the scopes.
+        /// </summary>
+        /// <value>
+        /// The scopes.
+        /// </value>
         IEnumerable<string> Scopes { get; }
     }
-    
-    public class InMemoryTokenMetadata : ITokenMetadata
-    {
-        public string SubjectId { get; set; }
-        public string ClientId { get; set; }
-        public IEnumerable<string> Scopes { get; set; }
-    }
 
+    /// <summary>
+    /// Models a token.
+    /// </summary>
     public class Token : ITokenMetadata
     {
+        /// <summary>
+        /// Gets or sets the audience.
+        /// </summary>
+        /// <value>
+        /// The audience.
+        /// </value>
         public string Audience { get; set; }
+        /// <summary>
+        /// Gets or sets the issuer.
+        /// </summary>
+        /// <value>
+        /// The issuer.
+        /// </value>
         public string Issuer { get; set; }
+        /// <summary>
+        /// Gets or sets the creation time.
+        /// </summary>
+        /// <value>
+        /// The creation time.
+        /// </value>
         public DateTimeOffset CreationTime { get; set; }
+        /// <summary>
+        /// Gets or sets the lifetime.
+        /// </summary>
+        /// <value>
+        /// The lifetime.
+        /// </value>
         public int Lifetime { get; set; }
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
         public string Type { get; set; }
+        /// <summary>
+        /// Gets or sets the client.
+        /// </summary>
+        /// <value>
+        /// The client.
+        /// </value>
         public Client Client { get; set; }
 
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
         public List<Claim> Claims { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Token"/> class.
+        /// </summary>
         public Token()
         {
             Type = Constants.TokenTypes.AccessToken;
             CreationTime = DateTimeOffset.UtcNow;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Token"/> class.
+        /// </summary>
+        /// <param name="tokenType">Type of the token.</param>
         public Token(string tokenType)
         {
             Type = tokenType;
             CreationTime = DateTimeOffset.UtcNow;
         }
 
+        /// <summary>
+        /// Gets the subject identifier.
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
         public string SubjectId
         {
             get
@@ -66,6 +138,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         public string ClientId
         {
             get
@@ -74,6 +152,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the scopes.
+        /// </summary>
+        /// <value>
+        /// The scopes.
+        /// </value>
         public IEnumerable<string> Scopes
         {
             get { return Claims.Where(x => x.Type == Constants.ClaimTypes.Scope).Select(x => x.Value); }

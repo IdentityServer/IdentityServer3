@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OAuth2/OpenID Connect authorize endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
@@ -96,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            if (!_options.Endpoints.AuthorizeEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableAuthorizeEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

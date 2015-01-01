@@ -16,7 +16,7 @@
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    class ClientValidationLog
+    internal class ClientValidationLog
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }

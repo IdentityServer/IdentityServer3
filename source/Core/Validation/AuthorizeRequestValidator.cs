@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -27,6 +28,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AuthorizeRequestValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -312,7 +314,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             var sessionId = _sessionCookie.GetSessionId();
             // TODO what to do if not present?
-            if (sessionId.IsPresent() && _options.Endpoints.CheckSessionEndpoint.IsEnabled)
+            if (sessionId.IsPresent() && _options.Endpoints.EnableCheckSessionEndpoint)
             {
                 _validatedRequest.SessionId = sessionId;
             }
@@ -345,7 +347,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check if redirect_uri is valid
             //////////////////////////////////////////////////////////
-            if (await _uriValidator.IsRedirecUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
+            if (await _uriValidator.IsRedirectUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
             {
                 LogError("Invalid redirect_uri: " + _validatedRequest.RedirectUri);
                 return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);

@@ -17,15 +17,37 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models the data submitted from the conset page.
+    /// </summary>
     public class UserConsent
     {
+        /// <summary>
+        /// Gets or sets the button that was clicked (either "yes" or "no").
+        /// </summary>
+        /// <value>
+        /// The button.
+        /// </value>
         public string Button { get; set; }
+        /// <summary>
+        /// Gets or sets the scopes consented to.
+        /// </summary>
+        /// <value>
+        /// The scopes.
+        /// </value>
         public string[] Scopes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user wishes the consent to be remembered.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if consent is to be remembered; otherwise, <c>false</c>.
+        /// </value>
         public bool RememberConsent { get; set; }
 
-        public bool WasConsentGranted
+        internal bool WasConsentGranted
         {
             get
             {
@@ -33,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
-        public IEnumerable<string> ScopedConsented
+        internal IEnumerable<string> ScopedConsented
         {
             get
             {

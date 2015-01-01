@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    class TokenValidationLog
+    internal class TokenValidationLog
     {
         // identity token
         public string ClientId { get; set; }

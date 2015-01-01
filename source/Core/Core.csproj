@@ -132,7 +132,7 @@
     <Compile Include="App_Packages\LibLog.1.4\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
-    <Compile Include="Configuration\Endpoints.cs" />
+    <Compile Include="Configuration\EndpointOptions.cs" />
     <Compile Include="Configuration\Hosting\SessionCookie.cs" />
     <Compile Include="Endpoints\Connect\CheckSessionEndpointController.cs" />
     <Compile Include="Events\LocalAuthenticationEvent.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
-    <Compile Include="Events\Base\EventIds.cs" />
+    <Compile Include="Events\Base\EventConstants.cs" />
     <Compile Include="Events\Base\EventType.cs" />
     <Compile Include="Events\AuthenticationEventBase.cs" />
     <Compile Include="Events\ExternalAuthenticationEvent.cs" />
@@ -151,7 +151,7 @@
     <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
-    <Compile Include="Models\ScopeString.cs" />
+    <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Resources\T4resx.cs">
       <AutoGen>True</AutoGen>
@@ -275,7 +275,7 @@
     <Compile Include="Configuration\Hosting\AutofacConfig.cs" />
     <Compile Include="Configuration\CookieOptions.cs" />
     <Compile Include="Configuration\CorsPolicy.cs" />
-    <Compile Include="Configuration\CorsPolicyProvider.cs" />
+    <Compile Include="Configuration\Hosting\CorsPolicyProvider.cs" />
     <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
@@ -292,7 +292,6 @@
     <Compile Include="Services\ITokenSigningService.cs" />
     <Compile Include="Configuration\Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
-    <Compile Include="Configuration\EndpointSettings.cs" />
     <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
@@ -304,9 +303,8 @@
     <Compile Include="Endpoints\Connect\EndSessionController.cs" />
     <Compile Include="Endpoints\Connect\UserInfoEndpointController.cs" />
     <Compile Include="Models\AuthorizationCode.cs" />
-    <Compile Include="Models\ConsentError.cs" />
     <Compile Include="Models\ClientCredential.cs" />
-    <Compile Include="Models\UserConsent.cs" />
+    <Compile Include="ViewModels\UserConsent.cs" />
     <Compile Include="ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Results\UserInfoResult.cs" />
@@ -355,7 +353,7 @@
     <Compile Include="Results\LoginResult.cs" />
     <Compile Include="Results\TokenErrorResult.cs" />
     <Compile Include="Results\TokenResult.cs" />
-    <Compile Include="Results\ResultExtensions.cs" />
+    <Compile Include="Extensions\ResultExtensions.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

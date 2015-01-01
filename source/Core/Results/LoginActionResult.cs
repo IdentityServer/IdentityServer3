@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class LoginActionResult : HtmlStreamActionResult
+    internal class LoginActionResult : HtmlStreamActionResult
     {
         public LoginActionResult(IViewService viewSvc, LoginViewModel model, SignInMessage message)
             : base(async () => await viewSvc.Login(model, message))

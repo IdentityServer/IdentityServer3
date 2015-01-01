@@ -16,9 +16,27 @@
 
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models values needed for Cross-Site Request Forgery (CSRF) prevention. These
+    /// values must be submitted with any HTML form that is displayed to the user (typically as 
+    /// a hidden input element).
+    /// </summary>
     public class AntiForgeryHiddenInputViewModel
     {
+        /// <summary>
+        /// The name of the form field.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
         public string Name { get; set; }
+        
+        /// <summary>
+        /// The value of the form field.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public string Value { get; set; }
     }
 }

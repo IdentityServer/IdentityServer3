@@ -29,7 +29,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class LoginResult : IHttpActionResult
+    internal class LoginResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

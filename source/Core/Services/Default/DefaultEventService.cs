@@ -22,25 +22,25 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class DefaultEventService : IEventService
+    internal class ContextEventService : IEventService
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
         private readonly IRequestIdService _reqId;
         private readonly OwinContext context;
-        
-        public DefaultEventService(OwinEnvironmentService owinEnvironment, IRequestIdService reqId)
+        private readonly IEventService inner;
+
+        public ContextEventService(OwinEnvironmentService owinEnvironment, IRequestIdService reqId, IEventService inner)
         {
             this.context = new OwinContext(owinEnvironment.Environment);
             _reqId = reqId;
+            this.inner = inner;
         }
 
         public void Raise(EventBase evt)
         {
             evt = PrepareEvent(evt);
-
-            var json = LogSerializer.Serialize(evt);
-            Logger.Info(json);
+            inner.Raise(evt);
         }
 
         protected virtual EventBase PrepareEvent(EventBase evt)
@@ -50,13 +50,26 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             evt.Context = new EventContext
             {
                 ActivityId = _reqId.GetRequestId(),
-                TimeStamp = DateTime.UtcNow,
+                TimeStamp = DateTimeOffset.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,
                 RemoteIpAddress = context.Request.RemoteIpAddress
             };
 
             return evt;
+        }
+    }
+
+    public class DefaultEventService : IEventService
+    {
+        protected static readonly ILog Logger = LogProvider.GetLogger("Events");
+
+        public void Raise(EventBase evt)
+        {
+            if (evt == null) throw new ArgumentNullException("evt");
+
+            var json = LogSerializer.Serialize(evt);
+            Logger.Info(json);
         }
     }
 }

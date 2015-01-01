@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -25,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class ScopeValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

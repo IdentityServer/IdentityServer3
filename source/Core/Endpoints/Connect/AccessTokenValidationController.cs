@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -31,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// Endpoint for validating access tokens
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.AccessTokenValidation)]
     [NoCache]
     public class AccessTokenValidationController : ApiController
@@ -56,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start access token validation request");
 
-            if (!_options.Endpoints.AccessTokenValidationEndpoint.IsEnabled)
+            if (!_options.Endpoints.EnableAccessTokenValidationEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

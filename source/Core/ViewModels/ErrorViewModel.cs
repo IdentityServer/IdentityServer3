@@ -17,14 +17,33 @@
 using Thinktecture.IdentityServer.Core.Logging;
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
+    /// <summary>
+    /// Models the data needed to render the error page.
+    /// </summary>
     public class ErrorViewModel : CommonViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ErrorViewModel"/> class.
+        /// </summary>
         public ErrorViewModel()
         {
             this.RequestId = ActivityId.GetCurrentId();
         }
 
+        /// <summary>
+        /// Gets or sets the error message.
+        /// </summary>
+        /// <value>
+        /// The error message.
+        /// </value>
         public string ErrorMessage { get; set; }
+        
+        /// <summary>
+        /// The per-request identifier. This can be used to display to the end user and can be used in diagnostics.
+        /// </summary>
+        /// <value>
+        /// The request identifier.
+        /// </value>
         public string RequestId { get; set; }
     }
 }

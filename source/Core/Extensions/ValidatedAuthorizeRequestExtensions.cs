@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    static class ValidatedAuthorizeRequestExtensions
+    internal static class ValidatedAuthorizeRequestExtensions
     {
         public static IEnumerable<ConsentScopeViewModel> GetIdentityScopes(this ValidatedAuthorizeRequest validatedRequest, ILocalizationService localizationService)
         {

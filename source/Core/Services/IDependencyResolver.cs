@@ -16,8 +16,17 @@
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// Allows resolving dependencies from the dependency injection system.
+    /// </summary>
     public interface IDependencyResolver
     {
+        /// <summary>
+        /// Resolves the dependency based upon the type. If name is provided then the dependency is also resolved by name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">The name.</param>
+        /// <returns>The dependency.</returns>
         T Resolve<T>(string name = null);
     }
 }

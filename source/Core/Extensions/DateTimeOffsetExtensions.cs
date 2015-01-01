@@ -19,7 +19,7 @@ using System.Diagnostics;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class DateTimeOffsetExtensions
+    internal static class DateTimeOffsetExtensions
     {
         [DebuggerStepThrough]
         public static bool HasExceeded(this DateTimeOffset creationTime, int seconds)

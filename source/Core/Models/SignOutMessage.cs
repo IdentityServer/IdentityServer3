@@ -16,9 +16,25 @@
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models the request from a client to sign the user out.
+    /// </summary>
     public class SignOutMessage : Message
     {
-        public string ReturnUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL for the user to return to after they have signed out.
+        /// </summary>
+        /// <value>
+        /// The return URL.
+        /// </value>
+        public string ReturnUrl { get; set; }
     }
 }

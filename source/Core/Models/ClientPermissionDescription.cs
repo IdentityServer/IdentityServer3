@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Models
 {
-    public class EndpointSettings
+    /// <summary>
+    /// Models the display information for a permission.
+    /// </summary>
+    public class ClientPermissionDescription
     {
-        public static EndpointSettings Disabled
-        {
-            get { return new EndpointSettings { IsEnabled = false }; }
-        }
-
-        public static EndpointSettings Enabled
-        {
-            get { return new EndpointSettings { IsEnabled = true }; }
-        }
-
-        public EndpointSettings()
-        {
-            IsEnabled = false;
-        }
-
-        public bool IsEnabled { get; set; }
+        public string DisplayName { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
@@ -53,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
-            if (options.Endpoints.ClientPermissionsEndpoint.IsEnabled == false)
+            if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 return NotFound();
             }
@@ -70,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpPost]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
-            if (options.Endpoints.ClientPermissionsEndpoint.IsEnabled == false)
+            if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 return NotFound();
             }

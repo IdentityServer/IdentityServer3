@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    class AuthorizeRequestValidationLog
+    internal class AuthorizeRequestValidationLog
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }
