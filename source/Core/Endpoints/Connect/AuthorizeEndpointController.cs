@@ -254,7 +254,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var url = new Uri(host, path);
             message.ReturnUrl = url.AbsoluteUri;
             
-            return new LoginResult(message, Request.GetOwinContext().Environment, _options);
+            return new LoginResult(Request.GetOwinContext().Environment, message);
         }
 
         IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)

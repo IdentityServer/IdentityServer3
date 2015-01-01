@@ -22,20 +22,38 @@ using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="System.Security.Principal.IPrincipal"/> and <see cref="System.Security.Principal.IIdentity"/> .
+    /// </summary>
     public static class PrincipalExtensions
     {
+        /// <summary>
+        /// Gets the authentication time.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static DateTime GetAuthenticationTime(this IPrincipal principal)
         {
             return principal.GetAuthenticationTimeEpoch().ToDateTimeFromEpoch();
         }
 
+        /// <summary>
+        /// Gets the authentication epoch time.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static long GetAuthenticationTimeEpoch(this IPrincipal principal)
         {
             return principal.Identity.GetAuthenticationTimeEpoch();
         }
-        
+
+        /// <summary>
+        /// Gets the authentication epoch time.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static long GetAuthenticationTimeEpoch(this IIdentity identity)
         {
@@ -45,12 +63,23 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return long.Parse(value);
         }
 
+        /// <summary>
+        /// Gets the subject identifier.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static string GetSubjectId(this IPrincipal principal)
         {
             return principal.Identity.GetSubjectId();
         }
-        
+
+        /// <summary>
+        /// Gets the subject identifier.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">sub claim is missing</exception>
         [DebuggerStepThrough]
         public static string GetSubjectId(this IIdentity identity)
         {
@@ -61,12 +90,23 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return claim.Value;
         }
 
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static string GetName(this IPrincipal principal)
         {
             return principal.Identity.GetName();
         }
-        
+
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">name claim is missing</exception>
         [DebuggerStepThrough]
         public static string GetName(this IIdentity identity)
         {
@@ -77,12 +117,23 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return claim.Value;
         }
 
+        /// <summary>
+        /// Gets the authentication method.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public static string GetAuthenticationMethod(this IPrincipal principal)
         {
             return principal.Identity.GetAuthenticationMethod();
         }
 
+        /// <summary>
+        /// Gets the authentication method.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">amr claim is missing</exception>
         [DebuggerStepThrough]
         public static string GetAuthenticationMethod(this IIdentity identity)
         {
@@ -93,11 +144,23 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return claim.Value;
         }
 
+        /// <summary>
+        /// Gets the identity provider.
+        /// </summary>
+        /// <param name="principal">The principal.</param>
+        /// <returns></returns>
+        [DebuggerStepThrough]
         public static string GetIdentityProvider(this IPrincipal principal)
         {
             return principal.Identity.GetIdentityProvider();
         }
 
+        /// <summary>
+        /// Gets the identity provider.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">idp claim is missing</exception>
         [DebuggerStepThrough]
         public static string GetIdentityProvider(this IIdentity identity)
         {

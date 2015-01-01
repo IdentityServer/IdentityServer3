@@ -24,11 +24,26 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerServiceFactory"/>
+    /// </summary>
     public static class IdentityServerServiceFactoryExtensions
     {
         const string CachingRegistrationName = "IdentityServerServiceFactoryExtensions.cache";
         const string InnerRegistrationName = "IdentityServerServiceFactoryExtensions.inner";
 
+        /// <summary>
+        /// Configures the provided cache in the dependency injection system as a decorator for the scope store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheRegistration">The cache registration.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// factory
+        /// or
+        /// cacheRegistration
+        /// or
+        /// ScopeStore needs to be configured on the factory
+        /// </exception>
         public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory,
             Registration<ICache<IEnumerable<Scope>>> cacheRegistration)
         {
@@ -47,13 +62,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             });
         }
 
+        /// <summary>
+        /// Configures an in-memory, time-based cache for the scope store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheDuration">Duration of the cache.</param>
         public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory, TimeSpan cacheDuration)
         {
             var cache = new DefaultCache<IEnumerable<Scope>>(cacheDuration);
             var cacheRegistration = new Registration<ICache<IEnumerable<Scope>>>(cache);
             factory.ConfigureScopeStoreCache(cacheRegistration);
         }
-        
+
+        /// <summary>
+        /// Configures the default cache for the scope store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         public static void ConfigureScopeStoreCache(this IdentityServerServiceFactory factory)
         {
             var cache = new DefaultCache<IEnumerable<Scope>>();
@@ -61,6 +85,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             factory.ConfigureScopeStoreCache(cacheRegistration);
         }
 
+        /// <summary>
+        /// Configures the provided cache in the dependency injection system as a decorator for the client store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheRegistration">The cache registration.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// factory
+        /// or
+        /// cacheRegistration
+        /// or
+        /// ClientStore needs to be configured on the factory
+        /// </exception>
         public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory,
             Registration<ICache<Client>> cacheRegistration)
         {
@@ -79,13 +115,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             });
         }
 
+        /// <summary>
+        /// Configures an in-memory, time-based cache for the client store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheDuration">Duration of the cache.</param>
         public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory, TimeSpan cacheDuration)
         {
             var cache = new DefaultCache<Client>(cacheDuration);
             var cacheRegistration = new Registration<ICache<Client>>(cache);
             factory.ConfigureClientStoreCache(cacheRegistration);
         }
-        
+
+        /// <summary>
+        /// Configures the default cache for the client store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         public static void ConfigureClientStoreCache(this IdentityServerServiceFactory factory)
         {
             var cache = new DefaultCache<Client>();
@@ -93,6 +138,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             factory.ConfigureClientStoreCache(cacheRegistration);
         }
 
+        /// <summary>
+        /// Configures the provided cache in the dependency injection system as a decorator for the user service.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheRegistration">The cache registration.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// factory
+        /// or
+        /// cacheRegistration
+        /// or
+        /// UserService needs to be configured on the factory
+        /// </exception>
         public static void ConfigureUserServiceCache(this IdentityServerServiceFactory factory,
            Registration<ICache<IEnumerable<Claim>>> cacheRegistration)
         {
@@ -111,6 +168,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             });
         }
 
+        /// <summary>
+        /// Configures an in-memory, time-based cache for the user service store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="cacheDuration">Duration of the cache.</param>
         public static void ConfigureUserServiceCache(this IdentityServerServiceFactory factory, TimeSpan cacheDuration)
         {
             var cache = new DefaultCache<IEnumerable<Claim>>(cacheDuration);
@@ -118,6 +180,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             factory.ConfigureUserServiceCache(cacheRegistration);
         }
 
+        /// <summary>
+        /// Configures the default cache for the user service store.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
         public static void ConfigureUserServiceCache(this IdentityServerServiceFactory factory)
         {
             var cache = new DefaultCache<IEnumerable<Claim>>();

@@ -18,6 +18,9 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Base class for authentication events
+    /// </summary>
     public class AuthenticationEventBase : EventBase
     {
         public AuthenticationEventBase()
@@ -25,7 +28,20 @@ namespace Thinktecture.IdentityServer.Core.Events
             this.Category = EventConstants.Categories.Authentication;
         }
 
+        /// <summary>
+        /// Gets or sets the subject identifier.
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
         public string SubjectId { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the sign in message.
+        /// </summary>
+        /// <value>
+        /// The sign in message.
+        /// </value>
         public SignInMessage SignInMessage { get; set; }
     }
 }

@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.ComponentModel;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -26,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="Message"/> class.
         /// </summary>
-        public Message()
+        internal Message()
         {
             Created = DateTime.UtcNow.Ticks;
         }

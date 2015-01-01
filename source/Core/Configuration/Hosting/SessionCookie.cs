@@ -17,6 +17,7 @@
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class SessionCookie
     {
         IOwinContext context;

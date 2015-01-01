@@ -67,6 +67,18 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return url;
         }
         
+        public static string CleanUrlPath(this string url)
+        {
+            if (String.IsNullOrWhiteSpace(url)) url = "/";
+
+            if (url != "/" && url.EndsWith("/"))
+            {
+                url = url.Substring(0, url.Length - 1);
+            }
+
+            return url;
+        }
+        
         public static string AddQueryString(this string url, string query)
         {
             if (!url.Contains("?"))

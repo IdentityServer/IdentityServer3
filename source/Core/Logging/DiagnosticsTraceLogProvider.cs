@@ -19,23 +19,48 @@ using System.Diagnostics;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
+    /// <summary>
+    /// Implementation of <see cref="ILogProvider"/> that uses the <see cref="DiagnosticsTraceLogger"/>.
+    /// </summary>
     public class DiagnosticsTraceLogProvider : ILogProvider
     {
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public ILog GetLogger(string name)
         {
             return new DiagnosticsTraceLogger(name);
         }
     }
 
+    /// <summary>
+    /// Implementation of <see cref="ILog"/> that uses <see cref="System.Diagnostics.Trace"/>.
+    /// </summary>
     public class DiagnosticsTraceLogger : ILog
     {
         private readonly string _name = string.Empty;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiagnosticsTraceLogger"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
         public DiagnosticsTraceLogger(string name)
         {
             _name = string.Format("[{0}]", name);
         }
 
+        /// <summary>
+        /// Log a message the specified log level.
+        /// </summary>
+        /// <param name="logLevel">The log level.</param>
+        /// <param name="messageFunc">The message function.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Note to implementors: the message func should not be called if the loglevel is not enabled
+        /// so as not to incur perfomance penalties.
+        /// </remarks>
         public bool Log(LogLevel logLevel, Func<string> messageFunc)
         {
             if (messageFunc != null)
@@ -47,6 +72,17 @@ namespace Thinktecture.IdentityServer.Core.Logging
             return true;
         }
 
+        /// <summary>
+        /// Log a message and exception at the specified log level.
+        /// </summary>
+        /// <typeparam name="TException">The type of the exception.</typeparam>
+        /// <param name="logLevel">The log level.</param>
+        /// <param name="messageFunc">The message function.</param>
+        /// <param name="exception">The exception.</param>
+        /// <remarks>
+        /// Note to implementors: the message func should not be called if the loglevel is not enabled
+        /// so as not to incur perfomance penalties.
+        /// </remarks>
         public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
         {
             if (messageFunc != null && exception != null)

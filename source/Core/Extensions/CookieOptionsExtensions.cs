@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
-    public static class CookieOptionsExtensions
+    internal static class CookieOptionsExtensions
     {
         public static string GetCookieName(this CookieOptions options, string name)
         {

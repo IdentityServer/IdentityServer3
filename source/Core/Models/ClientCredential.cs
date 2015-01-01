@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class ClientCredential
     {
         public string ClientId { get; set; }

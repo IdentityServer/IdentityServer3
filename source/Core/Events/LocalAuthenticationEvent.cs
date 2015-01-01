@@ -17,8 +17,17 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Base class for local authentication events
+    /// </summary>
     public class LocalAuthenticationEvent : AuthenticationEventBase
     {
+        /// <summary>
+        /// Gets or sets the name of the login user.
+        /// </summary>
+        /// <value>
+        /// The name of the login user.
+        /// </value>
         public string LoginUserName { get; set; }
     }
 }

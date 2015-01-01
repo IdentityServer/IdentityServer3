@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class InteractionResponse
     {
         public bool IsError { get { return Error != null; } }
         public AuthorizeError Error { get; set; }
     }
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class LoginInteractionResponse : InteractionResponse
     {
         public bool IsLogin { get { return SignInMessage != null; } }
         public SignInMessage SignInMessage { get; set; }
     }
-    
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class ConsentInteractionResponse : InteractionResponse
     {
         public bool IsConsent { get; set; }

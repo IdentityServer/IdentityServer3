@@ -19,6 +19,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
+    /// <summary>
+    /// Helper to JSON serialize object data for logging.
+    /// </summary>
     public static class LogSerializer
     {
         static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
@@ -33,6 +36,11 @@ namespace Thinktecture.IdentityServer.Core.Logging
             jsonSettings.Converters.Add(new StringEnumConverter());
         }
 
+        /// <summary>
+        /// Serializes the specified object.
+        /// </summary>
+        /// <param name="logObject">The object.</param>
+        /// <returns></returns>
         public static string Serialize(object logObject)
         {
             return JsonConvert.SerializeObject(logObject, jsonSettings);

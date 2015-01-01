@@ -16,12 +16,18 @@
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// OpenID Connect scope types.
+    /// </summary>
     public enum ScopeType
     {
         Identity,
         Resource
     }
 
+    /// <summary>
+    /// OpenID Connect flows.
+    /// </summary>
     public enum Flows
     {
         AuthorizationCode,
@@ -32,36 +38,54 @@ namespace Thinktecture.IdentityServer.Core.Models
         Custom
     }
 
+    /// <summary>
+    /// OpenID Connect subject types.
+    /// </summary>
     public enum SubjectTypes
     {
         Global,
         Ppid
     };
 
+    /// <summary>
+    /// OpenID Connect application types.
+    /// </summary>
     public enum ApplicationTypes
     {
         Web,
         Native
     };
 
+    /// <summary>
+    /// Signing keys types.
+    /// </summary>
     public enum SigningKeyTypes
     {
         Default,
         ClientSecret
     };
 
+    /// <summary>
+    /// Access token types.
+    /// </summary>
     public enum AccessTokenType
     {
         Jwt,
         Reference
     }
 
+    /// <summary>
+    /// Token usage types.
+    /// </summary>
     public enum TokenUsage
     {
         ReUse,
         OneTimeOnly
     }
 
+    /// <summary>
+    /// Token expiration types.
+    /// </summary>
     public enum TokenExpiration
     {
         Sliding,

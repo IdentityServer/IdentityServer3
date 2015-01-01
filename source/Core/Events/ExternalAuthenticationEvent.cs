@@ -16,9 +16,24 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Base class for external authentication events
+    /// </summary>
     public class ExternalAuthenticationEvent : AuthenticationEventBase
     {
+        /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
         public string Provider { get; set; }
+        /// <summary>
+        /// Gets or sets the provider identifier.
+        /// </summary>
+        /// <value>
+        /// The provider identifier.
+        /// </value>
         public string ProviderId { get; set; }
     }
 }

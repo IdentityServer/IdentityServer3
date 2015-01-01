@@ -20,8 +20,25 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Services.ICache{T}"/>
+    /// </summary>
     public static class ICacheExtensions
     {
+        /// <summary>
+        /// Attempts to get an item from the cache. If the item is not found, the <c>get</c> function is used to 
+        /// obtain the item and populate the cache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cache">The cache.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="get">The get function.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// cache
+        /// or
+        /// get
+        /// </exception>
         public static async Task<T> GetAsync<T>(this ICache<T> cache, string key, Func<Task<T>> get)
             where T : class
         {

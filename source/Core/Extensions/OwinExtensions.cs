@@ -19,60 +19,93 @@ using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
+    /// <summary>
+    /// Extension methods for the OWIN environment.
+    /// </summary>
     public static class OwinExtensions
     {
-        public static string GetHost(this IDictionary<string, object> env, string host = null)
-        {
-            var ctx = new OwinContext(env);
-            var request = ctx.Request;
-
-            if (host.IsMissing())
-            {
-                host = request.Uri.Scheme + "://" + request.Host.Value;
-            }
-
-            return host;
-        }
-        
-        public static string GetBasePath(this IDictionary<string, object> env)
-        {
-            var ctx = new OwinContext(env);
-            return ctx.Request.PathBase.Value.EnsureTrailingSlash();
-        }
-
-        public static string GetIdentityServerLogoutUrl(this IDictionary<string, object> env)
-        {
-            return env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
-        }
-        
-        public static string GetIdentityServerBaseUrl(this IDictionary<string, object> env)
-        {
-            return env.GetIdentityServerHost() + env.GetIdentityServerBasePath();
-        }
-
-        public static string GetIdentityServerBasePath(this IDictionary<string, object> env)
-        {
-            return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
-        }
-
-        internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
-        {
-            env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
-        }
-
+        /// <summary>
+        /// Gets the public host name for IdentityServer.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
         public static string GetIdentityServerHost(this IDictionary<string, object> env)
         {
             return env[Constants.OwinEnvironment.IdentityServerHost] as string;
         }
 
+        /// <summary>
+        /// Gets the base path of IdentityServer. Can be used inside of Katana <c>Map</c>ped middleware.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerBasePath(this IDictionary<string, object> env)
+        {
+            return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
+        }
+
+        /// <summary>
+        /// Gets the public base URL for IdentityServer.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerBaseUrl(this IDictionary<string, object> env)
+        {
+            return env.GetIdentityServerHost() + env.GetIdentityServerBasePath();
+        }
+
+        /// <summary>
+        /// Gets the URL for the logout page.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerLogoutUrl(this IDictionary<string, object> env)
+        {
+            return env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
+        }
+
+        /// <summary>
+        /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="message">The signin message.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// message
+        /// </exception>
+        public static string CreateSignInRequest(this IDictionary<string, object> env, SignInMessage message)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (message == null) throw new ArgumentNullException("message");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var cookie = new MessageCookie<SignInMessage>(env, options);
+            var id = cookie.Write(message);
+
+            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
+            var uri = new Uri(url.AddQueryString("signin=" + id));
+
+            return uri.AbsoluteUri;
+        }
+
+
         internal static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
+        
+        internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
+        {
+            env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
+        }
+
 
         internal static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
@@ -89,15 +122,6 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
-        }
-
-        public static string CreateSignInRequest(this IDictionary<string, object> env, SignInMessage message)
-        {
-            if (env == null) throw new ArgumentNullException("env");
-            if (message == null) throw new ArgumentNullException("message");
-
-            var options = env.ResolveDependency<IdentityServerOptions>();
-            return Thinktecture.IdentityServer.Core.Results.LoginResult.GetRedirectUrl(message, env, options);
         }
     }
 }

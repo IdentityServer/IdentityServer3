@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
@@ -24,11 +25,14 @@ namespace Owin
         {
             app.Use(async (ctx, next) =>
             {
-                var host = ctx.Environment.GetHost(publicHostName);
-                var path = ctx.Environment.GetBasePath();
+                var request = ctx.Request;
+                if (String.IsNullOrWhiteSpace(publicHostName))
+                {
+                    publicHostName = request.Uri.Scheme + "://" + request.Host.Value;
+                } 
                 
-                ctx.Environment.SetIdentityServerHost(host);
-                ctx.Environment.SetIdentityServerBasePath(path);
+                ctx.Environment.SetIdentityServerHost(publicHostName);
+                ctx.Environment.SetIdentityServerBasePath(ctx.Request.PathBase.Value.EnsureTrailingSlash());
 
                 await next();
             });

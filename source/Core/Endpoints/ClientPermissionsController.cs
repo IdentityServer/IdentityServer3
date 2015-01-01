@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
             var url = new Uri(host, path);
             message.ReturnUrl = url.AbsoluteUri;
-            return new LoginResult(message, Request.GetOwinContext().Environment, options);
+            return new LoginResult(Request.GetOwinContext().Environment, message);
         }
 
         private async Task<IHttpActionResult> RenderPermissionsPage(string error = null)

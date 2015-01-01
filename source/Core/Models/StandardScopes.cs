@@ -18,8 +18,17 @@ using System.Linq;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Convenience class that defines standard identity scopes.
+    /// </summary>
     public static class StandardScopes
     {
+        /// <summary>
+        /// All identity scopes.
+        /// </summary>
+        /// <value>
+        /// All.
+        /// </value>
         public static IEnumerable<Scope> All
         {
             get
@@ -35,6 +44,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// All identity scopes (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// All always include.
+        /// </value>
         public static IEnumerable<Scope> AllAlwaysInclude
         {
             get
@@ -50,6 +65,13 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+
+        /// <summary>
+        /// Gets the "openid" scope.
+        /// </summary>
+        /// <value>
+        /// The open identifier.
+        /// </value>
         public static Scope OpenId
         {
             get
@@ -67,6 +89,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "profile" scope.
+        /// </summary>
+        /// <value>
+        /// The profile.
+        /// </value>
         public static Scope Profile
         {
             get
@@ -81,6 +109,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "profile" scope (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// The profile always include.
+        /// </value>
         public static Scope ProfileAlwaysInclude
         {
             get
@@ -95,6 +129,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "email" scope.
+        /// </summary>
+        /// <value>
+        /// The email.
+        /// </value>
         public static Scope Email
         {
             get
@@ -109,6 +149,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "email" scope (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// The email always include.
+        /// </value>
         public static Scope EmailAlwaysInclude
         {
             get
@@ -123,6 +169,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "phone" scope.
+        /// </summary>
+        /// <value>
+        /// The phone.
+        /// </value>
         public static Scope Phone
         {
             get
@@ -137,6 +189,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "phone" scope (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// The phone always include.
+        /// </value>
         public static Scope PhoneAlwaysInclude
         {
             get
@@ -151,6 +209,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "address" scope.
+        /// </summary>
+        /// <value>
+        /// The address.
+        /// </value>
         public static Scope Address
         {
             get
@@ -165,6 +229,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "address" scope (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// The address always include.
+        /// </value>
         public static Scope AddressAlwaysInclude
         {
             get
@@ -179,6 +249,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "all_claims" scope.
+        /// </summary>
+        /// <value>
+        /// All claims.
+        /// </value>
         public static Scope AllClaims
         {
             get
@@ -193,6 +269,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "roles" scope.
+        /// </summary>
+        /// <value>
+        /// The roles.
+        /// </value>
         public static Scope Roles
         {
             get
@@ -210,6 +292,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "roles" scope (always include claims in token).
+        /// </summary>
+        /// <value>
+        /// The roles always include.
+        /// </value>
         public static Scope RolesAlwaysInclude
         {
             get
@@ -227,6 +315,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
         }
 
+        /// <summary>
+        /// Gets the "offline_access" scope.
+        /// </summary>
+        /// <value>
+        /// The offline access.
+        /// </value>
         public static Scope OfflineAccess
         {
             get

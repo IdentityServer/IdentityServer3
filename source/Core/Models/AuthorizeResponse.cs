@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class AuthorizeResponse
     {
         public ValidatedAuthorizeRequest Request { get; set; }

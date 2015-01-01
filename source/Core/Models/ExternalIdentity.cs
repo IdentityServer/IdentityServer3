@@ -21,7 +21,6 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
-
     /// <summary>
     /// Models the identity of a user authenticating from an external identity provider.
     /// </summary>

@@ -33,27 +33,16 @@ namespace Thinktecture.IdentityServer.Core.Results
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly SignInMessage message;
         private readonly IDictionary<string, object> env;
-        private readonly IdentityServerOptions options;
+        private readonly SignInMessage message;
 
-        public static string GetRedirectUrl(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
+        public LoginResult(IDictionary<string, object> env, SignInMessage message)
         {
-            var result = new LoginResult(message, env, options);
-            var response = result.Execute();
-
-            return response.Headers.Location.AbsoluteUri;
-        }
-        
-        public LoginResult(SignInMessage message, IDictionary<string, object> env, IdentityServerOptions options)
-        {
-            if (message == null) throw new ArgumentNullException("message");
             if (env == null) throw new ArgumentNullException("env");
-            if (options == null) throw new ArgumentNullException("options");
+            if (message == null) throw new ArgumentNullException("message");
 
-            this.message = message;
             this.env = env;
-            this.options = options;
+            this.message = message;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -65,14 +54,11 @@ namespace Thinktecture.IdentityServer.Core.Results
         {
             Logger.Info("Redirecting to login page");
 
-            var cookie = new MessageCookie<SignInMessage>(this.env, this.options);
-            var id = cookie.Write(this.message);
-
-            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-            var uri = new Uri(url.AddQueryString("signin=" + id));
-
             var response = new HttpResponseMessage(HttpStatusCode.Redirect);
-            response.Headers.Location = uri;
+
+            var url = this.env.CreateSignInRequest(this.message);
+            response.Headers.Location = new Uri(url);
+
             return response;
         }
     }

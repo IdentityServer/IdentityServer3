@@ -19,8 +19,18 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Services.ILocalizationService"/>
+    /// </summary>
     public static class ILocalizationServiceExtensions
     {
+        /// <summary>
+        /// Gets a localized string for the message category.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">localization</exception>
         public static string GetMessage(this ILocalizationService localization, string id)
         {
             if (localization == null) throw new ArgumentNullException("localization");
@@ -28,20 +38,41 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return localization.GetString(Constants.LocalizationCategories.Messages, id);
         }
 
+        /// <summary>
+        /// Gets a localized string for the event category.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">localization</exception>
         public static string GetEvent(this ILocalizationService localization, string id)
         {
             if (localization == null) throw new ArgumentNullException("localization");
 
             return localization.GetString(Constants.LocalizationCategories.Events, id);
         }
-        
+
+        /// <summary>
+        /// Gets a localized scope display name.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="scope">The scope.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">localization</exception>
         public static string GetScopeDisplayName(this ILocalizationService localization, string scope)
         {
             if (localization == null) throw new ArgumentNullException("localization");
             
             return localization.GetString(Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDisplayNameSuffix);
         }
-        
+
+        /// <summary>
+        /// Gets a localized scope description.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="scope">The scope.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">localization</exception>
         public static string GetScopeDescription(this ILocalizationService localization, string scope)
         {
             if (localization == null) throw new ArgumentNullException("localization");
