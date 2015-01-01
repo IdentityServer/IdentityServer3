@@ -61,6 +61,8 @@ namespace Owin
 
             app.UseCors(options.CorsPolicy);
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
+
+            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
             
             if (options.PluginConfiguration != null)
             {
@@ -74,7 +76,6 @@ namespace Owin
 
             app.UseEmbeddedFileServer();
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
             SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
