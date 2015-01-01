@@ -66,8 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
             
-            builder.RegisterDefaultType<IEventService, DefaultEventService>(fact.EventService);
-            //builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
+            builder.RegisterDecoratorDefaultType<IEventService, EventServiceDecorator, DefaultEventService>(fact.EventService);
 
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
@@ -192,6 +191,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             where TDefault : class, T, new()
         {
             builder.RegisterDefaultInstance<T, TDefault>(registration, DecoratorRegistrationName);
+            builder.RegisterDecorator<T, TDecorator>(DecoratorRegistrationName);
+        }
+        
+        private static void RegisterDecoratorDefaultType<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
+            where T : class
+            where TDecorator : T
+            where TDefault : class, T, new()
+        {
+            builder.RegisterDefaultType<T, TDefault>(registration, DecoratorRegistrationName);
             builder.RegisterDecorator<T, TDecorator>(DecoratorRegistrationName);
         }
 
