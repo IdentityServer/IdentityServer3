@@ -160,7 +160,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     /// <summary>
     /// Strongly typed <see cref="Registration" /> implementation.
     /// </summary>
-    /// <typeparam name="T">The <see cref="DependencyType"/>.</typeparam>
+    /// <typeparam name="T">The <see cref="Registration{T}.DependencyType"/>.</typeparam>
     /// <typeparam name="TImpl">The <see cref="Type"/>.</typeparam>
     public class Registration<T, TImpl> : Registration<T>
         where T : class
