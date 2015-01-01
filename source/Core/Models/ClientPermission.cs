@@ -18,19 +18,52 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models permissions granted to a client.
+    /// </summary>
     public class ClientPermission
     {
+        /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         public string ClientId { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the client.
+        /// </summary>
+        /// <value>
+        /// The name of the client.
+        /// </value>
         public string ClientName { get; set; }
+        /// <summary>
+        /// Gets or sets the client URL.
+        /// </summary>
+        /// <value>
+        /// The client URL.
+        /// </value>
         public string ClientUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the client logo URL.
+        /// </summary>
+        /// <value>
+        /// The client logo URL.
+        /// </value>
         public string ClientLogoUrl { get; set; }
-        public IEnumerable<PermissionDescription> IdentityPermissions { get; set; }
-        public IEnumerable<PermissionDescription> ResourcePermissions { get; set; }
-    }
-    
-    public class PermissionDescription
-    {
-        public string DisplayName { get; set; }
-        public string Description { get; set; }
+        /// <summary>
+        /// Gets or sets the identity permissions.
+        /// </summary>
+        /// <value>
+        /// The identity permissions.
+        /// </value>
+        public IEnumerable<ClientPermissionDescription> IdentityPermissions { get; set; }
+        /// <summary>
+        /// Gets or sets the resource permissions.
+        /// </summary>
+        /// <value>
+        /// The resource permissions.
+        /// </value>
+        public IEnumerable<ClientPermissionDescription> ResourcePermissions { get; set; }
     }
 }

@@ -207,7 +207,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     from name in names
                     let m = ReadByCookieName(name)
                     where m != null
-                    orderby m.Requested descending
+                    orderby m.Created descending
                     select new { name = name, message = m };
 
                 var purge = messages.Skip(Constants.SignInMessageThreshold);

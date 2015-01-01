@@ -20,7 +20,8 @@ using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Services
 {
     /// <summary>
-    /// Service to manage client permissions (refresh and access tokens, consent)
+    /// Service to allow a subject to query and revoke client permissions.
+    /// Provides an abstraction on the type of permission (codes, refresh tokens, access tokens, and consent).
     /// </summary>
     public interface IClientPermissionsService
     {

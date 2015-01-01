@@ -14,36 +14,14 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Thinktecture.IdentityServer.Core.Models
 {
-    public class UserConsent
+    /// <summary>
+    /// Models the display information for a permission.
+    /// </summary>
+    public class ClientPermissionDescription
     {
-        public string Button { get; set; }
-        public string[] Scopes { get; set; }
-        public bool RememberConsent { get; set; }
-
-        public bool WasConsentGranted
-        {
-            get
-            {
-                return Button == "yes";
-            }
-        }
-
-        public IEnumerable<string> ScopedConsented
-        {
-            get
-            {
-                if (WasConsentGranted && Scopes != null)
-                {
-                    return Scopes;
-                }
-
-                return Enumerable.Empty<string>();
-            }
-        }
+        public string DisplayName { get; set; }
+        public string Description { get; set; }
     }
 }

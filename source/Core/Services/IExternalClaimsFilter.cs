@@ -19,7 +19,6 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
-
     /// <summary>
     /// Models a mechanism for claims transformation for claims provided from external identity providers.
     /// </summary>

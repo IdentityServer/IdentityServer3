@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
         /// <param name="name">The name claim used as the display name.</param>
-        /// <param name="claims">The claims.</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
         /// <param name="identityProvider">The identity provider. This should used when an external 
         /// identity provider is used and will typically match the <c>AuthenticationType</c> as configured
         /// on the Katana authentication middleware.</param>
@@ -139,7 +139,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </param>
         /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
         /// <param name="name">The name claim used as the display name.</param>
-        /// <param name="claims">The claims.</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
         /// <param name="identityProvider">The identity provider. This should used when an external 
         /// identity provider is used and will typically match the <c>AuthenticationType</c> as configured
         /// on the Katana authentication middleware.</param>

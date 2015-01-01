@@ -20,8 +20,8 @@ using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Services
 {
     /// <summary>
-    /// Models an abstraction for querying and revoking a subject's permissions for clients. This abstraction
-    /// aggregates permissions for access tokens, refresh tokens, codes, and consent.
+    /// Models storage of a subject's permissions for clients. 
+    /// Provides an abstraction on the type of permission (codes, refresh tokens, access tokens, and consent).
     /// </summary>
     public interface IPermissionsStore
     {

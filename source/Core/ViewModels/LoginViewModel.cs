@@ -26,6 +26,7 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     {
         /// <summary>
         /// The URL to POST credentials to for local logins. Will be <c>null</c> if local login is disabled.
+        /// <see cref="LoginCredentials"/> for the model for the submitted data.
         /// </summary>
         /// <value>
         /// The login URL.

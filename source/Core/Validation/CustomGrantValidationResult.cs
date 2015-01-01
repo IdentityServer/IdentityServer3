@@ -20,16 +20,43 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    /// <summary>
+    /// Models the result of custom grant validation.
+    /// </summary>
     public class CustomGrantValidationResult
     {
+        /// <summary>
+        /// Gets or sets the principal which represents the result of the authentication.
+        /// </summary>
+        /// <value>
+        /// The principal.
+        /// </value>
         public ClaimsPrincipal Principal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the error message.
+        /// </summary>
+        /// <value>
+        /// The error message.
+        /// </value>
         public string ErrorMessage { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
         public CustomGrantValidationResult(string errorMessage)
         {
             ErrorMessage = errorMessage;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class.
+        /// </summary>
+        /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
+        /// <param name="authenticationMethod">The authentication method which describes the custom grant type.</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
+        /// <param name="identityProvider">The identity provider.</param>
         public CustomGrantValidationResult(
             string subject, 
             string authenticationMethod,

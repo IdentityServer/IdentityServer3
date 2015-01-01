@@ -16,6 +16,9 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Indicates if the event is a success or fail event.
+    /// </summary>
     public enum EventType
     {
         Success = 1,

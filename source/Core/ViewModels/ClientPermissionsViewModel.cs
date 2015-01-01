@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         public string LogoutUrl { get; set; }
         
         /// <summary>
-        /// The URL to POST to revoke client permissions.
+        /// The URL to POST to revoke client permissions. <see cref="RevokeClientPermission"/> for the model for the submitted data.
         /// </summary>
         /// <value>
         /// The revoke permission URL.

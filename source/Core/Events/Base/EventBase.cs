@@ -17,14 +17,57 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Models base class for events raised from IdentityServer.
+    /// </summary>
     public class EventBase
     {
+        /// <summary>
+        /// Gets or sets the event context.
+        /// </summary>
+        /// <value>
+        /// The context.
+        /// </value>
         public EventContext Context { get; set; }
 
+        /// <summary>
+        /// Gets or sets the event identifier. <see cref="EventConstants.Ids"/> for the list of the defined identifiers.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         public int Id { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the event type.
+        /// </summary>
+        /// <value>
+        /// The type of the event.
+        /// </value>
         public EventType EventType { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the event category. <see cref="EventConstants.Categories"/> for a list of the defined categories.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
         public string Category { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the event message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
         public string Message { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the event details.
+        /// </summary>
+        /// <value>
+        /// The details.
+        /// </value>
         public string Details { get; set; }
     }
 }
