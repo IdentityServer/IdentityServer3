@@ -19,7 +19,7 @@ We currently don't provide a setup tool or a UI, but IdentityServer is remarkabl
 IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication.
 
 ```csharp
-public void Configuration(IAppBuilder appBuilder)
+public void Configuration(IAppBuilder app)
 {
     var factory = InMemoryFactory.Create(
         users:   Users.Get(), 
@@ -28,14 +28,13 @@ public void Configuration(IAppBuilder appBuilder)
 
     var options = new IdentityServerOptions
     {
-        IssuerUri = "https://idsrv3.com",
-        SiteName = "Thinktecture IdentityServer v3"
-
+        SiteName = "Thinktecture IdentityServer v3",
         SigningCertificate = Certificate.Get(),
-        Factory = factory,
+        
+        Factory = factory
     };
 
-    appBuilder.UseIdentityServer(options);
+    app.UseIdentityServer(options);
 }
 ```
 
@@ -64,5 +63,6 @@ IdentityServer is built using the following great open source projects:
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
 - [Web Protection Library](https://wpl.codeplex.com/)
+- [License Header Manager](https://visualstudiogallery.msdn.microsoft.com/5647a099-77c9-4a49-91c3-94001828e99e)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
