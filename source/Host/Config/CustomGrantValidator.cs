@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                 if (credential != null)
                 {
                     // validate credential
-                    return Task.FromResult(new CustomGrantValidationResult("123", "custom"));
+                    return Task.FromResult(new CustomGrantValidationResult("818727", "custom"));
                 }
                 else
                 {
