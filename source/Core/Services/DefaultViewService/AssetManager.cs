@@ -21,7 +21,7 @@ using System.IO;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    class AssetManager
+    internal class AssetManager
     {
         public const string HttpAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.HttpAssets";
         public const string FontAssetsNamespace = HttpAssetsNamespace + ".libs.bootstrap.fonts";

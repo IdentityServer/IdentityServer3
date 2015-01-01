@@ -16,8 +16,16 @@
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Models loading the HTML for a view.
+    /// </summary>
     public interface IViewLoader
     {
+        /// <summary>
+        /// Loads the HTML for the named view.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         string Load(string name);
     }
 }

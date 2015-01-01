@@ -26,6 +26,9 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default view service.
+    /// </summary>
     public class DefaultViewService : IViewService
     {
         static Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings()

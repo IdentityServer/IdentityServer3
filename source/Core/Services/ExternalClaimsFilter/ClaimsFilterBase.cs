@@ -19,15 +19,31 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Base external claims filter implementation. Will only execute for the configured provider and 
+    /// provides a single virtual method to override to transform claims. 
+    /// </summary>
     public abstract class ClaimsFilterBase : IExternalClaimsFilter
     {
         readonly string provider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClaimsFilterBase"/> class.
+        /// </summary>
+        /// <param name="provider">The provider this claims filter will operate against.</param>
         public ClaimsFilterBase(string provider)
         {
             this.provider = provider;
         }
 
+        /// <summary>
+        /// Filters the specified claims from an external identity provider.
+        /// </summary>
+        /// <param name="provider">The identifier for the external identity provider.</param>
+        /// <param name="claims">The incoming claims.</param>
+        /// <returns>
+        /// The transformed claims.
+        /// </returns>
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
             if (this.provider == provider)
@@ -38,6 +54,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return claims;
         }
 
+        /// <summary>
+        /// Transforms the claims if this provider is used.
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <returns></returns>
         protected abstract IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims);
     }
 }

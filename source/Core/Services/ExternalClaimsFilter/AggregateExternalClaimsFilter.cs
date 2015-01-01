@@ -19,15 +19,30 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Claims filter to aggregate other claims filters.
+    /// </summary>
     public class AggregateExternalClaimsFilter : IExternalClaimsFilter
     {
         readonly IExternalClaimsFilter[] filters;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AggregateExternalClaimsFilter"/> class.
+        /// </summary>
+        /// <param name="filters">The filters to aggregate.</param>
         public AggregateExternalClaimsFilter(params IExternalClaimsFilter[] filters)
         {
             this.filters = filters;
         }
 
+        /// <summary>
+        /// Filters the specified claims from an external identity provider.
+        /// </summary>
+        /// <param name="provider">The identifier for the external identity provider.</param>
+        /// <param name="claims">The incoming claims.</param>
+        /// <returns>
+        /// The transformed claims.
+        /// </returns>
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
             foreach (var filter in this.filters)

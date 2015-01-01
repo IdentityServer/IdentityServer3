@@ -20,18 +20,33 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Claims filter for facebook. Converts the "urn:facebook:name" claim to the "name" claim.
+    /// </summary>
     public class FacebookClaimsFilter : ClaimsFilterBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookClaimsFilter"/> class.
+        /// </summary>
         public FacebookClaimsFilter()
             : this("Facebook")
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacebookClaimsFilter"/> class.
+        /// </summary>
+        /// <param name="provider">The provider this claims filter will operate against.</param>
         public FacebookClaimsFilter(string provider)
             : base(provider)
         {
         }
 
+        /// <summary>
+        /// Transforms the claims if this provider is used.
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <returns></returns>
         protected override IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims)
         {
             var nameClaim = claims.FirstOrDefault(x => x.Type == "urn:facebook:name");

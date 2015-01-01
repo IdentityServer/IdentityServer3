@@ -19,7 +19,7 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class NopClaimsFilter : IExternalClaimsFilter
+    internal class NopClaimsFilter : IExternalClaimsFilter
     {
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {

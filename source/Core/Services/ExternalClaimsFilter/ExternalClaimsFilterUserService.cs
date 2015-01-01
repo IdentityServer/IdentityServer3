@@ -22,7 +22,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    public class ExternalClaimsFilterUserService : IUserService
+    internal class ExternalClaimsFilterUserService : IUserService
     {
         readonly IExternalClaimsFilter filter;
         readonly IUserService inner;

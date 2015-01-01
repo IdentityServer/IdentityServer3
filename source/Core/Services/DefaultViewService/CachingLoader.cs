@@ -16,6 +16,9 @@
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// <see cref="IViewLoader"/> implementation that caches HTML in-memory.
+    /// </summary>
     public class CachingLoader : IViewLoader
     {
         readonly ResourceCache cache = new ResourceCache();

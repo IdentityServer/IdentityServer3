@@ -20,15 +20,30 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Implementation of claims filter that filters out the claim types indicated.
+    /// </summary>
     public class IgnoreClaimsFilter : IExternalClaimsFilter
     {
         readonly string[] claimTypesToIgnore;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IgnoreClaimsFilter"/> class.
+        /// </summary>
+        /// <param name="claimTypesToIgnore">The claim types to ignore.</param>
         public IgnoreClaimsFilter(params string[] claimTypesToIgnore)
         {
             this.claimTypesToIgnore = claimTypesToIgnore;
         }
-        
+
+        /// <summary>
+        /// Filters the specified claims from an external identity provider.
+        /// </summary>
+        /// <param name="provider">The identifier for the external identity provider.</param>
+        /// <param name="claims">The incoming claims.</param>
+        /// <returns>
+        /// The transformed claims.
+        /// </returns>
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
             return claims.Where(x => !claimTypesToIgnore.Contains(x.Type));

@@ -20,13 +20,29 @@ using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Claims filter to convert from WIF claim types to OpenID Connect claim types.
+    /// </summary>
     public class NormalizingClaimsFilter : IExternalClaimsFilter
     {
+        /// <summary>
+        /// Filters the specified claims from an external identity provider.
+        /// </summary>
+        /// <param name="provider">The identifier for the external identity provider.</param>
+        /// <param name="claims">The incoming claims.</param>
+        /// <returns>
+        /// The transformed claims.
+        /// </returns>
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
             return Filter(claims);
         }
-        
+
+        /// <summary>
+        /// Filters the specified claims.
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <returns></returns>
         public IEnumerable<Claim> Filter(IEnumerable<Claim> claims)
         {
             return ClaimMap.Map(claims);
