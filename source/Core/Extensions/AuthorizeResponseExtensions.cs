@@ -60,6 +60,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 collection.Add("state", response.State);
             }
+            
+            if (response.SessionState.IsPresent())
+            {
+                collection.Add("session_state", response.SessionState);
+            }
 
             return collection;
         }

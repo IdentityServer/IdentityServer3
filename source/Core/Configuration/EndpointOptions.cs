@@ -25,9 +25,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.EnableUserInfoEndpoint = true;
             this.EnableDiscoveryEndpoint = true;
             this.EnableAccessTokenValidationEndpoint = true;
-            this.IdentityTokenValidationEndpoint = true;
-            this.EndSessionEndpoint = true;
+            this.EnableIdentityTokenValidationEndpoint = true;
+            this.EnableEndSessionEndpoint = true;
             this.EnableClientPermissionsEndpoint = true;
+            this.EnableCheckSessionEndpoint = true;
 
             this.EnableCspReportEndpoint = false;
         }
@@ -37,10 +38,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnableUserInfoEndpoint { get; set; }
         public bool EnableDiscoveryEndpoint { get; set; }
         public bool EnableAccessTokenValidationEndpoint { get; set; }
-        public bool IdentityTokenValidationEndpoint { get; set; }
-        public bool EndSessionEndpoint { get; set; }
+        public bool EnableIdentityTokenValidationEndpoint { get; set; }
+        public bool EnableEndSessionEndpoint { get; set; }
         public bool EnableClientPermissionsEndpoint { get; set; }
         public bool EnableCspReportEndpoint { get; set; }
+        public bool EnableCheckSessionEndpoint { get; set; }
     }
 
 }

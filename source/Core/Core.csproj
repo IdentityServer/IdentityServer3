@@ -133,7 +133,10 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
     <Compile Include="Configuration\EndpointOptions.cs" />
+    <Compile Include="Configuration\Hosting\SessionCookie.cs" />
+    <Compile Include="Endpoints\Connect\CheckSessionEndpointController.cs" />
     <Compile Include="Events\LocalAuthenticationEvent.cs" />
+    <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
@@ -155,6 +158,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
+    <Compile Include="Results\CheckSessionResult.cs" />
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
@@ -454,6 +458,9 @@
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\utilities.less" />
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\variables.less" />
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\wells.less" />
+    <None Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js.map">
+      <DependentUpon>crypto.min.js</DependentUpon>
+    </None>
     <None Include="Services\DefaultViewService\HttpAssets\scripts.js.bundle" />
     <None Include="Services\DefaultViewService\HttpAssets\scripts.min.js.map">
       <DependentUpon>scripts.min.js</DependentUpon>
@@ -462,6 +469,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Services\DefaultViewService\PageAssets\checksession.html" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\FormPostResponse.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\app\app.css">
       <DependentUpon>app.less</DependentUpon>
@@ -491,6 +499,10 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.css" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\less\bootstrap.min.css" />
+    <Content Include="Services\DefaultViewService\HttpAssets\app\crypto.js" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js">
+      <DependentUpon>crypto.js</DependentUpon>
+    </EmbeddedResource>
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />

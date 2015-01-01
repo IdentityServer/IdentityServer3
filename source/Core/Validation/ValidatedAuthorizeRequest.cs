@@ -168,6 +168,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
         /// </value>
         public string LoginHint { get; set; }
 
+        public string SessionId { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether an access token was requested.
         /// </summary>

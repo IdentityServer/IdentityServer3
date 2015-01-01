@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start identity token validation request");
 
-            if (!_options.Endpoints.IdentityTokenValidationEndpoint)
+            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
             {
                 Logger.Warn("Endpoint is disabled. Aborting");
                 return NotFound();

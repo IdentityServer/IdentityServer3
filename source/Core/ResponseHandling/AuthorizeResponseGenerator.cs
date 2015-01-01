@@ -17,6 +17,8 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -73,13 +75,20 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
         {
             var code = await CreateCodeAsync(request);
 
-            return new AuthorizeResponse
+            var response = new AuthorizeResponse
             {
                 Request = request,
                 RedirectUri = request.RedirectUri,
                 Code = code,
                 State = request.State
             };
+
+            if (request.IsOpenIdRequest)
+            {
+                response.SessionState = GenerateSessionStateValue(request);
+            }
+
+            return response;
         }
 
         private async Task<string> CreateCodeAsync(ValidatedAuthorizeRequest request)
@@ -148,7 +157,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 jwt = await _tokenService.CreateSecurityTokenAsync(idToken);
             }
 
-            return new AuthorizeResponse
+            var response = new AuthorizeResponse
             {
                 Request = request,
                 RedirectUri = request.RedirectUri,
@@ -156,8 +165,36 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 AccessTokenLifetime = accessTokenLifetime,
                 IdentityToken = jwt,
                 State = request.State,
-                Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString()
+                Scope = request.ValidatedScopes.GrantedScopes.ToSpaceSeparatedString(),
             };
+
+            if (request.IsOpenIdRequest)
+            {
+                response.SessionState = GenerateSessionStateValue(request);
+            }
+
+            return response;
+        }
+
+        private string GenerateSessionStateValue(ValidatedAuthorizeRequest request)
+        {
+            var sessionId = request.SessionId;
+            if (sessionId.IsMissing()) return null;
+
+            var salt = CryptoRandom.CreateUniqueId();
+            var clientId = request.ClientId;
+            
+            var uri = new Uri(request.RedirectUri);
+            var origin = uri.Scheme + "://" + uri.Host;
+            if (!uri.IsDefaultPort)
+            {
+                origin += ":" + uri.Port;
+            }
+
+            var bytes = Encoding.UTF8.GetBytes(clientId + origin + sessionId + salt);
+            var hash = SHA256.Create().ComputeHash(bytes);
+
+            return Base64Url.Encode(hash) + "." + salt;
         }
     }
 }

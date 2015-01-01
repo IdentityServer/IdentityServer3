@@ -119,14 +119,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             // load core controller
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
+            // other internal
+            builder.Register(ctx => new SessionCookie(ctx.Resolve<IOwinContext>(), ctx.Resolve<IdentityServerOptions>()));
+            builder.Register(c => new OwinEnvironmentService(c.Resolve<IOwinContext>()));
+
             // add any additional dependencies from hosting application
             foreach(var registration in fact.Registrations)
             {
                 builder.Register(registration, registration.Name);
             }
-
-            // other internal
-            builder.Register(c => new OwinEnvironmentService(c.Resolve<IOwinContext>()));
 
             return builder.Build();
         }

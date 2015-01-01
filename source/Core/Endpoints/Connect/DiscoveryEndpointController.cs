@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,6 +39,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;
         private readonly IScopeStore _scopes;
+
+        static JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
 
         public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes)
         {
@@ -69,21 +75,48 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 supportedGrantTypes = supportedGrantTypes.Where(type => type != Constants.GrantTypes.Password);
             }
 
-            return Json(new
+            var dto = new DiscoveryDto
             {
                 issuer = _options.IssuerUri,
-                jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys,
-                authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize,
-                token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token,
-                userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo,
-                end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession,
-                scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name),
-                response_types_supported = Constants.SupportedResponseTypes,
-                response_modes_supported = Constants.SupportedResponseModes,
-                grant_types_supported = supportedGrantTypes,
+                scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name).ToArray(),
+                response_types_supported = Constants.SupportedResponseTypes.ToArray(),
+                response_modes_supported = Constants.SupportedResponseModes.ToArray(),
+                grant_types_supported = supportedGrantTypes.ToArray(),
                 subject_types_supported = new[] { "public" },
                 id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 }
-            });
+            };
+
+            if (_options.Endpoints.EnableAuthorizeEndpoint)
+            {
+                dto.authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize;
+            }
+
+            if (_options.Endpoints.EnableTokenEndpoint)
+            {
+                dto.token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token;
+            }
+
+            if (_options.Endpoints.EnableUserInfoEndpoint)
+            {
+                dto.userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo;
+            }
+
+            if (_options.Endpoints.EnableEndSessionEndpoint)
+            {
+                dto.end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession;
+            }
+
+            if (_options.Endpoints.EnableCheckSessionEndpoint)
+            {
+                dto.check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CheckSession;
+            }
+
+            if (_options.SigningCertificate != null)
+            {
+                dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
+            }
+
+            return Json(dto, Settings);
         }
 
         /// <summary>
@@ -130,6 +163,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             return Json(new { keys = webKeys });
         }
+
+        private class DiscoveryDto
+        {
+            public string issuer { get; set; }
+            public string jwks_uri { get; set; }
+            public string authorization_endpoint { get; set; }
+            public string token_endpoint { get; set; }
+            public string userinfo_endpoint { get; set; }
+            public string end_session_endpoint { get; set; }
+            public string check_session_iframe { get; set; }
+            public string[] scopes_supported { get; set; }
+            public string[] response_types_supported { get; set; }
+            public string[] response_modes_supported { get; set; }
+            public string[] grant_types_supported { get; set; }
+            public string[] subject_types_supported { get; set; }
+            public string[] id_token_signing_alg_values_supported { get; set; }
+        };
 
         private class JsonWebKeyDto
         {
