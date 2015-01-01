@@ -19,7 +19,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    static class LogSerializer
+    public static class LogSerializer
     {
         static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
         {

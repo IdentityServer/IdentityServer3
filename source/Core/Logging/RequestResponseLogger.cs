@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    class RequestResponseLogger : DelegatingHandler
+    internal class RequestResponseLogger : DelegatingHandler
     {
         static readonly ILog Logger = LogProvider.GetLogger("HTTP Logging");
 

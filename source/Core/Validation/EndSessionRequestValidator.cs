@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class EndSessionRequestValidator
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();

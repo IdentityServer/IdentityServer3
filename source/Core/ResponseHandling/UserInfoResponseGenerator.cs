@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public class UserInfoResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

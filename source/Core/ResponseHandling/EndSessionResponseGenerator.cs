@@ -1,4 +1,5 @@
-﻿/*
+﻿using System.ComponentModel;
+/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +21,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
     public class EndSessionResponseGenerator
     {
         public SignOutMessage CreateSignoutMessage(ValidatedEndSessionRequest request)

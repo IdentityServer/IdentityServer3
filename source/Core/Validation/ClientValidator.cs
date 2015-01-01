@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class ClientValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

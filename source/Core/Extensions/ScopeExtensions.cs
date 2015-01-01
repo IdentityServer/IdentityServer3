@@ -21,7 +21,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class ScopeExtensions
+    internal static class ScopeExtensions
     {
         [DebuggerStepThrough]
         public static string ToSpaceSeparatedString(this IEnumerable<Scope> scopes)

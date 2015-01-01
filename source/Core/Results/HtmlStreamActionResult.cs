@@ -23,7 +23,7 @@ using System.Web.Http;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class HtmlStreamActionResult : IHttpActionResult
+    internal class HtmlStreamActionResult : IHttpActionResult
     {
         readonly Func<Task<Stream>> renderFunc;
 

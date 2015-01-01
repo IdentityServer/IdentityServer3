@@ -16,8 +16,8 @@
 
 using Autofac;
 using Autofac.Integration.WebApi;
-using System;
 using Microsoft.Owin;
+using System;
 using Thinktecture.IdentityServer.Core.Endpoints;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
@@ -65,7 +65,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
+            
             builder.RegisterDefaultType<IEventService, DefaultEventService>(fact.EventService);
+            //builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
+
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
@@ -122,6 +125,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 builder.Register(registration, registration.Name);
             }
 
+            // other internal
             builder.Register(c => new OwinEnvironmentService(c.Resolve<IOwinContext>()));
 
             return builder.Build();

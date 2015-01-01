@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class ErrorActionResult : HtmlStreamActionResult
+    internal class ErrorActionResult : HtmlStreamActionResult
     {
         public ErrorActionResult(IViewService viewSvc, ErrorViewModel model)
             : base(async () => await viewSvc.Error(model))

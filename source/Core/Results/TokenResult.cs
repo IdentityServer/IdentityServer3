@@ -26,7 +26,7 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class TokenResult : IHttpActionResult
+    internal class TokenResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly TokenResponse _response;

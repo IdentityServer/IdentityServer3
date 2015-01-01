@@ -20,7 +20,7 @@ using System.Web.Http.ModelBinding;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    static class ModelStateDictionaryExtensions
+    internal static class ModelStateDictionaryExtensions
     {
         public static IEnumerable<string> GetErrors(this ModelStateDictionary modelState)
         {

@@ -350,7 +350,7 @@
     <Compile Include="Results\LoginResult.cs" />
     <Compile Include="Results\TokenErrorResult.cs" />
     <Compile Include="Results\TokenResult.cs" />
-    <Compile Include="Results\ResultExtensions.cs" />
+    <Compile Include="Extensions\ResultExtensions.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

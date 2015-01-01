@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OpenID Connect end session endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [SecurityHeaders]
     [NoCache]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]

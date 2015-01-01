@@ -21,6 +21,9 @@ using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
+    /// <summary>
+    /// Helper class to create <see cref="IdentityServerServiceFactory"/>.
+    /// </summary>
     public static class InMemoryFactory
     {
         /// <summary>

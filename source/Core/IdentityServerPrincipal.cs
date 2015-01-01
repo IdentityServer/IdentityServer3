@@ -22,7 +22,7 @@ using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core
 {
-    public static class IdentityServerPrincipal
+    internal static class IdentityServerPrincipal
     {
         public static ClaimsPrincipal Create(
             string subject,

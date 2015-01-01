@@ -22,7 +22,7 @@ using System.Web.Http;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public abstract class HtmlActionResult : IHttpActionResult
+    internal abstract class HtmlActionResult : IHttpActionResult
     {
         protected abstract string GetHtml();
 

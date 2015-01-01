@@ -23,7 +23,7 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class AuthorizeFormPostResult : HtmlActionResult
+    internal class AuthorizeFormPostResult : HtmlActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

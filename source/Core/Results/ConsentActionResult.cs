@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    class ConsentActionResult : HtmlStreamActionResult
+    internal class ConsentActionResult : HtmlStreamActionResult
     {
         public ConsentActionResult(IViewService viewSvc, ConsentViewModel model)
             : base(async () => await viewSvc.Consent(model))

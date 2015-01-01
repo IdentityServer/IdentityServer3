@@ -25,7 +25,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
-    public class UserInfoResult : IHttpActionResult
+    internal class UserInfoResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly Dictionary<string, object> _claims;

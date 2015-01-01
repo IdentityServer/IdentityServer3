@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class CorsPolicyProvider : ICorsPolicyProvider
+    internal class CorsPolicyProvider : ICorsPolicyProvider
     {
         readonly CorsPolicy policy;
         readonly string[] paths;

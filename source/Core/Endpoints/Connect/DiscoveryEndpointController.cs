@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// OpenID Connect discovery document endpoint
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

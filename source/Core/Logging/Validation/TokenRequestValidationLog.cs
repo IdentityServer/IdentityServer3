@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
-    class TokenRequestValidationLog
+    internal class TokenRequestValidationLog
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -21,6 +22,7 @@ using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class BearerTokenUsageValidator
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();

@@ -23,7 +23,7 @@ using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         [DebuggerStepThrough]
         public static string ToSpaceSeparatedString(this IEnumerable<string> list)

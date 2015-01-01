@@ -16,8 +16,9 @@
 
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Results;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class ResultExtensions
     {

@@ -38,11 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetBasePath(this IDictionary<string, object> env)
         {
             var ctx = new OwinContext(env);
-            
-            var path = ctx.Request.PathBase.Value;
-            if (!path.EndsWith("/")) path += "/";
-
-            return path;
+            return ctx.Request.PathBase.Value.EnsureTrailingSlash();
         }
 
         public static string GetIdentityServerLogoutUrl(this IDictionary<string, object> env)
@@ -60,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
         }
 
-        public static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
+        internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
         }
@@ -70,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return env[Constants.OwinEnvironment.IdentityServerHost] as string;
         }
 
-        public static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
+        internal static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
@@ -79,12 +75,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
         }
+
         internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
             new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
         }
 
-        public static T ResolveDependency<T>(this IDictionary<string, object> env)
+        internal static T ResolveDependency<T>(this IDictionary<string, object> env)
         {
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));

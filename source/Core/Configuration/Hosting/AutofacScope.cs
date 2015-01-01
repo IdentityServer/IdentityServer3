@@ -22,7 +22,7 @@ using System.Web.Http.Dependencies;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    class AutofacScope : IDependencyScope
+    internal class AutofacScope : IDependencyScope
     {
         private readonly ILifetimeScope _scope;
 
