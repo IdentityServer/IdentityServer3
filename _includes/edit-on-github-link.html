@@ -1,0 +1,10 @@
+{% assign path = page.path %}
+{% if include.path %}{% assign path = include.path %}{% endif %}
+
+<a href="{{ site.edit_on_github_url|replace:'%path%',path }}"
+   class="page-link-to-github"
+   target="_blank"
+   title="Edit this page on GitHub">
+    <i class="github-icon"></i>
+    <span class="text">edit page</span>
+</a>

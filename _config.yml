@@ -1,0 +1,17 @@
+# Site settings
+title: IdentityServer
+email: identity@thinktecture.com
+description: IdentityServer Documentation
+baseurl: "/Thinktecture.IdentityServer.v3/" # the subpath of your site, e.g. /blog/
+url: "https://thinktecture.github.io" # the base hostname & protocol for your site
+twitter_username: identityserver
+github_username:  thinktecture
+
+# Build settings
+markdown: redcarpet
+highlighter: pygments
+
+# Custom Settings
+github_url: https://github.com/thinktecture/Thinktecture.IdentityServer.v3
+site_github_url: https://github.com/thinktecture/Thinktecture.IdentityServer.v3
+edit_on_github_url: https://github.com/thinktecture/Thinktecture.IdentityServer.v3/gh-pages/%path%
