@@ -2,7 +2,7 @@
 title: IdentityServer
 email: identity@thinktecture.com
 description: IdentityServer Documentation
-baseurl: "/Thinktecture.IdentityServer.v3/" # the subpath of your site, e.g. /blog/
+baseurl: "/Thinktecture.IdentityServer.v3" # the subpath of your site, e.g. /blog/
 url: "https://thinktecture.github.io" # the base hostname & protocol for your site
 twitter_username: identityserver
 github_username:  thinktecture
