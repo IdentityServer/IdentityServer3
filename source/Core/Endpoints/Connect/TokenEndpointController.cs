@@ -48,12 +48,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IEventService _events;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TokenEndpointController"/> class.
+        /// Initializes a new instance of the <see cref="TokenEndpointController" /> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="requestValidator">The request validator.</param>
         /// <param name="clientValidator">The client validator.</param>
         /// <param name="generator">The generator.</param>
+        /// <param name="events">The events service.</param>
         public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
         {
             _requestValidator = requestValidator;

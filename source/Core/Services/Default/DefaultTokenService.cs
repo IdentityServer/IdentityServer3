@@ -66,12 +66,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         private readonly IEventService _events;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTokenService"/> class.
+        /// Initializes a new instance of the <see cref="DefaultTokenService" /> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="claimsProvider">The claims provider.</param>
         /// <param name="tokenHandles">The token handles.</param>
         /// <param name="signingService">The signing service.</param>
+        /// <param name="events">The events service.</param>
         public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService, IEventService events)
         {
             _options = options;
