@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     internal class KeyHashingTransientDataRepository<T> : ITransientDataRepository<T>
         where T : ITokenMetadata
     {
-        readonly HashAlgorithm hash;
+        readonly string hashName;
         readonly ITransientDataRepository<T> inner;
 
         public KeyHashingTransientDataRepository(ITransientDataRepository<T> inner)
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (String.IsNullOrWhiteSpace(hashName)) throw new ArgumentNullException("hashName");
             if (inner == null) throw new ArgumentNullException("inner");
 
-            hash = HashAlgorithm.Create(hashName);
+            this.hashName = hashName;
             this.inner = inner;
         }
 
@@ -71,10 +71,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (String.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("value");
 
-            var bytes = Encoding.UTF8.GetBytes(value);
-            var hashedBytes = hash.ComputeHash(bytes);
-            var hashedString = Base64Url.Encode(hashedBytes);
-            return hashedString;
+            using (var hash = HashAlgorithm.Create(hashName))
+            {
+                var bytes = Encoding.UTF8.GetBytes(value);
+                var hashedBytes = hash.ComputeHash(bytes);
+                var hashedString = Base64Url.Encode(hashedBytes);
+                return hashedString;
+            }
         }
 
         public Task StoreAsync(string key, T value)
