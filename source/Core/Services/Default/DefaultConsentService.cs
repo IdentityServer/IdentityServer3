@@ -46,10 +46,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this._store = store;
         }
 
-        public async Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+        /// <summary>
+        /// Checks if consent is required.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="subject">The user.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns>Boolean if consent is required.</returns>
+        public async Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
-            if (user == null) throw new ArgumentNullException("user");
+            if (subject == null) throw new ArgumentNullException("user");
 
             if (!client.RequireConsent)
             {
@@ -67,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 return false;
             }
             
-            var consent = await _store.LoadAsync(user.GetSubjectId(), client.ClientId);
+            var consent = await _store.LoadAsync(subject.GetSubjectId(), client.ClientId);
             if (consent != null && consent.Scopes != null)
             {
                 var intersect = scopes.Intersect(consent.Scopes);
@@ -77,21 +84,28 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return true;
         }
 
-        public async Task UpdateConsentAsync(Client client, ClaimsPrincipal user, IEnumerable<string> scopes)
+        /// <summary>
+        /// Updates the consent.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns></returns>
+        public async Task UpdateConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
-            if (user == null) throw new ArgumentNullException("user");
+            if (subject == null) throw new ArgumentNullException("user");
 
             if (client.AllowRememberConsent)
             {
-                var subject = user.GetSubjectId();
+                var subjectId = subject.GetSubjectId();
                 var clientId = client.ClientId;
 
                 if (scopes != null && scopes.Any())
                 {
                     var consent = new Consent
                     {
-                        Subject = subject,
+                        Subject = subjectId,
                         ClientId = clientId,
                         Scopes = scopes
                     };
@@ -99,7 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 }
                 else
                 {
-                    await _store.RevokeAsync(subject, clientId);
+                    await _store.RevokeAsync(subjectId, clientId);
                 }
             }
         }

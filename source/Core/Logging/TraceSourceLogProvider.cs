@@ -58,15 +58,12 @@ namespace Thinktecture.IdentityServer.Core.Logging
         }
 
         /// <summary>
-        /// Log a message the specified log level.
+        /// Logs the specified log level.
         /// </summary>
         /// <param name="logLevel">The log level.</param>
         /// <param name="messageFunc">The message function.</param>
+        /// <param name="exception">The exception.</param>
         /// <returns></returns>
-        /// <remarks>
-        /// Note to implementors: the message func should not be called if the loglevel is not enabled
-        /// so as not to incur perfomance penalties.
-        /// </remarks>
         public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
         {
             if (messageFunc != null)
