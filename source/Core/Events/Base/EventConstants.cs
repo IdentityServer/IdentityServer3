@@ -23,6 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string Authentication = "Authentication";
             public const string TokenService = "TokenService";
             public const string Endpoints = "Endpoints";
+            public const string Endpoints = "Information";
             public const string InternalError = "InternalError";
         }
         
@@ -87,11 +88,17 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             /// Information events
             ///////////////////////////
-            private const int InformationEventsStart = 5000;
+            private const int InformationEventsStart = 4000;
 
             private const int InternalError = InformationEventsStart + 0;
             private const int CertificateExpiration = InformationEventsStart + 1;
 
+            ///////////////////////////
+            /// Information events
+            ///////////////////////////
+            private const int InternalErrorEventsStart = 5000;
+
+            private const int UnhandledException = InternalErrorEventsStart + 0;
         }
     }
 }
