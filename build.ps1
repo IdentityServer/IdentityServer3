@@ -3,16 +3,20 @@ Param(
 	[string]$preRelease = $null
 )
 
-if(Test-Path Env:\APPVEYOR_BUILD_NUMBER) {
-	$d = Get-Date
-	$preRelease = "pre-" + [int]$Env:APPVEYOR_BUILD_NUMBER
-	Write-Host "Using APPVEYOR_BUILD_NUMBER"
-}
-
 gci .\source -Recurse "packages.config" |% {
 	"Restoring " + $_.FullName
 	.\source\.nuget\nuget.exe i $_.FullName -o .\source\packages
 }
+
 Import-Module .\source\packages\psake.4.4.1\tools\psake.psm1
+
+if(Test-Path Env:\APPVEYOR_BUILD_NUMBER) {
+	$preRelease = "pre-" + [int]$Env:APPVEYOR_BUILD_NUMBER
+	Write-Host "Using APPVEYOR_BUILD_NUMBER"
+
+	$task = "appVeyor"
+}
+
 Invoke-Psake .\default.ps1 $task -framework "4.0x64" -properties @{ buildNumber=$buildNumber; preRelease=$preRelease }
+
 Remove-Module psake
