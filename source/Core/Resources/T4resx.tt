@@ -49,8 +49,8 @@ This template if free for redistribution in accordance with the same license.
 	 AppRoot = Path.GetDirectoryName(Project.FullName) + '\\';
 	 RootNamespace = Project.Properties.Item("RootNamespace").Value.ToString();
 #>
-using System.Threading;
-using System.Web;
+
+#pragma warning disable 1591
 
 <#
 try{

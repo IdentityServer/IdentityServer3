@@ -1,18 +1,5 @@
-﻿/*
- * Copyright 2014 Dominick Baier, Brock Allen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+﻿
+#pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core.Resources
 {
@@ -42,14 +29,14 @@ namespace Thinktecture.IdentityServer.Core.Resources
 	}
 	public class ScopeIds
 	{
-			public const string AddressDisplayName = "AddressDisplayName";
-			public const string AllClaimsDisplayName = "AllClaimsDisplayName";
-			public const string EmailDisplayName = "EmailDisplayName";
-			public const string OfflineAccessDisplayName = "OfflineAccessDisplayName";
-			public const string OpenIdDisplayName = "OpenIdDisplayName";
-			public const string PhoneDisplayName = "PhoneDisplayName";
-			public const string ProfileDescription = "ProfileDescription";
-			public const string ProfileDisplayName = "ProfileDisplayName";
-			public const string RolesDisplayName = "RolesDisplayName";
+			public const string Address_DisplayName = "Address_DisplayName";
+			public const string All_claims_DisplayName = "All_claims_DisplayName";
+			public const string Email_DisplayName = "Email_DisplayName";
+			public const string Offline_access_DisplayName = "Offline_access_DisplayName";
+			public const string Openid_DisplayName = "Openid_DisplayName";
+			public const string Phone_DisplayName = "Phone_DisplayName";
+			public const string Profile_Description = "Profile_Description";
+			public const string Profile_DisplayName = "Profile_DisplayName";
+			public const string Roles_DisplayName = "Roles_DisplayName";
 	}
 }
