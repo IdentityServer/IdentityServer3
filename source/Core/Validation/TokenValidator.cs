@@ -81,19 +81,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             _log.ClientName = client.ClientName;
-            _log.IdentityTokenSigningKeyType = client.IdentityTokenSigningKeyType.ToString();
-
-            SecurityKey signingKey;
-            if (client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-            {
-                signingKey = new InMemorySymmetricSecurityKey(Convert.FromBase64String(client.ClientSecret));
-            }
-            else
-            {
-                signingKey = new X509SecurityKey(_options.SigningCertificate);
-            }
-
+            
+            var signingKey = new X509SecurityKey(_options.SigningCertificate);
             var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
+            
             result.Client = client;
 
             if (result.IsError)

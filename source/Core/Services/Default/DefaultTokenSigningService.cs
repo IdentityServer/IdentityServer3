@@ -53,20 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <exception cref="System.InvalidOperationException">Invalid token type</exception>
         public Task<string> SignTokenAsync(Token token)
         {
-            if (token.Type == Constants.TokenTypes.AccessToken ||
-               (token.Type == Constants.TokenTypes.IdentityToken &&
-                token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.SigningCertificate))
-            {
-                return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
-            }
-
-            if (token.Type == Constants.TokenTypes.IdentityToken &&
-                token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.ClientSecret)
-            {
-                return Task.FromResult(CreateJsonWebToken(token, new HmacSigningCredentials(token.Client.ClientSecret)));
-            }
-
-            throw new InvalidOperationException("Invalid token type");
+            return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
         }
 
         /// <summary>

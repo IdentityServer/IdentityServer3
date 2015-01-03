@@ -122,11 +122,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         public TokenExpiration RefreshTokenExpiration { get; set; }
         
         /// <summary>
-        /// Specifies the key material used to sign the identity token. Default for the primary X.509 certificate, ClientSecret for using the client secret as a symmetric key (must be 256 bits in length). Defaults to Default.
-        /// </summary>
-        public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
-        
-        /// <summary>
         /// Specifies whether the access token is a reference token or a self contained JWT token (defaults to Jwt).
         /// </summary>
         public AccessTokenType AccessTokenType { get; set; }
@@ -213,9 +208,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenUsage = TokenUsage.OneTimeOnly;
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
-            IdentityTokenSigningKeyType = SigningKeyTypes.SigningCertificate;
             AccessTokenType = AccessTokenType.Jwt;
-
             AllowLocalLogin = true;
         }
     }
