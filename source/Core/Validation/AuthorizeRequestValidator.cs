@@ -264,6 +264,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             //////////////////////////////////////////////////////////
+            // check display
+            //////////////////////////////////////////////////////////
+            var display = parameters.Get(Constants.AuthorizeRequest.Display);
+            if (display.IsPresent())
+            {
+                _validatedRequest.DisplayMode = display;
+            }
+
+            //////////////////////////////////////////////////////////
             // check max_age
             //////////////////////////////////////////////////////////
             var maxAge = parameters.Get(Constants.AuthorizeRequest.MaxAge);
