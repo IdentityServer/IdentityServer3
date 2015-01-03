@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
+using System;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
     /// Models base class for events raised from IdentityServer.
     /// </summary>
-    public class EventBase
+    public abstract class EventBase
     {
+        public EventBase(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                throw new ArgumentNullException("category");
+            }
+
+            Category = category;
+        }
+
         /// <summary>
         /// Gets or sets the event context.
         /// </summary>

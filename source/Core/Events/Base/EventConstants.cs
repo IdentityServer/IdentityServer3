@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string Authentication = "Authentication";
             public const string TokenService = "TokenService";
             public const string Endpoints = "Endpoints";
-            public const string Endpoints = "Information";
+            public const string Information = "Information";
             public const string InternalError = "InternalError";
         }
         
