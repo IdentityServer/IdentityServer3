@@ -33,6 +33,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         [DebuggerStepThrough]
+        public static IEnumerable<string> ToStringList(this IEnumerable<Scope> scopes)
+        {
+            var scopeNames = from s in scopes
+                             select s.Name;
+
+            return scopeNames;
+        }
+
+        [DebuggerStepThrough]
         public static bool IncludesAllClaimsForUserRule(this IEnumerable<Scope> scopes, ScopeType type)
         {
             foreach (var scope in scopes)
