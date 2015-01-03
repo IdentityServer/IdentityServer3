@@ -61,18 +61,24 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         protected readonly ITokenSigningService _signingService;
 
         /// <summary>
+        /// The events service
+        /// </summary>
+        private readonly IEventService _events;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenService"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="claimsProvider">The claims provider.</param>
         /// <param name="tokenHandles">The token handles.</param>
         /// <param name="signingService">The signing service.</param>
-        public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService)
+        public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService, IEventService events)
         {
             _options = options;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
             _signingService = signingService;
+            _events = events;
         }
 
         /// <summary>
@@ -176,31 +182,39 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <exception cref="System.InvalidOperationException">Invalid token type.</exception>
         public virtual async Task<string> CreateSecurityTokenAsync(Token token)
         {
+            string tokenResult;
+
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
                 if (token.Client.AccessTokenType == AccessTokenType.Jwt)
                 {
                     Logger.Debug("Creating JWT access token");
 
-                    return await _signingService.SignTokenAsync(token);
+                    tokenResult = await _signingService.SignTokenAsync(token);
                 }
-                
-                Logger.Debug("Creating reference access token");
+                else
+                {
+                    Logger.Debug("Creating reference access token");
 
-                var handle = CryptoRandom.CreateUniqueId();
-                await _tokenHandles.StoreAsync(handle, token);
+                    var handle = CryptoRandom.CreateUniqueId();
+                    await _tokenHandles.StoreAsync(handle, token);
 
-                return handle;
+                    tokenResult = handle;
+                }
             }
-
-            if (token.Type == Constants.TokenTypes.IdentityToken)
+            else if (token.Type == Constants.TokenTypes.IdentityToken)
             {
                 Logger.Debug("Creating JWT identity token");
 
-                return await _signingService.SignTokenAsync(token);
+                tokenResult = await _signingService.SignTokenAsync(token);
+            }
+            else
+            {
+                throw new InvalidOperationException("Invalid token type.");
             }
 
-            throw new InvalidOperationException("Invalid token type.");
+            _events.RaiseTokenIssuedEvent(token);
+            return tokenResult;
         }
 
         /// <summary>

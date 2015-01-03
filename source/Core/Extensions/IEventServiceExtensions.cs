@@ -15,9 +15,12 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -25,8 +28,6 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static void RaiseLocalLoginSuccessEvent(this IEventService events, string username, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            if (events == null) throw new ArgumentNullException("events");
-
             var evt = new LocalAuthenticationEvent(EventType.Success)
             {
                 Id = EventConstants.Ids.LocalLogin,
@@ -36,6 +37,38 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 SignInMessage = signInMessage,
                 LoginUserName = username
             };
+            
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseTokenIssuedEvent(this IEventService events, Token token)
+        {
+            var subjectId = "none";
+
+            if (!string.IsNullOrWhiteSpace(token.SubjectId))
+            {
+                subjectId = token.SubjectId;
+            }
+
+            if (token.Type == Constants.TokenTypes.AccessToken)
+            {
+                var evt = new AccessTokenIssuedEvent
+                {
+                    SubjectId = subjectId,
+                    ClientId = token.ClientId,
+                    TokenType = token.Client.AccessTokenType,
+                    Lifetime = token.Lifetime,
+                    Scopes = token.Scopes
+                };
+
+                events.RaiseEvent(evt);
+            }
+        }
+
+        private static void RaiseEvent(this IEventService events, EventBase evt)
+        {
+            if (events == null) throw new ArgumentNullException("events");
+
             events.Raise(evt);
         }
     }
