@@ -21,9 +21,11 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
@@ -43,6 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly TokenRequestValidator _requestValidator;
         private readonly ClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
+        private readonly IEventService _events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenEndpointController"/> class.
@@ -51,12 +54,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="requestValidator">The request validator.</param>
         /// <param name="clientValidator">The client validator.</param>
         /// <param name="generator">The generator.</param>
-        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator)
+        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
         {
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
             _generator = generator;
             _options = options;
+            _events = events;
         }
 
         /// <summary>
