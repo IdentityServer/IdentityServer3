@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Thinktecture.IdentityModel;
+using Thinktecture.IdentityModel.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -63,15 +66,21 @@ namespace Thinktecture.IdentityServer.Core.Validation
             IEnumerable<Claim> claims = null,
             string identityProvider = Constants.BuiltInIdentityProvider)
         {
-            var id = new ClaimsIdentity("CustomGrant");
-            id.AddClaim(new Claim(Constants.ClaimTypes.Subject, subject));
-            id.AddClaim(new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod));
-            id.AddClaim(new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider));
+            var resultClaims = new List<Claim>
+            {
+                new Claim(Constants.ClaimTypes.Subject, subject),
+                new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
+                new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider),
+                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffset.UtcNow.ToEpochTime().ToString())
+            };
 
             if (claims != null && claims.Any())
             {
-                id.AddClaims(claims);
+                resultClaims.AddRange(claims);
             }
+
+            var id = new ClaimsIdentity(authenticationMethod);
+            id.AddClaims(resultClaims.Distinct(new ClaimComparer()));
 
             Principal = new ClaimsPrincipal(id);
         }
