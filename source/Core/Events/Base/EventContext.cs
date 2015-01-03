@@ -30,6 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The activity identifier.
         /// </value>
         public string ActivityId { get; set; }
+        
         /// <summary>
         /// Gets or sets the time stamp when the event was raised.
         /// </summary>
@@ -37,6 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The time stamp.
         /// </value>
         public DateTimeOffset TimeStamp { get; set; }
+        
         /// <summary>
         /// Gets or sets the server process identifier.
         /// </summary>
@@ -44,6 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The process identifier.
         /// </value>
         public int ProcessId { get; set; }
+        
         /// <summary>
         /// Gets or sets the name of the server machine.
         /// </summary>
@@ -51,6 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The name of the machine.
         /// </value>
         public string MachineName { get; set; }
+        
         /// <summary>
         /// Gets or sets the remote ip address of the current request.
         /// </summary>

@@ -19,14 +19,26 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Event class for access token issued events
+    /// </summary>
     public class AccessTokenIssuedEvent : TokenIssuedEventBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessTokenIssuedEvent"/> class.
+        /// </summary>
         public AccessTokenIssuedEvent()
             : base(EventConstants.Ids.AccessTokenIssued)
         {
             Message = "Access token issued";
         }
 
+        /// <summary>
+        /// Gets or sets the type of the access token.
+        /// </summary>
+        /// <value>
+        /// The type of the token.
+        /// </value>
         public AccessTokenType TokenType { get; set; }
     }
 }

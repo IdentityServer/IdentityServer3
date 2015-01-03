@@ -23,6 +23,10 @@ namespace Thinktecture.IdentityServer.Core.Events
     /// </summary>
     public abstract class EventBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventBase"/> class.
+        /// </summary>
+        /// <param name="category">The event category.</param>
         public EventBase(string category)
         {
             if (string.IsNullOrWhiteSpace(category)) throw new ArgumentNullException("category");

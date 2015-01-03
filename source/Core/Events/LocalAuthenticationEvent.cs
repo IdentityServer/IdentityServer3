@@ -18,10 +18,14 @@
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Base class for local authentication events
+    /// Event class local authentication events
     /// </summary>
     public class LocalAuthenticationEvent : AuthenticationEventBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalAuthenticationEvent"/> class.
+        /// </summary>
+        /// <param name="type">The event type.</param>
         public LocalAuthenticationEvent(EventType type)
             : base(EventConstants.Ids.LocalLogin, type)
         {

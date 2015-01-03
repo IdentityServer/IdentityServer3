@@ -19,8 +19,14 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Event class for identity token issued events
+    /// </summary>
     public class IdentityTokenIssuedEvent : TokenIssuedEventBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IdentityTokenIssuedEvent"/> class.
+        /// </summary>
         public IdentityTokenIssuedEvent()
             : base(EventConstants.Ids.IdentityTokenIssued)
         {

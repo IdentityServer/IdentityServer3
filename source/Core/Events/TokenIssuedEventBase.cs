@@ -19,8 +19,15 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Base class for token issued events
+    /// </summary>
     public abstract class TokenIssuedEventBase : EventBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenIssuedEventBase"/> class.
+        /// </summary>
+        /// <param name="id">Event id.</param>
         public TokenIssuedEventBase(int id)
             : base(EventConstants.Categories.TokenService)
         {
@@ -28,10 +35,44 @@ namespace Thinktecture.IdentityServer.Core.Events
             Id = id;
         }
 
+        /// <summary>
+        /// Gets or sets the subject identifier.
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
         public string SubjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
         public string ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scopes.
+        /// </summary>
+        /// <value>
+        /// The scopes.
+        /// </value>
         public IEnumerable<string> Scopes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lifetime.
+        /// </summary>
+        /// <value>
+        /// The lifetime.
+        /// </value>
         public int Lifetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
         public Dictionary<string, object> Claims { get; set; }
     }
 }

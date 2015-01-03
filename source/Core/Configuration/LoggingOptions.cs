@@ -21,6 +21,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     /// </summary>
     public class LoggingOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggingOptions"/> class.
+        /// </summary>
         public LoggingOptions()
         {
             EnableWebApiDiagnostics = false;

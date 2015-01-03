@@ -21,7 +21,19 @@ namespace Thinktecture.IdentityServer.Core.Events
     /// </summary>
     public enum EventType
     {
+        /// <summary>
+        /// Success event
+        /// </summary>
         Success = 1,
-        Failure = 2
+
+        /// <summary>
+        /// Failure event
+        /// </summary>
+        Failure = 2,
+
+        /// <summary>
+        /// Information event
+        /// </summary>
+        Info = 3
     }
 }
