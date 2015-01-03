@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -24,18 +25,28 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class RefreshToken : ITokenMetadata
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="RefreshToken"/> class.
+        /// </summary>
+        public RefreshToken()
+        {
+            Version = 3;
+        }
+
+        /// <summary>
         /// Gets the client identifier.
         /// </summary>
         /// <value>
         /// The client identifier.
         /// </value>
         public string ClientId { get { return AccessToken.ClientId; } }
+     
         /// <summary>
         /// Gets or sets the creation time.
         /// </summary>
         /// <value>
         /// The creation time.
         /// </value>
+        
         public DateTimeOffset CreationTime { get; set; }
         /// <summary>
         /// Gets or sets the life time.
@@ -54,6 +65,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Token AccessToken { get; set; }
 
         /// <summary>
+        /// Gets or sets the version number.
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        public int Version { get; set; }
+
+        /// <summary>
         /// Gets the subject identifier.
         /// </summary>
         /// <value>
@@ -70,7 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// The scopes.
         /// </value>
-        public System.Collections.Generic.IEnumerable<string> Scopes
+        public IEnumerable<string> Scopes
         {
             get { return AccessToken.Scopes; }
         }

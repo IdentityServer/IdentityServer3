@@ -33,6 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// The audience.
         /// </value>
         public string Audience { get; set; }
+        
         /// <summary>
         /// Gets or sets the issuer.
         /// </summary>
@@ -40,6 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// The issuer.
         /// </value>
         public string Issuer { get; set; }
+        
         /// <summary>
         /// Gets or sets the creation time.
         /// </summary>
@@ -47,6 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// The creation time.
         /// </value>
         public DateTimeOffset CreationTime { get; set; }
+        
         /// <summary>
         /// Gets or sets the lifetime.
         /// </summary>
@@ -54,6 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// The lifetime.
         /// </value>
         public int Lifetime { get; set; }
+        
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
@@ -61,6 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// The type.
         /// </value>
         public string Type { get; set; }
+        
         /// <summary>
         /// Gets or sets the client.
         /// </summary>
@@ -78,10 +83,19 @@ namespace Thinktecture.IdentityServer.Core.Models
         public List<Claim> Claims { get; set; }
 
         /// <summary>
+        /// Gets or sets the version.
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        public int Version { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Token"/> class.
         /// </summary>
         public Token()
         {
+            Version = 3;
             Type = Constants.TokenTypes.AccessToken;
             CreationTime = DateTimeOffset.UtcNow;
         }
@@ -90,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Initializes a new instance of the <see cref="Token"/> class.
         /// </summary>
         /// <param name="tokenType">Type of the token.</param>
-        public Token(string tokenType)
+        public Token(string tokenType) : this()
         {
             Type = tokenType;
             CreationTime = DateTimeOffset.UtcNow;
