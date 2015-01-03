@@ -42,6 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         public string PromptMode { get; set; }
         public int? MaxAge { get; set; }
         public string LoginHint { get; set; }
+        public string SessionId { get; set; }
 
         public Dictionary<string, string> Raw { get; set; }
 
@@ -86,6 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
             PromptMode = request.PromptMode;
             LoginHint = request.LoginHint;
             MaxAge = request.MaxAge;
+            SessionId = request.SessionId;
         }
     }
 }

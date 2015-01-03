@@ -323,13 +323,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check session cookie
             //////////////////////////////////////////////////////////
-            var sessionId = _sessionCookie.GetSessionId();
-            // TODO what to do if not present?
-            if (sessionId.IsPresent() && _options.Endpoints.EnableCheckSessionEndpoint)
+            if (_options.Endpoints.EnableCheckSessionEndpoint)
             {
-                _validatedRequest.SessionId = sessionId;
+                var sessionId = _sessionCookie.GetSessionId();
+                if (sessionId.IsPresent())
+                {
+                    _validatedRequest.SessionId = sessionId;
+                }
             }
-
+            
             LogSuccess();
             return Valid();
         }
@@ -408,6 +410,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (!_scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
             {
                 return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+            }
+
+            //////////////////////////////////////////////////////////
+            // check if sessionId is available and if session management is enabled
+            //////////////////////////////////////////////////////////
+            if (_options.Endpoints.EnableCheckSessionEndpoint)
+            {
+                if (_validatedRequest.SessionId.IsMissing())
+                {
+                    Logger.Warn("Session management is enabled, but session id cookie is missing.");
+                }
             }
 
             var customResult = await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest);
