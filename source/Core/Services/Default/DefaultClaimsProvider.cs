@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, ValidatedRequest request)
         {
-            Logger.Debug("Getting claims for identity token");
+            Logger.Info("Getting claims for identity token for subject: " + subject.GetSubjectId());
 
             var outputClaims = new List<Claim>(GetStandardSubjectClaims(subject));
             outputClaims.AddRange(GetOptionalClaims(subject));
@@ -72,6 +72,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // if a include all claims rule exists, call the user service without a claims filter
             if (scopes.IncludesAllClaimsForUserRule(ScopeType.Identity))
             {
+                Logger.Info("All claims rule found - emitting all claims for user.");
+
                 var claims = await _users.GetProfileDataAsync(subject);
                 if (claims != null)
                 {
@@ -120,8 +122,6 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual async Task<IEnumerable<Claim>> GetAccessTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, ValidatedRequest request)
         {
-            Logger.Debug("Getting claims for access token");
-
             // add client_id
             var outputClaims = new List<Claim>
             {
@@ -210,10 +210,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             var claims = new List<Claim>
             {
-                subject.FindFirst(Constants.ClaimTypes.Subject),
-                subject.FindFirst(Constants.ClaimTypes.AuthenticationMethod),
-                subject.FindFirst(Constants.ClaimTypes.AuthenticationTime),
-                subject.FindFirst(Constants.ClaimTypes.IdentityProvider),
+                new Claim(Constants.ClaimTypes.Subject, subject.GetSubjectId()),
+                new Claim(Constants.ClaimTypes.AuthenticationMethod, subject.GetAuthenticationMethod()),
+                new Claim(Constants.ClaimTypes.AuthenticationTime, subject.GetAuthenticationTimeEpoch().ToString()),
+                new Claim(Constants.ClaimTypes.IdentityProvider, subject.GetIdentityProvider()),
             };
 
             return claims;
