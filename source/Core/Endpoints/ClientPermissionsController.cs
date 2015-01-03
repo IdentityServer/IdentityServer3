@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -27,6 +28,8 @@ using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
+
+#pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {

@@ -27,6 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultEventService : IEventService
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
         /// <summary>

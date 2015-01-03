@@ -26,6 +26,8 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

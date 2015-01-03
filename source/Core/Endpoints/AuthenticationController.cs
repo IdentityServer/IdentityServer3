@@ -37,6 +37,8 @@ using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

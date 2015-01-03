@@ -18,10 +18,33 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    /// <summary>
+    /// Represents a validated end session (logout) request
+    /// </summary>
     public class ValidatedEndSessionRequest : ValidatedRequest
     {
+        /// <summary>
+        /// Gets or sets the client.
+        /// </summary>
+        /// <value>
+        /// The client.
+        /// </value>
         public Client Client { get; set; }
+
+        /// <summary>
+        /// Gets or sets the post-logout URI.
+        /// </summary>
+        /// <value>
+        /// The post-logout URI.
+        /// </value>
         public string PostLogOutUri { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the state.
+        /// </summary>
+        /// <value>
+        /// The state.
+        /// </value>
         public string State { get; set; }
     }
 }

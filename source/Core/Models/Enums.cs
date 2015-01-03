@@ -21,7 +21,14 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum ScopeType
     {
+        /// <summary>
+        /// Scope representing identity data (e.g. profile or email)
+        /// </summary>
         Identity,
+
+        /// <summary>
+        /// Scope representing a resource (e.g. a web api)
+        /// </summary>
         Resource
     }
 
@@ -30,11 +37,34 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum Flows
     {
+        /// <summary>
+        /// authorization code flow
+        /// </summary>
         AuthorizationCode,
+
+        /// <summary>
+        /// implicit flow
+        /// </summary>
         Implicit,
+
+        /// <summary>
+        /// hybrid flow
+        /// </summary>
         Hybrid,
+
+        /// <summary>
+        /// client credentials flow
+        /// </summary>
         ClientCredentials,
+
+        /// <summary>
+        /// resource owner password credential flow
+        /// </summary>
         ResourceOwner,
+
+        /// <summary>
+        /// custom grant
+        /// </summary>
         Custom
     }
 
@@ -43,17 +73,15 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum SubjectTypes
     {
+        /// <summary>
+        /// global - use the native subject id
+        /// </summary>
         Global,
-        Ppid
-    };
 
-    /// <summary>
-    /// OpenID Connect application types.
-    /// </summary>
-    public enum ApplicationTypes
-    {
-        Web,
-        Native
+        /// <summary>
+        /// ppid - scope the subject id to the client
+        /// </summary>
+        Ppid
     };
 
     /// <summary>
@@ -61,7 +89,14 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum SigningKeyTypes
     {
+        /// <summary>
+        /// use the default signing certificate
+        /// </summary>
         Default,
+        
+        /// <summary>
+        /// use the client secret
+        /// </summary>
         ClientSecret
     };
 
@@ -70,7 +105,14 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum AccessTokenType
     {
+        /// <summary>
+        /// Self-contained Json Web Token
+        /// </summary>
         Jwt,
+
+        /// <summary>
+        /// Reference token
+        /// </summary>
         Reference
     }
 
@@ -79,7 +121,14 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum TokenUsage
     {
+        /// <summary>
+        /// Re-use the refresh token handle
+        /// </summary>
         ReUse,
+
+        /// <summary>
+        /// Issue a new refresh token handle every time
+        /// </summary>
         OneTimeOnly
     }
 
@@ -88,7 +137,14 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// </summary>
     public enum TokenExpiration
     {
+        /// <summary>
+        /// Sliding token expiration
+        /// </summary>
         Sliding,
+
+        /// <summary>
+        /// Absolute token expiration
+        /// </summary>
         Absolute
     }
 }

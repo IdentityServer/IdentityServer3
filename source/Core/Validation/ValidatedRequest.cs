@@ -19,11 +19,41 @@ using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    /// <summary>
+    /// Base class for a validate authorize or token request
+    /// </summary>
     public class ValidatedRequest
     {
+        /// <summary>
+        /// Gets or sets the raw request data
+        /// </summary>
+        /// <value>
+        /// The raw.
+        /// </value>
         public NameValueCollection Raw { get; set; }
+
+        /// <summary>
+        /// Gets or sets the subject.
+        /// </summary>
+        /// <value>
+        /// The subject.
+        /// </value>
         public ClaimsPrincipal Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identity server options.
+        /// </summary>
+        /// <value>
+        /// The options.
+        /// </value>
         public IdentityServerOptions Options { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validated scopes.
+        /// </summary>
+        /// <value>
+        /// The validated scopes.
+        /// </value>
         public ScopeValidator ValidatedScopes { get; set; }
     }
 }

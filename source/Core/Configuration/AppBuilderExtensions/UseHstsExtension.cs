@@ -18,6 +18,9 @@ using System;
 
 namespace Owin
 {
+    /// <summary>
+    /// Configure extensions for HSTS support
+    /// </summary>
     public static class UseHstsExtension
     {
         /// <summary>

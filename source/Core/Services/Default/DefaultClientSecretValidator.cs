@@ -25,6 +25,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultClientSecretValidator : IClientSecretValidator
     {
+        /// <summary>
+        /// Validates the client secret
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="secret">The client secret.</param>
+        /// <returns></returns>
         public Task<bool> ValidateClientSecretAsync(Client client, string secret)
         {
             // use time constant string comparison

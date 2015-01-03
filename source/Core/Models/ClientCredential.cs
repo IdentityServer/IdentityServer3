@@ -15,6 +15,9 @@
  */
 
 using System.ComponentModel;
+
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Models
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

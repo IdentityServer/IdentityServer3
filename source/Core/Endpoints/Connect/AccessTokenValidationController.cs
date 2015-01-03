@@ -26,6 +26,8 @@ using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     /// <summary>

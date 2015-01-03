@@ -58,7 +58,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
     /// </summary>
     public enum ErrorTypes
     {
+        /// <summary>
+        /// client error
+        /// </summary>
         Client,
+
+        /// <summary>
+        /// user error
+        /// </summary>
         User
     }
 }

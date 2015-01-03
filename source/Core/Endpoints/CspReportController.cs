@@ -22,6 +22,8 @@ using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

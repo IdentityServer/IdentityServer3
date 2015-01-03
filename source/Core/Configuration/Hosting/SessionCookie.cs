@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

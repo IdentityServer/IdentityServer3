@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Validation
 {
     [EditorBrowsable(EditorBrowsableState.Never)]

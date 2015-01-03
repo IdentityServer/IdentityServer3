@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
+
+#pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {

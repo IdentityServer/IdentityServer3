@@ -168,6 +168,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
         /// </value>
         public string LoginHint { get; set; }
 
+        /// <summary>
+        /// Gets or sets the session identifier.
+        /// </summary>
+        /// <value>
+        /// The session identifier.
+        /// </value>
         public string SessionId { get; set; }
 
         /// <summary>

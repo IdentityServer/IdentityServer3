@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
     public static class EventConstants

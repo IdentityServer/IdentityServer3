@@ -18,8 +18,17 @@ using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
+    /// <summary>
+    /// Represents a validated request to the user info endpoint
+    /// </summary>
     public class ValidatedUserInfoRequest
     {
+        /// <summary>
+        /// Gets or sets the access token.
+        /// </summary>
+        /// <value>
+        /// The access token.
+        /// </value>
         public Token AccessToken { get; set; }
     }
 }

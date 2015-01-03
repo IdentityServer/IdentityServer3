@@ -25,16 +25,28 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class TwitterClaimsFilter : ClaimsFilterBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwitterClaimsFilter"/> class.
+        /// </summary>
         public TwitterClaimsFilter()
             : this("Twitter")
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwitterClaimsFilter"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
         public TwitterClaimsFilter(string provider)
             : base(provider)
         {
         }
 
+        /// <summary>
+        /// Transforms the claims.
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <returns>Transformed claims</returns>
         protected override IEnumerable<Claim> TransformClaims(IEnumerable<Claim> claims)
         {
             return claims.Where(x => x.Type != "urn:twitter:userid");

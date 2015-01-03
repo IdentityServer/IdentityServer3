@@ -166,6 +166,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         where T : class
         where TImpl : T
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Registration{T, TImpl}"/> class.
+        /// </summary>
+        /// <param name="name">Dependency name.</param>
         public Registration(string name = null)
             : base(typeof(TImpl), name)
         {

@@ -24,6 +24,9 @@ using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
+    /// <summary>
+    /// Configuration extensions for identity server
+    /// </summary>
     public static class UseIdentityServerExtension
     {
         /// <summary>

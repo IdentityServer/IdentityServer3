@@ -24,6 +24,11 @@ namespace Thinktecture.IdentityServer.Core.Logging
     /// </summary>
     public class TraceSourceLogProvider : ILogProvider
     {
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public ILog GetLogger(string name)
         {
             return new TraceSourceLogger(name);

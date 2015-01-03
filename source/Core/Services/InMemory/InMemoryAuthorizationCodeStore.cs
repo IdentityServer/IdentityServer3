@@ -30,6 +30,12 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     {
         private readonly ConcurrentDictionary<string, AuthorizationCode> _repository = new ConcurrentDictionary<string, AuthorizationCode>();
 
+        /// <summary>
+        /// Stores the data.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public Task StoreAsync(string key, AuthorizationCode value)
         {
             _repository[key] = value;

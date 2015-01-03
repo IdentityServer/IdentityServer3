@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Net;
 using Thinktecture.IdentityServer.Core.Models;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants

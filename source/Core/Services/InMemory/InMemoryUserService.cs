@@ -189,6 +189,11 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             return Task.FromResult(0);
         }
 
+        /// <summary>
+        /// Retrieves the display name.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         protected virtual string GetDisplayName(InMemoryUser user)
         {
             var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);

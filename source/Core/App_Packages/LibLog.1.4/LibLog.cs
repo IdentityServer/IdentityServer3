@@ -24,6 +24,8 @@
 // SOFTWARE.
 //===============================================================================
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Logging
 {
     using System;
