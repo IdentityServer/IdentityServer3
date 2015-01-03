@@ -194,8 +194,13 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             }
 
             var bytes = Encoding.UTF8.GetBytes(clientId + origin + sessionId + salt);
-            var hash = SHA256.Create().ComputeHash(bytes);
-
+            byte[] hash;
+            
+            using (var sha = SHA256.Create())
+            {
+                hash = sha.ComputeHash(bytes);
+            }
+            
             return Base64Url.Encode(hash) + "." + salt;
         }
     }
