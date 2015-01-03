@@ -79,6 +79,13 @@ namespace Thinktecture.IdentityServer.Host
                         {
                             EnableHttpLogging = false,
                             IncludeSensitiveDataInLogs = true
+                        },
+
+                        EventsOptions = new EventsOptions
+                        {
+                            RaiseFailureEvents = true,
+                            RaiseInformationEvents = true,
+                            RaiseSuccessEvents = true
                         }
                     };
 

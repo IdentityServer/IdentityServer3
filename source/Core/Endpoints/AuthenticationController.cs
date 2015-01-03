@@ -530,7 +530,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseLocalLoginSuccessEvent(string username, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            _events.RaiseLocalLoginSuccessEvent(username, signInMessage, authResult);
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseLocalLoginSuccessEvent(username, signInMessage, authResult);
+            }
         }
 
         private void IssueAuthenticationCookie(string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)

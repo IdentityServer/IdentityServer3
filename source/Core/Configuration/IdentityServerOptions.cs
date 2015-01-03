@@ -43,6 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
             this.DiagnosticsOptions = new LoggingOptions();
+            this.EventsOptions = new EventsOptions();
         }
 
         internal void Validate()
@@ -185,6 +186,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The diagnostics options.
         /// </value>
         public LoggingOptions DiagnosticsOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the events options.
+        /// </summary>
+        /// <value>
+        /// The events options.
+        /// </value>
+        public EventsOptions EventsOptions { get; set; }
 
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {

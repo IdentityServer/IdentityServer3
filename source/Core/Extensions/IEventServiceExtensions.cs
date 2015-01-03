@@ -55,16 +55,9 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseAccessTokenIssuedEvent(this IEventService events, Token token)
         {
-            var subjectId = "none";
-
-            if (!string.IsNullOrWhiteSpace(token.SubjectId))
-            {
-                subjectId = token.SubjectId;
-            }
-
             var evt = new AccessTokenIssuedEvent
             {
-                SubjectId = subjectId,
+                SubjectId = token.SubjectId ?? "no subject id",
                 ClientId = token.ClientId,
                 TokenType = token.Client.AccessTokenType,
                 Lifetime = token.Lifetime,
