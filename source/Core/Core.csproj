@@ -135,6 +135,8 @@
     <Compile Include="Configuration\EndpointOptions.cs" />
     <Compile Include="Configuration\Hosting\SessionCookie.cs" />
     <Compile Include="Endpoints\Connect\CheckSessionEndpointController.cs" />
+    <Compile Include="Events\TokenIssuedEventBase.cs" />
+    <Compile Include="Events\IdentityTokenIssuedEvent.cs" />
     <Compile Include="Events\LocalAuthenticationEvent.cs" />
     <Compile Include="Events\AccessTokenIssuedEvent.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />

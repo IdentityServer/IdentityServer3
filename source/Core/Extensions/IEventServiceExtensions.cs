@@ -43,6 +43,18 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseTokenIssuedEvent(this IEventService events, Token token)
         {
+            if (token.Type == Constants.TokenTypes.AccessToken)
+            {
+                events.RaiseAccessTokenIssuedEvent(token);
+            }
+            else if (token.Type == Constants.TokenTypes.IdentityToken)
+            {
+                events.RaiseIdentityTokenIssuedEvent(token);
+            }
+        }
+
+        public static void RaiseAccessTokenIssuedEvent(this IEventService events, Token token)
+        {
             var subjectId = "none";
 
             if (!string.IsNullOrWhiteSpace(token.SubjectId))
@@ -50,19 +62,30 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 subjectId = token.SubjectId;
             }
 
-            if (token.Type == Constants.TokenTypes.AccessToken)
+            var evt = new AccessTokenIssuedEvent
             {
-                var evt = new AccessTokenIssuedEvent
-                {
-                    SubjectId = subjectId,
-                    ClientId = token.ClientId,
-                    TokenType = token.Client.AccessTokenType,
-                    Lifetime = token.Lifetime,
-                    Scopes = token.Scopes
-                };
+                SubjectId = subjectId,
+                ClientId = token.ClientId,
+                TokenType = token.Client.AccessTokenType,
+                Lifetime = token.Lifetime,
+                Scopes = token.Scopes,
+                Claims = token.Claims.ToClaimsDictionary()
+            };
 
-                events.RaiseEvent(evt);
-            }
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseIdentityTokenIssuedEvent(this IEventService events, Token token)
+        {
+            var evt = new IdentityTokenIssuedEvent
+            {
+                SubjectId = token.SubjectId,
+                ClientId = token.ClientId,
+                Lifetime = token.Lifetime,
+                Claims = token.Claims.ToClaimsDictionary()
+            };
+
+            events.RaiseEvent(evt);
         }
 
         private static void RaiseEvent(this IEventService events, EventBase evt)
