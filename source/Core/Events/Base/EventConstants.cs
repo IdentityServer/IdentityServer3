@@ -34,13 +34,9 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int AuthenticationEventsStart = 1000;
 
-            public const int SuccessfulLocalLogin = AuthenticationEventsStart + 0;
-            public const int FailedLocalLogin = AuthenticationEventsStart + 1;
-            
-            public const int SuccessfulExternalLogin = AuthenticationEventsStart + 2;
-            public const int FailedExternalLogin = AuthenticationEventsStart + 3;
-
-            public const int Logout = AuthenticationEventsStart + 4;
+            public const int LocalLogin = AuthenticationEventsStart + 0;
+            public const int ExternalLogin = AuthenticationEventsStart + 1;
+            public const int Logout = AuthenticationEventsStart + 2;
 
 
             ///////////////////////////

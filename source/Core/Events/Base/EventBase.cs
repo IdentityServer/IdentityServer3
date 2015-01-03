@@ -25,10 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Events
     {
         public EventBase(string category)
         {
-            if (string.IsNullOrWhiteSpace(category))
-            {
-                throw new ArgumentNullException("category");
-            }
+            if (string.IsNullOrWhiteSpace(category)) throw new ArgumentNullException("category");
 
             Category = category;
         }

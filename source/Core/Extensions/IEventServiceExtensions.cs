@@ -27,9 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (events == null) throw new ArgumentNullException("events");
 
-            var evt = new LocalAuthenticationEvent()
+            var evt = new LocalAuthenticationEvent(EventType.Success)
             {
-                Id = EventConstants.Ids.SuccessfulLocalLogin,
+                Id = EventConstants.Ids.LocalLogin,
                 EventType = EventType.Success,
                 Message = Resources.Events.LocalLoginSuccess,
                 SubjectId = authResult.User.GetSubjectId(),

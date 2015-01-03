@@ -21,10 +21,13 @@ namespace Thinktecture.IdentityServer.Core.Events
     /// <summary>
     /// Base class for authentication events
     /// </summary>
-    public class AuthenticationEventBase : EventBase
+    public abstract class AuthenticationEventBase : EventBase
     {
-        public AuthenticationEventBase() : base(EventConstants.Categories.Authentication)
-        { }
+        public AuthenticationEventBase(int id, EventType type) : base(EventConstants.Categories.Authentication)
+        {
+            Id = id;
+            EventType = type;
+        }
 
         /// <summary>
         /// Gets or sets the subject identifier.
