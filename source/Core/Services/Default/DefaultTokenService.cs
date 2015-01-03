@@ -109,13 +109,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // add at_hash claim
             if (request.AccessTokenToHash.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAdditionalToken(request.AccessTokenToHash)));
+                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAdditionalData(request.AccessTokenToHash)));
             }
 
             // add c_hash claim
             if (request.AuthorizationCodeToHash.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalToken(request.AuthorizationCodeToHash)));
+                claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalData(request.AuthorizationCodeToHash)));
             }
 
             claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
@@ -223,19 +223,21 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         }
 
         /// <summary>
-        /// Hashes an additional token.
+        /// Hashes an additional data (e.g. for c_hash or at_hash).
         /// </summary>
         /// <param name="tokenToHash">The token to hash.</param>
         /// <returns></returns>
-        protected virtual string HashAdditionalToken(string tokenToHash)
+        protected virtual string HashAdditionalData(string tokenToHash)
         {
-            var algorithm = SHA256.Create();
-            var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(tokenToHash));
+            using (var sha = SHA256.Create())
+            {
+                var hash = sha.ComputeHash(Encoding.ASCII.GetBytes(tokenToHash));
 
-            var leftPart = new byte[16];
-            Array.Copy(hash, leftPart, 16);
+                var leftPart = new byte[16];
+                Array.Copy(hash, leftPart, 16);
 
-            return Base64Url.Encode(leftPart);
+                return Base64Url.Encode(leftPart);
+            }
         }
     }
 }
