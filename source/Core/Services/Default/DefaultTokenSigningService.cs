@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (token.Type == Constants.TokenTypes.AccessToken ||
                (token.Type == Constants.TokenTypes.IdentityToken &&
-                token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.Default))
+                token.Client.IdentityTokenSigningKeyType == SigningKeyTypes.SigningCertificate))
             {
                 return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
             }

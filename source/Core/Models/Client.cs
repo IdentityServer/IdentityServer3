@@ -213,7 +213,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenUsage = TokenUsage.OneTimeOnly;
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
-            IdentityTokenSigningKeyType = SigningKeyTypes.Default;
+            IdentityTokenSigningKeyType = SigningKeyTypes.SigningCertificate;
             AccessTokenType = AccessTokenType.Jwt;
 
             AllowLocalLogin = true;

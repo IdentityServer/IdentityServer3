@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// use the default signing certificate
         /// </summary>
-        Default,
+        SigningCertificate,
         
         /// <summary>
         /// use the client secret
