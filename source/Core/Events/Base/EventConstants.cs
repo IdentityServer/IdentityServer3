@@ -45,16 +45,17 @@ namespace Thinktecture.IdentityServer.Core.Events
             private const int TokenServiceEventsStart = 2000;
 
             public const int AccessTokenIssued = TokenServiceEventsStart + 0;
+            public const int IdentityTokenIssued = TokenServiceEventsStart + 1;
 
-            public const int AuthorizationCodeIssued = TokenServiceEventsStart + 1;
-            public const int SuccessfulAuthorizationCodeRedeemed = TokenServiceEventsStart + 2;
-            public const int FailedAuthorizationCodeRedeemed = TokenServiceEventsStart + 3;
+            public const int AuthorizationCodeIssued = TokenServiceEventsStart + 10;
+            public const int SuccessfulAuthorizationCodeRedeemed = TokenServiceEventsStart + 11;
+            public const int FailedAuthorizationCodeRedeemed = TokenServiceEventsStart + 12;
 
-            public const int RefreshTokenIssued = TokenServiceEventsStart + 4;
-            public const int SuccessfulRefreshTokenRefreshed = TokenServiceEventsStart + 5;
-            public const int FailedRefreshTokenRefreshed = TokenServiceEventsStart + 6;
+            public const int RefreshTokenIssued = TokenServiceEventsStart + 20;
+            public const int SuccessfulRefreshTokenRefreshed = TokenServiceEventsStart + 21;
+            public const int FailedRefreshTokenRefreshed = TokenServiceEventsStart + 22;
 
-            public const int PermissionRevoked = TokenServiceEventsStart + 7;
+            public const int PermissionRevoked = TokenServiceEventsStart + 30;
             
             
             ///////////////////////////
