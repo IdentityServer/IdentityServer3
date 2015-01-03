@@ -61,12 +61,20 @@ namespace Thinktecture.IdentityServer.Core.Logging
         /// Note to implementors: the message func should not be called if the loglevel is not enabled
         /// so as not to incur perfomance penalties.
         /// </remarks>
-        public bool Log(LogLevel logLevel, Func<string> messageFunc)
+        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
         {
             if (messageFunc != null)
             {
-                var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow.ToString(), messageFunc());
-                TraceMsg(logLevel, message);
+                if (exception == null)
+                {
+                    var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow.ToString(), messageFunc());
+                    TraceMsg(logLevel, message);
+                }
+                else
+                {
+                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow.ToString(), messageFunc(), exception.ToString());
+                    TraceMsg(logLevel, message);
+                }
             }
 
             return true;

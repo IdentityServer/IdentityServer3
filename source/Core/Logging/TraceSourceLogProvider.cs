@@ -67,39 +67,24 @@ namespace Thinktecture.IdentityServer.Core.Logging
         /// Note to implementors: the message func should not be called if the loglevel is not enabled
         /// so as not to incur perfomance penalties.
         /// </remarks>
-        public bool Log(LogLevel logLevel, Func<string> messageFunc)
+        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
         {
             if (messageFunc != null)
             {
                 var eventType = GetEventType(logLevel);
                 EnsureCorrelationId();
 
-                _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
+                if (exception == null)
+                {
+                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
+                }
+                else
+                {
+                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception.ToString()));
+                }
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Log a message and exception at the specified log level.
-        /// </summary>
-        /// <typeparam name="TException">The type of the exception.</typeparam>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="messageFunc">The message function.</param>
-        /// <param name="exception">The exception.</param>
-        /// <remarks>
-        /// Note to implementors: the message func should not be called if the loglevel is not enabled
-        /// so as not to incur perfomance penalties.
-        /// </remarks>
-        public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
-        {
-            if (messageFunc != null && exception != null)
-            {
-                var eventType = GetEventType(logLevel);
-                EnsureCorrelationId();
-
-                _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception.ToString()));
-            }
         }
 
         private TraceEventType GetEventType(LogLevel logLevel)
