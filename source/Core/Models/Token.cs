@@ -22,34 +22,6 @@ using System.Security.Claims;
 namespace Thinktecture.IdentityServer.Core.Models
 {
     /// <summary>
-    /// Models the permissions contained within a token.
-    /// </summary>
-    public interface ITokenMetadata
-    {
-        /// <summary>
-        /// Gets the subject identifier.
-        /// </summary>
-        /// <value>
-        /// The subject identifier.
-        /// </value>
-        string SubjectId { get; }
-        /// <summary>
-        /// Gets the client identifier.
-        /// </summary>
-        /// <value>
-        /// The client identifier.
-        /// </value>
-        string ClientId { get; }
-        /// <summary>
-        /// Gets the scopes.
-        /// </summary>
-        /// <value>
-        /// The scopes.
-        /// </value>
-        IEnumerable<string> Scopes { get; }
-    }
-
-    /// <summary>
     /// Models a token.
     /// </summary>
     public class Token : ITokenMetadata
