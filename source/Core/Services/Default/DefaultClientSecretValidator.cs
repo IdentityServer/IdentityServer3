@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Models;
@@ -33,10 +36,29 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public Task<bool> ValidateClientSecretAsync(Client client, string secret)
         {
-            // use time constant string comparison
-            var isValid = ObfuscatingComparer.IsEqual(client.ClientSecret, secret);
-            
-            return Task.FromResult(isValid);
+            if (client.ClientSecretProtection == ClientSecretProtection.Hashed)
+            {
+                using (var sha = SHA256.Create())
+                {
+                    var secretBytes = Encoding.UTF8.GetBytes(secret);
+                    var hashed = sha.ComputeHash(secretBytes);
+
+                    secret = Convert.ToBase64String(hashed);
+                }
+            }
+
+            foreach (var clientSecret in client.ClientSecrets)
+            {
+                // use time constant string comparison
+                var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret);
+
+                if (isValid)
+                {
+                    return Task.FromResult(true);
+                }
+            }
+
+            return Task.FromResult(false);
         }
     }
 }
