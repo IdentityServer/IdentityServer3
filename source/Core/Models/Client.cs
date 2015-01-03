@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Specifies the key material used to sign the identity token. Default for the primary X.509 certificate, ClientSecret for using the client secret as a symmetric key (must be 256 bits in length). Defaults to Default.
         /// </summary>
-        public SigningKeyType IdentityTokenSigningKeyType { get; set; }
+        public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
         
         /// <summary>
         /// Specifies whether the access token is a reference token or a self contained JWT token (defaults to Jwt).
