@@ -24,7 +24,9 @@ namespace Thinktecture.IdentityServer.Core.Events
     {
         public LocalAuthenticationEvent(EventType type)
             : base(EventConstants.Ids.LocalLogin, type)
-        { }
+        {
+            Message = "Local authentication event";
+        }
 
         /// <summary>
         /// Gets or sets the name of the login user.

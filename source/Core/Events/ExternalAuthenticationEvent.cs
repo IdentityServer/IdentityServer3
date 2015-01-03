@@ -23,7 +23,9 @@ namespace Thinktecture.IdentityServer.Core.Events
     {
         public ExternalAuthenticationEvent(EventType type)
             : base(EventConstants.Ids.LocalLogin, type)
-        { }
+        {
+            Message = "External authentication event";
+        }
 
         /// <summary>
         /// Gets or sets the provider.
