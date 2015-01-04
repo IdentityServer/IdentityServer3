@@ -142,27 +142,27 @@
     </Compile>
     <Compile Include="ClassVisibilityTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
-    <Compile Include="Connect\Endpoints\TokenEndpointControllerTests.cs" />
-    <Compile Include="Connect\BearerTokenUsageValidation.cs" />
-    <Compile Include="Connect\Setup\ClientValidationTestClients.cs" />
+    <Compile Include="Endpoints\Connect\TokenEndpointControllerTests.cs" />
+    <Compile Include="Validation\BearerTokenUsageValidation.cs" />
+    <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
     <Compile Include="Configuration\RegistrationTests.cs" />
-    <Compile Include="Connect\Endpoints\ClientPermissionsControllerTests.cs" />
-    <Compile Include="Connect\Endpoints\AuthorizeEndpointControllerTests.cs" />
-    <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Consent.cs" />
-    <Compile Include="Connect\ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
-    <Compile Include="Connect\ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
-    <Compile Include="Connect\Validation\Token Validation\IdentityTokenValidation.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
+    <Compile Include="Endpoints\Connect\ClientPermissionsControllerTests.cs" />
+    <Compile Include="Endpoints\Connect\AuthorizeEndpointControllerTests.cs" />
+    <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Consent.cs" />
+    <Compile Include="ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
+    <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
+    <Compile Include="Validation\Token Validation\IdentityTokenValidation.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IdSvrHostTestBase.cs" />
     <Compile Include="NoDataProtector.cs" />
-    <Compile Include="Connect\Setup\TestGrantValidator.cs" />
-    <Compile Include="Connect\Setup\TestClients.cs" />
-    <Compile Include="Connect\Setup\TestScopes.cs" />
-    <Compile Include="Connect\Setup\TestUserService.cs" />
-    <Compile Include="Connect\Setup\Factory.cs" />
+    <Compile Include="Validation\Setup\TestGrantValidator.cs" />
+    <Compile Include="Validation\Setup\TestClients.cs" />
+    <Compile Include="Validation\Setup\TestScopes.cs" />
+    <Compile Include="Validation\Setup\TestUserService.cs" />
+    <Compile Include="Validation\Setup\Factory.cs" />
     <Compile Include="Services\Default\DefaultConsentServiceTests.cs" />
     <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
     <Compile Include="Services\Default\AggregatePermissionsStoreTests.cs" />
@@ -172,24 +172,24 @@
     <Compile Include="TestIdentityServerOptions.cs" />
     <Compile Include="TestScopes.cs" />
     <Compile Include="TestUsers.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
-    <Compile Include="Connect\Setup\TokenFactory.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />
+    <Compile Include="Validation\Setup\TokenFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
-    <Compile Include="Connect\Validation\AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
-    <Compile Include="Connect\Validation\Client Validation\Request_Validation.cs" />
-    <Compile Include="Connect\Validation\Client Validation\Client_Validation.cs" />
-    <Compile Include="Connect\Validation\Token Validation\AccessTokenValidation.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_Valid.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_ClientCredentials_Invalid.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
-    <Compile Include="Connect\Validation\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
-    <Compile Include="Connect\Validation\ScopeValidation.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
+    <Compile Include="Validation\Client Validation\Request_Validation.cs" />
+    <Compile Include="Validation\Client Validation\Client_Validation.cs" />
+    <Compile Include="Validation\Token Validation\AccessTokenValidation.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_Valid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_ClientCredentials_Invalid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
+    <Compile Include="Validation\ScopeValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">
@@ -202,7 +202,6 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
-    <EmbeddedResource Include="Connect\Setup\idsrv3test.pfx" />
     <EmbeddedResource Include="idsrv3test.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
