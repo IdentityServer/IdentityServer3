@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InternalErrorEventsStart = 5000;
 
-            private const int UnhandledException = InternalErrorEventsStart + 0;
+            public const int UnhandledException = InternalErrorEventsStart + 0;
         }
     }
 }

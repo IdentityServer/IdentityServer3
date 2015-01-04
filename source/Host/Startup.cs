@@ -85,7 +85,8 @@ namespace Thinktecture.IdentityServer.Host
                         {
                             RaiseFailureEvents = true,
                             RaiseInformationEvents = true,
-                            RaiseSuccessEvents = true
+                            RaiseSuccessEvents = true,
+                            RaiseErrorEvents = true
                         }
                     };
 

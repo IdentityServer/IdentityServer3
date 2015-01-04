@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
@@ -28,6 +31,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
             Logger.ErrorException("Unhandled exception", context.Exception);
+
+            var env = context.Request.GetOwinEnvironment();
+            var options = env.ResolveDependency<IdentityServerOptions>();
+
+            if (options.EventsOptions.RaiseErrorEvents)
+            {
+                var events = env.ResolveDependency<IEventService>();
+                events.RaiseUnhandledExceptionEvent(context.Exception);
+            }
 
             return Task.FromResult<object>(null);
         }

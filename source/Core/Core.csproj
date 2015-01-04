@@ -141,6 +141,7 @@
     <Compile Include="Events\IdentityTokenIssuedEvent.cs" />
     <Compile Include="Events\LocalAuthenticationEvent.cs" />
     <Compile Include="Events\AccessTokenIssuedEvent.cs" />
+    <Compile Include="Events\UnhandledExceptionEvent.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />

@@ -81,6 +81,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
+        {
+            var evt = new UnhandledExceptionEvent
+            {
+                ExceptionDetails = exception.ToString()
+            };
+
+            events.RaiseEvent(evt);
+        }
+
         private static void RaiseEvent(this IEventService events, EventBase evt)
         {
             if (events == null) throw new ArgumentNullException("events");
