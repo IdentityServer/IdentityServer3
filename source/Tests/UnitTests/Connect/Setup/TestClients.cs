@@ -122,14 +122,6 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                             "resource"
                         },       
                     },
-                    //new Client
-                    //{
-                    //    ClientName = "Resource Owner Client",
-                    //    Enabled = true,
-                    //    ClientId = "roclient_symmetric",
-                    //    ClientSecret = "V5CQ9HV04yVFOp4WZseN+PUzxtl6sYEcgaJ64IdE7cw=",
-                    //    Flow = Flows.ResourceOwner,
-                    //},
                     new Client
                     {
                         ClientName = "Resource Owner Client",
