@@ -154,23 +154,13 @@ namespace Thinktecture.IdentityServer.Core.Models
     public enum ClientSecretProtection
     {
         /// <summary>
-        /// One-way protection
+        /// Hashed
         /// </summary>
         Hashed,
 
         /// <summary>
-        /// Reversible encryption
-        /// </summary>
-        ReversibleEncryption,
-
-        /// <summary>
         /// No protection
         /// </summary>
-        None,
-
-        /// <summary>
-        /// Custom scheme (implemented by a custom client secret validator)
-        /// </summary>
-        Custom
+        None
     }
 }

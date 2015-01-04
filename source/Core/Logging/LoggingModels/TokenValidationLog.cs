@@ -23,7 +23,6 @@ namespace Thinktecture.IdentityServer.Core.Logging
         // identity token
         public string ClientId { get; set; }
         public string ClientName { get; set; }
-        public string IdentityTokenSigningKeyType { get; set; }
         public bool ValidateLifetime { get; set; }
 
         // access token

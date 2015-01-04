@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
         {
             if (clients == null)
             {
-                clients = new InMemoryClientStore(TestClients.Get());
+                clients = new InMemoryClientStore(ClientValidationTestClients.Get());
             }
 
             return new ClientValidator(clients, new DefaultClientSecretValidator());

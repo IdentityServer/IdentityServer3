@@ -83,30 +83,5 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Tokens
             result.IsError.Should().BeTrue();
             result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
-
-        
-
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Valid_IdentityToken_SymmetricKeyType()
-        {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
-            var jwt = await signer.SignTokenAsync(TokenFactory.CreateIdentityToken("roclient_symmetric", "valid"));
-            var validator = Factory.CreateTokenValidator();
-
-            var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient_symmetric");
-            result.IsError.Should().BeFalse();
-        }
-
-        [Trait("Category", Category)]
-        public async Task Valid_IdentityToken_SymmetricKeyType_no_ClientId_supplied()
-        {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
-            var jwt = await signer.SignTokenAsync(TokenFactory.CreateIdentityToken("roclient_symmetric", "valid"));
-            var validator = Factory.CreateTokenValidator();
-
-            var result = await validator.ValidateIdentityTokenAsync(jwt);
-            result.IsError.Should().BeFalse();
-        }
     }
 }

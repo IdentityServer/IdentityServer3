@@ -32,27 +32,204 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Valid_Client_Credentials()
+        public async Task Valid_Single_Secret_No_Protection()
         {
+            var clientId = "single_secret_no_protection_no_expiration";
+
             var credential = new ClientCredential
             {
-                ClientId = "codeclient",
+                ClientId = clientId,
                 Secret = "secret"
             };
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
-            client.ClientId.Should().Be("codeclient");
+            client.ClientId.Should().Be(clientId);
+        }
+
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Valid_Single_Secret_Hashed()
+        {
+            var clientId = "single_secret_hashed_no_expiration";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "secret"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Invalid_Client_Credentials()
+        public async Task Valid_Multiple_Secrets_No_Protection()
         {
+            var clientId = "multiple_secrets_no_protection";
+
             var credential = new ClientCredential
             {
-                ClientId = "codeclient",
+                ClientId = clientId,
+                Secret = "secret"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "foobar"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "quux"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "notexpired"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Valid_Multiple_Secrets_Hashed()
+        {
+            var clientId = "multiple_secrets_hashed";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "secret"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "foobar"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "quux"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "notexpired"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Invalid_Single_Secret_No_Protection()
+        {
+            var clientId = "single_secret_no_protection_no_expiration";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "invalid"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Expired_Secret_No_Protection()
+        {
+            var clientId = "multiple_secrets_no_protection";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "expired"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Invalid_Multiple_Secrets_No_Protection()
+        {
+            var clientId = "multiple_secrets_no_protection";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "invalid"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Invalid_Multiple_Secrets_Hashed()
+        {
+            var clientId = "multiple_secrets_hashed";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
                 Secret = "invalid"
             };
 
@@ -82,8 +259,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
         {
             var credential = new ClientCredential
             {
-                ClientId = "disabled",
-                Secret = "invalid"
+                ClientId = "disabled_client",
+                Secret = "secret"
             };
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);
@@ -128,6 +305,35 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             var client = await _validator.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task No_Secret_Client_Credentials_Empty_Secret()
+        {
+            var credential = new ClientCredential
+            {
+                ClientId = "no_secret_client",
+                Secret = ""
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void No_Secret_Client_Credentials_No_Secret()
+        {
+            var credential = new ClientCredential
+            {
+                ClientId = "no_secret_client"
+            };
+
+            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
         }
     }
 }

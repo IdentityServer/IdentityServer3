@@ -30,8 +30,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Code Client",
                         Enabled = true,
                         ClientId = "codeclient",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.AuthorizationCode,
+                        
                         RequireConsent = false,
                     
                         RedirectUris = new List<string>
@@ -46,7 +52,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Implicit Client",
                         Enabled = true,
                         ClientId = "implicitclient",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.Implicit,
                         RequireConsent = false,
                     
@@ -60,7 +71,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Code Client with Scope Restrictions",
                         Enabled = true,
                         ClientId = "codeclient_restricted",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.AuthorizationCode,
                         RequireConsent = false,
 
@@ -79,7 +95,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Client Credentials Client",
                         Enabled = true,
                         ClientId = "client",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ClientCredentials,
                         AccessTokenType = AccessTokenType.Jwt
                     },
@@ -88,7 +109,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Client Credentials Client (restricted)",
                         Enabled = true,
                         ClientId = "client_restricted",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ClientCredentials,
 
                         ScopeRestrictions = new List<string>
@@ -100,17 +126,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                     {
                         ClientName = "Resource Owner Client",
                         Enabled = true,
-                        ClientId = "roclient_symmetric",
-                        ClientSecret = "V5CQ9HV04yVFOp4WZseN+PUzxtl6sYEcgaJ64IdE7cw=",
-                        Flow = Flows.ResourceOwner,
-                        IdentityTokenSigningKeyType = SigningKeyTypes.ClientSecret
-                    },
-                    new Client
-                    {
-                        ClientName = "Resource Owner Client",
-                        Enabled = true,
                         ClientId = "roclient",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
                     },
                     new Client
@@ -118,7 +140,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_absolute_refresh_expiration_one_time_only",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         RefreshTokenExpiration = TokenExpiration.Absolute,
@@ -130,7 +157,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_absolute_refresh_expiration_reuse",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         RefreshTokenExpiration = TokenExpiration.Absolute,
@@ -142,7 +174,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_sliding_refresh_expiration_one_time_only",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         RefreshTokenExpiration = TokenExpiration.Sliding,
@@ -155,7 +192,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_sliding_refresh_expiration_reuse",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         RefreshTokenExpiration = TokenExpiration.Sliding,
@@ -168,7 +210,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client (restricted)",
                         Enabled = true,
                         ClientId = "roclient_restricted",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         ScopeRestrictions = new List<string>
@@ -181,7 +228,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Resource Owner Client (restricted with refresh)",
                         Enabled = true,
                         ClientId = "roclient_restricted_refresh",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.ResourceOwner,
 
                         ScopeRestrictions = new List<string>
@@ -195,7 +247,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Assertion Flow Client",
                         Enabled = true,
                         ClientId = "assertionclient",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        {    
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.Custom,
                     },
                     new Client
@@ -203,7 +260,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         ClientName = "Disabled Client",
                         Enabled = false,
                         ClientId = "disabled",
-                        ClientSecret = "invalid",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("invalid")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.Custom,
                     },
                     new Client
@@ -212,7 +274,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
 
                         Enabled = true,
                         ClientId = "referencetokenclient",
-                        ClientSecret = "secret",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret")
+                        },
+
+                        ClientSecretProtection = ClientSecretProtection.None,
                         Flow = Flows.Implicit,
 
                         AccessTokenType = AccessTokenType.Reference

@@ -31,7 +31,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Code Flow Clients",
                     Enabled = true,
                     ClientId = "codeclient",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     
                     RequireConsent = true,
@@ -70,7 +75,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Implicit Clients",
                     Enabled = true,
                     ClientId = "implicitclient",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.Implicit,
                     
                     ClientUri = "http://www.thinktecture.com",
@@ -113,7 +123,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Client Credentials Flow Client",
                     Enabled = true,
                     ClientId = "client",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ClientCredentials,
                     
                     ScopeRestrictions = new List<string>
@@ -130,7 +145,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Resource Owner Flow Client",
                     Enabled = true,
                     ClientId = "roclient",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ResourceOwner,
                     
                     ScopeRestrictions = new List<string>
@@ -147,7 +167,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "no_external_idps",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     IdentityProviderRestrictions = new List<string>{"NotGoogle"},
                     
@@ -186,7 +211,12 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "any_external_idps",
-                    ClientSecret = "secret",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret("secret")
+                    },
+
+                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     IdentityProviderRestrictions = new List<string> {},
                     

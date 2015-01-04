@@ -35,9 +35,17 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string ClientId { get; set; }
 
         /// <summary>
-        /// Client secret - only relevant for flows that require a secret
+        /// Client secrets - only relevant for flows that require a secret
         /// </summary>
-        public string ClientSecret { get; set; }
+        public List<ClientSecret> ClientSecrets { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client secret protection method (defaults to hashed).
+        /// </summary>
+        /// <value>
+        /// The client secret protection.
+        /// </value>
+        public ClientSecretProtection ClientSecretProtection { get; set; }
 
         /// <summary>
         /// Client display name (used for logging and consent screen)
@@ -122,11 +130,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         public TokenExpiration RefreshTokenExpiration { get; set; }
         
         /// <summary>
-        /// Specifies the key material used to sign the identity token. Default for the primary X.509 certificate, ClientSecret for using the client secret as a symmetric key (must be 256 bits in length). Defaults to Default.
-        /// </summary>
-        public SigningKeyTypes IdentityTokenSigningKeyType { get; set; }
-        
-        /// <summary>
         /// Specifies whether the access token is a reference token or a self contained JWT token (defaults to Jwt).
         /// </summary>
         public AccessTokenType AccessTokenType { get; set; }
@@ -187,6 +190,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Client()
         {
             Flow = Flows.Implicit;
+            ClientSecretProtection = ClientSecretProtection.Hashed;
+
+            ClientSecrets = new List<ClientSecret>();
             ScopeRestrictions = new List<string>();
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
@@ -213,9 +219,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenUsage = TokenUsage.OneTimeOnly;
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
-            IdentityTokenSigningKeyType = SigningKeyTypes.SigningCertificate;
             AccessTokenType = AccessTokenType.Jwt;
-
             AllowLocalLogin = true;
         }
     }
