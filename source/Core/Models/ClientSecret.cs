@@ -24,12 +24,12 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class ClientSecret
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the description.
         /// </summary>
         /// <value>
-        /// The identifier.
+        /// The description.
         /// </value>
-        public string Id { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -59,14 +59,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// Initializes a new instance of the <see cref="ClientSecret" /> class.
         /// </summary>
-        /// <param name="id">The identifier.</param>
         /// <param name="value">The value.</param>
+        /// <param name="description">The description.</param>
         /// <param name="expiration">The expiration.</param>
-        public ClientSecret(string id, string value, DateTimeOffset? expiration = null)
+        public ClientSecret(string value, string description, DateTimeOffset? expiration = null)
         {
-            Id = id;
+            Description = description;
             Value = value;
             Expiration = expiration;
         }
