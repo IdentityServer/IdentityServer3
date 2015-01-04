@@ -49,6 +49,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             foreach (var clientSecret in client.ClientSecrets)
             {
+                // check if client secret is still valid
+                if (clientSecret.Expiration.HasValue)
+                {
+                    if (clientSecret.Expiration < DateTimeOffset.UtcNow)
+                    {
+                        // skip expired secrets
+                        continue;
+                    }
+                }
+
                 // use time constant string comparison
                 var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret);
 
