@@ -105,6 +105,17 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "notexpired"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
         }
 
         [Fact]
@@ -145,6 +156,18 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
+
+
+            credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "notexpired"
+            };
+
+            client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().NotBeNull();
+            client.ClientId.Should().Be(clientId);
         }
 
         [Fact]
@@ -157,6 +180,23 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Validation.Clients
             {
                 ClientId = clientId,
                 Secret = "invalid"
+            };
+
+            var client = await _validator.ValidateClientCredentialsAsync(credential);
+
+            client.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Expired_Secret_No_Protection()
+        {
+            var clientId = "multiple_secrets_no_protection";
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                Secret = "expired"
             };
 
             var client = await _validator.ValidateClientCredentialsAsync(credential);

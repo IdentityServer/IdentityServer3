@@ -86,8 +86,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                     ClientSecrets = new List<ClientSecret>
                     {
                         new ClientSecret("secret"),
-                        new ClientSecret("foobar"),
-                        new ClientSecret("quux")
+                        new ClientSecret("foobar", "some description"),
+                        new ClientSecret("quux"),
+                        new ClientSecret("notexpired", DateTimeOffset.UtcNow.AddDays(1)),
+                        new ClientSecret("expired", DateTimeOffset.UtcNow.AddDays(-1)),
                     }
                 },
 
@@ -103,9 +105,13 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Setup
                         // secret
                         new ClientSecret("K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols="),
                         // foobar
-                        new ClientSecret("w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI="),
+                        new ClientSecret("w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=", "some description"),
                         // quux
-                        new ClientSecret("BTBX/ampNfLU+ox7xipBGiaSbgC0kcB8Gy7BkJB4oKI=")
+                        new ClientSecret("BTBX/ampNfLU+ox7xipBGiaSbgC0kcB8Gy7BkJB4oKI="),
+                        // notexpired
+                        new ClientSecret("Cbl++qz/Fm2e/tRYCuYAvxPcJUsYb3mH72/j87Jyu6o=", DateTimeOffset.UtcNow.AddDays(1)),
+                        // expired
+                        new ClientSecret("+mTqHoLhIG+CirKgKRfH6SrMuY47lYgaG0rVK5FLZuM=", DateTimeOffset.UtcNow.AddDays(-1)),
                     }
                 },
             };
