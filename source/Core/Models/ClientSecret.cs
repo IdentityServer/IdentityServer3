@@ -14,22 +14,61 @@
  * limitations under the License.
  */
 
+using System;
+
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models a client secret with identifier and expiration
+    /// </summary>
     public class ClientSecret
     {
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
         public string Value { get; set; }
 
-        public ClientSecret(string value)
+        /// <summary>
+        /// Gets or sets the expiration.
+        /// </summary>
+        /// <value>
+        /// The expiration.
+        /// </value>
+        public DateTimeOffset? Expiration { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="expiration">The expiration.</param>
+        public ClientSecret(string value, DateTimeOffset? expiration = null)
         {
             Value = value;
+            Expiration = expiration;
         }
 
-        public ClientSecret(string id, string value)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="expiration">The expiration.</param>
+        public ClientSecret(string id, string value, DateTimeOffset? expiration = null)
         {
             Id = id;
             Value = value;
+            Expiration = expiration;
         }
     }
 }
