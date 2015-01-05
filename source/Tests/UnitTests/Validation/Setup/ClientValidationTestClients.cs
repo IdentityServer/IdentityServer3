@@ -35,7 +35,6 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "disabled_client",
                     Enabled = false,
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     ClientSecrets = new List<ClientSecret>
                     {
                         new ClientSecret("secret")
@@ -55,7 +54,6 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "single_secret_no_protection_no_expiration",
                     Enabled = true,
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     ClientSecrets = new List<ClientSecret>
                     {
                         new ClientSecret("secret")
@@ -68,11 +66,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "single_secret_hashed_no_expiration",
                     Enabled = true,
 
-                    ClientSecretProtection = ClientSecretProtection.Hashed,
                     ClientSecrets = new List<ClientSecret>
                     {
                         // secret
-                        new ClientSecret("K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=")
+                        new ClientSecret("secret".Sha256())
                     }
                 },
 
@@ -82,7 +79,6 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "multiple_secrets_no_protection",
                     Enabled = true,
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     ClientSecrets = new List<ClientSecret>
                     {
                         new ClientSecret("secret"),
@@ -99,19 +95,18 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "multiple_secrets_hashed",
                     Enabled = true,
 
-                    ClientSecretProtection = ClientSecretProtection.Hashed,
                     ClientSecrets = new List<ClientSecret>
                     {
                         // secret
-                        new ClientSecret("K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols="),
+                        new ClientSecret("secret".Sha256()),
                         // foobar
-                        new ClientSecret("w6uP8Tcg6K2QR905Rms8iXTlksL6OD1KOWBxTK7wxPI=", "some description"),
+                        new ClientSecret("foobar".Sha256(), "some description"),
                         // quux
-                        new ClientSecret("BTBX/ampNfLU+ox7xipBGiaSbgC0kcB8Gy7BkJB4oKI="),
+                        new ClientSecret("quux".Sha512()),
                         // notexpired
-                        new ClientSecret("Cbl++qz/Fm2e/tRYCuYAvxPcJUsYb3mH72/j87Jyu6o=", DateTimeOffset.UtcNow.AddDays(1)),
+                        new ClientSecret("notexpired".Sha256(), DateTimeOffset.UtcNow.AddDays(1)),
                         // expired
-                        new ClientSecret("+mTqHoLhIG+CirKgKRfH6SrMuY47lYgaG0rVK5FLZuM=", DateTimeOffset.UtcNow.AddDays(-1)),
+                        new ClientSecret("expired".Sha512(), DateTimeOffset.UtcNow.AddDays(-1)),
                     }
                 },
             };

@@ -33,10 +33,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "codeclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     
                     RequireConsent = true,
@@ -77,10 +76,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "implicitclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
-
-                    ClientSecretProtection = ClientSecretProtection.None,
+                    
                     Flow = Flows.Implicit,
                     
                     ClientUri = "http://www.thinktecture.com",
@@ -125,10 +123,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "client",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ClientCredentials,
                     
                     ScopeRestrictions = new List<string>
@@ -147,10 +144,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "roclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ResourceOwner,
                     
                     ScopeRestrictions = new List<string>
@@ -169,10 +165,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "no_external_idps",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     IdentityProviderRestrictions = new List<string>{"NotGoogle"},
                     
@@ -213,10 +208,9 @@ namespace Thinktecture.IdentityServer.Tests
                     ClientId = "any_external_idps",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     IdentityProviderRestrictions = new List<string> {},
                     

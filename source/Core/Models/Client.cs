@@ -40,14 +40,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         public List<ClientSecret> ClientSecrets { get; set; }
 
         /// <summary>
-        /// Gets or sets the client secret protection method (defaults to hashed).
-        /// </summary>
-        /// <value>
-        /// The client secret protection.
-        /// </value>
-        public ClientSecretProtection ClientSecretProtection { get; set; }
-
-        /// <summary>
         /// Client display name (used for logging and consent screen)
         /// </summary>
         public string ClientName { get; set; }
@@ -190,8 +182,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Client()
         {
             Flow = Flows.Implicit;
-            ClientSecretProtection = ClientSecretProtection.Hashed;
-
+            
             ClientSecrets = new List<ClientSecret>();
             ScopeRestrictions = new List<string>();
             RedirectUris = new List<string>();

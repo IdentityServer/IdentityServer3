@@ -32,5 +32,17 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return ((int)(DateTimeOffset.UtcNow - creationTime).TotalSeconds);
         }
+
+        [DebuggerStepThrough]
+        public static bool HasExpired(this DateTimeOffset? expirationTime)
+        {
+            if (expirationTime.HasValue &&
+                expirationTime < DateTimeOffset.UtcNow)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

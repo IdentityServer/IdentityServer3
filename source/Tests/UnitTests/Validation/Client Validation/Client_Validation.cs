@@ -18,6 +18,7 @@ using FluentAssertions;
 using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
@@ -25,7 +26,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 {
     public class Client_Validation
     {
-        ClientValidator _validator = Factory.CreateClientValidator();
+        ClientValidator _validatorHashed = Factory.CreateClientValidator(
+            secretValidator: new HashedClientSecretValidator());
+        ClientValidator _validatorPlain = Factory.CreateClientValidator(
+            secretValidator: new PlainTextClientSecretValidator());
 
         const string Category = "Client validation";
 
@@ -41,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "secret"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -60,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "secret"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -78,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "secret"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -89,7 +93,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "foobar"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -100,7 +104,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "quux"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -111,7 +115,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "notexpired"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -129,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "secret"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -140,7 +144,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "foobar"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -151,7 +155,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "quux"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -163,7 +167,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "notexpired"
             };
 
-            client = await _validator.ValidateClientCredentialsAsync(credential);
+            client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().NotBeNull();
             client.ClientId.Should().Be(clientId);
@@ -181,7 +185,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "invalid"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -198,7 +202,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "expired"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -215,7 +219,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "invalid"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -232,7 +236,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "invalid"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -247,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "invalid"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -262,7 +266,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = "secret"
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -274,7 +278,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         {
             var credential = new ClientCredential();
 
-            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+            Func<Task> act = () => _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             act.ShouldThrow<InvalidOperationException>();
         }
@@ -286,7 +290,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         {
             var credential = new ClientCredential();
 
-            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+            Func<Task> act = () => _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             act.ShouldThrow<InvalidOperationException>();
         }
@@ -301,7 +305,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = ""
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -316,7 +320,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 Secret = ""
             };
 
-            var client = await _validator.ValidateClientCredentialsAsync(credential);
+            var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             client.Should().BeNull();
         }
@@ -330,7 +334,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
                 ClientId = "no_secret_client"
             };
 
-            Func<Task> act = () => _validator.ValidateClientCredentialsAsync(credential);
+            Func<Task> act = () => _validatorHashed.ValidateClientCredentialsAsync(credential);
 
             act.ShouldThrow<InvalidOperationException>();
         }

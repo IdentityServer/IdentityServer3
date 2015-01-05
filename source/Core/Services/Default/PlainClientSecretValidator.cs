@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-using System;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     /// <summary>
-    /// Default client secret validator.
+    /// Client secret validator for plain text secrets
     /// </summary>
-    public class DefaultClientSecretValidator : IClientSecretValidator
+    public class PlainTextClientSecretValidator : IClientSecretValidator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Validates the client secret
         /// </summary>
@@ -36,29 +37,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public Task<bool> ValidateClientSecretAsync(Client client, string secret)
         {
-            if (client.ClientSecretProtection == ClientSecretProtection.Hashed)
-            {
-                using (var sha = SHA256.Create())
-                {
-                    var secretBytes = Encoding.UTF8.GetBytes(secret);
-                    var hashed = sha.ComputeHash(secretBytes);
-
-                    secret = Convert.ToBase64String(hashed);
-                }
-            }
-
             foreach (var clientSecret in client.ClientSecrets)
             {
                 // check if client secret is still valid
-                if (clientSecret.Expiration.HasValue)
-                {
-                    if (clientSecret.Expiration < DateTimeOffset.UtcNow)
-                    {
-                        // skip expired secrets
-                        continue;
-                    }
-                }
-
+                if (clientSecret.Expiration.HasExpired()) continue;
+                
                 // use time constant string comparison
                 var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret);
 

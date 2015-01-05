@@ -35,10 +35,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "codeclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.AuthorizationCode,
                     
                     RequireConsent = true,
@@ -74,10 +73,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "implicitclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.Implicit,
                     
                     ClientUri = "http://www.thinktecture.com",
@@ -125,10 +123,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "hybridclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.Hybrid,
                     
                     ClientUri = "http://www.thinktecture.com",
@@ -150,10 +147,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "katanaclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.Hybrid,
                     
                     ClientUri = "http://www.thinktecture.com",
@@ -180,10 +176,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "client",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ClientCredentials,
                     
                     Claims = new List<Claim>
@@ -200,10 +195,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "customclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.Custom
                 },
 
@@ -214,10 +208,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientId = "roclient",
                     ClientSecrets = new List<ClientSecret>
                     { 
-                        new ClientSecret("secret")
+                        new ClientSecret("secret".Sha256())
                     },
 
-                    ClientSecretProtection = ClientSecretProtection.None,
                     Flow = Flows.ResourceOwner,
                     
                     AccessTokenType = AccessTokenType.Jwt,

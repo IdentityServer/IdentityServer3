@@ -147,20 +147,4 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         Absolute
     }
-
-    /// <summary>
-    /// Client secret protection mechanisms
-    /// </summary>
-    public enum ClientSecretProtection
-    {
-        /// <summary>
-        /// Hashed
-        /// </summary>
-        Hashed,
-
-        /// <summary>
-        /// No protection
-        /// </summary>
-        None
-    }
 }

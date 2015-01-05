@@ -34,14 +34,20 @@ namespace Thinktecture.IdentityServer.Tests.Validation
         }
 
         public static ClientValidator CreateClientValidator(
-            IClientStore clients = null)
+            IClientStore clients = null,
+            IClientSecretValidator secretValidator = null)
         {
             if (clients == null)
             {
                 clients = new InMemoryClientStore(ClientValidationTestClients.Get());
             }
 
-            return new ClientValidator(clients, new DefaultClientSecretValidator());
+            if (secretValidator == null)
+            {
+                secretValidator = new HashedClientSecretValidator();
+            }
+
+            return new ClientValidator(clients, secretValidator);
         }
 
         public static TokenRequestValidator CreateTokenRequestValidator(
