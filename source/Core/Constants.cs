@@ -423,7 +423,8 @@ namespace Thinktecture.IdentityServer.Core
             public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
 
-        public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]{
+        public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]
+        {
             ClaimTypes.Audience,
             ClaimTypes.Issuer,
             ClaimTypes.NotBefore,
@@ -446,6 +447,30 @@ namespace Thinktecture.IdentityServer.Core
         {
             ClaimTypes.Subject,
             ClaimTypes.Name,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
+        };
+
+        public static readonly string[] CustomGrantProtocolClaimTypes = new string[]
+        {
+            ClaimTypes.Audience,
+            ClaimTypes.Issuer,
+            ClaimTypes.NotBefore,
+            ClaimTypes.Expiration,
+            ClaimTypes.UpdatedAt,
+            ClaimTypes.IssuedAt,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.AuthenticationContextClassReference,
+            ClaimTypes.AuthenticationTime,
+            ClaimTypes.AuthorizedParty,
+            ClaimTypes.AccessTokenHash,
+            ClaimTypes.AuthorizationCodeHash,
+            ClaimTypes.Nonce,
+            ClaimTypes.JwtId,
+            ClaimTypes.Scope,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.Subject,
             ClaimTypes.AuthenticationMethod,
             ClaimTypes.IdentityProvider,
             ClaimTypes.AuthenticationTime,
