@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (claims != null && claims.Any())
             {
-                resultClaims.AddRange(claims);
+                resultClaims.AddRange(claims.Where(x => !Constants.AuthenticateResultClaimTypes.Contains(x.Type)));
             }
 
             var id = new ClaimsIdentity(authenticationMethod);

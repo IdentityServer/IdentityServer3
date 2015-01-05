@@ -143,6 +143,7 @@
     <Compile Include="Events\AccessTokenIssuedEvent.cs" />
     <Compile Include="Events\UnhandledExceptionEvent.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
+    <Compile Include="Extensions\HashExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
