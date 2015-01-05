@@ -32,13 +32,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         public DefaultViewServiceConfiguration()
         {
             // adding default CSS here so hosting application can choose to remove it
-            Stylesheets = new HashSet<string>
+            Stylesheets = new List<string>
             {
                 "~/assets/styles.min.css"
             };
 
             
-            Scripts = new HashSet<string>();
+            Scripts = new List<string>();
             CacheViews = true;
         }
 
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <value>
         /// The stylesheets.
         /// </value>
-        public ICollection<string> Stylesheets { get; set; }
+        public IList<string> Stylesheets { get; set; }
         
         /// <summary>
         /// Scripts to be rendered into the layout.
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <value>
         /// The scripts.
         /// </value>
-        public ICollection<string> Scripts { get; set; }
+        public IList<string> Scripts { get; set; }
         
         /// <summary>
         /// View loader used to load the HTML templates.
