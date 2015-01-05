@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class local authentication events
+    /// Event class for partial login complete events
     /// </summary>
-    public class LocalAuthenticationEvent : AuthenticationEventBase
+    public class PartialLoginCompleteEvent : AuthenticationEventBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalAuthenticationEvent"/> class.
+        /// Initializes a new instance of the <see cref="PartialLoginCompleteEvent"/> class.
         /// </summary>
-        /// <param name="type">The event type.</param>
-        public LocalAuthenticationEvent(EventType type)
-            : base(EventConstants.Ids.LocalLogin, type)
+        public PartialLoginCompleteEvent()
+            : base(EventConstants.Ids.PartialLoginComplete, EventType.Success)
         {
-            Message = "Local authentication event";
+            Message = Resources.Events.PartialLoginComplete;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the login user.
-        /// </summary>
-        /// <value>
-        /// The name of the login user.
-        /// </value>
-        public string LoginUserName { get; set; }
     }
 }

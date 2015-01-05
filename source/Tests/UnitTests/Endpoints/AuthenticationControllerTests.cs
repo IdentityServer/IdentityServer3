@@ -73,6 +73,21 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             return Constants.RoutePaths.Login + "?signin=" + SignInId;
         }
 
+        void Login(bool setCookie = true)
+        {
+            var msg = new SignInMessage() { ReturnUrl = Url("authorize") };
+            var signInId = WriteMessageToCookie(msg);
+            var url = Constants.RoutePaths.Login + "?signin=" + signInId;
+            var resp = Get(url);
+            ProcessXsrf(resp);
+
+            if (setCookie)
+            {
+                resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" });
+                client.SetCookies(resp.GetCookies());
+            }
+        }
+
         private string GetResumeUrlFromPartialSignInCookie(HttpResponseMessage resp)
         {
             var cookie = resp.GetCookies().Where(x=>x.Name == Constants.PartialSignInAuthenticationType).Single();
@@ -475,8 +490,16 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void Logout_ShowsLogoutPromptPage()
+        public void Logout_AnonymousUser_ShowsLoggedOutPage()
         {
+            var resp = Get(Constants.RoutePaths.Logout);
+            resp.AssertPage("loggedOut");
+        }
+        [Fact]
+        public void Logout_LoggedInUser_ShowsLogoutPromptPage()
+        {
+            Login();
+            
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("logout");
         }
@@ -490,9 +513,16 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void PostToLogout_InvokesUserServiceSignOut()
+        public void PostToLogout_AnonymousUser_DoesNotInvokeUserServiceSignOut()
         {
-            GetLoginPage();
+            var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
+            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()), Times.Never());
+        }
+        
+        [Fact]
+        public void PostToLogout_AuthenticatedUser_InvokesUserServiceSignOut()
+        {
+            Login();
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()));
         }

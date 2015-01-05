@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core
                 new Claim(Constants.ClaimTypes.AuthenticationTime, authenticationTime.ToString(), ClaimValueTypes.Integer)
             };
 
-            var id = new ClaimsIdentity(claims, authenticationType);
+            var id = new ClaimsIdentity(claims, authenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
             return new ClaimsPrincipal(id);
         }
 
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core
             var idp = principal.FindFirst(Constants.ClaimTypes.IdentityProvider);
             if (idp == null) throw new InvalidOperationException("idp claim is missing");
 
-            var id = new ClaimsIdentity(principal.Claims, authenticationType);
+            var id = new ClaimsIdentity(principal.Claims, authenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
             return new ClaimsPrincipal(id);
         }
 

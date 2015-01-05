@@ -14,37 +14,47 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for external authentication events
+    /// Event class for logout events
     /// </summary>
-    public class ExternalAuthenticationEvent : AuthenticationEventBase
+    public class LogoutEvent : EventBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExternalAuthenticationEvent"/> class.
+        /// Initializes a new instance of the <see cref="LogoutEvent"/> class.
         /// </summary>
-        /// <param name="type">Event type.</param>
-        public ExternalAuthenticationEvent(EventType type)
-            : base(EventConstants.Ids.LocalLogin, type)
+        public LogoutEvent()
+            : base(EventConstants.Categories.Authentication)
         {
-            Message = "External authentication event";
+            Id = EventConstants.Ids.Logout;
+            EventType = EventType.Success;
+            Message = Resources.Events.LogoutEvent;
         }
 
         /// <summary>
-        /// Gets or sets the provider.
+        /// Gets or sets the subject identifier.
         /// </summary>
         /// <value>
-        /// The provider.
+        /// The subject identifier.
         /// </value>
-        public string Provider { get; set; }
+        public string SubjectId { get; set; }
 
         /// <summary>
-        /// Gets or sets the provider identifier.
+        /// Gets or sets the user's name.
         /// </summary>
         /// <value>
-        /// The provider identifier.
+        /// The name.
         /// </value>
-        public string ProviderId { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sign out message.
+        /// </summary>
+        /// <value>
+        /// The sign out message.
+        /// </value>
+        public SignOutMessage SignOutMessage { get; set; }
     }
 }

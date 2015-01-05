@@ -14,40 +14,41 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Base class for authentication events
+    /// Event class for local login events
     /// </summary>
-    public abstract class AuthenticationEventBase : EventBase
+    public class LocalLoginEvent : AuthenticationEventBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthenticationEventBase"/> class.
+        /// Initializes a new instance of the <see cref="LocalLoginEvent"/> class.
         /// </summary>
-        /// <param name="id">Event id.</param>
-        /// <param name="type">Event type.</param>
-        public AuthenticationEventBase(int id, EventType type) : base(EventConstants.Categories.Authentication)
+        /// <param name="type">The event type.</param>
+        public LocalLoginEvent(EventType type)
+            : base(EventConstants.Ids.LocalLogin, type)
         {
-            Id = id;
-            EventType = type;
+            if (type == Events.EventType.Success)
+            {
+                Message = Resources.Events.LocalLoginSuccess;
+            }
+            else if (type == Events.EventType.Failure)
+            {
+                Message = Resources.Events.LocalLoginFailure;
+            }
+            else
+            {
+                Message = "Local login event";
+            }
         }
 
         /// <summary>
-        /// Gets or sets the subject identifier.
+        /// Gets or sets the name of the login user.
         /// </summary>
         /// <value>
-        /// The subject identifier.
+        /// The name of the login user.
         /// </value>
-        public string SubjectId { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the sign in message.
-        /// </summary>
-        /// <value>
-        /// The sign in message.
-        /// </value>
-        public SignInMessage SignInMessage { get; set; }
+        public string LoginUserName { get; set; }
     }
 }

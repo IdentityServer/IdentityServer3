@@ -117,7 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ExternalLoginFailure" xml:space="preserve">
+    <value>External Login Failure</value>
+  </data>
+  <data name="ExternalLoginSuccess" xml:space="preserve">
+    <value>External Login Success</value>
+  </data>
+  <data name="LocalLoginFailure" xml:space="preserve">
+    <value>Local Login Failure</value>
+  </data>
   <data name="LocalLoginSuccess" xml:space="preserve">
     <value>Local Login Success</value>
+  </data>
+  <data name="LogoutEvent" xml:space="preserve">
+    <value>Logout Event</value>
+  </data>
+  <data name="PartialLogin" xml:space="preserve">
+    <value>Partial Login</value>
+  </data>
+  <data name="PartialLoginComplete" xml:space="preserve">
+    <value>Partial Login Complete</value>
+  </data>
+  <data name="PreLoginFailure" xml:space="preserve">
+    <value>Pre-Login Failure</value>
+  </data>
+  <data name="PreLoginSuccess" xml:space="preserve">
+    <value>Pre-Login Success</value>
   </data>
 </root>
