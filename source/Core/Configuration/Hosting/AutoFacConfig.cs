@@ -20,6 +20,7 @@ using Microsoft.Owin;
 using System;
 using Thinktecture.IdentityServer.Core.Endpoints;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
@@ -119,8 +120,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterApiControllers(typeof(AuthorizeEndpointController).Assembly);
 
             // other internal
-            builder.Register(ctx => new SessionCookie(ctx.Resolve<IOwinContext>(), ctx.Resolve<IdentityServerOptions>()));
             builder.Register(c => new OwinEnvironmentService(c.Resolve<IOwinContext>()));
+            builder.Register(c => new SessionCookie(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
+            builder.Register(c => new MessageCookie<SignInMessage>(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
+            builder.Register(c => new MessageCookie<SignOutMessage>(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
+            builder.Register(c => new LastUserNameCookie(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
 
             // add any additional dependencies from hosting application
             foreach(var registration in fact.Registrations)

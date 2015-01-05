@@ -495,6 +495,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("loggedOut");
         }
+
         [Fact]
         public void Logout_LoggedInUser_ShowsLogoutPromptPage()
         {
@@ -503,12 +504,24 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = Get(Constants.RoutePaths.Logout);
             resp.AssertPage("logout");
         }
-        
+
         [Fact]
         public void Logout_EnableSignOutPromptSetToFalse_SkipsLogoutPromptPage()
         {
+            Login();
+
             options.AuthenticationOptions.EnableSignOutPrompt = false;
             var resp = Get(Constants.RoutePaths.Logout);
+            resp.AssertPage("loggedOut");
+        }
+        
+        [Fact]
+        public void Logout_SignOutMessagePassed_SkipsLogoutPromptPage()
+        {
+            Login();
+            
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "foo", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
             resp.AssertPage("loggedOut");
         }
 
@@ -523,6 +536,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void PostToLogout_AuthenticatedUser_InvokesUserServiceSignOut()
         {
             Login();
+
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()));
         }
@@ -530,7 +544,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         [Fact]
         public void PostToLogout_RemovesCookies()
         {
-            GetLoginPage();
+            Login();
+
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
             // 5: primary, partial, external, signin, session
@@ -542,7 +557,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         [Fact]
         public void PostToLogout_EmitsLogoutUrlsForProtocolIframes()
         {
-            GetLoginPage();
+            Login();
+
             options.ProtocolLogoutUrls.Add("/foo/signout");
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var model = resp.GetModel<LoggedOutViewModel>();
