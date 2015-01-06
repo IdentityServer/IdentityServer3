@@ -25,6 +25,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -369,21 +370,43 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
+            // check to see if the partial login has all the claim types needed to login
             AuthenticateResult result = null;
-            var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
-            if (externalProviderClaim == null)
+            if (Constants.AuthenticateResultClaimTypes.All(claimType => user.HasClaim(claimType)))
             {
+                Logger.Info("Authentication claims found -- logging user in");
+                
                 // the user/subject was known, so pass thru (without the redirect claims)
-                user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
-                user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
+                if (user.HasClaim(Constants.ClaimTypes.PartialLoginReturnUrl))
+                {
+                    user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
+                }
+                if (user.HasClaim(Constants.ClaimTypes.ExternalProviderUserId))
+                {
+                    user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId));
+                }
+                if (user.HasClaim(GetClaimTypeForResumeId(resume)))
+                {
+                    user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
+                }
+                
                 result = new AuthenticateResult(new ClaimsPrincipal(user));
 
                 eventService.RaisePartialLoginCompleteEvent(user, signInId, signInMessage);
             }
             else
             {
+                Logger.Info("Authentication claims not found -- looking for ExternalProviderUserId to call AuthenticateExternalAsync");
+                
                 // the user was not known, we need to re-execute AuthenticateExternalAsync
                 // to obtain a subject to proceed
+                var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
+                if (externalProviderClaim == null)
+                {
+                    Logger.Error("No ExternalProviderUserId claim found -- rendering error page");
+                    return RenderErrorPage();
+                }
+
                 var provider = externalProviderClaim.Issuer;
                 var providerId = externalProviderClaim.Value;
                 var externalId = new ExternalIdentity
