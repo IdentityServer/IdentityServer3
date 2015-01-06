@@ -50,7 +50,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (item == null)
             {
                 item = await get();
-                await cache.SetAsync(key, item);
+
+                if (item != null)
+                {
+                    await cache.SetAsync(key, item);
+                }
             }
             
             return item;
