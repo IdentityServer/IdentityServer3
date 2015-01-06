@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2015 Dominick Baier, Brock Allen
+ * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Events
     {
         public FailedRefreshTokenRefreshEvent() : base(EventConstants.Categories.TokenService)
         {
-            Id = EventConstants.Ids.RefreshTokenRefreshed;
+            Id = EventConstants.Ids.FailedRefreshTokenRefreshed;
             EventType = EventType.Failure;
         }
 
