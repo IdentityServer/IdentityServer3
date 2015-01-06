@@ -63,6 +63,7 @@ IdentityServer is built using the following great open source projects:
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
 - [Web Protection Library](https://wpl.codeplex.com/)
+- [XUnit](https://github.com/xunit/xunit)
 - [License Header Manager](https://visualstudiogallery.msdn.microsoft.com/5647a099-77c9-4a49-91c3-94001828e99e)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
