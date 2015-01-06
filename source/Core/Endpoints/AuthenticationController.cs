@@ -441,7 +441,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
             var message = signOutMessageCookie.Read(id);
-            if (message != null)
+            if (message != null && message.ClientId.IsPresent())
             {
                 Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
                 return await Logout(id);
