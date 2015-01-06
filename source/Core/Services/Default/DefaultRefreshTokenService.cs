@@ -152,19 +152,31 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 string newHandle = CryptoRandom.CreateUniqueId();
                 await _store.StoreAsync(newHandle, refreshToken);
 
+                RaiseRefreshTokenRefreshedEvent(handle, newHandle, refreshToken);
                 Logger.Debug("Updated refresh token in store");
+                
                 return newHandle;
             }
 
+            RaiseRefreshTokenRefreshedEvent(handle, handle, refreshToken);
             Logger.Debug("No updates to refresh token done");
+            
             return handle;
         }
 
-        private void RaiseRefreshTokenIssuedEvent(string refreshToken, RefreshToken token)
+        private void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
         {
             if (_options.EventsOptions.RaiseInformationEvents)
             {
-                _events.RaiseRefreshTokenIssuedEvent(refreshToken, token);
+                _events.RaiseRefreshTokenIssuedEvent(handle, token);
+            }
+        }
+
+        private void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
+        {
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
             }
         }
     }

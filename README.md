@@ -2,7 +2,7 @@
 
 **Current status: Beta 4**
 
-[![Build status](https://ci.appveyor.com/api/projects/status/p3w7grusyd7cnctw?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture-identityserver-v3)
+Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/p3w7grusyd7cnctw?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture-identityserver-v3)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview ##
@@ -63,6 +63,14 @@ IdentityServer is built using the following great open source projects:
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
 - [Web Protection Library](https://wpl.codeplex.com/)
+- [XUnit](https://github.com/xunit/xunit)
 - [License Header Manager](https://visualstudiogallery.msdn.microsoft.com/5647a099-77c9-4a49-91c3-94001828e99e)
+
+..and is supported by the following open source friendly companies:
+
+- [JetBrains](http://www.jetbrains.com)
+- [Gitter](http://gitter.im)
+- [Huboard](http://huboard.com)
+- [AppVeyor](http://appveyor.com)
 
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!

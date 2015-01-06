@@ -238,6 +238,19 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseSuccessfulRefreshTokenRefreshEvent(this IEventService events, string oldHandle, string newHandle, RefreshToken token)
+        {
+            var evt = new SuccessfulRefreshTokenRefreshEvent
+            {
+                OldHandle = oldHandle,
+                NewHandle = newHandle,
+                ClientId = token.ClientId,
+                Lifetime = token.LifeTime,
+            };
+
+            events.RaiseEvent(evt);
+        }
+
         public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
         {
             var evt = new UnhandledExceptionEvent
