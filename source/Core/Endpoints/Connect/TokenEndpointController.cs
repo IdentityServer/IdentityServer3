@@ -25,6 +25,7 @@ using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
+using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
@@ -76,6 +77,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             Logger.Info("Start token request");
 
             var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
+
+            if (response is TokenResult)
+            {
+                if (_options.EventsOptions.RaiseSuccessEvents)
+                {
+                    _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
+                }
+            }
+            else if (response is TokenErrorResult)
+            {
+                if (_options.EventsOptions.RaiseFailureEvents)
+                {
+                    var details = response as TokenErrorResult;
+
+                    _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, details.Error);
+                }
+            }
 
             Logger.Info("End token request");
             return response;

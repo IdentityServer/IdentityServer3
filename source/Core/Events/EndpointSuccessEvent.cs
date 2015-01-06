@@ -22,6 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         {
             EndpointName = endpointName;
             EventType = EventType.Success;
+            Id = EventConstants.Ids.SuccessfulEndpoint;
         }
 
         public string EndpointName { get; set; }

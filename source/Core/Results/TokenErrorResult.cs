@@ -27,11 +27,12 @@ namespace Thinktecture.IdentityServer.Core.Results
     internal class TokenErrorResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly string _error;
+        
+        public string Error { get; internal set; }
 
         public TokenErrorResult(string error)
         {
-            _error = error;
+            Error = error;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -43,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Results
         {
             var dto = new ErrorDto
             {
-                error = _error 
+                error = Error 
             };
 
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -51,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Results
                 Content = new ObjectContent<ErrorDto>(dto, new JsonMediaTypeFormatter())
             };
 
-            Logger.Info("Returning error: " + _error);
+            Logger.Info("Returning error: " + Error);
             return response;
         }
 
