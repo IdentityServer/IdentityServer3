@@ -18,6 +18,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using Thinktecture.IdentityModel;
@@ -25,9 +26,12 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
+#pragma warning disable 1591
+
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
-    internal class MessageCookie<TMessage>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class MessageCookie<TMessage>
         where TMessage : Message
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -53,12 +57,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             this.options = options;
         }
 
-        public string MessageType
+        string MessageType
         {
             get { return typeof(TMessage).Name; }
         }
 
-        public string Protect(IDataProtector protector, TMessage message)
+        string Protect(IDataProtector protector, TMessage message)
         {
             var settings = new JsonSerializerSettings
             {
@@ -72,14 +76,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             return protector.Protect(json, MessageType);
         }
 
-        public TMessage Unprotect(string data, IDataProtector protector)
+        TMessage Unprotect(string data, IDataProtector protector)
         {
             var json = protector.Unprotect(data, MessageType);
             var message = JsonConvert.DeserializeObject<TMessage>(json);
             return message;
         }
 
-        public string GetCookieName(string id = null)
+        string GetCookieName(string id = null)
         {
             return String.Format("{0}{1}.{2}", 
                 options.AuthenticationOptions.CookieOptions.Prefix, 
@@ -87,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 id);
         }
         
-        public string CookiePath
+        string CookiePath
         {
             get
             {
@@ -153,6 +157,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public TMessage Read(string id)
         {
+            if (String.IsNullOrWhiteSpace(id)) return null;
+
             var name = GetCookieName(id);
             return ReadByCookieName(name);
         }

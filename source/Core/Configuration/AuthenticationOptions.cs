@@ -52,7 +52,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public CookieOptions CookieOptions { get; set; }
 
-
         /// <summary>
         /// Gets or sets the login page links.
         /// LoginPageLinks allow the login view to provide the user custom links to other web pages that they might need to visit before they can login (such as a registration page, or a password reset page).

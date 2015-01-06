@@ -77,8 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                         value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
                         if (options.Endpoints.EnableCspReportEndpoint)
                         {
-                            var cspReportUrl = actionExecutedContext.ActionContext.RequestContext.Url.Link(Constants.RouteNames.CspReport, null);
-                            value += " report-uri " + cspReportUrl;
+                            value += " report-uri " + ctx.GetCspReportUrl();
                         }
                         actionExecutedContext.Response.Headers.Add("Content-Security-Policy", value);
                     }
