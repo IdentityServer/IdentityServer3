@@ -66,4 +66,11 @@ IdentityServer is built using the following great open source projects:
 - [XUnit](https://github.com/xunit/xunit)
 - [License Header Manager](https://visualstudiogallery.msdn.microsoft.com/5647a099-77c9-4a49-91c3-94001828e99e)
 
+..and is supported by the following open source friendly companies:
+
+- [JetBrains](http://www.jetbrains.com)
+- [Gitter](http://gitter.im)
+- [Huboard](http://huboard.com)
+- [AppVeyor](http://appveyor.com)
+
 thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
