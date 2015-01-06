@@ -133,6 +133,7 @@
     <Compile Include="App_Packages\LibLog.2.0\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
+    <Compile Include="Configuration\Hosting\LastUserNameCookie.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
     <Compile Include="Configuration\EndpointOptions.cs" />
     <Compile Include="Configuration\Hosting\SessionCookie.cs" />
@@ -153,6 +154,8 @@
     <Compile Include="Events\UnhandledExceptionEvent.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Extensions\HashExtensions.cs" />
+    <Compile Include="Extensions\IClientStoreExtensions.cs" />
+    <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />

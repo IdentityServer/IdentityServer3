@@ -121,8 +121,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = User.GetName(),
-                LogoutUrl = Url.Link(Constants.RouteNames.Logout, null),
-                RevokePermissionUrl = Url.Link(Constants.RouteNames.ClientPermissions, null),
+                LogoutUrl = env.GetIdentityServerLogoutUrl(),
+                RevokePermissionUrl = Request.GetOwinContext().GetPermissionsPageUrl(),
                 AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(env),
                 Clients = clients,
                 ErrorMessage = error

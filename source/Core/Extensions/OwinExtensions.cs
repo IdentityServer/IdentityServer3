@@ -16,11 +16,15 @@
 
 using Autofac;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -122,6 +126,108 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
+        }
+
+        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent());
+        }
+        
+        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context, IEnumerable<string> typeFilter)
+        {
+            var types = context.GetExternalAuthenticationTypes();
+            
+            if (typeFilter != null && typeFilter.Any())
+            {
+                types = types.Where(type => typeFilter.Contains(type.AuthenticationType));
+            }
+            
+            return types;
+        }
+
+        static async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            if (authenticationType.IsMissing()) throw new ArgumentNullException("authenticationType");
+            
+            return await context.Authentication.AuthenticateAsync(authenticationType);
+        }
+
+        static async Task<ClaimsIdentity> GetIdentityFrom(this IOwinContext context, string authenticationType)
+        {
+            var result = await context.GetAuthenticationFrom(authenticationType);
+            if (result != null &&
+                result.Identity != null &&
+                result.Identity.IsAuthenticated)
+            {
+                return result.Identity;
+            }
+            return null;
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromPartialSignIn(this IOwinContext context)
+        {
+            return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromExternalSignIn(this IOwinContext context)
+        {
+            return await context.GetIdentityFrom(Constants.ExternalAuthenticationType);
+        }
+
+        internal static async Task<string> GetSignInIdFromExternalProvider(this IOwinContext context)
+        {
+            var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+            if (result != null)
+            {
+                string val = null;
+                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
+                {
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromExternalProvider(this IOwinContext context)
+        {
+            var id = await context.GetIdentityFromExternalSignIn();
+            if (id != null)
+            {
+                // this is mapping from the external IdP's issuer to the name of the 
+                // katana middleware that's registered in startup
+                var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
+                {
+                    throw new InvalidOperationException("Missing KatanaAuthenticationType");
+                }
+
+                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
+                var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
+                id = new ClaimsIdentity(newClaims, id.AuthenticationType);
+            }
+            return id;
+        }
+
+        internal static string GetCspReportUrl(this IOwinContext context)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CspReport;
+        }
+
+        internal static string GetPartialLoginResumeUrl(this IOwinContext context, string resumeId)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;
+        }
+        
+        internal static string GetPermissionsPageUrl(this IOwinContext context)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ClientPermissions;
+        }
+
+        internal static string GetExternalProviderLoginUrl(this IOwinContext context, string provider, string signinId)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LoginExternal + "?provider=" + provider + "&signin=" + signinId;
         }
     }
 }

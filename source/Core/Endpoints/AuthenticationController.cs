@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel;
@@ -49,33 +48,43 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly IViewService _viewService;
-        private readonly IUserService _userService;
-        private readonly AuthenticationOptions _authenticationOptions;
-        private readonly IdentityServerOptions _options;
-        private readonly IClientStore _clientStore;
-        private readonly IEventService _events;
-        private readonly ILocalizationService _localizationService;
-        private readonly SessionCookie _sessionCookie;
+
+        private readonly IOwinContext context;
+        private readonly IViewService viewService;
+        private readonly IUserService userService;
+        private readonly IdentityServerOptions options;
+        private readonly IClientStore clientStore;
+        private readonly IEventService eventService;
+        private readonly ILocalizationService localizationService;
+        private readonly SessionCookie sessionCookie;
+        private readonly MessageCookie<SignInMessage> signInMessageCookie;
+        private readonly MessageCookie<SignOutMessage> signOutMessageCookie;
+        private readonly LastUserNameCookie lastUsernameCookie;
 
         public AuthenticationController(
+            OwinEnvironmentService owin,
             IViewService viewService, 
             IUserService userService, 
-            AuthenticationOptions authenticationOptions, 
             IdentityServerOptions idSvrOptions, 
             IClientStore clientStore, 
-            IEventService events,
+            IEventService eventService,
             ILocalizationService localizationService,
-            SessionCookie sessionCookie)
+            SessionCookie sessionCookie, 
+            MessageCookie<SignInMessage> signInMessageCookie,
+            MessageCookie<SignOutMessage> signOutMessageCookie,
+            LastUserNameCookie lastUsernameCookie)
         {
-            _viewService = viewService;
-            _userService = userService;
-            _authenticationOptions = authenticationOptions;
-            _options = idSvrOptions;
-            _clientStore = clientStore;
-            _events = events;
-            _localizationService = localizationService;
-            _sessionCookie = sessionCookie;
+            this.context = new OwinContext(owin.Environment);
+            this.viewService = viewService;
+            this.userService = userService;
+            this.options = idSvrOptions;
+            this.clientStore = clientStore;
+            this.eventService = eventService;
+            this.localizationService = localizationService;
+            this.sessionCookie = sessionCookie;
+            this.signInMessageCookie = signInMessageCookie;
+            this.signOutMessageCookie = signOutMessageCookie;
+            this.lastUsernameCookie = lastUsernameCookie;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -87,21 +96,19 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            var signInMessage = cookie.Read(signin);
+            var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(
-                    _localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
-            var authResult = await _userService.PreAuthenticateAsync(signInMessage);
+            var authResult = await userService.PreAuthenticateAsync(signInMessage);
             if (authResult != null)
             {
                 if (authResult.IsError)
@@ -123,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage.IdP.IsPresent())
             {
                 Logger.InfoFormat("identity provider requested, redirecting to: {0}", signInMessage.IdP);
-                return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider = signInMessage.IdP, signin }));
+                return Redirect(context.GetExternalProviderLoginUrl(signInMessage.IdP, signin));
             }
 
             return await RenderLoginPage(signInMessage, signin);
@@ -136,7 +143,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Login page submitted");
 
-            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            if (this.options.AuthenticationOptions.EnableLocalLogin == false)
             {
                 Logger.Warn("EnableLocalLogin disabled -- returning 405 MethodNotAllowed");
                 return StatusCode(HttpStatusCode.MethodNotAllowed);
@@ -145,31 +152,30 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            var signInMessage = cookie.Read(signin);
+            var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             if (model == null)
             {
                 Logger.Error("no data submitted");
-                return await RenderLoginPage(signInMessage, signin, _localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword));
+                return await RenderLoginPage(signInMessage, signin, localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword));
             }
 
             if (String.IsNullOrWhiteSpace(model.Username))
             {
-                ModelState.AddModelError("Username", _localizationService.GetMessage(MessageIds.UsernameRequired));
+                ModelState.AddModelError("Username", localizationService.GetMessage(MessageIds.UsernameRequired));
             }
             
             if (String.IsNullOrWhiteSpace(model.Password))
             {
-                ModelState.AddModelError("Password", _localizationService.GetMessage(MessageIds.PasswordRequired));
+                ModelState.AddModelError("Password", localizationService.GetMessage(MessageIds.PasswordRequired));
             }
 
             // the browser will only send 'true' if ther user has checked the checkbox
@@ -177,7 +183,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             // this check here is to establish if the user deliberatly did not check the checkbox
             // or if the checkbox was not presented as an option (and thus AllowRememberMe is not allowed)
             // true means they did check it, false means they did not, null means they were not presented with the choice
-            if (_options.AuthenticationOptions.CookieOptions.AllowRememberMe)
+            if (options.AuthenticationOptions.CookieOptions.AllowRememberMe)
             {
                 if (model.RememberMe != true)
                 {
@@ -195,12 +201,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
-            var authResult = await _userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
+            var authResult = await userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
                 
-                var errorMessage = _localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword);
+                var errorMessage = localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword);
                 RaiseLocalLoginFailureEvent(model.Username, signin, signInMessage, errorMessage);
                 
                 return await RenderLoginPage(signInMessage, signin, errorMessage, model.Username, model.RememberMe == true);
@@ -217,7 +223,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             RaiseLocalLoginSuccessEvent(model.Username, signin, signInMessage, authResult);
 
-            IssueLastUsernameCookie(model.Username);
+            lastUsernameCookie.SetValue(model.Username);
 
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
@@ -231,25 +237,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (provider.IsMissing())
             {
                 Logger.Error("No provider passed");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoExternalProvider));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoExternalProvider));
             }
 
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            var signInMessage = cookie.Read(signin);
+            var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
-            if (providerFilter != null && providerFilter.Any() && !providerFilter.Contains(provider))
+            if (!(await clientStore.IsValidIdentityProviderAsync(signInMessage.ClientId, provider)))
             {
                 Logger.ErrorFormat("Provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
                 return RenderErrorPage();
@@ -263,7 +267,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             // add the id to the dictionary so we can recall the cookie id on the callback
             authProp.Dictionary.Add(Constants.Authentication.SigninId, signin);
             authProp.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, provider);
-            Request.GetOwinContext().Authentication.Challenge(authProp, provider);
+            context.Authentication.Challenge(authProp, provider);
             
             return Unauthorized();
         }
@@ -274,44 +278,42 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Callback invoked from external identity provider ");
 
-            var signInId = await GetSignInIdFromExternalProvider();
-
+            var signInId = await context.GetSignInIdFromExternalProvider();
             if (signInId.IsMissing())
             {
                 Logger.Error("No signin id passed");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            var signInMessage = cookie.Read(signInId);
+            var signInMessage = signInMessageCookie.Read(signInId);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var user = await GetIdentityFromExternalProvider();
+            var user = await context.GetIdentityFromExternalProvider();
             if (user == null)
             {
                 Logger.Error("no identity from external identity provider");
-                return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
+                return await RenderLoginPage(signInMessage, signInId, localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
             var externalIdentity = ExternalIdentity.FromClaims(user.Claims);
             if (externalIdentity == null)
             {
                 Logger.Error("no subject or unique identifier claims from external identity provider");
-                return await RenderLoginPage(signInMessage, signInId, _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
+                return await RenderLoginPage(signInMessage, signInId, localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
 
-            var authResult = await _userService.AuthenticateExternalAsync(externalIdentity, signInMessage);
+            var authResult = await userService.AuthenticateExternalAsync(externalIdentity, signInMessage);
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
                 
-                var msg = _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
+                var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
                 RaiseExternalLoginFailureEvent(externalIdentity, signInId, signInMessage, msg);
                 
                 return await RenderLoginPage(signInMessage, signInId, msg);
@@ -343,7 +345,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage();
             }
 
-            var user = await GetIdentityFromPartialSignIn();
+            var user = await context.GetIdentityFromPartialSignIn();
             if (user == null)
             {
                 Logger.Error("no identity from partial login");
@@ -365,12 +367,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage();
             }
 
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            var signInMessage = cookie.Read(signInId);
+            var signInMessage = signInMessageCookie.Read(signInId);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(_localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             AuthenticateResult result = null;
@@ -397,13 +398,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     Claims = user.Claims
                 };
 
-                result = await _userService.AuthenticateExternalAsync(externalId, signInMessage);
+                result = await userService.AuthenticateExternalAsync(externalId, signInMessage);
 
                 if (result == null)
                 {
                     Logger.Warn("user service failed to authenticate external identity");
                     
-                    var msg = _localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
+                    var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
                     RaiseExternalLoginFailureEvent(externalId, signInId, signInMessage, msg);
                     
                     return await RenderLoginPage(signInMessage, signInId, msg);
@@ -438,14 +439,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var sub = user.GetSubjectId();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            var message = GetSignOutMessage(id);
-            if (message != null)
+            var message = signOutMessageCookie.Read(id);
+            if (message != null && message.ClientId.IsPresent())
             {
                 Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
                 return await Logout(id);
             }
 
-            if (!this._options.AuthenticationOptions.EnableSignOutPrompt)
+            if (!this.options.AuthenticationOptions.EnableSignOutPrompt)
             {
                 Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
                 return await Logout(id);
@@ -467,153 +468,32 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Logger.InfoFormat("Logout requested for subject: {0}", sub);
             }
 
+            sessionCookie.ClearSessionId();
+            signInMessageCookie.ClearAll();
+            signOutMessageCookie.ClearAll();
+            
             ClearAuthenticationCookies();
-            _sessionCookie.ClearSessionId();
-            ClearSignInCookies();
             SignOutOfExternalIdP();
 
             if (user != null && user.Identity.IsAuthenticated)
             {
-                await this._userService.SignOutAsync(user);
-                
-                var message = GetSignOutMessage(id);
+                await this.userService.SignOutAsync(user);
+
+                var message = signOutMessageCookie.Read(id);
                 RaiseLogoutEvent(user, message);
             }
 
             return await RenderLoggedOutPage(id);
         }
 
-        private async Task<ClaimsIdentity> GetIdentityFromExternalProvider()
-        {
-            var id = await GetIdentityFrom(Constants.ExternalAuthenticationType);
-            if (id != null)
-            {
-                // this is mapping from the external IdP's issuer to the name of the 
-                // katana middleware that's registered in startup
-                var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
-                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
-                {
-                    Logger.Error("Missing katanaAuthenticationType in external callback");
-                    throw new InvalidOperationException("Missing KatanaAuthenticationType");
-                }
-
-                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
-                var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
-                id = new ClaimsIdentity(newClaims, id.AuthenticationType);
-            }
-            return id;
-        }
-
-        private async Task<string> GetSignInIdFromExternalProvider()
-        {
-            var result = await GetAuthenticationFrom(Constants.ExternalAuthenticationType);
-            if (result != null)
-            {
-                string val = null;
-                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
-                {
-                    return val;
-                }
-            }
-            return null;
-        }
-
-        private async Task<ClaimsIdentity> GetIdentityFromPartialSignIn()
-        {
-            return await GetIdentityFrom(Constants.PartialSignInAuthenticationType);
-        }
-
-        private async Task<ClaimsIdentity> GetIdentityFrom(string type)
-        {
-            var result = await GetAuthenticationFrom(type);
-            if (result != null &&
-                result.Identity != null &&
-                result.Identity.IsAuthenticated)
-            {
-                return result.Identity;
-            }
-            return null;
-        }
-
-        private async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(string type)
-        {
-            var ctx = Request.GetOwinContext();
-            var result = await ctx.Authentication.AuthenticateAsync(type);
-            return result;
-        }
-
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
-            _sessionCookie.IssueSessionId();
+            sessionCookie.IssueSessionId();
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
-        }
-
-        private void RaisePreLoginSuccessEvent(string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
-        {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaisePreLoginSuccessEvent(signInMessageId, signInMessage, authResult);
-            }
-        }
-
-        private void RaisePreLoginFailureEvent(string signInMessageId, SignInMessage signInMessage, string details)
-        {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaisePreLoginFailureEvent(signInMessageId, signInMessage, details);
-            }
-        }
-
-        private void RaiseLocalLoginSuccessEvent(string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
-        {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseLocalLoginSuccessEvent(username, signInMessageId, signInMessage, authResult);
-            }
-        }
-
-        private void RaiseLocalLoginFailureEvent(string username, string signInMessageId, SignInMessage signInMessage, string details)
-        {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseLocalLoginFailureEvent(username, signInMessageId, signInMessage, details);
-            }
-        }
-
-        private void RaiseExternalLoginSuccessEvent(ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
-        {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseExternalLoginSuccessEvent(externalIdentity, signInMessageId, signInMessage, authResult);
-            }
-        }
-
-        private void RaiseExternalLoginFailureEvent(ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
-        {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseExternalLoginFailureEvent(externalIdentity, signInMessageId, signInMessage, details);
-            }
-        }
-
-        private void RaisePartialLoginCompleteEvent(ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
-        {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaisePartialLoginCompleteEvent(subject, signInMessageId, signInMessage);
-            }
-        }
-
-        private void RaiseLogoutEvent(ClaimsPrincipal subject, SignOutMessage signOutMessage)
-        {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseLogoutEvent(subject, signOutMessage);
-            }
         }
 
         private void IssueAuthenticationCookie(string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
@@ -631,23 +511,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // we need a random ID to resume, and this will be the query string
                 // to match a claim added. the claim added will be the original 
                 // signIn ID. 
-                var resumeId = CryptoRandom.CreateUniqueId(); 
+                var resumeId = CryptoRandom.CreateUniqueId();
 
-                var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
+                var resumeLoginUrl = context.GetPartialLoginResumeUrl(resumeId);
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
                 id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessageId));
             }
             else
             {
-                ClearSignInCookie(signInMessageId);
+                signInMessageCookie.Clear(signInMessageId);
             }
 
             if (!authResult.IsPartialSignIn)
             {
                 // don't issue persistnt cookie if it's a partial signin
                 if (rememberMe == true ||
-                    (rememberMe != false && this._options.AuthenticationOptions.CookieOptions.IsPersistent))
+                    (rememberMe != false && this.options.AuthenticationOptions.CookieOptions.IsPersistent))
                 {
                     // only issue persistent cookie if user consents (rememberMe == true) or
                     // if server is configured to issue persistent cookies and user has not explicitly
@@ -656,16 +536,15 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     props.IsPersistent = true;
                     if (rememberMe == true)
                     {
-                        var expires = DateTime.UtcNow.Add(_options.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                        var expires = DateTime.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
                         props.ExpiresUtc = new DateTimeOffset(expires);
                     }
                 }
             }
 
             ClearAuthenticationCookies();
-
-            var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignIn(props, id);
+            
+            context.Authentication.SignIn(props, id);
         }
 
         private static string GetClaimTypeForResumeId(string resume)
@@ -686,7 +565,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     path = path.Substring(2);
                     path = Request.GetIdentityServerBaseUrl() + path;
                 }
-                var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
+                var host = new Uri(context.Environment.GetIdentityServerHost());
                 return new Uri(host, path);
             }
             else
@@ -697,8 +576,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void ClearAuthenticationCookies()
         {
-            var ctx = Request.GetOwinContext();
-            ctx.Authentication.SignOut(
+            context.Authentication.SignOut(
                 Constants.PrimaryAuthenticationType,
                 Constants.ExternalAuthenticationType,
                 Constants.PartialSignInAuthenticationType);
@@ -714,8 +592,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 var idp = user.GetIdentityProvider();
                 if (idp != Constants.BuiltInIdentityProvider)
                 {
-                    var ctx = Request.GetOwinContext();
-                    ctx.Authentication.SignOut(idp);
+                    context.Authentication.SignOut(idp);
                 }
             }
         }
@@ -724,7 +601,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            username = username ?? GetLastUsernameFromCookie();
+            username = username ?? lastUsernameCookie.GetValue();
 
             var providers = await GetExternalProviders(message, signInMessageId);
 
@@ -734,12 +611,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                if (_authenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
+                if (options.AuthenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
                 {
                     // no local login and only one provider -- redirect to provider
                     Logger.Info("no local login and only one provider -- redirect to provider");
-                    var url = Request.GetOwinEnvironment().GetIdentityServerHost();
-                    url += providers.First().Href;
+                    var url = providers.First().Href;
                     return Redirect(url);
                 }
                 else
@@ -748,249 +624,163 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 }
             }
 
-            var loginPageLinks = PrepareLoginPageLinks(signInMessageId, _authenticationOptions.LoginPageLinks);
+            var loginPageLinks = options.AuthenticationOptions.LoginPageLinks.Render(Request.GetIdentityServerBaseUrl(), signInMessageId);
 
             var loginModel = new LoginViewModel
             {
-                SiteName = _options.SiteName,
+                SiteName = options.SiteName,
                 SiteUrl = Request.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
                 ExternalProviders = providers,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = _options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
-                AllowRememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe,
-                RememberMe = _options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
+                LoginUrl = options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
+                AllowRememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe,
+                RememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(context.Environment),
                 Username = username
             };
 
-            return new LoginActionResult(_viewService, loginModel, message);
+            return new LoginActionResult(viewService, loginModel, message);
         }
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
         {
-            IEnumerable<string> filter = await GetProviderFilterForClientAsync(message);
-
-            var ctx = Request.GetOwinContext();
+            var restrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
             var providers =
-                from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                where (!filter.Any() || filter.Contains(p.AuthenticationType))
+                from p in context.GetExternalAuthenticationTypes(restrictions)
                 select new LoginPageLink
                 {
                     Text = p.Caption,
-                    Href = Url.Route(Constants.RouteNames.LoginExternal,
-                    new { provider = p.AuthenticationType, signin = signInMessageId })
+                    Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
                 };
 
             return providers.ToArray();
         }
 
-        private async Task<IEnumerable<string>> GetProviderFilterForClientAsync(SignInMessage message)
-        {
-            IEnumerable<string> filter = null;
-            if (!String.IsNullOrWhiteSpace(message.ClientId))
-            {
-                var client = await _clientStore.FindClientByIdAsync(message.ClientId);
-                if (client != null)
-                {
-                    filter = client.IdentityProviderRestrictions;
-                }
-            }
-            filter = filter ?? Enumerable.Empty<string>();
-            return filter;
-        }
-
-        private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
-        {
-            if (links == null || !links.Any()) return null;
-
-            var result = new List<LoginPageLink>();
-            foreach (var link in links)
-            {
-                var url = link.Href;
-                if (url.StartsWith("~/"))
-                {
-                    url = url.Substring(2);
-                    url = Request.GetIdentityServerBaseUrl() + url;
-                }
-
-                url = url.AddQueryString("signin=" + signin);
-
-                result.Add(new LoginPageLink
-                {
-                    Text = link.Text,
-                    Href = url
-                });
-            }
-            return result;
-        }
-
         private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
         {
-            var clientName = await GetClientNameFromSignOutMessageId(id);
+            var clientName = await clientStore.GetClientName(signOutMessageCookie.Read(id));
 
-            var env = Request.GetOwinEnvironment();
+            var env = context.Environment;
             var logoutModel = new LogoutViewModel
             {
-                SiteName = _options.SiteName,
+                SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id = id }),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment()),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(env),
                 ClientName = clientName
             };
-            return new LogoutActionResult(_viewService, logoutModel);
+            return new LogoutActionResult(viewService, logoutModel);
         }
 
         private async Task<IHttpActionResult> RenderLoggedOutPage(string id)
         {
             Logger.Info("rendering logged out page");
 
-            var env = Request.GetOwinEnvironment();
+            var env = context.Environment;
             var baseUrl = env.GetIdentityServerBaseUrl();
             var urls = new List<string>();
 
-            foreach (var url in _options.ProtocolLogoutUrls)
+            foreach (var url in options.ProtocolLogoutUrls)
             {
                 var tmp = url;
                 if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
                 urls.Add(baseUrl + tmp);
             }
 
-            var message = GetSignOutMessage(id);
+            var message = signOutMessageCookie.Read(id);
             var redirectUrl = message != null ? message.ReturnUrl : null;
-            var clientName = await GetClientNameFromSignOutMessage(message);
-            ClearSignOutMessage();
-
+            var clientName = await clientStore.GetClientName(message);
+            
             var loggedOutModel = new LoggedOutViewModel
             {
-                SiteName = _options.SiteName,
+                SiteName = options.SiteName,
                 SiteUrl = baseUrl,
                 IFrameUrls = urls,
                 ClientName = clientName,
                 RedirectUrl = redirectUrl
             };
-            return new LoggedOutActionResult(_viewService, loggedOutModel);
-        }
-
-        private void ClearSignOutMessage()
-        {
-            var cookie = new MessageCookie<SignOutMessage>(Request.GetOwinContext(), this._options);
-            cookie.ClearAll();
-        }
-
-        private SignOutMessage GetSignOutMessage(string id)
-        {
-            if (!String.IsNullOrWhiteSpace(id))
-            {
-                var cookie = new MessageCookie<SignOutMessage>(Request.GetOwinContext(), this._options);
-                return cookie.Read(id);
-            }
-            return null;
-        }
-
-        private async Task<string> GetClientNameFromSignOutMessageId(string id)
-        {
-            var signOutMessage = GetSignOutMessage(id);
-            return await GetClientNameFromSignOutMessage(signOutMessage);
-        }
-
-        private async Task<string> GetClientNameFromSignOutMessage(SignOutMessage signOutMessage)
-        {
-            if (signOutMessage != null && signOutMessage.ClientId.IsPresent())
-            {
-                var client = await _clientStore.FindClientByIdAsync(signOutMessage.ClientId);
-                if (client != null)
-                {
-                    return client.ClientName;
-                }
-            }
-            return null;
+            return new LoggedOutActionResult(viewService, loggedOutModel);
         }
 
         private IHttpActionResult RenderErrorPage(string message = null)
         {
-            message = message ?? _localizationService.GetMessage(MessageIds.UnexpectedError);
+            message = message ?? localizationService.GetMessage(MessageIds.UnexpectedError);
             var errorModel = new ErrorViewModel
             {
-                SiteName = this._options.SiteName,
-                SiteUrl = Request.GetOwinContext().Environment.GetIdentityServerBaseUrl(),
+                SiteName = this.options.SiteName,
+                SiteUrl = context.Environment.GetIdentityServerBaseUrl(),
                 ErrorMessage = message
             };
-            var errorResult = new ErrorActionResult(_viewService, errorModel);
+            var errorResult = new ErrorActionResult(viewService, errorModel);
             return errorResult;
         }
 
-        private void ClearSignInCookies()
+        private void RaisePreLoginSuccessEvent(string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            cookie.ClearAll();
-        }
-
-        private void ClearSignInCookie(string signin)
-        {
-            var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
-            cookie.Clear(signin);
-        }
-
-        private void IssueLastUsernameCookie(string username)
-        {
-            if (this._options.AuthenticationOptions.RememberLastUsername)
+            if (options.EventsOptions.RaiseSuccessEvents)
             {
-                var ctx = Request.GetOwinContext();
-                var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
-                var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
-                var path = ctx.Request.Environment.GetIdentityServerBasePath();
-                if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
-                if (String.IsNullOrWhiteSpace(path)) path = "/";
-
-                var options = new Microsoft.Owin.CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = secure,
-                    Path = path
-                };
-                
-                if (!String.IsNullOrWhiteSpace(username))
-                {
-                    var bytes = Encoding.UTF8.GetBytes(username);
-                    bytes = _options.DataProtector.Protect(bytes, cookieName);
-                    username = Base64Url.Encode(bytes);
-                    options.Expires = DateTime.UtcNow.AddYears(1);
-                }
-                else
-                {
-                    username = ".";
-                    options.Expires = DateTime.UtcNow.AddYears(-1);
-                }
-
-                ctx.Response.Cookies.Append(cookieName, username, options);
+                eventService.RaisePreLoginSuccessEvent(signInMessageId, signInMessage, authResult);
             }
         }
 
-        private string GetLastUsernameFromCookie()
+        private void RaisePreLoginFailureEvent(string signInMessageId, SignInMessage signInMessage, string details)
         {
-            if (this._options.AuthenticationOptions.RememberLastUsername)
+            if (options.EventsOptions.RaiseFailureEvents)
             {
-                try
-                {
-                    var ctx = Request.GetOwinContext();
-                    var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + "username";
-                    var value = ctx.Request.Cookies[cookieName];
-
-                    var bytes = Base64Url.Decode(value);
-                    bytes = _options.DataProtector.Unprotect(bytes, cookieName);
-                    value = Encoding.UTF8.GetString(bytes);
-
-                    return value;
-                }
-                catch {
-                    IssueLastUsernameCookie(null);
-                }
+                eventService.RaisePreLoginFailureEvent(signInMessageId, signInMessage, details);
             }
-            return null;
+        }
+
+        private void RaiseLocalLoginSuccessEvent(string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
+        {
+            if (options.EventsOptions.RaiseSuccessEvents)
+            {
+                eventService.RaiseLocalLoginSuccessEvent(username, signInMessageId, signInMessage, authResult);
+            }
+        }
+
+        private void RaiseLocalLoginFailureEvent(string username, string signInMessageId, SignInMessage signInMessage, string details)
+        {
+            if (options.EventsOptions.RaiseFailureEvents)
+            {
+                eventService.RaiseLocalLoginFailureEvent(username, signInMessageId, signInMessage, details);
+            }
+        }
+
+        private void RaiseExternalLoginSuccessEvent(ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
+        {
+            if (options.EventsOptions.RaiseSuccessEvents)
+            {
+                eventService.RaiseExternalLoginSuccessEvent(externalIdentity, signInMessageId, signInMessage, authResult);
+            }
+        }
+
+        private void RaiseExternalLoginFailureEvent(ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
+        {
+            if (options.EventsOptions.RaiseFailureEvents)
+            {
+                eventService.RaiseExternalLoginFailureEvent(externalIdentity, signInMessageId, signInMessage, details);
+            }
+        }
+
+        private void RaisePartialLoginCompleteEvent(ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
+        {
+            if (options.EventsOptions.RaiseSuccessEvents)
+            {
+                eventService.RaisePartialLoginCompleteEvent(subject, signInMessageId, signInMessage);
+            }
+        }
+
+        private void RaiseLogoutEvent(ClaimsPrincipal subject, SignOutMessage signOutMessage)
+        {
+            if (options.EventsOptions.RaiseSuccessEvents)
+            {
+                eventService.RaiseLogoutEvent(subject, signOutMessage);
+            }
         }
     }
 }
