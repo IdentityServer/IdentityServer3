@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for pre-login events
+    /// Event details for logout events
     /// </summary>
-    public class PreLoginEvent : AuthenticationEventBase
+    public class LogoutDetails : AuthenticationDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PreLoginEvent"/> class.
+        /// Gets or sets the sign out identifier.
         /// </summary>
-        /// <param name="type">The type.</param>
-        public PreLoginEvent(EventTypes type)
-            : base(EventConstants.Ids.PreLogin, type)
-        {
-            if (type == EventTypes.Success)
-            {
-                Message = Resources.Events.PreLoginSuccess;
-            }
-            else if (type == EventTypes.Failure)
-            {
-                Message = Resources.Events.PreLoginFailure;
-            }
-            else
-            {
-                Message = "Pre-login event";
-            }
-        }
+        /// <value>
+        /// The sign out identifier.
+        /// </value>
+        public string SignOutId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sign out message.
+        /// </summary>
+        /// <value>
+        /// The sign out message.
+        /// </value>
+        public SignOutMessage SignOutMessage { get; set; }
     }
 }

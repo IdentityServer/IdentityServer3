@@ -17,17 +17,24 @@
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for partial login events
+    /// Event class for external login events
     /// </summary>
-    public class PartialLoginEvent : AuthenticationEventBase
+    public class ExternalLoginDetails : LoginDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartialLoginEvent"/> class.
+        /// Gets or sets the provider.
         /// </summary>
-        public PartialLoginEvent()
-            : base(EventConstants.Ids.PartialLogin, EventTypes.Success)
-        {
-            Message = Resources.Events.PartialLogin;
-        }
+        /// <value>
+        /// The provider.
+        /// </value>
+        public string Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the provider identifier.
+        /// </summary>
+        /// <value>
+        /// The provider identifier.
+        /// </value>
+        public string ProviderId { get; set; }
     }
 }

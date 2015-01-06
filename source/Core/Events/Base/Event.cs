@@ -24,48 +24,52 @@ namespace Thinktecture.IdentityServer.Core.Events
     public class Event<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Event{T}"/> class.
+        /// Initializes a new instance of the <see cref="Event{T}" /> class.
         /// </summary>
         /// <param name="category">The category.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="name">The name.</param>
         /// <param name="type">The type.</param>
         /// <param name="id">The identifier.</param>
+        /// <param name="message">The message.</param>
         /// <exception cref="System.ArgumentNullException">category</exception>
-        public Event(string category, string message, EventTypes type, int id)
+        public Event(string category, string name, EventTypes type, int id, string message = null)
         {
             if (string.IsNullOrWhiteSpace(category)) throw new ArgumentNullException("category");
 
             Category = category;
-            Message = message;
+            Name = name;
             EventType = type;
             Id = id;
+            Message = message;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Event{T}"/> class.
+        /// Initializes a new instance of the <see cref="Event{T}" /> class.
         /// </summary>
         /// <param name="category">The category.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="name">The name.</param>
         /// <param name="type">The type.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="details">The details.</param>
-        public Event(string category, string message, EventTypes type, int id, T details)
-            : this(category, message, type, id)
+        /// <param name="message">The message.</param>
+        public Event(string category, string name, EventTypes type, int id, T details, string message = null)
+            : this(category, name, type, id, message)
         {
             Details = details;
         }
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Event{T}"/> class.
+        /// Initializes a new instance of the <see cref="Event{T}" /> class.
         /// </summary>
         /// <param name="category">The category.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="name">The name.</param>
         /// <param name="type">The type.</param>
         /// <param name="id">The identifier.</param>
         /// <param name="detailsFunc">The details function.</param>
-        public Event(string category, string message, EventTypes type, int id, Func<T> detailsFunc)
-            : this(category, message, type, id)
+        /// <param name="message">The message.</param>
+        public Event(string category, string name, EventTypes type, int id, Func<T> detailsFunc, string message = null)
+            : this(category, name, type, id, message)
         {
             DetailsFunc = detailsFunc;
         }
@@ -98,13 +102,13 @@ namespace Thinktecture.IdentityServer.Core.Events
         public string Category { get; set; }
 
         /// <summary>
-        /// Gets or sets the event message.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The message.
+        /// The name.
         /// </value>
-        public string Message { get; set; }
-
+        public string Name { get; set; }
+        
         /// <summary>
         /// Gets or sets the event type.
         /// </summary>
@@ -120,6 +124,14 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The identifier.
         /// </value>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the event message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
+        public string Message { get; set; }
 
         /// <summary>
         /// Gets or sets the event details.

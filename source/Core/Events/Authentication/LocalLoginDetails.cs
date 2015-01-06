@@ -17,17 +17,16 @@
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for partial login complete events
+    /// Event details for local login events
     /// </summary>
-    public class PartialLoginCompleteEvent : AuthenticationEventBase
+    public class LocalLoginDetails : LoginDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartialLoginCompleteEvent"/> class.
+        /// Gets or sets the name of the login user.
         /// </summary>
-        public PartialLoginCompleteEvent()
-            : base(EventConstants.Ids.PartialLoginComplete, EventTypes.Success)
-        {
-            Message = Resources.Events.PartialLoginComplete;
-        }
+        /// <value>
+        /// The name of the login user.
+        /// </value>
+        public string LoginUserName { get; set; }
     }
 }

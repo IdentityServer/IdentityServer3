@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ExternalLoginError" xml:space="preserve">
+    <value>External Login Error</value>
+  </data>
   <data name="ExternalLoginFailure" xml:space="preserve">
     <value>External Login Failure</value>
   </data>
@@ -143,5 +146,11 @@
   </data>
   <data name="PreLoginSuccess" xml:space="preserve">
     <value>Pre-Login Success</value>
+  </data>
+  <data name="ResourceOwnerFlowLoginFailure" xml:space="preserve">
+    <value>Resource owner password flow Login Failure</value>
+  </data>
+  <data name="ResourceOwnerFlowLoginSuccess" xml:space="preserve">
+    <value>Resource owner password flow Login Success</value>
   </data>
 </root>

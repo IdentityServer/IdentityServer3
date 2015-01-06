@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for resource owner password flow login events
+    /// Event details for authentication events
     /// </summary>
-    public class ResourceOwnerPasswordFlowAuthenticationEvent : LocalLoginEvent
+    public abstract class AuthenticationDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceOwnerPasswordFlowAuthenticationEvent"/> class.
+        /// Gets or sets the subject identifier.
         /// </summary>
-        /// <param name="type">The event type.</param>
-        public ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes type) : base(EventConstants.Ids.ResourceOwnerFlowLogin, type)
-        {
-            Message = "Authentication via resource owner password credential flow";
-        }
+        /// <value>
+        /// The subject identifier.
+        /// </value>
+        public string SubjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user's name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
     }
 }

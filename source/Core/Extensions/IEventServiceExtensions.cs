@@ -26,117 +26,157 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static void RaisePreLoginSuccessEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new PreLoginEvent(EventTypes.Success)
-            {
-                SubjectId = authResult.User.GetSubjectId(),
-                Name = authResult.User.Identity.Name,
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                PartialLogin = authResult.IsPartialSignIn
-            };
+            var evt = new Event<LoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.PreLoginSuccess,
+                EventTypes.Success, 
+                EventConstants.Ids.PreLoginSuccess,
+                new LoginDetails{
+                    SubjectId = authResult.User.GetSubjectId(),
+                    Name = authResult.User.Identity.Name,
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                    PartialLogin = authResult.IsPartialSignIn
+                });
 
             events.RaiseEvent(evt);
         }
 
-        public static void RaisePreLoginFailureEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, string details)
+        public static void RaisePreLoginFailureEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, string error)
         {
-            var evt = new PreLoginEvent(EventTypes.Failure)
-            {
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                Details = details
-            };
+            var evt = new Event<LoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.PreLoginFailure,
+                EventTypes.Failure,
+                EventConstants.Ids.PreLoginFailure,
+                new LoginDetails
+                {
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                }, 
+                error);
 
             events.RaiseEvent(evt);
         }
 
         public static void RaiseLocalLoginSuccessEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new LocalLoginEvent(EventTypes.Success)
-            {
-                SubjectId = authResult.User.GetSubjectId(),
-                Name = authResult.User.Identity.Name,
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                LoginUserName = username,
-                PartialLogin = authResult.IsPartialSignIn
-            };
+            var evt = new Event<LocalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.LocalLoginSuccess,
+                EventTypes.Success,
+                EventConstants.Ids.LocalLoginSuccess,
+                new LocalLoginDetails
+                {
+                    SubjectId = authResult.User.GetSubjectId(),
+                    Name = authResult.User.Identity.Name,
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                    PartialLogin = authResult.IsPartialSignIn,
+                    LoginUserName = username
+                }); 
 
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseLocalLoginFailureEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, string details)
+        public static void RaiseLocalLoginFailureEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, string error)
         {
-            var evt = new LocalLoginEvent(EventTypes.Failure)
-            {
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                LoginUserName = username,
-                Details = details
-            };
+            var evt = new Event<LocalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.LocalLoginFailure,
+                EventTypes.Failure,
+                EventConstants.Ids.LocalLoginFailure,
+                new LocalLoginDetails
+                {
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                    LoginUserName = username
+                }, 
+                error); 
 
             events.RaiseEvent(evt);
         }
 
         public static void RaiseExternalLoginSuccessEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new ExternalLoginEvent(EventTypes.Success)
-            {
-                Provider = externalIdentity.Provider,
-                ProviderId = externalIdentity.ProviderId,
-                SubjectId = authResult.User.GetSubjectId(),
-                Name = authResult.User.Identity.Name,
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                PartialLogin = authResult.IsPartialSignIn
-            };
+            var evt = new Event<ExternalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.ExternalLoginSuccess,
+                EventTypes.Success,
+                EventConstants.Ids.ExternalLoginSuccess,
+                new ExternalLoginDetails
+                {
+                    SubjectId = authResult.User.GetSubjectId(),
+                    Name = authResult.User.Identity.Name,
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                    PartialLogin = authResult.IsPartialSignIn,
+                    Provider = externalIdentity.Provider,
+                    ProviderId = externalIdentity.ProviderId,
+                }); 
 
             events.RaiseEvent(evt);
         }
 
         public static void RaiseExternalLoginFailureEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
         {
-            var evt = new ExternalLoginEvent(EventTypes.Failure)
-            {
-                Provider = externalIdentity.Provider,
-                ProviderId = externalIdentity.ProviderId,
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage,
-                Details = details
-            };
+            var evt = new Event<ExternalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.ExternalLoginFailure,
+                EventTypes.Failure,
+                EventConstants.Ids.ExternalLoginFailure,
+                new ExternalLoginDetails
+                {
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage,
+                    Provider = externalIdentity.Provider,
+                    ProviderId = externalIdentity.ProviderId,
+                }); 
 
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseExternalLoginErrorEvent(this IEventService events, string details)
+        public static void RaiseExternalLoginErrorEvent(this IEventService events, string error)
         {
-            var evt = new ExternalLoginEvent(EventTypes.Error)
-            {
-                Details = details
-            };
+            var evt = new Event<object>(
+               EventConstants.Categories.Authentication,
+               Resources.Events.ExternalLoginError,
+               EventTypes.Error,
+               EventConstants.Ids.ExternalLoginError,
+               error);
 
             events.RaiseEvent(evt);
         }
 
         public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, string subjectId, SignInMessage message)
         {
-            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes.Success)
-            {
-                LoginUserName = userName,
-                SubjectId = subjectId,
-                SignInMessage = message
-            };
-
+            var evt = new Event<LocalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.ResourceOwnerFlowLoginSuccess,
+                EventTypes.Success,
+                EventConstants.Ids.ResourceOwnerFlowLoginSuccess,
+                new LocalLoginDetails
+                {
+                    SubjectId = subjectId,
+                    SignInMessage = message,
+                    LoginUserName = userName
+                }); 
+            
             events.RaiseEvent(evt);
         }
 
         public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, SignInMessage message)
         {
-            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes.Failure)
-            {
-                LoginUserName = userName,
-                SignInMessage = message
-            };
+            var evt = new Event<LocalLoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.ResourceOwnerFlowLoginFailure,
+                EventTypes.Failure,
+                EventConstants.Ids.ResourceOwnerFlowLoginFailure,
+                new LocalLoginDetails
+                {
+                    SignInMessage = message,
+                    LoginUserName = userName
+                }); 
 
             events.RaiseEvent(evt);
         }
@@ -156,25 +196,36 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaisePartialLoginCompleteEvent(this IEventService events, ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
         {
-            var evt = new PartialLoginCompleteEvent()
-            {
-                SubjectId = subject.GetSubjectId(),
-                Name = subject.Name,
-                SignInId = signInMessageId,
-                SignInMessage = signInMessage
-            };
+            var evt = new Event<LoginDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.PartialLoginComplete,
+                EventTypes.Information,
+                EventConstants.Ids.PartialLoginComplete,
+                new LoginDetails
+                {
+                    SubjectId = subject.GetSubjectId(),
+                    Name = subject.Name,
+                    SignInId = signInMessageId,
+                    SignInMessage = signInMessage
+                }); 
 
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseLogoutEvent(this IEventService events, ClaimsPrincipal subject, SignOutMessage signOutMessage)
+        public static void RaiseLogoutEvent(this IEventService events, ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
         {
-            var evt = new LogoutEvent()
-            {
-                SubjectId = subject.GetSubjectId(),
-                Name = subject.Identity.Name,
-                SignOutMessage = signOutMessage
-            };
+            var evt = new Event<LogoutDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.LogoutEvent,
+                EventTypes.Information,
+                EventConstants.Ids.Logout,
+                new LogoutDetails
+                {
+                    SubjectId = subject.GetSubjectId(),
+                    Name = subject.Identity.Name,
+                    SignOutId = signOutId,
+                    SignOutMessage = signOutMessage
+                });
 
             events.RaiseEvent(evt);
         }
@@ -293,16 +344,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
         {
-            var evt = new Event<UnhandledExceptionDetails>(
+            var evt = new Event<object>(
                 EventConstants.Categories.InternalError,
                 "Unhandled exception",
                 EventTypes.Error,
-                EventConstants.Ids.UnhandledExceptionError);
-
-            evt.Details = new UnhandledExceptionDetails
-            {
-                ExceptionDetails = exception.ToString()
-            };
+                EventConstants.Ids.UnhandledExceptionError, 
+                exception.ToString());
 
             events.RaiseEvent(evt);
         }
@@ -326,7 +373,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                  "Endpoint failure",
                  EventTypes.Failure,
                  EventConstants.Ids.EndpointFailure,
-                 new EndpointDetail { EndpointName = endpointName });
+                 new EndpointDetail { EndpointName = endpointName },
+                 error);
 
             events.Raise(evt);
         }

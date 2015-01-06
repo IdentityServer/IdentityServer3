@@ -46,15 +46,23 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int AuthenticationEventsStart = 1000;
 
-            public const int PreLogin = AuthenticationEventsStart + 0;
-            public const int LocalLogin = AuthenticationEventsStart + 1;
-            public const int ExternalLogin = AuthenticationEventsStart + 2;
-            public const int Logout = AuthenticationEventsStart + 3;
-            
-            public const int PartialLogin = AuthenticationEventsStart + 10;
-            public const int PartialLoginComplete = AuthenticationEventsStart + 11;
+            public const int PreLoginSuccess = AuthenticationEventsStart + 0;
+            public const int PreLoginFailure = AuthenticationEventsStart + 1;
 
-            public const int ResourceOwnerFlowLogin = AuthenticationEventsStart + 20;
+            public const int LocalLoginSuccess = AuthenticationEventsStart + 10;
+            public const int LocalLoginFailure = AuthenticationEventsStart + 11;
+
+            public const int ExternalLoginSuccess = AuthenticationEventsStart + 20;
+            public const int ExternalLoginFailure = AuthenticationEventsStart + 21;
+            public const int ExternalLoginError = AuthenticationEventsStart + 22;
+            
+            public const int Logout = AuthenticationEventsStart + 30;
+
+            public const int PartialLogin = AuthenticationEventsStart + 40;
+            public const int PartialLoginComplete = AuthenticationEventsStart + 41;
+
+            public const int ResourceOwnerFlowLoginSuccess = AuthenticationEventsStart + 50;
+            public const int ResourceOwnerFlowLoginFailure = AuthenticationEventsStart + 51;
 
             ///////////////////////////
             /// Token service related events
