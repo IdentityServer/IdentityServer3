@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -55,6 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly AuthorizeInteractionResponseGenerator _interactionGenerator;
         private readonly IdentityServerOptions _options;
         private readonly ILocalizationService _localizationService;
+        private readonly IEventService _events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.
@@ -71,7 +73,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             AuthorizeResponseGenerator responseGenerator,
             AuthorizeInteractionResponseGenerator interactionGenerator,
             IdentityServerOptions options,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IEventService events)
         {
             _viewService = viewService;
             _options = options;
@@ -80,6 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _interactionGenerator = interactionGenerator;
             _validator = validator;
             _localizationService = localizationService;
+            _events = events;
         }
 
         /// <summary>
@@ -93,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             Logger.Info("Start authorize request");
 
             var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
-            
+
             Logger.Info("End authorize request");
             return response;
         }
@@ -206,11 +210,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (request.ResponseMode == Constants.ResponseModes.Query ||
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
+                RaiseSuccessEvent();
                 return new AuthorizeRedirectResult(response);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
+                RaiseSuccessEvent();
                 return new AuthorizeFormPostResult(response, Request);
             }
 
@@ -261,6 +267,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
         {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
+            }
+
             // show error message to user
             if (errorType == ErrorTypes.User)
             {
@@ -299,6 +310,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return new AuthorizeRedirectResult(response);
             }
            
+        }
+
+        private void RaiseSuccessEvent()
+        {
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Authorize);
+            }
         }
 
         private string LookupErrorMessage(string error)
