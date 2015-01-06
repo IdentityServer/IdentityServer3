@@ -43,14 +43,6 @@ namespace Thinktecture.IdentityServer.Core.Events
         public string SubjectId { get; set; }
 
         /// <summary>
-        /// Gets or sets the username that the user used when trying to authenticate.
-        /// </summary>
-        /// <value>
-        /// The username.
-        /// </value>
-        public string UserName { get; set; }
-
-        /// <summary>
         /// Gets or sets the user's name.
         /// </summary>
         /// <value>

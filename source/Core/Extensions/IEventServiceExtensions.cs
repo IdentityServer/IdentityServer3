@@ -112,7 +112,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Success)
             {
-                UserName = userName,
+                LoginUserName = userName,
                 SubjectId = subjectId,
                 SignInMessage = message
             };
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Failure)
             {
-                UserName = userName,
+                LoginUserName = userName,
                 SignInMessage = message
             };
 

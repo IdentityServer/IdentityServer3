@@ -27,7 +27,17 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// </summary>
         /// <param name="type">The event type.</param>
         public LocalLoginEvent(EventType type)
-            : base(EventConstants.Ids.LocalLogin, type)
+            : this(EventConstants.Ids.LocalLogin, type)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalLoginEvent"/> class.
+        /// </summary>
+        /// <param name="id">Event id.</param>
+        /// <param name="type">Event type.</param>
+        protected LocalLoginEvent(int id, EventType type)
+            : base(id, type)
         {
             if (type == EventType.Success)
             {
