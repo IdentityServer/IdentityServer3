@@ -229,5 +229,36 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LoginExternal + "?provider=" + provider + "&signin=" + signinId;
         }
+
+
+        internal static string GetIdentityServerHost(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.GetIdentityServerHost();
+        }
+
+        internal static string GetIdentityServerBasePath(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.GetIdentityServerBasePath();
+        }
+
+        internal static string GetIdentityServerBaseUrl(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.GetIdentityServerBaseUrl();
+        }
+
+        internal static string GetIdentityServerLogoutUrl(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.GetIdentityServerLogoutUrl();
+        }
+
+        internal static string CreateSignInRequest(this IOwinContext context, SignInMessage message)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.CreateSignInRequest(message);
+        }
     }
 }
