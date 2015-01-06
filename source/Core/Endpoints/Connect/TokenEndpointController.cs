@@ -78,20 +78,20 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
 
-            if (response is TokenResult)
-            {
-                if (_options.EventsOptions.RaiseSuccessEvents)
-                {
-                    _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
-                }
-            }
-            else if (response is TokenErrorResult)
+            if (response is TokenErrorResult)
             {
                 if (_options.EventsOptions.RaiseFailureEvents)
                 {
                     var details = response as TokenErrorResult;
 
                     _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, details.Error);
+                }
+            }
+            else
+            {
+                if (_options.EventsOptions.RaiseSuccessEvents)
+                {
+                    _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
                 }
             }
 
