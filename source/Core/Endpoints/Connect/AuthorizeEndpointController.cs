@@ -310,7 +310,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 return new AuthorizeRedirectResult(response);
             }
-
         }
 
         private void RaiseSuccessEvent()
