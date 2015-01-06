@@ -27,6 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         public UnhandledExceptionEvent() : base(EventConstants.Categories.InternalError)
         {
             Id = EventConstants.Ids.UnhandledException;
+            Message = "Unhandled exception.";
         }
     }
 }

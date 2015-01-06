@@ -27,8 +27,9 @@ namespace Thinktecture.IdentityServer.Core.Events
         {
             EventType = EventType.Failure;
             Id = EventConstants.Ids.FailedEndpoint;
-
             Details = error;
+
+            Message = "Failure while calling endpoint.";
         }
     }
 }
