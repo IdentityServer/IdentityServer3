@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Resources;
@@ -42,12 +43,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly TokenValidator _validator;
         private readonly IdentityServerOptions _options;
         private readonly ILocalizationService _localizationService;
+        private readonly IEventService _events;
 
-        public AccessTokenValidationController(TokenValidator validator, IdentityServerOptions options, ILocalizationService localizationService)
+        public AccessTokenValidationController(TokenValidator validator, IdentityServerOptions options, ILocalizationService localizationService, IEventService events)
         {
             _validator = validator;
             _options = options;
             _localizationService = localizationService;
+            _events = events;
         }
 
         /// <summary>
@@ -61,7 +64,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!_options.Endpoints.EnableAccessTokenValidationEndpoint)
             {
-                Logger.Warn("Endpoint is disabled. Aborting");
+                var error = "Endpoint is disabled. Aborting";
+                Logger.Warn(error);
+                RaiseFailureEvent(error);
+
                 return NotFound();
             }
 
@@ -70,7 +76,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var token = parameters.Get("token");
             if (token.IsMissing())
             {
-                Logger.Error("token is missing.");
+                var error = "token is missing";
+
+                Logger.Error(error);
+                RaiseFailureEvent(error);
                 return BadRequest(_localizationService.GetMessage(MessageIds.MissingToken));
             }
 
@@ -79,13 +88,33 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (result.IsError)
             {
                 Logger.Info("Returning error: " + result.Error);
+                RaiseFailureEvent(result.Error);
+
                 return BadRequest(result.Error);
             }
 
             var response = result.Claims.ToClaimsDictionary();
 
             Logger.Info("End access token validation request");
+            RaiseSuccessEvent();
+
             return Json(response);
+        }
+
+        private void RaiseSuccessEvent()
+        {
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation);
+            }
+        }
+
+        private void RaiseFailureEvent(string error)
+        {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation, error);
+            }
         }
     }
 }
