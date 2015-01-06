@@ -28,6 +28,17 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string Information = "Information";
             public const string InternalError = "InternalError";
         }
+
+        public static class EndpointNames
+        {
+            public const string Authorize = "authorize";
+            public const string Token = "token";
+            public const string UserInfo = "userinfo";
+            public const string EndSession = "endsession";
+            public const string AccessTokenValidation = "accesstokenvalidation";
+            public const string IdentityTokenValidator = "identitytokenvalidaton";
+
+        }
         
         public static class Ids
         {
@@ -69,24 +80,8 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int EndpointsEventsStart = 3000;
 
-            public const int SuccessfulAuthorizeEndpoint = EndpointsEventsStart + 0;
-            public const int FailedAuthorizeEndpoint = EndpointsEventsStart + 1;
-            
-            public const int SuccessfulTokenEndpoint = EndpointsEventsStart + 2;
-            public const int FailedTokenEndpoint = EndpointsEventsStart + 3;
-            
-            public const int SuccessfulUserInfoEndpoint = EndpointsEventsStart + 4;
-            public const int FailedUserInfoEndpoint = EndpointsEventsStart + 5;
-
-            public const int SuccessfulEndSessionEndpoint = EndpointsEventsStart + 6;
-            public const int FailedEndSessionEndpoint = EndpointsEventsStart + 7;
-
-            public const int SuccessfulIdentityTokenValidationEndpoint = EndpointsEventsStart + 8;
-            public const int FailedIdentityTokenValidationEndpoint = EndpointsEventsStart + 9;
-
-            public const int SuccessfulAccessTokenValidationEndpoint = EndpointsEventsStart + 10;
-            public const int FailedAccessTokenValidationEndpoint = EndpointsEventsStart + 11;
-
+            public const int SuccessfulEndpoint = EndpointsEventsStart + 0;
+            public const int FailedEndpoint = EndpointsEventsStart + 1;
             
             ///////////////////////////
             /// Information events

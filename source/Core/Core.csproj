@@ -141,10 +141,12 @@
     <Compile Include="Events\Authentication\PartialLoginCompleteEvent.cs" />
     <Compile Include="Events\Authentication\PartialLoginEvent.cs" />
     <Compile Include="Events\Authentication\LogoutEvent.cs" />
-    <Compile Include="Events\TokenIssuedEventBase.cs" />
-    <Compile Include="Events\IdentityTokenIssuedEvent.cs" />
+    <Compile Include="Events\EndpointFailureEvent.cs" />
+    <Compile Include="Events\EndpointSuccessEvent.cs" />
+    <Compile Include="Events\TokenService\TokenIssuedEventBase.cs" />
+    <Compile Include="Events\TokenService\IdentityTokenIssuedEvent.cs" />
     <Compile Include="Events\Authentication\LocalLoginEvent.cs" />
-    <Compile Include="Events\AccessTokenIssuedEvent.cs" />
+    <Compile Include="Events\TokenService\AccessTokenIssuedEvent.cs" />
     <Compile Include="Events\UnhandledExceptionEvent.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Extensions\HashExtensions.cs" />
