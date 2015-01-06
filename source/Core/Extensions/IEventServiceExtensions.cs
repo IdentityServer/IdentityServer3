@@ -108,6 +108,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseExternalLoginErrorEvent(this IEventService events, string details)
+        {
+            var evt = new ExternalLoginEvent(EventType.Error)
+            {
+                Details = details
+            };
+
+            events.RaiseEvent(evt);
+        }
+
         public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, string subjectId, SignInMessage message)
         {
             var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Success)

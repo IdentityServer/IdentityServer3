@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
+﻿
 #pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core.Resources
 {
 	public class EventIds
 	{
+			public const string ExternalLoginFailure = "ExternalLoginFailure";
+			public const string ExternalLoginSuccess = "ExternalLoginSuccess";
+			public const string LocalLoginFailure = "LocalLoginFailure";
 			public const string LocalLoginSuccess = "LocalLoginSuccess";
+			public const string LogoutEvent = "LogoutEvent";
+			public const string PartialLogin = "PartialLogin";
+			public const string PartialLoginComplete = "PartialLoginComplete";
+			public const string PreLoginFailure = "PreLoginFailure";
+			public const string PreLoginSuccess = "PreLoginSuccess";
 	}
 	public class MessageIds
 	{
 			public const string ClientIdRequired = "ClientIdRequired";
+			public const string ExternalProviderError = "ExternalProviderError";
 			public const string Invalid_scope = "Invalid_scope";
 			public const string InvalidUsernameOrPassword = "InvalidUsernameOrPassword";
 			public const string MissingClientId = "MissingClientId";
