@@ -34,6 +34,6 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <summary>
         /// Information event
         /// </summary>
-        Info = 3
+        Information = 3
     }
 }
