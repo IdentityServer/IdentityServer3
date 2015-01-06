@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -52,6 +53,22 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             return true;
+        }
+
+        internal static async Task<string> GetClientName(this IClientStore store, SignOutMessage signOutMessage)
+        {
+            if (store == null) throw new ArgumentNullException("store");
+
+            if (signOutMessage != null && signOutMessage.ClientId.IsPresent())
+            {
+                var client = await store.FindClientByIdAsync(signOutMessage.ClientId);
+                if (client != null)
+                {
+                    return client.ClientName;
+                }
+            }
+
+            return null;
         }
     }
 }

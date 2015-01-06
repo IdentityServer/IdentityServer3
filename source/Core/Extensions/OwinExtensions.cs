@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -142,6 +144,70 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
             
             return types;
+        }
+
+        static async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            if (authenticationType.IsMissing()) throw new ArgumentNullException("authenticationType");
+            
+            return await context.Authentication.AuthenticateAsync(authenticationType);
+        }
+
+        static async Task<ClaimsIdentity> GetIdentityFrom(this IOwinContext context, string authenticationType)
+        {
+            var result = await context.GetAuthenticationFrom(authenticationType);
+            if (result != null &&
+                result.Identity != null &&
+                result.Identity.IsAuthenticated)
+            {
+                return result.Identity;
+            }
+            return null;
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromPartialSignIn(this IOwinContext context)
+        {
+            return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromExternalSignIn(this IOwinContext context)
+        {
+            return await context.GetIdentityFrom(Constants.ExternalAuthenticationType);
+        }
+
+        internal static async Task<string> GetSignInIdFromExternalProvider(this IOwinContext context)
+        {
+            var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+            if (result != null)
+            {
+                string val = null;
+                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
+                {
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        internal static async Task<ClaimsIdentity> GetIdentityFromExternalProvider(this IOwinContext context)
+        {
+            var id = await context.GetIdentityFromExternalSignIn();
+            if (id != null)
+            {
+                // this is mapping from the external IdP's issuer to the name of the 
+                // katana middleware that's registered in startup
+                var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
+                {
+                    throw new InvalidOperationException("Missing KatanaAuthenticationType");
+                }
+
+                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
+                var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
+                id = new ClaimsIdentity(newClaims, id.AuthenticationType);
+            }
+            return id;
         }
     }
 }
