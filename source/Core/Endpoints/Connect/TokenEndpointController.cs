@@ -76,16 +76,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start token request");
 
+            if (!_options.Endpoints.EnableTokenEndpoint)
+            {
+                var error = "Endpoint is disabled. Aborting";
+                Logger.Warn(error);
+                RaiseFailureEvent(error);
+
+                return NotFound();
+            }
+
             var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
 
             if (response is TokenErrorResult)
             {
-                if (_options.EventsOptions.RaiseFailureEvents)
-                {
-                    var details = response as TokenErrorResult;
-
-                    _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, details.Error);
-                }
+                var details = response as TokenErrorResult;
+                RaiseFailureEvent(details.Error);
             }
             else
             {
@@ -106,12 +111,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <returns>Token response</returns>
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
-            if (!_options.Endpoints.EnableTokenEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
-
             // validate client credentials and client
             var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);
             if (client == null)
@@ -130,6 +129,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             // return response
             var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest);
             return this.TokenResponse(response);
+        }
+
+        private void RaiseFailureEvent(string error)
+        {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
+            }
         }
     }
 }
