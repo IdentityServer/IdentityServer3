@@ -96,6 +96,15 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Start authorize request");
 
+            if (!_options.Endpoints.EnableAuthorizeEndpoint)
+            {
+                var error = "Endpoint is disabled. Aborting";
+                Logger.Warn(error);
+                RaiseFailureEvent(error);
+
+                return NotFound();
+            }
+
             var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
 
             Logger.Info("End authorize request");
@@ -104,12 +113,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            if (!_options.Endpoints.EnableAuthorizeEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
-
             ///////////////////////////////////////////////////////////////
             // validate protocol parameters
             //////////////////////////////////////////////////////////////
@@ -267,10 +270,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
-            }
+            RaiseFailureEvent(error);
 
             // show error message to user
             if (errorType == ErrorTypes.User)
@@ -317,6 +317,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (_options.EventsOptions.RaiseSuccessEvents)
             {
                 _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Authorize);
+            }
+        }
+
+        private void RaiseFailureEvent(string error)
+        {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
             }
         }
 
