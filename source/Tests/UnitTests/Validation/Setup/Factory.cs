@@ -95,7 +95,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 scopeValidator = new ScopeValidator(scopes);
             }
 
-            return new TokenRequestValidator(options, authorizationCodeStore, refreshTokens, userService, customGrantValidator, customRequestValidator, scopeValidator);
+            return new TokenRequestValidator(
+                options, 
+                authorizationCodeStore, 
+                refreshTokens, 
+                userService, 
+                customGrantValidator, 
+                customRequestValidator, 
+                scopeValidator, 
+                new DefaultEventService());
         }
 
         public static AuthorizeRequestValidator CreateAuthorizeRequestValidator(

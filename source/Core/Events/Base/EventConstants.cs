@@ -55,6 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const int PartialLogin = AuthenticationEventsStart + 10;
             public const int PartialLoginComplete = AuthenticationEventsStart + 11;
 
+            public const int ResourceOwnerFlowLogin = AuthenticationEventsStart + 20;
 
             ///////////////////////////
             /// Token service related events

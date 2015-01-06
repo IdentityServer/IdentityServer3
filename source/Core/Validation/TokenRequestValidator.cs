@@ -41,6 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
         private readonly ScopeValidator _scopeValidator;
+        private readonly IEventService _events;
 
         private ValidatedTokenRequest _validatedRequest;
         
@@ -52,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator, IEventService events)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
@@ -61,6 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _customGrantValidator = customGrantValidator;
             _customRequestValidator = customRequestValidator;
             _scopeValidator = scopeValidator;
+            _events = events;
         }
 
         public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
@@ -365,12 +367,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 LogError("User authentication failed");
+                RaiseFailedResourceOwnerAuthenticationEvent(userName, signInMessage);
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
             
             _validatedRequest.UserName = userName;
             _validatedRequest.Subject = authnResult.User;
 
+            RaiseSuccessfulResourceOwnerAuthenticationEvent(userName, signInMessage);
             Logger.Info("Password token request validation success.");
             return Valid();
         }
@@ -552,6 +557,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var json = LogSerializer.Serialize(validationLog);
 
             Logger.InfoFormat("{0}\n {1}", "Token request validation success", json);
+        }
+
+        private void RaiseSuccessfulResourceOwnerAuthenticationEvent(string userName, SignInMessage signInMessage)
+        {
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseResourceOwnerFlowAuthenticationEvent(Events.EventType.Success, userName, signInMessage);
+            }
+        }
+
+        private void RaiseFailedResourceOwnerAuthenticationEvent(string userName, SignInMessage signInMessage)
+        {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseResourceOwnerFlowAuthenticationEvent(Events.EventType.Failure, userName, signInMessage);
+            }
         }
     }
 }
