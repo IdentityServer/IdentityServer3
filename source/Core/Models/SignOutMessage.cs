@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
 namespace Thinktecture.IdentityServer.Core.Models
 {
     /// <summary>

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
-using FluentAssertions;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;

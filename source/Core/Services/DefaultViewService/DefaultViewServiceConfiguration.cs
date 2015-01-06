@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {

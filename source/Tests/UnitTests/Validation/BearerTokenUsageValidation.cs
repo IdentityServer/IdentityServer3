@@ -1,4 +1,5 @@
-﻿/*
+﻿using FluentAssertions;
+/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +17,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 

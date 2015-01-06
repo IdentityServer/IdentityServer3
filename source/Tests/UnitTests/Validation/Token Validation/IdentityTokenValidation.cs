@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.Default;

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
-using System.Diagnostics;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 

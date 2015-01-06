@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using System.Collections.Specialized;
 using FluentAssertions;
+using System.Collections.Specialized;
 using Thinktecture.IdentityServer.Core;
 using Xunit;
 

@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.ComponentModel;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {

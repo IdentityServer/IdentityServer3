@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 

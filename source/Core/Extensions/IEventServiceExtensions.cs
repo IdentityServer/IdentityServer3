@@ -15,12 +15,10 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
