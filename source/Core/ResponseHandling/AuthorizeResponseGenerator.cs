@@ -137,10 +137,10 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
-                    
+
                     ValidatedRequest = request
                 };
-                
+
                 var accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
                 accessTokenLifetime = accessToken.Lifetime;
 
@@ -193,7 +193,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             var salt = CryptoRandom.CreateUniqueId();
             var clientId = request.ClientId;
-            
+
             var uri = new Uri(request.RedirectUri);
             var origin = uri.Scheme + "://" + uri.Host;
             if (!uri.IsDefaultPort)
@@ -203,21 +203,18 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             var bytes = Encoding.UTF8.GetBytes(clientId + origin + sessionId + salt);
             byte[] hash;
-            
+
             using (var sha = SHA256.Create())
             {
                 hash = sha.ComputeHash(bytes);
             }
-            
+
             return Base64Url.Encode(hash) + "." + salt;
         }
 
         private void RaiseCodeIssuedEvent(string id, AuthorizationCode code)
         {
-            if (_options.EventsOptions.RaiseInformationEvents)
-            {
-                _events.RaiseAuthorizationCodeIssuedEvent(id, code);
-            }
+            _events.RaiseAuthorizationCodeIssuedEvent(id, code);
         }
     }
 }

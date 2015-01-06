@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class RefreshTokenIssuedDetails : TokenIssuedDetailsBase
+    /// <summary>
+    /// Details class for unhandled exceptions
+    /// </summary>
+    public class UnhandledExceptionDetails
     {
-        public string HandleId { get; set; }
-        public int Version { get; set; }
+        /// <summary>
+        /// Gets or sets the exception details.
+        /// </summary>
+        /// <value>
+        /// The exception details.
+        /// </value>
+        public string ExceptionDetails { get; set; }
     }
 }

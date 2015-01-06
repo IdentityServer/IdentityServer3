@@ -38,12 +38,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// The refresh token store
         /// </summary>
         protected readonly IRefreshTokenStore _store;
-        
+
         /// <summary>
         /// The _options
         /// </summary>
         protected readonly IdentityServerOptions _options;
-        
+
         /// <summary>
         /// The _events
         /// </summary>
@@ -154,30 +154,24 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 RaiseRefreshTokenRefreshedEvent(handle, newHandle, refreshToken);
                 Logger.Debug("Updated refresh token in store");
-                
+
                 return newHandle;
             }
 
             RaiseRefreshTokenRefreshedEvent(handle, handle, refreshToken);
             Logger.Debug("No updates to refresh token done");
-            
+
             return handle;
         }
 
         private void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
         {
-            if (_options.EventsOptions.RaiseInformationEvents)
-            {
-                _events.RaiseRefreshTokenIssuedEvent(handle, token);
-            }
+            _events.RaiseRefreshTokenIssuedEvent(handle, token);
         }
 
         private void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
-            }
+            _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
         }
     }
 }

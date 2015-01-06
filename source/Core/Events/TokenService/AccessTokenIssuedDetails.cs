@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events.TokenServiceDetails
-{
-    public class AuthorizationCodeIssuedDetails : AuthorizationCodeIssuedDetailsBase
-    {
+using Thinktecture.IdentityServer.Core.Models;
 
+namespace Thinktecture.IdentityServer.Core.Events
+{
+    /// <summary>
+    /// Details class for access token issued events
+    /// </summary>
+    public class AccessTokenIssuedDetails : TokenIssuedDetailsBase
+    {
+        /// <summary>
+        /// Gets or sets the type of the access token.
+        /// </summary>
+        /// <value>
+        /// The type of the token.
+        /// </value>
+        public AccessTokenType TokenType { get; set; }
     }
 }

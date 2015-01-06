@@ -33,13 +33,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             Logger.ErrorException("Unhandled exception", context.Exception);
 
             var env = context.Request.GetOwinEnvironment();
-            var options = env.ResolveDependency<IdentityServerOptions>();
-
-            if (options.EventsOptions.RaiseErrorEvents)
-            {
-                var events = env.ResolveDependency<IEventService>();
-                events.RaiseUnhandledExceptionEvent(context.Exception);
-            }
+            var events = env.ResolveDependency<IEventService>();
+            events.RaiseUnhandledExceptionEvent(context.Exception);
 
             return Task.FromResult<object>(null);
         }

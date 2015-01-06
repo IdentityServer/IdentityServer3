@@ -233,13 +233,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
         {
-            var evt = new Event<AuthorizationCodeIssuedDetailsBase>(
+            var evt = new Event<AuthorizationCodeIssuedDetails>(
                 EventConstants.Categories.TokenService,
                 "Authorization code issued",
                 EventTypes.Information,
                 EventConstants.Ids.AuthorizationCodeIssued);
 
-            evt.DetailsFunc = () => new AuthorizationCodeIssuedDetailsBase
+            evt.DetailsFunc = () => new AuthorizationCodeIssuedDetails
             {
                 HandleId = id,
                 ClientId = code.ClientId,
@@ -293,9 +293,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
         {
-            var evt = new UnhandledExceptionEvent
+            var evt = new Event<UnhandledExceptionDetails>(
+                EventConstants.Categories.InternalError,
+                "Unhandled exception",
+                EventTypes.Error,
+                EventConstants.Ids.UnhandledExceptionError);
+
+            evt.Details = new UnhandledExceptionDetails
             {
-                Details = exception.ToString()
+                ExceptionDetails = exception.ToString()
             };
 
             events.RaiseEvent(evt);

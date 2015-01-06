@@ -13,19 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using Thinktecture.IdentityServer.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class AccessTokenIssuedDetails : TokenIssuedDetailsBase
+    /// <summary>
+    /// Details class for refresh token issued events
+    /// </summary>
+    public class RefreshTokenIssuedDetails : TokenIssuedDetailsBase
     {
         /// <summary>
-        /// Gets or sets the type of the access token.
+        /// Gets or sets the handle identifier.
         /// </summary>
         /// <value>
-        /// The type of the token.
+        /// The handle identifier.
         /// </value>
-        public AccessTokenType TokenType { get; set; }
+        public string HandleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        public int Version { get; set; }
     }
 }

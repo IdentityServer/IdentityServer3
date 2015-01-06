@@ -16,9 +16,25 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class AuthorizationCodeIssuedDetailsBase : TokenIssuedDetailsBase
+    /// <summary>
+    /// Details class for authorization code issued events
+    /// </summary>
+    public class AuthorizationCodeIssuedDetails : TokenIssuedDetailsBase
     {
+        /// <summary>
+        /// Gets or sets the handle identifier.
+        /// </summary>
+        /// <value>
+        /// The handle identifier.
+        /// </value>
         public string HandleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the redirect URI.
+        /// </summary>
+        /// <value>
+        /// The redirect URI.
+        /// </value>
         public string RedirectUri { get; set; }
     }
 }

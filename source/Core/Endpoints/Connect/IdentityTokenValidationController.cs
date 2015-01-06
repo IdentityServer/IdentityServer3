@@ -94,12 +94,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var result = await _validator.ValidateIdentityTokenAsync(token, clientId);
-            
+
             if (result.IsError)
             {
                 Logger.Info("Returning error: " + result.Error);
                 RaiseFailureEvent(result.Error);
-                
+
                 return BadRequest(result.Error);
             }
 
@@ -113,18 +113,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseSuccessEvent()
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation);
-            }
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation);
         }
 
         private void RaiseFailureEvent(string error)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation, error);
-            }
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation, error);
         }
     }
 }
