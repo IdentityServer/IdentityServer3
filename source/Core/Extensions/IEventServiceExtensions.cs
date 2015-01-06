@@ -110,11 +110,23 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseResourceOwnerFlowAuthenticationEvent(this IEventService events, EventType type, string userName, SignInMessage message)
+        public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, string subjectId, SignInMessage message)
         {
-            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(type)
+            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Success)
             {
-                SubjectId = userName,
+                UserName = userName,
+                SubjectId = subjectId,
+                SignInMessage = message
+            };
+
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, SignInMessage message)
+        {
+            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Failure)
+            {
+                UserName = userName,
                 SignInMessage = message
             };
 

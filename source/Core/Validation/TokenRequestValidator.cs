@@ -375,7 +375,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _validatedRequest.UserName = userName;
             _validatedRequest.Subject = authnResult.User;
 
-            RaiseSuccessfulResourceOwnerAuthenticationEvent(userName, signInMessage);
+            RaiseSuccessfulResourceOwnerAuthenticationEvent(userName, authnResult.User.GetSubjectId(), signInMessage);
             Logger.Info("Password token request validation success.");
             return Valid();
         }
@@ -559,11 +559,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             Logger.InfoFormat("{0}\n {1}", "Token request validation success", json);
         }
 
-        private void RaiseSuccessfulResourceOwnerAuthenticationEvent(string userName, SignInMessage signInMessage)
+        private void RaiseSuccessfulResourceOwnerAuthenticationEvent(string userName, string subjectId, SignInMessage signInMessage)
         {
             if (_options.EventsOptions.RaiseSuccessEvents)
             {
-                _events.RaiseResourceOwnerFlowAuthenticationEvent(Events.EventType.Success, userName, signInMessage);
+                _events.RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(userName, subjectId, signInMessage);
             }
         }
 
@@ -571,7 +571,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             if (_options.EventsOptions.RaiseFailureEvents)
             {
-                _events.RaiseResourceOwnerFlowAuthenticationEvent(Events.EventType.Failure, userName, signInMessage);
+                _events.RaiseFailedResourceOwnerFlowAuthenticationEvent(userName, signInMessage);
             }
         }
     }
