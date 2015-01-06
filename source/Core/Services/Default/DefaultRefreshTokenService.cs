@@ -40,23 +40,18 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         protected readonly IRefreshTokenStore _store;
 
         /// <summary>
-        /// The _options
-        /// </summary>
-        protected readonly IdentityServerOptions _options;
-
-        /// <summary>
         /// The _events
         /// </summary>
         protected readonly IEventService _events;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultRefreshTokenService"/> class.
+        /// Initializes a new instance of the <see cref="DefaultRefreshTokenService" /> class.
         /// </summary>
         /// <param name="store">The refresh token store.</param>
-        public DefaultRefreshTokenService(IRefreshTokenStore store, IdentityServerOptions options, IEventService events)
+        /// <param name="events">The events.</param>
+        public DefaultRefreshTokenService(IRefreshTokenStore store, IEventService events)
         {
             _store = store;
-            _options = options;
             _events = events;
         }
 
