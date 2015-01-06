@@ -625,7 +625,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 }
             }
 
-            var loginPageLinks = PrepareLoginPageLinks(signInMessageId, options.AuthenticationOptions.LoginPageLinks);
+            var loginPageLinks = options.AuthenticationOptions.LoginPageLinks.Render(Request.GetIdentityServerBaseUrl(), signInMessageId);
 
             var loginModel = new LoginViewModel
             {
@@ -658,31 +658,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 };
 
             return providers.ToArray();
-        }
-
-        private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
-        {
-            if (links == null || !links.Any()) return null;
-
-            var result = new List<LoginPageLink>();
-            foreach (var link in links)
-            {
-                var url = link.Href;
-                if (url.StartsWith("~/"))
-                {
-                    url = url.Substring(2);
-                    url = Request.GetIdentityServerBaseUrl() + url;
-                }
-
-                url = url.AddQueryString("signin=" + signin);
-
-                result.Add(new LoginPageLink
-                {
-                    Text = link.Text,
-                    Href = url
-                });
-            }
-            return result;
         }
 
         private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
