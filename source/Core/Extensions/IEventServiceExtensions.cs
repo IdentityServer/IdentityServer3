@@ -209,6 +209,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
+        {
+            var evt = new AuthorizationCodeIssuedEvent
+            {
+                AuthorizationCode = id,
+                ClientId = code.ClientId,
+                Scopes = code.Scopes,
+                SubjectId = code.SubjectId,
+                RedirectUri = code.RedirectUri
+            };
+
+            events.RaiseEvent(evt);
+        }
+
         public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
         {
             var evt = new UnhandledExceptionEvent

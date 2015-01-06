@@ -141,6 +141,7 @@
     <Compile Include="Events\Authentication\PartialLoginCompleteEvent.cs" />
     <Compile Include="Events\Authentication\PartialLoginEvent.cs" />
     <Compile Include="Events\Authentication\LogoutEvent.cs" />
+    <Compile Include="Events\AuthorizationCodeIssuedEvent.cs" />
     <Compile Include="Events\EndpointFailureEvent.cs" />
     <Compile Include="Events\EndpointSuccessEvent.cs" />
     <Compile Include="Events\Authentication\ResourceOwnerPasswordFlowAuthenticationEvent.cs" />

@@ -21,6 +21,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -38,11 +40,15 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         private readonly ITokenService _tokenService;
         private readonly IAuthorizationCodeStore _authorizationCodes;
+        private readonly IdentityServerOptions _options;
+        private readonly IEventService _events;
 
-        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes)
+        public AuthorizeResponseGenerator(ITokenService tokenService, IAuthorizationCodeStore authorizationCodes, IdentityServerOptions options, IEventService events)
         {
             _tokenService = tokenService;
             _authorizationCodes = authorizationCodes;
+            _options = options;
+            _events = events;
         }
 
         public async Task<AuthorizeResponse> CreateResponseAsync(ValidatedAuthorizeRequest request)
@@ -111,7 +117,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             // store id token and access token and return authorization code
             var id = CryptoRandom.CreateUniqueId();
             await _authorizationCodes.StoreAsync(id, code);
-            
+
+            RaiseCodeIssuedEvent(id, code);
+
             return id;
         }
 
@@ -202,6 +210,14 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             }
             
             return Base64Url.Encode(hash) + "." + salt;
+        }
+
+        private void RaiseCodeIssuedEvent(string id, AuthorizationCode code)
+        {
+            if (_options.EventsOptions.RaiseInformationEvents)
+            {
+                _events.RaiseAuthorizationCodeIssuedEvent(id, code);
+            }
         }
     }
 }
