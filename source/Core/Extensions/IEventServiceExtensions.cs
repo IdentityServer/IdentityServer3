@@ -193,7 +193,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseAccessTokenIssuedEvent(this IEventService events, Token token)
         {
-            var evt = new AccessTokenIssuedEvent
+            var evt = new Event<AccessTokenIssuedDetails>(
+                EventConstants.Categories.TokenService,
+                "Access token issued",
+                EventTypes.Information,
+                EventConstants.Ids.AccessTokenIssued);
+
+            evt.DetailsFunc = () => new AccessTokenIssuedDetails
             {
                 SubjectId = token.SubjectId ?? "no subject id",
                 ClientId = token.ClientId,
@@ -202,13 +208,19 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Scopes = token.Scopes,
                 Claims = token.Claims.ToClaimsDictionary()
             };
-
-            events.RaiseEvent(evt);
+            
+            events.Raise(evt);
         }
 
         public static void RaiseIdentityTokenIssuedEvent(this IEventService events, Token token)
         {
-            var evt = new IdentityTokenIssuedEvent
+            var evt = new Event<TokenIssuedDetailsBase>(
+                EventConstants.Categories.TokenService,
+                "Identity token issued",
+                EventTypes.Information,
+                EventConstants.Ids.IdentityTokenIssued);
+
+            evt.DetailsFunc = () => new TokenIssuedDetailsBase
             {
                 SubjectId = token.SubjectId,
                 ClientId = token.ClientId,
@@ -221,7 +233,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
         {
-            var evt = new AuthorizationCodeIssuedEvent
+            var evt = new Event<AuthorizationCodeIssuedDetailsBase>(
+                EventConstants.Categories.TokenService,
+                "Authorization code issued",
+                EventTypes.Information,
+                EventConstants.Ids.AuthorizationCodeIssued);
+
+            evt.DetailsFunc = () => new AuthorizationCodeIssuedDetailsBase
             {
                 HandleId = id,
                 ClientId = code.ClientId,
@@ -235,7 +253,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseRefreshTokenIssuedEvent(this IEventService events, string id, RefreshToken token)
         {
-            var evt = new RefreshTokenIssuedEvent
+            var evt = new Event<RefreshTokenIssuedDetails>(
+                EventConstants.Categories.TokenService,
+                "Refresh token issued",
+                EventTypes.Information,
+                EventConstants.Ids.RefreshTokenIssued);
+
+            evt.DetailsFunc = () => new RefreshTokenIssuedDetails
             {
                 HandleId = id,
                 ClientId = token.ClientId,
@@ -250,12 +274,18 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseSuccessfulRefreshTokenRefreshEvent(this IEventService events, string oldHandle, string newHandle, RefreshToken token)
         {
-            var evt = new SuccessfulRefreshTokenRefreshEvent
+            var evt = new Event<RefreshTokenRefreshDetails>(
+                EventConstants.Categories.TokenService,
+                "Refresh token refresh success",
+                EventTypes.Success,
+                EventConstants.Ids.RefreshTokenRefreshedSuccess);
+
+            evt.Details = new RefreshTokenRefreshDetails
             {
                 OldHandle = oldHandle,
                 NewHandle = newHandle,
                 ClientId = token.ClientId,
-                Lifetime = token.LifeTime,
+                Lifetime = token.LifeTime
             };
 
             events.RaiseEvent(evt);
@@ -273,19 +303,29 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseSuccessfulEndpointEvent(this IEventService events, string endpointName)
         {
-            var evt = new EndpointSuccessEvent(endpointName);
+            var evt = new Event<EndpointDetail>(
+                EventConstants.Categories.Endpoints,
+                "Endpoint success",
+                EventTypes.Success,
+                EventConstants.Ids.EndpointSuccess,
+                new EndpointDetail { EndpointName = endpointName });
 
-            events.RaiseEvent(evt);
+            events.Raise(evt);
         }
 
         public static void RaiseFailureEndpointEvent(this IEventService events, string endpointName, string error)
         {
-            var evt = new EndpointFailureEvent(endpointName, error);
-            
-            events.RaiseEvent(evt);
+            var evt = new Event<EndpointDetail>(
+                 EventConstants.Categories.Endpoints,
+                 "Endpoint failure",
+                 EventTypes.Failure,
+                 EventConstants.Ids.EndpointFailure,
+                 new EndpointDetail { EndpointName = endpointName });
+
+            events.Raise(evt);
         }
 
-        private static void RaiseEvent(this IEventService events, EventBase evt)
+        private static void RaiseEvent<T>(this IEventService events, Event<T> evt)
         {
             if (events == null) throw new ArgumentNullException("events");
 

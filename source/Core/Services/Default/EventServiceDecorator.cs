@@ -40,16 +40,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.inner = inner;
         }
 
-        public void Raise(EventBase evt)
+        public void Raise<T>(Event<T> evt)
         {
             if (CanRaiseEvent(evt))
             {
                 evt = PrepareEvent(evt);
+                evt.Prepare();
                 inner.Raise(evt);
             }
         }
 
-        bool CanRaiseEvent(EventBase evt)
+        bool CanRaiseEvent<T>(Event<T> evt)
         {
             switch(evt.EventType)
             {
@@ -66,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return false;
         }
 
-        protected virtual EventBase PrepareEvent(EventBase evt)
+        protected virtual Event<T> PrepareEvent<T>(Event<T> evt)
         {
             if (evt == null) throw new ArgumentNullException("evt");
 

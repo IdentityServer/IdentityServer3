@@ -14,21 +14,10 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    class AuthorizationCodeIssuedEvent : TokenIssuedEventBase
+    public class AuthorizationCodeIssuedDetailsBase : TokenIssuedDetailsBase
     {
-        public AuthorizationCodeIssuedEvent() : base(EventConstants.Ids.AuthorizationCodeIssued)
-        {
-            Message = "Authorization code issued";
-        }
-
         public string HandleId { get; set; }
         public string RedirectUri { get; set; }
     }

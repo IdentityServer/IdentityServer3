@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class AccessTokenIssuedDetails : TokenIssuedDetailsBase
+    class EndpointDetail
     {
-        /// <summary>
-        /// Gets or sets the type of the access token.
-        /// </summary>
-        /// <value>
-        /// The type of the token.
-        /// </value>
-        public AccessTokenType TokenType { get; set; }
+        public string EndpointName { get; set; }
     }
 }

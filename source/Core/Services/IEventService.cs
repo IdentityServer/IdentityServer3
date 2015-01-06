@@ -27,6 +27,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Raises the specified event.
         /// </summary>
         /// <param name="evt">The event.</param>
-        void Raise(EventBase evt);
+        void Raise<T>(Event<T> evt);
     }
 }

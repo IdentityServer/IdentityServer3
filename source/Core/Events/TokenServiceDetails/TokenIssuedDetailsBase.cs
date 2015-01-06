@@ -18,22 +18,8 @@ using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    /// <summary>
-    /// Base class for token issued events
-    /// </summary>
-    public abstract class TokenIssuedEventBase : EventBase
+    public class TokenIssuedDetailsBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TokenIssuedEventBase"/> class.
-        /// </summary>
-        /// <param name="id">Event id.</param>
-        protected TokenIssuedEventBase(int id)
-            : base(EventConstants.Categories.TokenService)
-        {
-            EventType = EventTypes.Information;
-            Id = id;
-        }
-
         /// <summary>
         /// Gets or sets the subject identifier.
         /// </summary>

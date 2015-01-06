@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.TokenServiceDetails
 {
-    /// <summary>
-    /// Event class for identity token issued events
-    /// </summary>
-    public class IdentityTokenIssuedEvent : TokenIssuedEventBase
+    public class AuthorizationCodeIssuedDetails : AuthorizationCodeIssuedDetailsBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityTokenIssuedEvent"/> class.
-        /// </summary>
-        public IdentityTokenIssuedEvent()
-            : base(EventConstants.Ids.IdentityTokenIssued)
-        {
-            Message = "Identity token issued event";
-        }
+
     }
 }

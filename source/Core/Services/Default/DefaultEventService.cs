@@ -35,10 +35,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="evt">The event.</param>
         /// <exception cref="System.ArgumentNullException">evt</exception>
-        public void Raise(EventBase evt)
+        public void Raise<T>(Event<T> evt)
         {
             if (evt == null) throw new ArgumentNullException("evt");
-
+            
             var json = LogSerializer.Serialize(evt);
             Logger.Info(json);
         }

@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class AccessTokenIssuedDetails : TokenIssuedDetailsBase
+    public class RefreshTokenRefreshDetails
     {
-        /// <summary>
-        /// Gets or sets the type of the access token.
-        /// </summary>
-        /// <value>
-        /// The type of the token.
-        /// </value>
-        public AccessTokenType TokenType { get; set; }
+        public string ClientId { get; set; }
+        public string OldHandle { get; set; }
+        public string NewHandle { get; set; }
+        public int Lifetime { get; set; }
     }
 }

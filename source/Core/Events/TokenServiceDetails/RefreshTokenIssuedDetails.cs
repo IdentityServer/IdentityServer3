@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class RefreshTokenIssuedEvent : TokenIssuedEventBase
+    public class RefreshTokenIssuedDetails : TokenIssuedDetailsBase
     {
-        public RefreshTokenIssuedEvent() : base(EventConstants.Ids.RefreshTokenIssued)
-        {
-            Message = "Refresh token issued";
-        }
-
         public string HandleId { get; set; }
         public int Version { get; set; }
     }
