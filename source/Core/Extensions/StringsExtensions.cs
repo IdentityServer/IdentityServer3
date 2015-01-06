@@ -66,6 +66,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
             return url;
         }
+
+        public static string RemoveLeadingSlash(this string url)
+        {
+            if (url != null && url.StartsWith("/"))
+            {
+                url = url.Substring(1);
+            }
+
+            return url;
+        }
         
         public static string CleanUrlPath(this string url)
         {

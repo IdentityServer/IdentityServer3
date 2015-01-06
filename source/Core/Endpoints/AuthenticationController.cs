@@ -178,22 +178,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ModelState.AddModelError("Password", localizationService.GetMessage(MessageIds.PasswordRequired));
             }
 
-            // the browser will only send 'true' if ther user has checked the checkbox
-            // it will pass nothing if the user does not check the checkbox
-            // this check here is to establish if the user deliberatly did not check the checkbox
-            // or if the checkbox was not presented as an option (and thus AllowRememberMe is not allowed)
-            // true means they did check it, false means they did not, null means they were not presented with the choice
-            if (options.AuthenticationOptions.CookieOptions.AllowRememberMe)
-            {
-                if (model.RememberMe != true)
-                {
-                    model.RememberMe = false;
-                }
-            }
-            else
-            {
-                model.RememberMe = null;
-            }
+            model.RememberMe = options.AuthenticationOptions.CookieOptions.CalculateRememberMeFromUserInput(model.RememberMe);
 
             if (!ModelState.IsValid)
             {
@@ -565,7 +550,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     path = path.Substring(2);
                     path = Request.GetIdentityServerBaseUrl() + path;
                 }
-                var host = new Uri(context.Environment.GetIdentityServerHost());
+                var host = new Uri(context.GetIdentityServerHost());
                 return new Uri(host, path);
             }
             else
@@ -663,14 +648,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             var clientName = await clientStore.GetClientName(signOutMessageCookie.Read(id));
 
-            var env = context.Environment;
             var logoutModel = new LogoutViewModel
             {
                 SiteName = options.SiteName,
-                SiteUrl = env.GetIdentityServerBaseUrl(),
+                SiteUrl = context.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id = id }),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(env),
+                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(context.Environment),
                 ClientName = clientName
             };
             return new LogoutActionResult(viewService, logoutModel);
@@ -680,16 +664,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("rendering logged out page");
 
-            var env = context.Environment;
-            var baseUrl = env.GetIdentityServerBaseUrl();
-            var urls = new List<string>();
-
-            foreach (var url in options.ProtocolLogoutUrls)
-            {
-                var tmp = url;
-                if (tmp.StartsWith("/")) tmp = tmp.Substring(1);
-                urls.Add(baseUrl + tmp);
-            }
+            var baseUrl = context.GetIdentityServerBaseUrl();
+            var iframeUrls = options.RenderProtocolUrls(baseUrl);
 
             var message = signOutMessageCookie.Read(id);
             var redirectUrl = message != null ? message.ReturnUrl : null;
@@ -699,7 +675,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 SiteName = options.SiteName,
                 SiteUrl = baseUrl,
-                IFrameUrls = urls,
+                IFrameUrls = iframeUrls,
                 ClientName = clientName,
                 RedirectUrl = redirectUrl
             };
@@ -712,7 +688,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var errorModel = new ErrorViewModel
             {
                 SiteName = this.options.SiteName,
-                SiteUrl = context.Environment.GetIdentityServerBaseUrl(),
+                SiteUrl = context.GetIdentityServerBaseUrl(),
                 ErrorMessage = message
             };
             var errorResult = new ErrorActionResult(viewService, errorModel);
