@@ -115,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (_options.EventsOptions.RaiseSuccessEvents)
             {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidator);
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation);
             }
         }
 
@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (_options.EventsOptions.RaiseFailureEvents)
             {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidator, error);
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation, error);
             }
         }
     }
