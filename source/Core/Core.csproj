@@ -142,7 +142,7 @@
     <Compile Include="Events\Authentication\PartialLoginCompleteEvent.cs" />
     <Compile Include="Events\Authentication\PartialLoginEvent.cs" />
     <Compile Include="Events\Authentication\LogoutEvent.cs" />
-    <Compile Include="Events\AuthorizationCodeRedeemedEvent.cs" />
+    <Compile Include="Events\TokenService\SuccessfulAuthorizationCodeRedeemedEvent.cs" />
     <Compile Include="Events\TokenService\SuccessfulRefreshTokenRefreshEvent.cs" />
     <Compile Include="Events\TokenService\RefreshTokenIssuedEvent.cs" />
     <Compile Include="Events\TokenService\AuthorizationCodeIssuedEvent.cs" />
