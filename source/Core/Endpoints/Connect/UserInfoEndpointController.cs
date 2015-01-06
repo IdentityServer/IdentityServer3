@@ -21,10 +21,13 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
+using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 #pragma warning disable 1591
 
@@ -44,6 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly TokenValidator _tokenValidator;
         private readonly BearerTokenUsageValidator _tokenUsageValidator;
         private readonly IdentityServerOptions _options;
+        private readonly IEventService _events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInfoEndpointController"/> class.
@@ -52,12 +56,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="tokenValidator">The token validator.</param>
         /// <param name="generator">The generator.</param>
         /// <param name="tokenUsageValidator">The token usage validator.</param>
-        public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator, BearerTokenUsageValidator tokenUsageValidator)
+        public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator, BearerTokenUsageValidator tokenUsageValidator, IEventService events)
         {
             _tokenValidator = tokenValidator;
             _generator = generator;
             _options = options;
             _tokenUsageValidator = tokenUsageValidator;
+            _events = events;
         }
 
         /// <summary>
@@ -73,13 +78,20 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!_options.Endpoints.EnableUserInfoEndpoint)
             {
-                Logger.Warn("Endpoint is disabled. Aborting");
+                var error = "Endpoint is disabled. Aborting";
+                Logger.Warn(error);
+                RaiseFailureEvent(error);
+
                 return NotFound();
             }
 
             var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request);
             if (tokenUsageResult.TokenFound == false)
             {
+                var error = "No token found.";
+
+                Logger.Error(error);
+                RaiseFailureEvent(error);
                 return Error(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
@@ -89,6 +101,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (tokenResult.IsError)
             {
+                Logger.Error(tokenResult.Error);
+                RaiseFailureEvent(tokenResult.Error);
                 return Error(tokenResult.Error);
             }
 
@@ -99,12 +113,30 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var payload = await _generator.ProcessAsync(subject, scopes);
 
             Logger.Info("End userinfo request");
+            RaiseSuccessEvent();
+
             return new UserInfoResult(payload);
         }
 
         IHttpActionResult Error(string error, string description = null)
         {
             return new ProtectedResourceErrorResult(error, description);
+        }
+
+        private void RaiseSuccessEvent()
+        {
+            if (_options.EventsOptions.RaiseSuccessEvents)
+            {
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.UserInfo);
+            }
+        }
+
+        private void RaiseFailureEvent(string error)
+        {
+            if (_options.EventsOptions.RaiseFailureEvents)
+            {
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.UserInfo, error);
+            }
         }
     }
 }
