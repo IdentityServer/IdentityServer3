@@ -230,6 +230,61 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseCspReportEvent(this IEventService events, string report, ClaimsPrincipal user)
+        {
+            var evt = new Event<CspReportDetails>(
+                EventConstants.Categories.Information,
+                Resources.Events.CspReport,
+                EventTypes.Information,
+                EventConstants.Ids.CspReport);
+
+            evt.DetailsFunc = () => {
+                string subject = null;
+                string name = null;
+                if (user != null && user.Identity.IsAuthenticated)
+                {
+                    subject = user.GetSubjectId();
+                    name = user.Identity.Name;
+                }
+
+                object reportData = null;
+                try
+                {
+                    reportData = Newtonsoft.Json.JsonConvert.DeserializeObject(report);
+                }
+                catch(Newtonsoft.Json.JsonReaderException)
+                {
+                    reportData = "Error reading CSP report JSON";
+                    evt.Message = "Raw Report Data: " + report;
+                }
+                return new CspReportDetails
+                {
+                    Subject = subject,
+                    Name = name,
+                    Report = reportData
+                };
+            };
+
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseClientPermissionsRevokedEvent(this IEventService events, ClaimsPrincipal user, string clientId)
+        {
+            var evt = new Event<ClientPermissionsRevokedDetails>(
+                EventConstants.Categories.Information,
+                Resources.Events.ClientPermissionsRevoked,
+                EventTypes.Information,
+                EventConstants.Ids.ClientPermissionRevoked,
+                new ClientPermissionsRevokedDetails
+                {
+                    Subject = user.GetSubjectId(),
+                    Name = user.Identity.Name,
+                    ClientId = clientId
+                });
+
+            events.RaiseEvent(evt);
+        }
+
         public static void RaiseTokenIssuedEvent(this IEventService events, Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)

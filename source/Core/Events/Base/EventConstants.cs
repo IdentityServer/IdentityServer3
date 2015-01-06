@@ -37,6 +37,8 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string EndSession = "endsession";
             public const string AccessTokenValidation = "accesstokenvalidation";
             public const string IdentityTokenValidation = "identitytokenvalidaton";
+            public const string CspReport = "cspreport";
+            public const string ClientPermissions = "clientpermissions";
         }
         
         public static class Ids
@@ -96,7 +98,9 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InformationEventsStart = 4000;
 
-            private const int CertificateExpiration = InformationEventsStart + 0;
+            public const int CertificateExpiration = InformationEventsStart + 0;
+            public const int CspReport = InformationEventsStart + 1;
+            public const int ClientPermissionRevoked = InformationEventsStart + 2;
 
             ///////////////////////////
             /// Information events

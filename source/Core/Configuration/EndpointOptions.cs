@@ -34,9 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.EnableIdentityTokenValidationEndpoint = true;
             this.EnableEndSessionEndpoint = true;
             this.EnableClientPermissionsEndpoint = true;
+            this.EnableCspReportEndpoint = true;
             this.EnableCheckSessionEndpoint = true;
-
-            this.EnableCspReportEndpoint = false;
         }
 
         /// <summary>

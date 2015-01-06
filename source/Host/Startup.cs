@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Host
                         SigningCertificate = Cert.Load(),
 
                         CorsPolicy = CorsPolicy.AllowAll,
-                        
+
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,

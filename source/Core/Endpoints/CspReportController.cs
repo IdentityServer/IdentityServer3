@@ -17,25 +17,32 @@
 using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
+    [HostAuthentication(Constants.PrimaryAuthenticationType)]
     public class CspReportController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        readonly IdentityServerOptions options;
-        
-        public CspReportController(IdentityServerOptions options)
+        private readonly IdentityServerOptions options;
+        private readonly IEventService eventService;
+
+        public CspReportController(IdentityServerOptions options, IEventService eventService)
         {
             this.options = options;
+            this.eventService = eventService;
         }
 
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
@@ -43,11 +50,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (!options.Endpoints.EnableCspReportEndpoint)
             {
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, "endpoint disabled");
                 return NotFound();
             }
 
             var json = await Request.Content.ReadAsStringAsync();
-            Logger.Error(json);
+            if (json.IsPresent())
+            {
+                Logger.Error(json);
+                eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
+            }
+            
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
         }
     }

@@ -61,6 +61,24 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client Permissions Revoked.
+        /// </summary>
+        internal static string ClientPermissionsRevoked {
+            get {
+                return ResourceManager.GetString("ClientPermissionsRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content Security Policy (CSP) Report.
+        /// </summary>
+        internal static string CspReport {
+            get {
+                return ResourceManager.GetString("CspReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to External Login Error.
         /// </summary>
         internal static string ExternalLoginError {
@@ -151,7 +169,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resource owner password flow Login Failure.
+        ///   Looks up a localized string similar to Resource Owner Password Flow Login Failure.
         /// </summary>
         internal static string ResourceOwnerFlowLoginFailure {
             get {
@@ -160,7 +178,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resource owner password flow Login Success.
+        ///   Looks up a localized string similar to Resource Owner Password Flow Login Success.
         /// </summary>
         internal static string ResourceOwnerFlowLoginSuccess {
             get {

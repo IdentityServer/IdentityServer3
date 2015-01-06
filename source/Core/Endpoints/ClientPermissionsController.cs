@@ -18,10 +18,12 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
@@ -45,20 +47,22 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IdentityServerOptions options;
         private readonly IViewService viewSvc;
         private readonly ILocalizationService localizationService;
+        private readonly IEventService eventService;
         private readonly AntiForgeryToken antiForgeryToken;
-
 
         public ClientPermissionsController(
             IClientPermissionsService clientPermissionsService, 
             IdentityServerOptions options, 
             IViewService viewSvc, 
             ILocalizationService localizationService,
+            IEventService eventService,
             AntiForgeryToken antiForgeryToken)
         {
             this.clientPermissionsService = clientPermissionsService;
             this.options = options;
             this.viewSvc = viewSvc;
             this.localizationService = localizationService;
+            this.eventService = eventService;
             this.antiForgeryToken = antiForgeryToken;
         }
 
@@ -68,6 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
 
@@ -85,6 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
             
@@ -105,6 +111,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
+            
+            eventService.RaiseClientPermissionsRevokedEvent(User as ClaimsPrincipal, model.ClientId);
 
             return RedirectToRoute(Constants.RouteNames.ClientPermissions, null);
         }
