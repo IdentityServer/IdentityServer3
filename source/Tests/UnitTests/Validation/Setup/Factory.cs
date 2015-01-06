@@ -33,6 +33,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             return new InMemoryClientStore(TestClients.Get());
         }
 
+        public static IRefreshTokenService CreateDefaultRefreshTokenService(IRefreshTokenStore store)
+        {
+            var service = new DefaultRefreshTokenService(
+                store,
+                TestIdentityServerOptions.Create(),
+                new DefaultEventService());
+
+            return service;
+        }
+
         public static ClientValidator CreateClientValidator(
             IClientStore clients = null,
             IClientSecretValidator secretValidator = null)

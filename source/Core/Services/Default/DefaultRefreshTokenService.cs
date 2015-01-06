@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -37,14 +38,26 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// The refresh token store
         /// </summary>
         protected readonly IRefreshTokenStore _store;
+        
+        /// <summary>
+        /// The _options
+        /// </summary>
+        protected readonly IdentityServerOptions _options;
+        
+        /// <summary>
+        /// The _events
+        /// </summary>
+        protected readonly IEventService _events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRefreshTokenService"/> class.
         /// </summary>
         /// <param name="store">The refresh token store.</param>
-        public DefaultRefreshTokenService(IRefreshTokenStore store)
+        public DefaultRefreshTokenService(IRefreshTokenStore store, IdentityServerOptions options, IEventService events)
         {
             _store = store;
+            _options = options;
+            _events = events;
         }
 
         /// <summary>
@@ -80,6 +93,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             };
 
             await _store.StoreAsync(handle, refreshToken);
+
+            RaiseRefreshTokenIssuedEvent(handle, refreshToken);
             return handle;
         }
 
@@ -143,6 +158,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             Logger.Debug("No updates to refresh token done");
             return handle;
+        }
+
+        private void RaiseRefreshTokenIssuedEvent(string refreshToken, RefreshToken token)
+        {
+            if (_options.EventsOptions.RaiseInformationEvents)
+            {
+                _events.RaiseRefreshTokenIssuedEvent(refreshToken, token);
+            }
         }
     }
 }

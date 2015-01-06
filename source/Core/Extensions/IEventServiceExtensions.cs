@@ -213,11 +213,26 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new AuthorizationCodeIssuedEvent
             {
-                AuthorizationCode = id,
+                HandleId = id,
                 ClientId = code.ClientId,
                 Scopes = code.Scopes,
                 SubjectId = code.SubjectId,
                 RedirectUri = code.RedirectUri
+            };
+
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseRefreshTokenIssuedEvent(this IEventService events, string id, RefreshToken token)
+        {
+            var evt = new RefreshTokenIssuedEvent
+            {
+                HandleId = id,
+                ClientId = token.ClientId,
+                Scopes = token.Scopes,
+                SubjectId = token.SubjectId,
+                Lifetime = token.LifeTime,
+                Version = token.Version
             };
 
             events.RaiseEvent(evt);

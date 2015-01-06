@@ -18,6 +18,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -35,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenService _refreshTokenService;
-
+       
         public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService)
         {
             _tokenService = tokenService;

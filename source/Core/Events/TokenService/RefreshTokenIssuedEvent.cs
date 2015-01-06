@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    class AuthorizationCodeIssuedEvent : TokenIssuedEventBase
+    public class RefreshTokenIssuedEvent : TokenIssuedEventBase
     {
-        public AuthorizationCodeIssuedEvent() : base(EventConstants.Ids.AuthorizationCodeIssued)
+        public RefreshTokenIssuedEvent() : base(EventConstants.Ids.RefreshTokenIssued)
         {
-            Message = "Authorization code issued";
+            Message = "Refresh token issued";
         }
 
-        public string AuthorizationCode { get; set; }
-        public string RedirectUri { get; set; }
+        public string HandleId { get; set; }
+        public int Version { get; set; }
     }
 }
