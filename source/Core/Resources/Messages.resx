@@ -168,4 +168,7 @@
   <data name="NoExternalProvider" xml:space="preserve">
     <value>The external login provider was not provided.</value>
   </data>
+  <data name="ExternalProviderError" xml:space="preserve">
+    <value>There was an error logging into the external provider. The error message is: {0}</value>
+  </data>
 </root>

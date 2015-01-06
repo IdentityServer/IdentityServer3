@@ -24,10 +24,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Thinktecture.IdentityServer.Core.Resources
-{
-
-
+namespace Thinktecture.IdentityServer.Core.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -82,6 +82,15 @@ namespace Thinktecture.IdentityServer.Core.Resources
         public static string ClientIdRequired {
             get {
                 return ResourceManager.GetString("ClientIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error logging into the external provider. The error message is: {0}.
+        /// </summary>
+        public static string ExternalProviderError {
+            get {
+                return ResourceManager.GetString("ExternalProviderError", resourceCulture);
             }
         }
         

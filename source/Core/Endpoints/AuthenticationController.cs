@@ -259,9 +259,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         [Route(Constants.RoutePaths.LoginExternalCallback, Name = Constants.RouteNames.LoginExternalCallback)]
         [HttpGet]
-        public async Task<IHttpActionResult> LoginExternalCallback()
+        public async Task<IHttpActionResult> LoginExternalCallback(string error = null)
         {
-            Logger.Info("Callback invoked from external identity provider ");
+            Logger.Info("Callback invoked from external identity provider");
+            
+            if (error.IsPresent())
+            {
+                Logger.ErrorFormat("External identity provider returned error: {0}", error);
+                RaiseExternalLoginErrorEvent(error);
+                return RenderErrorPage(String.Format(localizationService.GetMessage(MessageIds.ExternalProviderError), error));
+            }
 
             var signInId = await context.GetSignInIdFromExternalProvider();
             if (signInId.IsMissing())
@@ -740,6 +747,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (options.EventsOptions.RaiseFailureEvents)
             {
                 eventService.RaiseExternalLoginFailureEvent(externalIdentity, signInMessageId, signInMessage, details);
+            }
+        }
+
+        private void RaiseExternalLoginErrorEvent(string details)
+        {
+            if (options.EventsOptions.RaiseErrorEvents)
+            {
+                eventService.RaiseExternalLoginErrorEvent(details);
             }
         }
 
