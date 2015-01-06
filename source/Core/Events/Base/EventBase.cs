@@ -35,29 +35,13 @@ namespace Thinktecture.IdentityServer.Core.Events
         }
 
         /// <summary>
-        /// Gets or sets the event context.
-        /// </summary>
-        /// <value>
-        /// The context.
-        /// </value>
-        public EventContext Context { get; set; }
-
-        /// <summary>
         /// Gets or sets the event identifier. <see cref="EventConstants.Ids"/> for the list of the defined identifiers.
         /// </summary>
         /// <value>
         /// The identifier.
         /// </value>
         public int Id { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the event type.
-        /// </summary>
-        /// <value>
-        /// The type of the event.
-        /// </value>
-        public EventType EventType { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the event category. <see cref="EventConstants.Categories"/> for a list of the defined categories.
         /// </summary>
@@ -65,7 +49,15 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The category.
         /// </value>
         public string Category { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the event type.
+        /// </summary>
+        /// <value>
+        /// The type of the event.
+        /// </value>
+        public EventType EventType { get; set; }
+
         /// <summary>
         /// Gets or sets the event message.
         /// </summary>
@@ -73,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The message.
         /// </value>
         public string Message { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the event details.
         /// </summary>
@@ -81,5 +73,13 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The details.
         /// </value>
         public string Details { get; set; }
+
+        /// <summary>
+        /// Gets or sets the event context.
+        /// </summary>
+        /// <value>
+        /// The context.
+        /// </value>
+        public EventContext Context { get; set; }
     }
 }
