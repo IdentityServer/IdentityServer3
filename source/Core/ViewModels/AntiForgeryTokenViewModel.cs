@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     /// values must be submitted with any HTML form that is displayed to the user (typically as 
     /// a hidden input element).
     /// </summary>
-    public class AntiForgeryHiddenInputViewModel
+    public class AntiForgeryTokenViewModel
     {
         /// <summary>
         /// The name of the form field.

@@ -47,13 +47,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             this.options = options;
         }
 
-        internal AntiForgeryHiddenInputViewModel GetAntiForgeryToken()
+        internal AntiForgeryTokenViewModel GetAntiForgeryToken()
         {
             var tokenBytes = GetCookieToken();
             var protectedTokenBytes = options.DataProtector.Protect(tokenBytes, HiddenInputEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
 
-            return new AntiForgeryHiddenInputViewModel
+            return new AntiForgeryTokenViewModel
             {
                 Name = TokenName,
                 Value = token

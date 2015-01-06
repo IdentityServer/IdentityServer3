@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         /// <value>
         /// The anti forgery.
         /// </value>
-        public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
+        public AntiForgeryTokenViewModel AntiForgery { get; set; }
 
         /// <summary>
         /// Indicates if "remember me" has been disabled and should not be displayed to the user.

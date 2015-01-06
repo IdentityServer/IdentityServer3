@@ -281,7 +281,7 @@
     <Compile Include="Services\DefaultViewService\FileSystemWithEmbeddedFallbackViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\IViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\ResourceCache.cs" />
-    <Compile Include="ViewModels\AntiForgeryHiddenInputViewModel.cs" />
+    <Compile Include="ViewModels\AntiForgeryTokenViewModel.cs" />
     <Compile Include="ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="ViewModels\LogoutViewModel.cs" />
     <Compile Include="ViewModels\ConsentScopeViewModel.cs" />

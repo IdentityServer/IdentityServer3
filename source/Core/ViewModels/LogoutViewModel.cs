@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         /// <value>
         /// The anti forgery.
         /// </value>
-        public AntiForgeryHiddenInputViewModel AntiForgery { get; set; }
+        public AntiForgeryTokenViewModel AntiForgery { get; set; }
         
         /// <summary>
         /// The name of the client that requested the logout.

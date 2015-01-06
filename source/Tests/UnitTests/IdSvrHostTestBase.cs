@@ -117,7 +117,7 @@ namespace Thinktecture.IdentityServer.Tests
             app.UseGoogleAuthentication(google);
         }
 
-        public AntiForgeryHiddenInputViewModel Xsrf { get; set; }
+        public AntiForgeryTokenViewModel Xsrf { get; set; }
 
         protected void ProcessXsrf(HttpResponseMessage resp)
         {
