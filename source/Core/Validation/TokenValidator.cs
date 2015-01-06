@@ -120,6 +120,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             Logger.Info("Start access token validation");
 
             _log.ExpectedScope = expectedScope;
+            _log.ValidateLifetime = true;
+        
             TokenValidationResult result;
 
             if (token.Contains("."))
