@@ -16,7 +16,9 @@
 
 using Autofac;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
@@ -122,6 +124,24 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
+        }
+
+        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent());
+        }
+        
+        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context, IEnumerable<string> typeFilter)
+        {
+            var types = context.GetExternalAuthenticationTypes();
+            
+            if (typeFilter != null && typeFilter.Any())
+            {
+                types = types.Where(type => typeFilter.Contains(type.AuthenticationType));
+            }
+            
+            return types;
         }
     }
 }

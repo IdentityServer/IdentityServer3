@@ -157,6 +157,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public TMessage Read(string id)
         {
+            if (String.IsNullOrWhiteSpace(id)) return null;
+
             var name = GetCookieName(id);
             return ReadByCookieName(name);
         }

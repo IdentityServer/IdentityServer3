@@ -48,9 +48,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     public class AuthenticationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IViewService viewService;
         private readonly IUserService userService;
-        private readonly AuthenticationOptions authenticationOptions;
         private readonly IdentityServerOptions options;
         private readonly IClientStore clientStore;
         private readonly IEventService eventService;
@@ -63,7 +63,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         public AuthenticationController(
             IViewService viewService, 
             IUserService userService, 
-            AuthenticationOptions authenticationOptions, 
             IdentityServerOptions idSvrOptions, 
             IClientStore clientStore, 
             IEventService eventService,
@@ -75,7 +74,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             this.viewService = viewService;
             this.userService = userService;
-            this.authenticationOptions = authenticationOptions;
             this.options = idSvrOptions;
             this.clientStore = clientStore;
             this.eventService = eventService;
@@ -98,13 +96,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            //var cookie = new MessageCookie<SignInMessage>(Request.GetOwinContext(), this._options);
             var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
                 Logger.Error("No cookie matching signin id found");
-                return RenderErrorPage(
-                    localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
@@ -254,8 +250,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            var providerFilter = await GetProviderFilterForClientAsync(signInMessage);
-            if (providerFilter != null && providerFilter.Any() && !providerFilter.Contains(provider))
+            if (!(await clientStore.IsValidIdentityProviderAsync(signInMessage.ClientId, provider)))
             {
                 Logger.ErrorFormat("Provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
                 return RenderErrorPage();
@@ -442,7 +437,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var sub = user.GetSubjectId();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            var message = GetSignOutMessage(id);
+            var message = signOutMessageCookie.Read(id);
             if (message != null)
             {
                 Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
@@ -474,13 +469,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             ClearAuthenticationCookies();
             sessionCookie.ClearSessionId();
             signInMessageCookie.ClearAll();
+            signOutMessageCookie.ClearAll();
             SignOutOfExternalIdP();
 
             if (user != null && user.Identity.IsAuthenticated)
             {
                 await this.userService.SignOutAsync(user);
-                
-                var message = GetSignOutMessage(id);
+
+                var message = signOutMessageCookie.Read(id);
                 RaiseLogoutEvent(user, message);
             }
 
@@ -738,7 +734,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                if (authenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
+                if (options.AuthenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
                 {
                     // no local login and only one provider -- redirect to provider
                     Logger.Info("no local login and only one provider -- redirect to provider");
@@ -752,7 +748,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 }
             }
 
-            var loginPageLinks = PrepareLoginPageLinks(signInMessageId, authenticationOptions.LoginPageLinks);
+            var loginPageLinks = PrepareLoginPageLinks(signInMessageId, options.AuthenticationOptions.LoginPageLinks);
 
             var loginModel = new LoginViewModel
             {
@@ -775,35 +771,18 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
         {
-            IEnumerable<string> filter = await GetProviderFilterForClientAsync(message);
-
+            var restrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
             var ctx = Request.GetOwinContext();
+            
             var providers =
-                from p in ctx.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent())
-                where (!filter.Any() || filter.Contains(p.AuthenticationType))
+                from p in ctx.GetExternalAuthenticationTypes(restrictions)
                 select new LoginPageLink
                 {
                     Text = p.Caption,
-                    Href = Url.Route(Constants.RouteNames.LoginExternal,
-                    new { provider = p.AuthenticationType, signin = signInMessageId })
+                    Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType, signin = signInMessageId })
                 };
 
             return providers.ToArray();
-        }
-
-        private async Task<IEnumerable<string>> GetProviderFilterForClientAsync(SignInMessage message)
-        {
-            IEnumerable<string> filter = null;
-            if (!String.IsNullOrWhiteSpace(message.ClientId))
-            {
-                var client = await clientStore.FindClientByIdAsync(message.ClientId);
-                if (client != null)
-                {
-                    filter = client.IdentityProviderRestrictions;
-                }
-            }
-            filter = filter ?? Enumerable.Empty<string>();
-            return filter;
         }
 
         private IEnumerable<LoginPageLink> PrepareLoginPageLinks(string signin, IEnumerable<LoginPageLink> links)
@@ -863,12 +842,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 urls.Add(baseUrl + tmp);
             }
 
-            var message = GetSignOutMessage(id);
+            var message = signOutMessageCookie.Read(id);
             var redirectUrl = message != null ? message.ReturnUrl : null;
             var clientName = await GetClientNameFromSignOutMessage(message);
             
-            signOutMessageCookie.ClearAll();
-
             var loggedOutModel = new LoggedOutViewModel
             {
                 SiteName = options.SiteName,
@@ -880,19 +857,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new LoggedOutActionResult(viewService, loggedOutModel);
         }
 
-        private SignOutMessage GetSignOutMessage(string id)
-        {
-            if (!String.IsNullOrWhiteSpace(id))
-            {
-                var cookie = new MessageCookie<SignOutMessage>(Request.GetOwinContext(), this.options);
-                return cookie.Read(id);
-            }
-            return null;
-        }
-
         private async Task<string> GetClientNameFromSignOutMessageId(string id)
         {
-            var signOutMessage = GetSignOutMessage(id);
+            var signOutMessage = signOutMessageCookie.Read(id);
             return await GetClientNameFromSignOutMessage(signOutMessage);
         }
 
