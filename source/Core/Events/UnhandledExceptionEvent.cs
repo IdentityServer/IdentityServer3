@@ -28,13 +28,5 @@ namespace Thinktecture.IdentityServer.Core.Events
         {
             Id = EventConstants.Ids.UnhandledException;
         }
-
-        /// <summary>
-        /// Gets or sets the exception details
-        /// </summary>
-        /// <value>
-        /// The exception detail.
-        /// </value>
-        public string ExceptionDetails { get; set; }
     }
 }

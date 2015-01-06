@@ -192,7 +192,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new UnhandledExceptionEvent
             {
-                ExceptionDetails = exception.ToString()
+                Details = exception.ToString()
             };
 
             events.RaiseEvent(evt);
