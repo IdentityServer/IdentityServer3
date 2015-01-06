@@ -17,6 +17,7 @@
 using Microsoft.Owin;
 using System;
 using System.Diagnostics;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -26,21 +27,43 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
-        private readonly IRequestIdService _reqId;
+        private readonly IdentityServerOptions options;
+        private readonly IRequestIdService reqId;
         private readonly OwinContext context;
         private readonly IEventService inner;
 
-        public EventServiceDecorator(OwinEnvironmentService owinEnvironment, IRequestIdService reqId, IEventService inner)
+        public EventServiceDecorator(IdentityServerOptions options, OwinEnvironmentService owinEnvironment, IRequestIdService reqId, IEventService inner)
         {
+            this.options = options;
             this.context = new OwinContext(owinEnvironment.Environment);
-            _reqId = reqId;
+            this.reqId = reqId;
             this.inner = inner;
         }
 
         public void Raise(EventBase evt)
         {
-            evt = PrepareEvent(evt);
-            inner.Raise(evt);
+            if (CanRaiseEvent(evt))
+            {
+                evt = PrepareEvent(evt);
+                inner.Raise(evt);
+            }
+        }
+
+        bool CanRaiseEvent(EventBase evt)
+        {
+            switch(evt.EventType)
+            {
+                case EventType.Failure:
+                    return options.EventsOptions.RaiseFailureEvents;
+                case EventType.Information:
+                    return options.EventsOptions.RaiseInformationEvents;
+                case EventType.Success:
+                    return options.EventsOptions.RaiseSuccessEvents;
+                case EventType.Error:
+                    return options.EventsOptions.RaiseErrorEvents;
+            }
+
+            return false;
         }
 
         protected virtual EventBase PrepareEvent(EventBase evt)
@@ -49,11 +72,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             evt.Context = new EventContext
             {
-                ActivityId = _reqId.GetRequestId(),
+                ActivityId = reqId.GetRequestId(),
                 TimeStamp = DateTimeOffset.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,
-                RemoteIpAddress = context.Request.RemoteIpAddress
+                RemoteIpAddress = context.Request.RemoteIpAddress,
             };
 
             var principal = context.Authentication.User;
