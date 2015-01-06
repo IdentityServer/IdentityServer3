@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public override async Task OnAuthorizationAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
         {
-            // firect check for 415
+            // first check for 415
             await base.OnAuthorizationAsync(actionContext, cancellationToken);
 
             if (actionContext.Response == null)
@@ -69,7 +69,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var ctx = new OwinContext(env);
                 ctx.Request.Body = ms;
 
-                success = await AntiForgeryTokenValidator.IsTokenValid(env);
+                var antiForgeryToken = env.ResolveDependency<AntiForgeryToken>();
+                success = await antiForgeryToken.IsTokenValid();
             }
 
             if (!success)

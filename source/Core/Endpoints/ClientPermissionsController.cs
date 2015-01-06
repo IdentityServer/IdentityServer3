@@ -41,17 +41,25 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     public class ClientPermissionsController : ApiController
     {
-        readonly IClientPermissionsService clientPermissionsService;
-        readonly IdentityServerOptions options;
-        readonly IViewService viewSvc;
-        readonly ILocalizationService localizationService;
+        private readonly IClientPermissionsService clientPermissionsService;
+        private readonly IdentityServerOptions options;
+        private readonly IViewService viewSvc;
+        private readonly ILocalizationService localizationService;
+        private readonly AntiForgeryToken antiForgeryToken;
 
-        public ClientPermissionsController(IClientPermissionsService clientPermissionsService, IdentityServerOptions options, IViewService viewSvc, ILocalizationService localizationService)
+
+        public ClientPermissionsController(
+            IClientPermissionsService clientPermissionsService, 
+            IdentityServerOptions options, 
+            IViewService viewSvc, 
+            ILocalizationService localizationService,
+            AntiForgeryToken antiForgeryToken)
         {
             this.clientPermissionsService = clientPermissionsService;
             this.options = options;
             this.viewSvc = viewSvc;
             this.localizationService = localizationService;
+            this.antiForgeryToken = antiForgeryToken;
         }
 
         [Route(Constants.RoutePaths.ClientPermissions)]
@@ -123,7 +131,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 CurrentUser = User.GetName(),
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 RevokePermissionUrl = Request.GetOwinContext().GetPermissionsPageUrl(),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(env),
+                AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
                 Clients = clients,
                 ErrorMessage = error
             };

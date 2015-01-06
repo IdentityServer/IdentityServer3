@@ -128,6 +128,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return instance;
         }
 
+        internal static T ResolveDependency<T>(this IOwinContext context)
+        {
+            return context.Environment.ResolveDependency<T>();
+        }
+
         internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");

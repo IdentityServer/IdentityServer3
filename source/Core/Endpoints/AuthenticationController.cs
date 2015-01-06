@@ -60,6 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly MessageCookie<SignInMessage> signInMessageCookie;
         private readonly MessageCookie<SignOutMessage> signOutMessageCookie;
         private readonly LastUserNameCookie lastUsernameCookie;
+        private readonly AntiForgeryToken antiForgeryToken;
 
         public AuthenticationController(
             OwinEnvironmentService owin,
@@ -72,7 +73,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             SessionCookie sessionCookie, 
             MessageCookie<SignInMessage> signInMessageCookie,
             MessageCookie<SignOutMessage> signOutMessageCookie,
-            LastUserNameCookie lastUsernameCookie)
+            LastUserNameCookie lastUsernameCookie,
+            AntiForgeryToken antiForgeryToken)
         {
             this.context = new OwinContext(owin.Environment);
             this.viewService = viewService;
@@ -85,6 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             this.signInMessageCookie = signInMessageCookie;
             this.signOutMessageCookie = signOutMessageCookie;
             this.lastUsernameCookie = lastUsernameCookie;
+            this.antiForgeryToken = antiForgeryToken;
         }
 
         [Route(Constants.RoutePaths.Login, Name = Constants.RouteNames.Login)]
@@ -630,7 +633,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 AllowRememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(context.Environment),
+                AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
                 Username = username
             };
 
@@ -661,7 +664,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteUrl = context.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id = id }),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(context.Environment),
+                AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
                 ClientName = clientName
             };
             return new LogoutActionResult(viewService, logoutModel);

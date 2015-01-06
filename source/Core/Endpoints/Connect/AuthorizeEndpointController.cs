@@ -57,6 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly ILocalizationService _localizationService;
         private readonly IEventService _events;
+        private readonly AntiForgeryToken _antiForgeryToken;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.
@@ -68,6 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="options">The options.</param>
         /// <param name="localizationService">The localization service.</param>
         /// <param name="events">The event service.</param>
+        /// <param name="antiForgeryToken">The anti forgery token.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,
@@ -75,7 +77,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             AuthorizeInteractionResponseGenerator interactionGenerator,
             IdentityServerOptions options,
             ILocalizationService localizationService,
-            IEventService events)
+            IEventService events,
+            AntiForgeryToken antiForgeryToken)
         {
             _viewService = viewService;
             _options = options;
@@ -85,6 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             _validator = validator;
             _localizationService = localizationService;
             _events = events;
+            _antiForgeryToken = antiForgeryToken;
         }
 
         /// <summary>
@@ -251,7 +255,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
                 LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
-                AntiForgery = AntiForgeryTokenValidator.GetAntiForgeryHiddenInput(Request.GetOwinEnvironment())
+                AntiForgery = _antiForgeryToken.GetAntiForgeryToken()
             };
 
             return new ConsentActionResult(_viewService, consentModel);
