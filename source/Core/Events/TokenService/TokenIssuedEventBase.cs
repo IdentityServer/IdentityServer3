@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         protected TokenIssuedEventBase(int id)
             : base(EventConstants.Categories.TokenService)
         {
-            EventType = EventType.Success;
+            EventType = EventType.Information;
             Id = id;
         }
 

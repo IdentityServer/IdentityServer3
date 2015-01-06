@@ -214,7 +214,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 throw new InvalidOperationException("Invalid token type.");
             }
 
-            if (_options.EventsOptions.RaiseSuccessEvents)
+            if (_options.EventsOptions.RaiseInformationEvents)
             {
                 _events.RaiseTokenIssuedEvent(token);
             }
