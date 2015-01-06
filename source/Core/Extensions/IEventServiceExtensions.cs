@@ -198,6 +198,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
+        public static void RaiseSuccessfulEndpointEvent(this IEventService events, string endpointName)
+        {
+            var evt = new EndpointSuccessEvent(endpointName);
+
+            events.RaiseEvent(evt);
+        }
+
+        public static void RaiseFailureEndpointEvent(this IEventService events, string endpointName, string error)
+        {
+            var evt = new EndpointFailureEvent(endpointName, error);
+            
+            events.RaiseEvent(evt);
+        }
+
         private static void RaiseEvent(this IEventService events, EventBase evt)
         {
             if (events == null) throw new ArgumentNullException("events");

@@ -23,9 +23,10 @@ namespace Thinktecture.IdentityServer.Core.Events
 {
     class EndpointFailureEvent : EndpointSuccessEvent
     {
-        public EndpointFailureEvent(string endpointName) : base(endpointName)
+        public EndpointFailureEvent(string endpointName, string error) : base(endpointName)
         {
             EventType = EventType.Failure;
+            Details = error;
         }
     }
 }
