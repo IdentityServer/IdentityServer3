@@ -28,11 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Events
         public ExternalLoginEvent(EventType type)
             : base(EventConstants.Ids.ExternalLogin, type)
         {
-            if (type == Events.EventType.Success)
+            if (type == EventType.Success)
             {
                 Message = Resources.Events.ExternalLoginSuccess;
             }
-            else if (type == Events.EventType.Failure)
+            else if (type == EventType.Failure)
             {
                 Message = Resources.Events.ExternalLoginFailure;
             }

@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="TokenIssuedEventBase"/> class.
         /// </summary>
         /// <param name="id">Event id.</param>
-        public TokenIssuedEventBase(int id)
+        protected TokenIssuedEventBase(int id)
             : base(EventConstants.Categories.TokenService)
         {
             EventType = EventType.Success;

@@ -29,11 +29,11 @@ namespace Thinktecture.IdentityServer.Core.Events
         public LocalLoginEvent(EventType type)
             : base(EventConstants.Ids.LocalLogin, type)
         {
-            if (type == Events.EventType.Success)
+            if (type == EventType.Success)
             {
                 Message = Resources.Events.LocalLoginSuccess;
             }
-            else if (type == Events.EventType.Failure)
+            else if (type == EventType.Failure)
             {
                 Message = Resources.Events.LocalLoginFailure;
             }

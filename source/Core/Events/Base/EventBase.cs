@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="EventBase"/> class.
         /// </summary>
         /// <param name="category">The event category.</param>
-        public EventBase(string category)
+        protected EventBase(string category)
         {
             if (string.IsNullOrWhiteSpace(category)) throw new ArgumentNullException("category");
 

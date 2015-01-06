@@ -30,8 +30,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         const string AllScopes = "CachingScopeStore.allscopes";
         const string AllScopesPublic = AllScopes + ".public";
 
-        IScopeStore inner;
-        ICache<IEnumerable<Scope>> cache;
+        readonly IScopeStore inner;
+        readonly ICache<IEnumerable<Scope>> cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CachingScopeStore"/> class.
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </summary>
         /// <param name="publicOnly">if set to <c>true</c> only public scopes are returned.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<Models.Scope>> GetScopesAsync(bool publicOnly = true)
+        public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
             var key = GetKey(publicOnly);
             return await cache.GetAsync(key, async () => await inner.GetScopesAsync(publicOnly));

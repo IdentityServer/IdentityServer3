@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Initializes a new instance of the <see cref="ClaimsFilterBase"/> class.
         /// </summary>
         /// <param name="provider">The provider this claims filter will operate against.</param>
-        public ClaimsFilterBase(string provider)
+        protected ClaimsFilterBase(string provider)
         {
             this.provider = provider;
         }

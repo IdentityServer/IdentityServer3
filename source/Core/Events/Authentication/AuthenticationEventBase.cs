@@ -28,7 +28,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// </summary>
         /// <param name="id">Event id.</param>
         /// <param name="type">Event type.</param>
-        public AuthenticationEventBase(int id, EventType type) : base(EventConstants.Categories.Authentication)
+        protected AuthenticationEventBase(int id, EventType type) : base(EventConstants.Categories.Authentication)
         {
             Id = id;
             EventType = type;

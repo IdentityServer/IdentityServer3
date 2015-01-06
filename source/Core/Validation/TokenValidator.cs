@@ -234,7 +234,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (token.Type != Constants.TokenTypes.AccessToken)
             {
-                LogError(string.Format("Token handle does not resolve to an access token - but instead to: {1}", tokenHandle, token.Type));
+                LogError("Token handle does not resolve to an access token - but instead to: " + token.Type);
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 

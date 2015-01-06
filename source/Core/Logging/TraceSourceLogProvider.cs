@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
                 }
                 else
                 {
-                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception.ToString()));
+                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception));
                 }
             }
 

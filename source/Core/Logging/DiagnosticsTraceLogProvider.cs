@@ -64,12 +64,12 @@ namespace Thinktecture.IdentityServer.Core.Logging
             {
                 if (exception == null)
                 {
-                    var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow.ToString(), messageFunc());
+                    var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow, messageFunc());
                     TraceMsg(logLevel, message);
                 }
                 else
                 {
-                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow.ToString(), messageFunc(), exception.ToString());
+                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow, messageFunc(), exception);
                     TraceMsg(logLevel, message);
                 }
             }
@@ -116,8 +116,6 @@ namespace Thinktecture.IdentityServer.Core.Logging
                     break;
                 case LogLevel.Fatal:
                     Trace.TraceError(string.Format("FATAL : {0}", message));
-                    break;
-                default:
                     break;
             }
         }

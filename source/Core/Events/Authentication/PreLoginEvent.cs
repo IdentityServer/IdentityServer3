@@ -28,11 +28,11 @@ namespace Thinktecture.IdentityServer.Core.Events
         public PreLoginEvent(EventType type)
             : base(EventConstants.Ids.PreLogin, type)
         {
-            if (type == Events.EventType.Success)
+            if (type == EventType.Success)
             {
                 Message = Resources.Events.PreLoginSuccess;
             }
-            else if (type == Events.EventType.Failure)
+            else if (type == EventType.Failure)
             {
                 Message = Resources.Events.PreLoginFailure;
             }

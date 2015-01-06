@@ -89,8 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InformationEventsStart = 4000;
 
-            private const int InternalError = InformationEventsStart + 0;
-            private const int CertificateExpiration = InformationEventsStart + 1;
+            private const int CertificateExpiration = InformationEventsStart + 0;
 
             ///////////////////////////
             /// Information events

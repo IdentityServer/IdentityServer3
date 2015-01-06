@@ -56,6 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="tokenValidator">The token validator.</param>
         /// <param name="generator">The generator.</param>
         /// <param name="tokenUsageValidator">The token usage validator.</param>
+        /// <param name="events">The event service</param>
         public UserInfoEndpointController(IdentityServerOptions options, TokenValidator tokenValidator, UserInfoResponseGenerator generator, BearerTokenUsageValidator tokenUsageValidator, IEventService events)
         {
             _tokenValidator = tokenValidator;

@@ -67,6 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="interactionGenerator">The interaction generator.</param>
         /// <param name="options">The options.</param>
         /// <param name="localizationService">The localization service.</param>
+        /// <param name="events">The event service.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,

@@ -27,8 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class SessionCookie
     {
-        IOwinContext context;
-        IdentityServerOptions identityServerOptions;
+        readonly IOwinContext context;
+        readonly IdentityServerOptions identityServerOptions;
 
         protected internal SessionCookie(IOwinContext ctx, IdentityServerOptions options)
         {

@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly IScopeStore _scopes;
 
-        static JsonSerializerSettings Settings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };

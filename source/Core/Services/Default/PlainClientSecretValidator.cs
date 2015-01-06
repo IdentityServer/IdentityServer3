@@ -27,8 +27,6 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class PlainTextClientSecretValidator : IClientSecretValidator
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         /// <summary>
         /// Validates the client secret
         /// </summary>

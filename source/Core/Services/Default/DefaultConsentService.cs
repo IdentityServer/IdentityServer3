@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         public async Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
-            if (subject == null) throw new ArgumentNullException("user");
+            if (subject == null) throw new ArgumentNullException("subject");
 
             if (!client.RequireConsent)
             {
@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         public async Task UpdateConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
-            if (subject == null) throw new ArgumentNullException("user");
+            if (subject == null) throw new ArgumentNullException("subject");
 
             if (client.AllowRememberConsent)
             {

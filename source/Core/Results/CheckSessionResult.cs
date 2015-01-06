@@ -24,8 +24,6 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     internal class CheckSessionResult : HtmlActionResult
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-
         private readonly IdentityServerOptions options;
         private readonly HttpRequestMessage request;
 

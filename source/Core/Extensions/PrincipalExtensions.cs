@@ -58,9 +58,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static long GetAuthenticationTimeEpoch(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var value = id.FindFirst(Constants.ClaimTypes.AuthenticationTime).Value;
+            var claim = id.FindFirst(Constants.ClaimTypes.AuthenticationTime);
 
-            return long.Parse(value);
+            if (claim == null) throw new InvalidOperationException("auth_time is missing.");
+           
+            return long.Parse(claim.Value);
         }
 
         /// <summary>
