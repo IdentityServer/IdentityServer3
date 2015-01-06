@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Events
     {
         public EndpointFailureEvent(string endpointName, string error) : base(endpointName)
         {
-            EventType = EventType.Failure;
+            EventType = EventTypes.Failure;
             Id = EventConstants.Ids.FailedEndpoint;
             Details = error;
 

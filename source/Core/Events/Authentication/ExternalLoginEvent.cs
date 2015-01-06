@@ -25,14 +25,14 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="ExternalLoginEvent"/> class.
         /// </summary>
         /// <param name="type">Event type.</param>
-        public ExternalLoginEvent(EventType type)
+        public ExternalLoginEvent(EventTypes type)
             : base(EventConstants.Ids.ExternalLogin, type)
         {
-            if (type == EventType.Success)
+            if (type == EventTypes.Success)
             {
                 Message = Resources.Events.ExternalLoginSuccess;
             }
-            else if (type == EventType.Failure)
+            else if (type == EventTypes.Failure)
             {
                 Message = Resources.Events.ExternalLoginFailure;
             }

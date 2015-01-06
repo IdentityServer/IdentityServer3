@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static void RaisePreLoginSuccessEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new PreLoginEvent(EventType.Success)
+            var evt = new PreLoginEvent(EventTypes.Success)
             {
                 SubjectId = authResult.User.GetSubjectId(),
                 Name = authResult.User.Identity.Name,
@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaisePreLoginFailureEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, string details)
         {
-            var evt = new PreLoginEvent(EventType.Failure)
+            var evt = new PreLoginEvent(EventTypes.Failure)
             {
                 SignInId = signInMessageId,
                 SignInMessage = signInMessage,
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseLocalLoginSuccessEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new LocalLoginEvent(EventType.Success)
+            var evt = new LocalLoginEvent(EventTypes.Success)
             {
                 SubjectId = authResult.User.GetSubjectId(),
                 Name = authResult.User.Identity.Name,
@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseLocalLoginFailureEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, string details)
         {
-            var evt = new LocalLoginEvent(EventType.Failure)
+            var evt = new LocalLoginEvent(EventTypes.Failure)
             {
                 SignInId = signInMessageId,
                 SignInMessage = signInMessage,
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseExternalLoginSuccessEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
-            var evt = new ExternalLoginEvent(EventType.Success)
+            var evt = new ExternalLoginEvent(EventTypes.Success)
             {
                 Provider = externalIdentity.Provider,
                 ProviderId = externalIdentity.ProviderId,
@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseExternalLoginFailureEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
         {
-            var evt = new ExternalLoginEvent(EventType.Failure)
+            var evt = new ExternalLoginEvent(EventTypes.Failure)
             {
                 Provider = externalIdentity.Provider,
                 ProviderId = externalIdentity.ProviderId,
@@ -110,7 +110,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseExternalLoginErrorEvent(this IEventService events, string details)
         {
-            var evt = new ExternalLoginEvent(EventType.Error)
+            var evt = new ExternalLoginEvent(EventTypes.Error)
             {
                 Details = details
             };
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, string subjectId, SignInMessage message)
         {
-            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Success)
+            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes.Success)
             {
                 LoginUserName = userName,
                 SubjectId = subjectId,
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, SignInMessage message)
         {
-            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventType.Failure)
+            var evt = new ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes.Failure)
             {
                 LoginUserName = userName,
                 SignInMessage = message

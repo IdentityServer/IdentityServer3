@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="ResourceOwnerPasswordFlowAuthenticationEvent"/> class.
         /// </summary>
         /// <param name="type">The event type.</param>
-        public ResourceOwnerPasswordFlowAuthenticationEvent(EventType type) : base(EventConstants.Ids.ResourceOwnerFlowLogin, type)
+        public ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes type) : base(EventConstants.Ids.ResourceOwnerFlowLogin, type)
         {
             Message = "Authentication via resource owner password credential flow";
         }

@@ -53,13 +53,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             switch(evt.EventType)
             {
-                case EventType.Failure:
+                case EventTypes.Failure:
                     return options.EventsOptions.RaiseFailureEvents;
-                case EventType.Information:
+                case EventTypes.Information:
                     return options.EventsOptions.RaiseInformationEvents;
-                case EventType.Success:
+                case EventTypes.Success:
                     return options.EventsOptions.RaiseSuccessEvents;
-                case EventType.Error:
+                case EventTypes.Error:
                     return options.EventsOptions.RaiseErrorEvents;
             }
 

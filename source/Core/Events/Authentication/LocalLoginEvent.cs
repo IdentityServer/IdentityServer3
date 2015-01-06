@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="LocalLoginEvent"/> class.
         /// </summary>
         /// <param name="type">The event type.</param>
-        public LocalLoginEvent(EventType type)
+        public LocalLoginEvent(EventTypes type)
             : this(EventConstants.Ids.LocalLogin, type)
         {
         }
@@ -35,14 +35,14 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// </summary>
         /// <param name="id">Event id.</param>
         /// <param name="type">Event type.</param>
-        protected LocalLoginEvent(int id, EventType type)
+        protected LocalLoginEvent(int id, EventTypes type)
             : base(id, type)
         {
-            if (type == EventType.Success)
+            if (type == EventTypes.Success)
             {
                 Message = Resources.Events.LocalLoginSuccess;
             }
-            else if (type == EventType.Failure)
+            else if (type == EventTypes.Failure)
             {
                 Message = Resources.Events.LocalLoginFailure;
             }

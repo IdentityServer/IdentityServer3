@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <value>
         /// The type of the event.
         /// </value>
-        public EventType EventType { get; set; }
+        public EventTypes EventType { get; set; }
 
         /// <summary>
         /// Gets or sets the event message.

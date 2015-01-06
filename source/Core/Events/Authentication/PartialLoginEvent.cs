@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="PartialLoginEvent"/> class.
         /// </summary>
         public PartialLoginEvent()
-            : base(EventConstants.Ids.PartialLogin, EventType.Success)
+            : base(EventConstants.Ids.PartialLogin, EventTypes.Success)
         {
             Message = Resources.Events.PartialLogin;
         }

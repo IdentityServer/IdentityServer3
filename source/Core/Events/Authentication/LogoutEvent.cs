@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             : base(EventConstants.Categories.Authentication)
         {
             Id = EventConstants.Ids.Logout;
-            EventType = EventType.Success;
+            EventType = EventTypes.Success;
             Message = Resources.Events.LogoutEvent;
         }
 

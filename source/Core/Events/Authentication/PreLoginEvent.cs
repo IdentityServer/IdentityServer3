@@ -25,14 +25,14 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// Initializes a new instance of the <see cref="PreLoginEvent"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-        public PreLoginEvent(EventType type)
+        public PreLoginEvent(EventTypes type)
             : base(EventConstants.Ids.PreLogin, type)
         {
-            if (type == EventType.Success)
+            if (type == EventTypes.Success)
             {
                 Message = Resources.Events.PreLoginSuccess;
             }
-            else if (type == EventType.Failure)
+            else if (type == EventTypes.Failure)
             {
                 Message = Resources.Events.PreLoginFailure;
             }
