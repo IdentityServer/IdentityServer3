@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -131,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signInMessage.IdP.IsPresent())
             {
                 Logger.InfoFormat("identity provider requested, redirecting to: {0}", signInMessage.IdP);
-                return Redirect(Url.Link(Constants.RouteNames.LoginExternal, new { provider = signInMessage.IdP, signin }));
+                return Redirect(context.GetExternalProviderLoginUrl(signInMessage.IdP, signin));
             }
 
             return await RenderLoginPage(signInMessage, signin);
@@ -469,10 +468,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Logger.InfoFormat("Logout requested for subject: {0}", sub);
             }
 
-            ClearAuthenticationCookies();
             sessionCookie.ClearSessionId();
             signInMessageCookie.ClearAll();
             signOutMessageCookie.ClearAll();
+            
+            ClearAuthenticationCookies();
             SignOutOfExternalIdP();
 
             if (user != null && user.Identity.IsAuthenticated)
@@ -511,9 +511,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 // we need a random ID to resume, and this will be the query string
                 // to match a claim added. the claim added will be the original 
                 // signIn ID. 
-                var resumeId = CryptoRandom.CreateUniqueId(); 
+                var resumeId = CryptoRandom.CreateUniqueId();
 
-                var resumeLoginUrl = Url.Link(Constants.RouteNames.ResumeLoginFromRedirect, new { resume = resumeId });
+                var resumeLoginUrl = context.GetPartialLoginResumeUrl(resumeId);
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
                 id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessageId));
@@ -615,8 +615,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 {
                     // no local login and only one provider -- redirect to provider
                     Logger.Info("no local login and only one provider -- redirect to provider");
-                    var url = context.Environment.GetIdentityServerHost();
-                    url += providers.First().Href;
+                    var url = providers.First().Href;
                     return Redirect(url);
                 }
                 else
@@ -654,7 +653,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 select new LoginPageLink
                 {
                     Text = p.Caption,
-                    Href = Url.Route(Constants.RouteNames.LoginExternal, new { provider = p.AuthenticationType, signin = signInMessageId })
+                    Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
                 };
 
             return providers.ToArray();

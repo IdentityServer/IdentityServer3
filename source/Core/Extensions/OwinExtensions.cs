@@ -209,5 +209,25 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
             return id;
         }
+
+        internal static string GetCspReportUrl(this IOwinContext context)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CspReport;
+        }
+
+        internal static string GetPartialLoginResumeUrl(this IOwinContext context, string resumeId)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;
+        }
+        
+        internal static string GetPermissionsPageUrl(this IOwinContext context)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ClientPermissions;
+        }
+
+        internal static string GetExternalProviderLoginUrl(this IOwinContext context, string provider, string signinId)
+        {
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LoginExternal + "?provider=" + provider + "&signin=" + signinId;
+        }
     }
 }
