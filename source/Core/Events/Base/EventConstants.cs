@@ -37,7 +37,6 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string EndSession = "endsession";
             public const string AccessTokenValidation = "accesstokenvalidation";
             public const string IdentityTokenValidation = "identitytokenvalidaton";
-
         }
         
         public static class Ids
@@ -47,15 +46,23 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int AuthenticationEventsStart = 1000;
 
-            public const int PreLogin = AuthenticationEventsStart + 0;
-            public const int LocalLogin = AuthenticationEventsStart + 1;
-            public const int ExternalLogin = AuthenticationEventsStart + 2;
-            public const int Logout = AuthenticationEventsStart + 3;
-            
-            public const int PartialLogin = AuthenticationEventsStart + 10;
-            public const int PartialLoginComplete = AuthenticationEventsStart + 11;
+            public const int PreLoginSuccess = AuthenticationEventsStart + 0;
+            public const int PreLoginFailure = AuthenticationEventsStart + 1;
 
-            public const int ResourceOwnerFlowLogin = AuthenticationEventsStart + 20;
+            public const int LocalLoginSuccess = AuthenticationEventsStart + 10;
+            public const int LocalLoginFailure = AuthenticationEventsStart + 11;
+
+            public const int ExternalLoginSuccess = AuthenticationEventsStart + 20;
+            public const int ExternalLoginFailure = AuthenticationEventsStart + 21;
+            public const int ExternalLoginError = AuthenticationEventsStart + 22;
+            
+            public const int Logout = AuthenticationEventsStart + 30;
+
+            public const int PartialLogin = AuthenticationEventsStart + 40;
+            public const int PartialLoginComplete = AuthenticationEventsStart + 41;
+
+            public const int ResourceOwnerFlowLoginSuccess = AuthenticationEventsStart + 50;
+            public const int ResourceOwnerFlowLoginFailure = AuthenticationEventsStart + 51;
 
             ///////////////////////////
             /// Token service related events
@@ -66,12 +73,12 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const int IdentityTokenIssued = TokenServiceEventsStart + 1;
 
             public const int AuthorizationCodeIssued = TokenServiceEventsStart + 10;
-            public const int SuccessfulAuthorizationCodeRedeemed = TokenServiceEventsStart + 11;
-            public const int FailedAuthorizationCodeRedeemed = TokenServiceEventsStart + 12;
+            public const int AuthorizationCodeRedeemedSuccess = TokenServiceEventsStart + 11;
+            public const int AuthorizationCodeRedeemedFailure = TokenServiceEventsStart + 12;
 
             public const int RefreshTokenIssued = TokenServiceEventsStart + 20;
-            public const int SuccessfulRefreshTokenRefreshed = TokenServiceEventsStart + 21;
-            public const int FailedRefreshTokenRefreshed = TokenServiceEventsStart + 22;
+            public const int RefreshTokenRefreshedSuccess = TokenServiceEventsStart + 21;
+            public const int RefreshTokenRefreshedFailure = TokenServiceEventsStart + 22;
 
             public const int PermissionRevoked = TokenServiceEventsStart + 30;
             
@@ -81,8 +88,8 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int EndpointsEventsStart = 3000;
 
-            public const int SuccessfulEndpoint = EndpointsEventsStart + 0;
-            public const int FailedEndpoint = EndpointsEventsStart + 1;
+            public const int EndpointSuccess = EndpointsEventsStart + 0;
+            public const int EndpointFailure = EndpointsEventsStart + 1;
             
             ///////////////////////////
             /// Information events
@@ -96,7 +103,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InternalErrorEventsStart = 5000;
 
-            public const int UnhandledException = InternalErrorEventsStart + 0;
+            public const int UnhandledExceptionError = InternalErrorEventsStart + 0;
         }
     }
 }

@@ -16,15 +16,25 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    class EndpointFailureEvent : EndpointSuccessEvent
+    /// <summary>
+    /// Event class for external login events
+    /// </summary>
+    public class ExternalLoginDetails : LoginDetails
     {
-        public EndpointFailureEvent(string endpointName, string error) : base(endpointName)
-        {
-            EventType = EventTypes.Failure;
-            Id = EventConstants.Ids.FailedEndpoint;
-            Details = error;
+        /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
+        public string Provider { get; set; }
 
-            Message = "Failure while calling endpoint.";
-        }
+        /// <summary>
+        /// Gets or sets the provider identifier.
+        /// </summary>
+        /// <value>
+        /// The provider identifier.
+        /// </value>
+        public string ProviderId { get; set; }
     }
 }

@@ -13,16 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class SuccessfulAuthorizationCodeRedeemedEvent : EventBase
+    /// <summary>
+    /// Details class for refresh token issued events
+    /// </summary>
+    public class RefreshTokenIssuedDetails : TokenIssuedDetailsBase
     {
-        public SuccessfulAuthorizationCodeRedeemedEvent()
-            : base(EventConstants.Categories.TokenService)
-        {
-            Id = EventConstants.Ids.SuccessfulAuthorizationCodeRedeemed;
-            Message = "Authorization code redeem success";
-        }
+        /// <summary>
+        /// Gets or sets the handle identifier.
+        /// </summary>
+        /// <value>
+        /// The handle identifier.
+        /// </value>
+        public string HandleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version.
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        public int Version { get; set; }
     }
 }

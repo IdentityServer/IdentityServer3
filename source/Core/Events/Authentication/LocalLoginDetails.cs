@@ -17,17 +17,16 @@
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for resource owner password flow login events
+    /// Event details for local login events
     /// </summary>
-    public class ResourceOwnerPasswordFlowAuthenticationEvent : LocalLoginEvent
+    public class LocalLoginDetails : LoginDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceOwnerPasswordFlowAuthenticationEvent"/> class.
+        /// Gets or sets the name of the login user.
         /// </summary>
-        /// <param name="type">The event type.</param>
-        public ResourceOwnerPasswordFlowAuthenticationEvent(EventTypes type) : base(EventConstants.Ids.ResourceOwnerFlowLogin, type)
-        {
-            Message = "Authentication via resource owner password credential flow";
-        }
+        /// <value>
+        /// The name of the login user.
+        /// </value>
+        public string LoginUserName { get; set; }
     }
 }

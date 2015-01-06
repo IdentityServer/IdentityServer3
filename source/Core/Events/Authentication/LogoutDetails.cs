@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for partial login complete events
+    /// Event details for logout events
     /// </summary>
-    public class PartialLoginCompleteEvent : AuthenticationEventBase
+    public class LogoutDetails : AuthenticationDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartialLoginCompleteEvent"/> class.
+        /// Gets or sets the sign out identifier.
         /// </summary>
-        public PartialLoginCompleteEvent()
-            : base(EventConstants.Ids.PartialLoginComplete, EventTypes.Success)
-        {
-            Message = Resources.Events.PartialLoginComplete;
-        }
+        /// <value>
+        /// The sign out identifier.
+        /// </value>
+        public string SignOutId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sign out message.
+        /// </summary>
+        /// <value>
+        /// The sign out message.
+        /// </value>
+        public SignOutMessage SignOutMessage { get; set; }
     }
 }

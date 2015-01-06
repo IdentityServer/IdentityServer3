@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    class EndpointSuccessEvent : EventBase
+    /// <summary>
+    /// Details class for access token issued events
+    /// </summary>
+    public class AccessTokenIssuedDetails : TokenIssuedDetailsBase
     {
-        public EndpointSuccessEvent(string endpointName) : base(EventConstants.Categories.Endpoints)
-        {
-            EndpointName = endpointName;
-            EventType = EventTypes.Success;
-            Id = EventConstants.Ids.SuccessfulEndpoint;
-
-            Message = "Endpoint successfully called.";
-        }
-
-        public string EndpointName { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the access token.
+        /// </summary>
+        /// <value>
+        /// The type of the token.
+        /// </value>
+        public AccessTokenType TokenType { get; set; }
     }
 }

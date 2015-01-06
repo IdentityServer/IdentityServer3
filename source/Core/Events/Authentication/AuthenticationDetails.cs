@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for partial login events
+    /// Event details for authentication events
     /// </summary>
-    public class PartialLoginEvent : AuthenticationEventBase
+    public abstract class AuthenticationDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartialLoginEvent"/> class.
+        /// Gets or sets the subject identifier.
         /// </summary>
-        public PartialLoginEvent()
-            : base(EventConstants.Ids.PartialLogin, EventTypes.Success)
-        {
-            Message = Resources.Events.PartialLogin;
-        }
+        /// <value>
+        /// The subject identifier.
+        /// </value>
+        public string SubjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user's name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
     }
 }

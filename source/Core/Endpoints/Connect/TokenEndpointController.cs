@@ -94,10 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                if (_options.EventsOptions.RaiseSuccessEvents)
-                {
-                    _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
-                }
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
             }
 
             Logger.Info("End token request");
@@ -133,10 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseFailureEvent(string error)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
-            }
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
         }
     }
 }

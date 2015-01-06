@@ -38,25 +38,20 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// The refresh token store
         /// </summary>
         protected readonly IRefreshTokenStore _store;
-        
-        /// <summary>
-        /// The _options
-        /// </summary>
-        protected readonly IdentityServerOptions _options;
-        
+
         /// <summary>
         /// The _events
         /// </summary>
         protected readonly IEventService _events;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultRefreshTokenService"/> class.
+        /// Initializes a new instance of the <see cref="DefaultRefreshTokenService" /> class.
         /// </summary>
         /// <param name="store">The refresh token store.</param>
-        public DefaultRefreshTokenService(IRefreshTokenStore store, IdentityServerOptions options, IEventService events)
+        /// <param name="events">The events.</param>
+        public DefaultRefreshTokenService(IRefreshTokenStore store, IEventService events)
         {
             _store = store;
-            _options = options;
             _events = events;
         }
 
@@ -154,30 +149,24 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 RaiseRefreshTokenRefreshedEvent(handle, newHandle, refreshToken);
                 Logger.Debug("Updated refresh token in store");
-                
+
                 return newHandle;
             }
 
             RaiseRefreshTokenRefreshedEvent(handle, handle, refreshToken);
             Logger.Debug("No updates to refresh token done");
-            
+
             return handle;
         }
 
         private void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
         {
-            if (_options.EventsOptions.RaiseInformationEvents)
-            {
-                _events.RaiseRefreshTokenIssuedEvent(handle, token);
-            }
+            _events.RaiseRefreshTokenIssuedEvent(handle, token);
         }
 
         private void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
-            }
+            _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
         }
     }
 }

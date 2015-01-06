@@ -14,30 +14,43 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Event class for access token issued events
+    /// Details class for refresh token refresh events
     /// </summary>
-    public class AccessTokenIssuedEvent : TokenIssuedEventBase
+    public class RefreshTokenRefreshDetails
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AccessTokenIssuedEvent"/> class.
-        /// </summary>
-        public AccessTokenIssuedEvent()
-            : base(EventConstants.Ids.AccessTokenIssued)
-        {
-            Message = "Access token issued";
-        }
-
-        /// <summary>
-        /// Gets or sets the type of the access token.
+        /// Gets or sets the client identifier.
         /// </summary>
         /// <value>
-        /// The type of the token.
+        /// The client identifier.
         /// </value>
-        public AccessTokenType TokenType { get; set; }
+        public string ClientId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the old handle.
+        /// </summary>
+        /// <value>
+        /// The old handle.
+        /// </value>
+        public string OldHandle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the new handle.
+        /// </summary>
+        /// <value>
+        /// The new handle.
+        /// </value>
+        public string NewHandle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lifetime.
+        /// </summary>
+        /// <value>
+        /// The lifetime.
+        /// </value>
+        public int Lifetime { get; set; }
     }
 }

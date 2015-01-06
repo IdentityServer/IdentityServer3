@@ -37,7 +37,6 @@ namespace Thinktecture.IdentityServer.Tests.Validation
         {
             var service = new DefaultRefreshTokenService(
                 store,
-                TestIdentityServerOptions.Create(),
                 new DefaultEventService());
 
             return service;

@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    class AuthorizationCodeIssuedEvent : TokenIssuedEventBase
+    /// <summary>
+    /// Details class for authorization code issued events
+    /// </summary>
+    public class AuthorizationCodeIssuedDetails : TokenIssuedDetailsBase
     {
-        public AuthorizationCodeIssuedEvent() : base(EventConstants.Ids.AuthorizationCodeIssued)
-        {
-            Message = "Authorization code issued";
-        }
-
+        /// <summary>
+        /// Gets or sets the handle identifier.
+        /// </summary>
+        /// <value>
+        /// The handle identifier.
+        /// </value>
         public string HandleId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the redirect URI.
+        /// </summary>
+        /// <value>
+        /// The redirect URI.
+        /// </value>
         public string RedirectUri { get; set; }
     }
 }

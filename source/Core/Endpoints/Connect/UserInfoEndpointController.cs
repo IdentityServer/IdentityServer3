@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     public class UserInfoEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         private readonly UserInfoResponseGenerator _generator;
         private readonly TokenValidator _tokenValidator;
         private readonly BearerTokenUsageValidator _tokenUsageValidator;
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var tokenResult = await _tokenValidator.ValidateAccessTokenAsync(
-                tokenUsageResult.Token, 
+                tokenUsageResult.Token,
                 Constants.StandardScopes.OpenId);
 
             if (tokenResult.IsError)
@@ -126,10 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseSuccessEvent()
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.UserInfo);
-            }
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.UserInfo);
         }
 
         private void RaiseFailureEvent(string error)

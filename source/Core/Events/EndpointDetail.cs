@@ -16,19 +16,8 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    /// <summary>
-    /// Event class for unhandled exceptions
-    /// </summary>
-    public class UnhandledExceptionEvent : EventBase
+    class EndpointDetail
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnhandledExceptionEvent"/> class.
-        /// </summary>
-        public UnhandledExceptionEvent() : base(EventConstants.Categories.InternalError)
-        {
-            EventType = Events.EventTypes.Error;
-            Id = EventConstants.Ids.UnhandledException;
-            Message = "Unhandled exception.";
-        }
+        public string EndpointName { get; set; }
     }
 }

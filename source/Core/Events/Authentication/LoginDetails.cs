@@ -15,41 +15,13 @@
  */
 
 using Thinktecture.IdentityServer.Core.Models;
-
 namespace Thinktecture.IdentityServer.Core.Events
 {
     /// <summary>
-    /// Base class for authentication events
+    /// Event details for login events
     /// </summary>
-    public abstract class AuthenticationEventBase : EventBase
+    public class LoginDetails : AuthenticationDetails
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthenticationEventBase"/> class.
-        /// </summary>
-        /// <param name="id">Event id.</param>
-        /// <param name="type">Event type.</param>
-        protected AuthenticationEventBase(int id, EventTypes type) : base(EventConstants.Categories.Authentication)
-        {
-            Id = id;
-            EventType = type;
-        }
-
-        /// <summary>
-        /// Gets or sets the subject identifier.
-        /// </summary>
-        /// <value>
-        /// The subject identifier.
-        /// </value>
-        public string SubjectId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user's name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the sign in identifier.
         /// </summary>
@@ -57,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The sign in identifier.
         /// </value>
         public string SignInId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the sign in message.
         /// </summary>
@@ -72,6 +44,6 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <value>
         ///   <c>true</c> if is a partial login; otherwise, <c>false</c>.
         /// </value>
-        public bool PartialLogin { get; set; }
+        public bool PartialLogin { get; set; }      
     }
 }

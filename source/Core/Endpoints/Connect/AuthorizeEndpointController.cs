@@ -266,10 +266,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             message = message ?? new SignInMessage();
 
             var path = Url.Route(Constants.RouteNames.Oidc.Authorize, null).AddQueryString(parameters.ToQueryString());
-            var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost()); 
+            var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
             var url = new Uri(host, path);
             message.ReturnUrl = url.AbsoluteUri;
-            
+
             return new LoginResult(Request.GetOwinContext().Environment, message);
         }
 
@@ -299,7 +299,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var response = new AuthorizeResponse
             {
                 Request = request,
-                
+
                 IsError = true,
                 Error = error,
                 State = request.State,
@@ -314,23 +314,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 return new AuthorizeRedirectResult(response);
             }
-           
         }
 
         private void RaiseSuccessEvent()
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Authorize);
-            }
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Authorize);
         }
 
         private void RaiseFailureEvent(string error)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
-            }
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
         }
 
         private string LookupErrorMessage(string error)
