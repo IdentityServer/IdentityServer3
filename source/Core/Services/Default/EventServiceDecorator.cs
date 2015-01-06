@@ -56,6 +56,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 RemoteIpAddress = context.Request.RemoteIpAddress
             };
 
+            var principal = context.Authentication.User;
+            if (principal != null && principal.Identity != null)
+            {
+                var subjectClaim = principal.FindFirst(Constants.ClaimTypes.Subject);
+                if (subjectClaim != null)
+                {
+                    evt.Context.SubjectId = subjectClaim.Value;
+                }
+            }
+
             return evt;
         }
     }

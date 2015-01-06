@@ -62,5 +62,13 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// The remote ip address.
         /// </value>
         public string RemoteIpAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the subject identifier of the current user (if available).
+        /// </summary>
+        /// <value>
+        /// The subject identifier.
+        /// </value>
+        public string SubjectId { get; set; }
     }
 }
