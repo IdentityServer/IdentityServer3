@@ -16,16 +16,7 @@
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class FailedRefreshTokenRefreshEvent : EventBase
+    class IdentityTokenIssuedDetails
     {
-        public FailedRefreshTokenRefreshEvent() : base(EventConstants.Categories.TokenService)
-        {
-            Id = EventConstants.Ids.RefreshTokenRefreshedFailure;
-            EventType = EventTypes.Failure;
-        }
-
-        public string Handle { get; set; }
-        public string ClientId { get; set; }
-        public string Error { get; set; }
     }
 }

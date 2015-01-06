@@ -37,7 +37,6 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string EndSession = "endsession";
             public const string AccessTokenValidation = "accesstokenvalidation";
             public const string IdentityTokenValidation = "identitytokenvalidaton";
-
         }
         
         public static class Ids
@@ -66,12 +65,12 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const int IdentityTokenIssued = TokenServiceEventsStart + 1;
 
             public const int AuthorizationCodeIssued = TokenServiceEventsStart + 10;
-            public const int SuccessfulAuthorizationCodeRedeemed = TokenServiceEventsStart + 11;
-            public const int FailedAuthorizationCodeRedeemed = TokenServiceEventsStart + 12;
+            public const int AuthorizationCodeRedeemedSuccess = TokenServiceEventsStart + 11;
+            public const int AuthorizationCodeRedeemedFailure = TokenServiceEventsStart + 12;
 
             public const int RefreshTokenIssued = TokenServiceEventsStart + 20;
-            public const int SuccessfulRefreshTokenRefreshed = TokenServiceEventsStart + 21;
-            public const int FailedRefreshTokenRefreshed = TokenServiceEventsStart + 22;
+            public const int RefreshTokenRefreshedSuccess = TokenServiceEventsStart + 21;
+            public const int RefreshTokenRefreshedFailure = TokenServiceEventsStart + 22;
 
             public const int PermissionRevoked = TokenServiceEventsStart + 30;
             
@@ -81,8 +80,8 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int EndpointsEventsStart = 3000;
 
-            public const int SuccessfulEndpoint = EndpointsEventsStart + 0;
-            public const int FailedEndpoint = EndpointsEventsStart + 1;
+            public const int EndpointSuccess = EndpointsEventsStart + 0;
+            public const int EndpointFailure = EndpointsEventsStart + 1;
             
             ///////////////////////////
             /// Information events
@@ -96,7 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InternalErrorEventsStart = 5000;
 
-            public const int UnhandledException = InternalErrorEventsStart + 0;
+            public const int UnhandledExceptionError = InternalErrorEventsStart + 0;
         }
     }
 }

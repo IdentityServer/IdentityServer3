@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Events
 {
-    public class FailedRefreshTokenRefreshEvent : EventBase
+    public class AccessTokenIssuedDetails : TokenIssuedDetails
     {
-        public FailedRefreshTokenRefreshEvent() : base(EventConstants.Categories.TokenService)
-        {
-            Id = EventConstants.Ids.RefreshTokenRefreshedFailure;
-            EventType = EventTypes.Failure;
-        }
-
-        public string Handle { get; set; }
-        public string ClientId { get; set; }
-        public string Error { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the access token.
+        /// </summary>
+        /// <value>
+        /// The type of the token.
+        /// </value>
+        public AccessTokenType TokenType { get; set; }
     }
 }

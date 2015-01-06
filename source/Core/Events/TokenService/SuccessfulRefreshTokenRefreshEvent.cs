@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         public SuccessfulRefreshTokenRefreshEvent() : base(EventConstants.Categories.TokenService)
         {
             EventType = Events.EventTypes.Success;
-            Id = EventConstants.Ids.SuccessfulRefreshTokenRefreshed;
+            Id = EventConstants.Ids.RefreshTokenRefreshedSuccess;
             
             Message = "Refresh token successfully refreshed";
         }

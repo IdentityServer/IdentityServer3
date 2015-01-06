@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         public SuccessfulAuthorizationCodeRedeemedEvent()
             : base(EventConstants.Categories.TokenService)
         {
-            Id = EventConstants.Ids.SuccessfulAuthorizationCodeRedeemed;
+            Id = EventConstants.Ids.AuthorizationCodeRedeemedSuccess;
             Message = "Authorization code redeem success";
         }
     }
