@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Models
@@ -66,7 +67,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         internal AuthenticateResult(ClaimsPrincipal user)
         {
             if (user == null) throw new ArgumentNullException("user");
-
             this.User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PrimaryAuthenticationType);
         }
 
@@ -153,7 +153,6 @@ namespace Thinktecture.IdentityServer.Core.Models
             string identityProvider = Constants.BuiltInIdentityProvider,
             string authenticationMethod = null
         )
-            : this(subject, name, claims, identityProvider, authenticationMethod)
         {
             if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
             if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
@@ -223,6 +222,20 @@ namespace Thinktecture.IdentityServer.Core.Models
             get
             {
                 return !String.IsNullOrWhiteSpace(PartialSignInRedirectPath);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the authentication result has a subject claim.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has a subject claim; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasSubject
+        {
+            get
+            {
+                return User != null && User.HasClaim(Constants.ClaimTypes.Subject);
             }
         }
     }

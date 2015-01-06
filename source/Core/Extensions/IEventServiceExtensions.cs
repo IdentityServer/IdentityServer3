@@ -24,15 +24,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class IEventServiceExtensions
     {
-        public static void RaisePreLoginSuccessEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
+        public static void RaisePreLoginSuccessEvent(this IEventService events, 
+            string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LoginDetails>(
                 EventConstants.Categories.Authentication,
                 Resources.Events.PreLoginSuccess,
                 EventTypes.Success, 
                 EventConstants.Ids.PreLoginSuccess,
-                new LoginDetails{
-                    SubjectId = authResult.User.GetSubjectId(),
+                new LoginDetails {
+                    SubjectId = authResult.HasSubject ?  authResult.User.GetSubjectId() : null,
                     Name = authResult.User.Identity.Name,
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
@@ -42,7 +43,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaisePreLoginFailureEvent(this IEventService events, string signInMessageId, SignInMessage signInMessage, string error)
+        public static void RaisePreLoginFailureEvent(this IEventService events, 
+            string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -59,7 +61,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseLocalLoginSuccessEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
+        public static void RaiseLocalLoginSuccessEvent(this IEventService events, 
+            string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -68,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 EventConstants.Ids.LocalLoginSuccess,
                 new LocalLoginDetails
                 {
-                    SubjectId = authResult.User.GetSubjectId(),
+                    SubjectId = authResult.HasSubject ? authResult.User.GetSubjectId() : null,
                     Name = authResult.User.Identity.Name,
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
@@ -79,7 +82,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseLocalLoginFailureEvent(this IEventService events, string username, string signInMessageId, SignInMessage signInMessage, string error)
+        public static void RaiseLocalLoginFailureEvent(this IEventService events, 
+            string username, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -97,7 +101,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseExternalLoginSuccessEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
+        public static void RaiseExternalLoginSuccessEvent(this IEventService events, 
+            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<ExternalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -106,7 +111,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 EventConstants.Ids.ExternalLoginSuccess,
                 new ExternalLoginDetails
                 {
-                    SubjectId = authResult.User.GetSubjectId(),
+                    SubjectId = authResult.HasSubject ? authResult.User.GetSubjectId() : null,
                     Name = authResult.User.Identity.Name,
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
@@ -118,7 +123,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseExternalLoginFailureEvent(this IEventService events, ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
+        public static void RaiseExternalLoginFailureEvent(this IEventService events, 
+            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
         {
             var evt = new Event<ExternalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -148,7 +154,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, string subjectId, SignInMessage message)
+        public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, 
+            string userName, string subjectId, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -165,7 +172,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, string userName, SignInMessage message)
+        public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, 
+            string userName, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -194,7 +202,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         //    //events.RaiseEvent(evt);
         //}
 
-        public static void RaisePartialLoginCompleteEvent(this IEventService events, ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
+        public static void RaisePartialLoginCompleteEvent(this IEventService events, 
+            ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
         {
             var evt = new Event<LoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -212,7 +221,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             events.RaiseEvent(evt);
         }
 
-        public static void RaiseLogoutEvent(this IEventService events, ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
+        public static void RaiseLogoutEvent(this IEventService events, 
+            ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
         {
             var evt = new Event<LogoutDetails>(
                 EventConstants.Categories.Authentication,
