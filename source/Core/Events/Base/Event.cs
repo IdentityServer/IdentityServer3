@@ -80,6 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <value>
         /// The details function.
         /// </value>
+        [Newtonsoft.Json.JsonIgnore]
         public Func<T> DetailsFunc { get; set; }
 
         /// <summary>
