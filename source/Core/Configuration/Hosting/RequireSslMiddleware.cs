@@ -39,10 +39,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (context.Request.Uri.Scheme != Uri.UriSchemeHttps)
             {
-                var localization = env.ResolveDependency<ILocalizationService>();
-                
                 context.Response.StatusCode = 403;
-                context.Response.ReasonPhrase = localization.GetMessage(MessageIds.SslRequired);
+                context.Response.ReasonPhrase = Messages.SslRequired;
 
                 await context.Response.WriteAsync(context.Response.ReasonPhrase);
 
