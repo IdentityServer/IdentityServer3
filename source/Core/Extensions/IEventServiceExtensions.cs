@@ -16,6 +16,7 @@
 
 using System;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
@@ -440,6 +441,65 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                  EventConstants.Ids.EndpointFailure,
                  new EndpointDetail { EndpointName = endpointName },
                  error);
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseNoCertificateConfiguredEvent(this IEventService events)
+        {
+            var evt = new Event<object>(
+                EventConstants.Categories.Information,
+                "No signing certificate configured",
+                EventTypes.Information,
+                EventConstants.Ids.NoSigningCertificateConfigured);
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseCertificatePrivateKeyNotAccessibleEvent(this IEventService events, X509Certificate2 cert)
+        {
+            var evt = new Event<SigningCertificateDetail>(
+                EventConstants.Categories.InternalError,
+                "Signing certificate private key not accessible",
+                EventTypes.Error,
+                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                new SigningCertificateDetail
+                {
+                    SigningCertificateName = cert.SubjectName.Name,
+                    SigningCertificateExpiration = cert.NotAfter
+                });
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseCertificateExpiringSoonEvent(this IEventService events, X509Certificate2 cert)
+        {
+            var evt = new Event<SigningCertificateDetail>(
+                EventConstants.Categories.Information,
+                "The signing certificate will expire in the next 30 days",
+                EventTypes.Information,
+                EventConstants.Ids.SigningCertificateExpiringSoon,
+                new SigningCertificateDetail
+                {
+                    SigningCertificateName = cert.SubjectName.Name,
+                    SigningCertificateExpiration = cert.NotAfter
+                });
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseCertificateValidatedEvent(this IEventService events, X509Certificate2 cert)
+        {
+            var evt = new Event<SigningCertificateDetail>(
+                EventConstants.Categories.Information,
+                "Signing certificate successfully validated.",
+                EventTypes.Information,
+                EventConstants.Ids.SigningCertificateValidated,
+                new SigningCertificateDetail
+                {
+                    SigningCertificateName = cert.SubjectName.Name,
+                    SigningCertificateExpiration = cert.NotAfter
+                });
 
             events.Raise(evt);
         }

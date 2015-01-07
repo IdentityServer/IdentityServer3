@@ -23,6 +23,8 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Owin
 {
@@ -31,6 +33,8 @@ namespace Owin
     /// </summary>
     public static class UseIdentityServerExtension
     {
+        private static readonly ILog Logger = LogProvider.GetLogger("Startup");
+
         /// <summary>
         /// Extension method to configure IdentityServer in the hosting application.
         /// </summary>
@@ -85,13 +89,45 @@ namespace Owin
             SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
 
-            //using (var child = container.CreateScopeWithEmptyOwinContext())
-            //{
-            //    var eventSvc = child.Resolve<Thinktecture.IdentityServer.Core.Services.IEventService>();
-            //    eventSvc.RaiseFailureEndpointEvent("foo", "bar");
-            //};
+            using (var child = container.CreateScopeWithEmptyOwinContext())
+            {
+                var eventSvc = child.Resolve<IEventService>();
 
+                DoStartupDiagnostics(options, eventSvc);
+            };
+            
             return app;
+        }
+
+        private static void DoStartupDiagnostics(IdentityServerOptions options, IEventService eventSvc)
+        {
+            var cert = options.SigningCertificate;
+            
+            if (cert == null)
+            {
+                Logger.Warn("No signing certificate configured.");
+                eventSvc.RaiseNoCertificateConfiguredEvent();
+
+                return;
+            }
+            if (!cert.IsPrivateAccessAllowed())
+            {
+                Logger.Error("Signing certificate private key is not accessible. Check the ACLs.");
+                eventSvc.RaiseCertificatePrivateKeyNotAccessibleEvent(cert);
+
+                return;
+            }
+
+            var timeSpanToExpire = cert.NotAfter - DateTime.UtcNow;
+            if (timeSpanToExpire < TimeSpan.FromDays(30))
+            {
+                Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());
+                eventSvc.RaiseCertificateExpiringSoonEvent(cert);
+
+                return;
+            }
+
+            eventSvc.RaiseCertificateValidatedEvent(cert);
         }
     }
 }

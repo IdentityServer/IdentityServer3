@@ -102,12 +102,18 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const int CspReport = InformationEventsStart + 1;
             public const int ClientPermissionRevoked = InformationEventsStart + 2;
 
+            public const int NoSigningCertificateConfigured = InformationEventsStart + 10;
+            public const int SigningCertificateExpiringSoon = InformationEventsStart + 11;
+            public const int SigningCertificateValidated = InformationEventsStart + 12;
+
+
             ///////////////////////////
-            /// Information events
+            /// Error events
             ///////////////////////////
             private const int InternalErrorEventsStart = 5000;
 
             public const int UnhandledExceptionError = InternalErrorEventsStart + 0;
+            public const int SigningCertificatePrivatKeyNotAccessible = InternalErrorEventsStart + 1;
         }
     }
 }

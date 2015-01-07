@@ -141,6 +141,7 @@
     <Compile Include="Events\Authentication\LoginDetails.cs" />
     <Compile Include="Events\Informational\ClientPermissionsRevokedDetails.cs" />
     <Compile Include="Events\Informational\CspReportDetails.cs" />
+    <Compile Include="Events\Informational\SigningCertificateDetail.cs" />
     <Compile Include="Events\TokenService\AccessTokenIssuedDetails.cs" />
     <Compile Include="Events\Authentication\LogoutDetails.cs" />
     <Compile Include="Events\Base\Event.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Extensions\IContainerExtensions.cs" />
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
+    <Compile Include="Extensions\X509Certificate2Extensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
