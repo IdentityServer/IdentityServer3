@@ -16,9 +16,11 @@
 
 using Microsoft.Owin.Infrastructure;
 using System;
+using Autofac;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
@@ -65,7 +67,8 @@ namespace Owin
             app.UseCors(options.CorsPolicy);
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
 
-            app.Use<AutofacContainerMiddleware>(AutofacConfig.Configure(options));
+            var container = AutofacConfig.Configure(options);
+            app.Use<AutofacContainerMiddleware>(container);
             
             if (options.PluginConfiguration != null)
             {
@@ -81,6 +84,12 @@ namespace Owin
 
             SignatureConversions.AddConversions(app);
             app.UseWebApi(WebApiConfig.Configure(options));
+
+            //using (var child = container.CreateScopeWithEmptyOwinContext())
+            //{
+            //    var eventSvc = child.Resolve<Thinktecture.IdentityServer.Core.Services.IEventService>();
+            //    eventSvc.RaiseFailureEndpointEvent("foo", "bar");
+            //};
 
             return app;
         }

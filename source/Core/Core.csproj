@@ -153,6 +153,7 @@
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
     <Compile Include="Extensions\HashExtensions.cs" />
     <Compile Include="Extensions\IClientStoreExtensions.cs" />
+    <Compile Include="Extensions\IContainerExtensions.cs" />
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
