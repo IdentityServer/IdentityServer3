@@ -145,8 +145,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     var thumbprint = Base64Url.Encode(pubKey.GetCertHash());
                     var key = pubKey.PublicKey.Key as RSACryptoServiceProvider;
                     var parameters = key.ExportParameters(false);
-                    var exponent = Convert.ToBase64String(parameters.Exponent);
-                    var modulus = Convert.ToBase64String(parameters.Modulus);
+                    var exponent = Base64Url.Encode(parameters.Exponent);
+                    var modulus = Base64Url.Encode(parameters.Modulus);
 
                     var webKey = new JsonWebKeyDto
                     {
