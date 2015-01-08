@@ -134,14 +134,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="Registration{T}"/> class.
         /// </summary>
-        /// <param name="instance">The instance.</param>
+        /// <param name="singleton">The singleton instance.</param>
         /// <param name="name">The name.</param>
         /// <exception cref="System.ArgumentNullException">instance</exception>
-        public Registration(T instance, string name = null)
+        public Registration(T singleton, string name = null)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
+            if (singleton == null) throw new ArgumentNullException("instance");
 
-            this.Instance = instance;
+            this.Instance = singleton;
             this.Name = name;
         }
 
