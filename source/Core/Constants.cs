@@ -561,6 +561,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string IdentityServerHost = "idsrv:IdentityServerHost";
 
             public const string AutofacScope = "idsrv:AutofacScope";
+            public const string RequestId = "idsrv:RequestId";
         }
         
         public static class Authentication

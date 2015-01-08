@@ -134,6 +134,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var clients = await this.clientPermissionsService.GetClientPermissionsAsync(User.GetSubjectId());
             var vm = new ClientPermissionsViewModel
             {
+                RequestId = env.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = User.GetName(),

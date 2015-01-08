@@ -83,6 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
                 var errorModel = new ErrorViewModel
                 {
+                    RequestId = env.GetRequestId(),
                     SiteName = options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
                     ErrorMessage = localization.GetMessage(Resources.MessageIds.UnexpectedError),

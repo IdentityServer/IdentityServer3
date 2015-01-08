@@ -241,6 +241,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var env = Request.GetOwinEnvironment();
             var consentModel = new ConsentViewModel
             {
+                RequestId = env.GetRequestId(),
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 ErrorMessage = errorMessage,
@@ -285,6 +286,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
                 var errorModel = new ErrorViewModel
                 {
+                    RequestId = env.GetRequestId(),
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
                     CurrentUser = username,

@@ -18,6 +18,7 @@ using Microsoft.Owin;
 using System;
 using System.Diagnostics;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -28,15 +29,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
         private readonly IdentityServerOptions options;
-        private readonly IRequestIdService reqId;
         private readonly OwinContext context;
         private readonly IEventService inner;
 
-        public EventServiceDecorator(IdentityServerOptions options, OwinEnvironmentService owinEnvironment, IRequestIdService reqId, IEventService inner)
+        public EventServiceDecorator(IdentityServerOptions options, OwinEnvironmentService owinEnvironment, IEventService inner)
         {
             this.options = options;
             this.context = new OwinContext(owinEnvironment.Environment);
-            this.reqId = reqId;
             this.inner = inner;
         }
 
@@ -73,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             evt.Context = new EventContext
             {
-                ActivityId = reqId.GetRequestId(),
+                ActivityId = context.GetRequestId(),
                 TimeStamp = DateTimeOffset.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,

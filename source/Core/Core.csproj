@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="App_Packages\LibLog.2.0\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\Hosting\LastUserNameCookie.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
@@ -170,7 +171,6 @@
     <Compile Include="Extensions\IdentityServerServiceFactoryExtensions.cs" />
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
-    <Compile Include="Logging\ActivityId.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ClientSecret.cs" />
@@ -186,7 +186,6 @@
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceConfiguration.cs" />
-    <Compile Include="Services\Default\CorrelationManagerRequestIdService.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
@@ -199,7 +198,6 @@
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
-    <Compile Include="Services\IRequestIdService.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />

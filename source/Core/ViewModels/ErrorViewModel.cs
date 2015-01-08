@@ -23,14 +23,6 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     public class ErrorViewModel : CommonViewModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorViewModel"/> class.
-        /// </summary>
-        public ErrorViewModel()
-        {
-            this.RequestId = ActivityId.GetCurrentId();
-        }
-
-        /// <summary>
         /// Gets or sets the error message.
         /// </summary>
         /// <value>

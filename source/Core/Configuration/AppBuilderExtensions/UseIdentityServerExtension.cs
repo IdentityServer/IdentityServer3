@@ -62,6 +62,8 @@ namespace Owin
                 app.Use<RequireSslMiddleware>();
             }
 
+            app.ConfigureRequestId();
+
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
 

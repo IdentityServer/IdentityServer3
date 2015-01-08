@@ -99,6 +99,32 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return uri.AbsoluteUri;
         }
 
+        /// <summary>
+        /// Gets the current request identifier.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetRequestId(this IDictionary<string, object> env)
+        {
+            object value = null;
+            if (env.TryGetValue(Constants.OwinEnvironment.RequestId, out value))
+            {
+                return value as string;
+            }
+            
+            return null;
+        }
+
+        internal static string GetRequestId(this IOwinContext ctx)
+        {
+            return ctx.Environment.GetRequestId();
+        }
+
+        internal static void SetRequestId(this IDictionary<string, object> env, string id)
+        {
+            env[Constants.OwinEnvironment.RequestId] = id;
+        }
+
 
         internal static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {

@@ -660,6 +660,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             var loginModel = new LoginViewModel
             {
+                RequestId = context.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = Request.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
@@ -720,6 +721,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             message = message ?? localizationService.GetMessage(MessageIds.UnexpectedError);
             var errorModel = new ErrorViewModel
             {
+                RequestId = context.GetRequestId(),
                 SiteName = this.options.SiteName,
                 SiteUrl = context.GetIdentityServerBaseUrl(),
                 ErrorMessage = message
