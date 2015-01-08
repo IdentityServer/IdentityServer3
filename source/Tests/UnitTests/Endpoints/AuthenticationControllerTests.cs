@@ -587,7 +587,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
-            // 5: primary, partial, external, signin, session
+            // cookies: primary, partial, external, session, signout
             cookies.Count().Should().Be(5);
             // GetCookies will not return values for cookies that are expired/revoked
             resp.GetCookies().Count().Should().Be(0);

@@ -487,8 +487,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             sessionCookie.ClearSessionId();
-            signInMessageCookie.ClearAll();
-            signOutMessageCookie.ClearAll();
+            signOutMessageCookie.Clear(id);
             
             ClearAuthenticationCookies();
             SignOutOfExternalIdP();

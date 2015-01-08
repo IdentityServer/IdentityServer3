@@ -179,15 +179,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             ClearByCookieName(name);
         }
 
-        public void ClearAll()
-        {
-            var names = GetCookieNames();
-            foreach (var name in names)
-            {
-                ClearByCookieName(name);
-            }
-        }
-        
         void ClearByCookieName(string name)
         {
             ctx.Response.Cookies.Append(
