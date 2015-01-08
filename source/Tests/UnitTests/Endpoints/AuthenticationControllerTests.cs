@@ -340,6 +340,16 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void PostToLogin_ValidCredentials_ClearsSignInCookie()
+        {
+            GetLoginPage();
+            var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            var cookies = resp.Headers.GetValues("Set-Cookie");
+            var cookie = cookies.SingleOrDefault(x => x.Contains("SignInMessage." + SignInId));
+            cookie.Should().NotBeNull();
+        }
+
+        [Fact]
         public void PostToLogin_ValidCredentials_RedirectsBackToAuthorization()
         {
             GetLoginPage();
