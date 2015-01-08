@@ -56,6 +56,9 @@ namespace Thinktecture.IdentityServer.Tests
 
         protected Action<IdentityServerOptions> ConfigureIdentityServerOptions;
 
+        protected GoogleOAuth2AuthenticationOptions google;
+        protected GoogleOAuth2AuthenticationOptions google2;
+        protected GoogleOAuth2AuthenticationOptions hiddenGoogle;
         
         public IdSvrHostTestBase()
         {
@@ -107,7 +110,7 @@ namespace Thinktecture.IdentityServer.Tests
                 Postprocess(ctx);
             });
 
-            var google = new GoogleOAuth2AuthenticationOptions
+            google = new GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "Google",
                 SignInAsAuthenticationType = signInAsType,
@@ -115,6 +118,26 @@ namespace Thinktecture.IdentityServer.Tests
                 ClientSecret = "bar"
             };
             app.UseGoogleAuthentication(google);
+            
+            google2 = new GoogleOAuth2AuthenticationOptions
+            {
+                Caption = "Google2",
+                AuthenticationType = "Google2",
+                SignInAsAuthenticationType = signInAsType,
+                ClientId = "g2",
+                ClientSecret = "g2"
+            };
+            app.UseGoogleAuthentication(google2);
+            
+            hiddenGoogle = new GoogleOAuth2AuthenticationOptions
+            {
+                AuthenticationType = "HiddenGoogle",
+                Caption = null,
+                SignInAsAuthenticationType = signInAsType,
+                ClientId = "baz",
+                ClientSecret = "quux"
+            };
+            app.UseGoogleAuthentication(hiddenGoogle);
         }
 
         public AntiForgeryTokenViewModel Xsrf { get; set; }

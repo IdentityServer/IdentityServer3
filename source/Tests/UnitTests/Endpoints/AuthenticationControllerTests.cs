@@ -208,12 +208,51 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void GetLogin_EnableLocalLoginAndOnlyOneProvider_RedirectsToProvider()
+        public void GetLogin_DisableLocalLoginAndOnlyOneProvider_RedirectsToProvider()
         {
+            google2.Caption = null;
             options.AuthenticationOptions.EnableLocalLogin = false;
             var resp = GetLoginPage();
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google").Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetLogin_DisableLocalLoginMultipleProvidersClientHasSingleHiddenProviderRestriction_RedirectsToProvider()
+        {
+            options.AuthenticationOptions.EnableLocalLogin = false;
+            clients.First().IdentityProviderRestrictions = new List<string>
+            {
+                "HiddenGoogle"
+            };
+            var resp = GetLoginPage();
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=HiddenGoogle").Should().BeTrue();
+        }
+        
+        [Fact]
+        public void GetLogin_DisableLocalLoginMultipleProvidersClientHasSingleVisibleProviderRestriction_RedirectsToProvider()
+        {
+            options.AuthenticationOptions.EnableLocalLogin = false;
+            clients.First().IdentityProviderRestrictions = new List<string>
+            {
+                "Google"
+            };
+            var resp = GetLoginPage();
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google").Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetLogin_DisableLocalLoginMultipleProvidersClientHasMultipleProviderRestriction_DisplaysLoginPage()
+        {
+            options.AuthenticationOptions.EnableLocalLogin = false;
+            clients.First().IdentityProviderRestrictions = new List<string>
+            {
+                "Google", "Google2"
+            };
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
         }
 
         [Fact]
@@ -811,8 +850,10 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var msg = new SignInMessage() { ReturnUrl = Url("authorize"), ClientId = "any_external_idps" };
             var resp = GetLoginPage(msg);
             var model = resp.GetModel<LoginViewModel>();
-            var google = model.ExternalProviders.SingleOrDefault(x => x.Text == "Google");
-            google.Should().NotBeNull();
+            var hasGoogle = model.ExternalProviders.Any(x => x.Text == "Google");
+            var hasGoogle2 = model.ExternalProviders.Any(x => x.Text == "Google2");
+            hasGoogle.Should().BeTrue();
+            hasGoogle2.Should().BeTrue();
         }
 
         [Fact]

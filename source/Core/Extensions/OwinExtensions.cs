@@ -133,22 +133,40 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return context.Environment.ResolveDependency<T>();
         }
 
-        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context)
+        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationProviders(this IOwinContext context, IEnumerable<string> filter = null)
         {
             if (context == null) throw new ArgumentNullException("context");
-            return context.Authentication.GetAuthenticationTypes(d => d.Caption.IsPresent());
-        }
-        
-        internal static IEnumerable<AuthenticationDescription> GetExternalAuthenticationTypes(this IOwinContext context, IEnumerable<string> typeFilter)
-        {
-            var types = context.GetExternalAuthenticationTypes();
+
+            var types = context.Authentication.GetAuthenticationTypes().Where(x => !Constants.IdentityServerAuthenticationTypes.Contains(x.AuthenticationType));
             
-            if (typeFilter != null && typeFilter.Any())
+            if (filter != null && filter.Any())
             {
-                types = types.Where(type => typeFilter.Contains(type.AuthenticationType));
+                types = types.Where(x=>filter.Contains(x.AuthenticationType));
             }
             
             return types;
+        }
+
+        internal static IEnumerable<LoginPageLink> GetLinksFromProviders(this IOwinContext context, IEnumerable<AuthenticationDescription> types, string signInMessageId)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            if (types != null)
+            {
+                return types.Select(p => new LoginPageLink
+                {
+                    Text = p.Caption,
+                    Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
+                });
+            }
+            
+            return Enumerable.Empty<LoginPageLink>();
+        }
+
+        internal static IEnumerable<LoginPageLink> FilterHiddenLinks(this IEnumerable<LoginPageLink> links)
+        {
+            if (links == null) throw new ArgumentNullException("links");
+            return links.Where(x=>x.Text.IsPresent());
         }
 
         static async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)

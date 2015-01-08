@@ -30,6 +30,13 @@ namespace Thinktecture.IdentityServer.Core
         public const string PrimaryAuthenticationType       = "idsrv";
         public const string ExternalAuthenticationType      = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
+        
+        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]{
+            PrimaryAuthenticationType,
+            ExternalAuthenticationType,
+            PartialSignInAuthenticationType
+        };
+        
         public const string BuiltInIdentityProvider         = "idsrv";
 
         public const string AccessTokenAudience             = "{0}resources";

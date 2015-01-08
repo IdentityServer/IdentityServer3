@@ -621,7 +621,10 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             username = username ?? lastUsernameCookie.GetValue();
 
-            var providers = await GetExternalProviders(message, signInMessageId);
+            var idpRestrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
+            var providers = context.GetExternalAuthenticationProviders(idpRestrictions);
+            var providerLinks = context.GetLinksFromProviders(providers, signInMessageId);
+            var visibleLinks = providerLinks.FilterHiddenLinks();
 
             if (errorMessage != null)
             {
@@ -629,17 +632,29 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                if (options.AuthenticationOptions.EnableLocalLogin == false && providers.Count() == 1)
+                if (options.AuthenticationOptions.EnableLocalLogin == false)
                 {
-                    // no local login and only one provider -- redirect to provider
-                    Logger.Info("no local login and only one provider -- redirect to provider");
-                    var url = providers.First().Href;
-                    return Redirect(url);
+                    string url = null;
+
+                    if (providerLinks.Count() == 1)
+                    {
+                        Logger.Info("only one provider for client");
+                        url = providerLinks.First().Href;
+                    }
+                    else if (visibleLinks.Count() == 1)
+                    {
+                        Logger.Info("only one visible provider");
+                        url = visibleLinks.First().Href;
+                    }
+
+                    if (url.IsPresent())
+                    {
+                        Logger.InfoFormat("redirecting to provider URL: {0}", url);
+                        return Redirect(url);
+                    }
                 }
-                else
-                {
-                    Logger.Info("rendering login page");
-                }
+
+                Logger.Info("rendering login page");
             }
 
             var loginPageLinks = options.AuthenticationOptions.LoginPageLinks.Render(Request.GetIdentityServerBaseUrl(), signInMessageId);
@@ -649,7 +664,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteName = options.SiteName,
                 SiteUrl = Request.GetIdentityServerBaseUrl(),
                 CurrentUser = User.Identity.Name,
-                ExternalProviders = providers,
+                ExternalProviders = visibleLinks,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
                 LoginUrl = options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
@@ -661,20 +676,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             };
 
             return new LoginActionResult(viewService, loginModel, message);
-        }
-
-        private async Task<IEnumerable<LoginPageLink>> GetExternalProviders(SignInMessage message, string signInMessageId)
-        {
-            var restrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
-            var providers =
-                from p in context.GetExternalAuthenticationTypes(restrictions)
-                select new LoginPageLink
-                {
-                    Text = p.Caption,
-                    Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
-                };
-
-            return providers.ToArray();
         }
 
         private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
