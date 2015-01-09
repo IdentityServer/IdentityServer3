@@ -205,12 +205,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
         [Trait("Category", Category)]
         public async Task Valid_CustomGrant_Request()
         {
-            var client = await _clients.FindClientByIdAsync("assertionclient");
+            var client = await _clients.FindClientByIdAsync("customgrantclient");
 
             var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
+            parameters.Add(Constants.TokenRequest.GrantType, "custom_grant");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = await validator.ValidateRequestAsync(parameters, client);

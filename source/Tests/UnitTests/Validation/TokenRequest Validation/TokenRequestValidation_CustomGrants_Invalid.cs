@@ -24,7 +24,7 @@ using Xunit;
 namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 {
     
-    public class TokenRequestValidation_AssertionFlow_Invalid
+    public class TokenRequestValidation_CustomGrants_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
 
@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Invalid_GrantType_For_Client()
+        public async Task Invalid_Custom_Grant_Type_For_Client_Credentials_Client()
         {
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
@@ -49,20 +49,20 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Invalid_Assertion()
+        public async Task Restricted_Custom_Grant_Type()
         {
-            var client = await _clients.FindClientByIdAsync("assertionclient");
+            var client = await _clients.FindClientByIdAsync("customgrantclient");
 
             var validator = Factory.CreateTokenRequestValidator();
 
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "unknownGrantType");
+            parameters.Add(Constants.TokenRequest.GrantType, "unknown_grant_type");
             parameters.Add(Constants.TokenRequest.Scope, "resource");
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
     }
 }

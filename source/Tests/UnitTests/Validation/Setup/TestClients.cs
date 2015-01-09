@@ -232,15 +232,20 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     },
                     new Client
                     {
-                        ClientName = "Assertion Flow Client",
+                        ClientName = "Custom Grant Client",
                         Enabled = true,
-                        ClientId = "assertionclient",
+                        ClientId = "customgrantclient",
                         ClientSecrets = new List<ClientSecret>
                         { 
                             new ClientSecret("secret".Sha256())
                         },
 
                         Flow = Flows.Custom,
+                        CustomGrantTypeRestrictions = new List<string>
+                        {
+                            "custom_grant"
+                        }
+
                     },
                     new Client
                     {

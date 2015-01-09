@@ -168,6 +168,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public bool PrefixClientClaims { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of allowed custom grant types when Flow is set to Custom. If the list is empty, all custom grant types are allowed.
+        /// </summary>
+        /// <value>
+        /// The custom grant restrictions.
+        /// </value>
+        public List<string> CustomGrantTypeRestrictions { get; set; }
+
         // not implemented yet
 
         //public bool RefreshClaimsOnRefreshToken { get; set; }
@@ -188,6 +196,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
+            CustomGrantTypeRestrictions = new List<string>();
             
             // client claims settings
             Claims = new List<Claim>();

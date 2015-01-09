@@ -464,6 +464,18 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             /////////////////////////////////////////////
+            // check if client has grant type restrictions
+            /////////////////////////////////////////////
+            if (_validatedRequest.Client.CustomGrantTypeRestrictions.Any())
+            {
+                if (!_validatedRequest.Client.CustomGrantTypeRestrictions.Contains(_validatedRequest.GrantType))
+                {
+                    LogError("Client has configured grant type restrictions. Requested grant is not allowed.");
+                    return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                }
+            }
+
+            /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
             if (!(await ValidateRequestedScopesAsync(parameters)))

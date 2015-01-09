@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            if (request.GrantType == "customGrant")
+            if (request.GrantType == "custom_grant")
             {
                 return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));    
             };

@@ -188,7 +188,7 @@
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_Valid.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_ClientCredentials_Invalid.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_ResourceOwner_Invalid.cs" />
-    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_AssertionFlow_Invalid.cs" />
+    <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_CustomGrants_Invalid.cs" />
     <Compile Include="Validation\ScopeValidation.cs" />
   </ItemGroup>
   <ItemGroup>
