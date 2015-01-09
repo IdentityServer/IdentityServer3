@@ -45,13 +45,19 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public string ErrorMessage { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class.
+        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class with an error message.
         /// </summary>
         /// <param name="errorMessage">The error message.</param>
         public CustomGrantValidationResult(string errorMessage)
         {
             ErrorMessage = errorMessage;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class with no error and no user.
+        /// </summary>
+        public CustomGrantValidationResult()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class.

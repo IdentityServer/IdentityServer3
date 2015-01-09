@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly IEventService _events;
 
         private ValidatedTokenRequest _validatedRequest;
-        
+
         public ValidatedTokenRequest ValidatedRequest
         {
             get
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             Logger.Info("Start token request validation");
 
             _validatedRequest = new ValidatedTokenRequest();
-            
+
             if (client == null)
             {
                 throw new ArgumentNullException("client");
@@ -188,13 +188,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError("Invalid authorization code: " + code);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
-            
+
             await _authorizationCodes.RemoveAsync(code);
 
             /////////////////////////////////////////////
             // validate client binding
             /////////////////////////////////////////////
-            if (authZcode.Client.ClientId!= _validatedRequest.Client.ClientId)
+            if (authZcode.Client.ClientId != _validatedRequest.Client.ClientId)
             {
                 LogError(string.Format("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId));
                 return Invalid(Constants.TokenErrors.InvalidGrant);
@@ -267,7 +267,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (! (await ValidateRequestedScopesAsync(parameters)))
+            if (!(await ValidateRequestedScopesAsync(parameters)))
             {
                 LogError("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -287,7 +287,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             //LogSuccess("Successful validation of client_credentials request");
             Logger.Info("Client credentials token request validation success");
-            
+
             return Valid();
         }
 
@@ -314,7 +314,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client is allowed to request scopes
             /////////////////////////////////////////////
-            if (! (await ValidateRequestedScopesAsync(parameters)))
+            if (!(await ValidateRequestedScopesAsync(parameters)))
             {
                 LogError("Invalid scopes.");
                 return Invalid(Constants.TokenErrors.InvalidScope);
@@ -371,7 +371,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
-            
+
             _validatedRequest.UserName = userName;
             _validatedRequest.Subject = authnResult.User;
 
@@ -436,7 +436,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             _validatedRequest.RefreshToken = refreshToken;
-            
+
             /////////////////////////////////////////////
             // make sure user is enabled
             /////////////////////////////////////////////
@@ -488,27 +488,24 @@ namespace Thinktecture.IdentityServer.Core.Validation
             // validate custom grant type
             /////////////////////////////////////////////
             var result = await _customGrantValidator.ValidateAsync(_validatedRequest);
-            
+
             if (result == null)
             {
                 LogError("Invalid custom grant.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            if (result.Principal == null)
+            if (result.ErrorMessage.IsPresent())
             {
-                if (result.ErrorMessage.IsPresent())
-                {
-                    LogError("Invalid custom grant: " + result.ErrorMessage);
-                    return Invalid(result.ErrorMessage);
-                }
-
-                Logger.Error("Invalid grant.");
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                LogError("Invalid custom grant: " + result.ErrorMessage);
+                return Invalid(result.ErrorMessage);
             }
 
-            _validatedRequest.Subject = result.Principal;
-
+            if (result.Principal != null)
+            {
+                _validatedRequest.Subject = result.Principal;
+            }
+            
             Logger.Info("Validation of custom grant token request success");
             return Valid();
         }
@@ -526,8 +523,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 return false;
             }
-            
-            if (! await _scopeValidator.AreScopesValidAsync(requestedScopes))
+
+            if (!await _scopeValidator.AreScopesValidAsync(requestedScopes))
             {
                 return false;
             }

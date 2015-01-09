@@ -30,15 +30,17 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                 if (credential != null)
                 {
-                    // validate credential
+                    // valid credential
                     return Task.FromResult(new CustomGrantValidationResult("818727", "custom"));
                 }
                 else
                 {
-                    return Task.FromResult(new CustomGrantValidationResult("invalid credential"));
+                    // custom error message
+                    return Task.FromResult(new CustomGrantValidationResult("invalid custom credential"));
                 }
             }
 
+            // standard error message - invalid_grant
             return Task.FromResult<CustomGrantValidationResult>(null);
         }
     }
