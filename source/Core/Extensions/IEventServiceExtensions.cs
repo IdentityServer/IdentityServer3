@@ -492,7 +492,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.Information,
-                "Signing certificate successfully validated.",
+                "Signing certificate validation success",
                 EventTypes.Information,
                 EventConstants.Ids.SigningCertificateValidated,
                 new SigningCertificateDetail
