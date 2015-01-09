@@ -467,7 +467,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 {
                     SigningCertificateName = cert.SubjectName.Name,
                     SigningCertificateExpiration = cert.NotAfter
-                });
+                },
+                "Make sure the account running your application has access to the private key");
 
             events.Raise(evt);
         }

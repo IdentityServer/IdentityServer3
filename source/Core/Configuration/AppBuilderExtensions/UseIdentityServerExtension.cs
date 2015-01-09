@@ -114,7 +114,7 @@ namespace Owin
             }
             if (!cert.IsPrivateAccessAllowed())
             {
-                Logger.Error("Signing certificate private key is not accessible. Check the ACLs.");
+                Logger.Error("Signing certificate private key is not accessible. Make sure the account running your application has access to the private key");
                 eventSvc.RaiseCertificatePrivateKeyNotAccessibleEvent(cert);
 
                 return;
