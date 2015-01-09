@@ -100,10 +100,16 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user == null)
             {
+                string displayName;
+
                 var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
                 if (name == null)
                 {
-                    return Task.FromResult<AuthenticateResult>(null);
+                    displayName = externalUser.ProviderId;
+                }
+                else
+                {
+                    displayName = name.Value;
                 }
 
                 user = new InMemoryUser
@@ -111,7 +117,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                     Subject = CryptoRandom.CreateUniqueId(),
                     Provider = externalUser.Provider,
                     ProviderId = externalUser.ProviderId,
-                    Username = name.Value,
+                    Username = displayName,
                     Claims = externalUser.Claims
                 };
                 _users.Add(user);
