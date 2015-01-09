@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                             claimType = "client_" + claimType;
                         }
 
-                        outputClaims.Add(new Claim(claimType, claim.Value));
+                        outputClaims.Add(new Claim(claimType, claim.Value, claim.ValueType));
                     }
                 }
             }
