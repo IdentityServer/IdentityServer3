@@ -30,7 +30,6 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
-using Thinktecture.IdentityServer.Tests.ResponseHandling;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
@@ -63,6 +62,39 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             error.ErrorUri.Should().Be(request.RedirectUri);
             error.State.Should().Be(request.State);
         }
+
+        private static IEnumerable<Scope> GetScopes()
+        {
+            return new Scope[]
+            {
+                StandardScopes.OpenId,
+                StandardScopes.Profile,
+                StandardScopes.Email,
+
+                new Scope
+                {
+                    Name = "read",
+                    DisplayName = "Read data",
+                    Type = ScopeType.Resource,
+                    Emphasize = false,
+                },
+                new Scope
+                {
+                    Name = "write",
+                    DisplayName = "Write data",
+                    Type = ScopeType.Resource,
+                    Emphasize = true,
+                },
+                new Scope
+                {
+                    Name = "forbidden",
+                    Type = ScopeType.Resource,
+                    DisplayName = "Forbidden scope",
+                    Emphasize = true
+                }
+             };
+        }
+
         
         public AuthorizeInteractionResponseGeneratorTests_Consent()
         {
@@ -294,7 +326,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
-                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(GetScopes())),
                 Client = new Client { }
             };
             await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
@@ -321,7 +353,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
-                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(GetScopes())),
                 Client = new Client { }
             };
             await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
@@ -350,7 +382,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ResponseMode = Constants.ResponseModes.Fragment,
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
-                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(TestScopes.Get())),
+                ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(GetScopes())),
                 Client = client,
                 Subject = user
             };

@@ -142,7 +142,6 @@
     </Compile>
     <Compile Include="ClassVisibilityTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
-    <Compile Include="ResponseHandling\Setup\TestScopes.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
