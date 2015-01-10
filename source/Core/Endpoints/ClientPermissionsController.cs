@@ -25,6 +25,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
@@ -43,6 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     public class ClientPermissionsController : ApiController
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IClientPermissionsService clientPermissionsService;
         private readonly IdentityServerOptions options;
         private readonly IViewService viewSvc;
@@ -70,16 +73,22 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
+            Logger.Info("Permissions page requested");
+
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
+                Logger.Error("Permissions page disabled, returning 404");
                 eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
 
             if (User == null || User.Identity == null || User.Identity.IsAuthenticated == false)
             {
+                Logger.Info("User not authenticated, redirecting to login");
                 return RedirectToLogin();
             }
+
+            Logger.Info("Rendering permissions page");
 
             return await RenderPermissionsPage();
         }
@@ -88,31 +97,41 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpPost]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
+            Logger.Info("Revoke permissions requested");
+            
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
+                Logger.Error("Permissions page disabled, returning 404");
                 eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
             
             if (User == null || User.Identity == null || User.Identity.IsAuthenticated == false)
             {
+                Logger.Info("User not authenticated, redirecting to login");
                 return RedirectToLogin();
             }
 
             if (model != null && String.IsNullOrWhiteSpace(model.ClientId))
             {
+                Logger.Warn("No model or client id submitted");
                 ModelState.AddModelError("ClientId", localizationService.GetMessage(MessageIds.ClientIdRequired));
             }
 
             if (model == null || ModelState.IsValid == false)
             {
                 var error = ModelState.Where(x => x.Value.Errors.Any()).Select(x => x.Value.Errors.First().ErrorMessage).First();
+                Logger.WarnFormat("Rendering error: {0}", error);
                 return await RenderPermissionsPage(error);
             }
 
+            Logger.InfoFormat("Revoking permissions for sub: {0}, name: {1}, clientID: {2}", User.GetSubjectId(), User.Identity.Name, model.ClientId);
+            
             await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
             
             eventService.RaiseClientPermissionsRevokedEvent(User as ClaimsPrincipal, model.ClientId);
+
+            Logger.Info("Redirecting back to permissions page");
 
             return RedirectToRoute(Constants.RouteNames.ClientPermissions, null);
         }
