@@ -73,7 +73,6 @@ namespace Owin
                 if (!String.IsNullOrWhiteSpace(path))
                 {
                     primary.CookiePath = external.CookiePath = path;
-                    // TODO: should we leave the partial path to "/"?
                     partial.CookiePath = path;
                 }
             };
