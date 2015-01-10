@@ -20,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
@@ -33,6 +34,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class AuthorizeInteractionResponseGenerator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly SignInMessage _signIn;
         private readonly IConsentService _consent;
         private readonly IUserService _users;
@@ -94,8 +97,19 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             }
 
             // unauthenticated user
-            if (user.Identity.IsAuthenticated    == false ||
-                await _users.IsActiveAsync(user) == false)
+            var isAuthenticated = user.Identity.IsAuthenticated;
+            if (!isAuthenticated) Logger.Info("User is not authenticated. Redirecting to login.");
+            
+            // user de-activated
+            bool isActive = false;
+
+            if (isAuthenticated)
+            {
+                isActive = await _users.IsActiveAsync(user);
+                if (!isActive) Logger.Info("User is not active. Redirecting to login.");
+            }
+
+            if (!isAuthenticated || !isActive)
             {
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)

@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -28,6 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
+        protected static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// The user service
         /// </summary>
@@ -56,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// The validation result
         /// </returns>
-        public async Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
+        public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(TokenValidationResult result)
         {
             if (result.IsError)
             {
@@ -76,8 +79,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 if (await _users.IsActiveAsync(principal) == false)
                 {
+                    Logger.Warn("User marked as not active: " + subClaim.Value);
+
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
@@ -91,8 +96,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 var client = await _clients.FindClientByIdAsync(clientClaim.Value);
                 if (client == null || client.Enabled == false)
                 {
+                    Logger.Warn("Client deleted or disabled: " + clientClaim.Value);
+
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
@@ -109,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// The validation result
         /// </returns>
-        public async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
+        public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
             // make sure user is still active (if sub claim is present)
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
@@ -119,8 +126,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 if (await _users.IsActiveAsync(principal) == false)
                 {
+                    Logger.Warn("User marked as not active: " + subClaim.Value);
+
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
