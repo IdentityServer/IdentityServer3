@@ -16,12 +16,14 @@
 
 using FluentAssertions;
 using Moq;
+using System;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
@@ -30,7 +32,7 @@ using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
 {
-    public class AccessTokenValidation
+    public class AccessTokenValidation : IDisposable
     {
         const string Category = "Access token validation";
 
@@ -40,6 +42,33 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
         {
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
+
+        DateTimeOffset now;
+        public DateTimeOffset UtcNow
+        {
+            get
+            {
+                if (now > DateTimeOffset.MinValue) return now;
+                return DateTimeOffset.UtcNow;
+            }
+        }
+
+        Func<DateTimeOffset> originalNowFunc;
+        
+        public AccessTokenValidation()
+        {
+            originalNowFunc = DateTimeOffsetHelper.UtcNowFunc;
+            DateTimeOffsetHelper.UtcNowFunc = () => UtcNow;
+        }
+
+        public void Dispose()
+        {
+            if (originalNowFunc != null)
+            {
+                DateTimeOffsetHelper.UtcNowFunc = originalNowFunc;
+            }
+        }
+
 
         [Fact]
         [Trait("Category", Category)]
@@ -112,6 +141,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
         [Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
+            now = DateTimeOffset.UtcNow;
+
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
@@ -119,7 +150,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var handle = "123";
 
             await store.StoreAsync(handle, token);
-            await Task.Delay(2000);
+            
+            now = now.AddMilliseconds(2000);
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
