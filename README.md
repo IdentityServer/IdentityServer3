@@ -30,13 +30,9 @@ public void Configuration(IAppBuilder app)
 For more information, e.g.
 
 * support for MembershipReboot and ASP.NET Identity based user stores
-
 * support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
-
 * support for EntityFramework based persistence of configuration
-
 * support for WS-Federation
-
 * extensibility
 
 check out the [documentation](https://thinktecture.github.io/Thinktecture.IdentityServer.v3.Documentation/) and the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples).
