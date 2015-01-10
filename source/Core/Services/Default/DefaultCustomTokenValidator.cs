@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 if (client == null || client.Enabled == false)
                 {
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 if (await _users.IsActiveAsync(principal) == false)
                 {
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.ExpiredToken;
+                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
                     result.Claims = null;
 
                     return result;
