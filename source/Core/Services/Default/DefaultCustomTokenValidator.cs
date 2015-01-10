@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 var client = await _clients.FindClientByIdAsync(clientClaim.Value);
                 if (client == null || client.Enabled == false)
                 {
-                    Logger.Warn("Client deleted or disabled: " + client.ClientId);
+                    Logger.Warn("Client deleted or disabled: " + clientClaim.Value);
 
                     result.IsError = true;
                     result.Error = Constants.ProtectedResourceErrors.InvalidToken;
