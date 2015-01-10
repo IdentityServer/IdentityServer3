@@ -196,7 +196,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         private long GetCookieRank(string name)
         {   
             // empty and invalid cookies are considered to be the oldest:
-            var rank = DateTime.MinValue.Ticks;
+            var rank = DateTimeOffset.MinValue.Ticks;
 
             try
             {

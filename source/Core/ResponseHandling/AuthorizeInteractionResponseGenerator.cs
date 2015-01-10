@@ -152,7 +152,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             if (request.MaxAge.HasValue)
             {
                 var authTime = user.GetAuthenticationTime();
-                if (DateTimeHelper.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
+                if (DateTimeOffsetHelper.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
                 {
                     return new LoginInteractionResponse
                     {

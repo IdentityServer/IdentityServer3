@@ -33,9 +33,9 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <param name="principal">The principal.</param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public static DateTime GetAuthenticationTime(this IPrincipal principal)
+        public static DateTimeOffset GetAuthenticationTime(this IPrincipal principal)
         {
-            return principal.GetAuthenticationTimeEpoch().ToDateTimeFromEpoch();
+            return principal.GetAuthenticationTimeEpoch().ToDateTimeOffsetFromEpoch();
         }
 
         /// <summary>

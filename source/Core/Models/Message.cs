@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         internal Message()
         {
-            Created = DateTimeHelper.UtcNow.Ticks;
+            Created = DateTimeOffsetHelper.UtcNow.Ticks;
         }
 
         /// <summary>

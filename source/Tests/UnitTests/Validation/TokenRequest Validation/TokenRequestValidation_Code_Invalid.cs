@@ -257,7 +257,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 Client = client,
                 IsOpenId = true,
                 RedirectUri = "https://server/cb",
-                CreationTime = DateTime.UtcNow.AddSeconds(-100)
+                CreationTime = DateTimeOffset.UtcNow.AddSeconds(-100)
             };
 
             await store.StoreAsync("valid", code);

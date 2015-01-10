@@ -65,12 +65,12 @@ namespace Thinktecture.IdentityServer.Core.Logging
             {
                 if (exception == null)
                 {
-                    var message = string.Format("{0}: {1} -- {2}", _name, DateTimeHelper.UtcNow, messageFunc());
+                    var message = string.Format("{0}: {1} -- {2}", _name, DateTimeOffsetHelper.UtcNow, messageFunc());
                     TraceMsg(logLevel, message);
                 }
                 else
                 {
-                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeHelper.UtcNow, messageFunc(), exception);
+                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeOffsetHelper.UtcNow, messageFunc(), exception);
                     TraceMsg(logLevel, message);
                 }
             }
@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (messageFunc != null && exception != null)
             {
-                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeHelper.UtcNow.ToString(), messageFunc(), exception.ToString());
+                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeOffsetHelper.UtcNow.ToString(), messageFunc(), exception.ToString());
                 TraceMsg(logLevel, message);
             }
         }

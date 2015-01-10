@@ -104,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             }
 
             // add iat claim
-            claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTimeHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
+            claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
 
             // add at_hash claim
             if (request.AccessTokenToHash.IsPresent())

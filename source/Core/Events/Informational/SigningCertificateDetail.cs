@@ -21,6 +21,6 @@ namespace Thinktecture.IdentityServer.Core.Events
     public class SigningCertificateDetail
     {
         public string SigningCertificateName  { get; set; }
-        public DateTime SigningCertificateExpiration { get; set; }
+        public DateTimeOffset SigningCertificateExpiration { get; set; }
     }
 }

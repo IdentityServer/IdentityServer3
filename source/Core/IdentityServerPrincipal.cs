@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core
             if (String.IsNullOrWhiteSpace(idp)) throw new ArgumentNullException("idp");
             if (String.IsNullOrWhiteSpace(authenticationType)) throw new ArgumentNullException("authenticationType");
 
-            if (authenticationTime <= 0) authenticationTime = DateTimeHelper.UtcNow.ToEpochTime();
+            if (authenticationTime <= 0) authenticationTime = DateTimeOffset.UtcNow.ToEpochTime();
 
             var claims = new List<Claim>
             {

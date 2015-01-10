@@ -235,7 +235,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                     Client =new Client{ClientId = "roclient"}
                 },
                 LifeTime = 600,
-                CreationTime = DateTime.UtcNow
+                CreationTime = DateTimeOffset.UtcNow
             };
             var handle = Guid.NewGuid().ToString();
 
@@ -275,7 +275,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 },
                 
                 LifeTime = 600,
-                CreationTime = DateTime.UtcNow
+                CreationTime = DateTimeOffset.UtcNow
             };
             var handle = Guid.NewGuid().ToString();
 

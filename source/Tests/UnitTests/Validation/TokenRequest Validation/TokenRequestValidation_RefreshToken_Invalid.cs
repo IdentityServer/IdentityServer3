@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             {
                 AccessToken = new Token("access_token") { Client = new Client() { ClientId = "roclient" } },
                 LifeTime = 10,
-                CreationTime = DateTime.UtcNow.AddSeconds(-15)
+                CreationTime = DateTimeOffset.UtcNow.AddSeconds(-15)
             };
             var handle = Guid.NewGuid().ToString();
 
@@ -99,7 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                         ClientId = "otherclient"
                     },
                     Lifetime = 600,
-                    CreationTime = DateTime.UtcNow
+                    CreationTime = DateTimeOffset.UtcNow
                 }
             };
             var handle = Guid.NewGuid().ToString();
@@ -136,7 +136,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                     },
                 },
                 LifeTime = 600,
-                CreationTime = DateTime.UtcNow
+                CreationTime = DateTimeOffset.UtcNow
             };
             var handle = Guid.NewGuid().ToString();
 
@@ -175,7 +175,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                     Client = new Client() { ClientId = "roclient" }
                 },
                 LifeTime = 600,
-                CreationTime = DateTime.UtcNow
+                CreationTime = DateTimeOffset.UtcNow
             };
             var handle = Guid.NewGuid().ToString();
 

@@ -238,7 +238,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
-            if (DateTimeHelper.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
+            if (DateTimeOffsetHelper.UtcNow > token.CreationTime.AddSeconds(token.Lifetime))
             {
                 LogError("Token expired.");
                 return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
