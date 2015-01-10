@@ -14,23 +14,16 @@ IdentityServer is a framework and a hostable component that allows implementing 
 Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
 
 ## Getting started ##
-We currently don't provide a setup tool or a UI, but IdentityServer is remarkably easy to setup. Start with downloading/cloning the repo. Open the solution in Visual Studio and start it. Use the various clients in the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples) repository to exercise the various flows. Also check the wiki for more information.
-
-IdSrv3 is designed as an OWIN/Katana component. The following configuration (in the host project) gives you a minimal implementation with in-memory repositories and user authentication.
+IdentityServer is designed as an OWIN/Katana component. By referencing the library or nuget you get a `UseIdentityServer` extension method for `IAppBuilder` that allows setting up IdentityServer in your OWIN host:  
 
 ```csharp
 public void Configuration(IAppBuilder app)
 {
-    var factory = InMemoryFactory.Create(
-        users:   Users.Get(), 
-        clients: Clients.Get(), 
-        scopes:  Scopes.Get());
+    var factory = CreateFactory();
 
     var options = new IdentityServerOptions
     {
-        SiteName = "Thinktecture IdentityServer v3",
         SigningCertificate = Certificate.Get(),
-        
         Factory = factory
     };
 
@@ -38,13 +31,19 @@ public void Configuration(IAppBuilder app)
 }
 ```
 
-You can find a test signing certificate and setup instructions in the [certificates](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/tree/master/source/Certificates) folder in the samples repository.
+For more information, e.g.
 
-The host [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples/) shows other configuration options, including
 * support for MembershipReboot and ASP.NET Identity based user stores
+
 * support for additional Katana authentication middleware (e.g. Google, Twitter, Facebook etc)
+
 * support for EntityFramework based persistence of configuration
+
 * support for WS-Federation
+
+* extensibility
+
+check out the [documentation](https://thinktecture.github.io/Thinktecture.IdentityServer.v3.Documentation/) and the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples).
 
 ## Related repositories ##
 * [Access Token Validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
@@ -73,4 +72,4 @@ IdentityServer is built using the following great open source projects:
 - [Huboard](http://huboard.com)
 - [AppVeyor](http://appveyor.com)
 
-thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
+...and last but not least thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
