@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
     public class TestClients
     {

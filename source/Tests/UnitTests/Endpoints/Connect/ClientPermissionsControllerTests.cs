@@ -21,6 +21,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Thinktecture.IdentityServer.Tests.Endpoints;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints

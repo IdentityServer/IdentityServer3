@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
+using Thinktecture.IdentityServer.Core.Configuration;
+
+namespace Thinktecture.IdentityServer.Tests.Validation
 {
-    
-    public class TokenEndpointControllerTests : IdSvrHostTestBase
+    public class NoDataProtector : IDataProtector
     {
+        public byte[] Protect(byte[] data, string entropy = null)
+        {
+            return data;
+        }
+
+        public byte[] Unprotect(byte[] data, string entropy = null)
+        {
+            return data;
+        }
     }
 }

@@ -142,7 +142,7 @@
     </Compile>
     <Compile Include="ClassVisibilityTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
-    <Compile Include="Endpoints\Connect\TokenEndpointControllerTests.cs" />
+    <Compile Include="ResponseHandling\Setup\TestScopes.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
@@ -153,11 +153,13 @@
     <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Consent.cs" />
     <Compile Include="ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
     <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
+    <Compile Include="Validation\Setup\NoDataProtector.cs" />
+    <Compile Include="Validation\Setup\TestIdentityServerOptions.cs" />
     <Compile Include="Validation\Token Validation\IdentityTokenValidation.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="IdSvrHostTestBase.cs" />
-    <Compile Include="NoDataProtector.cs" />
+    <Compile Include="Endpoints\Setup\Extensions.cs" />
+    <Compile Include="Endpoints\Setup\IdSvrHostTestBase.cs" />
+    <Compile Include="Endpoints\Setup\NoDataProtector.cs" />
     <Compile Include="Validation\Setup\TestGrantValidator.cs" />
     <Compile Include="Validation\Setup\TestClients.cs" />
     <Compile Include="Validation\Setup\TestScopes.cs" />
@@ -167,11 +169,11 @@
     <Compile Include="Services\Default\DefaultClientPermissionsServiceTests.cs" />
     <Compile Include="Services\Default\AggregatePermissionsStoreTests.cs" />
     <Compile Include="Services\Default\TokenMetadataPermissionsStoreAdapterTest.cs" />
-    <Compile Include="TestClients.cs" />
-    <Compile Include="TestFactory.cs" />
-    <Compile Include="TestIdentityServerOptions.cs" />
-    <Compile Include="TestScopes.cs" />
-    <Compile Include="TestUsers.cs" />
+    <Compile Include="Endpoints\Setup\TestClients.cs" />
+    <Compile Include="Endpoints\Setup\TestFactory.cs" />
+    <Compile Include="Endpoints\Setup\TestIdentityServerOptions.cs" />
+    <Compile Include="Endpoints\Setup\TestScopes.cs" />
+    <Compile Include="Endpoints\Setup\TestUsers.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Valid.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ProtocolValidation_Invalid.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Token.cs" />

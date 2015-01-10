@@ -30,6 +30,7 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Thinktecture.IdentityServer.Tests.ResponseHandling;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling

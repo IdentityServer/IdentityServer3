@@ -16,7 +16,7 @@
 
 using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
     public class NoDataProtector : IDataProtector
     {

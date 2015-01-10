@@ -37,7 +37,7 @@ using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
     public class IdSvrHostTestBase
     {

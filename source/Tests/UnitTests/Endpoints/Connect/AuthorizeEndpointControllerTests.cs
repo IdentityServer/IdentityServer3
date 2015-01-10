@@ -18,6 +18,7 @@ using FluentAssertions;
 using System.Net;
 using System.Net.Http;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Tests.Endpoints;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints

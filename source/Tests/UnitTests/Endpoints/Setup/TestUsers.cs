@@ -19,7 +19,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace Thinktecture.IdentityServer.Tests.Endpoints
 {
     public class TestUsers
     {

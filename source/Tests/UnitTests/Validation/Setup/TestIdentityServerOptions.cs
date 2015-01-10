@@ -18,7 +18,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace Thinktecture.IdentityServer.Tests.Validation
 {
     class TestIdentityServerOptions
     {
