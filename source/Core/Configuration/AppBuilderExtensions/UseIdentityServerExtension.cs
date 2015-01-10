@@ -120,7 +120,7 @@ namespace Owin
                 return;
             }
 
-            var timeSpanToExpire = cert.NotAfter - DateTime.UtcNow;
+            var timeSpanToExpire = cert.NotAfter - DateTimeHelper.UtcNow;
             if (timeSpanToExpire < TimeSpan.FromDays(30))
             {
                 Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());

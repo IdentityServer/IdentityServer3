@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         public virtual void ClearSessionId()
         {
             var options = CreateCookieOptions();
-            options.Expires = DateTime.UtcNow.AddYears(-1);
+            options.Expires = DateTimeHelper.UtcNow.AddYears(-1);
             
             var name = GetCookieName();
             context.Response.Cookies.Append(name, ".", options);

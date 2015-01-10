@@ -553,7 +553,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     props.IsPersistent = true;
                     if (rememberMe == true)
                     {
-                        var expires = DateTime.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                        var expires = DateTimeHelper.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
                         props.ExpiresUtc = new DateTimeOffset(expires);
                     }
                 }

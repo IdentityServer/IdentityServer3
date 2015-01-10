@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             get
             {
-                return DateTimeOffsetHelper.UtcNow.ToUniversalTime().DateTime;
+                return DateTime.SpecifyKind(DateTimeOffsetHelper.UtcNow.DateTime, DateTimeKind.Utc);
             }
         }
     }

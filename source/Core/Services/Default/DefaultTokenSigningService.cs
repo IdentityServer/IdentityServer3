@@ -19,6 +19,7 @@ using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -67,8 +68,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 token.Issuer,
                 token.Audience,
                 token.Claims,
-                DateTime.UtcNow,
-                DateTime.UtcNow.AddSeconds(token.Lifetime),
+                DateTimeHelper.UtcNow,
+                DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
             var x509credential = credentials as X509SigningCredentials;

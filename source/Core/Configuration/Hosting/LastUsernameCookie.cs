@@ -99,12 +99,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     var bytes = Encoding.UTF8.GetBytes(username);
                     bytes = options.DataProtector.Protect(bytes, cookieName);
                     username = Base64Url.Encode(bytes);
-                    cookieOptions.Expires = DateTime.UtcNow.AddYears(1);
+                    cookieOptions.Expires = DateTimeHelper.UtcNow.AddYears(1);
                 }
                 else
                 {
                     username = ".";
-                    cookieOptions.Expires = DateTime.UtcNow.AddYears(-1);
+                    cookieOptions.Expires = DateTimeHelper.UtcNow.AddYears(-1);
                 }
 
                 ctx.Response.Cookies.Append(cookieName, username, cookieOptions);

@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 ".",
                 new Microsoft.Owin.CookieOptions
                 {
-                    Expires = DateTime.UtcNow.AddYears(-1),
+                    Expires = DateTimeHelper.UtcNow.AddYears(-1),
                     HttpOnly = true,
                     Secure = Secure,
                     Path = CookiePath

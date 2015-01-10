@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
@@ -64,12 +65,12 @@ namespace Thinktecture.IdentityServer.Core.Logging
             {
                 if (exception == null)
                 {
-                    var message = string.Format("{0}: {1} -- {2}", _name, DateTime.UtcNow, messageFunc());
+                    var message = string.Format("{0}: {1} -- {2}", _name, DateTimeHelper.UtcNow, messageFunc());
                     TraceMsg(logLevel, message);
                 }
                 else
                 {
-                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow, messageFunc(), exception);
+                    var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeHelper.UtcNow, messageFunc(), exception);
                     TraceMsg(logLevel, message);
                 }
             }
@@ -92,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (messageFunc != null && exception != null)
             {
-                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTime.UtcNow.ToString(), messageFunc(), exception.ToString());
+                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeHelper.UtcNow.ToString(), messageFunc(), exception.ToString());
                 TraceMsg(logLevel, message);
             }
         }

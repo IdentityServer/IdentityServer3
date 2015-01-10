@@ -23,7 +23,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class DateTimeOffsetHelper
     {
-        internal static Func<DateTimeOffset> UtcNowFunc = () => DateTimeOffset.Now;
+        internal static Func<DateTimeOffset> UtcNowFunc = () => DateTimeOffset.UtcNow;
 
         internal static DateTimeOffset UtcNow
         {

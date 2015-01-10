@@ -15,6 +15,7 @@
  */
 
 using System;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -28,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         internal Message()
         {
-            Created = DateTime.UtcNow.Ticks;
+            Created = DateTimeHelper.UtcNow.Ticks;
         }
 
         /// <summary>

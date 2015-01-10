@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core
 {
@@ -38,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core
             if (String.IsNullOrWhiteSpace(idp)) throw new ArgumentNullException("idp");
             if (String.IsNullOrWhiteSpace(authenticationType)) throw new ArgumentNullException("authenticationType");
 
-            if (authenticationTime <= 0) authenticationTime = DateTime.UtcNow.ToEpochTime();
+            if (authenticationTime <= 0) authenticationTime = DateTimeHelper.UtcNow.ToEpochTime();
 
             var claims = new List<Claim>
             {
