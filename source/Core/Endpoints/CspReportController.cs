@@ -48,8 +48,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
         public async Task<IHttpActionResult> Post()
         {
+            Logger.Info("CSP Report endpoint requested");
+
             if (!options.Endpoints.EnableCspReportEndpoint)
             {
+                Logger.Error("endpoint disabled, returning 404");
                 eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, "endpoint disabled");
                 return NotFound();
             }
@@ -57,10 +60,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var json = await Request.Content.ReadAsStringAsync();
             if (json.IsPresent())
             {
-                Logger.Error(json);
+                Logger.InfoFormat("CSP Report data: {0}", json);
                 eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
             }
-            
+
+            Logger.Info("Rendering 204");
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
         }
     }
