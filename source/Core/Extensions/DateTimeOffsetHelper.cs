@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class DateTimeOffsetHelper
     {

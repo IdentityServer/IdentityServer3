@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
@@ -97,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Version = 3;
             Type = Constants.TokenTypes.AccessToken;
-            CreationTime = DateTimeOffset.UtcNow;
+            CreationTime = DateTimeOffsetHelper.UtcNow;
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Token(string tokenType) : this()
         {
             Type = tokenType;
-            CreationTime = DateTimeOffset.UtcNow;
+            CreationTime = DateTimeOffsetHelper.UtcNow;
         }
 
         /// <summary>

@@ -96,7 +96,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public AuthorizationCode()
         {
-            CreationTime = DateTimeOffset.UtcNow;
+            CreationTime = DateTimeOffsetHelper.UtcNow;
         }
 
         /// <summary>

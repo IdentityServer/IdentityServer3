@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class DateTimeHelper
     {
@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             get
             {
-                return DateTimeOffsetHelper.UtcNow.DateTime;
+                return DateTimeOffsetHelper.UtcNow.ToUniversalTime().DateTime;
             }
         }
     }

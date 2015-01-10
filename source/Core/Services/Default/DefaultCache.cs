@@ -17,6 +17,7 @@
 using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -84,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </value>
         protected virtual DateTimeOffset UtcNow
         {
-            get { return DateTimeOffset.UtcNow; }
+            get { return DateTimeOffsetHelper.UtcNow; }
         }
     }
 }

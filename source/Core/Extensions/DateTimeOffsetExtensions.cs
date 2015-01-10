@@ -24,20 +24,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         [DebuggerStepThrough]
         public static bool HasExceeded(this DateTimeOffset creationTime, int seconds)
         {
-            return (DateTimeOffset.UtcNow > creationTime.AddSeconds(seconds));
+            return (DateTimeOffsetHelper.UtcNow > creationTime.AddSeconds(seconds));
         }
 
         [DebuggerStepThrough]
         public static int GetLifetimeInSeconds(this DateTimeOffset creationTime)
         {
-            return ((int)(DateTimeOffset.UtcNow - creationTime).TotalSeconds);
+            return ((int)(DateTimeOffsetHelper.UtcNow - creationTime).TotalSeconds);
         }
 
         [DebuggerStepThrough]
         public static bool HasExpired(this DateTimeOffset? expirationTime)
         {
             if (expirationTime.HasValue &&
-                expirationTime < DateTimeOffset.UtcNow)
+                expirationTime < DateTimeOffsetHelper.UtcNow)
             {
                 return true;
             }

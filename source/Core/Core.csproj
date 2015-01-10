@@ -134,8 +134,8 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
-    <Compile Include="Configuration\Hosting\DateTimeOffsetHelper.cs" />
-    <Compile Include="Configuration\Hosting\DateTimeHelper.cs" />
+    <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
+    <Compile Include="Extensions\DateTimeHelper.cs" />
     <Compile Include="Configuration\Hosting\LastUserNameCookie.cs" />
     <Compile Include="Configuration\LoggingOptions.cs" />
     <Compile Include="Configuration\EndpointOptions.cs" />

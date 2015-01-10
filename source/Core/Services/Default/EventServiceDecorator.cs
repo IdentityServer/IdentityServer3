@@ -73,7 +73,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             evt.Context = new EventContext
             {
                 ActivityId = context.GetRequestId(),
-                TimeStamp = DateTimeOffset.UtcNow,
+                TimeStamp = DateTimeOffsetHelper.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,
                 RemoteIpAddress = context.Request.RemoteIpAddress,

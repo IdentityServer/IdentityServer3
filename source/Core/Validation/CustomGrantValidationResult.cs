@@ -20,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -77,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 new Claim(Constants.ClaimTypes.Subject, subject),
                 new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
                 new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffset.UtcNow.ToEpochTime().ToString())
+                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString())
             };
 
             if (claims != null && claims.Any())
