@@ -108,7 +108,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Token(string tokenType) : this()
         {
             Type = tokenType;
-            CreationTime = DateTimeOffsetHelper.UtcNow;
         }
 
         /// <summary>
