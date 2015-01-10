@@ -19,12 +19,10 @@ IdentityServer is designed as an OWIN/Katana component. By referencing the libra
 ```csharp
 public void Configuration(IAppBuilder app)
 {
-    var factory = CreateFactory();
-
     var options = new IdentityServerOptions
     {
         SigningCertificate = Certificate.Get(),
-        Factory = factory
+        Factory = Factory.Create()
     };
 
     app.UseIdentityServer(options);
