@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using FluentAssertions;
-using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Validation;
 using Thinktecture.IdentityServer.Tests.Validation;
 using Xunit;
 
@@ -49,9 +48,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_one_time_only",
                 ClientSecrets = new List<ClientSecret>
-                        { 
-                            new ClientSecret("secret".Sha256())
-                        },
+                { 
+                    new ClientSecret("secret".Sha256())
+                },
 
                 Flow = Flows.ResourceOwner,
 
@@ -84,9 +83,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_reuse",
                 ClientSecrets = new List<ClientSecret>
-                        { 
-                            new ClientSecret("secret".Sha256())
-                        },
+                { 
+                    new ClientSecret("secret".Sha256())
+                },
 
                 Flow = Flows.ResourceOwner,
 
@@ -99,12 +98,35 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             service = new DefaultRefreshTokenService(refreshTokenStore, new DefaultEventService());
         }
 
+        Token CreateAccessToken(Client client, string subjectId, int lifetime, params string[] scopes)
+        {
+            var claims = new List<Claim> 
+            {
+                new Claim("client_id", client.ClientId),
+                new Claim("sub", subjectId)
+            };
+
+            scopes.ToList().ForEach(s => claims.Add(new Claim("scope", s)));
+
+            var token = new Token(Constants.TokenTypes.AccessToken)
+            {
+                Audience = "https://idsrv3.com/resources",
+                Issuer = "https://idsrv3.com",
+                Lifetime = lifetime,
+                Claims = claims,
+                Client = client
+            };
+
+            return token;
+        }
+
+
         [Fact]
         [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
             var client = roclient_absolute_refresh_expiration_one_time_only;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
@@ -125,7 +147,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
             var client = roclient_sliding_refresh_expiration_one_time_only;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
 
@@ -146,7 +168,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
             var client = roclient_sliding_refresh_expiration_one_time_only;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
@@ -166,7 +188,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
             var client = roclient_sliding_refresh_expiration_one_time_only;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
@@ -186,7 +208,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task ReUse_Handle_reuses_Handle()
         {
             var client = roclient_absolute_refresh_expiration_reuse;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
@@ -199,7 +221,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task OneTime_Handle_creates_new_Handle()
         {
             var client = roclient_absolute_refresh_expiration_one_time_only;
-            var token = TokenFactory.CreateAccessToken(client, "valid", 60, "read", "write");
+            var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
             var handle = await service.CreateRefreshTokenAsync(token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
