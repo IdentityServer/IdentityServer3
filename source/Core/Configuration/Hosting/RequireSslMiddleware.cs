@@ -18,9 +18,7 @@ using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {

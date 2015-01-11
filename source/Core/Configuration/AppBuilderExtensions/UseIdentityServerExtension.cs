@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
+using Autofac;
 using Microsoft.Owin.Infrastructure;
 using System;
-using Autofac;
 using System.IdentityModel.Tokens;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Owin
 {
@@ -94,9 +94,8 @@ namespace Owin
             using (var child = container.CreateScopeWithEmptyOwinContext())
             {
                 var eventSvc = child.Resolve<IEventService>();
-
                 DoStartupDiagnostics(options, eventSvc);
-            };
+            }
             
             return app;
         }

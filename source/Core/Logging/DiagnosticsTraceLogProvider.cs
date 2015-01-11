@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
     /// </summary>
     public class DiagnosticsTraceLogger : ILog
     {
-        private readonly string _name = string.Empty;
+        private readonly string _name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsTraceLogger"/> class.

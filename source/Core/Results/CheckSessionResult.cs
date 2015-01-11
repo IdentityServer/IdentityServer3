@@ -17,7 +17,6 @@
 using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Core.Results

@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core
 {

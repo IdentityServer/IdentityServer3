@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Models

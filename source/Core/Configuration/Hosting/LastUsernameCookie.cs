@@ -15,17 +15,14 @@
  */
 
 using Microsoft.Owin;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
+
 
 #pragma warning disable 1591
 

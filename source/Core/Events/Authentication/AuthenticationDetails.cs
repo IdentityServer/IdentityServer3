@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {

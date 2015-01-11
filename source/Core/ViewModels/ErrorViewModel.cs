@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Logging;
 namespace Thinktecture.IdentityServer.Core.ViewModels
 {
     /// <summary>

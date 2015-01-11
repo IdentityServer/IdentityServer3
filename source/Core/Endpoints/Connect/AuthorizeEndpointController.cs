@@ -248,7 +248,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 CurrentUser = User.GetName(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
-                ClientLogoUrl = validatedRequest.Client.LogoUri != null ? validatedRequest.Client.LogoUri : null,
+                ClientLogoUrl = validatedRequest.Client.LogoUri ?? null,
                 IdentityScopes = validatedRequest.GetIdentityScopes(this._localizationService),
                 ResourceScopes = validatedRequest.GetResourceScopes(this._localizationService),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,

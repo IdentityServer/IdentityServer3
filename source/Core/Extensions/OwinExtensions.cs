@@ -18,13 +18,13 @@ using Autofac;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
-using System.Threading.Tasks;
-using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {

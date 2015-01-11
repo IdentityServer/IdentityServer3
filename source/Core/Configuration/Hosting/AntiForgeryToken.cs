@@ -16,7 +16,6 @@
 
 using Microsoft.Owin;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -38,8 +37,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         const string CookieEntropy = TokenName + "AntiForgeryTokenCookie";
         const string HiddenInputEntropy = TokenName + "AntiForgeryTokenHidden";
 
-        IOwinContext context;
-        IdentityServerOptions options;
+        readonly IOwinContext context;
+        readonly IdentityServerOptions options;
 
         internal AntiForgeryToken(IOwinContext context, IdentityServerOptions options)
         {

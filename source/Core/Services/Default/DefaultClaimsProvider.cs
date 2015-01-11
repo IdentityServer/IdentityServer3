@@ -131,7 +131,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // check for client claims
             if (client.Claims != null && client.Claims.Any())
             {
-                if (subject == null || client.AlwaysSendClientClaims == true)
+                if (subject == null || client.AlwaysSendClientClaims)
                 {
                     foreach (var claim in client.Claims)
                     {

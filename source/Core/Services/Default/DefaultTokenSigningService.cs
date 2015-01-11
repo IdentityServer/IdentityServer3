@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
