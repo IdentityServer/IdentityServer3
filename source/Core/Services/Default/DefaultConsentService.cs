@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="subject">The user.</param>
         /// <param name="scopes">The scopes.</param>
         /// <returns>Boolean if consent is required.</returns>
-        public async Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
+        public virtual async Task<bool> RequiresConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
             if (subject == null) throw new ArgumentNullException("subject");
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="subject">The subject.</param>
         /// <param name="scopes">The scopes.</param>
         /// <returns></returns>
-        public async Task UpdateConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
+        public virtual async Task UpdateConsentAsync(Client client, ClaimsPrincipal subject, IEnumerable<string> scopes)
         {
             if (client == null) throw new ArgumentNullException("client");
             if (subject == null) throw new ArgumentNullException("subject");

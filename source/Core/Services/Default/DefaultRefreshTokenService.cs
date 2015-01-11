@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// The refresh token handle
         /// </returns>
-        public async Task<string> CreateRefreshTokenAsync(Token accessToken, Client client)
+        public virtual async Task<string> CreateRefreshTokenAsync(Token accessToken, Client client)
         {
             Logger.Debug("Creating refresh token");
 
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// The refresh token handle
         /// </returns>
-        public async Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client)
+        public virtual async Task<string> UpdateRefreshTokenAsync(string handle, RefreshToken refreshToken, Client client)
         {
             Logger.Debug("Updating refresh token");
 
@@ -159,12 +159,23 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             return handle;
         }
 
-        private void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
+        /// <summary>
+        /// Raises the refresh token issued event.
+        /// </summary>
+        /// <param name="handle">The handle.</param>
+        /// <param name="token">The token.</param>
+        protected void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
         {
             _events.RaiseRefreshTokenIssuedEvent(handle, token);
         }
 
-        private void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
+        /// <summary>
+        /// Raises the refresh token refreshed event.
+        /// </summary>
+        /// <param name="oldHandle">The old handle.</param>
+        /// <param name="newHandle">The new handle.</param>
+        /// <param name="token">The token.</param>
+        protected void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
         {
             _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
         }

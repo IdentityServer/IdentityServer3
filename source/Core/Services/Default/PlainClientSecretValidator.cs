@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="client">The client.</param>
         /// <param name="secret">The client secret.</param>
         /// <returns></returns>
-        public Task<bool> ValidateClientSecretAsync(Client client, string secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, string secret)
         {
             foreach (var clientSecret in client.ClientSecrets)
             {

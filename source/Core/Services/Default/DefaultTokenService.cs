@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The events service
         /// </summary>
-        private readonly IEventService _events;
+        protected readonly IEventService _events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenService" /> class.

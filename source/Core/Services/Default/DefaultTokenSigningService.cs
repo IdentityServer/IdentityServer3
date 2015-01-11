@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// A protected and serialized security token
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Invalid token type</exception>
-        public Task<string> SignTokenAsync(Token token)
+        public virtual Task<string> SignTokenAsync(Token token)
         {
             return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
         }

@@ -30,7 +30,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="category">The category.</param>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public string GetString(string category, string id)
+        public virtual string GetString(string category, string id)
         {
             switch(category)
             {

@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// A list of client permissions
         /// </returns>
         /// <exception cref="System.ArgumentNullException">subject</exception>
-        public async Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject)
+        public virtual async Task<IEnumerable<ClientPermission>> GetClientPermissionsAsync(string subject)
         {
             if (String.IsNullOrWhiteSpace(subject))
             {
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// or
         /// clientId
         /// </exception>
-        public async Task RevokeClientPermissionsAsync(string subject, string clientId)
+        public virtual async Task RevokeClientPermissionsAsync(string subject, string clientId)
         {
             if (String.IsNullOrWhiteSpace(subject))
             {

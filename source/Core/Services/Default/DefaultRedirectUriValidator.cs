@@ -28,7 +28,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultRedirectUriValidator : IRedirectUriValidator
     {
-        bool UriCollectionContainsUri(IEnumerable<string> collection, string requestedUri)
+        /// <summary>
+        /// Checks if a given URI is in a list of URIs.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="requestedUri">The requested URI.</param>
+        /// <returns>true or false</returns>
+        protected bool UriCollectionContainsUri(IEnumerable<string> collection, string requestedUri)
         {
             bool result = false;
 
@@ -50,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         ///   <c>true</c> is the URI is valid; <c>false</c> otherwise.
         /// </returns>
-        public Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
+        public virtual Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
         {
             return Task.FromResult(UriCollectionContainsUri(client.RedirectUris, requestedUri));
         }
@@ -63,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         ///   <c>true</c> is the URI is valid; <c>false</c> otherwise.
         /// </returns>
-        public Task<bool> IsPostLogoutRedirectUriValidAsync(string requestedUri, Client client)
+        public virtual Task<bool> IsPostLogoutRedirectUriValidAsync(string requestedUri, Client client)
         {
             return Task.FromResult(UriCollectionContainsUri(client.PostLogoutRedirectUris, requestedUri));
         }

@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The client store
         /// </summary>
-        private readonly IClientStore _clients;
+        protected readonly IClientStore _clients;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCustomTokenValidator"/> class.
