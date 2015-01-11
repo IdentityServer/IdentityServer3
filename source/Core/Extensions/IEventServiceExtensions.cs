@@ -350,19 +350,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
         {
-            var evt = new Event<AuthorizationCodeIssuedDetails>(
+            var evt = new Event<AuthorizationCodeDetails>(
                 EventConstants.Categories.TokenService,
                 "Authorization code issued",
                 EventTypes.Information,
                 EventConstants.Ids.AuthorizationCodeIssued);
 
-            evt.DetailsFunc = () => new AuthorizationCodeIssuedDetails
+            evt.DetailsFunc = () => new AuthorizationCodeDetails
             {
                 HandleId = id,
                 ClientId = code.ClientId,
                 Scopes = code.Scopes,
                 SubjectId = code.SubjectId,
-                RedirectUri = code.RedirectUri
+                RedirectUri = code.RedirectUri,
+                Lifetime = code.Client.AuthorizationCodeLifetime
             };
 
             events.RaiseEvent(evt);
@@ -441,6 +442,39 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                  EventConstants.Ids.EndpointFailure,
                  new EndpointDetail { EndpointName = endpointName },
                  error);
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseFailedAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle, string error)
+        {
+            var evt = new Event<AuthorizationCodeDetails>(
+                EventConstants.Categories.TokenService,
+                "Authorization code redeem failure",
+                EventTypes.Failure,
+                EventConstants.Ids.AuthorizationCodeRedeemedFailure,
+                new AuthorizationCodeDetails
+                {
+                    HandleId = handle,
+                    ClientId = client.ClientId
+                },
+                error);
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseSuccessAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle)
+        {
+            var evt = new Event<AuthorizationCodeDetails>(
+                EventConstants.Categories.TokenService,
+                "Authorization code redeem success",
+                EventTypes.Success,
+                EventConstants.Ids.AuthorizationCodeRedeemedSuccess,
+                new AuthorizationCodeDetails
+                {
+                    HandleId = handle,
+                    ClientId = client.ClientId
+                });
 
             events.Raise(evt);
         }

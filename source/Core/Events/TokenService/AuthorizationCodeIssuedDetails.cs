@@ -19,7 +19,7 @@ namespace Thinktecture.IdentityServer.Core.Events
     /// <summary>
     /// Details class for authorization code issued events
     /// </summary>
-    public class AuthorizationCodeIssuedDetails : TokenIssuedDetailsBase
+    public class AuthorizationCodeDetails : TokenIssuedDetailsBase
     {
         /// <summary>
         /// Gets or sets the handle identifier.

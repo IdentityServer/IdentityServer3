@@ -176,7 +176,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var code = parameters.Get(Constants.TokenRequest.Code);
             if (code.IsMissing())
             {
-                LogError("Authorization code is missing.");
+                var error = "Authorization code is missing.";
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(null, error);
+                
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -186,6 +189,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (authZcode == null)
             {
                 LogError("Invalid authorization code: " + code);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, "Invalid handle");
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -197,6 +202,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (authZcode.Client.ClientId != _validatedRequest.Client.ClientId)
             {
                 LogError(string.Format("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId));
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, "Invalid client binding");
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -205,7 +212,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (authZcode.CreationTime.HasExceeded(_validatedRequest.Client.AuthorizationCodeLifetime))
             {
-                LogError("Authorization code is expired");
+                var error = "Authorization code is expired";
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -217,13 +227,19 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var redirectUri = parameters.Get(Constants.TokenRequest.RedirectUri);
             if (redirectUri.IsMissing())
             {
-                LogError("Redirect URI is missing.");
+                var error = "Redirect URI is missing.";
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
+
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
             if (redirectUri != _validatedRequest.AuthorizationCode.RedirectUri)
             {
-                LogError("Invalid redirect_uri: " + redirectUri);
+                var error = "Invalid redirect_uri: " + redirectUri;
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
+
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
@@ -233,7 +249,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (_validatedRequest.AuthorizationCode.RequestedScopes == null ||
                 !_validatedRequest.AuthorizationCode.RequestedScopes.Any())
             {
-                LogError("Authorization code has no associated scopes.");
+                var error = "Authorization code has no associated scopes.";
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
+
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
@@ -243,11 +262,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (await _users.IsActiveAsync(_validatedRequest.AuthorizationCode.Subject) == false)
             {
-                LogError("User has been disabled: " + _validatedRequest.AuthorizationCode.Subject);
+                var error = "User has been disabled: " + _validatedRequest.AuthorizationCode.Subject;
+                LogError(error);
+                RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
+
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
             Logger.Info("Validation of authorization code token request success");
+            RaiseSuccessfulAuthorizationCodeRedeemedEvent();
+
             return Valid();
         }
 
@@ -582,6 +606,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 _events.RaiseFailedResourceOwnerFlowAuthenticationEvent(userName, signInMessage);
             }
+        }
+
+        private void RaiseFailedAuthorizationCodeRedeemedEvent(string handle, string error)
+        {
+            _events.RaiseFailedAuthorizationCodeRedeemedEvent(_validatedRequest.Client, handle, error);
+        }
+
+        private void RaiseSuccessfulAuthorizationCodeRedeemedEvent()
+        {
+            _events.RaiseSuccessAuthorizationCodeRedeemedEvent(_validatedRequest.Client, _validatedRequest.AuthorizationCodeHandle);
         }
     }
 }
