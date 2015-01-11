@@ -371,13 +371,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseRefreshTokenIssuedEvent(this IEventService events, string id, RefreshToken token)
         {
-            var evt = new Event<RefreshTokenIssuedDetails>(
+            var evt = new Event<RefreshTokenDetails>(
                 EventConstants.Categories.TokenService,
                 "Refresh token issued",
                 EventTypes.Information,
                 EventConstants.Ids.RefreshTokenIssued);
 
-            evt.DetailsFunc = () => new RefreshTokenIssuedDetails
+            evt.DetailsFunc = () => new RefreshTokenDetails
             {
                 HandleId = id,
                 ClientId = token.ClientId,
@@ -477,6 +477,28 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 });
 
             events.Raise(evt);
+        }
+
+        public static void RaiseFailedRefreshTokenRefreshEvent(this IEventService events, Client client, string handle, string error)
+        {
+            var evt = new Event<RefreshTokenDetails>(
+                EventConstants.Categories.TokenService,
+                "Refresh token refresh failure",
+                EventTypes.Failure,
+                EventConstants.Ids.RefreshTokenRefreshedFailure,
+                new RefreshTokenDetails
+                {
+                    HandleId = handle,
+                    ClientId = client.ClientId
+                },
+                error);
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseSuccessRefreshTokenRefreshEvent(this IEventService events, Client client, string handle)
+        {
+            
         }
 
         public static void RaiseNoCertificateConfiguredEvent(this IEventService events)

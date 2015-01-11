@@ -150,7 +150,7 @@
     <Compile Include="Events\Base\Event.cs" />
     <Compile Include="Events\EndpointDetail.cs" />
     <Compile Include="Events\TokenService\AuthorizationCodeIssuedDetails.cs" />
-    <Compile Include="Events\TokenService\RefreshTokenIssuedDetails.cs" />
+    <Compile Include="Events\TokenService\RefreshTokenDetails.cs" />
     <Compile Include="Events\TokenService\RefreshTokenRefreshDetails.cs" />
     <Compile Include="Events\TokenService\TokenIssuedDetailsBase.cs" />
     <Compile Include="Events\Authentication\LocalLoginDetails.cs" />

@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Events
     /// <summary>
     /// Details class for refresh token issued events
     /// </summary>
-    public class RefreshTokenIssuedDetails : TokenIssuedDetailsBase
+    public class RefreshTokenDetails : TokenIssuedDetailsBase
     {
         /// <summary>
         /// Gets or sets the handle identifier.

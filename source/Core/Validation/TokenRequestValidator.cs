@@ -179,7 +179,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var error = "Authorization code is missing.";
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(null, error);
-                
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -411,7 +411,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var refreshTokenHandle = parameters.Get(Constants.TokenRequest.RefreshToken);
             if (refreshTokenHandle.IsMissing())
             {
-                LogError("Refresh token is missing");
+                var error = "Refresh token is missing";
+                LogError(error);
+                RaiseRefreshTokenRefreshFailureEvent(null, error);
+
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
@@ -423,7 +426,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var refreshToken = await _refreshTokens.GetAsync(refreshTokenHandle);
             if (refreshToken == null)
             {
-                LogError("Refresh token is invalid");
+                var error = "Refresh token is invalid";
+                LogError(error);
+                RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -432,9 +438,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (refreshToken.CreationTime.HasExceeded(refreshToken.LifeTime))
             {
-                LogError("Refresh token has expired");
-                await _refreshTokens.RemoveAsync(refreshTokenHandle);
+                var error = "Refresh token has expired";
+                LogError(error);
+                RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
+                await _refreshTokens.RemoveAsync(refreshTokenHandle);
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -444,6 +452,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (_validatedRequest.Client.ClientId != refreshToken.ClientId)
             {
                 LogError(string.Format("Client {0} tries to refresh token belonging to client {1}", _validatedRequest.Client.ClientId, refreshToken.ClientId));
+                RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, "Invalid client binding");
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -454,7 +464,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OfflineAccess))
                 {
-                    LogError("Client does not have access to offline_access scope anymore");
+                    var error = "Client does not have access to offline_access scope anymore";
+                    LogError(error);
+                    RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
+
                     return Invalid(Constants.TokenErrors.InvalidGrant);
                 }
             }
@@ -466,7 +479,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (await _users.IsActiveAsync(IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId)) == false)
             {
-                LogError("User has been disabled: " + _validatedRequest.RefreshToken.SubjectId);
+                var error = "User has been disabled: " + _validatedRequest.RefreshToken.SubjectId;
+                LogError(error);
+                RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
+
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
@@ -529,7 +545,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 _validatedRequest.Subject = result.Principal;
             }
-            
+
             Logger.Info("Validation of custom grant token request success");
             return Valid();
         }
@@ -594,18 +610,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private void RaiseSuccessfulResourceOwnerAuthenticationEvent(string userName, string subjectId, SignInMessage signInMessage)
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(userName, subjectId, signInMessage);
-            }
+            _events.RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(userName, subjectId, signInMessage);
         }
 
         private void RaiseFailedResourceOwnerAuthenticationEvent(string userName, SignInMessage signInMessage)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailedResourceOwnerFlowAuthenticationEvent(userName, signInMessage);
-            }
+            _events.RaiseFailedResourceOwnerFlowAuthenticationEvent(userName, signInMessage);
         }
 
         private void RaiseFailedAuthorizationCodeRedeemedEvent(string handle, string error)
@@ -616,6 +626,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private void RaiseSuccessfulAuthorizationCodeRedeemedEvent()
         {
             _events.RaiseSuccessAuthorizationCodeRedeemedEvent(_validatedRequest.Client, _validatedRequest.AuthorizationCodeHandle);
+        }
+
+        private void RaiseRefreshTokenRefreshFailureEvent(string handle, string error)
+        {
+            _events.RaiseFailedRefreshTokenRefreshEvent(_validatedRequest.Client, handle, error);
         }
     }
 }
