@@ -20,7 +20,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 {
     internal class LibLogTraceListener : TraceListener
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogProvider.GetLogger("WebApi Diagnostics");
 
         public override void WriteLine(string message)
         {
