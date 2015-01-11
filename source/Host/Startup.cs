@@ -71,7 +71,8 @@ namespace Thinktecture.IdentityServer.Host
 
                         DiagnosticsOptions = new LoggingOptions
                         {
-                            EnableHttpLogging = false,
+                            EnableHttpLogging = true, 
+                            EnableWebApiDiagnostics = true,
                             IncludeSensitiveDataInLogs = true
                         },
 
