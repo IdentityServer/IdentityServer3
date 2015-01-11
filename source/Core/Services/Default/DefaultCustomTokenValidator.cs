@@ -29,6 +29,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultCustomTokenValidator : ICustomTokenValidator
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
         protected static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>

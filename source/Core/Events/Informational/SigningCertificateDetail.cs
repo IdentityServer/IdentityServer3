@@ -18,9 +18,25 @@ using System;
 
 namespace Thinktecture.IdentityServer.Core.Events
 {
+    /// <summary>
+    /// Details class for signing certificate validation
+    /// </summary>
     public class SigningCertificateDetail
     {
+        /// <summary>
+        /// Gets or sets the name of the signing certificate.
+        /// </summary>
+        /// <value>
+        /// The name of the signing certificate.
+        /// </value>
+
         public string SigningCertificateName  { get; set; }
+        /// <summary>
+        /// Gets or sets the signing certificate expiration.
+        /// </summary>
+        /// <value>
+        /// The signing certificate expiration.
+        /// </value>
         public DateTimeOffset SigningCertificateExpiration { get; set; }
     }
 }
