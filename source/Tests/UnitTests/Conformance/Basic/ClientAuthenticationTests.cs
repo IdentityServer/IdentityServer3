@@ -64,9 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             host.Login();
 
             var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(
-                client_id, redirect_uri, 
-                "openid", nonce);
+            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
             var code = query["code"];
 
             host.NewRequest();
@@ -101,9 +99,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             host.Login();
 
             var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(
-                client_id, redirect_uri,
-                "openid", nonce);
+            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
             var code = query["code"];
 
             host.NewRequest();

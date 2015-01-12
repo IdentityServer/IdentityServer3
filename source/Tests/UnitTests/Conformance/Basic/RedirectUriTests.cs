@@ -25,12 +25,15 @@ using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
 using System.Net.Http;
 using Thinktecture.IdentityModel.Http;
+using Thinktecture.IdentityServer.Core.ViewModels;
+using Thinktecture.IdentityServer.Core.Resources;
+
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 {
-    public class ResponseTypeResponseModeTests : IdentityServerHostTest
+    public class RedirectUriTests : IdentityServerHostTest
     {
-        const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
+        const string Category = "Conformance.Basic.RedirectUriTests";
 
         string client_id = "code_client";
         string redirect_uri = "https://code_client/callback";
@@ -58,43 +61,19 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 
         [Fact]
         [Trait("Category", Category)]
-        public void Request_with_response_type_code_supported()
+        public void Reject_redirect_uri_not_matching_registered_redirect_uri()
         {
             host.Login();
 
-            var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
-
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, "openid", "code", state, nonce);
-            var result = host.Client.GetAsync(url).Result;
-            result.StatusCode.Should().Be(HttpStatusCode.Found);
-
-            var query = result.Headers.Location.ParseQueryString();
-            query.AllKeys.Should().Contain("code");
-            query.AllKeys.Should().Contain("state");
-            query["state"].Should().Be(state);
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public void Request_missing_response_type_rejected()
-        {
-            host.Login();
-
             var state = Guid.NewGuid().ToString();
-            var nonce = Guid.NewGuid().ToString();
-
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, "openid", /*response_type*/ null, state, nonce);
-
+            var url = host.GetAuthorizeUrl(client_id, "http://bad", "openid", "code", state, nonce);
+            
             var result = host.Client.GetAsync(url).Result;
-            result.StatusCode.Should().Be(HttpStatusCode.Found);
-            result.Headers.Location.AbsoluteUri.Should().Contain("#");
-
-            var query = result.Headers.Location.ParseHashFragment();
-            //query.AllKeys.Should().Contain("state");
-            //query["state"].Should().Be(state);
-            query.AllKeys.Should().Contain("error");
-            query["error"].Should().Be("unsupported_response_type");
+            
+            result.AssertPage("error");
+            var model = result.GetPageModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.unauthorized_client);
         }
     }
 }

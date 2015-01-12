@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="ClassVisibilityTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
+    <Compile Include="Conformance\Basic\RedirectUriTests.cs" />
     <Compile Include="Conformance\Basic\ClientAuthenticationTests.cs" />
     <Compile Include="Conformance\Basic\ResponseTypeResponseModeTests.cs" />
     <Compile Include="Conformance\CookieHeaderValue.cs" />

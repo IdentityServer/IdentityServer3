@@ -46,29 +46,18 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         {
             var state = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl() +
-                "?state=" + state + 
-                "&response_type=code" + 
-                "&scope=" + scope + 
-                "&client_id=" + client_id + 
-                "&redirect_uri=" + redirect_uri;
-            
-            if (nonce.IsPresent())
-            {
-                url += "&nonce=" + nonce;
-            }
-            
+            var url = host.GetAuthorizeUrl(client_id, redirect_uri, scope, "code", state, nonce);
             var result = host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
 
             var query = result.Headers.Location.ParseQueryString();
-            
+
             query.AllKeys.Should().Contain("state");
             query["state"].Should().Be(state);
-            
+
             return query;
         }
-
+        
         public static void Login(this IdentityServerHost host, string username = "bob")
         {
             var resp = host.GetLoginPage();
@@ -206,9 +195,42 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         {
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Login + "?signin=" + signInId;
         }
-        public static string GetAuthorizeUrl(this IdentityServerHost host)
+        public static string GetAuthorizeUrl(this IdentityServerHost host, string client_id = null, string redirect_uri = null, string scope = null, string response_type = null, string state = null, string nonce = null)
         {
-            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.Authorize;
+            var url = host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.Authorize;
+            
+            var query = "";
+            if (response_type.IsPresent())
+            {
+                query += "&response_type=" + response_type;
+            }
+            if (scope.IsPresent())
+            {
+                query += "&scope=" + scope;
+            }
+            if (client_id.IsPresent())
+            {
+                query += "&client_id=" + client_id;
+            }
+            if (redirect_uri.IsPresent())
+            {
+                query += "&redirect_uri=" + redirect_uri;
+            }
+            if (state.IsPresent())
+            {
+                query += "&state=" + state;
+            }
+            if (nonce.IsPresent())
+            {
+                query += "&nonce=" + nonce;
+            }
+
+            if (query.StartsWith("&"))
+            {
+                url += "?" + query.Substring(1);
+            }
+            
+            return url;
         }
         public static string GetTokenUrl(this IdentityServerHost host)
         {
