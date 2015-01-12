@@ -79,7 +79,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             _validatedRequest.Raw = parameters;
 
-
+            //////////////////////////////////////////////////////////
+            // check state
+            //////////////////////////////////////////////////////////
+            var state = parameters.Get(Constants.AuthorizeRequest.State);
+            if (state.IsPresent())
+            {
+                _validatedRequest.State = state;
+            }
+            
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
@@ -178,15 +186,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
             }
 
-            //////////////////////////////////////////////////////////
-            // check state
-            //////////////////////////////////////////////////////////
-            var state = parameters.Get(Constants.AuthorizeRequest.State);
-            if (state.IsPresent())
-            {
-                _validatedRequest.State = state;
-            }
-           
             //////////////////////////////////////////////////////////
             // scope must be present
             //////////////////////////////////////////////////////////

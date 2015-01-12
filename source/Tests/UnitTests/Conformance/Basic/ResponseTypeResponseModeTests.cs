@@ -91,8 +91,8 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             result.Headers.Location.AbsoluteUri.Should().Contain("#");
 
             var query = result.Headers.Location.ParseHashFragment();
-            //query.AllKeys.Should().Contain("state");
-            //query["state"].Should().Be(state);
+            query.AllKeys.Should().Contain("state");
+            query["state"].Should().Be(state);
             query.AllKeys.Should().Contain("error");
             query["error"].Should().Be("unsupported_response_type");
         }
