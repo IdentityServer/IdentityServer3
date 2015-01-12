@@ -61,6 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         public void Request_with_response_type_code_supported()
         {
             host.Login();
+            var cert = host.GetSigningCertificate();
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();

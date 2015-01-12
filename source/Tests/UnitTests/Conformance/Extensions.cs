@@ -37,6 +37,8 @@ using System.ComponentModel;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.IO;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance
 {
@@ -197,7 +199,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         }
         public static string GetAuthorizeUrl(this IdentityServerHost host, string client_id = null, string redirect_uri = null, string scope = null, string response_type = null, string state = null, string nonce = null)
         {
-            var url = host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.Authorize;
+            var disco = host.GetDiscoveryDocument();
+            disco["authorization_endpoint"].Should().NotBeNull();
+            disco["response_types_supported"].Should().NotBeNull();
+            var arr = (JArray)disco["response_types_supported"];
+            var values = arr.Select(x=>x.ToString());
+            values.Should().Contain("code");
+
+            var url = disco["authorization_endpoint"].ToString();
             
             var query = "";
             if (response_type.IsPresent())
@@ -236,13 +245,79 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         {
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.Token;
         }
+        
         public static string GetUserInfoUrl(this IdentityServerHost host)
         {
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.UserInfo;
         }
+
         public static string GetDiscoveryUrl(this IdentityServerHost host)
         {
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.DiscoveryConfiguration;
+        }
+
+        public static JObject GetDiscoveryDocument(this IdentityServerHost host)
+        {
+            var disco_url = host.GetDiscoveryUrl();
+            var result = host.Client.GetAsync(disco_url).Result;
+            
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+
+            var json = result.Content.ReadAsStringAsync().Result;
+            var data = JObject.Parse(json);
+
+            string[] https_checks = new string[]{
+                "issuer", "jwks_uri", "authorization_endpoint", "token_endpoint", "userinfo_endpoint", "end_session_endpoint", "check_session_iframe"
+            };
+            foreach (var url in https_checks)
+            {
+                data[url].Should().NotBeNull();
+                data[url].ToString().Should().StartWith("https://");
+            }
+
+            var issuer = host.Url;
+            if (issuer.EndsWith("/")) issuer = issuer.Substring(0, issuer.Length - 1);
+            data["issuer"].ToString().Should().Be(issuer);
+
+            var jwks = data["jwks_uri"].ToString();
+            result = host.Client.GetAsync(jwks).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+
+            return data;
+        }
+
+        public static X509Certificate2 GetSigningCertificate(this IdentityServerHost host)
+        {
+            var meta = host.GetDiscoveryDocument();
+
+            meta["jwks_uri"].Should().NotBeNull();
+            var jwks = meta["jwks_uri"].ToString();
+            
+            var result = host.Client.GetAsync(jwks).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Content.Headers.ContentType.MediaType.Should().Be("application/json");
+
+            var json = result.Content.ReadAsStringAsync().Result;
+            var data = JObject.Parse(json);
+            data["keys"].Should().NotBeNull();
+
+            var keys = (JArray)data["keys"];
+            var rsa = keys.FirstOrDefault(x => (string)x["kty"] == "RSA" && (string)x["use"] == "sig");
+            rsa.Should().NotBeNull();
+
+            var certs = (JArray)rsa["x5c"];
+            certs.Should().NotBeNull();
+
+            var cert = (string)certs.First();
+            cert.Should().NotBeNull();
+
+            var bytes = Convert.FromBase64String(cert);
+            var ret = new X509Certificate2(bytes);
+            ret.Should().NotBeNull();
+            
+            return ret;
         }
 
         public static T GetPageModel<T>(string html)
