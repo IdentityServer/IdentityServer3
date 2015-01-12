@@ -31,6 +31,7 @@ using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Extensions;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
+using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance
 {
@@ -60,6 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
                 ScopeStore = new Registration<IScopeStore>(scopeStore),
                 ClientStore = new Registration<IClientStore>(clientStore),
                 UserService = new Registration<IUserService>(userService),
+                ClientSecretValidator = new Registration<IClientSecretValidator, PlainTextClientSecretValidator>(),
             };
 
             Options = new IdentityServerOptions

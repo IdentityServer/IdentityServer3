@@ -33,27 +33,26 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
     {
         const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
 
+        string client_id = "code_client";
+        string redirect_uri = "https://code_client/callback";
+        string client_secret = "secret";
+
         protected override void PreInit()
         {
-            host.Scopes.Add(new Scope
-            {
-                Enabled = true,
-                Name = "test_scope",
-                Type = ScopeType.Resource,
-            });
-
+            host.Scopes.Add(StandardScopes.OpenId);
             host.Clients.Add(new Client
             {
                 Enabled = true,
-                ClientId = "code_client",
-                ClientSecrets = new List<ClientSecret>{
-                    new ClientSecret("secret".Sha256())
+                ClientId = client_id,
+                ClientSecrets = new List<ClientSecret>
+                {
+                    new ClientSecret(client_secret)
                 },
                 Flow = Flows.AuthorizationCode,
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {
-                    "https://code_client/callback"
+                    redirect_uri
                 }
             });
         }
@@ -65,10 +64,16 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             host.Login();
 
             var state = Guid.NewGuid().ToString();
+            var nonce = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl() 
-                + "?state=" + state + "&response_type=code&scope=test_scope&client_id=code_client&redirect_uri=https://code_client/callback";
-            
+            var url = host.GetAuthorizeUrl()
+                + "?state=" + state +
+                "&nonce=" + nonce +
+                "&response_type=code" +
+                "&scope=openid" +
+                "&client_id=" + client_id +
+                "&redirect_uri=" + redirect_uri;
+
             var result = host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
 
@@ -76,26 +81,8 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             query.AllKeys.Should().Contain("code");
             query.AllKeys.Should().Contain("state");
             query["state"].Should().Be(state);
-
-            host.NewRequest();
-
-            var code = query["code"];
-            host.Client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue("code_client", "secret");
-            result = host.PostForm(host.GetTokenUrl(), 
-                new {
-                    grant_type="authorization_code", 
-                    code=code, 
-                    client_id="code_client",
-                    redirect_uri="https://code_client/callback" 
-                }
-            );
-            result.StatusCode.Should().Be(HttpStatusCode.OK);
-            var data = result.ReadJsonObject();
-            data["token_type"].Should().NotBeNull();
-            data["token_type"].ToString().Should().Be("Bearer");
-            data["access_token"].Should().NotBeNull();
         }
-        
+
         [Fact]
         [Trait("Category", Category)]
         public void Request_missing_response_type_rejected()
@@ -103,9 +90,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             host.Login();
 
             var state = Guid.NewGuid().ToString();
-            
-            var url = host.GetAuthorizeUrl() + 
-                "?state=" + state + "&scope=test_scope&client_id=code_client&redirect_uri=https://code_client/callback";
+            var nonce = Guid.NewGuid().ToString();
+
+            var url = host.GetAuthorizeUrl()
+                + "?state=" + state +
+                "&nonce=" + nonce +
+                "&scope=openid" +
+                "&client_id=" + client_id +
+                "&redirect_uri=" + redirect_uri;
 
             var result = host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);

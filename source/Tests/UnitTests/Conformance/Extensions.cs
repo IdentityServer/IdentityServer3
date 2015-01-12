@@ -42,6 +42,33 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 {
     public static class Extensions
     {
+        public static NameValueCollection RequestAuthorizationCode(this IdentityServerHost host, string client_id, string redirect_uri, string scope, string nonce = null)
+        {
+            var state = Guid.NewGuid().ToString();
+
+            var url = host.GetAuthorizeUrl() +
+                "?state=" + state + 
+                "&response_type=code" + 
+                "&scope=" + scope + 
+                "&client_id=" + client_id + 
+                "&redirect_uri=" + redirect_uri;
+            
+            if (nonce.IsPresent())
+            {
+                url += "&nonce=" + nonce;
+            }
+            
+            var result = host.Client.GetAsync(url).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.Found);
+
+            var query = result.Headers.Location.ParseQueryString();
+            
+            query.AllKeys.Should().Contain("state");
+            query["state"].Should().Be(state);
+            
+            return query;
+        }
+
         public static void Login(this IdentityServerHost host, string username = "bob")
         {
             var resp = host.GetLoginPage();
