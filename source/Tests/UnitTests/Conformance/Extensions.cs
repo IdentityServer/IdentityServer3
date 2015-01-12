@@ -36,6 +36,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json.Linq;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance
 {
@@ -44,7 +45,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         public static void Login(this IdentityServerHost host, string username = "bob")
         {
             var resp = host.GetLoginPage();
-            var model = resp.GetModel<LoginViewModel>();
+            var model = resp.GetPageModel<LoginViewModel>();
 
             var user = host.Users.Single(x=>x.Username == username);
             resp = host.PostForm(model.LoginUrl, new LoginCredentials { Username = user.Username, Password = user.Password }, model.AntiForgery);
@@ -195,7 +196,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.DiscoveryConfiguration;
         }
 
-        public static T GetModel<T>(string html)
+        public static T GetPageModel<T>(string html)
         {
             var match = "<script id='modelJson' type='application/json'>";
             var start = html.IndexOf(match);
@@ -205,10 +206,10 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             return JsonConvert.DeserializeObject<T>(json);
         }
 
-        public static T GetModel<T>(this HttpResponseMessage resp)
+        public static T GetPageModel<T>(this HttpResponseMessage resp)
         {
             var html = resp.Content.ReadAsStringAsync().Result;
-            return GetModel<T>(html);
+            return GetPageModel<T>(html);
         }
 
         public static void AssertPage(this HttpResponseMessage resp, string name)
@@ -278,6 +279,21 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
                 return cookies;
             }
             return Enumerable.Empty<CookieHeaderValue>();
+        }
+
+        public static NameValueCollection ParseHashFragment(this Uri uri)
+        {
+            var url = uri.AbsoluteUri;
+            if (!url.Contains("#")) return new NameValueCollection();
+
+            var hash = url.Substring(url.IndexOf('#') + 1);
+            return new Uri("http://foo?" + hash).ParseQueryString();
+        }
+        
+        public static JObject ReadJsonObject(this HttpResponseMessage resp)
+        {
+            var json = resp.Content.ReadAsStringAsync().Result;
+            return JObject.Parse(json);
         }
     }
 }

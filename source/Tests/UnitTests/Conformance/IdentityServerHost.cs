@@ -85,7 +85,13 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             {
                 app.UseIdentityServer(Options);
             });
-            Client = Server.HttpClient;
+            
+            NewRequest();
+        }
+
+        public HttpClient NewRequest()
+        {
+            return Client = Server.HttpClient;
         }
 
         public DateTimeOffset UtcNow

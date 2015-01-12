@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Client;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
+using System.Net.Http;
+using Thinktecture.IdentityModel.Http;
+
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 {
@@ -34,14 +39,18 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             {
                 Enabled = true,
                 Name = "test_scope",
-                Type = ScopeType.Resource
+                Type = ScopeType.Resource,
             });
 
             host.Clients.Add(new Client
             {
                 Enabled = true,
                 ClientId = "code_client",
+                ClientSecrets = new List<ClientSecret>{
+                    new ClientSecret("secret".Sha256())
+                },
                 Flow = Flows.AuthorizationCode,
+                RequireConsent = false,
                 RedirectUris = new List<string>
                 {
                     "https://code_client/callback"
@@ -55,17 +64,58 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         {
             host.Login();
 
-            var oauth = new OAuth2Client(new Uri("https://foo/connect/authorize"));
-            var url = oauth.CreateAuthorizeUrl("code_client", "code", "test_scope", "https://code_client/callback");
+            var state = Guid.NewGuid().ToString();
+
+            var url = host.GetAuthorizeUrl() 
+                + "?state=" + state + "&response_type=code&scope=test_scope&client_id=code_client&redirect_uri=https://code_client/callback";
             
             var result = host.Client.GetAsync(url).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.Found);
+
+            var query = result.Headers.Location.ParseQueryString();
+            query.AllKeys.Should().Contain("code");
+            query.AllKeys.Should().Contain("state");
+            query["state"].Should().Be(state);
+
+            host.NewRequest();
+
+            var code = query["code"];
+            host.Client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue("code_client", "secret");
+            result = host.PostForm(host.GetTokenUrl(), 
+                new {
+                    grant_type="authorization_code", 
+                    code=code, 
+                    client_id="code_client",
+                    redirect_uri="https://code_client/callback" 
+                }
+            );
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            var data = result.ReadJsonObject();
+            data["token_type"].Should().NotBeNull();
+            data["token_type"].ToString().Should().Be("Bearer");
+            data["access_token"].Should().NotBeNull();
         }
         
         [Fact]
         [Trait("Category", Category)]
         public void Request_missing_response_type_rejected()
         {
+            host.Login();
 
+            var state = Guid.NewGuid().ToString();
+            
+            var url = host.GetAuthorizeUrl() + 
+                "?state=" + state + "&scope=test_scope&client_id=code_client&redirect_uri=https://code_client/callback";
+
+            var result = host.Client.GetAsync(url).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.Found);
+            result.Headers.Location.AbsoluteUri.Should().Contain("#");
+
+            var query = result.Headers.Location.ParseHashFragment();
+            //query.AllKeys.Should().Contain("state");
+            //query["state"].Should().Be(state);
+            query.AllKeys.Should().Contain("error");
+            query["error"].Should().Be("unsupported_response_type");
         }
     }
 }
