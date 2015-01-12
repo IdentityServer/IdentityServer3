@@ -632,9 +632,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 if (options.AuthenticationOptions.EnableLocalLogin == false)
                 {
+                    Logger.Info("local login disabled");
+
                     string url = null;
 
-                    if (providerLinks.Count() == 1)
+                    if (providerLinks.Count() == 0)
+                    {
+                        Logger.Info("no providers registered for client");
+                        return RenderErrorPage();
+                    }
+                    else if (providerLinks.Count() == 1)
                     {
                         Logger.Info("only one provider for client");
                         url = providerLinks.First().Href;

@@ -190,6 +190,22 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_NoLocalLogin_NoExternalProviders_ShowsErrorPage()
+        {
+            ConfigureIdentityServerOptions = opts =>
+            {
+                opts.AuthenticationOptions.EnableLocalLogin = false;
+                opts.AuthenticationOptions.IdentityProviders = null;
+            };
+            Init();
+
+            var resp = GetLoginPage();
+            resp.AssertPage("error");
+            var model = resp.GetModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.UnexpectedError);
+        }
+
+        [Fact]
         public void GetLogin_PublicHostNameConfigured_PreAuthenticateReturnsParialLogin_IssuesRedirectToCustomHost()
         {
             ConfigureIdentityServerOptions = opts =>
@@ -197,7 +213,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 opts.PublicHostName = "http://somehost";
             };
             Init();
-            
+
             mockUserService
                 .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
