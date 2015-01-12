@@ -202,27 +202,27 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             var query = "";
             if (response_type.IsPresent())
             {
-                query += "&response_type=" + response_type;
+                query += "&response_type=" + HttpUtility.UrlEncode(response_type);
             }
             if (scope.IsPresent())
             {
-                query += "&scope=" + scope;
+                query += "&scope=" + HttpUtility.UrlEncode(scope);
             }
             if (client_id.IsPresent())
             {
-                query += "&client_id=" + client_id;
+                query += "&client_id=" + HttpUtility.UrlEncode(client_id);
             }
             if (redirect_uri.IsPresent())
             {
-                query += "&redirect_uri=" + redirect_uri;
+                query += "&redirect_uri=" + HttpUtility.UrlEncode(redirect_uri);
             }
             if (state.IsPresent())
             {
-                query += "&state=" + state;
+                query += "&state=" + HttpUtility.UrlEncode(state);
             }
             if (nonce.IsPresent())
             {
-                query += "&nonce=" + nonce;
+                query += "&nonce=" + HttpUtility.UrlEncode(nonce);
             }
 
             if (query.StartsWith("&"))

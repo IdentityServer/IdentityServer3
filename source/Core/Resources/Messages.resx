@@ -148,7 +148,7 @@
     <value>SSL is required</value>
   </data>
   <data name="unauthorized_client" xml:space="preserve">
-    <value>The client application tried to access a resource it does not have access to.</value>
+    <value>The client application is not known or is not authorized.</value>
   </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>There was an unexpected error</value>
@@ -170,5 +170,8 @@
   </data>
   <data name="ExternalProviderError" xml:space="preserve">
     <value>There was an error logging into the external provider. The error message is: {0}</value>
+  </data>
+  <data name="invalid_request" xml:space="preserve">
+    <value>The client application made an invalid request.</value>
   </data>
 </root>

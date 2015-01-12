@@ -35,6 +35,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
     {
         const string Category = "Conformance.Basic.RedirectUriTests";
 
+        Client client;
         string client_id = "code_client";
         string redirect_uri = "https://code_client/callback";
         string client_secret = "secret";
@@ -42,7 +43,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         protected override void PreInit()
         {
             host.Scopes.Add(StandardScopes.OpenId);
-            host.Clients.Add(new Client
+            host.Clients.Add(client = new Client
             {
                 Enabled = true,
                 ClientId = client_id,
@@ -68,7 +69,69 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             var nonce = Guid.NewGuid().ToString();
             var state = Guid.NewGuid().ToString();
             var url = host.GetAuthorizeUrl(client_id, "http://bad", "openid", "code", state, nonce);
-            
+
+            var result = host.Client.GetAsync(url).Result;
+
+            result.AssertPage("error");
+            var model = result.GetPageModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.unauthorized_client);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void Reject_request_without_redirect_uri_when_multiple_registered()
+        {
+            host.Login();
+
+            var nonce = Guid.NewGuid().ToString();
+            var state = Guid.NewGuid().ToString();
+            var url = host.GetAuthorizeUrl(client_id, /*redirect_uri*/ null, "openid", "code", state, nonce);
+
+            var result = host.Client.GetAsync(url).Result;
+
+            result.AssertPage("error");
+            var model = result.GetPageModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.invalid_request);
+        }
+        
+        [Fact]
+        [Trait("Category", Category)]
+        public void Preserves_query_parameters_in_redirect_uri()
+        {
+            var query_redirect_uri = redirect_uri + "?foo=bar&baz=quux";
+            client.RedirectUris.Add(query_redirect_uri);
+
+            host.Login();
+
+            var nonce = Guid.NewGuid().ToString();
+            var state = Guid.NewGuid().ToString();
+            var url = host.GetAuthorizeUrl(client_id, query_redirect_uri, "openid", "code", state, nonce);
+
+            var result = host.Client.GetAsync(url).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            result.Headers.Location.AbsoluteUri.Should().StartWith("https://code_client/callback");
+            result.Headers.Location.AbsolutePath.Should().Be("/callback");
+            var query = result.Headers.Location.ParseQueryString();
+            query.AllKeys.Should().Contain("foo");
+            query["foo"].ToString().Should().Be("bar");
+            query.AllKeys.Should().Contain("baz");
+            query["baz"].ToString().Should().Be("quux");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void Rejects_redirect_uri_when_query_parameter_does_not_match()
+        {
+            var query_redirect_uri = redirect_uri + "?foo=bar&baz=quux";
+            client.RedirectUris.Add(query_redirect_uri);
+            query_redirect_uri = redirect_uri + "?baz=quux&foo=bar";
+
+            host.Login();
+
+            var nonce = Guid.NewGuid().ToString();
+            var state = Guid.NewGuid().ToString();
+            var url = host.GetAuthorizeUrl(client_id, query_redirect_uri, "openid", "code", state, nonce);
+
             var result = host.Client.GetAsync(url).Result;
             
             result.AssertPage("error");
