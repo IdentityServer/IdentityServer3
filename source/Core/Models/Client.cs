@@ -193,6 +193,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             IdentityProviderRestrictions = new List<string>();
             CustomGrantTypeRestrictions = new List<string>();
 
+            Enabled = true;
             EnableLocalLogin = true;
             
             // client claims settings
