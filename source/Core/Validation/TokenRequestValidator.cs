@@ -320,12 +320,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             Logger.Info("Start password token request validation");
 
             // if we've disabled local authentication, then fail
-            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            if (_options.AuthenticationOptions.EnableLocalLogin == false ||
+                _validatedRequest.Client.EnableLocalLogin == false)
             {
                 LogError("EnableLocalLogin is disabled, failing with UnsupportedGrantType");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
-
+            
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
