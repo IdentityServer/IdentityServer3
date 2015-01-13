@@ -221,6 +221,9 @@ namespace Thinktecture.IdentityServer.Core.Models
 
             AccessTokenType = AccessTokenType.Jwt;
             AllowLocalLogin = true;
+            
+            RequireConsent = true;
+            AllowRememberConsent = true;
         }
     }
 }
