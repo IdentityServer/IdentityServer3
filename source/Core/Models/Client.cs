@@ -125,6 +125,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Specifies whether the access token is a reference token or a self contained JWT token (defaults to Jwt).
         /// </summary>
         public AccessTokenType AccessTokenType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the local login is allowed for this client.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if local logins are enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableLocalLogin { get; set; }
         
         /// <summary>
         /// Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
@@ -184,6 +192,8 @@ namespace Thinktecture.IdentityServer.Core.Models
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
             CustomGrantTypeRestrictions = new List<string>();
+
+            EnableLocalLogin = true;
             
             // client claims settings
             Claims = new List<Claim>();
