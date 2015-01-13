@@ -50,6 +50,13 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientSecret"/> class.
         /// </summary>
+        public ClientSecret()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="expiration">The expiration.</param>
         public ClientSecret(string value, DateTimeOffset? expiration = null)
