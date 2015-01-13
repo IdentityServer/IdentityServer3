@@ -327,7 +327,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
                 ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(GetScopes())),
-                Client = new Client { }
+                Client = new Client {
+                    AllowRememberConsent = false
+                }
             };
             await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
             var consent = new UserConsent
@@ -354,7 +356,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 State = "12345",
                 RedirectUri = "https://client.com/callback",
                 ValidatedScopes = new ScopeValidator(new InMemoryScopeStore(GetScopes())),
-                Client = new Client { }
+                Client = new Client {
+                    AllowRememberConsent = false
+                }
             };
             await request.ValidatedScopes.AreScopesValidAsync(new string[] { "read", "write" });
             var consent = new UserConsent
