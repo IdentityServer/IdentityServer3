@@ -42,22 +42,31 @@ namespace Thinktecture.IdentityServer.Core.Models
         
         /// <summary>
         /// The external identity provider requested. This is used to bypass home realm 
-        /// discovery (HRD). This is provided via the <c>"idp:"</c> prefix to the <c>login_hint</c> 
+        /// discovery (HRD). This is provided via the <c>"idp:"</c> prefix to the <c>acr</c> 
         /// parameter on the authorize request.
         /// </summary>
         /// <value>
         /// The external identity provider identifier.
         /// </value>
         public string IdP { get; set; }
-        
+
         /// <summary>
         /// The tenant requested. This is provided via the <c>"tenant:"</c> prefix to 
-        /// the <c>login_hint</c> parameter on the authorize request.
+        /// the <c>acr</c> parameter on the authorize request.
         /// </summary>
         /// <value>
         /// The tenant.
         /// </value>
         public string Tenant { get; set; }
+        
+        /// <summary>
+        /// The expected username the user will use to login. This is requested from the client 
+        /// via the <c>login_hint</c> parameter on the authorize request.
+        /// </summary>
+        /// <value>
+        /// The LoginHint.
+        /// </value>
+        public string LoginHint { get; set; }
         
         /// <summary>
         /// The display mode passed from the authorization request.
