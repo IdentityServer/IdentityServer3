@@ -617,7 +617,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            username = username ?? lastUsernameCookie.GetValue();
+            username = username ?? message.LoginHint ?? lastUsernameCookie.GetValue();
 
             var idpRestrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
             var providers = context.GetExternalAuthenticationProviders(idpRestrictions);

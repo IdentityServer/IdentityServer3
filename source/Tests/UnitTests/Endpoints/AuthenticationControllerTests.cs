@@ -117,6 +117,31 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_SignInMessageHasLoginHint_UsernameIsPopulatedFromLoginHint()
+        {
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+
+            var model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().Be("test");
+        }
+        
+        [Fact]
+        public void PostToLogin_SignInMessageHasLoginHint_UsernameShouldBeUsernamePosted()
+        {
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+            var model = resp.GetModel<LoginViewModel>();
+            resp = PostForm(model.LoginUrl, new LoginCredentials { Username = "alice", Password = "jdfhjkdf" });
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().Be("alice");
+        }
+
+        [Fact]
         public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
