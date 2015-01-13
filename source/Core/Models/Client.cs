@@ -125,11 +125,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Specifies whether the access token is a reference token or a self contained JWT token (defaults to Jwt).
         /// </summary>
         public AccessTokenType AccessTokenType { get; set; }
-
-        /// <summary>
-        /// Specifies if this client can use local accounts, or external IdPs only
-        /// </summary>
-        public bool AllowLocalLogin { get; set; }
         
         /// <summary>
         /// Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
@@ -176,14 +171,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public List<string> CustomGrantTypeRestrictions { get; set; }
 
-        // not implemented yet
-
-        //public bool RefreshClaimsOnRefreshToken { get; set; }
-        //public bool RequireSignedAuthorizeRequest { get; set; }
-        //public SubjectTypes SubjectType { get; set; }
-        //public Uri SectorIdentifierUri { get; set; }
-        //public ApplicationTypes ApplicationType { get; set; }
-
         /// <summary>
         /// Creates a Client with default values
         /// </summary>
@@ -220,7 +207,6 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
             AccessTokenType = AccessTokenType.Jwt;
-            AllowLocalLogin = true;
             
             RequireConsent = true;
             AllowRememberConsent = true;
