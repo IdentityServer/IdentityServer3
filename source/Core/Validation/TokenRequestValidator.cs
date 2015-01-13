@@ -363,23 +363,36 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             var signInMessage = new SignInMessage();
 
-            var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
-            if (loginHint.IsPresent())
-            {
-                if (loginHint.StartsWith(Constants.LoginHints.HomeRealm))
-                {
-                    signInMessage.IdP = loginHint.Substring(Constants.LoginHints.HomeRealm.Length);
-                }
-                else if (loginHint.StartsWith(Constants.LoginHints.Tenant))
-                {
-                    signInMessage.Tenant = loginHint.Substring(Constants.LoginHints.Tenant.Length);
-                }
-            }
+            // pass through client_id
+            signInMessage.ClientId = _validatedRequest.Client.ClientId;
 
-            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
-            if (acrValues.IsPresent())
+            // process acr values
+            var acr = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            if (acr.IsPresent())
             {
-                signInMessage.AcrValues = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+                var acrValues = acr.FromSpaceSeparatedString().Distinct().ToList();
+
+                // look for well-known acr value -- idp
+                var idp = acrValues.Where(x => x.StartsWith(Constants.AcrValues.HomeRealm)).FirstOrDefault();
+                if (idp.IsPresent())
+                {
+                    signInMessage.IdP = idp.Substring(Constants.AcrValues.HomeRealm.Length);
+                    acrValues.Remove(idp);
+                }
+
+                // look for well-known acr value -- tenant
+                var tenant = acrValues.Where(x => x.StartsWith(Constants.AcrValues.Tenant)).FirstOrDefault();
+                if (tenant.IsPresent())
+                {
+                    signInMessage.Tenant = tenant.Substring(Constants.AcrValues.Tenant.Length);
+                    acrValues.Remove(tenant);
+                }
+
+                // pass through any remaining acr values
+                if (acrValues.Any())
+                {
+                    signInMessage.AcrValues = acrValues;
+                }
             }
 
             _validatedRequest.SignInMessage = signInMessage;
