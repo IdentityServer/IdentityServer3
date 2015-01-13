@@ -63,6 +63,6 @@ IdentityServer is built using the following great open source projects:
 - [Gitter](http://gitter.im)
 - [Huboard](http://huboard.com)
 - [AppVeyor](http://appveyor.com)
-- [MyGet](http://myget.com)
+- [MyGet](http://myget.org)
 
 ...and last but not least thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
