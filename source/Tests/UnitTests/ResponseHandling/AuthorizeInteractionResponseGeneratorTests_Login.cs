@@ -130,7 +130,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                LoginHint = "idp:" + Constants.BuiltInIdentityProvider
+                 AuthenticationContextReferenceClasses = new List<string>{
+                    "idp:" + Constants.BuiltInIdentityProvider
+                }
             };
 
             var principal = IdentityServerPrincipal.Create("123", "dom");
@@ -150,7 +152,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                LoginHint = "idp:some_idp"
+                AuthenticationContextReferenceClasses = new List<string>{
+                    "idp:some_idp"
+                }
             };
 
             var principal = IdentityServerPrincipal.Create("123", "dom");

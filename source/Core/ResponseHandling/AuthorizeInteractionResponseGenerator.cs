@@ -66,23 +66,35 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 _signIn.UiLocales = request.UiLocales;
             }
 
-            // check login_hint - we only support idp: right now
+            // pass through login_hint
             if (request.LoginHint.IsPresent())
             {
-                if (request.LoginHint.StartsWith(Constants.LoginHints.HomeRealm))
-                {
-                    _signIn.IdP = request.LoginHint.Substring(Constants.LoginHints.HomeRealm.Length);
-                }
-                if (request.LoginHint.StartsWith(Constants.LoginHints.Tenant))
-                {
-                    _signIn.Tenant = request.LoginHint.Substring(Constants.LoginHints.Tenant.Length);
-                }
+                _signIn.LoginHint = request.LoginHint;
             }
 
-            // pass through acr values
-            if (request.AuthenticationContextReferenceClasses.Any())
+            // process acr values
+            var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
+            
+            // look for well-known acr value -- idp
+            var idp = acrValues.Where(x => x.StartsWith(Constants.AcrValues.HomeRealm)).FirstOrDefault();
+            if (idp.IsPresent())
             {
-                _signIn.AcrValues = request.AuthenticationContextReferenceClasses;
+                _signIn.IdP = idp.Substring(Constants.AcrValues.HomeRealm.Length);
+                acrValues.Remove(idp);
+            }
+
+            // look for well-known acr value -- tenant
+            var tenant = acrValues.Where(x => x.StartsWith(Constants.AcrValues.Tenant)).FirstOrDefault();
+            if (tenant.IsPresent())
+            {
+                _signIn.Tenant = tenant.Substring(Constants.AcrValues.Tenant.Length);
+                acrValues.Remove(tenant);
+            }
+
+            // pass through any remaining acr values
+            if (acrValues.Any())
+            {
+                _signIn.AcrValues = acrValues;
             }
 
             if (request.PromptMode == Constants.PromptModes.Login)
