@@ -22,6 +22,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
@@ -40,6 +41,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         Mock<IConsentService> mockConsent;
         Mock<IUserService> mockUserService;
         AuthorizeInteractionResponseGenerator subject;
+        IdentityServerOptions options;
 
         void RequiresConsent(bool value)
         {
@@ -98,9 +100,10 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         
         public AuthorizeInteractionResponseGeneratorTests_Consent()
         {
+            options = new IdentityServerOptions();
             mockConsent = new Mock<IConsentService>();
             mockUserService = new Mock<IUserService>();
-            subject = new AuthorizeInteractionResponseGenerator(mockConsent.Object, mockUserService.Object, new DefaultLocalizationService());
+            subject = new AuthorizeInteractionResponseGenerator(options, mockConsent.Object, mockUserService.Object, new DefaultLocalizationService());
         }
 
         [Fact]
