@@ -31,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Events
 
         public static class EndpointNames
         {
+            public const string Authenticate = "authenticate";
             public const string Authorize = "authorize";
             public const string Token = "token";
             public const string UserInfo = "userinfo";
