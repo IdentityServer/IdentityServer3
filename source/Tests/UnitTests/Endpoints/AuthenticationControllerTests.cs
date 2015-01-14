@@ -371,6 +371,30 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
+        
+        [Fact]
+        public void GetLogin_ClientEnableLocalLoginFalse_NoLoginUrl()
+        {
+            var clientApp = clients.First();
+            clientApp.EnableLocalLogin = false;
+
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            model.LoginUrl.Should().BeNull();
+        }
+
+        [Fact]
+        public void PostToLogin_ClientEnableLocalLoginFalse_Fails()
+        {
+            var url = GetLoginPage().GetModel<LoginViewModel>().LoginUrl;
+
+            var clientApp = clients.First();
+            clientApp.EnableLocalLogin = false;
+
+            var resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" });
+            var model = resp.GetModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.UnexpectedError);
+        }
 
         [Fact]
         public void PostToLogin_ValidCredentials_IssuesAuthenticationCookie()

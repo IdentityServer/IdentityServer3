@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ClientIdRequired" xml:space="preserve">
-    <value>Client Identifier is required</value>
+    <value>Client identifier is required</value>
   </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
-    <value>Invalid Username or Password</value>
+    <value>Invalid username or password</value>
   </data>
   <data name="invalid_scope" xml:space="preserve">
     <value>The client application tried to access a resource it does not have access to.</value>

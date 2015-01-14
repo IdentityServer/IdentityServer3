@@ -101,6 +101,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
         public static T GetModel<T>(this HttpResponseMessage resp)
         {
+            resp.IsSuccessStatusCode.Should().BeTrue();
             var html = resp.Content.ReadAsStringAsync().Result;
             return GetModel<T>(html);
         }

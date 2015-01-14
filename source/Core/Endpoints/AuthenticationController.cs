@@ -165,6 +165,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
+            if (!(await IsLocalLoginAllowed(signInMessage)))
+            {
+                Logger.ErrorFormat("Login not allowed for client {0}", signInMessage.ClientId);
+                return RenderErrorPage();
+            }
+
             if (model == null)
             {
                 Logger.Error("no data submitted");
@@ -613,11 +619,30 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
         }
 
+        async Task<bool> IsLocalLoginAllowed(SignInMessage message)
+        {
+            if (this.options.AuthenticationOptions.EnableLocalLogin)
+            {
+                if (message != null && message.ClientId.IsPresent())
+                {
+                    var client = await clientStore.FindClientByIdAsync(message.ClientId);
+                    if (client != null)
+                    {
+                        if (client.EnableLocalLogin == false) return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private async Task<IHttpActionResult> RenderLoginPage(SignInMessage message, string signInMessageId, string errorMessage = null, string username = null, bool rememberMe = false)
         {
             if (message == null) throw new ArgumentNullException("message");
 
             username = username ?? message.LoginHint ?? lastUsernameCookie.GetValue();
+
+            var loginAllowed = await IsLocalLoginAllowed(message);
 
             var idpRestrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
             var providers = context.GetExternalAuthenticationProviders(idpRestrictions);
@@ -673,7 +698,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ExternalProviders = visibleLinks,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = options.AuthenticationOptions.EnableLocalLogin ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
+                LoginUrl = loginAllowed ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
                 AllowRememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
