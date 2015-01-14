@@ -27,6 +27,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -249,7 +250,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!(await clientStore.IsValidIdentityProviderAsync(signInMessage.ClientId, provider)))
             {
-                Logger.ErrorFormat("Provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
+                var msg = String.Format("External login error: provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
+                Logger.ErrorFormat(msg);
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authenticate, msg);
+                return RenderErrorPage();
+            }
+            
+            if (context.IsValidExternalAuthenticationProvider(provider) == false)
+            {
+                var msg = String.Format("External login error: provider requested {0} is not a configured external provider", provider);
+                Logger.ErrorFormat(msg);
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authenticate, msg);
                 return RenderErrorPage();
             }
 

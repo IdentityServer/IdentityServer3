@@ -332,14 +332,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void GetLoginExternal_InvalidProvider_ReturnsUnauthorized()
+        public void GetLoginExternal_InvalidProvider_ReturnsError()
         {
             var msg = new SignInMessage();
             msg.IdP = "Foo";
             var resp1 = GetLoginPage(msg);
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            resp2.AssertPage("error");
         }
 
         [Fact]

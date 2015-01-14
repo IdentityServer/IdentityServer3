@@ -238,6 +238,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             NameValueCollection requestParameters,
             string errorMessage)
         {
+            string loginWithDifferentAccountUrl = null;
+            if (validatedRequest.HasIdpAcrValue() == false)
+            {
+                loginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null)
+                    .AddQueryString(requestParameters.ToQueryString());
+            }
+            
             var env = Request.GetOwinEnvironment();
             var consentModel = new ConsentViewModel
             {
@@ -253,7 +260,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ResourceScopes = validatedRequest.GetResourceScopes(this._localizationService),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
-                LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
+                LoginWithDifferentAccountUrl = loginWithDifferentAccountUrl,
                 LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()

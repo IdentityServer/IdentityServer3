@@ -173,6 +173,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return types;
         }
 
+        internal static bool IsValidExternalAuthenticationProvider(this IOwinContext context, string name)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            return context.Authentication.GetAuthenticationTypes().Any(x => x.AuthenticationType == name);
+        }
+
         internal static IEnumerable<LoginPageLink> GetLinksFromProviders(this IOwinContext context, IEnumerable<AuthenticationDescription> types, string signInMessageId)
         {
             if (context == null) throw new ArgumentNullException("context");
