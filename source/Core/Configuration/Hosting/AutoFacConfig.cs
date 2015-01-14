@@ -92,9 +92,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 );
             }).As<IPermissionsStore>();
 
-            // hosting services
-            builder.RegisterType<OwinEnvironmentService>();
-
             // validators
             builder.RegisterType<TokenRequestValidator>();
             builder.RegisterType<AuthorizeRequestValidator>();
