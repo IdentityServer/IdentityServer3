@@ -29,23 +29,22 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class DefaultRedirectUriValidator : IRedirectUriValidator
     {
         /// <summary>
-        /// Checks if a given URI is in a list of URIs.
+        /// Checks if a given URI string is in a collection of strings (using ordinal ignore case comparison)
         /// </summary>
-        /// <param name="collection">The collection.</param>
+        /// <param name="uris">The uris.</param>
         /// <param name="requestedUri">The requested URI.</param>
-        /// <returns>true or false</returns>
-        protected bool UriCollectionContainsUri(IEnumerable<string> collection, string requestedUri)
+        /// <returns></returns>
+        protected bool StringCollectionContainsString(IEnumerable<string> uris, string requestedUri)
         {
-            bool result = false;
-
-            Uri uri;
-            if (Uri.TryCreate(requestedUri, UriKind.Absolute, out uri))
+            foreach (var uri in uris)
             {
-                var uris = collection.Select(x => new Uri(x));
-                result = uris.Contains(uri);
+                if (uri.Equals(requestedUri, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
             }
 
-            return result;
+            return false;
         }
 
         /// <summary>
@@ -58,7 +57,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
         {
-            return Task.FromResult(UriCollectionContainsUri(client.RedirectUris, requestedUri));
+            
+            return Task.FromResult(StringCollectionContainsString(client.RedirectUris, requestedUri));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual Task<bool> IsPostLogoutRedirectUriValidAsync(string requestedUri, Client client)
         {
-            return Task.FromResult(UriCollectionContainsUri(client.PostLogoutRedirectUris, requestedUri));
+            return Task.FromResult(StringCollectionContainsString(client.PostLogoutRedirectUris, requestedUri));
         }
     }
 }
