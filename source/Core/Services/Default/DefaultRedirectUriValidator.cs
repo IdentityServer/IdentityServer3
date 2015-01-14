@@ -36,15 +36,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         protected bool StringCollectionContainsString(IEnumerable<string> uris, string requestedUri)
         {
-            foreach (var uri in uris)
-            {
-                if (uri.Equals(requestedUri, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
+            if (uris == null) return false;
 
-            return false;
+            return uris.Contains(requestedUri, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -57,7 +51,6 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual Task<bool> IsRedirectUriValidAsync(string requestedUri, Client client)
         {
-            
             return Task.FromResult(StringCollectionContainsString(client.RedirectUris, requestedUri));
         }
 
