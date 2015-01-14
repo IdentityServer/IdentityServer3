@@ -234,7 +234,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
-            if (redirectUri != _validatedRequest.AuthorizationCode.RedirectUri)
+            if (redirectUri.Equals(_validatedRequest.AuthorizationCode.RedirectUri, StringComparison.Ordinal) == false)
             {
                 var error = "Invalid redirect_uri: " + redirectUri;
                 LogError(error);
