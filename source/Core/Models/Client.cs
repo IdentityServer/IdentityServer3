@@ -109,16 +109,16 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public int SlidingRefreshTokenLifetime { get; set; }
         
-        /// <summary>
-        /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
-        /// Sliding: when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in SlidingRefreshTokenLifetime). The lifetime will not exceed 
+        /// /// <summary>
+        /// ReUse: the refresh token handle will stay the same when refreshing tokens
+        /// OneTime: the refresh token handle will be updated when refreshing tokens
         /// </summary>
         public TokenUsage RefreshTokenUsage { get; set; }
 
         /// <summary>
-        /// ReUse: the refresh token handle will stay the same when refreshing tokens
-        /// OneTime: the refresh token handle will be updated when refreshing tokens
-        /// </summary>
+        /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
+        /// Sliding: when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in SlidingRefreshTokenLifetime). The lifetime will not exceed 
+        /// </summary>        
         public TokenExpiration RefreshTokenExpiration { get; set; }
         
         /// <summary>
