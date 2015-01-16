@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
-            this.DiagnosticsOptions = new LoggingOptions();
+            this.LoggingOptions = new LoggingOptions();
             this.EventsOptions = new EventsOptions();
         }
 
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 throw new ArgumentException("Endpoints is missing");
             }
             
-            if (DiagnosticsOptions.EnableHttpLogging || DiagnosticsOptions.EnableWebApiDiagnostics || DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (LoggingOptions.EnableHttpLogging || LoggingOptions.EnableWebApiDiagnostics || LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 Logger.Warn("Detailed logging is enabled, potentially sensitive data will be exposed in log files.");
             }
@@ -185,7 +185,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The diagnostics options.
         /// </value>
-        public LoggingOptions DiagnosticsOptions { get; set; }
+        public LoggingOptions LoggingOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the events options.

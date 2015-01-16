@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public TokenRequestValidationLog(ValidatedTokenRequest request)
         {
-            if (request.Options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (request.Options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 Raw = request.Raw.ToDictionary();
             }

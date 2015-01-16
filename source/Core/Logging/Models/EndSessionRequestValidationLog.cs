@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public EndSessionRequestValidationLog(ValidatedEndSessionRequest request)
         {
-            if (request.Options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (request.Options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 Raw = request.Raw.ToDictionary();
             }
