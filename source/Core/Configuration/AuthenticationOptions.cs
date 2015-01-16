@@ -31,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions()
         {
             EnableLocalLogin = true;
+            EnableLoginHint = true;
             EnableSignOutPrompt = true;
             CookieOptions = new CookieOptions();
         }
@@ -43,6 +44,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         ///   <c>true</c> if local login is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableLocalLogin { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the login_hint parameter is used to prepopulate the username field.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if login_hint is used; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableLoginHint { get; set; }
 
         /// <summary>
         /// Gets or sets the cookie options.

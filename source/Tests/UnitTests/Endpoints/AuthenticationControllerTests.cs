@@ -119,6 +119,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         [Fact]
         public void GetLogin_SignInMessageHasLoginHint_UsernameIsPopulatedFromLoginHint()
         {
+            options.AuthenticationOptions.EnableLoginHint = true;
+
             var msg = new SignInMessage();
             msg.LoginHint = "test";
 
@@ -127,7 +129,21 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var model = resp.GetModel<LoginViewModel>();
             model.Username.Should().Be("test");
         }
-        
+
+        [Fact]
+        public void GetLogin_EnableLoginHintFalse_UsernameIsNotPopulatedFromLoginHint()
+        {
+            options.AuthenticationOptions.EnableLoginHint = false;
+            
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+
+            var model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNull(); ;
+        }
+
         [Fact]
         public void PostToLogin_SignInMessageHasLoginHint_UsernameShouldBeUsernamePosted()
         {

@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private readonly SessionCookie sessionCookie;
         private readonly MessageCookie<SignInMessage> signInMessageCookie;
         private readonly MessageCookie<SignOutMessage> signOutMessageCookie;
-        private readonly LastUserNameCookie lastUsernameCookie;
+        private readonly LastUserNameCookie lastUserNameCookie;
         private readonly AntiForgeryToken antiForgeryToken;
 
         public AuthenticationController(
@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             this.sessionCookie = sessionCookie;
             this.signInMessageCookie = signInMessageCookie;
             this.signOutMessageCookie = signOutMessageCookie;
-            this.lastUsernameCookie = lastUsernameCookie;
+            this.lastUserNameCookie = lastUsernameCookie;
             this.antiForgeryToken = antiForgeryToken;
         }
 
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             eventService.RaiseLocalLoginSuccessEvent(model.Username, signin, signInMessage, authResult);
 
-            lastUsernameCookie.SetValue(model.Username);
+            lastUserNameCookie.SetValue(model.Username);
 
             return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
         }
@@ -651,7 +651,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            username = username ?? message.LoginHint ?? lastUsernameCookie.GetValue();
+            username = GetUserNameForLoginPage(message, username);
 
             var loginAllowed = await IsLocalLoginAllowed(message);
 
@@ -718,6 +718,30 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             };
 
             return new LoginActionResult(viewService, loginModel, message);
+        }
+
+        private string GetUserNameForLoginPage(SignInMessage message, string username)
+        {
+            if (username.IsMissing() && message.LoginHint.IsPresent())
+            {
+                if (options.AuthenticationOptions.EnableLoginHint)
+                {
+                    Logger.InfoFormat("Using LoginHint for username: {0}", message.LoginHint);
+                    username = message.LoginHint;
+                }
+                else
+                {
+                    Logger.Warn("Not using LoginHint because EnableLoginHint is false");
+                }
+            }
+
+            var lastUsernameCookieValue = lastUserNameCookie.GetValue();
+            if (username.IsMissing() && lastUsernameCookieValue.IsPresent())
+            {
+                Logger.InfoFormat("Using LastUserNameCookie value for username: {0}", lastUsernameCookieValue);
+                username = lastUsernameCookieValue;
+            }
+            return username;
         }
 
         private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
