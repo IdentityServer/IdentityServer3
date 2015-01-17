@@ -105,6 +105,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 // remove prompt so when we redirect back in from login page
                 // we won't think we need to force a prompt again
                 request.Raw.Remove(Constants.AuthorizeRequest.Prompt);
+
+                Logger.Info("Redirecting to login page because of prompt=login");
+
                 return new LoginInteractionResponse
                 {
                     SignInMessage = _signIn
@@ -129,6 +132,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)
                 {
+                    Logger.Info("prompt=none was requested. But user is not authenticated.");
+
                     return new LoginInteractionResponse
                     {
                         Error = new AuthorizeError
@@ -156,6 +161,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             {
                 if (_signIn.IdP != currentIdp)
                 {
+                    Logger.Info("Current IdP is not the requested IdP. Redirecting to login");
+
                     return new LoginInteractionResponse
                     {
                         SignInMessage = _signIn
@@ -169,6 +176,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 var authTime = user.GetAuthenticationTime();
                 if (DateTimeOffsetHelper.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
                 {
+                    Logger.Info("Requested MaxAge exceeded. Redirecting to login");
+
                     return new LoginInteractionResponse
                     {
                         SignInMessage = _signIn
@@ -233,6 +242,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             if (consentRequired && request.PromptMode == Constants.PromptModes.None)
             {
+                Logger.Info("Prompt=none requested, but consent is required.")
+
                 return new ConsentInteractionResponse
                 {
                     Error = new AuthorizeError
