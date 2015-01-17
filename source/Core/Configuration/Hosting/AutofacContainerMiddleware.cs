@@ -20,11 +20,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal class AutofacContainerMiddleware
     {
+        readonly private static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         readonly private Func<IDictionary<string, object>, Task> _next;
         readonly private IContainer _container;
 
@@ -38,17 +41,25 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             var context = new OwinContext(env);
 
-            // this creates a per-request, disposable scope
-            using (var scope = _container.BeginLifetimeScope(b =>
+            try
             {
-                // this makes owin context resolvable in the scope
-                b.RegisterInstance(context).As<IOwinContext>();
-            }))
+                // this creates a per-request, disposable scope
+                using (var scope = _container.BeginLifetimeScope(b =>
+                {
+                    // this makes owin context resolvable in the scope
+                    b.RegisterInstance(context).As<IOwinContext>();
+                }))
+                {
+                    // this makes scope available for downstream frameworks
+                    env.SetLifetimeScope(scope);
+
+                    await _next(env);
+                }
+            }
+            catch (Exception ex)
             {
-                // this makes scope available for downstream frameworks
-                env.SetLifetimeScope(scope);
-                
-                await _next(env);
+                Logger.FatalException("unhandled exception in Autofac middleware", ex);
+                throw;
             }
         }
     }
