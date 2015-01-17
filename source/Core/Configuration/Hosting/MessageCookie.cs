@@ -36,6 +36,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        static readonly JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+        };
+
         readonly IOwinContext ctx;
         readonly IdentityServerOptions options;
 
@@ -64,12 +70,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         string Protect(IDataProtector protector, TMessage message)
         {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-            };
-
             var json = JsonConvert.SerializeObject(message, settings);
             Logger.DebugFormat("Protecting message: {0}", json);
 
