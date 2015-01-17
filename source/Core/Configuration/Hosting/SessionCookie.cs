@@ -45,9 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions()
         {
-            var path = context.Request.Environment.GetIdentityServerBasePath();
-            if (path.EndsWith("/")) path = path.Substring(0, path.Length - 1);
-            if (String.IsNullOrWhiteSpace(path)) path = "/";
+            var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
             var options = new Microsoft.Owin.CookieOptions
             {
