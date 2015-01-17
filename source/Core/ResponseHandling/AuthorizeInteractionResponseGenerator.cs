@@ -242,7 +242,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             if (consentRequired && request.PromptMode == Constants.PromptModes.None)
             {
-                Logger.Info("Prompt=none requested, but consent is required.")
+                Logger.Info("Prompt=none requested, but consent is required.");
 
                 return new ConsentInteractionResponse
                 {
