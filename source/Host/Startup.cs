@@ -69,7 +69,7 @@ namespace Thinktecture.IdentityServer.Host
                             IdentityProviders = ConfigureIdentityProviders,
                         },
 
-                        DiagnosticsOptions = new LoggingOptions
+                        LoggingOptions = new LoggingOptions
                         {
                             EnableHttpLogging = true, 
                             EnableWebApiDiagnostics = true,
