@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     public class LastUserNameCookie
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        const string LastUsernameCookieName = "idsvr.username";
 
         readonly IOwinContext ctx;
         readonly IdentityServerOptions options;
@@ -51,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             {
                 try
                 {
-                    var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                    var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
                     var value = ctx.Request.Cookies[cookieName];
 
                     var bytes = Base64Url.Decode(value);
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             if (options.AuthenticationOptions.RememberLastUsername)
             {
-                var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + "username";
+                var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
                 var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
                 var path = ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
