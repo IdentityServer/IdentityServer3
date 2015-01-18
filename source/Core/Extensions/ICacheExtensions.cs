@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -25,6 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     /// </summary>
     public static class ICacheExtensions
     {
+        private static readonly ILog Logger = LogProvider.GetLogger("Cache");
+
         /// <summary>
         /// Attempts to get an item from the cache. If the item is not found, the <c>get</c> function is used to 
         /// obtain the item and populate the cache.
@@ -47,14 +50,21 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (key == null) return null;
 
             T item = await cache.GetAsync(key);
+            
             if (item == null)
             {
+                Logger.Debug("Cache miss: " + key);
+
                 item = await get();
 
                 if (item != null)
                 {
                     await cache.SetAsync(key, item);
                 }
+            }
+            else
+            {
+                Logger.Debug("Cache hit: " + key);
             }
             
             return item;
