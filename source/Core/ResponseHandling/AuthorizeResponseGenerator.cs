@@ -68,6 +68,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         private async Task<AuthorizeResponse> CreateHybridFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
+            Logger.Info("Creating Hybrid Flow response.");
+
             var code = await CreateCodeAsync(request);
             var response = await CreateImplicitFlowResponseAsync(request, code);
             response.Code = code;
@@ -77,6 +79,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
+            Logger.Info("Creating Authorization Code Flow response.");
+
             var code = await CreateCodeAsync(request);
 
             var response = new AuthorizeResponse
@@ -121,6 +125,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         public async Task<AuthorizeResponse> CreateImplicitFlowResponseAsync(ValidatedAuthorizeRequest request, string authorizationCode = null)
         {
+            Logger.Info("Creating Implicit Flow response.");
+
             string accessTokenValue = null;
             int accessTokenLifetime = 0;
 
