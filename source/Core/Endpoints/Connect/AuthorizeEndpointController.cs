@@ -219,7 +219,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
                 RaiseSuccessEvent();
-                return new AuthorizeRedirectResult(response);
+                return new AuthorizeRedirectResult(response, _options);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
@@ -321,7 +321,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                return new AuthorizeRedirectResult(response);
+                return new AuthorizeRedirectResult(response, _options);
             }
         }
 
