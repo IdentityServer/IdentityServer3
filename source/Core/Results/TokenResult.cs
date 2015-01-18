@@ -29,8 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Results
     internal class TokenResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-
-        private static JsonMediaTypeFormatter Formatter = new JsonMediaTypeFormatter
+        private readonly static JsonMediaTypeFormatter Formatter = new JsonMediaTypeFormatter
         {
             SerializerSettings = { DefaultValueHandling = DefaultValueHandling.Ignore }
         };
