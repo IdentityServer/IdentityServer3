@@ -28,6 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Results
     internal class UserInfoResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly static JsonMediaTypeFormatter Formatter = new JsonMediaTypeFormatter();
+
         private readonly Dictionary<string, object> _claims;
         
         public UserInfoResult(Dictionary<string, object> claims)
@@ -42,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Results
 
         private HttpResponseMessage Execute()
         {
-            var content = new ObjectContent<Dictionary<string, object>>(_claims, new JsonMediaTypeFormatter());
+            var content = new ObjectContent<Dictionary<string, object>>(_claims, Formatter);
             var message = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = content
