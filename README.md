@@ -9,6 +9,8 @@ IdentityServer is a framework and a hostable component that allows implementing 
 
 Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
 
+Go to the documenation [site](https://thinktecture.github.io/Thinktecture.IdentityServer.v3.Documentation/).
+
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
 ## Getting started ##
