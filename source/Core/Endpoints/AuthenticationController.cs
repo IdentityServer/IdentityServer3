@@ -216,6 +216,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
 
+            Logger.Info("Login credentials successfully validated by user service");
+
             eventService.RaiseLocalLoginSuccessEvent(model.Username, signin, signInMessage, authResult);
 
             lastUserNameCookie.SetValue(model.Username);
@@ -268,6 +270,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 RedirectUri = Url.Route(Constants.RouteNames.LoginExternalCallback, null)
             };
+
+            Logger.Info("Triggering challenge for external identity provider");
 
             // add the id to the dictionary so we can recall the cookie id on the callback
             authProp.Dictionary.Add(Constants.Authentication.SigninId, signin);
@@ -339,6 +343,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 
                 return await RenderLoginPage(signInMessage, signInId, authResult.ErrorMessage);
             }
+
+            Logger.Info("External identity successfully validated by user service");
 
             eventService.RaiseExternalLoginSuccessEvent(externalIdentity, signInId, signInMessage, authResult);
 
@@ -432,6 +438,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     Claims = user.Claims
                 };
 
+                Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalId.Provider, externalId.ProviderId);
+                
                 result = await userService.AuthenticateExternalAsync(externalId, signInMessage);
 
                 if (result == null)
@@ -452,6 +460,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     
                     return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
                 }
+
+                Logger.Info("External identity successfully validated by user service");
 
                 eventService.RaiseExternalLoginSuccessEvent(externalId, signInId, signInMessage, result);
             }
@@ -495,12 +505,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> Logout(string id = null)
         {
+            Logger.Info("Logout endpoint submitted");
+            
             var user = (ClaimsPrincipal)User;
             if (user != null && user.Identity.IsAuthenticated)
             {
                 var sub = user.GetSubjectId();
                 Logger.InfoFormat("Logout requested for subject: {0}", sub);
             }
+
+            Logger.Info("Clearing cookies");
 
             sessionCookie.ClearSessionId();
             signOutMessageCookie.Clear(id);
