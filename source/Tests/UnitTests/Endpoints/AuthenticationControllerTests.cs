@@ -251,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             ConfigureIdentityServerOptions = opts =>
             {
-                opts.PublicHostName = "http://somehost";
+                opts.PublicOrigin = "http://somehost";
             };
             Init();
 

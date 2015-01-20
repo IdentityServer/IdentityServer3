@@ -109,12 +109,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool RequireSsl { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the public host.
+        /// Gets or sets the public origin for IdentityServer.
         /// </summary>
         /// <value>
-        /// The name of the public host.
+        /// The name of the public origin.
         /// </value>
-        public string PublicHostName { get; set; }
+        public string PublicOrigin { get; set; }
 
         /// <summary>
         /// Gets or sets the identity server factory.

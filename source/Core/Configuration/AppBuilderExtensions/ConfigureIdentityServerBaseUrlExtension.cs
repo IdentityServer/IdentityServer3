@@ -21,17 +21,22 @@ namespace Owin
 {
     internal static class ConfigureIdentityServerBaseUrlExtension
     {
-        public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicHostName)
+        public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicOrigin)
         {
+            if (publicOrigin.IsPresent())
+            {
+                publicOrigin = publicOrigin.RemoveTrailingSlash();
+            }
+
             app.Use(async (ctx, next) =>
             {
                 var request = ctx.Request;
-                if (String.IsNullOrWhiteSpace(publicHostName))
+                if (publicOrigin.IsMissing())
                 {
-                    publicHostName = request.Uri.Scheme + "://" + request.Host.Value;
-                } 
+                    publicOrigin = request.Uri.Scheme + "://" + request.Host.Value;
+                }
                 
-                ctx.Environment.SetIdentityServerHost(publicHostName);
+                ctx.Environment.SetIdentityServerHost(publicOrigin);
                 ctx.Environment.SetIdentityServerBasePath(ctx.Request.PathBase.Value.EnsureTrailingSlash());
 
                 await next();

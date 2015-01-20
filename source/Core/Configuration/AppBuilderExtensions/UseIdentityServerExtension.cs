@@ -67,7 +67,7 @@ namespace Owin
             options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
 
-            app.ConfigureIdentityServerBaseUrl(options.PublicHostName);
+            app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
             app.ConfigureIdentityServerIssuer(options);
 
             app.UseCors(options.CorsPolicy);
