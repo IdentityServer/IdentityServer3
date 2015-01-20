@@ -44,6 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CspOptions = new CspOptions();
             this.LoggingOptions = new LoggingOptions();
             this.EventsOptions = new EventsOptions();
+            this.EnableWelcomePage = true;
         }
 
         internal void Validate()
@@ -195,6 +196,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public EventsOptions EventsOptions { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the welcome page is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the welcome page is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableWelcomePage { get; set; }
+        
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {
             get

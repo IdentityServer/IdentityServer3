@@ -81,12 +81,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             });
         }
 
-        internal static string LoadWelcomePage(string applicationPath)
+        internal static string LoadWelcomePage(string applicationPath, string version)
         {
             applicationPath = applicationPath.RemoveTrailingSlash();
             return LoadResourceString(Welcome, new
             {
                 applicationPath,
+                version
             });
         }
         

@@ -47,9 +47,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         {
             Logger.Info("Welcome page requested");
 
-            if (!options.Endpoints.EnableWelcomeEndpoint)
+            if (!options.EnableWelcomePage)
             {
-                Logger.Error("endpoint disabled, returning 404");
+                Logger.Error("welcome page disabled, returning 404");
                 return NotFound();
             }
 

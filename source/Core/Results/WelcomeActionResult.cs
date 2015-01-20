@@ -39,8 +39,9 @@ namespace Thinktecture.IdentityServer.Core.Results
         public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             var baseUrl = context.GetIdentityServerBaseUrl();
+            var build = typeof(WelcomeActionResult).Assembly.GetName().Version.ToString();
             
-            var html = AssetManager.LoadWelcomePage(baseUrl);
+            var html = AssetManager.LoadWelcomePage(baseUrl, build);
             var content = new StringContent(html, Encoding.UTF8, "text/html");
 
             var response = new HttpResponseMessage
