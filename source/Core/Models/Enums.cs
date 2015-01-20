@@ -85,22 +85,6 @@ namespace Thinktecture.IdentityServer.Core.Models
     };
 
     /// <summary>
-    /// Signing keys types.
-    /// </summary>
-    public enum SigningKeyTypes
-    {
-        /// <summary>
-        /// use the default signing certificate
-        /// </summary>
-        SigningCertificate,
-        
-        /// <summary>
-        /// use the client secret
-        /// </summary>
-        ClientSecret
-    };
-
-    /// <summary>
     /// Access token types.
     /// </summary>
     public enum AccessTokenType
