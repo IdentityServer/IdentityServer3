@@ -497,7 +497,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
-            return await RenderLogoutPromptPage(id);
+            return RenderLogoutPromptPage();
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
@@ -719,14 +719,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 RequestId = context.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = Request.GetIdentityServerBaseUrl(),
-                CurrentUser = User.Identity.Name,
                 ExternalProviders = visibleLinks,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
                 LoginUrl = loginAllowed ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
                 AllowRememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
-                LogoutUrl = Url.Route(Constants.RouteNames.Logout, null),
+                CurrentUser = context.GetCurrentUserDisplayName(),
+                LogoutUrl = context.GetIdentityServerLogoutUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
                 Username = username
             };
@@ -758,19 +758,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return username;
         }
 
-        private async Task<IHttpActionResult> RenderLogoutPromptPage(string id = null)
+        private IHttpActionResult RenderLogoutPromptPage()
         {
-            var clientName = await clientStore.GetClientName(signOutMessageCookie.Read(id));
-
             var logoutModel = new LogoutViewModel
             {
                 SiteName = options.SiteName,
                 SiteUrl = context.GetIdentityServerBaseUrl(),
-                CurrentUser = User.Identity.Name,
-                LogoutUrl = Url.Route(Constants.RouteNames.Logout, new { id = id }),
+                CurrentUser = context.GetCurrentUserDisplayName(),
+                LogoutUrl = context.GetIdentityServerLogoutUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
-                ClientName = clientName
             };
+
             return new LogoutActionResult(viewService, logoutModel);
         }
 
@@ -804,7 +802,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 RequestId = context.GetRequestId(),
                 SiteName = this.options.SiteName,
                 SiteUrl = context.GetIdentityServerBaseUrl(),
-                ErrorMessage = message
+                ErrorMessage = message,
+                CurrentUser = context.GetCurrentUserDisplayName(),
+                LogoutUrl = context.GetIdentityServerLogoutUrl(),
             };
             var errorResult = new ErrorActionResult(viewService, errorModel);
             return errorResult;

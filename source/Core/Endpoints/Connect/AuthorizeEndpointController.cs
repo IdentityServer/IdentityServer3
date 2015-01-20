@@ -252,7 +252,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 ErrorMessage = errorMessage,
-                CurrentUser = User.GetName(),
+                CurrentUser = env.GetCurrentUserDisplayName(),
+                LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
                 ClientLogoUrl = validatedRequest.Client.LogoUri ?? null,
@@ -261,7 +262,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
                 RememberConsent = consent != null ? consent.RememberConsent : true,
                 LoginWithDifferentAccountUrl = loginWithDifferentAccountUrl,
-                LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()
             };
@@ -289,14 +289,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
-                var username = User.Identity.IsAuthenticated ? User.GetName() : (string)null;
-
                 var errorModel = new ErrorViewModel
                 {
                     RequestId = env.GetRequestId(),
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    CurrentUser = username,
+                    CurrentUser = env.GetCurrentUserDisplayName(),
+                    LogoutUrl = env.GetIdentityServerLogoutUrl(),
                     ErrorMessage = LookupErrorMessage(error)
                 };
 

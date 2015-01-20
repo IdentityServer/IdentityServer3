@@ -858,37 +858,6 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void LogoutPrompt_WithSignOutMessage_ContainsClientNameInPage()
-        {
-            var c = TestClients.Get().First();
-            var msg = new SignOutMessage
-            {
-                ClientId = c.ClientId,
-                ReturnUrl = "http://foo"
-            };
-            var id = WriteMessageToCookie(msg);
-            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().Be(c.ClientName);
-        }
-        
-        [Fact]
-        public void LogoutPrompt_NoSignOutMessage_ContainsNullClientNameInPage()
-        {
-            var resp = Get(Constants.RoutePaths.Logout);
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().BeNull();
-        }
-
-        [Fact]
-        public void LogoutPrompt_InvalidSignOutMessageId_ContainsNullClientNameInPage()
-        {
-            var resp = Get(Constants.RoutePaths.Logout + "?id=123");
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().BeNull();
-        }
-
-        [Fact]
         public void LoggedOut_WithSignOutMessage_ContainsClientNameAndRedirectUrlInPage()
         {
             GetLoginPage();

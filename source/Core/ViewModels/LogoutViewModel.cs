@@ -22,27 +22,11 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     public class LogoutViewModel : CommonViewModel
     {
         /// <summary>
-        /// The URL to POST to to trigger a logout.
-        /// </summary>
-        /// <value>
-        /// The logout URL.
-        /// </value>
-        public string LogoutUrl { get; set; }
-        
-        /// <summary>
         /// The anti forgery values.
         /// </summary>
         /// <value>
         /// The anti forgery.
         /// </value>
         public AntiForgeryTokenViewModel AntiForgery { get; set; }
-        
-        /// <summary>
-        /// The name of the client that requested the logout.
-        /// </summary>
-        /// <value>
-        /// The name of the client.
-        /// </value>
-        public string ClientName { get; set; }
     }
 }

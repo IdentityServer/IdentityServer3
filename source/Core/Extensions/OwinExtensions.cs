@@ -74,6 +74,17 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         /// <summary>
+        /// Gets the display name of the current user.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetCurrentUserDisplayName(this IDictionary<string, object> env)
+        {
+            return new OwinContext(env).GetCurrentUserDisplayName();
+        }
+        
+
+        /// <summary>
         /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
@@ -309,6 +320,19 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (context == null) throw new ArgumentNullException("context");
             return context.Environment.GetIdentityServerLogoutUrl();
+        }
+        
+        internal static string GetCurrentUserDisplayName(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            
+            if (context.Authentication.User != null && 
+                context.Authentication.User.Identity != null)
+            {
+                return context.Authentication.User.Identity.Name;
+            }
+            
+            return null;
         }
 
         internal static string CreateSignInRequest(this IOwinContext context, SignInMessage message)

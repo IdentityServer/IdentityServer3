@@ -156,7 +156,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 RequestId = env.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
-                CurrentUser = User.GetName(),
+                CurrentUser = env.GetCurrentUserDisplayName(),
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 RevokePermissionUrl = Request.GetOwinContext().GetPermissionsPageUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),

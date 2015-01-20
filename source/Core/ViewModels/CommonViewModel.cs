@@ -44,5 +44,13 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         /// The current user.
         /// </value>
         public string CurrentUser { get; set; }
+
+        /// <summary>
+        /// The URL to allow a user to logout.
+        /// </summary>
+        /// <value>
+        /// The logout URL.
+        /// </value>
+        public string LogoutUrl { get; set; }
     }
 }
