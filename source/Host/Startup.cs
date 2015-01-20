@@ -87,9 +87,6 @@ namespace Thinktecture.IdentityServer.Host
 
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
-
-            // only for showing the getting started index page
-            app.UseStaticFiles();
         }
 
         public static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)

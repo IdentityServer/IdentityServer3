@@ -499,6 +499,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RouteNames
         {
+            public const string Welcome = "idsrv.welcome";
             public const string Login = "idsrv.authentication.login";
             public const string LoginExternal = "idsrv.authentication.loginexternal";
             public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
@@ -521,6 +522,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RoutePaths
         {
+            public const string Welcome = "";
             public const string Login = "login";
             public const string LoginExternal = "external";
             public const string LoginExternalCallback = "callback";

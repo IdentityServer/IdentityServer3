@@ -118,7 +118,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html" />
     <Content Include="packages.config" />
     <EmbeddedResource Include="Config\idsrv3test.pfx" />
     <Content Include="..\default.licenseheader">

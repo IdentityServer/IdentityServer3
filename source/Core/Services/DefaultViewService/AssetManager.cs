@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -31,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         const string Layout = PagesPrefix + "layout.html";
         const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
         const string CheckSession = PagesPrefix + "checksession.html";
+        const string Welcome = PagesPrefix + "welcome.html";
 
         static readonly ResourceCache cache = new ResourceCache();
 
@@ -69,13 +71,22 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 }
             );
         }
-        
+
         public static string LoadCheckSession(string rootUrl, string cookieName)
         {
             return LoadResourceString(CheckSession, new
             {
                 rootUrl,
                 cookieName
+            });
+        }
+
+        internal static string LoadWelcomePage(string applicationPath)
+        {
+            applicationPath = applicationPath.RemoveTrailingSlash();
+            return LoadResourceString(Welcome, new
+            {
+                applicationPath,
             });
         }
         
