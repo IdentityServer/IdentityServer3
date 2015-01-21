@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         /// <summary>
         /// Gets or sets a value indicating whether the "remember me" option is presented to users on the login page. 
-        /// If selected this option will issue a persistent authentication cookie.
+        /// If selected this option will issue a persistent authentication cookie. Defaults to true.
         /// </summary>
         /// <value>
         ///   <c>true</c> if allowed; otherwise, <c>false</c>.
@@ -86,6 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         /// <summary>
         /// Gets or sets the duration of the persistent cookie issued by the "remember me" option on the login page.
+        /// Defaults to 30 days.
         /// </summary>
         /// <value>
         /// The duration of the "remember me" persistent cookie.
