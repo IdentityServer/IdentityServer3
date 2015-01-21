@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Specifies whether this claim should always be present in the identity token (even if an access token has been requested as well). Applies to identity scopes only.
+        /// Specifies whether this claim should always be present in the identity token (even if an access token has been requested as well). Applies to identity scopes only. Defaults to false.
         /// </summary>
         public bool AlwaysIncludeInIdToken { get; set; }
 
