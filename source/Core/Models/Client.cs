@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class Client
     {
         /// <summary>
-        /// Specifies if client is enabled (defaults to false)
+        /// Specifies if client is enabled (defaults to true)
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -55,12 +55,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string LogoUri { get; set; }
         
         /// <summary>
-        /// Specifies whether a consent screen is required (defaults to false)
+        /// Specifies whether a consent screen is required (defaults to true)
         /// </summary>
         public bool RequireConsent { get; set; }
 
         /// <summary>
-        /// Specifies whether user can choose to store consent decisions (defaults to false)
+        /// Specifies whether user can choose to store consent decisions (defaults to true)
         /// </summary>
         public bool AllowRememberConsent { get; set; }
 
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public AccessTokenType AccessTokenType { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the local login is allowed for this client.
+        /// Gets or sets a value indicating whether the local login is allowed for this client. Defaults to <c>true</c>.
         /// </summary>
         /// <value>
         ///   <c>true</c> if local logins are enabled; otherwise, <c>false</c>.
@@ -148,7 +148,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public bool IncludeJwtId { get; set; }
 
         /// <summary>
-        /// Gets or sets the client claims.
+        /// Allows settings claims for the client (will be included in the access token).
         /// </summary>
         /// <value>
         /// The claims.
