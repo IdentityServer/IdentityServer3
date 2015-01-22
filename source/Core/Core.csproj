@@ -273,7 +273,6 @@
     <Compile Include="Models\AuthenticateResult.cs" />
     <Compile Include="Endpoints\AuthenticationController.cs" />
     <Compile Include="Results\LoginActionResult.cs" />
-    <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Services\DefaultViewService\FileSystemViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\EmbeddedAssetsViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\CachingLoader.cs" />

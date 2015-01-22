@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             };
             
             Scripts = new List<string>();
+            CacheViews = true;
         }
 
         /// <summary>

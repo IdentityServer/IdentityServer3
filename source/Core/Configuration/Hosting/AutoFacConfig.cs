@@ -76,14 +76,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (fact.ViewService == null)
             {
-                builder.Register(new Registration<DefaultViewServiceOptions>());
-                builder.Register(new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>());
-                builder.Register(new Registration<IViewService, DefaultViewService>());
+                fact.ConfigureDefaultViewService(new DefaultViewServiceOptions());
             }
-            else
-            {
-                builder.Register(fact.ViewService);
-            }
+            builder.Register(fact.ViewService);
 
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
