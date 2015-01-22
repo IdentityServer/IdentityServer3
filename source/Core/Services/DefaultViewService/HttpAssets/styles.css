@@ -7296,87 +7296,87 @@ body {
 [ng-cloak] {
   display: none;
 }
-.error-page .request-id {
+.page-error .request-id {
   margin-left: 20px;
   font-size: 80%;
   font-weight: bold;
 }
-.error-page .request-id span {
+.page-error .request-id span {
   font-weight: normal;
 }
-.consent-page .client-logo {
-  float: left;
-}
-.consent-page .client-logo img {
-  width: 80px;
-  height: 80px;
-}
-.consent-buttons {
-  margin-top: 25px;
-}
-.consent-form .consent-scopecheck {
-  display: inline-block;
-  margin-right: 5px;
-}
-.consent-form .consent-description {
+.page-login .list-unstyled {
   margin-left: 25px;
 }
-.consent-form .consent-description label {
-  font-weight: normal;
-}
-.consent-form .consent-remember {
-  padding-left: 16px;
-}
-.login-page .list-unstyled {
-  margin-left: 25px;
-}
-.login-page .list-unstyled li {
+.page-login .list-unstyled li {
   margin-bottom: 10px;
 }
-.login-page .login-remember {
+.page-login .login-remember {
   padding-left: 16px;
 }
-.login-page .login-remember input {
+.page-login .login-remember input {
   margin-right: 5px;
 }
-.login-page .external-providers li:first-child {
+.page-login .external-providers li:first-child {
   padding-left: 5px;
 }
-.login-page .external-providers li {
+.page-login .external-providers li {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-iframe.signout {
+.page-loggedOut iframe.signout {
   display: none;
+}
+.page-consent .client-logo {
+  float: left;
+}
+.page-consent .client-logo img {
+  width: 80px;
+  height: 80px;
+}
+.page-consent .consent-buttons {
+  margin-top: 25px;
+}
+.page-consent .consent-form .consent-scopecheck {
+  display: inline-block;
+  margin-right: 5px;
+}
+.page-consent .consent-form .consent-description {
+  margin-left: 25px;
+}
+.page-consent .consent-form .consent-description label {
+  font-weight: normal;
+}
+.page-consent .consent-form .consent-remember {
+  padding-left: 16px;
 }
 .page-permissions .page-header {
   margin-bottom: 10px;
 }
-.permissions .permission {
+.page-permissions .permissions .permission {
   margin-top: 20px;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid lightgray;
 }
-.permissions .permission img {
+.page-permissions .permissions .permission img {
   width: 100px;
   height: 100px;
 }
-.permissions .permission .permission-clientname {
+.page-permissions .permissions .permission .permission-clientname {
   font-size: 140%;
   font-weight: bold;
 }
-.permissions .permission .permission-type {
+.page-permissions .permissions .permission .permission-type {
   font-size: 120%;
   font-weight: bold;
 }
-.permissions .permission li {
+.page-permissions .permissions .permission li {
   list-style-type: none;
   display: inline;
 }
-.permissions .permission li:after {
+.page-permissions .permissions .permission li:after {
   content: ', ';
 }
-.permissions .permission li:last-child:after {
+.page-permissions .permissions .permission li:last-child:after {
   content: '';
 }
 
