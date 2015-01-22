@@ -15,46 +15,27 @@
  */
 
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Configuration;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     /// <summary>
-    /// Configures the default view service.
+    /// Configures the assets for the default view service.
     /// </summary>
-    public class DefaultViewServiceConfiguration
+    public class DefaultViewServiceOptions
     {
-        internal static readonly DefaultViewServiceConfiguration Default = 
-            new DefaultViewServiceConfiguration();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultViewServiceConfiguration"/> class.
+        /// Initializes a new instance of the <see cref="DefaultViewServiceOptions"/> class.
         /// </summary>
-        public DefaultViewServiceConfiguration()
+        public DefaultViewServiceOptions()
         {
             // adding default CSS here so hosting application can choose to remove it
             Stylesheets = new List<string>
             {
                 "~/assets/styles.min.css"
             };
-
             
             Scripts = new List<string>();
-            CacheViews = true;
-        }
-
-        static volatile IViewLoader _loader = null;
-        internal IViewLoader GetLoader()
-        {
-            if (_loader == null)
-            {
-                IViewLoader loader = ViewLoader ?? new FileSystemWithEmbeddedFallbackViewLoader();
-                if (CacheViews)
-                {
-                    loader = new CachingLoader(loader);
-                }
-                _loader = loader;
-            }
-            return _loader;
         }
 
         /// <summary>
@@ -72,15 +53,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// The scripts.
         /// </value>
         public IList<string> Scripts { get; set; }
-        
+
         /// <summary>
-        /// View loader used to load the HTML templates.
+        /// Gets or sets the registration for the view loader.
         /// </summary>
         /// <value>
         /// The view loader.
         /// </value>
-        public IViewLoader ViewLoader { get; set; }
-        
+        public Registration<IViewLoader> ViewLoader { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether HTML will be cached by the default view cache.
         /// </summary>

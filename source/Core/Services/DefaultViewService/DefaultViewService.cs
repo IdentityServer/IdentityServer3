@@ -36,26 +36,19 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
         };
 
-        private readonly DefaultViewServiceConfiguration config;
+        private readonly DefaultViewServiceOptions config;
+        private readonly IViewLoader viewLoader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
         /// </summary>
-        public DefaultViewService()
-            : this(DefaultViewServiceConfiguration.Default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
-        /// </summary>
-        /// <param name="config">The configuration.</param>
-        /// <exception cref="System.ArgumentNullException">config</exception>
-        public DefaultViewService(DefaultViewServiceConfiguration config)
+        public DefaultViewService(DefaultViewServiceOptions config, IViewLoader viewLoader)
         {
             if (config == null) throw new ArgumentNullException("config");
-            
+            if (viewLoader == null) throw new ArgumentNullException("viewLoader");
+
             this.config = config;
+            this.viewLoader = viewLoader;
         }
 
         /// <summary>
@@ -139,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
-            string html = this.config.GetLoader().Load(page);
+            string html = this.viewLoader.Load(page);
 
             var data = BuildModel(model, page, config.Stylesheets, config.Scripts);
             html = AssetManager.Format(html, data);

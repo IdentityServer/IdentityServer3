@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class CachingLoader : IViewLoader
     {
-        readonly ResourceCache cache = new ResourceCache();
+        readonly static ResourceCache cache = new ResourceCache();
         readonly IViewLoader inner;
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Initializes a new instance of the <see cref="DefaultViewServiceRegistration"/> class.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        public DefaultViewServiceRegistration(DefaultViewServiceConfiguration config)
+        public DefaultViewServiceRegistration(DefaultViewServiceOptions config)
             : base(resolver => new DefaultViewService(config))
         {
         }

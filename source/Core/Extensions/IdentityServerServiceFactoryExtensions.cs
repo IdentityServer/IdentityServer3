@@ -190,5 +190,32 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var cacheRegistration = new Registration<ICache<IEnumerable<Claim>>>(cache);
             factory.ConfigureUserServiceCache(cacheRegistration);
         }
+
+
+        public static void ConfigureDefaultViewService(this IdentityServerServiceFactory factory, DefaultViewServiceOptions options)
+        {
+            if (factory == null) throw new ArgumentNullException("factory");
+            if (options == null) throw new ArgumentNullException("options");
+            
+            if (factory.ViewService != null) throw new InvalidOperationException("ViewService is already configured");
+
+            factory.ViewService = new Registration<IViewService, DefaultViewService>();
+            factory.Register(new Registration<DefaultViewServiceOptions>(options));
+            
+            if (options.ViewLoader == null)
+            {
+                options.ViewLoader = new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>();
+            }
+
+            if (options.CacheViews)
+            {
+                factory.Register(new Registration<IViewLoader>(viewLoaderRegistration, InnerRegistrationName));
+                factory.Register(new Registration<IViewLoader>(resolver=>new CachingLoader(resolver=>resolver.Resolve<IViewLoader>(InnerRegistrationName)));
+            }
+            else
+            {
+                factory.Register(options.ViewLoader);
+            }
+        }
     }
 }

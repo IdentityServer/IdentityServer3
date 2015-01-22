@@ -72,8 +72,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
-            builder.RegisterDefaultType<IViewService, DefaultViewService>(fact.ViewService);
             builder.RegisterDefaultType<IClientSecretValidator, HashedClientSecretValidator>(fact.ClientSecretValidator);
+
+            if (fact.ViewService == null)
+            {
+                builder.Register(new Registration<DefaultViewServiceOptions>());
+                builder.Register(new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>());
+                builder.Register(new Registration<IViewService, DefaultViewService>());
+            }
+            else
+            {
+                builder.Register(fact.ViewService);
+            }
 
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
