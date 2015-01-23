@@ -37,8 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Results
         public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             var baseUrl = context.GetIdentityServerBaseUrl();
-            //var build = typeof(WelcomeActionResult).Assembly.GetName().Version.ToString();
-
+            
             var assembly = Assembly.GetExecutingAssembly();
             var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
