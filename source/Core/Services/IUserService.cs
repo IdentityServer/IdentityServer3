@@ -45,6 +45,8 @@ namespace Thinktecture.IdentityServer.Core.Services
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
+        /// The user's identity from the external provider is passed via the `externalUser` parameter which contains the 
+        /// provider identifier, the provider's identifier for the user, and the claims from the provider for the external user.
         /// </summary>
         /// <param name="externalUser">The external user.</param>
         /// <param name="message">The signin message.</param>

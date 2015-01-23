@@ -95,6 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
             Logger.Info("Revoke permissions requested");
