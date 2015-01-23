@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             var options = new IdentityServerOptions
             {
                 IssuerUri = "https://idsrv3.com",
-                SiteName = "Thinktecture IdentityServer v3 - test",
+                SiteName = "Thinktecture IdentityServer 3 - test",
                 DataProtector = new NoDataProtector(),
             };
 
