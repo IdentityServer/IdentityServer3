@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Host
 
                     var idsrvOptions = new IdentityServerOptions
                     {
-                        SiteName = "Thinktecture IdentityServer 3",
+                        SiteName = "Thinktecture IdentityServer3",
                         Factory = factory,
                         SigningCertificate = Cert.Load(),
 
