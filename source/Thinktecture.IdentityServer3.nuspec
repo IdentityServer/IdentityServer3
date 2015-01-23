@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Thinktecture.IdentityServer.v3</id>
+    <id>Thinktecture.IdentityServer3</id>
     <version>0.0.0</version>
-    <title>Thinktecture IdentityServer v3</title>
+    <title>Thinktecture IdentityServer3</title>
     <authors>Brock Allen, Dominick Baier</authors>
     <owners>Brock Allen, Dominick Baier</owners>
-    <projectUrl>https://github.com/thinktecture/Thinktecture.IdentityServer.v3</projectUrl>
+    <projectUrl>https://github.com/IdentityServer/Thinktecture.IdentityServer3</projectUrl>
     <iconUrl>http://www.thinktecture.com/images/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>OpenID Connect and OAuth2 Security Token Service and Authorization Server.</description>
-    <copyright>Copyright 2014</copyright>
+    <description>OpenID Connect Provider and OAuth2 Authorization Server.</description>
+    <copyright>Copyright 2015</copyright>
     <tags>Thinktecture IdentityServer OpenIDConnect OAuth2 OWIN</tags>
     <dependencies>
       <dependency id="Owin" version="1.0"/>
