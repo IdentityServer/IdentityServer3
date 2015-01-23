@@ -15,7 +15,9 @@
  */
 
 using Microsoft.Owin;
+using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -35,9 +37,13 @@ namespace Thinktecture.IdentityServer.Core.Results
         public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             var baseUrl = context.GetIdentityServerBaseUrl();
-            var build = typeof(WelcomeActionResult).Assembly.GetName().Version.ToString();
-            
-            var html = AssetManager.LoadWelcomePage(baseUrl, build);
+            //var build = typeof(WelcomeActionResult).Assembly.GetName().Version.ToString();
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            var html = AssetManager.LoadWelcomePage(baseUrl, version);
             var content = new StringContent(html, Encoding.UTF8, "text/html");
 
             var response = new HttpResponseMessage
