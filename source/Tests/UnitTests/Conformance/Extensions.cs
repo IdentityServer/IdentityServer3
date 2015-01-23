@@ -15,30 +15,27 @@
  */
 
 using FluentAssertions;
+using Microsoft.Owin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System;
-using System.Text;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core;
-using Microsoft.Owin;
-using Thinktecture.IdentityServer.Core.ViewModels;
-using System.Net.Http.Formatting;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using System.Collections.ObjectModel;
-using Newtonsoft.Json.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.ViewModels;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance
 {

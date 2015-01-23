@@ -15,7 +15,6 @@
  */
 
 using Microsoft.Owin;
-using System;
 using System.ComponentModel;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;

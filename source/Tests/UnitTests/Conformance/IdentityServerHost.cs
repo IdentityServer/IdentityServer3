@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Testing;
+using Owin;
 /*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
@@ -16,22 +17,15 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Owin;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Microsoft.Owin.Security.DataHandler;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Extensions;
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.InMemory;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance
 {
