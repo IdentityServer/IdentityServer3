@@ -82,6 +82,11 @@ task CreateNuGetPackage -depends ILMerge {
 	if($preRelease){
 		$packageVersion = "$packageVersion-$preRelease"
 	}
+	
+	if ($buildNumber -ne 0){
+		$packageVersion = $packageVersion + "-build" + $buildNumber.ToString().PadLeft(5,'0')
+	}
+
 
 	copy-item $src_directory\Thinktecture.IdentityServer3.nuspec $dist_directory
 	copy-item $output_directory\Thinktecture.IdentityServer3.xml $dist_directory\lib\net45\
