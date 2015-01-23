@@ -1,6 +1,6 @@
 # Thinktecture IdentityServer3 #
 
-Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/ldvb26el6kojbsdu/branch/dev?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture-identityserver-v3-wsfederation/branch/dev)
+Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7c60xg7cb/branch/dev?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture/branch/dev)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview ##
