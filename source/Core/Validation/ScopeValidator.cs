@@ -54,6 +54,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             if (scopes.IsMissing())
             {
+                Logger.Warn("Empty scopes.");
+                return null;
+            }
+
+            if (scopes.Length > Constants.MaxScopeLength)
+            {
+                Logger.Warn("Scopes too long.");
                 return null;
             }
 
