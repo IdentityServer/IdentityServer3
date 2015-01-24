@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     public class AuthenticationController : ApiController
     {
-        const int MaxInputParamLength = 100;
+        public const int MaxInputParamLength = 100;
 
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.Length > MaxInputParamLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
-                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage();
             }
 
             var signInMessage = signInMessageCookie.Read(signin);
@@ -170,7 +170,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.Length > MaxInputParamLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
-                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage();
             }
             
             var signInMessage = signInMessageCookie.Read(signin);
@@ -272,7 +272,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.Length > MaxInputParamLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
-                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+                return RenderErrorPage();
             }
 
             var signInMessage = signInMessageCookie.Read(signin);

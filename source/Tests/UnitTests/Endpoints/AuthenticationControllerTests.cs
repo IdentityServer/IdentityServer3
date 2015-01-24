@@ -945,5 +945,111 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var resp = PostForm(Url(Constants.RoutePaths.Logout), (object)null);
             resp.AssertPage("error");
         }
+
+        string GetLongString()
+        {
+            string value = "x";
+            var parts = new string[Thinktecture.IdentityServer.Core.Endpoints.AuthenticationController.MaxInputParamLength+1];
+            return parts.Aggregate((x, y) => (x??value) + value);
+        }
+
+        [Fact]
+        public void GetLogin_SignInIdTooLong_ReturnsError()
+        {
+            var url = GetLoginUrl();
+            url += GetLongString();
+            var resp = Get(url);
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void PostLogin_SignInIdTooLong_ReturnsError()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl + GetLongString();
+            resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("error");
+        }
+        
+        [Fact]
+        public void PostLogin_UsernameTooLong_ReturnsLoginPageWithEmptyUidPwd()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl;
+            resp = PostForm(url, new LoginCredentials { Username = "alice" + GetLongString(), Password = "alice" });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("login");
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNullOrEmpty();
+        }
+        
+        [Fact]
+        public void PostLogin_PasswordTooLong_ReturnsLoginPageWithEmptyUidPwd()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl;
+            resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" + GetLongString() });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("login");
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetLoginExternal_IdPTooLong_ReturnsError()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google" + GetLongString();
+            var resp1 = GetLoginPage(msg);
+
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            resp2.AssertPage("error");
+        }
+
+        [Fact]
+        public void GetLoginExternal_SignInIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.LoginExternal) + "?signin=" + GetLongString() + "&provider=Google";
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void GetLoginExternalCallback_ErrorTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.LoginExternalCallback) + "?error=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void ResumeLogin_ResumeIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.ResumeLoginFromRedirect) + "?resume=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void LogoutPrompt_SignOutIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.Logout) + "?id=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+        
+        [Fact]
+        public void LogoutSubmit_SignOutIdTooLong_ReturnsError()
+        {
+            Login();
+
+            var url = Constants.RoutePaths.Logout + "?id=" + GetLongString();
+            var resp = PostForm(url, new { });
+            resp.AssertPage("error");
+        }
     }
 }
