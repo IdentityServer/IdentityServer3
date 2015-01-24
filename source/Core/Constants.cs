@@ -31,7 +31,8 @@ namespace Thinktecture.IdentityServer.Core
         public const string ExternalAuthenticationType      = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         
-        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]{
+        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]
+        {
             PrimaryAuthenticationType,
             ExternalAuthenticationType,
             PartialSignInAuthenticationType
@@ -54,6 +55,16 @@ namespace Thinktecture.IdentityServer.Core
 
         public const string ScopeDisplayNameSuffix = "_DisplayName";
         public const string ScopeDescriptionSuffix = "_Description";
+
+        public const int DefaultMaxAuthorizeInputLength = 100;
+        public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxRedirectUriLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxNonceLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxAcrValuesLength = DefaultMaxAuthorizeInputLength;
+
+
 
         public static class AuthorizeRequest
         {

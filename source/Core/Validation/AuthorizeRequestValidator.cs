@@ -92,9 +92,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             // client_id must be present
             /////////////////////////////////////////////////////////
             var clientId = parameters.Get(Constants.AuthorizeRequest.ClientId);
-            if (clientId.IsMissing())
+            if (clientId.IsMissingOrTooLong(Constants.MaxClientIdLength))
             {
-                LogError("client_id is missing");
+                LogError("client_id is missing or too long");
                 return Invalid();
             }
 
@@ -106,9 +106,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             var redirectUri = parameters.Get(Constants.AuthorizeRequest.RedirectUri);
 
-            if (redirectUri.IsMissing())
+            if (redirectUri.IsMissingOrTooLong(Constants.MaxRedirectUriLength))
             {
-                LogError("redirect_uri is missing");
+                LogError("redirect_uri is missing or too long");
                 return Invalid();
             }
 
@@ -224,6 +224,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var nonce = parameters.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
+                if (nonce.Length > Constants.MaxNonceLength)
+                {
+                    LogError("Nonce too long");
+                    return Invalid(ErrorTypes.Client);
+                }
+
                 _validatedRequest.Nonce = nonce;
             }
             else
@@ -261,6 +267,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var uilocales = parameters.Get(Constants.AuthorizeRequest.UiLocales);
             if (uilocales.IsPresent())
             {
+                if (uilocales.Length > Constants.MaxUiLocaleLength)
+                {
+                    LogError("UI locale too long");
+                    return Invalid(ErrorTypes.Client);
+                }
+
                 _validatedRequest.UiLocales = uilocales;
             }
 
@@ -270,7 +282,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var display = parameters.Get(Constants.AuthorizeRequest.Display);
             if (display.IsPresent())
             {
-                _validatedRequest.DisplayMode = display;
+                if (Constants.SupportedDisplayModes.Contains(display))
+                {
+                    _validatedRequest.DisplayMode = display;
+                }
+
+                Logger.Info("Unsupported display mode - ignored: " + display);
             }
 
             //////////////////////////////////////////////////////////
@@ -279,8 +296,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var maxAge = parameters.Get(Constants.AuthorizeRequest.MaxAge);
             if (maxAge.IsPresent())
             {
-                Logger.InfoFormat("max_age: {0}", maxAge);
-
                 int seconds;
                 if (int.TryParse(maxAge, out seconds))
                 {
@@ -307,6 +322,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
             if (loginHint.IsPresent())
             {
+                if (loginHint.Length > Constants.MaxLoginHintLength)
+                {
+                    LogError("Login hint too long");
+                    return Invalid(ErrorTypes.Client);
+                }
+
                 _validatedRequest.LoginHint = loginHint;
             }
 
@@ -316,6 +337,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
             if (acrValues.IsPresent())
             {
+                if (acrValues.Length > Constants.MaxAcrValuesLength)
+                {
+                    LogError("Acr values too long");
+                    return Invalid(ErrorTypes.Client);
+                }
+
                 _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
             }
 
