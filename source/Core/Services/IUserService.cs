@@ -27,8 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Services
     public interface IUserService
     {
         /// <summary>
-        /// This method gets called before the login page is shown. This allows you to authenticate the 
-        /// user somehow based on data coming from the host (e.g. client certificates or trusted headers)
+        /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
         /// </summary>
         /// <param name="message">The signin message.</param>
         /// <returns>The authentication result or null to continue the flow.</returns>
@@ -72,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
 
         /// <summary>
-        /// This method gets called whenever identity server needs to determine if the user is valid or active 
+        /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
         /// (e.g. during token issuance or validation).
         /// </summary>
         /// <param name="subject">The subject.</param>
