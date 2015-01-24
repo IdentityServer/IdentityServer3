@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core
         public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
         public const int MaxScopeLength = 300;
         public const int MaxRedirectUriLength = 200;
-        public const int MaxNonceLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxNonceLength = 200;
         public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
         public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
         public const int MaxAcrValuesLength = 200;
