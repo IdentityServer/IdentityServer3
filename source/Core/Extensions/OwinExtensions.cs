@@ -117,7 +117,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <returns></returns>
         public static string GetRequestId(this IDictionary<string, object> env)
         {
-            object value = null;
+            object value;
             if (env.TryGetValue(Constants.OwinEnvironment.RequestId, out value))
             {
                 return value as string;
@@ -155,7 +155,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
-            new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
+            new OwinContext(env).Set(Constants.OwinEnvironment.AutofacScope, scope);
         }
 
         internal static T ResolveDependency<T>(this IDictionary<string, object> env)
@@ -248,7 +248,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
             if (result != null)
             {
-                string val = null;
+                string val;
                 if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
                 {
                     return val;

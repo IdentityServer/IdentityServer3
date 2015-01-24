@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 return Enumerable.Empty<object>();
             }
 
-            Type type = typeof(IEnumerable<>).MakeGenericType(new[] { serviceType });
+            Type type = typeof(IEnumerable<>).MakeGenericType(serviceType);
             return (IEnumerable<object>)_scope.Resolve(type);
         }
 

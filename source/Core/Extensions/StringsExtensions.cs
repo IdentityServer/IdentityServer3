@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (!url.EndsWith("/"))
             {
-                return url += "/";
+                return url + "/";
             }
 
             return url;

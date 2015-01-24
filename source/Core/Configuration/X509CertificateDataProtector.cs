@@ -24,8 +24,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     /// </summary>
     public class X509CertificateDataProtector : IDataProtector
     {
-        CookieTransform _encrypt;
-        CookieTransform _sign;
+        readonly CookieTransform _encrypt;
+        readonly CookieTransform _sign;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="X509CertificateDataProtector"/> class.

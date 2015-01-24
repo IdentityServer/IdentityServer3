@@ -256,11 +256,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
-                ClientLogoUrl = validatedRequest.Client.LogoUri ?? null,
+                ClientLogoUrl = validatedRequest.Client.LogoUri,
                 IdentityScopes = validatedRequest.GetIdentityScopes(this._localizationService),
                 ResourceScopes = validatedRequest.GetResourceScopes(this._localizationService),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
-                RememberConsent = consent != null ? consent.RememberConsent : true,
+                RememberConsent = consent == null || consent.RememberConsent,
                 LoginWithDifferentAccountUrl = loginWithDifferentAccountUrl,
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()

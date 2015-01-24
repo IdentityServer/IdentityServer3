@@ -281,7 +281,7 @@ namespace Thinktecture.IdentityServer.Core
                                 PromptModes.SelectAccount,
                             };
 
-        public static class AcrValues
+        public static class KnownAcrValues
         {
             public const string HomeRealm = "idp:";
             public const string Tenant = "tenant:";

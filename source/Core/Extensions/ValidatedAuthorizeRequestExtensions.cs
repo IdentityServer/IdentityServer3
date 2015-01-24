@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (request == null) throw new ArgumentNullException("request");
 
-            return request.AuthenticationContextReferenceClasses.Any(x => x.StartsWith(Constants.AcrValues.HomeRealm));
+            return request.AuthenticationContextReferenceClasses.Any(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
         }
     }
 }

@@ -79,18 +79,18 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
             
             // look for well-known acr value -- idp
-            var idp = acrValues.Where(x => x.StartsWith(Constants.AcrValues.HomeRealm)).FirstOrDefault();
+            var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
             if (idp.IsPresent())
             {
-                _signIn.IdP = idp.Substring(Constants.AcrValues.HomeRealm.Length);
+                _signIn.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
                 acrValues.Remove(idp);
             }
 
             // look for well-known acr value -- tenant
-            var tenant = acrValues.Where(x => x.StartsWith(Constants.AcrValues.Tenant)).FirstOrDefault();
+            var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.Tenant));
             if (tenant.IsPresent())
             {
-                _signIn.Tenant = tenant.Substring(Constants.AcrValues.Tenant.Length);
+                _signIn.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
                 acrValues.Remove(tenant);
             }
 

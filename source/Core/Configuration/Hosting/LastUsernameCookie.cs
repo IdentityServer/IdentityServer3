@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     public class LastUserNameCookie
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         const string LastUsernameCookieName = "idsvr.username";
 
         readonly IOwinContext ctx;

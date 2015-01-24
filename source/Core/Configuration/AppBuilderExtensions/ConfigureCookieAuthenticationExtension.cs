@@ -21,6 +21,7 @@ using System;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
 {
@@ -31,7 +32,7 @@ namespace Owin
             if (options == null) throw new ArgumentNullException("options");
             if (dataProtector == null) throw new ArgumentNullException("dataProtector");
 
-            if (options.Prefix != null && options.Prefix.Length > 0)
+            if (options.Prefix.IsPresent())
             {
                 options.Prefix += ".";
             }

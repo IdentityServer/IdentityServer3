@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");
 
             this.policy = policy;
-            this.paths = allowedPaths.Select(path => Normalize(path)).ToArray();
+            this.paths = allowedPaths.Select(Normalize).ToArray();
         }
 
         public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(IOwinRequest request)
@@ -90,13 +90,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         System.Web.Cors.CorsPolicy Allow(string origin)
         {
-            var policy = new System.Web.Cors.CorsPolicy
+            var p = new System.Web.Cors.CorsPolicy
             {
                 AllowAnyHeader = true,
                 AllowAnyMethod = true,
             };
-            policy.Origins.Add(origin);
-            return policy;
+
+            p.Origins.Add(origin);
+            return p;
         }
     }
 }

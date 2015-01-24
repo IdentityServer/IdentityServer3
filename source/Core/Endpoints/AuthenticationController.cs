@@ -738,7 +738,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
                     string url = null;
 
-                    if (providerLinks.Count() == 0)
+                    if (!providerLinks.Any())
                     {
                         Logger.Info("no providers registered for client");
                         return RenderErrorPage();

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using Microsoft.Owin;
 using System.Diagnostics;
 using System.Net.Http;
@@ -28,13 +29,16 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     internal class WelcomeActionResult : IHttpActionResult
     {
-        IOwinContext context;
+        readonly IOwinContext context;
+
         public WelcomeActionResult(IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             this.context = context;
         }
 
-        public Task<System.Net.Http.HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             var baseUrl = context.GetIdentityServerBaseUrl();
             
