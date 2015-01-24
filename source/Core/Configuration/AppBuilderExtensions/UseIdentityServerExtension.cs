@@ -111,10 +111,17 @@ namespace Owin
 
                 return;
             }
-            if (!cert.IsPrivateAccessAllowed())
+            if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
             {
-                Logger.Error("Signing certificate private key is not accessible. Make sure the account running your application has access to the private key");
+                Logger.Error("Signing certificate has not private key or private key is not accessible. Make sure the account running your application has access to the private key");
                 eventSvc.RaiseCertificatePrivateKeyNotAccessibleEvent(cert);
+
+                return;
+            }
+            if (cert.PublicKey.Key.KeySize < 2048)
+            {
+                Logger.Error("Signing certificate key length is less than 2048 bits.");
+                eventSvc.RaiseCertificateKeyLengthTooShortEvent(cert);
 
                 return;
             }
