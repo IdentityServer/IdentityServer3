@@ -583,7 +583,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
-            var requestedScopes = ScopeValidator.ParseScopesString(parameters.Get(Constants.TokenRequest.Scope));
+            var scopes = parameters.Get(Constants.TokenRequest.Scope);
+            if (scopes.IsMissingOrTooLong(Constants.MaxScopeLength))
+            {
+                Logger.Warn("Scopes missing or too long");
+                return false;
+            }
+
+            var requestedScopes = ScopeValidator.ParseScopesString(scopes);
 
             if (requestedScopes == null)
             {

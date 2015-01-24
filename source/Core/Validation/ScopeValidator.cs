@@ -58,12 +58,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return null;
             }
 
-            if (scopes.Length > Constants.MaxScopeLength)
-            {
-                Logger.Warn("Scopes too long.");
-                return null;
-            }
-
             scopes = scopes.Trim();
             var parsedScopes = scopes.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 

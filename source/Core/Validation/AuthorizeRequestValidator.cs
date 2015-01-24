@@ -196,6 +196,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(ErrorTypes.Client);
             }
 
+            if (scope.Length > Constants.MaxScopeLength)
+            {
+                LogError("scopes too long.");
+                return Invalid(ErrorTypes.Client);
+            }
+
             _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
             
             if (_validatedRequest.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
