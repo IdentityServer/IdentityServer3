@@ -421,7 +421,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Events.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Events.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.resx">
@@ -439,7 +439,7 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\app.less" />
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\custom.less" />
     <EmbeddedResource Include="Resources\Scopes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Scopes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />

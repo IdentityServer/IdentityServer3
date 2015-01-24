@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Thinktecture.IdentityServer.Core.Resources
-{
-
-
+namespace Thinktecture.IdentityServer.Core.Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,7 +22,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Events {
+    public class Events {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Thinktecture.IdentityServer.Core.Resources.Events", typeof(Events).Assembly);
@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Client Permissions Revoked.
         /// </summary>
-        internal static string ClientPermissionsRevoked {
+        public static string ClientPermissionsRevoked {
             get {
                 return ResourceManager.GetString("ClientPermissionsRevoked", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Content Security Policy (CSP) Report.
         /// </summary>
-        internal static string CspReport {
+        public static string CspReport {
             get {
                 return ResourceManager.GetString("CspReport", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to External Login Error.
         /// </summary>
-        internal static string ExternalLoginError {
+        public static string ExternalLoginError {
             get {
                 return ResourceManager.GetString("ExternalLoginError", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to External Login Failure.
         /// </summary>
-        internal static string ExternalLoginFailure {
+        public static string ExternalLoginFailure {
             get {
                 return ResourceManager.GetString("ExternalLoginFailure", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to External Login Success.
         /// </summary>
-        internal static string ExternalLoginSuccess {
+        public static string ExternalLoginSuccess {
             get {
                 return ResourceManager.GetString("ExternalLoginSuccess", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Local Login Failure.
         /// </summary>
-        internal static string LocalLoginFailure {
+        public static string LocalLoginFailure {
             get {
                 return ResourceManager.GetString("LocalLoginFailure", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Local Login Success.
         /// </summary>
-        internal static string LocalLoginSuccess {
+        public static string LocalLoginSuccess {
             get {
                 return ResourceManager.GetString("LocalLoginSuccess", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Logout Event.
         /// </summary>
-        internal static string LogoutEvent {
+        public static string LogoutEvent {
             get {
                 return ResourceManager.GetString("LogoutEvent", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Partial Login.
         /// </summary>
-        internal static string PartialLogin {
+        public static string PartialLogin {
             get {
                 return ResourceManager.GetString("PartialLogin", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Partial Login Complete.
         /// </summary>
-        internal static string PartialLoginComplete {
+        public static string PartialLoginComplete {
             get {
                 return ResourceManager.GetString("PartialLoginComplete", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Pre-Login Failure.
         /// </summary>
-        internal static string PreLoginFailure {
+        public static string PreLoginFailure {
             get {
                 return ResourceManager.GetString("PreLoginFailure", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Pre-Login Success.
         /// </summary>
-        internal static string PreLoginSuccess {
+        public static string PreLoginSuccess {
             get {
                 return ResourceManager.GetString("PreLoginSuccess", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Resource Owner Password Flow Login Failure.
         /// </summary>
-        internal static string ResourceOwnerFlowLoginFailure {
+        public static string ResourceOwnerFlowLoginFailure {
             get {
                 return ResourceManager.GetString("ResourceOwnerFlowLoginFailure", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         /// <summary>
         ///   Looks up a localized string similar to Resource Owner Password Flow Login Success.
         /// </summary>
-        internal static string ResourceOwnerFlowLoginSuccess {
+        public static string ResourceOwnerFlowLoginSuccess {
             get {
                 return ResourceManager.GetString("ResourceOwnerFlowLoginSuccess", resourceCulture);
             }
