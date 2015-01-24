@@ -95,6 +95,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
+            if (grantType.Length > Constants.MaxGrantTypeLength)
+            {
+                LogError("Grant type is too long.");
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+            }
+
             _validatedRequest.GrantType = grantType;
 
             // standard grant types
@@ -309,9 +315,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
-            //LogSuccess("Successful validation of client_credentials request");
             Logger.Info("Client credentials token request validation success");
-
             return Valid();
         }
 
@@ -357,6 +361,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            if (userName.Length > Constants.MaxUserNameLength ||
+                password.Length > Constants.MaxPasswordLength)
+            {
+                LogError("Username or password too long.");
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
             _validatedRequest.UserName = userName;
 
             /////////////////////////////////////////////
@@ -371,6 +382,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var acr = parameters.Get(Constants.AuthorizeRequest.AcrValues);
             if (acr.IsPresent())
             {
+                if (acr.Length > Constants.MaxAcrValuesLength)
+                {
+                    LogError("Acr values too long.");
+                    return Invalid(Constants.TokenErrors.InvalidRequest);
+                }
+
                 var acrValues = acr.FromSpaceSeparatedString().Distinct().ToList();
 
                 // look for well-known acr value -- idp

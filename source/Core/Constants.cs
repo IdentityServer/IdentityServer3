@@ -57,12 +57,19 @@ namespace Thinktecture.IdentityServer.Core
         public const string ScopeDescriptionSuffix = "_Description";
 
         public const int DefaultMaxAuthorizeInputLength = 100;
+        public const int DefaultMaxTokenInputLength = 100;
+
         public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxScopeLength = 200;
         public const int MaxRedirectUriLength = DefaultMaxAuthorizeInputLength;
         public const int MaxNonceLength = DefaultMaxAuthorizeInputLength;
         public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
         public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
-        public const int MaxAcrValuesLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxAcrValuesLength = 200;
+        
+        public const int MaxGrantTypeLength = DefaultMaxTokenInputLength;
+        public const int MaxUserNameLength = DefaultMaxTokenInputLength;
+        public const int MaxPasswordLength = DefaultMaxTokenInputLength;
 
 
 
