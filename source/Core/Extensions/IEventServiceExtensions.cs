@@ -516,7 +516,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.InternalError,
-                "Signing certificate private key not accessible",
+                "Signing certificate has no private key, or key is not accessible",
                 EventTypes.Error,
                 EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
                 new SigningCertificateDetail
@@ -525,6 +525,22 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SigningCertificateExpiration = cert.NotAfter
                 },
                 "Make sure the account running your application has access to the private key");
+
+            events.Raise(evt);
+        }
+
+        public static void RaiseCertificateKeyLengthTooShortEvent(this IEventService events, X509Certificate2 cert)
+        {
+            var evt = new Event<SigningCertificateDetail>(
+                EventConstants.Categories.InternalError,
+                "Signing certificate key length is less than 2048 bits.",
+                EventTypes.Error,
+                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                new SigningCertificateDetail
+                {
+                    SigningCertificateName = cert.SubjectName.Name,
+                    SigningCertificateExpiration = cert.NotAfter
+                });
 
             events.Raise(evt);
         }

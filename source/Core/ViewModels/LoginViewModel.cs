@@ -58,14 +58,6 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         public bool RememberMe { get; set; }
 
         /// <summary>
-        /// The URL to allow a user to logout.
-        /// </summary>
-        /// <value>
-        /// The logout URL.
-        /// </value>
-        public string LogoutUrl { get; set; }
-
-        /// <summary>
         /// The value to populate the username field.
         /// </summary>
         /// <value>

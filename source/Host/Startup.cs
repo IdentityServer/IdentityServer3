@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Host
 
                     var idsrvOptions = new IdentityServerOptions
                     {
-                        SiteName = "Thinktecture IdentityServer v3",
+                        SiteName = "Thinktecture IdentityServer3",
                         Factory = factory,
                         SigningCertificate = Cert.Load(),
 
@@ -69,11 +69,11 @@ namespace Thinktecture.IdentityServer.Host
                             IdentityProviders = ConfigureIdentityProviders,
                         },
 
-                        DiagnosticsOptions = new LoggingOptions
+                        LoggingOptions = new LoggingOptions
                         {
-                            EnableHttpLogging = true, 
-                            EnableWebApiDiagnostics = true,
-                            IncludeSensitiveDataInLogs = true
+                            //EnableHttpLogging = true, 
+                            //EnableWebApiDiagnostics = true,
+                            //IncludeSensitiveDataInLogs = true
                         },
 
                         EventsOptions = new EventsOptions
@@ -87,9 +87,6 @@ namespace Thinktecture.IdentityServer.Host
 
                     coreApp.UseIdentityServer(idsrvOptions);
                 });
-
-            // only for showing the getting started index page
-            app.UseStaticFiles();
         }
 
         public static void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)

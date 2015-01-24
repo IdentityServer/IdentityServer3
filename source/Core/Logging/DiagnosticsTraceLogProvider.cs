@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (messageFunc != null && exception != null)
             {
-                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeOffsetHelper.UtcNow.ToString(), messageFunc(), exception.ToString());
+                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeOffsetHelper.UtcNow.ToString(), messageFunc(), exception);
                 TraceMsg(logLevel, message);
             }
         }

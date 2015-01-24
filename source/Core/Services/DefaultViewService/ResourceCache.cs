@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
+#pragma warning disable 1591
+
 using System.Collections.Concurrent;
+using System.ComponentModel;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
-    internal class ResourceCache
+    /// <summary>
+    /// In-memory cache used by the view service
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public class ResourceCache
     {
         readonly ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
 

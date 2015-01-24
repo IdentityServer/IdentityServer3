@@ -2,7 +2,7 @@
     <h1>Login</h1>
 </div>
 
-<div class="row login-page">
+<div class="row">
     <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
         <div ng-show="model.errorMessage" class="alert alert-danger">
             <strong>Error:</strong>
@@ -20,11 +20,11 @@
                     <fieldset>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input required name="username" autofocus id="username" type="text" class="form-control" placeholder="Username" ng-model="model.username">
+                            <input required name="username" autofocus id="username" type="text" class="form-control" placeholder="Username" ng-model="model.username" maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input required id="password" name="password" type="password" class="form-control" placeholder="Password" ng-model="model.password">
+                            <input required id="password" name="password" type="password" class="form-control" placeholder="Password" ng-model="model.password" maxlength="100">
                         </div>
                         <div class="form-group login-remember" ng-show="model.allowRememberMe">
                             <label for="rememberMe">

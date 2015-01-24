@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class Scope
     {
         /// <summary>
-        /// Scope enabled
+        /// Indicates if scope is enabled and can be requested. Defaults to true.
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -44,17 +44,17 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string Description { get; set; }
         
         /// <summary>
-        /// Specifies whether the user can de-select the scope on the consent screen.
+        /// Specifies whether the user can de-select the scope on the consent screen. Defaults to false.
         /// </summary>
         public bool Required { get; set; }
 
         /// <summary>
-        /// Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes.
+        /// Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes. Defaults to false.
         /// </summary>
         public bool Emphasize { get; set; }
 
         /// <summary>
-        /// Specifies whether this scope is about identity information from the userinfo endpoint, or a resource (e.g. a Web API)
+        /// Specifies whether this scope is about identity information from the userinfo endpoint, or a resource (e.g. a Web API). Defaults to Resource.
         /// </summary>
         public ScopeType Type { get; set; }
         
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public List<ScopeClaim> Claims { get; set; }
         
         /// <summary>
-        /// If enabled, all claims for the user will be included in the token
+        /// If enabled, all claims for the user will be included in the token. Defaults to false.
         /// </summary>
         public bool IncludeAllClaimsForUser { get; set; }
         
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string ClaimsRule { get; set; }
 
         /// <summary>
-        /// Specifies whether this scope is shown in the discovery document (defaults to true)
+        /// Specifies whether this scope is shown in the discovery document. Defaults to true.
         /// </summary>
         public bool ShowInDiscoveryDocument { get; set; }
 

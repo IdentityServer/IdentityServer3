@@ -93,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return result;
             }
 
-            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 _log.Claims = result.Claims.ToClaimsDictionary();
             }
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return customResult;
             }
 
-            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 _log.Claims = customResult.Claims.ToClaimsDictionary();
             }
@@ -138,7 +138,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
-            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 _log.Claims = result.Claims.ToClaimsDictionary();
             }
@@ -167,7 +167,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             // add claims again after custom validation
-            if (_options.DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 _log.Claims = customResult.Claims.ToClaimsDictionary();
             }

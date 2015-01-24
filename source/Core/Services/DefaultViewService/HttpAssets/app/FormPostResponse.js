@@ -4,5 +4,5 @@
  */
 
 (function () {
-    document.querySelector("form").submit();
+    document.forms[0].submit();
 })();

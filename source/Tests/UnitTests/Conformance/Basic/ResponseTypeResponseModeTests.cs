@@ -17,14 +17,10 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
-using System.Net.Http;
-using Thinktecture.IdentityModel.Http;
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 {
@@ -61,6 +57,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         public void Request_with_response_type_code_supported()
         {
             host.Login();
+            var cert = host.GetSigningCertificate();
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
@@ -91,8 +88,8 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             result.Headers.Location.AbsoluteUri.Should().Contain("#");
 
             var query = result.Headers.Location.ParseHashFragment();
-            //query.AllKeys.Should().Contain("state");
-            //query["state"].Should().Be(state);
+            query.AllKeys.Should().Contain("state");
+            query["state"].Should().Be(state);
             query.AllKeys.Should().Contain("error");
             query["error"].Should().Be("unsupported_response_type");
         }

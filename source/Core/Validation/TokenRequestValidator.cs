@@ -95,6 +95,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
+            if (grantType.Length > Constants.MaxGrantTypeLength)
+            {
+                LogError("Grant type is too long.");
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+            }
+
             _validatedRequest.GrantType = grantType;
 
             // standard grant types
@@ -234,7 +240,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
             }
 
-            if (redirectUri != _validatedRequest.AuthorizationCode.RedirectUri)
+            if (redirectUri.Equals(_validatedRequest.AuthorizationCode.RedirectUri, StringComparison.Ordinal) == false)
             {
                 var error = "Invalid redirect_uri: " + redirectUri;
                 LogError(error);
@@ -309,9 +315,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidScope);
             }
 
-            //LogSuccess("Successful validation of client_credentials request");
             Logger.Info("Client credentials token request validation success");
-
             return Valid();
         }
 
@@ -320,12 +324,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             Logger.Info("Start password token request validation");
 
             // if we've disabled local authentication, then fail
-            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            if (_options.AuthenticationOptions.EnableLocalLogin == false ||
+                _validatedRequest.Client.EnableLocalLogin == false)
             {
                 LogError("EnableLocalLogin is disabled, failing with UnsupportedGrantType");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
-
+            
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
@@ -356,6 +361,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            if (userName.Length > Constants.MaxUserNameLength ||
+                password.Length > Constants.MaxPasswordLength)
+            {
+                LogError("Username or password too long.");
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
             _validatedRequest.UserName = userName;
 
             /////////////////////////////////////////////
@@ -363,23 +375,42 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             var signInMessage = new SignInMessage();
 
-            var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
-            if (loginHint.IsPresent())
-            {
-                if (loginHint.StartsWith(Constants.LoginHints.HomeRealm))
-                {
-                    signInMessage.IdP = loginHint.Substring(Constants.LoginHints.HomeRealm.Length);
-                }
-                else if (loginHint.StartsWith(Constants.LoginHints.Tenant))
-                {
-                    signInMessage.Tenant = loginHint.Substring(Constants.LoginHints.Tenant.Length);
-                }
-            }
+            // pass through client_id
+            signInMessage.ClientId = _validatedRequest.Client.ClientId;
 
-            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
-            if (acrValues.IsPresent())
+            // process acr values
+            var acr = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            if (acr.IsPresent())
             {
-                signInMessage.AcrValues = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+                if (acr.Length > Constants.MaxAcrValuesLength)
+                {
+                    LogError("Acr values too long.");
+                    return Invalid(Constants.TokenErrors.InvalidRequest);
+                }
+
+                var acrValues = acr.FromSpaceSeparatedString().Distinct().ToList();
+
+                // look for well-known acr value -- idp
+                var idp = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm)).FirstOrDefault();
+                if (idp.IsPresent())
+                {
+                    signInMessage.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
+                    acrValues.Remove(idp);
+                }
+
+                // look for well-known acr value -- tenant
+                var tenant = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.Tenant)).FirstOrDefault();
+                if (tenant.IsPresent())
+                {
+                    signInMessage.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
+                    acrValues.Remove(tenant);
+                }
+
+                // pass through any remaining acr values
+                if (acrValues.Any())
+                {
+                    signInMessage.AcrValues = acrValues;
+                }
             }
 
             _validatedRequest.SignInMessage = signInMessage;
@@ -552,7 +583,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
-            var requestedScopes = ScopeValidator.ParseScopesString(parameters.Get(Constants.TokenRequest.Scope));
+            var scopes = parameters.Get(Constants.TokenRequest.Scope);
+            if (scopes.IsMissingOrTooLong(Constants.MaxScopeLength))
+            {
+                Logger.Warn("Scopes missing or too long");
+                return false;
+            }
+
+            var requestedScopes = ScopeValidator.ParseScopesString(scopes);
 
             if (requestedScopes == null)
             {

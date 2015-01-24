@@ -118,5 +118,4 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public bool EnableCheckSessionEndpoint { get; set; }
     }
-
 }

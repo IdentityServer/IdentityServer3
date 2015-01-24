@@ -37,18 +37,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.LocalOnly;
 
-            if (options.DiagnosticsOptions.EnableWebApiDiagnostics)
+            if (options.LoggingOptions.EnableWebApiDiagnostics)
             {
                 var liblog = new TraceSource("LibLog");
                 liblog.Switch.Level = SourceLevels.All;
                 liblog.Listeners.Add(new LibLogTraceListener());
 
                 var diag = config.EnableSystemDiagnosticsTracing();
-                diag.IsVerbose = options.DiagnosticsOptions.WebApiDiagnosticsIsVerbose;
+                diag.IsVerbose = options.LoggingOptions.WebApiDiagnosticsIsVerbose;
                 diag.TraceSource = liblog;                
             }
 
-            if (options.DiagnosticsOptions.EnableHttpLogging)
+            if (options.LoggingOptions.EnableHttpLogging)
             {
                 config.MessageHandlers.Add(new RequestResponseLogger());
             }

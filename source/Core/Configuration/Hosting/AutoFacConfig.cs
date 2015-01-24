@@ -72,8 +72,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
-            builder.RegisterDefaultType<IViewService, DefaultViewService>(fact.ViewService);
             builder.RegisterDefaultType<IClientSecretValidator, HashedClientSecretValidator>(fact.ClientSecretValidator);
+
+            if (fact.ViewService == null)
+            {
+                fact.ConfigureDefaultViewService(new DefaultViewServiceOptions());
+            }
+            builder.Register(fact.ViewService);
 
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
@@ -91,9 +96,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     new TokenMetadataPermissionsStoreAdapter(access.GetAllAsync, access.RevokeAsync)
                 );
             }).As<IPermissionsStore>();
-
-            // hosting services
-            builder.RegisterType<OwinEnvironmentService>();
 
             // validators
             builder.RegisterType<TokenRequestValidator>();

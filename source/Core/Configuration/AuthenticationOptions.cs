@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     /// <summary>
-    /// Allows customizing the login view
+    /// Configures the login and logout views and behavior.
     /// </summary>
     public class AuthenticationOptions
     {
@@ -31,6 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public AuthenticationOptions()
         {
             EnableLocalLogin = true;
+            EnableLoginHint = true;
             EnableSignOutPrompt = true;
             CookieOptions = new CookieOptions();
         }
@@ -38,11 +39,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// Gets or sets a value indicating whether local login is enabled.
         /// Disabling this setting will not display the username/password form on the login page. This also will disable the resource owner password flow.
+        /// Defaults to true.
         /// </summary>
         /// <value>
         ///   <c>true</c> if local login is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableLocalLogin { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the login_hint parameter is used to prepopulate the username field. Defaults to true.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if login_hint is used; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableLoginHint { get; set; }
 
         /// <summary>
         /// Gets or sets the cookie options.
@@ -64,6 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// Gets or sets a value indicating whether IdentityServer will show a confirmation page for sign-out.
         /// When a client initiates a sign-out, by default IdentityServer will ask the user for confirmation. This is a mitigation technique against "logout spam".
+        /// Defaults to true.
         /// </summary>
         /// <value>
         /// <c>true</c> if sign-out prompt is enabled; otherwise, <c>false</c>.
@@ -71,7 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnableSignOutPrompt { get; set; }
         
         /// <summary>
-        /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page.
+        /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page. Defaults to false.
         /// </summary>
         /// <value>
         /// <c>true</c> if the last username will be remembered; otherwise, <c>false</c>.

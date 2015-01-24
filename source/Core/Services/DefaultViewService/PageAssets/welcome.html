@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html ng-app="app" ng-controller="LayoutCtrl">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Thinktecture IdentityServer v3</title>
+    <link rel="stylesheet" href="{applicationPath}/assets/styles.min.css">
+</head>
+<body lang="en">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <a href="{applicationPath}">
+                <span class="navbar-brand">
+                    Thinktecture IdentityServer3
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <div class="welcome-page container">
+        <div class="row page-header">
+            <div class="col-sm-10">
+                <h1>
+                    Welcome to Thinktecture IdentityServer3
+                    <small>(build {version})</small>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <p>
+                    IdentityServer publishes a
+                    <a href="{applicationPath}/.well-known/openid-configuration">discovery document</a>
+                    where you can find metadata and links to all the endpoints, key material, etc.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <p>
+                    IdentityServer allows users to view and revoke
+                    <a href="{applicationPath}/permissions">application permissions</a>
+                    previously granted to client applications.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <p>
+                    Here are links to the 
+                    <a href="https://identityserver.github.io/Documentation">documentation</a>,
+                    and <a href="https://github.com/identityserver/Thinktecture.IdentityServer3.Samples">ready to use samples</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

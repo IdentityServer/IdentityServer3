@@ -18,6 +18,7 @@ using Microsoft.Owin;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -74,15 +75,18 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.NoOptimization)]
         bool CompareByteArrays(byte[] cookieToken, byte[] hiddenInputToken)
         {
             if (cookieToken == null || hiddenInputToken == null) return false;
             if (cookieToken.Length != hiddenInputToken.Length) return false;
+            
+            bool same = true;
             for(var i = 0; i < cookieToken.Length; i++)
             {
-                if (cookieToken[i] != hiddenInputToken[i]) return false;
+                same &= (cookieToken[i] == hiddenInputToken[i]);
             }
-            return true;
+            return same;
         }
 
         byte[] GetCookieToken()

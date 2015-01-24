@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
             Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
 
-            var principal = Principal.Create("foo", new Claim("sub", subject));
+            var principal = Principal.Create("UserInfo", new Claim("sub", subject));
             var profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes);
             
             if (profileClaims != null)

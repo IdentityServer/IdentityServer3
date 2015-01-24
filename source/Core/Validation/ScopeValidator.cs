@@ -54,6 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             if (scopes.IsMissing())
             {
+                Logger.Warn("Empty scopes.");
                 return null;
             }
 

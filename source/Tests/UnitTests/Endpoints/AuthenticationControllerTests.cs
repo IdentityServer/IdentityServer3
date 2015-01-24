@@ -117,6 +117,47 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_SignInMessageHasLoginHint_UsernameIsPopulatedFromLoginHint()
+        {
+            options.AuthenticationOptions.EnableLoginHint = true;
+
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+
+            var model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().Be("test");
+        }
+
+        [Fact]
+        public void GetLogin_EnableLoginHintFalse_UsernameIsNotPopulatedFromLoginHint()
+        {
+            options.AuthenticationOptions.EnableLoginHint = false;
+            
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+
+            var model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNull(); ;
+        }
+
+        [Fact]
+        public void PostToLogin_SignInMessageHasLoginHint_UsernameShouldBeUsernamePosted()
+        {
+            var msg = new SignInMessage();
+            msg.LoginHint = "test";
+
+            var resp = GetLoginPage(msg);
+            var model = resp.GetModel<LoginViewModel>();
+            resp = PostForm(model.LoginUrl, new LoginCredentials { Username = "alice", Password = "jdfhjkdf" });
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().Be("alice");
+        }
+
+        [Fact]
         public void GetLogin_NoSignInMessage_ReturnNotFound()
         {
             var resp = Get(Constants.RoutePaths.Login);
@@ -210,7 +251,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         {
             ConfigureIdentityServerOptions = opts =>
             {
-                opts.PublicHostName = "http://somehost";
+                opts.PublicOrigin = "http://somehost";
             };
             Init();
 
@@ -307,14 +348,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void GetLoginExternal_InvalidProvider_ReturnsUnauthorized()
+        public void GetLoginExternal_InvalidProvider_ReturnsError()
         {
             var msg = new SignInMessage();
             msg.IdP = "Foo";
             var resp1 = GetLoginPage(msg);
 
             var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            resp2.AssertPage("error");
         }
 
         [Fact]
@@ -345,6 +386,30 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             resp = client.GetAsync(resp.Headers.Location.AbsoluteUri).Result;
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
+        }
+        
+        [Fact]
+        public void GetLogin_ClientEnableLocalLoginFalse_NoLoginUrl()
+        {
+            var clientApp = clients.First();
+            clientApp.EnableLocalLogin = false;
+
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            model.LoginUrl.Should().BeNull();
+        }
+
+        [Fact]
+        public void PostToLogin_ClientEnableLocalLoginFalse_Fails()
+        {
+            var url = GetLoginPage().GetModel<LoginViewModel>().LoginUrl;
+
+            var clientApp = clients.First();
+            clientApp.EnableLocalLogin = false;
+
+            var resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" });
+            var model = resp.GetModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be(Messages.UnexpectedError);
         }
 
         [Fact]
@@ -793,37 +858,6 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void LogoutPrompt_WithSignOutMessage_ContainsClientNameInPage()
-        {
-            var c = TestClients.Get().First();
-            var msg = new SignOutMessage
-            {
-                ClientId = c.ClientId,
-                ReturnUrl = "http://foo"
-            };
-            var id = WriteMessageToCookie(msg);
-            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().Be(c.ClientName);
-        }
-        
-        [Fact]
-        public void LogoutPrompt_NoSignOutMessage_ContainsNullClientNameInPage()
-        {
-            var resp = Get(Constants.RoutePaths.Logout);
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().BeNull();
-        }
-
-        [Fact]
-        public void LogoutPrompt_InvalidSignOutMessageId_ContainsNullClientNameInPage()
-        {
-            var resp = Get(Constants.RoutePaths.Logout + "?id=123");
-            var model = resp.GetModel<LogoutViewModel>();
-            model.ClientName.Should().BeNull();
-        }
-
-        [Fact]
         public void LoggedOut_WithSignOutMessage_ContainsClientNameAndRedirectUrlInPage()
         {
             GetLoginPage();
@@ -909,6 +943,112 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         public void Logout_PostWithoutXsrf_ReturnsError()
         {
             var resp = PostForm(Url(Constants.RoutePaths.Logout), (object)null);
+            resp.AssertPage("error");
+        }
+
+        string GetLongString()
+        {
+            string value = "x";
+            var parts = new string[Thinktecture.IdentityServer.Core.Endpoints.AuthenticationController.MaxInputParamLength+1];
+            return parts.Aggregate((x, y) => (x??value) + value);
+        }
+
+        [Fact]
+        public void GetLogin_SignInIdTooLong_ReturnsError()
+        {
+            var url = GetLoginUrl();
+            url += GetLongString();
+            var resp = Get(url);
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void PostLogin_SignInIdTooLong_ReturnsError()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl + GetLongString();
+            resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("error");
+        }
+        
+        [Fact]
+        public void PostLogin_UsernameTooLong_ReturnsLoginPageWithEmptyUidPwd()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl;
+            resp = PostForm(url, new LoginCredentials { Username = "alice" + GetLongString(), Password = "alice" });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("login");
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNullOrEmpty();
+        }
+        
+        [Fact]
+        public void PostLogin_PasswordTooLong_ReturnsLoginPageWithEmptyUidPwd()
+        {
+            var resp = GetLoginPage();
+            var model = resp.GetModel<LoginViewModel>();
+            var url = model.LoginUrl;
+            resp = PostForm(url, new LoginCredentials { Username = "alice", Password = "alice" + GetLongString() });
+            model = resp.GetModel<LoginViewModel>();
+            resp.AssertPage("login");
+            model = resp.GetModel<LoginViewModel>();
+            model.Username.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetLoginExternal_IdPTooLong_ReturnsError()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google" + GetLongString();
+            var resp1 = GetLoginPage(msg);
+
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            resp2.AssertPage("error");
+        }
+
+        [Fact]
+        public void GetLoginExternal_SignInIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.LoginExternal) + "?signin=" + GetLongString() + "&provider=Google";
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void GetLoginExternalCallback_ErrorTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.LoginExternalCallback) + "?error=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void ResumeLogin_ResumeIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.ResumeLoginFromRedirect) + "?resume=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void LogoutPrompt_SignOutIdTooLong_ReturnsError()
+        {
+            var url = Url(Constants.RoutePaths.Logout) + "?id=" + GetLongString();
+            var resp = client.GetAsync(url).Result;
+            resp.AssertPage("error");
+        }
+        
+        [Fact]
+        public void LogoutSubmit_SignOutIdTooLong_ReturnsError()
+        {
+            Login();
+
+            var url = Constants.RoutePaths.Logout + "?id=" + GetLongString();
+            var resp = PostForm(url, new { });
             resp.AssertPage("error");
         }
     }

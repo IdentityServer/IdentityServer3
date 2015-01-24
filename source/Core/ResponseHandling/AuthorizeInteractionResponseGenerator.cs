@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
@@ -37,13 +38,15 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly SignInMessage _signIn;
+        private readonly IdentityServerOptions _options;
         private readonly IConsentService _consent;
         private readonly IUserService _users;
         private readonly ILocalizationService _localizationService;
 
-        public AuthorizeInteractionResponseGenerator(IConsentService consent, IUserService users, ILocalizationService localizationService)
+        public AuthorizeInteractionResponseGenerator(IdentityServerOptions options, IConsentService consent, IUserService users, ILocalizationService localizationService)
         {
             _signIn = new SignInMessage();
+            _options = options;
             _consent = consent;
             _users = users;
             _localizationService = localizationService;
@@ -66,23 +69,35 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 _signIn.UiLocales = request.UiLocales;
             }
 
-            // check login_hint - we only support idp: right now
+            // pass through login_hint
             if (request.LoginHint.IsPresent())
             {
-                if (request.LoginHint.StartsWith(Constants.LoginHints.HomeRealm))
-                {
-                    _signIn.IdP = request.LoginHint.Substring(Constants.LoginHints.HomeRealm.Length);
-                }
-                if (request.LoginHint.StartsWith(Constants.LoginHints.Tenant))
-                {
-                    _signIn.Tenant = request.LoginHint.Substring(Constants.LoginHints.Tenant.Length);
-                }
+                _signIn.LoginHint = request.LoginHint;
             }
 
-            // pass through acr values
-            if (request.AuthenticationContextReferenceClasses.Any())
+            // process acr values
+            var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
+            
+            // look for well-known acr value -- idp
+            var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
+            if (idp.IsPresent())
             {
-                _signIn.AcrValues = request.AuthenticationContextReferenceClasses;
+                _signIn.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
+                acrValues.Remove(idp);
+            }
+
+            // look for well-known acr value -- tenant
+            var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.Tenant));
+            if (tenant.IsPresent())
+            {
+                _signIn.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
+                acrValues.Remove(tenant);
+            }
+
+            // pass through any remaining acr values
+            if (acrValues.Any())
+            {
+                _signIn.AcrValues = acrValues;
             }
 
             if (request.PromptMode == Constants.PromptModes.Login)
@@ -90,6 +105,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 // remove prompt so when we redirect back in from login page
                 // we won't think we need to force a prompt again
                 request.Raw.Remove(Constants.AuthorizeRequest.Prompt);
+
+                Logger.Info("Redirecting to login page because of prompt=login");
+
                 return new LoginInteractionResponse
                 {
                     SignInMessage = _signIn
@@ -114,6 +132,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 // prompt=none means user must be signed in already
                 if (request.PromptMode == Constants.PromptModes.None)
                 {
+                    Logger.Info("prompt=none was requested. But user is not authenticated.");
+
                     return new LoginInteractionResponse
                     {
                         Error = new AuthorizeError
@@ -141,6 +161,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             {
                 if (_signIn.IdP != currentIdp)
                 {
+                    Logger.Info("Current IdP is not the requested IdP. Redirecting to login");
+
                     return new LoginInteractionResponse
                     {
                         SignInMessage = _signIn
@@ -154,6 +176,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 var authTime = user.GetAuthenticationTime();
                 if (DateTimeOffsetHelper.UtcNow > authTime.AddSeconds(request.MaxAge.Value))
                 {
+                    Logger.Info("Requested MaxAge exceeded. Redirecting to login");
+
                     return new LoginInteractionResponse
                     {
                         SignInMessage = _signIn
@@ -177,6 +201,25 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                         SignInMessage = _signIn
                     };
 
+                    Logger.WarnFormat("User is logged in with idp: {0}, but idp not in client restriction list.", currentIdp); 
+                    
+                    return Task.FromResult(response);
+                }
+            }
+
+            // check if idp is local and local logins are not allowed
+            if (currentIdp == Constants.BuiltInIdentityProvider)
+            {
+                if (_options.AuthenticationOptions.EnableLocalLogin == false || 
+                    request.Client.EnableLocalLogin == false)
+                {
+                    var response = new LoginInteractionResponse
+                    {
+                        SignInMessage = _signIn
+                    };
+
+                    Logger.Warn("User is logged in with local idp, but local logins not enabled.");
+                    
                     return Task.FromResult(response);
                 }
             }
@@ -199,6 +242,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             if (consentRequired && request.PromptMode == Constants.PromptModes.None)
             {
+                Logger.Info("Prompt=none requested, but consent is required.");
+
                 return new ConsentInteractionResponse
                 {
                     Error = new AuthorizeError

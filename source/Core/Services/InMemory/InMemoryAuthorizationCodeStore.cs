@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         public Task<AuthorizationCode> GetAsync(string key)
         {
             AuthorizationCode code;
-            if (_repository.TryRemove(key, out code))
+            if (_repository.TryGetValue(key, out code))
             {
                 return Task.FromResult(code);
             }

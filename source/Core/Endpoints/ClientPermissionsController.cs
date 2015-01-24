@@ -95,6 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
             Logger.Info("Revoke permissions requested");
@@ -156,7 +157,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 RequestId = env.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
-                CurrentUser = User.GetName(),
+                CurrentUser = env.GetCurrentUserDisplayName(),
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 RevokePermissionUrl = Request.GetOwinContext().GetPermissionsPageUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),

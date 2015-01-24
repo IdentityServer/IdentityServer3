@@ -27,6 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         public string ClientId { get; set; }
         public string ClientName { get; set; }
         public string RedirectUri { get; set; }
+        public IEnumerable<string> AllowedRedirectUris { get; set; }
         public string SubjectId { get; set; }
 
         public string ResponseType { get; set; }
@@ -54,6 +55,8 @@ namespace Thinktecture.IdentityServer.Core.Logging
             {
                 ClientId = request.Client.ClientId;
                 ClientName = request.Client.ClientName;
+
+                AllowedRedirectUris = request.Client.RedirectUris;
             }
 
             if (request.Subject != null)

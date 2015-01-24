@@ -25,13 +25,14 @@ namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants
     {
-        public const string IdentityServerName = "Thinktecture IdentityServer v3";
+        public const string IdentityServerName = "Thinktecture IdentityServer3";
         
         public const string PrimaryAuthenticationType       = "idsrv";
         public const string ExternalAuthenticationType      = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
         
-        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]{
+        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]
+        {
             PrimaryAuthenticationType,
             ExternalAuthenticationType,
             PartialSignInAuthenticationType
@@ -54,6 +55,23 @@ namespace Thinktecture.IdentityServer.Core
 
         public const string ScopeDisplayNameSuffix = "_DisplayName";
         public const string ScopeDescriptionSuffix = "_Description";
+
+        public const int DefaultMaxAuthorizeInputLength = 100;
+        public const int DefaultMaxTokenInputLength = 100;
+
+        public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxScopeLength = 300;
+        public const int MaxRedirectUriLength = 400;
+        public const int MaxNonceLength = 300;
+        public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxAcrValuesLength = 300;
+        
+        public const int MaxGrantTypeLength = DefaultMaxTokenInputLength;
+        public const int MaxUserNameLength = DefaultMaxTokenInputLength;
+        public const int MaxPasswordLength = DefaultMaxTokenInputLength;
+
+
 
         public static class AuthorizeRequest
         {
@@ -263,7 +281,7 @@ namespace Thinktecture.IdentityServer.Core
                                 PromptModes.SelectAccount,
                             };
 
-        public static class LoginHints
+        public static class KnownAcrValues
         {
             public const string HomeRealm = "idp:";
             public const string Tenant = "tenant:";
@@ -499,6 +517,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RouteNames
         {
+            public const string Welcome = "idsrv.welcome";
             public const string Login = "idsrv.authentication.login";
             public const string LoginExternal = "idsrv.authentication.loginexternal";
             public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
@@ -521,6 +540,7 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RoutePaths
         {
+            public const string Welcome = "";
             public const string Login = "login";
             public const string LoginExternal = "external";
             public const string LoginExternalCallback = "callback";

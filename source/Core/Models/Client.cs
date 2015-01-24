@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     public class Client
     {
         /// <summary>
-        /// Specifies if client is enabled (defaults to false)
+        /// Specifies if client is enabled (defaults to true)
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -55,12 +55,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         public string LogoUri { get; set; }
         
         /// <summary>
-        /// Specifies whether a consent screen is required (defaults to false)
+        /// Specifies whether a consent screen is required (defaults to true)
         /// </summary>
         public bool RequireConsent { get; set; }
 
         /// <summary>
-        /// Specifies whether user can choose to store consent decisions (defaults to false)
+        /// Specifies whether user can choose to store consent decisions (defaults to true)
         /// </summary>
         public bool AllowRememberConsent { get; set; }
 
@@ -109,16 +109,16 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public int SlidingRefreshTokenLifetime { get; set; }
         
-        /// <summary>
-        /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
-        /// Sliding: when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in SlidingRefreshTokenLifetime). The lifetime will not exceed 
+        /// /// <summary>
+        /// ReUse: the refresh token handle will stay the same when refreshing tokens
+        /// OneTime: the refresh token handle will be updated when refreshing tokens
         /// </summary>
         public TokenUsage RefreshTokenUsage { get; set; }
 
         /// <summary>
-        /// ReUse: the refresh token handle will stay the same when refreshing tokens
-        /// OneTime: the refresh token handle will be updated when refreshing tokens
-        /// </summary>
+        /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
+        /// Sliding: when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in SlidingRefreshTokenLifetime). The lifetime will not exceed 
+        /// </summary>        
         public TokenExpiration RefreshTokenExpiration { get; set; }
         
         /// <summary>
@@ -127,9 +127,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         public AccessTokenType AccessTokenType { get; set; }
 
         /// <summary>
-        /// Specifies if this client can use local accounts, or external IdPs only
+        /// Gets or sets a value indicating whether the local login is allowed for this client. Defaults to <c>true</c>.
         /// </summary>
-        public bool AllowLocalLogin { get; set; }
+        /// <value>
+        ///   <c>true</c> if local logins are enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableLocalLogin { get; set; }
         
         /// <summary>
         /// Specifies which external IdPs can be used with this client (if list is empty all IdPs are allowed). Defaults to empty.
@@ -145,7 +148,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public bool IncludeJwtId { get; set; }
 
         /// <summary>
-        /// Gets or sets the client claims.
+        /// Allows settings claims for the client (will be included in the access token).
         /// </summary>
         /// <value>
         /// The claims.
@@ -176,14 +179,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public List<string> CustomGrantTypeRestrictions { get; set; }
 
-        // not implemented yet
-
-        //public bool RefreshClaimsOnRefreshToken { get; set; }
-        //public bool RequireSignedAuthorizeRequest { get; set; }
-        //public SubjectTypes SubjectType { get; set; }
-        //public Uri SectorIdentifierUri { get; set; }
-        //public ApplicationTypes ApplicationType { get; set; }
-
         /// <summary>
         /// Creates a Client with default values
         /// </summary>
@@ -197,6 +192,9 @@ namespace Thinktecture.IdentityServer.Core.Models
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
             CustomGrantTypeRestrictions = new List<string>();
+
+            Enabled = true;
+            EnableLocalLogin = true;
             
             // client claims settings
             Claims = new List<Claim>();
@@ -220,7 +218,9 @@ namespace Thinktecture.IdentityServer.Core.Models
             RefreshTokenExpiration = TokenExpiration.Absolute;
 
             AccessTokenType = AccessTokenType.Jwt;
-            AllowLocalLogin = true;
+            
+            RequireConsent = true;
+            AllowRememberConsent = true;
         }
     }
 }

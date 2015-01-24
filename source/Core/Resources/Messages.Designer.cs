@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client Identifier is required.
+        ///   Looks up a localized string similar to Client identifier is required.
         /// </summary>
         public static string ClientIdRequired {
             get {
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Username or Password.
+        ///   Looks up a localized string similar to Invalid username or password.
         /// </summary>
         public static string InvalidUsernameOrPassword {
             get {

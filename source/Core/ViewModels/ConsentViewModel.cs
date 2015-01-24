@@ -32,14 +32,6 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         public string LoginWithDifferentAccountUrl { get; set; }
 
         /// <summary>
-        /// The URL to allow a user to logout.
-        /// </summary>
-        /// <value>
-        /// The logout URL.
-        /// </value>
-        public string LogoutUrl { get; set; }
-
-        /// <summary>
         /// The URL to POST the user's consent. <see cref="UserConsent"/> for the model for the submitted data.
         /// </summary>
         /// <value>

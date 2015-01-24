@@ -17,14 +17,10 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
-using System.Net.Http;
-using Thinktecture.IdentityModel.Http;
 
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic

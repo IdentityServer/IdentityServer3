@@ -219,7 +219,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
                 RaiseSuccessEvent();
-                return new AuthorizeRedirectResult(response);
+                return new AuthorizeRedirectResult(response, _options);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
@@ -238,6 +238,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             NameValueCollection requestParameters,
             string errorMessage)
         {
+            string loginWithDifferentAccountUrl = null;
+            if (validatedRequest.HasIdpAcrValue() == false)
+            {
+                loginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null)
+                    .AddQueryString(requestParameters.ToQueryString());
+            }
+            
             var env = Request.GetOwinEnvironment();
             var consentModel = new ConsentViewModel
             {
@@ -245,16 +252,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 ErrorMessage = errorMessage,
-                CurrentUser = User.GetName(),
+                CurrentUser = env.GetCurrentUserDisplayName(),
+                LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 ClientName = validatedRequest.Client.ClientName,
                 ClientUrl = validatedRequest.Client.ClientUri,
-                ClientLogoUrl = validatedRequest.Client.LogoUri ?? null,
+                ClientLogoUrl = validatedRequest.Client.LogoUri,
                 IdentityScopes = validatedRequest.GetIdentityScopes(this._localizationService),
                 ResourceScopes = validatedRequest.GetResourceScopes(this._localizationService),
                 AllowRememberConsent = validatedRequest.Client.AllowRememberConsent,
-                RememberConsent = consent != null ? consent.RememberConsent : true,
-                LoginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null).AddQueryString(requestParameters.ToQueryString()),
-                LogoutUrl = Url.Route(Constants.RouteNames.Oidc.EndSession, null),
+                RememberConsent = consent == null || consent.RememberConsent,
+                LoginWithDifferentAccountUrl = loginWithDifferentAccountUrl,
                 ConsentUrl = Url.Route(Constants.RouteNames.Oidc.Consent, null).AddQueryString(requestParameters.ToQueryString()),
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()
             };
@@ -282,14 +289,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (errorType == ErrorTypes.User)
             {
                 var env = Request.GetOwinEnvironment();
-                var username = User.Identity.IsAuthenticated ? User.GetName() : (string)null;
-
                 var errorModel = new ErrorViewModel
                 {
                     RequestId = env.GetRequestId(),
                     SiteName = _options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    CurrentUser = username,
+                    CurrentUser = env.GetCurrentUserDisplayName(),
+                    LogoutUrl = env.GetIdentityServerLogoutUrl(),
                     ErrorMessage = LookupErrorMessage(error)
                 };
 
@@ -314,7 +320,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                return new AuthorizeRedirectResult(response);
+                return new AuthorizeRedirectResult(response, _options);
             }
         }
 

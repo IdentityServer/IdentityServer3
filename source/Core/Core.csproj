@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\Thinktecture.IdentityServer.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\Thinktecture.IdentityServer3.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\Thinktecture.IdentityServer.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\Thinktecture.IdentityServer3.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureWebSites|AnyCPU'">
@@ -134,6 +134,8 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
+    <Compile Include="Configuration\X509CertificateDataProtector.cs" />
+    <Compile Include="Endpoints\WelcomeController.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />
     <Compile Include="Configuration\Hosting\LastUserNameCookie.cs" />
@@ -184,10 +186,11 @@
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
     <Compile Include="Results\CheckSessionResult.cs" />
+    <Compile Include="Results\WelcomeActionResult.cs" />
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
-    <Compile Include="Services\DefaultViewService\DefaultViewServiceConfiguration.cs" />
+    <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
@@ -270,7 +273,6 @@
     <Compile Include="Models\AuthenticateResult.cs" />
     <Compile Include="Endpoints\AuthenticationController.cs" />
     <Compile Include="Results\LoginActionResult.cs" />
-    <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Services\DefaultViewService\FileSystemViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\EmbeddedAssetsViewLoader.cs" />
     <Compile Include="Services\DefaultViewService\CachingLoader.cs" />
@@ -419,7 +421,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Events.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Events.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.resx">
@@ -437,7 +439,7 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\app.less" />
     <None Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\custom.less" />
     <EmbeddedResource Include="Resources\Scopes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Scopes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
@@ -494,6 +496,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Services\DefaultViewService\PageAssets\welcome.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\checksession.html" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\FormPostResponse.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\app\app.css">

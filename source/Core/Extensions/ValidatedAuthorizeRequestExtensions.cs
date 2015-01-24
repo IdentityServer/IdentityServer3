@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Thinktecture.IdentityServer.Core.Models;
@@ -53,6 +54,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     Required = s.Required
                 };
             return values;
+        }
+
+        internal static bool HasIdpAcrValue(this ValidatedAuthorizeRequest request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+
+            return request.AuthenticationContextReferenceClasses.Any(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
         }
     }
 }

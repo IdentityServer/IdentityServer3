@@ -43,6 +43,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 ErrorMessage = localization.GetMessage(MessageIds.UnexpectedError),
+                CurrentUser = env.GetCurrentUserDisplayName(),
+                LogoutUrl = env.GetIdentityServerLogoutUrl(),
             };
             var errorResult = new ErrorActionResult(viewSvc, errorModel);
             actionExecutedContext.Response = await errorResult.GetResponseMessage();

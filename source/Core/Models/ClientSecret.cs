@@ -48,6 +48,20 @@ namespace Thinktecture.IdentityServer.Core.Models
         public DateTimeOffset? Expiration { get; set; }
 
         /// <summary>
+        /// Gets or sets the type of the client secret.
+        /// </summary>
+        /// <value>
+        /// The type of the client secret.
+        /// </value>
+        public string ClientSecretType { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// </summary>
+        public ClientSecret()
+        { }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ClientSecret"/> class.
         /// </summary>
         /// <param name="value">The value.</param>

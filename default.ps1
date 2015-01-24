@@ -3,7 +3,7 @@ properties {
 	$src_directory = "$base_directory\source"
 	$output_directory = "$base_directory\build"
 	$dist_directory = "$base_directory\distribution"
-	$sln_file = "$src_directory\Thinktecture.IdentityServer.v3.sln"
+	$sln_file = "$src_directory\Thinktecture.IdentityServer3.sln"
 	$target_config = "Release"
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
@@ -66,7 +66,7 @@ task ILMerge -depends Compile {
 	}
 
 	New-Item $dist_directory\lib\net45 -Type Directory
-	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer.dll $input_dlls"
+	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer3.dll $input_dlls"
 }
 
 task CreateNuGetPackage -depends ILMerge {
@@ -82,8 +82,13 @@ task CreateNuGetPackage -depends ILMerge {
 	if($preRelease){
 		$packageVersion = "$packageVersion-$preRelease"
 	}
+	
+	if ($buildNumber -ne 0){
+		$packageVersion = $packageVersion + "-build" + $buildNumber.ToString().PadLeft(5,'0')
+	}
 
-	copy-item $src_directory\Thinktecture.IdentityServer.v3.nuspec $dist_directory
-	copy-item $output_directory\Thinktecture.IdentityServer.xml $dist_directory\lib\net45\
-	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer.v3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
+
+	copy-item $src_directory\Thinktecture.IdentityServer3.nuspec $dist_directory
+	copy-item $output_directory\Thinktecture.IdentityServer3.xml $dist_directory\lib\net45\
+	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
 }

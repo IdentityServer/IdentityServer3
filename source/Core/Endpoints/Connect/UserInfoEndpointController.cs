@@ -96,6 +96,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return Error(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
+            Logger.Info("Token found: " + tokenUsageResult.UsageType.ToString());
+
             var tokenResult = await _tokenValidator.ValidateAccessTokenAsync(
                 tokenUsageResult.Token,
                 Constants.StandardScopes.OpenId);

@@ -52,6 +52,21 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         [DebuggerStepThrough]
+        public static bool IsMissingOrTooLong(this string value, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return true;
+            }
+            if (value.Length > maxLength)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [DebuggerStepThrough]
         public static bool IsPresent(this string value)
         {
             return !string.IsNullOrWhiteSpace(value);
@@ -61,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (!url.EndsWith("/"))
             {
-                return url += "/";
+                return url + "/";
             }
 
             return url;
@@ -72,6 +87,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (url != null && url.StartsWith("/"))
             {
                 url = url.Substring(1);
+            }
+
+            return url;
+        }
+        
+        public static string RemoveTrailingSlash(this string url)
+        {
+            if (url != null && url.EndsWith("/"))
+            {
+                url = url.Substring(0, url.Length - 1);
             }
 
             return url;

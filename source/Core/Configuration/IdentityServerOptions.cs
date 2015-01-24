@@ -42,8 +42,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
-            this.DiagnosticsOptions = new LoggingOptions();
+            this.LoggingOptions = new LoggingOptions();
             this.EventsOptions = new EventsOptions();
+            this.EnableWelcomePage = true;
         }
 
         internal void Validate()
@@ -61,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
                 throw new ArgumentException("Endpoints is missing");
             }
             
-            if (DiagnosticsOptions.EnableHttpLogging || DiagnosticsOptions.EnableWebApiDiagnostics || DiagnosticsOptions.IncludeSensitiveDataInLogs)
+            if (LoggingOptions.EnableHttpLogging || LoggingOptions.EnableWebApiDiagnostics || LoggingOptions.IncludeSensitiveDataInLogs)
             {
                 Logger.Warn("Detailed logging is enabled, potentially sensitive data will be exposed in log files.");
             }
@@ -108,12 +109,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool RequireSsl { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the public host.
+        /// Gets or sets the public origin for IdentityServer (e.g. "https://yourserver:1234").
         /// </summary>
         /// <value>
-        /// The name of the public host.
+        /// The name of the public origin.
         /// </value>
-        public string PublicHostName { get; set; }
+        public string PublicOrigin { get; set; }
 
         /// <summary>
         /// Gets or sets the identity server factory.
@@ -185,7 +186,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The diagnostics options.
         /// </value>
-        public LoggingOptions DiagnosticsOptions { get; set; }
+        public LoggingOptions LoggingOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the events options.
@@ -195,6 +196,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public EventsOptions EventsOptions { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the welcome page is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the welcome page is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableWelcomePage { get; set; }
+        
         internal IEnumerable<X509Certificate2> PublicKeysForMetadata
         {
             get

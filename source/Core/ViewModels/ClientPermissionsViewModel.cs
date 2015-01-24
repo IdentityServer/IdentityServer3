@@ -25,14 +25,6 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
     public class ClientPermissionsViewModel : ErrorViewModel
     {
         /// <summary>
-        /// The URL to allow a user to logout.
-        /// </summary>
-        /// <value>
-        /// The logout URL.
-        /// </value>
-        public string LogoutUrl { get; set; }
-        
-        /// <summary>
         /// The URL to POST to revoke client permissions. <see cref="RevokeClientPermission"/> for the model for the submitted data.
         /// </summary>
         /// <value>

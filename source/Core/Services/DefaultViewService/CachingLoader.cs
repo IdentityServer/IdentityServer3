@@ -21,15 +21,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class CachingLoader : IViewLoader
     {
-        readonly ResourceCache cache = new ResourceCache();
+        readonly ResourceCache cache;
         readonly IViewLoader inner;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CachingLoader"/> class.
+        /// Initializes a new instance of the <see cref="CachingLoader" /> class.
         /// </summary>
+        /// <param name="cache">The cache.</param>
         /// <param name="inner">The inner.</param>
-        public CachingLoader(IViewLoader inner)
+        public CachingLoader(ResourceCache cache, IViewLoader inner)
         {
+            this.cache = cache;
             this.inner = inner;
         }
 

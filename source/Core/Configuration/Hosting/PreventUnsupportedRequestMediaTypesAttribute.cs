@@ -27,8 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
     {
-        readonly bool allowJson = false;
-        readonly bool allowFormUrlEncoded = false;
+        readonly bool allowJson;
+        readonly bool allowFormUrlEncoded;
         
         public PreventUnsupportedRequestMediaTypesAttribute(bool allowJson = false, bool allowFormUrlEncoded = false)
         {

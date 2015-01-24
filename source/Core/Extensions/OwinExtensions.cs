@@ -74,6 +74,17 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         /// <summary>
+        /// Gets the display name of the current user.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetCurrentUserDisplayName(this IDictionary<string, object> env)
+        {
+            return new OwinContext(env).GetCurrentUserDisplayName();
+        }
+        
+
+        /// <summary>
         /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
@@ -106,7 +117,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <returns></returns>
         public static string GetRequestId(this IDictionary<string, object> env)
         {
-            object value = null;
+            object value;
             if (env.TryGetValue(Constants.OwinEnvironment.RequestId, out value))
             {
                 return value as string;
@@ -144,7 +155,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
-            new OwinContext(env).Set<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope, scope);
+            new OwinContext(env).Set(Constants.OwinEnvironment.AutofacScope, scope);
         }
 
         internal static T ResolveDependency<T>(this IDictionary<string, object> env)
@@ -171,6 +182,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
             
             return types;
+        }
+
+        internal static bool IsValidExternalAuthenticationProvider(this IOwinContext context, string name)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            return context.Authentication.GetAuthenticationTypes().Any(x => x.AuthenticationType == name);
         }
 
         internal static IEnumerable<LoginPageLink> GetLinksFromProviders(this IOwinContext context, IEnumerable<AuthenticationDescription> types, string signInMessageId)
@@ -230,7 +248,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
             if (result != null)
             {
-                string val = null;
+                string val;
                 if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
                 {
                     return val;
@@ -302,6 +320,19 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (context == null) throw new ArgumentNullException("context");
             return context.Environment.GetIdentityServerLogoutUrl();
+        }
+        
+        internal static string GetCurrentUserDisplayName(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            
+            if (context.Authentication.User != null && 
+                context.Authentication.User.Identity != null)
+            {
+                return context.Authentication.User.Identity.Name;
+            }
+            
+            return null;
         }
 
         internal static string CreateSignInRequest(this IOwinContext context, SignInMessage message)

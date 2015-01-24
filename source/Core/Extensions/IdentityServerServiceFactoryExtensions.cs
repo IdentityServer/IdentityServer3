@@ -190,5 +190,46 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             var cacheRegistration = new Registration<ICache<IEnumerable<Claim>>>(cache);
             factory.ConfigureUserServiceCache(cacheRegistration);
         }
+
+
+        /// <summary>
+        /// Configures the default view service.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="options">The default view service options.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// factory
+        /// or
+        /// options
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">ViewService is already configured</exception>
+        public static void ConfigureDefaultViewService(this IdentityServerServiceFactory factory, 
+            DefaultViewServiceOptions options)
+        {
+            if (factory == null) throw new ArgumentNullException("factory");
+            if (options == null) throw new ArgumentNullException("options");
+            
+            if (factory.ViewService != null) throw new InvalidOperationException("A ViewService is already configured");
+
+            factory.ViewService = new Registration<IViewService, DefaultViewService>();
+            factory.Register(new Registration<DefaultViewServiceOptions>(options));
+            
+            if (options.ViewLoader == null)
+            {
+                options.ViewLoader = new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>();
+            }
+
+            if (options.CacheViews)
+            {
+                factory.Register(new Registration<IViewLoader>(options.ViewLoader, InnerRegistrationName));
+                var cache = new ResourceCache();
+                factory.Register(new Registration<IViewLoader>(
+                    resolver=>new CachingLoader(cache, resolver.Resolve<IViewLoader>(InnerRegistrationName))));
+            }
+            else
+            {
+                factory.Register(options.ViewLoader);
+            }
+        }
     }
 }
