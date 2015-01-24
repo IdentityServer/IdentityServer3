@@ -48,6 +48,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     public class AuthenticationController : ApiController
     {
+        const int MaxInputParamLength = 100;
+
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly IOwinContext context;
@@ -100,6 +102,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+            }
+
+            if (signin.Length > MaxInputParamLength)
+            {
+                Logger.Error("Signin parameter passed was larger than max length");
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
@@ -159,6 +167,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
+            if (signin.Length > MaxInputParamLength)
+            {
+                Logger.Error("Signin parameter passed was larger than max length");
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+            }
+            
             var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
@@ -196,6 +210,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
+            if (model.Username.Length > MaxInputParamLength || model.Password.Length > MaxInputParamLength)
+            {
+                Logger.Error("username or password submitted beyond allowed length");
+                return await RenderLoginPage(signInMessage, signin);
+            }
+            
             var authResult = await userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
             if (authResult == null)
             {
@@ -237,9 +257,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoExternalProvider));
             }
 
+            if (provider.Length > MaxInputParamLength)
+            {
+                Logger.Error("Provider parameter passed was larger than max length");
+                return RenderErrorPage();
+            }
+
             if (signin.IsMissing())
             {
                 Logger.Error("No signin id passed");
+                return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
+            }
+
+            if (signin.Length > MaxInputParamLength)
+            {
+                Logger.Error("Signin parameter passed was larger than max length");
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
@@ -289,6 +321,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             
             if (error.IsPresent())
             {
+                if (error.Length > MaxInputParamLength) error = error.Substring(0, MaxInputParamLength);
+
                 Logger.ErrorFormat("External identity provider returned error: {0}", error);
                 eventService.RaiseExternalLoginErrorEvent(error);
                 return RenderErrorPage(String.Format(localizationService.GetMessage(MessageIds.ExternalProviderError), error));
@@ -360,6 +394,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (resume.IsMissing())
             {
                 Logger.Error("no resumeId passed");
+                return RenderErrorPage();
+            }
+
+            if (resume.Length > MaxInputParamLength)
+            {
+                Logger.Error("resumeId length longer than allowed length");
                 return RenderErrorPage();
             }
 
@@ -473,6 +513,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> LogoutPrompt(string id = null)
         {
+            if (id != null && id.Length > MaxInputParamLength)
+            {
+                Logger.Error("Logout prompt requested, but id param is longer than allowed length");
+                return RenderErrorPage();
+            }
+
             var user = (ClaimsPrincipal)User;
             if (user == null || user.Identity.IsAuthenticated == false)
             {
@@ -506,6 +552,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         public async Task<IHttpActionResult> Logout(string id = null)
         {
             Logger.Info("Logout endpoint submitted");
+
+            if (id != null && id.Length > MaxInputParamLength)
+            {
+                Logger.Error("id param is longer than allowed length");
+                return RenderErrorPage();
+            }
             
             var user = (ClaimsPrincipal)User;
             if (user != null && user.Identity.IsAuthenticated)
