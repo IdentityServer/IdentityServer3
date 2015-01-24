@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var result = await _validator.ValidateAccessTokenAsync(token, parameters.Get("expectedScope"));
-            
+
             if (result.IsError)
             {
                 Logger.Info("Returning error: " + result.Error);
@@ -103,18 +103,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseSuccessEvent()
         {
-            if (_options.EventsOptions.RaiseSuccessEvents)
-            {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation);
-            }
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation);
         }
 
         private void RaiseFailureEvent(string error)
         {
-            if (_options.EventsOptions.RaiseFailureEvents)
-            {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation, error);
-            }
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation, error);
         }
     }
 }
