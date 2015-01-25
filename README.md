@@ -37,15 +37,15 @@ For more information, e.g.
 * support for WS-Federation
 * extensibility
 
-check out the [documentation](https://thinktecture.github.io/Thinktecture.IdentityServer.v3.Documentation/) and the [samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples).
+check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/Thinktecture.IdentityServer3.Samples).
 
 ## Related repositories ##
-* [Access Token Validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
-* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
-* [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
-* [ASP.Net Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
-* [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
-* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
+* [Access Token Validation](https://github.com/identityserver/Thinktecture.IdentityServer3.AccessTokenValidation)
+* [EntityFramework support](https://github.com/identityserver/Thinktecture.IdentityServer3.EntityFramework)
+* [MembershipReboot support](https://github.com/identityserver/Thinktecture.IdentityServer3.MembershipReboot)
+* [ASP.Net Identity support](https://github.com/identityserver/Thinktecture.IdentityServer3.AspNetIdentity)
+* [WS-Federation plugin](https://github.com/identityserver/Thinktecture.IdentityServer3.WsFederation)
+* [Samples](https://github.com/thinktecture/identityserver.IdentityServer3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
