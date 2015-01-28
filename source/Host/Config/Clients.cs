@@ -85,6 +85,9 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     RedirectUris = new List<string>
                     {
+                        // "simple JS client"
+                        "http://localhost:37045/index.html",
+
                         // OAuthJS client
                         "http://localhost:23453/callback.html",
                         "http://localhost:23453/frame.html",
