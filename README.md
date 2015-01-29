@@ -45,7 +45,7 @@ check out the [documentation](https://identityserver.github.io/Documentation/) a
 * [MembershipReboot support](https://github.com/identityserver/Thinktecture.IdentityServer3.MembershipReboot)
 * [ASP.Net Identity support](https://github.com/identityserver/Thinktecture.IdentityServer3.AspNetIdentity)
 * [WS-Federation plugin](https://github.com/identityserver/Thinktecture.IdentityServer3.WsFederation)
-* [Samples](https://github.com/thinktecture/identityserver.IdentityServer3.Samples)
+* [Samples](https://github.com/IdentityServer/Thinktecture.IdentityServer3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
