@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -36,13 +38,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
         
         private readonly IClientStore _clients;
         private readonly IClientSecretValidator _secretValidator;
+        private readonly OwinEnvironmentService _owin;
 
         private readonly ClientValidationLog _log;
         
-        public ClientValidator(IClientStore clients, IClientSecretValidator secretValidator)
+        public ClientValidator(IClientStore clients, IClientSecretValidator secretValidator, OwinEnvironmentService owin)
         {
             _clients = clients;
             _secretValidator = secretValidator;
+            _owin = owin;
 
             _log = new ClientValidationLog();
         }
@@ -78,6 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public ClientCredential ValidateHttpRequest(AuthenticationHeaderValue header, NameValueCollection body)
         {
+            // shared secret via basic authentication
             var credentials = ParseBasicAuthenticationScheme(header);
 
             if (credentials.IsPresent && !credentials.IsMalformed)
@@ -90,7 +95,20 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return credentials;
             }
 
-            return ParsePostBody(body);
+            // shared secret via post body
+            credentials = ParsePostBody(body);
+
+            if (credentials.IsPresent && !credentials.IsMalformed)
+            {
+                return credentials;
+            }
+
+            if (credentials.IsMalformed)
+            {
+                return credentials;
+            }
+
+            return ParseX509ClientCertificate(body);
         }
 
         public async Task<Client> ValidateClientCredentialsAsync(ClientCredential credential)
@@ -215,6 +233,43 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 IsPresent = false
             };
+        }
+
+        private ClientCredential ParseX509ClientCertificate(NameValueCollection body)
+        {
+            var credential = new ClientCredential
+            {
+                IsPresent = false
+            };
+
+            if (body == null)
+            {
+                return credential;
+            }
+
+            var id = body.Get("client_id");
+            if (id.IsMissing())
+            {
+                return credential;
+            }
+
+            var context = new OwinContext(_owin.Environment);
+            var cert = context.Get<X509Certificate2>("ssl.ClientCertificate");
+
+            if (cert != null)
+            {
+                return new ClientCredential
+                {
+                    IsPresent = true,
+                    IsMalformed = false,
+
+                    ClientId = id,
+                    Secret = cert.GetRawCertDataString(),
+                    Type = Constants.ClientAuthenticationMethods.X509
+                };
+            }
+
+            return credential;
         }
 
         private void LogError(string message)
