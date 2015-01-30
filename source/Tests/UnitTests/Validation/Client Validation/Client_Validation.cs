@@ -17,6 +17,7 @@
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -42,7 +43,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret"
+                Secret = "secret",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -61,7 +63,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret"
+                Secret = "secret",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -79,7 +82,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret"
+                Secret = "secret",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -90,7 +94,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "foobar"
+                Secret = "foobar",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -101,7 +106,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "quux"
+                Secret = "quux",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -112,7 +118,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "notexpired"
+                Secret = "notexpired",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -130,7 +137,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret"
+                Secret = "secret",
+                Type = Constants.ClientAuthenticationMethods.FormPost
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -141,7 +149,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "foobar"
+                Secret = "foobar",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -152,7 +161,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "quux"
+                Secret = "quux",
+                Type = Constants.ClientAuthenticationMethods.FormPost
             };
 
             client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -164,7 +174,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "notexpired"
+                Secret = "notexpired",
+                Type = Constants.ClientAuthenticationMethods.FormPost
             };
 
             client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -182,7 +193,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid"
+                Secret = "invalid",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -199,7 +211,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "expired"
+                Secret = "expired",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -216,7 +229,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid"
+                Secret = "invalid",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorPlain.ValidateClientCredentialsAsync(credential);
@@ -233,7 +247,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid"
+                Secret = "invalid",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -248,7 +263,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "unknown",
-                Secret = "invalid"
+                Secret = "invalid",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -263,7 +279,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "disabled_client",
-                Secret = "secret"
+                Secret = "secret",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -302,7 +319,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "",
-                Secret = ""
+                Secret = "",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -317,7 +335,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "no_secret_client",
-                Secret = ""
+                Secret = "",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -331,7 +350,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         {
             var credential = new ClientCredential
             {
-                ClientId = "no_secret_client"
+                ClientId = "no_secret_client",
+                Type = Constants.ClientAuthenticationMethods.Basic
             };
 
             Func<Task> act = () => _validatorHashed.ValidateClientCredentialsAsync(credential);
