@@ -516,6 +516,12 @@ namespace Thinktecture.IdentityServer.Core
             public const string X509     = "X.509";
         }
 
+        public static class ClientSecretTypes
+        {
+            public const string SharedKey                 = "sharedKey";
+            public const string X509CertificateThumbprint = "x509Thumbprint";
+        }
+
         public static class RouteNames
         {
             public const string Welcome = "idsrv.welcome";

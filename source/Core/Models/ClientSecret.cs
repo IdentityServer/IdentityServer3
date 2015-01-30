@@ -59,7 +59,9 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Initializes a new instance of the <see cref="ClientSecret"/> class.
         /// </summary>
         public ClientSecret()
-        { }
+        {
+            ClientSecretType = Constants.ClientSecretTypes.SharedKey;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientSecret"/> class.
@@ -67,6 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <param name="value">The value.</param>
         /// <param name="expiration">The expiration.</param>
         public ClientSecret(string value, DateTimeOffset? expiration = null)
+            : this()
         {
             Value = value;
             Expiration = expiration;
@@ -79,6 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <param name="description">The description.</param>
         /// <param name="expiration">The expiration.</param>
         public ClientSecret(string value, string description, DateTimeOffset? expiration = null)
+            : this()
         {
             Description = description;
             Value = value;
