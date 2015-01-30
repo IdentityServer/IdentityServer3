@@ -33,10 +33,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="client">The client.</param>
         /// <param name="secret">The client secret.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, string secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
         {
-            var secretSha256 = secret.Sha256();
-            var secretSha512 = secret.Sha512();
+            var secretSha256 = secret.Secret.Sha256();
+            var secretSha512 = secret.Secret.Sha512();
 
             foreach (var clientSecret in client.ClientSecrets)
             {

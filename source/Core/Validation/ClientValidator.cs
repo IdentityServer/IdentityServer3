@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return null;
             }
 
-            var secretValid = await _secretValidator.ValidateClientSecretAsync(client, credential.Secret);
+            var secretValid = await _secretValidator.ValidateClientSecretAsync(client, credential);
             if (secretValid == false)
             {
                 LogError("Invalid client secret");
