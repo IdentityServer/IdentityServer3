@@ -43,6 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 foreach (var clientSecret in client.ClientSecrets)
                 {
+                    // this validator is only applicable to shared secrets
                     if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedKey)
                     {
                         continue;

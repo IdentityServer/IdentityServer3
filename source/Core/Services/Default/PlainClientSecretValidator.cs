@@ -34,17 +34,27 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
         {
-            foreach (var clientSecret in client.ClientSecrets)
+            if (secret.Type == Constants.ClientAuthenticationMethods.Basic ||
+                secret.Type == Constants.ClientAuthenticationMethods.FormPost)
             {
-                // check if client secret is still valid
-                if (clientSecret.Expiration.HasExpired()) continue;
-                
-                // use time constant string comparison
-                var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret.Secret);
-
-                if (isValid)
+                foreach (var clientSecret in client.ClientSecrets)
                 {
-                    return Task.FromResult(true);
+                    // this validator is only applicable to shared secrets
+                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedKey)
+                    {
+                        continue;
+                    }
+
+                    // check if client secret is still valid
+                    if (clientSecret.Expiration.HasExpired()) continue;
+
+                    // use time constant string comparison
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret.Secret);
+
+                    if (isValid)
+                    {
+                        return Task.FromResult(true);
+                    }
                 }
             }
 
