@@ -35,44 +35,53 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
         {
-            var secretSha256 = secret.Secret.Sha256();
-            var secretSha512 = secret.Secret.Sha512();
-
-            foreach (var clientSecret in client.ClientSecrets)
+            if (secret.Type == Constants.ClientAuthenticationMethods.Basic ||
+                secret.Type == Constants.ClientAuthenticationMethods.FormPost)
             {
-                bool isValid = false;
-                byte[] clientSecretBytes;
+                var secretSha256 = secret.Secret.Sha256();
+                var secretSha512 = secret.Secret.Sha512();
 
-                // check if client secret is still valid
-                if (clientSecret.Expiration.HasExpired()) continue;
+                foreach (var clientSecret in client.ClientSecrets)
+                {
+                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedKey)
+                    {
+                        continue;
+                    }
 
-                try
-                {
-                    clientSecretBytes = Convert.FromBase64String(clientSecret.Value);
-                }
-                catch (FormatException)
-                {
-                    // todo: logging
-                    throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
-                }
-                
-                if (clientSecretBytes.Length == 32)
-                {
-                    isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha256);
-                }
-                else if (clientSecretBytes.Length == 64)
-                {
-                    isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha512);
-                }
-                else
-                {
-                    // todo: logging
-                    throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
-                }
+                    bool isValid = false;
+                    byte[] clientSecretBytes;
 
-                if (isValid)
-                {
-                    return Task.FromResult(true);
+                    // check if client secret is still valid
+                    if (clientSecret.Expiration.HasExpired()) continue;
+
+                    try
+                    {
+                        clientSecretBytes = Convert.FromBase64String(clientSecret.Value);
+                    }
+                    catch (FormatException)
+                    {
+                        // todo: logging
+                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                    }
+
+                    if (clientSecretBytes.Length == 32)
+                    {
+                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha256);
+                    }
+                    else if (clientSecretBytes.Length == 64)
+                    {
+                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha512);
+                    }
+                    else
+                    {
+                        // todo: logging
+                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                    }
+
+                    if (isValid)
+                    {
+                        return Task.FromResult(true);
+                    }
                 }
             }
 
