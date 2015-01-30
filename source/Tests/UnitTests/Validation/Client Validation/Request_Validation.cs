@@ -21,6 +21,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
@@ -42,7 +43,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
+            credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.Basic);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");
@@ -60,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.FormPost);
+            credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.FormPost);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
+            credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.Basic);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");

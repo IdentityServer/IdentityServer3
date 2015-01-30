@@ -34,8 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
         {
-            if (secret.Type == Constants.ClientAuthenticationMethods.Basic ||
-                secret.Type == Constants.ClientAuthenticationMethods.FormPost)
+            if (secret.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
+                secret.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
                 foreach (var clientSecret in client.ClientSecrets)
                 {

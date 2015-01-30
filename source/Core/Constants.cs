@@ -509,13 +509,6 @@ namespace Thinktecture.IdentityServer.Core
             public const string External                = "external";
         }
 
-        public static class ClientAuthenticationMethods
-        {
-            public const string Basic    = "Basic";
-            public const string FormPost = "FormPost";
-            public const string X509     = "X.509";
-        }
-
         public static class ClientSecretTypes
         {
             public const string SharedKey                 = "sharedKey";

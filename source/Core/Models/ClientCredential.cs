@@ -28,6 +28,6 @@ namespace Thinktecture.IdentityServer.Core.Models
 
         public bool IsMalformed { get; set; }
         public bool IsPresent { get; set; }
-        public string Type { get; set; }
+        public ClientAuthenticationMethods AuthenticationMethod { get; set; }
     }
 }

@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             _log.ClientId = credential.ClientId;
-            _log.ClientCredentialType = credential.Type;
+            _log.ClientCredentialType = credential.AuthenticationMethod.ToString();
 
             // validate client against configuration store
             var client = await ValidateClientCredentialsAsync(credential);
@@ -192,7 +192,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                     IsPresent = true,
                     IsMalformed = false,
-                    Type = Constants.ClientAuthenticationMethods.Basic
+                    AuthenticationMethod = ClientAuthenticationMethods.Basic
                 };
             }
 
@@ -225,7 +225,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                     IsMalformed = false,
                     IsPresent = true,
-                    Type = Constants.ClientAuthenticationMethods.FormPost
+                    AuthenticationMethod = ClientAuthenticationMethods.FormPost
                 };
             }
 
@@ -265,7 +265,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                     ClientId = id,
                     Secret = cert.GetRawCertDataString(),
-                    Type = Constants.ClientAuthenticationMethods.X509
+                    AuthenticationMethod = ClientAuthenticationMethods.X509Certificate
                 };
             }
 
