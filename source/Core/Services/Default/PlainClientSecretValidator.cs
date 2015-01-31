@@ -30,12 +30,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Validates the client secret
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="secret">The client secret.</param>
+        /// <param name="credential">The client credential.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (secret.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
-                secret.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
+            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
+                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
                 foreach (var clientSecret in client.ClientSecrets)
                 {
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     if (clientSecret.Expiration.HasExpired()) continue;
 
                     // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret.SharedSecret);
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.SharedSecret);
 
                     if (isValid)
                     {

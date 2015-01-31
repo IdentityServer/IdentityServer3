@@ -26,10 +26,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class DefaultClientSecretValidator : IClientSecretValidator
     {
         /// <summary>
-        /// Validates the client secret asynchronous.
+        /// Validates the client secret.
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="credential">The credential.</param>
+        /// <param name="credential">The client credential.</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException">Invalid client authentication method</exception>
         public Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)

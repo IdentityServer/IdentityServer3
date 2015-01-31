@@ -31,15 +31,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Validates the client secret
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="secret">The client secret.</param>
+        /// <param name="credential">The client credential.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (secret.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
-                secret.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
+            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
+                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
-                var secretSha256 = secret.SharedSecret.Sha256();
-                var secretSha512 = secret.SharedSecret.Sha512();
+                var secretSha256 = credential.SharedSecret.Sha256();
+                var secretSha512 = credential.SharedSecret.Sha512();
 
                 foreach (var clientSecret in client.ClientSecrets)
                 {
