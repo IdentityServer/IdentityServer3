@@ -192,6 +192,30 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                 new Client
                 {
+                    ClientName = "Client Credentials Flow Client with Client Certificate",
+                    Enabled = true,
+                    
+                    ClientId = "certclient",
+                    ClientSecrets = new List<ClientSecret>
+                    { 
+                        new ClientSecret
+                        {
+                            Value = "61B754C541BBCFC6A45A9E9EC5E47D8702B78C29",
+                            ClientSecretType = Constants.ClientSecretTypes.X509CertificateThumbprint,
+                        }
+                    },
+
+                    Flow = Flows.ClientCredentials,
+                    
+                    Claims = new List<Claim>
+                    {
+                        new Claim("client_type", "headless")
+                    },
+                    PrefixClientClaims = false
+                },
+
+                new Client
+                {
                     ClientName = "Custom Grant Client",
                     Enabled = true,
                     ClientId = "customclient",
