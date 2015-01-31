@@ -44,6 +44,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "secret",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -64,6 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "secret",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -83,6 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "secret",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -95,6 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "foobar",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -107,6 +111,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "quux",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -119,6 +124,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "notexpired",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -138,6 +144,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "secret",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -150,6 +157,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "foobar",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -162,6 +170,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "quux",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -175,6 +184,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "notexpired",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -194,6 +204,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "invalid",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -212,6 +223,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "expired",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -230,6 +242,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "invalid",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -248,6 +261,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = clientId,
                 SharedSecret = "invalid",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -264,6 +278,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = "unknown",
                 SharedSecret = "invalid",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -280,7 +295,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = "disabled_client",
                 SharedSecret = "secret",
-                AuthenticationMethod = ClientAuthenticationMethods.Basic
+                AuthenticationMethod = ClientAuthenticationMethods.Basic,
+                IsPresent = true
             };
 
             var client = await _validatorHashed.ValidateClientCredentialsAsync(credential);
@@ -320,6 +336,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             {
                 ClientId = "",
                 SharedSecret = "",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -330,12 +347,29 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 
         [Fact]
         [Trait("Category", Category)]
+        public void Empty_Client_Credentials_Not_Present()
+        {
+            var credential = new ClientCredential
+            {
+                ClientId = "",
+                SharedSecret = "",
+                AuthenticationMethod = ClientAuthenticationMethods.Basic
+            };
+
+            Func<Task> act = () => _validatorHashed.ValidateClientCredentialsAsync(credential);
+
+            act.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public async Task No_Secret_Client_Credentials_Empty_Secret()
         {
             var credential = new ClientCredential
             {
                 ClientId = "no_secret_client",
                 SharedSecret = "",
+                IsPresent = true,
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
