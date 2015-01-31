@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<Client> ValidateClientCredentialsAsync(ClientCredential credential)
         {
-            if (credential == null || credential.ClientId == null || credential.Secret == null)
+            if (credential == null || credential.ClientId == null || credential.SharedSecret == null)
             {
                 throw new InvalidOperationException("credential is null");
             }
@@ -188,7 +188,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return new ClientCredential
                 {
                     ClientId = clientId,
-                    Secret = secret,
+                    SharedSecret = secret,
 
                     IsPresent = true,
                     IsMalformed = false,
@@ -221,7 +221,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return new ClientCredential
                 {
                     ClientId = id,
-                    Secret = secret,
+                    SharedSecret = secret,
 
                     IsMalformed = false,
                     IsPresent = true,
@@ -264,7 +264,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     IsMalformed = false,
 
                     ClientId = id,
-                    Secret = cert.GetRawCertDataString(),
+                    ClientCertificate = cert,
                     AuthenticationMethod = ClientAuthenticationMethods.X509Certificate
                 };
             }

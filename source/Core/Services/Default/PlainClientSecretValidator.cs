@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 foreach (var clientSecret in client.ClientSecrets)
                 {
                     // this validator is only applicable to shared secrets
-                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedKey)
+                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedSecret)
                     {
                         continue;
                     }
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     if (clientSecret.Expiration.HasExpired()) continue;
 
                     // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret.Secret);
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret.SharedSecret);
 
                     if (isValid)
                     {

@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret",
+                SharedSecret = "secret",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret",
+                SharedSecret = "secret",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret",
+                SharedSecret = "secret",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "foobar",
+                SharedSecret = "foobar",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -106,7 +106,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "quux",
+                SharedSecret = "quux",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "notexpired",
+                SharedSecret = "notexpired",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "secret",
+                SharedSecret = "secret",
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "foobar",
+                SharedSecret = "foobar",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -161,7 +161,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "quux",
+                SharedSecret = "quux",
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -174,7 +174,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "notexpired",
+                SharedSecret = "notexpired",
                 AuthenticationMethod = ClientAuthenticationMethods.FormPost
             };
 
@@ -193,7 +193,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid",
+                SharedSecret = "invalid",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "expired",
+                SharedSecret = "expired",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -229,7 +229,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid",
+                SharedSecret = "invalid",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -247,7 +247,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = clientId,
-                Secret = "invalid",
+                SharedSecret = "invalid",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -263,7 +263,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "unknown",
-                Secret = "invalid",
+                SharedSecret = "invalid",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -279,7 +279,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "disabled_client",
-                Secret = "secret",
+                SharedSecret = "secret",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -319,7 +319,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "",
-                Secret = "",
+                SharedSecret = "",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 
@@ -335,7 +335,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             var credential = new ClientCredential
             {
                 ClientId = "no_secret_client",
-                Secret = "",
+                SharedSecret = "",
                 AuthenticationMethod = ClientAuthenticationMethods.Basic
             };
 

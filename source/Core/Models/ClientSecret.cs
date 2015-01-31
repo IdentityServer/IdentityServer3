@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public ClientSecret()
         {
-            ClientSecretType = Constants.ClientSecretTypes.SharedKey;
+            ClientSecretType = Constants.ClientSecretTypes.SharedSecret;
         }
 
         /// <summary>

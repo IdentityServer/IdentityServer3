@@ -38,13 +38,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (secret.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
                 secret.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
-                var secretSha256 = secret.Secret.Sha256();
-                var secretSha512 = secret.Secret.Sha512();
+                var secretSha256 = secret.SharedSecret.Sha256();
+                var secretSha512 = secret.SharedSecret.Sha512();
 
                 foreach (var clientSecret in client.ClientSecrets)
                 {
                     // this validator is only applicable to shared secrets
-                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedKey)
+                    if (clientSecret.ClientSecretType != Constants.ClientSecretTypes.SharedSecret)
                     {
                         continue;
                     }

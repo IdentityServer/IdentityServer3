@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.Basic);
 
             credential.ClientId.Should().Be("client");
-            credential.Secret.Should().Be("secret");
+            credential.SharedSecret.Should().Be("secret");
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.FormPost);
 
             credential.ClientId.Should().Be("client");
-            credential.Secret.Should().Be("secret");
+            credential.SharedSecret.Should().Be("secret");
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
             credential.AuthenticationMethod.Should().Be(ClientAuthenticationMethods.Basic);
 
             credential.ClientId.Should().Be("client");
-            credential.Secret.Should().Be("secret");
+            credential.SharedSecret.Should().Be("secret");
         }
 
         [Fact]
