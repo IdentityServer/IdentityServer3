@@ -113,9 +113,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<Client> ValidateClientCredentialsAsync(ClientCredential credential)
         {
-            if (credential == null || credential.ClientId == null || credential.SharedSecret == null)
+            if (credential == null || 
+                !credential.IsPresent)
             {
-                throw new InvalidOperationException("credential is null");
+                throw new InvalidOperationException("credential is not present");
             }
 
             var client = await _clients.FindClientByIdAsync(credential.ClientId);

@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 if (secret.ClientSecretType == Constants.ClientSecretTypes.X509CertificateThumbprint)
                 {
-                    if (ObfuscatingComparer.IsEqual(thumbprint, secret.Value))
+                    if (ObfuscatingComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
                     {
                         return Task.FromResult(true);
                     }
