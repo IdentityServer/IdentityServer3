@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Extensions;
 using System.ComponentModel;
+using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
 
@@ -27,8 +28,20 @@ namespace Thinktecture.IdentityServer.Core.Validation
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenRevocationRequestValidator
     {
+        private readonly ITokenHandleStore _tokenHandles;
+        private readonly IRefreshTokenStore _refreshTokens;
+
+        public TokenRevocationRequestValidator(ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens)
+        {
+            _tokenHandles = tokenHandles;
+            _refreshTokens = refreshTokens;
+        }
+
         public Task<TokenRevocationRequestValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
+            ////////////////////////////
+            // make sure token is present
+            ///////////////////////////
             var token = parameters.Get("token");
             if (token.IsMissing())
             {
@@ -44,10 +57,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 Token = token
             };
 
+
+            ////////////////////////////
+            // check token type hint
+            ///////////////////////////
             var hint = parameters.Get("token_type_hint");
             if (hint.IsPresent())
             {
-                if (Constants.SupportTokenTypeHints.Contains(hint))
+                if (Constants.SupportedTokenTypeHints.Contains(hint))
                 {
                     result.TokenTypeHint = hint;
                 }

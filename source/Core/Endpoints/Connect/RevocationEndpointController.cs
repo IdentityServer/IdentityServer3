@@ -24,6 +24,7 @@ using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -110,19 +111,73 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             // revoke tokens
             if (result.TokenTypeHint == Constants.TokenTypeHints.AccessToken)
             {
-                await _tokenHandles.RemoveAsync(result.Token);
+                await RevokeAccessTokenAsync(result.Token, client);
             }
             else if (result.TokenTypeHint == Constants.TokenTypeHints.RefreshToken)
             {
-                await _refreshTokens.RemoveAsync(result.Token);
+                await RevokeRefreshTokenAsync(result.Token, client);
             }
             else
             {
-                await _tokenHandles.RemoveAsync(result.Token);
-                await _refreshTokens.RemoveAsync(result.Token);
+                var found = await RevokeAccessTokenAsync(result.Token, client);
+
+                if (!found)
+                {
+                    await RevokeRefreshTokenAsync(result.Token, client);
+                }
             }
 
             return Ok();
+        }
+
+        // revoke access token only if it belongs to client doing the request
+        private async Task<bool> RevokeAccessTokenAsync(string handle, Client client)
+        {
+            var token = await _tokenHandles.GetAsync(handle);
+
+            if (token != null)
+            {
+                if (token.ClientId == client.ClientId)
+                {
+                    await _tokenHandles.RemoveAsync(handle);
+                }
+                else
+                {
+                    var message = string.Format("Client {0} tried to revoke an access token belonging to a different client: {1}", client.ClientId, token.ClientId);
+
+                    Logger.Warn(message);
+                    RaiseFailureEvent(message);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // revoke refresh token only if it belongs to client doing the request
+        private async Task<bool> RevokeRefreshTokenAsync(string handle, Client client)
+        {
+            var token = await _refreshTokens.GetAsync(handle);
+
+            if (token != null)
+            {
+                if (token.ClientId == client.ClientId)
+                {
+                    await _refreshTokens.RemoveAsync(handle);
+                }
+                else
+                {
+                    var message = string.Format("Client {0} tried to revoke a refresh token belonging to a different client: {1}", client.ClientId, token.ClientId);
+                    
+                    Logger.Warn(message);
+                    RaiseFailureEvent(message);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private void RaiseFailureEvent(string error)
