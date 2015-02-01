@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.EnableClientPermissionsEndpoint = true;
             this.EnableCspReportEndpoint = true;
             this.EnableCheckSessionEndpoint = true;
+            this.EnableTokenRevocationEndpoint = true;
         }
 
         /// <summary>
