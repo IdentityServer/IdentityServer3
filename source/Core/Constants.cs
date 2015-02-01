@@ -557,6 +557,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string DiscoveryConfiguration = ".well-known/openid-configuration";
                 public const string DiscoveryWebKeys = ".well-known/jwks";
                 public const string Token = "connect/token";
+                public const string Revocation = "connect/revocation";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
                 public const string IdentityTokenValidation = "connect/identityTokenValidation";
