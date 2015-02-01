@@ -604,7 +604,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string AccessToken  = "access_token";
         }
 
-        public static List<string> SupportTokenTypeHints = new List<string>
+        public static List<string> SupportedTokenTypeHints = new List<string>
         {
             TokenTypeHints.RefreshToken,
             TokenTypeHints.AccessToken
