@@ -579,25 +579,40 @@ namespace Thinktecture.IdentityServer.Core
         public static class OwinEnvironment
         {
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
-            public const string IdentityServerHost = "idsrv:IdentityServerHost";
+            public const string IdentityServerHost     = "idsrv:IdentityServerHost";
 
             public const string AutofacScope = "idsrv:AutofacScope";
-            public const string RequestId = "idsrv:RequestId";
+            public const string RequestId    = "idsrv:RequestId";
         }
         
         public static class Authentication
         {
-            public const string SigninId = "signinid";
+            public const string SigninId                 = "signinid";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
         }
 
         public static class LocalizationCategories
         {
             public const string Messages = "Messages";
-            public const string Events = "Events";
-            public const string Scopes = "Scopes";
+            public const string Events   = "Events";
+            public const string Scopes   = "Scopes";
         }
 
+        public static class TokenTypeHints
+        {
+            public const string RefreshToken = "refresh_token";
+            public const string AccessToken  = "access_token";
+        }
 
+        public static List<string> SupportTokenTypeHints = new List<string>
+        {
+            TokenTypeHints.RefreshToken,
+            TokenTypeHints.AccessToken
+        };
+
+        public static class RevocationErrors
+        {
+            public const string UnsupportedTokenType = "unsupported_token_type";
+        }
     }
 }
