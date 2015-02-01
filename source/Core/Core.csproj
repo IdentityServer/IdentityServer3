@@ -135,6 +135,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
+    <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />
@@ -186,6 +187,7 @@
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
     <Compile Include="Results\CheckSessionResult.cs" />
+    <Compile Include="Results\RevocationErrorResult.cs" />
     <Compile Include="Results\WelcomeActionResult.cs" />
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
@@ -235,6 +237,8 @@
     <Compile Include="Logging\Models\EndSessionRequestValidationLog.cs" />
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
+    <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
+    <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
