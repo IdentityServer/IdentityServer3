@@ -235,12 +235,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (token.Type != Constants.TokenTypes.AccessToken)
             {
                 LogError("Token handle does not resolve to an access token - but instead to: " + token.Type);
+
+                await _tokenHandles.RemoveAsync(tokenHandle);
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
             if (DateTimeOffsetHelper.UtcNow >= token.CreationTime.AddSeconds(token.Lifetime))
             {
                 LogError("Token expired.");
+
+                await _tokenHandles.RemoveAsync(tokenHandle);
                 return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
             }
 
