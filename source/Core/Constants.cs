@@ -558,6 +558,7 @@ namespace Thinktecture.IdentityServer.Core
                 public const string DiscoveryConfiguration = ".well-known/openid-configuration";
                 public const string DiscoveryWebKeys = ".well-known/jwks";
                 public const string Token = "connect/token";
+                public const string Revocation = "connect/revocation";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
                 public const string IdentityTokenValidation = "connect/identityTokenValidation";
@@ -579,25 +580,40 @@ namespace Thinktecture.IdentityServer.Core
         public static class OwinEnvironment
         {
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
-            public const string IdentityServerHost = "idsrv:IdentityServerHost";
+            public const string IdentityServerHost     = "idsrv:IdentityServerHost";
 
             public const string AutofacScope = "idsrv:AutofacScope";
-            public const string RequestId = "idsrv:RequestId";
+            public const string RequestId    = "idsrv:RequestId";
         }
         
         public static class Authentication
         {
-            public const string SigninId = "signinid";
+            public const string SigninId                 = "signinid";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
         }
 
         public static class LocalizationCategories
         {
             public const string Messages = "Messages";
-            public const string Events = "Events";
-            public const string Scopes = "Scopes";
+            public const string Events   = "Events";
+            public const string Scopes   = "Scopes";
         }
 
+        public static class TokenTypeHints
+        {
+            public const string RefreshToken = "refresh_token";
+            public const string AccessToken  = "access_token";
+        }
 
+        public static List<string> SupportedTokenTypeHints = new List<string>
+        {
+            TokenTypeHints.RefreshToken,
+            TokenTypeHints.AccessToken
+        };
+
+        public static class RevocationErrors
+        {
+            public const string UnsupportedTokenType = "unsupported_token_type";
+        }
     }
 }

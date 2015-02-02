@@ -36,6 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.EnableClientPermissionsEndpoint = true;
             this.EnableCspReportEndpoint = true;
             this.EnableCheckSessionEndpoint = true;
+            this.EnableTokenRevocationEndpoint = true;
         }
 
         /// <summary>
@@ -117,5 +118,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <c>true</c> if the check session endpoint is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableCheckSessionEndpoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the token revocation endpoint is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the token revocation endpoint is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableTokenRevocationEndpoint { get; set; }
     }
 }
