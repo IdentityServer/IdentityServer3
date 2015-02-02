@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Extensions;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
@@ -39,6 +40,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public Task<TokenRevocationRequestValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
+            if (parameters == null) throw new ArgumentNullException("parameters");
+            if (client == null) throw new ArgumentNullException("client");
+
             ////////////////////////////
             // make sure token is present
             ///////////////////////////
