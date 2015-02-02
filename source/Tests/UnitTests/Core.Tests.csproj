@@ -151,6 +151,7 @@
     <Compile Include="Conformance\IdentityServerHostTest.cs" />
     <Compile Include="Conformance\NoDataProtector.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
+    <Compile Include="Validation\RevocationRequestValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
