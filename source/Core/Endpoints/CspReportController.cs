@@ -57,7 +57,24 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
+            if (Request.Content.Headers.ContentLength.HasValue && 
+                Request.Content.Headers.ContentLength.Value > Constants.MaxCspReportLength)
+            {
+                var msg = "Request content exceeds max length";
+                Logger.Warn(msg);
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                return BadRequest();
+            }
+
             var json = await Request.Content.ReadAsStringAsync();
+            if (json.Length > Constants.MaxCspReportLength)
+            {
+                var msg = "Request content exceeds max length";
+                Logger.Warn(msg);
+                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                return BadRequest();
+            }
+
             if (json.IsPresent())
             {
                 Logger.InfoFormat("CSP Report data: {0}", json);

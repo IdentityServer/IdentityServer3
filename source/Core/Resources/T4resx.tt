@@ -200,7 +200,7 @@ void RecordEntriesInResourceFile(ProjectItem item, string path)
 			Path = path.Substring(1),
 			File = MakeIntoValidIdentifier(parentFile),
 			Type = fileType,
-			Name = MakeIntoValidIdentifier(entryElement.Attributes["name"].Value)
+			Name = entryElement.Attributes["name"].Value
 		};
 		var valueElement = entryElement.SelectSingleNode("value");
 		if(valueElement != null)
@@ -257,8 +257,10 @@ void EmitNamesConstants(List<string> names)
 {
 	if(names.Any())
 	{
-		foreach(var name in names)
-			WriteLine(string.Format("\t\t\tpublic const string {0} = \"{0}\";", name));
+		foreach(var name in names){
+			//WriteLine(string.Format(@"//{0}", name));
+			WriteLine(string.Format("\t\t\tpublic const string {1} = \"{0}\";", name, MakeIntoValidIdentifier(name)));
+		}
 		names.Clear();
 	}
 }

@@ -71,6 +71,7 @@ namespace Thinktecture.IdentityServer.Core
         public const int MaxUserNameLength = DefaultMaxTokenInputLength;
         public const int MaxPasswordLength = DefaultMaxTokenInputLength;
 
+        public const int MaxCspReportLength = 2000;
 
 
         public static class AuthorizeRequest
