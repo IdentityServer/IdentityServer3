@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (!subject.Identity.IsAuthenticated)
             {
-                Logger.Error("User is anonymous. Aborting logout.");
+                Logger.Warn("User is anonymous. Ignoring end session parameters");
                 return Invalid();
             }
 
