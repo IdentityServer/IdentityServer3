@@ -79,6 +79,34 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 }
             }
 
+            if (claim.ValueType == ClaimValueTypes.Integer ||
+                claim.ValueType == ClaimValueTypes.Integer32)
+            {
+                Int32 value;
+                if (Int32.TryParse(claim.Value, out value))
+                {
+                    return int.Parse(claim.Value);
+                }
+            }
+
+            if (claim.ValueType == ClaimValueTypes.Integer64)
+            {
+                Int64 value;
+                if (Int64.TryParse(claim.Value, out value))
+                {
+                    return value;
+                }
+            }
+
+            if (claim.ValueType == ClaimValueTypes.Boolean)
+            {
+                bool value;
+                if (bool.TryParse(claim.Value, out value))
+                {
+                    return value;
+                }
+            }
+
             return claim.Value;
         }
     }
