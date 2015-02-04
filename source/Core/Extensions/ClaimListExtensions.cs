@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Int32 value;
                 if (Int32.TryParse(claim.Value, out value))
                 {
-                    return int.Parse(claim.Value);
+                    return value;
                 }
             }
 
