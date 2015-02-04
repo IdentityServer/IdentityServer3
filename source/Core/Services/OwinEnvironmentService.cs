@@ -15,6 +15,7 @@
  */
 
 using Microsoft.Owin;
+using System;
 using System.Collections.Generic;
 
 namespace Thinktecture.IdentityServer.Core.Services
@@ -24,11 +25,24 @@ namespace Thinktecture.IdentityServer.Core.Services
     /// </summary>
     public class OwinEnvironmentService
     {
-        readonly IOwinContext _context;
+        readonly IDictionary<string, object> _environment;
 
         internal OwinEnvironmentService(IOwinContext context)
         {
-            _context = context;
+            if (context == null) throw new ArgumentNullException("context");
+
+            _environment = context.Environment;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OwinEnvironmentService"/> class.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        public OwinEnvironmentService(IDictionary<string, object> environment)
+        {
+            if (environment == null) throw new ArgumentNullException("environment");
+
+            _environment = environment;
         }
 
         /// <summary>
@@ -41,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         { 
             get
             {
-                return _context.Environment;
+                return _environment;
             }
         }
     }
