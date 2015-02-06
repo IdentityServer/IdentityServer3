@@ -30,9 +30,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Code Client",
                         Enabled = true,
                         ClientId = "codeclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.AuthorizationCode,
@@ -51,9 +51,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Implicit Client",
                         Enabled = true,
                         ClientId = "implicitclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.Implicit,
@@ -69,9 +69,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Code Client with Scope Restrictions",
                         Enabled = true,
                         ClientId = "codeclient_restricted",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.AuthorizationCode,
@@ -92,9 +92,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Client Credentials Client",
                         Enabled = true,
                         ClientId = "client",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ClientCredentials,
@@ -105,9 +105,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Client Credentials Client (restricted)",
                         Enabled = true,
                         ClientId = "client_restricted",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ClientCredentials,
@@ -122,9 +122,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -134,9 +134,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_absolute_refresh_expiration_one_time_only",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -150,9 +150,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_absolute_refresh_expiration_reuse",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -166,9 +166,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_sliding_refresh_expiration_one_time_only",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -183,9 +183,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client",
                         Enabled = true,
                         ClientId = "roclient_sliding_refresh_expiration_reuse",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -200,9 +200,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client (restricted)",
                         Enabled = true,
                         ClientId = "roclient_restricted",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -217,9 +217,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Resource Owner Client (restricted with refresh)",
                         Enabled = true,
                         ClientId = "roclient_restricted_refresh",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.ResourceOwner,
@@ -235,9 +235,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Custom Grant Client",
                         Enabled = true,
                         ClientId = "customgrantclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.Custom,
@@ -252,9 +252,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Disabled Client",
                         Enabled = false,
                         ClientId = "disabled",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("invalid".Sha256())
+                            new Secret("invalid".Sha256())
                         },
 
                         Flow = Flows.Custom,
@@ -265,9 +265,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
                         Enabled = true,
                         ClientId = "referencetokenclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.Implicit,

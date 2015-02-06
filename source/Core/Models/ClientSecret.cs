@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Models
     /// <summary>
     /// Models a client secret with identifier and expiration
     /// </summary>
-    public class ClientSecret
+    public class Secret
     {
         /// <summary>
         /// Gets or sets the description.
@@ -53,22 +53,22 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// The type of the client secret.
         /// </value>
-        public string ClientSecretType { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// Initializes a new instance of the <see cref="Secret"/> class.
         /// </summary>
-        public ClientSecret()
+        public Secret()
         {
-            ClientSecretType = Constants.ClientSecretTypes.SharedSecret;
+            Type = Constants.SecretTypes.SharedSecret;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientSecret"/> class.
+        /// Initializes a new instance of the <see cref="Secret"/> class.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="expiration">The expiration.</param>
-        public ClientSecret(string value, DateTimeOffset? expiration = null)
+        public Secret(string value, DateTimeOffset? expiration = null)
             : this()
         {
             Value = value;
@@ -76,12 +76,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientSecret" /> class.
+        /// Initializes a new instance of the <see cref="Secret" /> class.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="description">The description.</param>
         /// <param name="expiration">The expiration.</param>
-        public ClientSecret(string value, string description, DateTimeOffset? expiration = null)
+        public Secret(string value, string description, DateTimeOffset? expiration = null)
             : this()
         {
             Description = description;

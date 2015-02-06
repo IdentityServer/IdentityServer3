@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 // check if client secret is still valid
                 if (secret.Expiration.HasExpired()) continue;
 
-                if (secret.ClientSecretType == Constants.ClientSecretTypes.X509CertificateThumbprint)
+                if (secret.Type == Constants.SecretTypes.X509CertificateThumbprint)
                 {
                     if (ObfuscatingComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
                     {
