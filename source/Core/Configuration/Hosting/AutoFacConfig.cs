@@ -105,6 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterType<EndSessionRequestValidator>();
             builder.RegisterType<BearerTokenUsageValidator>();
             builder.RegisterType<ScopeValidator>();
+            builder.RegisterType<TokenRevocationRequestValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();

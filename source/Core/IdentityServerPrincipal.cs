@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
@@ -75,10 +76,20 @@ namespace Thinktecture.IdentityServer.Core
             return new ClaimsPrincipal(id);
         }
 
-        public static ClaimsPrincipal FromSubjectId(string subjectId)
+        public static ClaimsPrincipal FromSubjectId(string subjectId, IEnumerable<Claim> additionalClaims = null)
         {
+            var claims = new List<Claim>
+            {
+                new Claim(Constants.ClaimTypes.Subject, subjectId)
+            };
+
+            if (additionalClaims != null)
+            {
+                claims.AddRange(additionalClaims);
+            }
+
             return Principal.Create(Constants.PrimaryAuthenticationType,
-                new Claim(Constants.ClaimTypes.Subject, subjectId));
+                claims.Distinct(new ClaimComparer()).ToArray());
         }
     }
 }

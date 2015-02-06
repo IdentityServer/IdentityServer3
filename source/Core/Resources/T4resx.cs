@@ -21,6 +21,9 @@ namespace Thinktecture.IdentityServer.Core.Resources
 {
 	public class EventIds
 	{
+			public const string ClientPermissionsRevoked = "ClientPermissionsRevoked";
+			public const string CspReport = "CspReport";
+			public const string ExternalLoginError = "ExternalLoginError";
 			public const string ExternalLoginFailure = "ExternalLoginFailure";
 			public const string ExternalLoginSuccess = "ExternalLoginSuccess";
 			public const string LocalLoginFailure = "LocalLoginFailure";
@@ -30,12 +33,15 @@ namespace Thinktecture.IdentityServer.Core.Resources
 			public const string PartialLoginComplete = "PartialLoginComplete";
 			public const string PreLoginFailure = "PreLoginFailure";
 			public const string PreLoginSuccess = "PreLoginSuccess";
+			public const string ResourceOwnerFlowLoginFailure = "ResourceOwnerFlowLoginFailure";
+			public const string ResourceOwnerFlowLoginSuccess = "ResourceOwnerFlowLoginSuccess";
 	}
 	public class MessageIds
 	{
 			public const string ClientIdRequired = "ClientIdRequired";
 			public const string ExternalProviderError = "ExternalProviderError";
-			public const string Invalid_scope = "Invalid_scope";
+			public const string Invalid_request = "invalid_request";
+			public const string Invalid_scope = "invalid_scope";
 			public const string InvalidUsernameOrPassword = "InvalidUsernameOrPassword";
 			public const string MissingClientId = "MissingClientId";
 			public const string MissingToken = "MissingToken";
@@ -46,22 +52,22 @@ namespace Thinktecture.IdentityServer.Core.Resources
 			public const string NoSubjectFromExternalProvider = "NoSubjectFromExternalProvider";
 			public const string PasswordRequired = "PasswordRequired";
 			public const string SslRequired = "SslRequired";
-			public const string Unauthorized_client = "Unauthorized_client";
+			public const string Unauthorized_client = "unauthorized_client";
 			public const string UnexpectedError = "UnexpectedError";
-			public const string Unsupported_response_type = "Unsupported_response_type";
+			public const string Unsupported_response_type = "unsupported_response_type";
 			public const string UnsupportedMediaType = "UnsupportedMediaType";
 			public const string UsernameRequired = "UsernameRequired";
 	}
 	public class ScopeIds
 	{
-			public const string Address_DisplayName = "Address_DisplayName";
-			public const string All_claims_DisplayName = "All_claims_DisplayName";
-			public const string Email_DisplayName = "Email_DisplayName";
-			public const string Offline_access_DisplayName = "Offline_access_DisplayName";
-			public const string Openid_DisplayName = "Openid_DisplayName";
-			public const string Phone_DisplayName = "Phone_DisplayName";
-			public const string Profile_Description = "Profile_Description";
-			public const string Profile_DisplayName = "Profile_DisplayName";
-			public const string Roles_DisplayName = "Roles_DisplayName";
+			public const string Address_DisplayName = "address_DisplayName";
+			public const string All_claims_DisplayName = "all_claims_DisplayName";
+			public const string Email_DisplayName = "email_DisplayName";
+			public const string Offline_access_DisplayName = "offline_access_DisplayName";
+			public const string Openid_DisplayName = "openid_DisplayName";
+			public const string Phone_DisplayName = "phone_DisplayName";
+			public const string Profile_Description = "profile_Description";
+			public const string Profile_DisplayName = "profile_DisplayName";
+			public const string Roles_DisplayName = "roles_DisplayName";
 	}
 }

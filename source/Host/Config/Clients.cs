@@ -87,6 +87,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         // "simple JS client"
                         "http://localhost:37045/index.html",
+                        "https://localhost:44331/Home/Callback",
 
                         // OAuthJS client
                         "http://localhost:23453/callback.html",
@@ -112,6 +113,7 @@ namespace Thinktecture.IdentityServer.Host.Config
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:23453/index.html",
+                        "http://localhost:21575/index.html"
                     },
                     
                     IdentityTokenLifetime = 360,

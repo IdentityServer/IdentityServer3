@@ -508,7 +508,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // make sure user is enabled
             /////////////////////////////////////////////
-            if (await _users.IsActiveAsync(IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId)) == false)
+            var principal = IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId, refreshToken.AccessToken.Claims);
+
+            if (await _users.IsActiveAsync(principal) == false)
             {
                 var error = "User has been disabled: " + _validatedRequest.RefreshToken.SubjectId;
                 LogError(error);

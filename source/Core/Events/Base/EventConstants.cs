@@ -34,6 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Events
             public const string Authenticate = "authenticate";
             public const string Authorize = "authorize";
             public const string Token = "token";
+            public const string Revocation = "revocation";
             public const string UserInfo = "userinfo";
             public const string EndSession = "endsession";
             public const string AccessTokenValidation = "accesstokenvalidation";
