@@ -1,0 +1,1 @@
+GitReleaseNotes.exe /outputFile RELEASES.md /token %1
