@@ -212,7 +212,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 new Claim(Constants.ClaimTypes.Subject, subject.GetSubjectId()),
                 new Claim(Constants.ClaimTypes.AuthenticationMethod, subject.GetAuthenticationMethod()),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, subject.GetAuthenticationTimeEpoch().ToString()),
+                new Claim(Constants.ClaimTypes.AuthenticationTime, subject.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
                 new Claim(Constants.ClaimTypes.IdentityProvider, subject.GetIdentityProvider()),
             };
 

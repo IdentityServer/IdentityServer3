@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 new Claim(Constants.ClaimTypes.Subject, subject),
                 new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
                 new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString())
+                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer)
             };
 
             if (claims != null && claims.Any())
