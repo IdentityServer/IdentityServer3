@@ -1,4 +1,4 @@
-# 1.1.0 (04 Februar 2015)
+# 1.1.0 (04 Februar 2015) (04 Februar 2015)
 
  - [#878](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/878) - Registration workflow
  - [#877](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/877) - Nuget package for core classes.
@@ -38,7 +38,7 @@
 Commits: [91a698c37e...b352a13332](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/91a698c37e...b352a13332)
 
 
-# 1.0.2 (01 Februar 2015)
+# 1.0.2 (01 Februar 2015) (01 Februar 2015)
 
  - [#855](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/855) - Deriving from LogProvider
  - [#834](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/834) - idp not set in IUserService.IsActiveAsync on validating subject in refresh
@@ -46,7 +46,7 @@ Commits: [91a698c37e...b352a13332](https://github.com/identityserver/Thinktectur
 Commits: [8d9adfa00f...41c0c791be](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/8d9adfa00f...41c0c791be)
 
 
-# 1.0.1 (01 Februar 2015)
+# 1.0.1 (01 Februar 2015) (01 Februar 2015)
 
  - [#856](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/856) - single sign-out multiple applications
  - [#851](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/851) - Sample for Session Management Spec?
@@ -93,7 +93,7 @@ Commits: [8d9adfa00f...41c0c791be](https://github.com/identityserver/Thinktectur
 Commits: [0203fe8147...363c730297](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/0203fe8147...363c730297)
 
 
-# 1.0.0 (24 Januar 2015)
+# 1.0.0 (24 Januar 2015) (24 Januar 2015)
 
  - [#812](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/812) - adding custom controllers to extend functionality
  - [#809](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/809) - Post RTM: Solution for being able to authenticate users from trusted domains outside idsrv domain.
@@ -190,7 +190,7 @@ Commits: [0203fe8147...363c730297](https://github.com/identityserver/Thinktectur
 Commits: [ea7577971e...4a44a9f038](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/ea7577971e...4a44a9f038)
 
 
-# rc (12 Januar 2015)
+# rc (12 Januar 2015) (12 Januar 2015)
 
  - [#747](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/747) - Resolve failed in RequireSSL middleware
  - [#745](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/745) - Registration<T> vs RegistrationType<T>
@@ -268,7 +268,7 @@ Commits: [ea7577971e...4a44a9f038](https://github.com/identityserver/Thinktectur
 Commits: [9508c6d1dd...2c0ef5f7dc](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/9508c6d1dd...2c0ef5f7dc)
 
 
-# beta4-1 (23 Dezember 2014)
+# beta4-1 (23 Dezember 2014) (23 Dezember 2014)
 
  - [#673](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/673) - Configuring Clients and Scopes from a UI
  - [#671](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/671) - Question: Looking for further help with config & SSL trust
@@ -331,7 +331,7 @@ Commits: [9508c6d1dd...2c0ef5f7dc](https://github.com/identityserver/Thinktectur
 Commits: [059fdc1969...5a6dd546ad](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/059fdc1969...5a6dd546ad)
 
 
-# beta4 (14 Dezember 2014)
+# beta4 (14 Dezember 2014) (14 Dezember 2014)
 
  - [#630](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/630) - Resource owner flow - why is a client secret mandatory?
  - [#629](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/629) - Remove OWIN environment from service signatures contributed by Dominick Baier ([leastprivilege](https://github.com/leastprivilege))
@@ -453,7 +453,7 @@ Commits: [84eb9c919a...186117a7cc](https://github.com/identityserver/Thinktectur
 Commits: [daa0137e77...f95470c3d6](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/daa0137e77...f95470c3d6)
 
 
-# beta3-1 (30 Oktober 2014)
+# beta3-1 (30 Oktober 2014) (30 Oktober 2014)
 
  - [#485](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/485) - WebAPI how to send unauthenticated users to IdentityServer?
  - [#484](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/484) - login_hint tenant
@@ -465,7 +465,7 @@ Commits: [daa0137e77...f95470c3d6](https://github.com/identityserver/Thinktectur
 Commits: [8781358744...1328dc0efa](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/8781358744...1328dc0efa)
 
 
-# beta3 (28 Oktober 2014)
+# beta3 (28 Oktober 2014) (28 Oktober 2014)
 
  - [#486](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/486) - Where to put FederationMetadata.xml
  - [#480](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/480) - PFX/Certificate issues when deploying to Windows Server 2012
@@ -516,7 +516,7 @@ Commits: [8781358744...1328dc0efa](https://github.com/identityserver/Thinktectur
 Commits: [454b4f43e7...fa8cd0f631](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/454b4f43e7...fa8cd0f631)
 
 
-# beta_2-1 (14 Oktober 2014)
+# beta_2-1 (14 Oktober 2014) (14 Oktober 2014)
 
  - [#440](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/440) - Is there IRelyingPartyService implementation for EntityFramework? 
  - [#433](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/433) - Question on "RedirectUris"
@@ -570,7 +570,7 @@ Commits: [454b4f43e7...fa8cd0f631](https://github.com/identityserver/Thinktectur
 Commits: [6fcdabbefe...78657c86e1](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/6fcdabbefe...78657c86e1)
 
 
-# beta2 (07 Oktober 2014)
+# beta2 (07 Oktober 2014) (07 Oktober 2014)
 
  - [#419](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/419) - Validate Access Token
  - [#413](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/413) - Add TraceSource log provider
@@ -705,7 +705,7 @@ Commits: [fed70c505e...294320954b](https://github.com/identityserver/Thinktectur
 Commits: [95d59411d0...4d4c5850ba](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/95d59411d0...4d4c5850ba)
 
 
-# beta1 (31 Juli 2014)
+# beta1 (31 Juli 2014) (31 Juli 2014)
 
  - [#260](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/260) - How to? Resource owner flow with Web API.
  - [#253](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/253) - fixes https://github.com/thinktecture/Thinktecture.IdentityServer.v3/issues/252 contributed by Christian Endter ([cendter](https://github.com/cendter))
@@ -873,7 +873,7 @@ Commits: [95d59411d0...4d4c5850ba](https://github.com/identityserver/Thinktectur
 Commits: [3a57dd03d1...2e067896af](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/3a57dd03d1...2e067896af)
 
 
-# WsFed_POC (14 Mai 2014)
+# WsFed_POC (14 Mai 2014) (14 Mai 2014)
 
  - [#90](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/90) - The UserService implementations were not being included in nuget contributed by Ciaran Jessup ([ciaranj](https://github.com/ciaranj))
  - [#89](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/89) - Using Idsrv 3 for in company applications/clients that do not require consent screens.
@@ -891,7 +891,7 @@ Commits: [3a57dd03d1...2e067896af](https://github.com/identityserver/Thinktectur
 Commits: [46ed2c185c...c2b054ac8e](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/46ed2c185c...c2b054ac8e)
 
 
-# SelfContained_Nuget (05 Mai 2014)
+# SelfContained_Nuget (05 Mai 2014) (05 Mai 2014)
 
  - [#70](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/70) - Removed unused string format placeholder. contributed by Chris Simmons ([NetChris](https://github.com/NetChris))
  - [#69](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/69) - Ability to build pre-release package from command line contributed by Damian Hickey ([damianh](https://github.com/damianh))
