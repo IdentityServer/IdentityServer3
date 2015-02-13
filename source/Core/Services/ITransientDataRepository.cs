@@ -53,8 +53,10 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Retrieves all data for a subject identifier.
         /// </summary>
         /// <param name="subject">The subject identifier.</param>
+        /// <param name="offset">Amount of tokens to skip. Defaults to none.</param>
+        /// <param name="take">Maximum amount of tokens to return. Defaults to all.</param>
         /// <returns>A list of token metadata</returns>
-        Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject);
+        Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject, int? offset=null, int? take=null);
 
         /// <summary>
         /// Revokes all data for a client and subject id combination.

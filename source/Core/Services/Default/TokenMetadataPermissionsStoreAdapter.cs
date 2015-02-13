@@ -24,11 +24,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     internal class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
     {
-        readonly Func<string, Task<IEnumerable<ITokenMetadata>>> get;
+        readonly Func<string, int?, int?, Task<IEnumerable<ITokenMetadata>>> get;
         readonly Func<string, string, Task> delete;
 
         public TokenMetadataPermissionsStoreAdapter(
-            Func<string, Task<IEnumerable<ITokenMetadata>>> get, 
+            Func<string, int?, int?, Task<IEnumerable<ITokenMetadata>>> get, 
             Func<string, string, Task> delete)
         {
             if (get == null) throw new ArgumentNullException("get");
