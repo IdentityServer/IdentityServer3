@@ -27,7 +27,7 @@ using Thinktecture.IdentityServer.Core.Results;
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public class WelcomeController : ApiController
+    internal class WelcomeController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [SecurityHeaders]
     [NoCache]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
-    public class EndSessionController : ApiController
+    internal class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

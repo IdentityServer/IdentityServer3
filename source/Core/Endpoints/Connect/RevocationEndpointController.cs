@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.Revocation)]
     [NoCache]
-    public class RevocationEndpointController : ApiController
+    internal class RevocationEndpointController : ApiController
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         
