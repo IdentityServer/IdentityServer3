@@ -352,7 +352,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var externalIdentity = ExternalIdentity.FromClaims(user.Claims);
             if (externalIdentity == null)
             {
-                Logger.Error("no subject or unique identifier claims from external identity provider");
+                var claims = user.Claims.Select(x => new { x.Type, x.Value });
+                Logger.ErrorFormat("no subject or unique identifier claims from external identity provider. Claims provided:\r\n{0}", LogSerializer.Serialize(claims));
                 return await RenderLoginPage(signInMessage, signInId, localizationService.GetMessage(MessageIds.NoMatchingExternalAccount));
             }
 
