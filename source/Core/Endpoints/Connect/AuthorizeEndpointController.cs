@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [SecurityHeaders]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
-    public class AuthorizeEndpointController : ApiController
+    internal class AuthorizeEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

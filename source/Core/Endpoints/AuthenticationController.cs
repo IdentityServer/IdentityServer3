@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
-    public class AuthenticationController : ApiController
+    internal class AuthenticationController : ApiController
     {
         public const int MaxInputParamLength = 100;
 
@@ -67,13 +67,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         public AuthenticationController(
             OwinEnvironmentService owin,
-            IViewService viewService, 
-            IUserService userService, 
-            IdentityServerOptions idSvrOptions, 
-            IClientStore clientStore, 
+            IViewService viewService,
+            IUserService userService,
+            IdentityServerOptions idSvrOptions,
+            IClientStore clientStore,
             IEventService eventService,
             ILocalizationService localizationService,
-            SessionCookie sessionCookie, 
+            SessionCookie sessionCookie,
             MessageCookie<SignInMessage> signInMessageCookie,
             MessageCookie<SignOutMessage> signOutMessageCookie,
             LastUserNameCookie lastUsernameCookie,

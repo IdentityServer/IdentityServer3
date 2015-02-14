@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// OpenID Connect discovery document endpoint
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public class DiscoveryEndpointController : ApiController
+    internal class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;

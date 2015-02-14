@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
-    public class CspReportController : ApiController
+    internal class CspReportController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
