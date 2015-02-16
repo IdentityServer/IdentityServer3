@@ -236,6 +236,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 {
                     reg.As(registration.DependencyType);
                 }
+                switch (registration.Mode)
+                {
+                    case RegistrationMode.Singleton:
+                        // this is the only option when Instance is provided
+                        break;
+                    case RegistrationMode.InstancePerHttpRequest:
+                        throw new InvalidOperationException("RegistrationMode.InstancePerHttpRequest can't be used when an Instance is provided.");
+                    case RegistrationMode.InstancePerUse:
+                        throw new InvalidOperationException("RegistrationMode.InstancePerUse can't be used when an Instance is provided.");
+                }
             }
             else if (registration.Type != null)
             {
@@ -248,6 +258,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 {
                     reg.As(registration.DependencyType);
                 }
+
+                switch(registration.Mode)
+                {
+                    case RegistrationMode.InstancePerHttpRequest:
+                        reg.InstancePerRequest(); break;
+                    case RegistrationMode.Singleton:
+                        reg.SingleInstance(); break;
+                    case RegistrationMode.InstancePerUse:
+                        // this is the default behavior
+                        break;
+                }
             }
             else if (registration.Factory != null)
             {
@@ -259,6 +280,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 else
                 {
                     reg.As(registration.DependencyType);
+                }
+
+                switch (registration.Mode)
+                {
+                    case RegistrationMode.InstancePerHttpRequest:
+                        reg.InstancePerRequest(); break;
+                    case RegistrationMode.InstancePerUse:
+                        // this is the default behavior
+                        break;
+                    case RegistrationMode.Singleton:
+                        throw new InvalidOperationException("RegistrationMode.Singleton can't be used when using a factory function.");
                 }
             }
             else
