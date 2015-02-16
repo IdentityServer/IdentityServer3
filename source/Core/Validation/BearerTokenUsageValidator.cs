@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
