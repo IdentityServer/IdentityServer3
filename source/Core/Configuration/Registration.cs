@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
@@ -25,6 +26,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
     public abstract class Registration
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Registration"/> class.
+        /// </summary>
+        public Registration()
+        {
+            this.Mode = RegistrationMode.InstancePerHttpRequest;
+            this.AdditionalRegistrations = new HashSet<Registration>();
+        }
         /// The type of dependency the registration implements.
         /// </summary>
         /// <value>
@@ -71,8 +79,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The factory.
         /// </value>
         public Func<IDependencyResolver, object> Factory { get; protected set; }
-    }
 
+        /// <summary>
+        /// Gets or sets the additional registrations. This collection allows for a convenience for custom
+        /// registrations rather than using the IdentityServerServiceFactory registrations.
+        /// </summary>
+        /// <value>
+        /// The additional registrations.
+        /// </value>
+        public ICollection<Registration> AdditionalRegistrations { get; set; }
+    }
 
     /// <summary>
     /// Strongly typed <see cref="Registration" /> implementation.

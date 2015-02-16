@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (fact.ViewService == null)
             {
-                fact.ConfigureDefaultViewService(new DefaultViewServiceOptions());
+                fact.ViewService = new DefaultViewServiceRegistration();
             }
             builder.Register(fact.ViewService);
 
@@ -266,6 +266,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var message = "No type or factory found on registration " + registration.GetType().FullName; 
                 Logger.Error(message);
                 throw new InvalidOperationException(message);
+            }
+
+            foreach(var item in registration.AdditionalRegistrations)
+            {
+                builder.Register(item, item.Name);
             }
         }
     }
