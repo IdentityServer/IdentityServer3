@@ -12,6 +12,8 @@ using AuthenticateResult = Thinktecture.IdentityServer.Core.Models.AuthenticateR
 
 namespace Thinktecture.IdentityServer.Core
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Provides a means to login to Identity Server from custom code running on the host.
     /// This is particularly useful for scenarios where you want to log a user in a way that is
@@ -25,10 +27,10 @@ namespace Thinktecture.IdentityServer.Core
 
         private readonly LifetimeScope autofacScope;
 
-        public IdentityServerLogin(IOwinContext owinContext)
+        public IdentityServerLogin(IDictionary<string, object> environment)
         {
-            this.owinContext = owinContext;
-            this.autofacScope = GetAutofacScope(owinContext);
+            this.owinContext = new OwinContext(environment);
+            this.autofacScope = GetAutofacScope(this.owinContext);
         }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core
 
         /// <summary>
         /// This does the mechanics of getting IdSrv to log you in and set an auth cookie
-        /// Basically copy & paste from the auth controller
+        /// Basically copy and paste from the auth controller
         /// This does deliberately not allow persistent cookies
         /// </summary>
         private void SetTheIdSrvAuthCookie(AuthenticateResult p)
