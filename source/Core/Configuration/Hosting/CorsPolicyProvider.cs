@@ -20,20 +20,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal class CorsPolicyProvider : ICorsPolicyProvider
     {
-        readonly CorsPolicy policy;
         readonly string[] paths;
 
-        public CorsPolicyProvider(CorsPolicy policy, IEnumerable<string> allowedPaths)
+        public CorsPolicyProvider(IEnumerable<string> allowedPaths)
         {
-            if (policy == null) throw new ArgumentNullException("policy");
             if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");
 
-            this.policy = policy;
             this.paths = allowedPaths.Select(Normalize).ToArray();
         }
 
@@ -44,21 +43,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 var origin = request.Headers["Origin"];
                 if (origin != null)
                 {
-                    if (policy.AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))
+                    if (await IsOriginAllowed(origin, request.Environment))
                     {
                         return Allow(origin);
                     }
-
-                    if (policy.PolicyCallback != null)
-                    {
-                        if (await policy.PolicyCallback(origin))
-                        {
-                            return Allow(origin);
-                        }
-                    }
                 }
             }
+
             return null;
+        }
+
+        protected virtual async Task<bool> IsOriginAllowed(string origin, IDictionary<string, object> env)
+        {
+            var corsPolicy = env.ResolveDependency<ICorsPolicyService>();
+            return await corsPolicy.IsOriginAllowed(origin);
         }
 
         private bool IsPathAllowed(IOwinRequest request)

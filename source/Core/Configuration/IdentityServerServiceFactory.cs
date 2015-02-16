@@ -273,6 +273,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </value>
         public Registration<IClientSecretValidator> ClientSecretValidator { get; set; }
 
+        /// <summary>
+        /// Gets or sets the CORS policy service.
+        /// </summary>
+        /// <value>
+        /// The CORS policy service.
+        /// </value>
+        public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
+
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");

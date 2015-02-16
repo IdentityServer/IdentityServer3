@@ -197,6 +197,7 @@
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
+    <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
     <Compile Include="Services\Default\HashedClientSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
     <Compile Include="Services\ICache.cs" />
     <Compile Include="Services\IClientSecretValidator.cs" />
+    <Compile Include="Services\ICorsPolicyService.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
