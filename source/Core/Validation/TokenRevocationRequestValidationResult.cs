@@ -21,7 +21,7 @@ using System.Text;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    public class TokenRevocationRequestValidationResult
+    internal class TokenRevocationRequestValidationResult
     {
         public bool IsError { get; set; }
         public string Error { get; set; }
