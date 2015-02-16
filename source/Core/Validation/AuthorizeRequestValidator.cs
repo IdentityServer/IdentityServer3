@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-#pragma warning disable 1591
-
 using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -30,8 +27,7 @@ using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class AuthorizeRequestValidator
+    internal class AuthorizeRequestValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

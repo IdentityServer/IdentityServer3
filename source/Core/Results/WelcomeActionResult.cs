@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using System;
 using Microsoft.Owin;
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;

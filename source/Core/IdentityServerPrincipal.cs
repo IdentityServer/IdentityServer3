@@ -15,8 +15,8 @@
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
