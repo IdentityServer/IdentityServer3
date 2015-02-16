@@ -50,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         public Registration()
         {
-            this.Mode = RegistrationMode.InstancePerHttpRequest;
+            this.Mode = RegistrationMode.InstancePerUse;
             this.AdditionalRegistrations = new HashSet<Registration>();
         }
 
