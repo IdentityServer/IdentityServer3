@@ -51,7 +51,11 @@ namespace Thinktecture.IdentityServer.Tests
             var errors = new List<string>();
             foreach (var type in assembly.GetExportedTypes())
             {
-                errors.AddRange(CheckConstructor(type));
+                //IdentityServerLogin provides an external hook for logging in and takes an IOwinContext
+                if (type != typeof(IdentityServerLogin))
+                {
+                    errors.AddRange(CheckConstructor(type));
+                }
                 //API controllers need to be public if we don't want to rewrite autofac/webapi controller discovery
                 if (type.BaseType != typeof (ApiController))
                 {
