@@ -30,13 +30,15 @@ namespace Owin
             app.Use(async (ctx, next) =>
             {
                 var request = ctx.Request;
-                if (publicOrigin.IsMissing())
+
+                var origin = publicOrigin;
+                if (origin.IsMissing())
                 {
-                    publicOrigin = request.Uri.Scheme + "://" + request.Host.Value;
+                    origin = request.Uri.Scheme + "://" + request.Host.Value;
                 }
-                
-                ctx.Environment.SetIdentityServerHost(publicOrigin);
-                ctx.Environment.SetIdentityServerBasePath(ctx.Request.PathBase.Value.EnsureTrailingSlash());
+
+                ctx.Environment.SetIdentityServerHost(origin);
+                ctx.Environment.SetIdentityServerBasePath(request.PathBase.Value.EnsureTrailingSlash());
 
                 await next();
             });
