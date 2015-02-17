@@ -449,6 +449,23 @@ namespace Thinktecture.IdentityServer.Core
             public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
 
+        public static readonly string[] ProtocolClaimTypes = new string[]
+        {
+            ClaimTypes.Audience,
+            ClaimTypes.Issuer,
+            ClaimTypes.NotBefore,
+            ClaimTypes.Expiration,
+            ClaimTypes.UpdatedAt,
+            ClaimTypes.IssuedAt,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.AuthenticationTime,
+            ClaimTypes.AuthorizedParty,
+            ClaimTypes.AccessTokenHash,
+            ClaimTypes.AuthorizationCodeHash,
+            ClaimTypes.Nonce,
+            ClaimTypes.IdentityProvider
+        };
+
         public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]
         {
             ClaimTypes.Audience,
