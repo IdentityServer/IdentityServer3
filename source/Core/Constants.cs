@@ -497,7 +497,6 @@ namespace Thinktecture.IdentityServer.Core
             ClaimTypes.Scope,
             ClaimTypes.IdentityProvider,
             ClaimTypes.Subject,
-            ClaimTypes.AuthenticationMethod,
             ClaimTypes.IdentityProvider,
             ClaimTypes.AuthenticationTime,
         };
