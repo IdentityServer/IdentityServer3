@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
 
@@ -61,32 +62,8 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 from client in clients
                 where client.Flow == Flows.Hybrid || client.Flow == Flows.Implicit
                 from url in client.RedirectUris
-                select GetOrigin(url);
+                select url.GetOrigin();
             return query;
-        }
-
-        /// <summary>
-        /// Gets the origin from the URL.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        /// <returns></returns>
-        protected string GetOrigin(string url)
-        {
-            if (url != null && (url.StartsWith("http://") || url.StartsWith("https://")))
-            {
-                var idx = url.IndexOf("//");
-                if (idx > 0)
-                {
-                    idx = url.IndexOf("/", idx + 2);
-                    if (idx >= 0)
-                    {
-                        url = url.Substring(0, idx);
-                    }
-                    return url;
-                }
-            }
-            
-            return null;
         }
     }
 }
