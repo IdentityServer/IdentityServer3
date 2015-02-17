@@ -208,6 +208,7 @@
     <Compile Include="Services\ICorsPolicyService.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
+    <Compile Include="Services\InMemory\InMemoryClientCorsPolicyService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
