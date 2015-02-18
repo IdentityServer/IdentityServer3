@@ -46,9 +46,6 @@
     <DocumentationFile>..\..\build\Thinktecture.IdentityServer.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AntiXssLibrary">
-      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\AntiXssLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
@@ -56,9 +53,6 @@
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlSanitizationLibrary">
-      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -165,6 +159,18 @@
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\CodeChartHelper.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\Lower.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\LowerMiddle.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\Middle.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\Upper.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts\UpperMiddle.cs" />
+    <Compile Include="Internal\AntiXssLibrary\EncoderUtil.cs" />
+    <Compile Include="Internal\AntiXssLibrary\SafeList.cs" />
+    <Compile Include="Internal\AntiXssLibrary\UnicodeCharacterEncoder.cs" />
+    <Compile Include="Internal\AntiXssLibrary\CodeCharts.cs" />
+    <Compile Include="Internal\AntiXssLibrary\Encoder.cs" />
+    <Compile Include="Internal\AntiXssLibrary\Utf16StringReader.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
