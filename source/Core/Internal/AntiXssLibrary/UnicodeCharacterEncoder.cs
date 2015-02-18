@@ -28,7 +28,7 @@ namespace Microsoft.Security.Application
     /// <summary>
     /// Provides HTML encoding methods.
     /// </summary>
-    public static class UnicodeCharacterEncoder
+    internal static class UnicodeCharacterEncoder
     {
         /// <summary>
         /// The HTML escaped value for a space, used in attribute encoding.

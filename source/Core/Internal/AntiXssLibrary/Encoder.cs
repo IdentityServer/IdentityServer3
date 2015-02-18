@@ -42,7 +42,7 @@ namespace Microsoft.Security.Application
     /// techniques. It is suitable for applications with high security 
     /// requirements.
     /// </remarks>
-    public static class Encoder
+    internal static class Encoder
     {
         /// <summary>
         /// Encodes input strings for use in HTML.

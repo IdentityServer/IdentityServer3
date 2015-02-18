@@ -27,7 +27,7 @@ namespace Microsoft.Security.Application
     /// Values for the lowest section of the UTF8 Unicode code tables, from U0000 to U0FFF.
     /// </summary>
     [Flags]
-    public enum LowerCodeCharts : long
+    internal enum LowerCodeCharts : long
     {
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
@@ -231,7 +231,7 @@ namespace Microsoft.Security.Application
     /// Values for the lower-mid section of the UTF8 Unicode code tables, from U1000 to U1EFF.
     /// </summary>
     [Flags]
-    public enum LowerMidCodeCharts : long
+    internal enum LowerMidCodeCharts : long
     {
         /// <summary>
         /// No code charts from the lower-mid region of the Unicode tables are safe-listed.
@@ -429,7 +429,7 @@ namespace Microsoft.Security.Application
     /// Values for the middle section of the UTF8 Unicode code tables, from U1F00 to U2DDF
     /// </summary>
     [Flags]
-    public enum MidCodeCharts : long
+    internal enum MidCodeCharts : long
     {
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
@@ -627,7 +627,7 @@ namespace Microsoft.Security.Application
     /// Values for the upper middle section of the UTF8 Unicode code tables, from U2DE0 to UA8DF
     /// </summary>
     [Flags]
-    public enum UpperMidCodeCharts : long
+    internal enum UpperMidCodeCharts : long
     {
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
@@ -827,7 +827,7 @@ namespace Microsoft.Security.Application
     /// Values for the upper section of the UTF8 Unicode code tables, from UA8E0 to UFFFD
     /// </summary>
     [Flags]
-    public enum UpperCodeCharts
+    internal enum UpperCodeCharts
     {
         /// <summary>
         /// No code charts from the upper region of the Unicode tables are safe-listed.
