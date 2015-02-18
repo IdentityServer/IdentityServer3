@@ -449,7 +449,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
 
-        public static readonly string[] ProtocolClaimTypes = new string[]
+        public static readonly string[] ClaimsProviderFilerClaimTypes = new string[]
         {
             ClaimTypes.Audience,
             ClaimTypes.Issuer,

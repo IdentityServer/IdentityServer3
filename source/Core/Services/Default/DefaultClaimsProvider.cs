@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 Logger.Info("All claims rule found - emitting all claims for user.");
 
-                var claims = await _users.GetProfileDataAsync(subject);
+                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             if (additionalClaims.Count > 0)
             {
-                var claims = await _users.GetProfileDataAsync(subject, additionalClaims);
+                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -162,7 +162,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 // if a include all claims rule exists, call the user service without a claims filter
                 if (scopes.IncludesAllClaimsForUserRule(ScopeType.Resource))
                 {
-                    var claims = await _users.GetProfileDataAsync(subject);
+                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -190,7 +190,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 if (additionalClaims.Count > 0)
                 {
-                    var claims = await _users.GetProfileDataAsync(subject, additionalClaims.Distinct());
+                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims.Distinct()));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -233,5 +233,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             return claims;
         }
-    }
+
+        /// <summary>
+        /// Filters out protocol claims like amr, nonce etc..
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <returns></returns>
+        protected virtual IEnumerable<Claim> FilterProtocolClaims(IEnumerable<Claim> claims)
+        {
+            return claims.Where(x => !Constants.ClaimsProviderFilerClaimTypes.Contains(x.Type));
+        }
+     }
 }
