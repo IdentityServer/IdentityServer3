@@ -301,6 +301,20 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_ClientHasDisableLocalLogin_HasSingleProvider_RedirectsToProvider()
+        {
+            var client = clients.First();
+            client.EnableLocalLogin = false;
+            client.IdentityProviderRestrictions = new List<string>
+            {
+                "Google"
+            };
+            var resp = GetLoginPage();
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith(Url(Constants.RoutePaths.LoginExternal) + "?provider=Google").Should().BeTrue();
+        }
+
+        [Fact]
         public void GetLogin_DisableLocalLoginMultipleProvidersClientHasMultipleProviderRestriction_DisplaysLoginPage()
         {
             options.AuthenticationOptions.EnableLocalLogin = false;
