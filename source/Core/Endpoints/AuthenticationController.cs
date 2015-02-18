@@ -180,7 +180,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoSignInCookie));
             }
 
-            if (!(await IsLocalLoginAllowed(signInMessage)))
+            if (!(await IsLocalLoginAllowedForClient(signInMessage)))
             {
                 Logger.ErrorFormat("Login not allowed for client {0}", signInMessage.ClientId);
                 return RenderErrorPage();
@@ -697,17 +697,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
         }
 
-        async Task<bool> IsLocalLoginAllowed(SignInMessage message)
+        async Task<bool> IsLocalLoginAllowedForClient(SignInMessage message)
         {
-            if (this.options.AuthenticationOptions.EnableLocalLogin)
+            if (message != null && message.ClientId.IsPresent())
             {
-                if (message != null && message.ClientId.IsPresent())
+                var client = await clientStore.FindClientByIdAsync(message.ClientId);
+                if (client != null)
                 {
-                    var client = await clientStore.FindClientByIdAsync(message.ClientId);
-                    if (client != null)
-                    {
-                        if (client.EnableLocalLogin == false) return false;
-                    }
+                    return client.EnableLocalLogin;
                 }
             }
 
@@ -720,7 +717,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             username = GetUserNameForLoginPage(message, username);
 
-            var loginAllowed = await IsLocalLoginAllowed(message);
+            var isLocalLoginAllowedForClient = await IsLocalLoginAllowedForClient(message);
+            var isLocalLoginAllowed = isLocalLoginAllowedForClient && options.AuthenticationOptions.EnableLocalLogin;
 
             var idpRestrictions = await clientStore.GetIdentityProviderRestrictionsAsync(message.ClientId);
             var providers = context.GetExternalAuthenticationProviders(idpRestrictions);
@@ -733,9 +731,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                if (options.AuthenticationOptions.EnableLocalLogin == false)
+                if (isLocalLoginAllowed == false)
                 {
-                    Logger.Info("local login disabled");
+                    if (options.AuthenticationOptions.EnableLocalLogin)
+                    {
+                        Logger.Info("local login disabled");
+                    }
+                    if (isLocalLoginAllowedForClient)
+                    {
+                        Logger.Info("local login disabled for the client");
+                    }
 
                     string url = null;
 
@@ -775,7 +780,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 ExternalProviders = visibleLinks,
                 AdditionalLinks = loginPageLinks,
                 ErrorMessage = errorMessage,
-                LoginUrl = loginAllowed ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
+                LoginUrl = isLocalLoginAllowed ? Url.Route(Constants.RouteNames.Login, new { signin = signInMessageId }) : null,
                 AllowRememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe,
                 RememberMe = options.AuthenticationOptions.CookieOptions.AllowRememberMe && rememberMe,
                 CurrentUser = context.GetCurrentUserDisplayName(),
