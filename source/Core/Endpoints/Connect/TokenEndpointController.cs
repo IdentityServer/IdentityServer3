@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
-    public class TokenEndpointController : ApiController
+    internal class TokenEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

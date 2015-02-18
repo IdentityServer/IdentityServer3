@@ -15,15 +15,53 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
     /// <summary>
+    /// Indicates in mode in which the DI system instantiates the dependency.
+    /// </summary>
+    public enum RegistrationMode
+    {
+        /// <summary>
+        /// The dependency is instantiated per HTTP request.
+        /// </summary>
+        InstancePerHttpRequest = 0,
+        
+        /// <summary>
+        /// The dependency is instantiated per use (or per location it is used).
+        /// </summary>
+        InstancePerUse = 1,
+        /// <summary>
+        /// The dependency is instantiated once for the lifetime of the application.
+        /// </summary>
+        Singleton = 2
+    }
+
+    /// <summary>
     /// Models the registration of a dependency within the IdentityServer dependency injection system.
     /// </summary>
     public abstract class Registration
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Registration"/> class.
+        /// </summary>
+        public Registration()
+        {
+            this.Mode = RegistrationMode.InstancePerUse;
+            this.AdditionalRegistrations = new HashSet<Registration>();
+        }
+
+        /// <summary>
+        /// Gets or sets the instantiation mode of the registration.
+        /// </summary>
+        /// <value>
+        /// The instantiation mode of the registration.
+        /// </value>
+        public RegistrationMode Mode { get; set; }
+
         /// <summary>
         /// The type of dependency the registration implements.
         /// </summary>
@@ -71,8 +109,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The factory.
         /// </value>
         public Func<IDependencyResolver, object> Factory { get; protected set; }
-    }
 
+        /// <summary>
+        /// Gets or sets the additional registrations. This collection allows for a convenience for custom
+        /// registrations rather than using the IdentityServerServiceFactory registrations.
+        /// </summary>
+        /// <value>
+        /// The additional registrations.
+        /// </value>
+        public ICollection<Registration> AdditionalRegistrations { get; set; }
+    }
 
     /// <summary>
     /// Strongly typed <see cref="Registration" /> implementation.
@@ -143,6 +189,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
             this.Instance = singleton;
             this.Name = name;
+            this.Mode = RegistrationMode.Singleton;
         }
 
         internal Registration(Registration<T> registration, string name)
@@ -150,6 +197,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (registration == null) throw new ArgumentNullException("registration");
             if (name == null) throw new ArgumentNullException("name");
 
+            this.Mode = registration.Mode;
             this.Type = registration.Type;
             this.Factory = registration.Factory;
             this.Instance = registration.Instance;

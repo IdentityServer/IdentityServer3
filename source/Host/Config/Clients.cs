@@ -102,6 +102,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                         // JavaScript client
                         "http://localhost:21575/index.html",
+                        "http://localhost:21575/silent_renew.html",
 
                         // MVC form post sample
                         "http://localhost:11716/account/signInCallback",

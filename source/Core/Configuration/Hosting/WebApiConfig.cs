@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -32,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
             config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
-
+            config.Services.Replace(typeof(IHttpControllerTypeResolver), new HttpControllerTypeResolver());
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.LocalOnly;
@@ -54,6 +59,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             }
 
             return config;
+        }
+
+        private class HttpControllerTypeResolver : IHttpControllerTypeResolver
+        {
+            public ICollection<Type> GetControllerTypes(IAssembliesResolver _)
+            {
+                var httpControllerType = typeof (IHttpController);
+                return typeof (WebApiConfig)
+                    .Assembly
+                    .GetTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract && httpControllerType.IsAssignableFrom(t))
+                    .ToList();
+            }
         }
     }
 }

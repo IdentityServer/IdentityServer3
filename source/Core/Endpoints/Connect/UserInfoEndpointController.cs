@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
-    public class UserInfoEndpointController : ApiController
+    internal class UserInfoEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

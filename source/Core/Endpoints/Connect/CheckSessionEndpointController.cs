@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// <summary>
     /// Check session iframe endpoint
     /// </summary>
-    public class CheckSessionEndpointController : ApiController
+    internal class CheckSessionEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;

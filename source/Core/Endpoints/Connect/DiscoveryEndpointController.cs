@@ -36,7 +36,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     /// OpenID Connect discovery document endpoint
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public class DiscoveryEndpointController : ApiController
+    internal class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;
@@ -113,6 +113,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 dto.check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CheckSession;
             }
 
+            if (_options.Endpoints.EnableTokenRevocationEndpoint)
+            {
+                dto.revocation_endpoint = baseUrl + Constants.RoutePaths.Oidc.Revocation;
+            }
+
             if (_options.SigningCertificate != null)
             {
                 dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
@@ -175,6 +180,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             public string userinfo_endpoint { get; set; }
             public string end_session_endpoint { get; set; }
             public string check_session_iframe { get; set; }
+            public string revocation_endpoint { get; set; }
             public string[] scopes_supported { get; set; }
             public string[] response_types_supported { get; set; }
             public string[] response_modes_supported { get; set; }
