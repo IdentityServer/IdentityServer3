@@ -31,6 +31,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        Task<bool> IsOriginAllowed(string origin);
+        Task<bool> IsOriginAllowedAsync(string origin);
     }
 }

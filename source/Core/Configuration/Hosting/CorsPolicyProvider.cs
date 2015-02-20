@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         protected virtual async Task<bool> IsOriginAllowed(string origin, IDictionary<string, object> env)
         {
             var corsPolicy = env.ResolveDependency<ICorsPolicyService>();
-            return await corsPolicy.IsOriginAllowed(origin);
+            return await corsPolicy.IsOriginAllowedAsync(origin);
         }
 
         private bool IsPathAllowed(IOwinRequest request)

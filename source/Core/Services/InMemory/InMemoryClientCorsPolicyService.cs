@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     /// <summary>
     /// CORS policy service that configures the allowed origins from a list of clients' redirect URLs.
     /// </summary>
-    public class InMemoryClientCorsPolicyService : DefaultCorsPolicyService
+    internal class InMemoryClientCorsPolicyService : DefaultCorsPolicyService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryClientCorsPolicyService"/> class.

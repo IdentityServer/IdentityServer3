@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        public async Task<bool> IsOriginAllowed(string origin)
+        public async Task<bool> IsOriginAllowedAsync(string origin)
         {
             if (AllowAll)
             {
