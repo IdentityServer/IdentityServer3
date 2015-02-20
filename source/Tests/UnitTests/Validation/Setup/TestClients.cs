@@ -66,6 +66,25 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     },
                     new Client
                     {
+                        ClientName = "Implicit and Client Credentials Client",
+                        Enabled = true,
+                        ClientId = "implicit_and_client_creds_client",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret".Sha256())
+                        },
+
+                        Flow = Flows.Implicit,
+                        AllowClientCredentialsFlow = true,
+                        RequireConsent = false,
+                    
+                        RedirectUris = new List<string>
+                        {
+                            "oob://implicit/cb"
+                        },
+                    },
+                    new Client
+                    {
                         ClientName = "Code Client with Scope Restrictions",
                         Enabled = true,
                         ClientId = "codeclient_restricted",

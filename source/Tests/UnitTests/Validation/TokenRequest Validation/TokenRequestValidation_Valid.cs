@@ -129,6 +129,23 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
+        public async Task Valid_ClientCredentials_Request_for_ImplicitClient_with_AllowClientCredentials_Flag()
+        {
+            var client = await _clients.FindClientByIdAsync("implicit_and_client_creds_client");
+
+            var validator = Factory.CreateTokenRequestValidator();
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeFalse();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Valid_ClientCredentials_Request_Restricted_Client()
         {
             var client = await _clients.FindClientByIdAsync("client_restricted");
