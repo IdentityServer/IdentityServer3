@@ -847,7 +847,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 SiteUrl = baseUrl,
                 IFrameUrls = iframeUrls,
                 ClientName = clientName,
-                RedirectUrl = redirectUrl
+                RedirectUrl = redirectUrl,
+                AutoRedirect = options.AuthenticationOptions.EnablePostSignOutAutoRedirect,
+                AutoRedirectDelay = options.AuthenticationOptions.PostSignOutAutoRedirectDelay
             };
             return new LoggedOutActionResult(viewService, loggedOutModel);
         }
