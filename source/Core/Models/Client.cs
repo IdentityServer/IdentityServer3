@@ -76,7 +76,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// <c>true</c> if client credentials flow is allowed; otherwise, <c>false</c>.
         /// </value>
-        public bool AllowClientCredentialsFlow { get; set; }
+        public bool AllowClientCredentialsOnly { get; set; }
 
         /// <summary>
         /// Specifies allowed URIs to return tokens or authorization codes to

@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Implicit,
-                        AllowClientCredentialsFlow = true,
+                        AllowClientCredentialsOnly = true,
                         RequireConsent = false,
                     
                         RedirectUris = new List<string>

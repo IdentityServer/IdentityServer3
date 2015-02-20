@@ -286,7 +286,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
             {
-                if (_validatedRequest.Client.AllowClientCredentialsFlow == false)
+                if (_validatedRequest.Client.AllowClientCredentialsOnly == false)
                 {
                     LogError("Client not authorized for client credentials flow");
                     return Invalid(Constants.TokenErrors.UnauthorizedClient);
