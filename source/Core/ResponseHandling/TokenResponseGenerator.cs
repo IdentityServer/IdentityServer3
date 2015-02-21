@@ -35,11 +35,13 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenService _refreshTokenService;
+        private readonly IScopeStore _scopes;
        
-        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService)
+        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, IScopeStore scopes)
         {
             _tokenService = tokenService;
             _refreshTokenService = refreshTokenService;
+            _scopes = scopes;
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
@@ -131,12 +133,30 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
             oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
 
-            var newAccessToken = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+            string accessTokenString;
+            if (request.Client.UpdateClaimsOnRefreshTokenRefresh == false)
+            {
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+            }
+            else
+            {
+                var creationRequest = new TokenCreationRequest
+                {
+                    Client = request.Client,
+                    Subject = request.Subject,
+                    ValidatedRequest = request,
+                    Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes)
+                };
+
+                var newAccessToken = await _tokenService.CreateAccessTokenAsync(creationRequest);
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(newAccessToken);
+            }
+
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);
 
             return new TokenResponse
                 {
-                    AccessToken = newAccessToken,
+                    AccessToken = accessTokenString,
                     AccessTokenLifetime = request.Client.AccessTokenLifetime,
                     RefreshToken = handle
                 };
