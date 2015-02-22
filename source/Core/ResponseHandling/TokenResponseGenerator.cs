@@ -134,10 +134,13 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             
             if (request.Client.UpdateAccessTokenOnRefresh)
             {
+                // re-create original subject
+                var subject = IdentityServerPrincipal.FromClaims(oldAccessToken.Claims, allowMissing: true);
+
                 var creationRequest = new TokenCreationRequest
                 {
                     Client = request.Client,
-                    Subject = request.Subject,
+                    Subject = subject,
                     ValidatedRequest = request,
                     Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes)
                 };
