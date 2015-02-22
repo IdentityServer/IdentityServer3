@@ -130,15 +130,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             Logger.Info("Processing refresh token request");
 
             var oldAccessToken = request.RefreshToken.AccessToken;
-            oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
-            oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
-
             string accessTokenString;
-            if (request.Client.UpdateClaimsOnRefreshTokenRefresh == false)
-            {
-                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
-            }
-            else
+            
+            if (request.Client.UpdateAccessTokenOnRefresh)
             {
                 var creationRequest = new TokenCreationRequest
                 {
@@ -150,6 +144,13 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
                 var newAccessToken = await _tokenService.CreateAccessTokenAsync(creationRequest);
                 accessTokenString = await _tokenService.CreateSecurityTokenAsync(newAccessToken);
+            }
+            else
+            {
+                oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
+                oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
+
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
             }
 
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);
