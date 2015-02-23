@@ -1,7 +1,19 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014, 2015 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +21,37 @@ using System.Security.Claims;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
+    /// <summary>
+    /// Models the identity of a user authenticating from an external identity provider.
+    /// </summary>
     public class ExternalIdentity
     {
-        public IdentityProvider Provider { get; set; }
+        /// <summary>
+        /// Identifier of the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
+        public string Provider { get; set; }
+
+
+        /// <summary>
+        /// User's unique identifier provided by the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The provider identifier.
+        /// </value>
         public string ProviderId { get; set; }
+
+        /// <summary>
+        /// Claims supplied for the user from the external identity provider.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
         public IEnumerable<Claim> Claims { get; set; }
 
-        public static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
+        internal static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
         {
             if (claims == null) throw new ArgumentNullException("claims");
 
@@ -30,11 +66,11 @@ namespace Thinktecture.IdentityServer.Core.Models
                 }
             }
 
-            claims = claims.Except(new Claim[] { subClaim });
+            claims = claims.Except(new[] { subClaim });
             
             return new ExternalIdentity
             {
-                Provider = new IdentityProvider { Name = subClaim.Issuer },
+                Provider = subClaim.Issuer,
                 ProviderId = subClaim.Value,
                 Claims = claims
             };

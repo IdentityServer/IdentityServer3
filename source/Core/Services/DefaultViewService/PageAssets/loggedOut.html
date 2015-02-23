@@ -1,0 +1,11 @@
+﻿<div class="page-header">
+    <h1>
+        Logout
+        <small>You are now logged out</small>
+    </h1>
+    <div ng-show="model.redirectUrl">
+        Click <a ng-href="{{model.redirectUrl}}">here</a> to return to the
+        <span ng-bind="model.clientName"></span> application.
+    </div>
+    <iframe class="signout" ng-repeat="url in model.iFrameUrls" ng-src="{{url}}"></iframe>
+</div>

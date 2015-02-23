@@ -1,0 +1,89 @@
+﻿body {
+  margin-top: 65px;
+}
+[ng-cloak] {
+  display: none;
+}
+.page-error .request-id {
+  margin-left: 20px;
+  font-size: 80%;
+  font-weight: bold;
+}
+.page-error .request-id span {
+  font-weight: normal;
+}
+.page-login .list-unstyled {
+  margin-left: 25px;
+}
+.page-login .list-unstyled li {
+  margin-bottom: 10px;
+}
+.page-login .login-remember {
+  padding-left: 16px;
+}
+.page-login .login-remember input {
+  margin-right: 5px;
+}
+.page-login .external-providers li:first-child {
+  padding-left: 5px;
+}
+.page-login .external-providers li {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.page-loggedOut iframe.signout {
+  display: none;
+}
+.page-consent .client-logo {
+  float: left;
+}
+.page-consent .client-logo img {
+  width: 80px;
+  height: 80px;
+}
+.page-consent .consent-buttons {
+  margin-top: 25px;
+}
+.page-consent .consent-form .consent-scopecheck {
+  display: inline-block;
+  margin-right: 5px;
+}
+.page-consent .consent-form .consent-description {
+  margin-left: 25px;
+}
+.page-consent .consent-form .consent-description label {
+  font-weight: normal;
+}
+.page-consent .consent-form .consent-remember {
+  padding-left: 16px;
+}
+.page-permissions .page-header {
+  margin-bottom: 10px;
+}
+.page-permissions .permissions .permission {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid lightgray;
+}
+.page-permissions .permissions .permission img {
+  width: 100px;
+  height: 100px;
+}
+.page-permissions .permissions .permission .permission-clientname {
+  font-size: 140%;
+  font-weight: bold;
+}
+.page-permissions .permissions .permission .permission-type {
+  font-size: 120%;
+  font-weight: bold;
+}
+.page-permissions .permissions .permission li {
+  list-style-type: none;
+  display: inline;
+}
+.page-permissions .permissions .permission li:after {
+  content: ', ';
+}
+.page-permissions .permissions .permission li:last-child:after {
+  content: '';
+}

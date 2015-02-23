@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Check Session IFrame</title>
+</head>
+<body>
+    <script id="cookie-name" type="application/json">{cookieName}</script>
+    <script src="{rootUrl}/assets/app.crypto.min.js"></script>
+    <script>
+        function getCookies() {
+            var allCookies = document.cookie;
+            var cookies = allCookies.split(';');
+            return cookies.map(function (value) {
+                var parts = value.trim().split('=');
+                if (parts.length === 2) {
+                    return {
+                        name: parts[0].trim(),
+                        value: parts[1].trim()
+                    };
+                }
+            }).filter(function (item) {
+                return item && item.name && item.value;
+            });
+        }
+
+        function getBrowserSessionId() {
+            var cookies = getCookies().filter(function (cookie) {
+                return (cookie.name == cookieName);
+            });
+            return cookies[0] && cookies[0].value;
+        }
+
+        function hash(value) {
+            var hash = KJUR.crypto.Util.sha256(value);
+            return hextob64u(hash);
+        }
+
+        function computeSessionStateHash(clientId, origin, sessionId, salt) {
+            return hash(clientId + origin + sessionId + salt);
+        }
+
+        function calculateSessionStateResult(origin, message) {
+            try {
+                if (!origin || !message) {
+                    return "error";
+                }
+
+                var messageParts = message.split(' ');
+                if (messageParts.length !== 2) {
+                    return "error";
+                }
+
+                var clientId = messageParts[0];
+                var sessionState = messageParts[1];
+                if (!clientId || !sessionState) {
+                    return "error";
+                }
+
+                var sessionStateParts = sessionState.split('.');
+                if (sessionStateParts.length !== 2) {
+                    return "error";
+                }
+
+                var clientHash = sessionStateParts[0];
+                var salt = sessionStateParts[1];
+                if (!clientHash || !salt) {
+                    return "error";
+                }
+
+                var currentSessionId = getBrowserSessionId();
+                var expectedHash = computeSessionStateHash(clientId, origin, currentSessionId, salt);
+                return clientHash === expectedHash ? "unchanged" : "changed";
+            }
+            catch(e) {
+                return "error";
+            }
+        }
+
+        var cookieName = document.getElementById("cookie-name").textContent.trim();
+
+        if (cookieName && window.parent !== window) {
+            window.addEventListener("message", function (e) {
+                var result = calculateSessionStateResult(e.origin, e.data);
+                e.source.postMessage(result, e.origin);
+            }, false);
+        }
+    </script>
+</body>
+</html>

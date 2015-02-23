@@ -1,26 +1,78 @@
 ﻿/*
- * Copyright (c) Dominick Baier, Brock Allen.  All rights reserved.
- * see license
+ * Copyright 2014, 2015 Dominick Baier, Brock Allen
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using Thinktecture.IdentityServer.Core.Models;
+
+#pragma warning disable 1591
 
 namespace Thinktecture.IdentityServer.Core
 {
     public static class Constants
     {
-        public const string IdentityServerName = "Thinktecture IdentityServer v3";
+        public const string IdentityServerName = "Thinktecture IdentityServer3";
         
-        public const string PrimaryAuthenticationType = "idsrv";
-        public const string ExternalAuthenticationType = "idsrv.external";
+        public const string PrimaryAuthenticationType       = "idsrv";
+        public const string ExternalAuthenticationType      = "idsrv.external";
         public const string PartialSignInAuthenticationType = "idsrv.partial";
+        
+        internal static readonly string[] IdentityServerAuthenticationTypes = new string[]
+        {
+            PrimaryAuthenticationType,
+            ExternalAuthenticationType,
+            PartialSignInAuthenticationType
+        };
+        
         public const string BuiltInIdentityProvider         = "idsrv";
 
-        public const string AccessTokenAudience             = "{0}/resources";
+        public const string AccessTokenAudience             = "{0}resources";
 
         public static readonly TimeSpan DefaultCookieTimeSpan = TimeSpan.FromHours(10);
         public static readonly TimeSpan ExternalCookieTimeSpan = TimeSpan.FromMinutes(10);
+        public static readonly TimeSpan DefaultRememberMeDuration = TimeSpan.FromDays(30);
+
+        public static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
+
+        // the limit after which old messages are purged
+        public const int SignInMessageThreshold = 5;
+
+        public const string DefaultHashAlgorithm = "SHA256";
+
+        public const string ScopeDisplayNameSuffix = "_DisplayName";
+        public const string ScopeDescriptionSuffix = "_Description";
+
+        public const int DefaultMaxAuthorizeInputLength = 100;
+        public const int DefaultMaxTokenInputLength = 100;
+
+        public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxScopeLength = 300;
+        public const int MaxRedirectUriLength = 400;
+        public const int MaxNonceLength = 300;
+        public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
+        public const int MaxAcrValuesLength = 300;
+        
+        public const int MaxGrantTypeLength = DefaultMaxTokenInputLength;
+        public const int MaxUserNameLength = DefaultMaxTokenInputLength;
+        public const int MaxPasswordLength = DefaultMaxTokenInputLength;
+
+        public const int MaxCspReportLength = 2000;
+
 
         public static class AuthorizeRequest
         {
@@ -52,6 +104,13 @@ namespace Thinktecture.IdentityServer.Core
             public const string Scope        = "scope";
             public const string UserName     = "username";
             public const string Password     = "password";
+        }
+
+        public static class EndSessionRequest
+        {
+            public const string IdTokenHint           = "id_token_hint";
+            public const string PostLogoutRedirectUri = "post_logout_redirect_uri";
+            public const string State                 = "state";
         }
 
         public static class TokenResponse
@@ -89,10 +148,18 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class ResponseTypes
         {
+            // authorization code flow
+            public const string Code = "code";
+
+            // implicit flow
             public const string Token        = "token";
             public const string IdToken      = "id_token";
             public const string IdTokenToken = "id_token token";
-            public const string Code         = "code";
+            
+            // hybrid flow
+            public const string CodeIdToken      = "code id_token";
+            public const string CodeToken        = "code token";
+            public const string CodeIdTokenToken = "code id_token token";
         }
 
         public static readonly List<string> SupportedResponseTypes = new List<string> 
@@ -100,17 +167,64 @@ namespace Thinktecture.IdentityServer.Core
                                 ResponseTypes.Code,
                                 ResponseTypes.Token,
                                 ResponseTypes.IdToken,
-                                ResponseTypes.IdTokenToken
+                                ResponseTypes.IdTokenToken,
+                                ResponseTypes.CodeIdToken,
+                                ResponseTypes.CodeToken,
+                                ResponseTypes.CodeIdTokenToken
                             };
 
+        public static readonly Dictionary<string, Flows> ResponseTypeToFlowMapping = new Dictionary<string, Flows>
+                            {
+                                { ResponseTypes.Code, Flows.AuthorizationCode },
+                                { ResponseTypes.Token, Flows.Implicit },
+                                { ResponseTypes.IdToken, Flows.Implicit },
+                                { ResponseTypes.IdTokenToken, Flows.Implicit },
+                                { ResponseTypes.CodeIdToken, Flows.Hybrid },
+                                { ResponseTypes.CodeToken, Flows.Hybrid },
+                                { ResponseTypes.CodeIdTokenToken, Flows.Hybrid }
+                            };
+
+        public static readonly List<Flows> AllowedFlowsForAuthorizeEndpoint = new List<Flows>
+                            {
+                                Flows.AuthorizationCode,
+                                Flows.Implicit,
+                                Flows.Hybrid
+                            };
+
+        public enum ScopeRequirement
+        {
+            None, 
+            ResourceOnly, 
+            IdentityOnly,
+            Identity
+        }
+
+        public static readonly Dictionary<string, ScopeRequirement> ResponseTypeToScopeRequirement = new Dictionary<string, ScopeRequirement>
+                            {
+                                { ResponseTypes.Code, ScopeRequirement.None },
+                                { ResponseTypes.Token, ScopeRequirement.ResourceOnly },
+                                { ResponseTypes.IdToken, ScopeRequirement.IdentityOnly },
+                                { ResponseTypes.IdTokenToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeToken, ScopeRequirement.Identity },
+                                { ResponseTypes.CodeIdTokenToken, ScopeRequirement.Identity }
+                            };
+                            
         public static readonly List<string> SupportedGrantTypes = new List<string> 
                             { 
                                 GrantTypes.AuthorizationCode,
                                 GrantTypes.ClientCredentials,
                                 GrantTypes.Password,
+                                GrantTypes.RefreshToken,
                                 GrantTypes.Implicit
                             };
 
+        public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
+                            {
+                                { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
+                                { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
+                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
+                            };
 
         public static class ResponseModes
         {
@@ -121,10 +235,20 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedResponseModes = new List<string>
                             {
-                                Constants.ResponseModes.FormPost,
-                                Constants.ResponseModes.Query,
-                                Constants.ResponseModes.Fragment,
+                                ResponseModes.FormPost,
+                                ResponseModes.Query,
+                                ResponseModes.Fragment,
                             };
+
+        public static string[] SupportedSubjectTypes =
+        {
+            "pairwise", "public"
+        };
+
+        public static class SigningAlgorithms
+        {
+            public const string RSA_SHA_256 = "RS256";
+        }
 
         public static class DisplayModes
         {
@@ -136,10 +260,10 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedDisplayModes = new List<string>
                             {
-                                Constants.DisplayModes.Page,
-                                Constants.DisplayModes.Popup,
-                                Constants.DisplayModes.Touch,
-                                Constants.DisplayModes.Wap,
+                                DisplayModes.Page,
+                                DisplayModes.Popup,
+                                DisplayModes.Touch,
+                                DisplayModes.Wap,
                             };
 
         public static class PromptModes
@@ -152,11 +276,17 @@ namespace Thinktecture.IdentityServer.Core
 
         public static readonly List<string> SupportedPromptModes = new List<string>
                             {
-                                Constants.PromptModes.None,
-                                Constants.PromptModes.Login,
-                                Constants.PromptModes.Consent,
-                                Constants.PromptModes.SelectAccount,
+                                PromptModes.None,
+                                PromptModes.Login,
+                                PromptModes.Consent,
+                                PromptModes.SelectAccount,
                             };
+
+        public static class KnownAcrValues
+        {
+            public const string HomeRealm = "idp:";
+            public const string Tenant = "tenant:";
+        }
 
         public static class AuthorizeErrors
         {
@@ -199,8 +329,15 @@ namespace Thinktecture.IdentityServer.Core
             public const string InvalidRequest    = "invalid_request";
             public const string InsufficientScope = "insufficient_scope";
         }
-        
 
+        public static Dictionary<string, HttpStatusCode> ProtectedResourceErrorStatusCodes = new Dictionary<string, HttpStatusCode>
+        {
+            { ProtectedResourceErrors.InvalidToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.ExpiredToken,      HttpStatusCode.Unauthorized },
+            { ProtectedResourceErrors.InvalidRequest,    HttpStatusCode.BadRequest },
+            { ProtectedResourceErrors.InsufficientScope, HttpStatusCode.Forbidden },
+        };
+        
         public static readonly Dictionary<string, IEnumerable<string>> ScopeToClaimsMapping = new Dictionary<string, IEnumerable<string>>
         {
             { StandardScopes.Profile, new[]
@@ -248,6 +385,10 @@ namespace Thinktecture.IdentityServer.Core
             public const string Address       = "address";
             public const string Phone         = "phone";
             public const string OfflineAccess = "offline_access";
+
+            // not part of spec
+            public const string AllClaims     = "all_claims";
+            public const string Roles         = "roles";
         }
 
         public static class ClaimTypes
@@ -287,6 +428,7 @@ namespace Thinktecture.IdentityServer.Core
             public const string AccessTokenHash                     = "at_hash";
             public const string AuthorizationCodeHash               = "c_hash";
             public const string Nonce                               = "nonce";
+            public const string JwtId                               = "jti";
 
             // more claims
             public const string ClientId         = "client_id";
@@ -294,11 +436,71 @@ namespace Thinktecture.IdentityServer.Core
             public const string Id               = "id";
             public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
+            public const string Role             = "role";
+            public const string ReferenceTokenId = "reference_token_id";
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
             public const string PartialLoginReturnUrl = "partial_login_return_url";
+
+            // internal claim types
+            // claim type to identify external user from external provider
+            public const string ExternalProviderUserId = "external_provider_user_id";
+            public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
         }
+
+        public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]
+        {
+            ClaimTypes.Audience,
+            ClaimTypes.Issuer,
+            ClaimTypes.NotBefore,
+            ClaimTypes.Expiration,
+            ClaimTypes.UpdatedAt,
+            ClaimTypes.IssuedAt,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.AuthenticationContextClassReference,
+            ClaimTypes.AuthenticationTime,
+            ClaimTypes.AuthorizedParty,
+            ClaimTypes.AccessTokenHash,
+            ClaimTypes.AuthorizationCodeHash,
+            ClaimTypes.Nonce,
+            ClaimTypes.JwtId,
+            ClaimTypes.Scope,
+            ClaimTypes.IdentityProvider,
+        };
+
+        public static readonly string[] AuthenticateResultClaimTypes = new string[]
+        {
+            ClaimTypes.Subject,
+            ClaimTypes.Name,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
+        };
+
+        public static readonly string[] CustomGrantProtocolClaimTypes = new string[]
+        {
+            ClaimTypes.Audience,
+            ClaimTypes.Issuer,
+            ClaimTypes.NotBefore,
+            ClaimTypes.Expiration,
+            ClaimTypes.UpdatedAt,
+            ClaimTypes.IssuedAt,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.AuthenticationContextClassReference,
+            ClaimTypes.AuthenticationTime,
+            ClaimTypes.AuthorizedParty,
+            ClaimTypes.AccessTokenHash,
+            ClaimTypes.AuthorizationCodeHash,
+            ClaimTypes.Nonce,
+            ClaimTypes.JwtId,
+            ClaimTypes.Scope,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.Subject,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
+        };
 
         public static class AuthenticationMethods
         {
@@ -316,17 +518,15 @@ namespace Thinktecture.IdentityServer.Core
 
         public static class RouteNames
         {
-            // TODO:brock
-            //public static class Authentication
-            //{
-                public const string Login = "idsrv.authentication.login";
-                public const string LoginExternal = "idsrv.authentication.loginexternal";
-                public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
-                public const string LogoutPrompt = "idsrv.authentication.logoutprompt";
-                public const string Logout = "idsrv.authentication.logout";
-                public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
-                public const string CspReport = "idsrv.csp.report";
-            //}
+            public const string Welcome = "idsrv.welcome";
+            public const string Login = "idsrv.authentication.login";
+            public const string LoginExternal = "idsrv.authentication.loginexternal";
+            public const string LoginExternalCallback = "idsrv.authentication.loginexternalcallback";
+            public const string LogoutPrompt = "idsrv.authentication.logoutprompt";
+            public const string Logout = "idsrv.authentication.logout";
+            public const string ResumeLoginFromRedirect = "idsrv.authentication.resume";
+            public const string CspReport = "idsrv.csp.report";
+            public const string ClientPermissions = "idsrv.permissions";
             
             public static class Oidc
             {
@@ -335,17 +535,20 @@ namespace Thinktecture.IdentityServer.Core
                 public const string SwitchUser = "idsrv.oidc.switch";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
+                public const string CheckSession = "idsrv.oidc.checksession";
             }
         }
 
         public static class RoutePaths
         {
+            public const string Welcome = "";
             public const string Login = "login";
             public const string LoginExternal = "external";
             public const string LoginExternalCallback = "callback";
             public const string Logout = "logout";
-            public const string ResumeLoginFromRedirect = "resume";
+            public const string ResumeLoginFromRedirect = "return";
             public const string CspReport = "csp/report";
+            public const string ClientPermissions = "permissions";
 
             public static class Oidc
             {
@@ -355,24 +558,62 @@ namespace Thinktecture.IdentityServer.Core
                 public const string DiscoveryConfiguration = ".well-known/openid-configuration";
                 public const string DiscoveryWebKeys = ".well-known/jwks";
                 public const string Token = "connect/token";
+                public const string Revocation = "connect/revocation";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
+                public const string IdentityTokenValidation = "connect/identityTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";
+                public const string CheckSession = "connect/checksession";
             }
             
-            public static readonly string[] CorsPaths = new string[]{
-                RoutePaths.Oidc.DiscoveryConfiguration,
-                RoutePaths.Oidc.DiscoveryWebKeys,
-                RoutePaths.Oidc.Token,
-                RoutePaths.Oidc.UserInfo,
+            public static readonly string[] CorsPaths =
+            {
+                Oidc.DiscoveryConfiguration,
+                Oidc.DiscoveryWebKeys,
+                Oidc.Token,
+                Oidc.UserInfo,
+                Oidc.IdentityTokenValidation
             };
         }
-        
+
         public static class OwinEnvironment
         {
-            public const string IdentityServerBaseUrl   = "idsrv:IdentityServerBaseUrl";
-            public const string AutofacScope            = "idsrv:AutofacScope";
+            public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
+            public const string IdentityServerHost     = "idsrv:IdentityServerHost";
+
+            public const string AutofacScope = "idsrv:AutofacScope";
+            public const string RequestId    = "idsrv:RequestId";
+        }
+        
+        public static class Authentication
+        {
+            public const string SigninId                 = "signinid";
+            public const string KatanaAuthenticationType = "katanaAuthenticationType";
+        }
+
+        public static class LocalizationCategories
+        {
+            public const string Messages = "Messages";
+            public const string Events   = "Events";
+            public const string Scopes   = "Scopes";
+        }
+
+        public static class TokenTypeHints
+        {
+            public const string RefreshToken = "refresh_token";
+            public const string AccessToken  = "access_token";
+        }
+
+        public static List<string> SupportedTokenTypeHints = new List<string>
+        {
+            TokenTypeHints.RefreshToken,
+            TokenTypeHints.AccessToken
+        };
+
+        public static class RevocationErrors
+        {
+            public const string UnsupportedTokenType = "unsupported_token_type";
         }
     }
 }

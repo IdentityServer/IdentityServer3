@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Thinktecture.IdentityServer3</id>
+    <version>0.0.0</version>
+    <title>Thinktecture IdentityServer3</title>
+    <authors>Brock Allen, Dominick Baier</authors>
+    <owners>Brock Allen, Dominick Baier</owners>
+    <projectUrl>https://github.com/IdentityServer/Thinktecture.IdentityServer3</projectUrl>
+    <iconUrl>http://www.thinktecture.com/images/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/IdentityServer/Thinktecture.IdentityServer3/blob/master/LICENSE</licenseUrl>
+    
+    <summary>OpenID Connect Provider and OAuth2 Authorization Server Framework.</summary>
+    <description>IdentityServer is a framework and a hostable component that allows implementing single sign-on and access control for modern web applications and APIs using protocols like OpenID Connect and OAuth2. It supports a wide range of clients like mobile, web, SPAs and desktop applications and is extensible to allow integration in new and existing architectures.</description>
+    
+    <copyright>Copyright 2015</copyright>
+    
+    <tags>Thinktecture IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
+    <dependencies>
+      <dependency id="Owin" version="1.0"/>
+    </dependencies>
+  </metadata>
+</package>

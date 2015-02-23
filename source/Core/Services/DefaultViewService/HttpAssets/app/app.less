@@ -1,0 +1,143 @@
+﻿body {
+    margin-top: 65px;
+}
+
+[ng-cloak] {
+    display: none;
+}
+
+.page-error {
+    .request-id {
+        margin-left: 20px;
+        font-size: 80%;
+        font-weight: bold;
+
+        span {
+            font-weight: normal;
+        }
+    }
+}
+
+.page-login {
+    .list-unstyled {
+        margin-left: 25px;
+
+        li {
+            margin-bottom: 10px;
+        }
+    }
+
+    .login-remember {
+        padding-left: 16px;
+
+        input {
+            margin-right: 5px;
+        }
+    }
+
+    .external-providers {
+        li:first-child {
+            padding-left: 5px;
+        }
+
+        li {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+    }
+}
+
+.page-logout {
+}
+
+.page-loggedOut {
+    iframe.signout {
+        display: none;
+    }
+}
+
+.page-consent {
+    .client-logo {
+        float: left;
+
+        img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    .consent-buttons {
+        margin-top: 25px;
+    }
+
+    .consent-form {
+        .consent-scopecheck {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .consent-scopecheck[disabled] {
+            //visibility:hidden;
+        }
+
+        .consent-description {
+            margin-left: 25px;
+
+            label {
+                font-weight: normal;
+            }
+        }
+
+        .consent-remember {
+            padding-left: 16px;
+        }
+    }
+}
+
+.page-permissions {
+    .page-header {
+        margin-bottom: 10px;
+    }
+
+    .permissions {
+        .permission {
+            margin-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid lightgray;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .permission-clientname {
+                font-size: 140%;
+                font-weight: bold;
+            }
+
+            .permission-type {
+                font-size: 120%;
+                font-weight: bold;
+            }
+
+            li {
+                list-style-type: none;
+                display: inline;
+
+                &:after {
+                    content: ', ';
+                }
+
+                &:last-child:after {
+                    content: '';
+                }
+
+                .permission-displayname {
+                }
+
+                .permission.description {
+                }
+            }
+        }
+    }
+}

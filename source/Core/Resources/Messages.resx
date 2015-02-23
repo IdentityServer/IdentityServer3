@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ClientIdRequired" xml:space="preserve">
+    <value>Client identifier is required</value>
+  </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
-    <value>Invalid Username or Password</value>
+    <value>Invalid username or password</value>
+  </data>
+  <data name="invalid_scope" xml:space="preserve">
+    <value>The client application tried to access a resource it does not have access to.</value>
+  </data>
+  <data name="MissingClientId" xml:space="preserve">
+    <value>client_id is missing</value>
+  </data>
+  <data name="MissingToken" xml:space="preserve">
+    <value>Token is missing</value>
   </data>
   <data name="MustSelectAtLeastOnePermission" xml:space="preserve">
     <value>Must select at least one permission.</value>
@@ -128,5 +140,38 @@
   </data>
   <data name="NoSubjectFromExternalProvider" xml:space="preserve">
     <value>Error authenticating with external provider</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="SslRequired" xml:space="preserve">
+    <value>SSL is required</value>
+  </data>
+  <data name="unauthorized_client" xml:space="preserve">
+    <value>The client application is not known or is not authorized.</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>There was an unexpected error</value>
+  </data>
+  <data name="UnsupportedMediaType" xml:space="preserve">
+    <value>Unsupported Media Type</value>
+  </data>
+  <data name="unsupported_response_type" xml:space="preserve">
+    <value>The authorization server does not support the requested response type.</value>
+  </data>
+  <data name="UsernameRequired" xml:space="preserve">
+    <value>Username is required</value>
+  </data>
+  <data name="NoSignInCookie" xml:space="preserve">
+    <value>There is an error determining which application you are signing into. Return to the application and try again.</value>
+  </data>
+  <data name="NoExternalProvider" xml:space="preserve">
+    <value>The external login provider was not provided.</value>
+  </data>
+  <data name="ExternalProviderError" xml:space="preserve">
+    <value>There was an error logging into the external provider. The error message is: {0}</value>
+  </data>
+  <data name="invalid_request" xml:space="preserve">
+    <value>The client application made an invalid request.</value>
   </data>
 </root>
