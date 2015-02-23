@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// <c>true</c> if the token should be updated; otherwise, <c>false</c>.
         /// </value>
-        public bool UpdateAccessTokenOnRefresh { get; set; }
+        public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
 
         /// <summary>
         /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)

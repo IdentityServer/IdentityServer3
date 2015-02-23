@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
             
-            if (request.Client.UpdateAccessTokenOnRefresh)
+            if (request.Client.UpdateAccessTokenClaimsOnRefresh)
             {
                 // re-create original subject
                 var subject = IdentityServerPrincipal.FromClaims(oldAccessToken.Claims, allowMissing: true);
