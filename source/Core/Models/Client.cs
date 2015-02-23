@@ -125,6 +125,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         public TokenUsage RefreshTokenUsage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the access token (and its claims) should be updated on a refresh token request.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the token should be updated; otherwise, <c>false</c>.
+        /// </value>
+        public bool UpdateAccessTokenOnRefresh { get; set; }
+
+        /// <summary>
         /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
         /// Sliding: when refreshing the token, the lifetime of the refresh token will be renewed (by the amount specified in SlidingRefreshTokenLifetime). The lifetime will not exceed 
         /// </summary>        
