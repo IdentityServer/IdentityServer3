@@ -197,6 +197,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         public List<string> CustomGrantTypeRestrictions { get; set; }
 
         /// <summary>
+        /// Gets or sets the allowed CORS origins for JavaScript clients.
+        /// </summary>
+        /// <value>
+        /// The allowed CORS origins.
+        /// </value>
+        public List<string> AllowedCorsOrigins { get; set; }
+
+        /// <summary>
         /// Creates a Client with default values
         /// </summary>
         public Client()
@@ -209,6 +217,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
             CustomGrantTypeRestrictions = new List<string>();
+            AllowedCorsOrigins = new List<string>();
 
             Enabled = true;
             EnableLocalLogin = true;

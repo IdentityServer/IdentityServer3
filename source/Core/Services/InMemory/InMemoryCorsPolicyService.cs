@@ -27,43 +27,34 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     /// <summary>
     /// CORS policy service that configures the allowed origins from a list of clients' redirect URLs.
     /// </summary>
-    internal class InMemoryClientCorsPolicyService : DefaultCorsPolicyService
+    public class InMemoryCorsPolicyService : ICorsPolicyService
     {
+        IEnumerable<Client> clients;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="InMemoryClientCorsPolicyService"/> class.
+        /// Initializes a new instance of the <see cref="InMemoryCorsPolicyService"/> class.
         /// </summary>
         /// <param name="clients">The clients.</param>
-        public InMemoryClientCorsPolicyService(IEnumerable<Client> clients)
+        public InMemoryCorsPolicyService(IEnumerable<Client> clients)
         {
-            clients = clients ?? Enumerable.Empty<Client>();
-
-            var origins = GetOriginsToAllow(clients);
-            
-            if (origins != null)
-            {
-                foreach(var origin in origins.Distinct())
-                {
-                    if (origin != null)
-                    {
-                        AllowedOrigins.Add(origin);
-                    }
-                }
-            }
+            this.clients = clients ?? Enumerable.Empty<Client>();
         }
 
         /// <summary>
-        /// Gets the origins to allow from the clients.
+        /// Determines whether origin is allowed.
         /// </summary>
-        /// <param name="clients">The clients.</param>
+        /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        protected virtual IEnumerable<string> GetOriginsToAllow(IEnumerable<Client> clients)
+        public Task<bool> IsOriginAllowedAsync(string origin)
         {
             var query =
                 from client in clients
-                where client.Flow == Flows.Hybrid || client.Flow == Flows.Implicit
-                from url in client.RedirectUris
+                from url in client.AllowedCorsOrigins
                 select url.GetOrigin();
-            return query;
+
+            var result = query.Contains(origin, StringComparer.OrdinalIgnoreCase);
+            
+            return Task.FromResult(result);
         }
     }
 }
