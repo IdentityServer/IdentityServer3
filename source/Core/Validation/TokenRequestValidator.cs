@@ -390,7 +390,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var acrValues = acr.FromSpaceSeparatedString().Distinct().ToList();
 
                 // look for well-known acr value -- idp
-                var idp = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm)).FirstOrDefault();
+                var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
                 if (idp.IsPresent())
                 {
                     signInMessage.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
@@ -398,7 +398,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
 
                 // look for well-known acr value -- tenant
-                var tenant = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.Tenant)).FirstOrDefault();
+                var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.Tenant));
                 if (tenant.IsPresent())
                 {
                     signInMessage.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);

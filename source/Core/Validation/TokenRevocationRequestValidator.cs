@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     result.IsError = true;
                     result.Error = Constants.RevocationErrors.UnsupportedTokenType;
-                };
+                }
             }
 
             return Task.FromResult(result);

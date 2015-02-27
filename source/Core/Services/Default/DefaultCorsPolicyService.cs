@@ -49,8 +49,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         ///   <c>true</c> if allow all; otherwise, <c>false</c>.
         /// </value>
         public bool AllowAll { get; set; }
-        
-        Func<string, Task<bool>> policyCallback;
+
+        readonly Func<string, Task<bool>> policyCallback;
         
         internal DefaultCorsPolicyService(CorsPolicy policy)
         {

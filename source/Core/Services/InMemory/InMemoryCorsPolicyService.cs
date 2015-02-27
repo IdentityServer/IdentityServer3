@@ -27,7 +27,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     /// </summary>
     public class InMemoryCorsPolicyService : ICorsPolicyService
     {
-        IEnumerable<Client> clients;
+        readonly IEnumerable<Client> clients;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryCorsPolicyService"/> class.
