@@ -1,5 +1,115 @@
-# 1.1.0 (04 Februar 2015) (04 Februar 2015)
+# 1.2.1 (27 February 2015)
 
+ - [#989](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/989) - Question: Is the signing certificate needs to be installed on the client application (RP) side
+ - [#986](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/986) - Serving subdomains with same CodeFlowClient 
+ - [#985](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/985) - Make client_id available in IsActiveAsync
+ - [#983](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/983) - Fixed typo in ClientAuthenticationTests 'suport to support' contributed by Onat Yiğit Mercan ([onatm](https://github.com/onatm))
+ - [#982](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/982) - In the javascript client from idsrv3 sample
+ - [#981](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/981) - Revert "Fixed typo in ClientAuthenticationTests 'suport to support'" contributed by Onat Yiğit Mercan ([onatm](https://github.com/onatm))
+ - [#980](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/980) - Fixed typo in ClientAuthenticationTests 'suport to support' contributed by Onat Yiğit Mercan ([onatm](https://github.com/onatm))
+ - [#979](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/979) - After logout from Idrsv3 Instead of showing core/logout Page i need show Login Page how i can get this..?
+ - [#978](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/978) - Validate the client before redirecting to login +enhancement
+ - [#977](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/977) - Permission to copy parts of documentation
+ - [#976](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/976) - DI System flawed in cooperation with other IoC Containers
+ - [#974](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/974) - ResourceActionAuthorize vs ResourceAuthorize Attribute
+ - [#973](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/973) - Localization / I18n
+ - [#972](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/972) - Javascript
+ - [#971](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/971) - InitialConfiguration
+ - [#969](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/969) - How do I redirect users to a predetermined url after login?
+ - [#966](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/966) - #955 - Support for runtime resolving of dependencies using delegate factories contributed by Mathijs van Dijk ([ambvdijk](https://github.com/ambvdijk))
+ - [#965](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/965) - Thinktecture and Microsoft Account Authentication
+ - [#963](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/963) - How to implement Idsrv3 for Angular js.
+ - [#962](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/962) - Revert "Fixed typo in ClientAuthenticationTests 'suport to support'" contributed by Dominick Baier ([leastprivilege](https://github.com/leastprivilege))
+ - [#961](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/961) - Fixed typo in ClientAuthenticationTests 'suport to support' contributed by Onat Yiğit Mercan ([onatm](https://github.com/onatm))
+ - [#960](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/960) - Fix typo in ClientAuthenticationTests.cs
+ - [#959](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/959) - Update claims on refresh token refresh contributed by Dominick Baier ([leastprivilege](https://github.com/leastprivilege))
+ - [#958](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/958) - Having an issue with MVC Hybrid flow
+ - [#957](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/957) - Add flags to allow auto redirects post logout
+ - [#956](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/956) - The use of "post_logout_redirect_uri"
+ - [#954](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/954) - Allow Client Credentials flow for any client contributed by Dominick Baier ([leastprivilege](https://github.com/leastprivilege))
+ - [#953](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/953) - Identity server3: HTTP activity shows password in clear text
+ - [#951](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/951) - Documentation suggestion for /advanced/customServices.html
+ - [#950](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/950) - OWIN Client causes an infinite loop if you forget to add openid to the requested scope following the MVC OWIN Hybrid sample
+ - [#949](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/949) - using "post_logout_redirect_uri"
+ - [#948](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/948) - Claim Information not being passed
+ - [#947](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/947) - Multi Tenancy Cookies
+ - [#946](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/946) - Access Token Validation & Caching Problem
+ - [#945](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/945) - Link users from several providers to a certain account
+ - [#944](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/944) - How to divide IdenityServer3 into 2 instances(one for Authentication and another for Authorization)
+ - [#943](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/943) - 401 not authorized with No redirecting to login page after Publishing on IIS
+ - [#941](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/941) - How to get the sub values from claims in the client side 
+ - [#940](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/940) - Deploying identityserver to the GAC
+ - [#939](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/939) - Infinite loop with local login disabled and only 1 external idp
+ - [#938](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/938) - Difference Between These Two Projects
+ - [#936](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/936) - OpenId Connect With OAuth2.0
+ - [#935](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/935) - “An exception of type 'System.Security.Cryptography.CryptographicException' occurred in System.Security.dll but was not handled in user code”
+ - [#934](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/934) - Remove Transitive Dependency on System.Web contributed by João Bragança ([thefringeninja](https://github.com/thefringeninja))
+ - [#933](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/933) - Local/External Authorization without View.
+ - [#932](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/932) - 401 trying to follow the Simplest Auth Walkthrough 
+ - [#931](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/931) - Nonce Validation Error on back button after initial login
+ - [#929](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/929) - [InvalidOperationException: IDX10803: Unable to create to obtain configuration when running idp and client site as sub sites within the same domain
+ - [#928](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/928) - vNext build missing wwwroot folder
+ - [#927](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/927) - Building vNext branch - LibLog dependency changed?
+ - [#926](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/926) - Preauthenticate_sync causes error 
+ - [#925](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/925) - AntiXssLibrary bringing in System.Web as a transitive reference. +enhancement
+ - [#924](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/924) - simplest OAuth2 Authorization Server blows up with Client 
+ - [#923](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/923) - Custom View Service + Linking Logins
+ - [#921](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/921) - Method Not Allowed trying to get Identity Server to work
+ - [#920](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/920) - implemented paging in ITransientDataRepository contributed by Felipe Leusin ([felipeleusin](https://github.com/felipeleusin))
+ - [#919](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/919) - Cached IdentityServerHost Value
+ - [#918](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/918) - Name claim not included in ResourceOwner flow
+ - [#917](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/917) - Only discover your own, internal, WebAPI controllers. contributed by Damian Hickey ([damianh](https://github.com/damianh))
+ - [#916](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/916) - Redirect URL Issue
+ - [#915](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/915) - Allow Client Credentials flow for any client
+ - [#914](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/914) - Refresh tokens lost on reboot?
+ - [#912](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/912) - Clients Need to be available for particular user how to make that.?
+ - [#911](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/911) - Can a client use ResourceOwner and ClientCredentials flows simultaneously?
+ - [#910](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/910) - Not Authorized when signing out
+ - [#909](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/909) - Log claims when external provider claims failure
+ - [#908](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/908) - Instead of loading Predefined user list to the InMemoryUser ,How we can take single record from database based on is username and Password to this paricular record we have to authenticate.
+ - [#907](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/907) - Creating authorization code in PreAuthenticateSync causes too many redirect error
+ - [#905](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/905) - Upgrading from beta to 1.1.0
+ - [#904](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/904) - User Import Registration Workflow Question
+ - [#902](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/902) - Value of Reference Tokens, Hybrid Flow and CORS
+ - [#898](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/898) - Unauthorized Issues
+ - [#896](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/896) - Reference Token Cache Store
+ - [#893](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/893) - IdentityServer 3 with ADFS in SPA
+ - [#892](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/892) - Changed level from error to warn on refresh token contributed by John Korsnes ([johnkors](https://github.com/johnkors))
+ - [#890](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/890) - Store access_token for multiple use
+ - [#889](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/889) - Tests for DefaultLocalizationService contributed by John Korsnes ([johnkors](https://github.com/johnkors))
+ - [#871](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/871) - EnableHttpLogging causes anti forgery token verification error during partial log in.
+ - [#862](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/862) - EndSessionRequestValidator Log Non-authenticated as Warnings +enhancement
+ - [#853](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/853) - ITransientDataRepository.GetAllAsync paging 
+ - [#833](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/833) - Support for IdP-initated SSO to Identity Server
+ - [#823](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/823) - Question: Windows Authentication
+ - [#816](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/816) - Question: Claims transformation and first time registration for third party Id Server.
+ - [#810](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/810) - Add instance per http request to registration
+ - [#802](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/802) - Better encapsulate service registrations that themselves have dependencies +enhancement
+ - [#729](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/729) - Cors policy should be a service
+ - [#666](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/666) - Automatic Logout After Timeout Period
+ - [#584](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/584) - Allow CORS settings on Client registration
+ - [#573](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/573) - Allow refreshing claims when refreshing access token
+
+Commits: [9644d76162...db9646650c](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/9644d76162...db9646650c)
+
+
+# 1.1.1 (11 February 2015)
+
+ - [#906](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/906) - Logout Confirmation Not Displayed When PostLogout Redirect Matches
+ - [#903](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/903) - How to connect Identity server 3 with MembershipReboot
+ - [#901](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/901) - External id provider and claims transforms
+ - [#900](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/900) - Failed to migrate from the RC version to the 1.1.0
+ - [#899](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/899) - Questions related to SPA with no backend
+ - [#897](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/897) - In Identity server we are loading the user list before login page called..why we have to call like that..?
+ - [#895](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/895) - IdentityServer as an OAuth 2 Authorization Server for Azure API Management
+ - [#894](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/894) - "Big name" users of Thinktecture.IdentityServer3?
+ - [#891](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/891) - AntiForgeryToken not working the provided samples
+ - [#888](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/888) - Add Owin Middleware to Thinktecture and support DI containers
+ - [#887](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/887) - authentication works correctly in iis express, but keeps on throwing 401 unatuhorized when hosted in iis
+ - [#886](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/886) - Token Revocation in 1.1 (latest stable nuget) - 404 Response
+ - [#885](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/885) - Question
+ - [#884](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/884) - ICache Delete
+ - [#883](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/883) - This repositories gh-pages branch is outdated
  - [#878](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/878) - Registration workflow
  - [#877](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/877) - Nuget package for core classes.
  - [#876](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/876) - Route Sharing / Extended Idv3 Route
@@ -9,6 +119,7 @@
  - [#872](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/872) - UserInfo and others drop Claim ValueType +enhancement
  - [#870](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/870) - Logout using multipe identityservers
  - [#869](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/869) - How to implement Thinktecture.IdentityServer3 For android application
+ - [#868](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/868) - Value cannot be null exception after upgrade
  - [#867](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/867) - Error AccessTokenValidationEndpoint multiple request 
  - [#865](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/865) - MembershipReboot and Roles
  - [#861](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/861) - MembershipReboot Integration Authentication Issues
@@ -25,6 +136,12 @@
  - [#442](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/442) - Consider token introspection spec for validation endpoints
  - [#421](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/421) - Add support for token revocation
  - [#160](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/160) - Feature: Google Authenticator Integration
+
+Commits: [4c78b42359...9d422a9c45](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/4c78b42359...9d422a9c45)
+
+
+# 1.1.0 (04 February 2015)
+
  - [#866](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/866) - Set claims of type Constants.ClaimTypes.AuthenticationTime as number +enhancement
  - [#864](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/864) - 415 Unsupported Media Type from Token Endpoint
  - [#863](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/863) - Consent screen - can it be dropped?
@@ -35,18 +152,18 @@
  - [#842](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/842) - limiting or protecting CSP Report Endpoint? +enhancement
  - [#830](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/830) - WelcomeController + WsFederationController have same routes
 
-Commits: [91a698c37e...b352a13332](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/91a698c37e...b352a13332)
+Commits: [91a698c37e...b352a13332](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/91a698c37e...b352a13332)
 
 
-# 1.0.2 (01 Februar 2015) (01 Februar 2015)
+# 1.0.2 (01 February 2015)
 
  - [#855](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/855) - Deriving from LogProvider
  - [#834](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/834) - idp not set in IUserService.IsActiveAsync on validating subject in refresh
 
-Commits: [8d9adfa00f...41c0c791be](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/8d9adfa00f...41c0c791be)
+Commits: [8d9adfa00f...41c0c791be](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/8d9adfa00f...41c0c791be)
 
 
-# 1.0.1 (01 Februar 2015) (01 Februar 2015)
+# 1.0.1 (01 February 2015)
 
  - [#856](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/856) - single sign-out multiple applications
  - [#851](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/851) - Sample for Session Management Spec?
@@ -71,7 +188,6 @@ Commits: [8d9adfa00f...41c0c791be](https://github.com/identityserver/Thinktectur
  - [#819](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/819) - Injecting IClientStore and MessageCookie<SigninMessage> to MVC controllers
  - [#818](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/818) - Extending standard access token claims 
  - [#817](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/817) - implementing support for ASP.NET SQL Membership
- - [#816](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/816) - Question: Claims transformation and first time registration for third party Id Server.
  - [#814](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/814) - Add length restrictions for authorize and token requests
  - [#813](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/813) - Add key length check for signing cert
  - [#811](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/811) - OpenID Connect, OAuth2 and User Details Syncronization
@@ -90,10 +206,10 @@ Commits: [8d9adfa00f...41c0c791be](https://github.com/identityserver/Thinktectur
  - [#555](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/555) - How to build on mono?
  - [#261](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/261) - Cleanup embedded stylesheet
 
-Commits: [0203fe8147...363c730297](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/0203fe8147...363c730297)
+Commits: [0203fe8147...363c730297](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/0203fe8147...363c730297)
 
 
-# 1.0.0 (24 Januar 2015) (24 Januar 2015)
+# 1.0.0 (24 January 2015)
 
  - [#812](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/812) - adding custom controllers to extend functionality
  - [#809](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/809) - Post RTM: Solution for being able to authenticate users from trusted domains outside idsrv domain.
@@ -187,10 +303,10 @@ Commits: [0203fe8147...363c730297](https://github.com/identityserver/Thinktectur
  - [#30](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/30) - Implement Session Management Spec
  - [#18](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/18) - Windows 8 / Web Authentication Broker sample
 
-Commits: [ea7577971e...4a44a9f038](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/ea7577971e...4a44a9f038)
+Commits: [ea7577971e...4a44a9f038](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/ea7577971e...4a44a9f038)
 
 
-# rc (12 Januar 2015) (12 Januar 2015)
+# rc (12 January 2015)
 
  - [#747](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/747) - Resolve failed in RequireSSL middleware
  - [#745](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/745) - Registration<T> vs RegistrationType<T>
@@ -240,7 +356,6 @@ Commits: [ea7577971e...4a44a9f038](https://github.com/identityserver/Thinktectur
  - [#672](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/672) - Correct authentication flow for cross service calls
  - [#669](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/669) - Federation With AD / AAD
  - [#668](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/668) - Add callback URI's for WinRT samples (Store & Phone) contributed by Kevin Dockx ([KevinDockx](https://github.com/KevinDockx))
- - [#666](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/666) - Automatic Logout After Timeout Period
  - [#665](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/665) - Question: Why is constructing an AuthenticateResult with a ClaimsPrincipal internal only?
  - [#663](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/663) - Multiple domain authentication
  - [#662](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/662) - Improve registration and DI API
@@ -265,10 +380,10 @@ Commits: [ea7577971e...4a44a9f038](https://github.com/identityserver/Thinktectur
  - [#324](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/324) - Performance improvements
  - [#249](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/249) - 2FA
 
-Commits: [9508c6d1dd...2c0ef5f7dc](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/9508c6d1dd...2c0ef5f7dc)
+Commits: [9508c6d1dd...2c0ef5f7dc](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/9508c6d1dd...2c0ef5f7dc)
 
 
-# beta4-1 (23 Dezember 2014) (23 Dezember 2014)
+# beta4-1 (23 December 2014)
 
  - [#673](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/673) - Configuring Clients and Scopes from a UI
  - [#671](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/671) - Question: Looking for further help with config & SSL trust
@@ -328,10 +443,10 @@ Commits: [9508c6d1dd...2c0ef5f7dc](https://github.com/identityserver/Thinktectur
  - [#379](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/379) - How to create an address claim?
  - [#355](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/355) - Expose a hook for exception handling
 
-Commits: [059fdc1969...5a6dd546ad](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/059fdc1969...5a6dd546ad)
+Commits: [059fdc1969...5a6dd546ad](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/059fdc1969...5a6dd546ad)
 
 
-# beta4 (14 Dezember 2014) (14 Dezember 2014)
+# beta4 (14 December 2014)
 
  - [#630](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/630) - Resource owner flow - why is a client secret mandatory?
  - [#629](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/629) - Remove OWIN environment from service signatures contributed by Dominick Baier ([leastprivilege](https://github.com/leastprivilege))
@@ -384,7 +499,7 @@ Commits: [059fdc1969...5a6dd546ad](https://github.com/identityserver/Thinktectur
  - [#459](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/459) - Look at all uses of IsActive
  - [#443](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/443) - Getting Started: Comment and question
 
-Commits: [629dad7e15...baadc3ea49](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/629dad7e15...baadc3ea49)
+Commits: [629dad7e15...baadc3ea49](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/629dad7e15...baadc3ea49)
 
 
 # beta3-4 (23 November 2014)
@@ -435,7 +550,7 @@ Commits: [629dad7e15...baadc3ea49](https://github.com/identityserver/Thinktectur
  - [#437](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/437) - Re-work logging/tracing/auditing/eventing
  - [#110](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/110) - Create admin UI for core configuration
 
-Commits: [84eb9c919a...186117a7cc](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/84eb9c919a...186117a7cc)
+Commits: [84eb9c919a...186117a7cc](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/84eb9c919a...186117a7cc)
 
 
 # beta3-2 (08 November 2014)
@@ -450,10 +565,10 @@ Commits: [84eb9c919a...186117a7cc](https://github.com/identityserver/Thinktectur
  - [#487](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/487) - Is it possible to use tokens for API and cookies for MVC in the same app?
  - [#478](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/478) - External identity's not logging in
 
-Commits: [daa0137e77...f95470c3d6](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/daa0137e77...f95470c3d6)
+Commits: [daa0137e77...f95470c3d6](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/daa0137e77...f95470c3d6)
 
 
-# beta3-1 (30 Oktober 2014) (30 Oktober 2014)
+# beta3-1 (30 October 2014)
 
  - [#485](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/485) - WebAPI how to send unauthenticated users to IdentityServer?
  - [#484](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/484) - login_hint tenant
@@ -462,10 +577,10 @@ Commits: [daa0137e77...f95470c3d6](https://github.com/identityserver/Thinktectur
  - [#466](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/466) - Add external IdPs to walkthrough
  - [#414](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/414) - Callback URI for Flows.Code with query parameters fails
 
-Commits: [8781358744...1328dc0efa](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/8781358744...1328dc0efa)
+Commits: [8781358744...1328dc0efa](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/8781358744...1328dc0efa)
 
 
-# beta3 (28 Oktober 2014) (28 Oktober 2014)
+# beta3 (28 October 2014)
 
  - [#486](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/486) - Where to put FederationMetadata.xml
  - [#480](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/480) - PFX/Certificate issues when deploying to Windows Server 2012
@@ -513,10 +628,10 @@ Commits: [8781358744...1328dc0efa](https://github.com/identityserver/Thinktectur
  - [#95](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/95) - IdSrv cookie paths +enhancement
  - [#59](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/59) - Add support for WS-Federation and OIDC based IdPs
 
-Commits: [454b4f43e7...fa8cd0f631](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/454b4f43e7...fa8cd0f631)
+Commits: [454b4f43e7...fa8cd0f631](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/454b4f43e7...fa8cd0f631)
 
 
-# beta_2-1 (14 Oktober 2014) (14 Oktober 2014)
+# beta_2-1 (14 October 2014)
 
  - [#440](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/440) - Is there IRelyingPartyService implementation for EntityFramework? 
  - [#433](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/433) - Question on "RedirectUris"
@@ -567,10 +682,10 @@ Commits: [454b4f43e7...fa8cd0f631](https://github.com/identityserver/Thinktectur
  - [#131](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/131) - Logout from Upstream IdP +enhancement
  - [#24](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/24) - Identity Token Validation Endpoint
 
-Commits: [6fcdabbefe...78657c86e1](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/6fcdabbefe...78657c86e1)
+Commits: [6fcdabbefe...78657c86e1](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/6fcdabbefe...78657c86e1)
 
 
-# beta2 (07 Oktober 2014) (07 Oktober 2014)
+# beta2 (07 October 2014)
 
  - [#419](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/419) - Validate Access Token
  - [#413](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/413) - Add TraceSource log provider
@@ -598,7 +713,7 @@ Commits: [6fcdabbefe...78657c86e1](https://github.com/identityserver/Thinktectur
  - [#166](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/166) - Create separate repo and nuget for access token validation middleware
  - [#121](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/121) - Implement "redirect after signout"
 
-Commits: [b5b5d32f87...1b33386e6b](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/b5b5d32f87...1b33386e6b)
+Commits: [b5b5d32f87...1b33386e6b](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/b5b5d32f87...1b33386e6b)
 
 
 # beta1-2 (25 September 2014)
@@ -608,7 +723,7 @@ Commits: [b5b5d32f87...1b33386e6b](https://github.com/identityserver/Thinktectur
  - [#274](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/274) - Custom grant type in token endpoint
  - [#185](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/185) - Turn custom assertion extensibility point into more general custom grant type extensibility point
 
-Commits: [fed70c505e...294320954b](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/fed70c505e...294320954b)
+Commits: [fed70c505e...294320954b](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/fed70c505e...294320954b)
 
 
 # Beta_1-2 (25 September 2014)
@@ -702,10 +817,10 @@ Commits: [fed70c505e...294320954b](https://github.com/identityserver/Thinktectur
  - [#148](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/148) - Add a "Always enforce SSL on redirect URI" mechanism
  - [#39](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/39) - MultiTenancy +enhancement
 
-Commits: [95d59411d0...4d4c5850ba](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/95d59411d0...4d4c5850ba)
+Commits: [95d59411d0...4d4c5850ba](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/95d59411d0...4d4c5850ba)
 
 
-# beta1 (31 Juli 2014) (31 Juli 2014)
+# beta1 (31 July 2014)
 
  - [#260](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/260) - How to? Resource owner flow with Web API.
  - [#253](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/253) - fixes https://github.com/thinktecture/Thinktecture.IdentityServer.v3/issues/252 contributed by Christian Endter ([cendter](https://github.com/cendter))
@@ -870,10 +985,10 @@ Commits: [95d59411d0...4d4c5850ba](https://github.com/identityserver/Thinktectur
  - [#13](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/13) - Identity token validation in JS sample
  - [#11](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/11) - Implement support for refresh tokens
 
-Commits: [3a57dd03d1...2e067896af](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/3a57dd03d1...2e067896af)
+Commits: [3a57dd03d1...2e067896af](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/3a57dd03d1...2e067896af)
 
 
-# WsFed_POC (14 Mai 2014) (14 Mai 2014)
+# WsFed_POC (14 May 2014)
 
  - [#90](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/90) - The UserService implementations were not being included in nuget contributed by Ciaran Jessup ([ciaranj](https://github.com/ciaranj))
  - [#89](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/89) - Using Idsrv 3 for in company applications/clients that do not require consent screens.
@@ -888,10 +1003,10 @@ Commits: [3a57dd03d1...2e067896af](https://github.com/identityserver/Thinktectur
  - [#73](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/73) - Extend Acces_Token
  - [#72](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/72) - How to validate the access tokens in WebAPI
 
-Commits: [46ed2c185c...c2b054ac8e](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/46ed2c185c...c2b054ac8e)
+Commits: [46ed2c185c...c2b054ac8e](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/46ed2c185c...c2b054ac8e)
 
 
-# SelfContained_Nuget (05 Mai 2014) (05 Mai 2014)
+# SelfContained_Nuget (05 May 2014)
 
  - [#70](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/70) - Removed unused string format placeholder. contributed by Chris Simmons ([NetChris](https://github.com/NetChris))
  - [#69](https://github.com/IdentityServer/Thinktecture.IdentityServer3/pull/69) - Ability to build pre-release package from command line contributed by Damian Hickey ([damianh](https://github.com/damianh))
@@ -904,7 +1019,7 @@ Commits: [46ed2c185c...c2b054ac8e](https://github.com/identityserver/Thinktectur
  - [#58](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/58) - WS-Star support ;) +enhancement
  - [#54](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/54) - MVC OWIN client + access token
 
-Commits: [beae05ef71...cc454f9090](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/beae05ef71...cc454f9090)
+Commits: [beae05ef71...cc454f9090](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/beae05ef71...cc454f9090)
 
 
 # HostingEnhancements (22 April 2014)
@@ -932,7 +1047,7 @@ Commits: [beae05ef71...cc454f9090](https://github.com/identityserver/Thinktectur
  - [#31](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/31) - Implement refresh tokens
  - [#29](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/29) - Validate tokens in JavaScript Implicit Sample
 
-Commits: [0733901aec...96abc3f7de](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/0733901aec...96abc3f7de)
+Commits: [0733901aec...96abc3f7de](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/0733901aec...96abc3f7de)
 
 
 # Preview1 (09 April 2014)
@@ -958,4 +1073,4 @@ Commits: [0733901aec...96abc3f7de](https://github.com/identityserver/Thinktectur
  - [#2](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/2) - Implement scope model to support identity and resource scopes
  - [#1](https://github.com/IdentityServer/Thinktecture.IdentityServer3/issues/1) - Implement protocol between endpoints and login page using JWTs
 
-Commits: [6f2bcd858f...70a04ff60a](https://github.com/identityserver/Thinktecture.IdentityServer3/compare/6f2bcd858f...70a04ff60a)
+Commits: [6f2bcd858f...70a04ff60a](https://github.com/IdentityServer/Thinktecture.IdentityServer3/compare/6f2bcd858f...70a04ff60a)
