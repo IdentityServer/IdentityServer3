@@ -15,8 +15,8 @@
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
@@ -27,9 +27,9 @@ namespace Thinktecture.IdentityServer.Core
     {
         public static ClaimsPrincipal Create(
             string subject,
-            string displayName, 
-            string authenticationMethod = Constants.AuthenticationMethods.Password, 
-            string idp = Constants.BuiltInIdentityProvider, 
+            string displayName,
+            string authenticationMethod = Constants.AuthenticationMethods.Password,
+            string idp = Constants.BuiltInIdentityProvider,
             string authenticationType = Constants.PrimaryAuthenticationType,
             long authenticationTime = 0)
         {
@@ -59,7 +59,7 @@ namespace Thinktecture.IdentityServer.Core
             // we require the following claims
             var subject = principal.FindFirst(Constants.ClaimTypes.Subject);
             if (subject == null) throw new InvalidOperationException("sub claim is missing");
-            
+
             var name = principal.FindFirst(Constants.ClaimTypes.Name);
             if (name == null) throw new InvalidOperationException("name claim is missing");
 
@@ -90,6 +90,66 @@ namespace Thinktecture.IdentityServer.Core
 
             return Principal.Create(Constants.PrimaryAuthenticationType,
                 claims.Distinct(new ClaimComparer()).ToArray());
+        }
+
+        public static ClaimsPrincipal FromClaims(IEnumerable<Claim> claims, bool allowMissing = false)
+        {
+            var sub = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
+            var amr = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
+            var idp = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.IdentityProvider);
+            var authTime = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationTime);
+
+            var id = new ClaimsIdentity(Constants.BuiltInIdentityProvider);
+
+            if (sub != null)
+            {
+                id.AddClaim(sub);
+            }
+            else
+            {
+                if (allowMissing == false)
+                {
+                    throw new InvalidOperationException("sub claim is missing");
+                }
+            }
+
+            if (amr != null)
+            {
+                id.AddClaim(amr);
+            }
+            else
+            {
+                if (allowMissing == false)
+                {
+                    throw new InvalidOperationException("amr claim is missing");
+                }
+            }
+
+            if (idp != null)
+            {
+                id.AddClaim(idp);
+            }
+            else
+            {
+                if (allowMissing == false)
+                {
+                    throw new InvalidOperationException("idp claim is missing");
+                }
+            }
+
+            if (authTime != null)
+            {
+                id.AddClaim(authTime);
+            }
+            else
+            {
+                if (allowMissing == false)
+                {
+                    throw new InvalidOperationException("auth_time claim is missing");
+                }
+            }
+
+            return new ClaimsPrincipal(id);
         }
     }
 }

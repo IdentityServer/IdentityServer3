@@ -70,6 +70,15 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Flows Flow { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this client is allowed to request token using client credentials only.
+        /// This is e.g. useful when you want a client to be able to use both a user-centric flow like implicit and additionally client credentials flow
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if client credentials flow is allowed; otherwise, <c>false</c>.
+        /// </value>
+        public bool AllowClientCredentialsOnly { get; set; }
+
+        /// <summary>
         /// Specifies allowed URIs to return tokens or authorization codes to
         /// </summary>
         public List<string> RedirectUris { get; set; }
@@ -114,6 +123,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// OneTime: the refresh token handle will be updated when refreshing tokens
         /// </summary>
         public TokenUsage RefreshTokenUsage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the access token (and its claims) should be updated on a refresh token request.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the token should be updated; otherwise, <c>false</c>.
+        /// </value>
+        public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
 
         /// <summary>
         /// Absolute: the refresh token will expire on a fixed point in time (specified by the AbsoluteRefreshTokenLifetime)
@@ -180,6 +197,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         public List<string> CustomGrantTypeRestrictions { get; set; }
 
         /// <summary>
+        /// Gets or sets the allowed CORS origins for JavaScript clients.
+        /// </summary>
+        /// <value>
+        /// The allowed CORS origins.
+        /// </value>
+        public List<string> AllowedCorsOrigins { get; set; }
+
+        /// <summary>
         /// Creates a Client with default values
         /// </summary>
         public Client()
@@ -192,6 +217,7 @@ namespace Thinktecture.IdentityServer.Core.Models
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
             CustomGrantTypeRestrictions = new List<string>();
+            AllowedCorsOrigins = new List<string>();
 
             Enabled = true;
             EnableLocalLogin = true;

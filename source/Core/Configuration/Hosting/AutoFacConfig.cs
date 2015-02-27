@@ -76,9 +76,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
             if (fact.ViewService == null)
             {
-                fact.ConfigureDefaultViewService(new DefaultViewServiceOptions());
+                fact.ViewService = new DefaultViewServiceRegistration();
             }
             builder.Register(fact.ViewService);
+
+            if (fact.CorsPolicyService == null)
+            {
+                fact.CorsPolicyService = new Registration<ICorsPolicyService>(new DefaultCorsPolicyService(options.CorsPolicy ?? new CorsPolicy()));
+            }
+            builder.Register(fact.CorsPolicyService);
 
             // this is more of an internal interface, but maybe we want to open it up as pluggable?
             // this is used by the DefaultClientPermissionsService below, or it could be used
@@ -236,6 +242,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 {
                     reg.As(registration.DependencyType);
                 }
+                switch (registration.Mode)
+                {
+                    case RegistrationMode.Singleton:
+                        // this is the only option when Instance is provided
+                        break;
+                    case RegistrationMode.InstancePerHttpRequest:
+                        throw new InvalidOperationException("RegistrationMode.InstancePerHttpRequest can't be used when an Instance is provided.");
+                    case RegistrationMode.InstancePerUse:
+                        throw new InvalidOperationException("RegistrationMode.InstancePerUse can't be used when an Instance is provided.");
+                }
             }
             else if (registration.Type != null)
             {
@@ -248,10 +264,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 {
                     reg.As(registration.DependencyType);
                 }
+
+                switch(registration.Mode)
+                {
+                    case RegistrationMode.InstancePerHttpRequest:
+                        reg.InstancePerRequest(); break;
+                    case RegistrationMode.Singleton:
+                        reg.SingleInstance(); break;
+                    case RegistrationMode.InstancePerUse:
+                        // this is the default behavior
+                        break;
+                }
             }
             else if (registration.Factory != null)
             {
-                var reg = builder.Register(ctx => registration.Factory(new AutofacDependencyResolver(ctx)));
+                var reg = builder.Register(ctx => registration.Factory(new AutofacDependencyResolver(ctx.Resolve<IComponentContext>())));
                 if (name != null)
                 {
                     reg.Named(name, registration.DependencyType);
@@ -260,12 +287,28 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 {
                     reg.As(registration.DependencyType);
                 }
+
+                switch (registration.Mode)
+                {
+                    case RegistrationMode.InstancePerHttpRequest:
+                        reg.InstancePerRequest(); break;
+                    case RegistrationMode.InstancePerUse:
+                        // this is the default behavior
+                        break;
+                    case RegistrationMode.Singleton:
+                        throw new InvalidOperationException("RegistrationMode.Singleton can't be used when using a factory function.");
+                }
             }
             else
             {
                 var message = "No type or factory found on registration " + registration.GetType().FullName; 
                 Logger.Error(message);
                 throw new InvalidOperationException(message);
+            }
+
+            foreach(var item in registration.AdditionalRegistrations)
+            {
+                builder.Register(item, item.Name);
             }
         }
     }

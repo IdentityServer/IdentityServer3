@@ -47,5 +47,21 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         /// The redirect URL.
         /// </value>
         public string RedirectUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether automatic redirect to the redirect URL is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if automatic redirect is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool AutoRedirect { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the automatic redirect delay (in seconds).
+        /// </summary>
+        /// <value>
+        /// The automatic redirect delay.
+        /// </value>
+        public int AutoRedirectDelay { get; set; }
     }
 }

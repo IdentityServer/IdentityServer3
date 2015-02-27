@@ -44,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             try
             {
                 // this creates a per-request, disposable scope
-                using (var scope = _container.BeginLifetimeScope(b =>
+                using (var scope = _container.BeginLifetimeScope("AutofacWebRequest", b =>
                 {
                     // this makes owin context resolvable in the scope
                     b.RegisterInstance(context).As<IOwinContext>();

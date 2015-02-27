@@ -15,22 +15,18 @@
  */
 
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
 namespace Owin
 {
     internal static class UseCorsExtension
     {
-        public static void UseCors(this IAppBuilder app, CorsPolicy policy)
+        public static void UseCors(this IAppBuilder app)
         {
-            if (policy != null)
+            app.UseCors(new Microsoft.Owin.Cors.CorsOptions
             {
-                app.UseCors(new Microsoft.Owin.Cors.CorsOptions
-                {
-                    PolicyProvider = new CorsPolicyProvider(policy, Constants.RoutePaths.CorsPaths)
-                });
-            }
+                PolicyProvider = new CorsPolicyProvider(Constants.RoutePaths.CorsPaths)
+            });
         }
     }
 }

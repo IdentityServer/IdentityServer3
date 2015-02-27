@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -25,12 +24,9 @@ using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
-#pragma warning disable 1591
-
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class TokenRequestValidator
+    internal class TokenRequestValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -290,8 +286,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
             {
-                LogError("Client not authorized for client credentials flow");
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                if (_validatedRequest.Client.AllowClientCredentialsOnly == false)
+                {
+                    LogError("Client not authorized for client credentials flow");
+                    return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                }
             }
 
             /////////////////////////////////////////////
@@ -458,7 +457,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (refreshToken == null)
             {
                 var error = "Refresh token is invalid";
-                LogError(error);
+                LogWarn(error);
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
                 return Invalid(Constants.TokenErrors.InvalidGrant);
@@ -470,7 +469,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (refreshToken.CreationTime.HasExceeded(refreshToken.LifeTime))
             {
                 var error = "Refresh token has expired";
-                LogError(error);
+                LogWarn(error);
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
                 await _refreshTokens.RemoveAsync(refreshTokenHandle);
@@ -638,6 +637,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var json = LogSerializer.Serialize(validationLog);
 
             Logger.ErrorFormat("{0}\n {1}", message, json);
+        }
+
+        private void LogWarn(string message)
+        {
+            var validationLog = new TokenRequestValidationLog(_validatedRequest);
+            var json = LogSerializer.Serialize(validationLog);
+
+            Logger.WarnFormat("{0}\n {1}", message, json);
         }
 
         private void LogSuccess()

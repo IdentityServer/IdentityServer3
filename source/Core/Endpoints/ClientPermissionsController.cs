@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [SecurityHeaders]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
-    public class ClientPermissionsController : ApiController
+    internal class ClientPermissionsController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 

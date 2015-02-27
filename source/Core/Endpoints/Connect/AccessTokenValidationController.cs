@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [EditorBrowsable(EditorBrowsableState.Never)]
     [RoutePrefix(Constants.RoutePaths.Oidc.AccessTokenValidation)]
     [NoCache]
-    public class AccessTokenValidationController : ApiController
+    internal class AccessTokenValidationController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly TokenValidator _validator;

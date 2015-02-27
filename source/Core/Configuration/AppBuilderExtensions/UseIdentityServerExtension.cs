@@ -70,12 +70,12 @@ namespace Owin
             app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
             app.ConfigureIdentityServerIssuer(options);
 
-            app.UseCors(options.CorsPolicy);
-            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
-
             var container = AutofacConfig.Configure(options);
             app.Use<AutofacContainerMiddleware>(container);
-            
+
+            app.UseCors();
+            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
+
             if (options.PluginConfiguration != null)
             {
                 options.PluginConfiguration(app, options);

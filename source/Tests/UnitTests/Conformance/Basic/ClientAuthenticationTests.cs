@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 
         [Fact]
         [Trait("Category", Category)]
-        public void Token_endpoint_suports_client_authentication_with_basic_authentication_with_POST()
+        public void Token_endpoint_supports_client_authentication_with_basic_authentication_with_POST()
         {
             host.Login();
 
@@ -90,7 +90,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 
         [Fact]
         [Trait("Category", Category)]
-        public void Token_endpoint_suports_client_authentication_with_form_encoded_authentication_in_POST_body()
+        public void Token_endpoint_supports_client_authentication_with_form_encoded_authentication_in_POST_body()
         {
             host.Login();
 
