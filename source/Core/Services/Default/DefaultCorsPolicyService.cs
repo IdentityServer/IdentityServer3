@@ -16,7 +16,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 
@@ -50,8 +49,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         ///   <c>true</c> if allow all; otherwise, <c>false</c>.
         /// </value>
         public bool AllowAll { get; set; }
-        
-        Func<string, Task<bool>> policyCallback;
+
+        readonly Func<string, Task<bool>> policyCallback;
         
         internal DefaultCorsPolicyService(CorsPolicy policy)
         {
@@ -66,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        public async Task<bool> IsOriginAllowed(string origin)
+        public async Task<bool> IsOriginAllowedAsync(string origin)
         {
             if (AllowAll)
             {

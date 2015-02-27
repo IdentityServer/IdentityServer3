@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="Registration"/> class.
         /// </summary>
-        public Registration()
+        protected Registration()
         {
             this.Mode = RegistrationMode.InstancePerUse;
             this.AdditionalRegistrations = new HashSet<Registration>();

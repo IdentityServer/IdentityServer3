@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Thinktecture.IdentityServer.Core.Services
@@ -31,6 +27,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        Task<bool> IsOriginAllowed(string origin);
+        Task<bool> IsOriginAllowedAsync(string origin);
     }
 }

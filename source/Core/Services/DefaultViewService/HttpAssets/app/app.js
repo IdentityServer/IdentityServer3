@@ -32,6 +32,14 @@
         var json = Encoder.htmlDecode(encodedJson);
         var model = JSON.parse(json);
         angular.module("app").constant("Model", model);
+        if (model.autoRedirect && model.redirectUrl) {
+            if (model.autoRedirectDelay < 0) {
+                model.autoRedirectDelay = 0;
+            }
+            window.setTimeout(function () {
+                window.location = model.redirectUrl;
+            }, model.autoRedirectDelay * 1000);
+        }
     })();
 
 })();

@@ -36,14 +36,14 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void IsOriginAllowed_OriginIsAllowed_ReturnsTrue()
         {
             subject.AllowedOrigins.Add("http://foo");
-            subject.IsOriginAllowed("http://foo").Result.Should().Be(true);
+            subject.IsOriginAllowedAsync("http://foo").Result.Should().Be(true);
         }
 
         [Fact]
         public void IsOriginAllowed_OriginIsNotAllowed_ReturnsFalse()
         {
             subject.AllowedOrigins.Add("http://foo");
-            subject.IsOriginAllowed("http://bar").Result.Should().Be(false);
+            subject.IsOriginAllowedAsync("http://bar").Result.Should().Be(false);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.AllowedOrigins.Add("http://foo");
             subject.AllowedOrigins.Add("http://bar");
             subject.AllowedOrigins.Add("http://baz");
-            subject.IsOriginAllowed("http://bar").Result.Should().Be(true);
+            subject.IsOriginAllowedAsync("http://bar").Result.Should().Be(true);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.AllowedOrigins.Add("http://foo");
             subject.AllowedOrigins.Add("http://bar");
             subject.AllowedOrigins.Add("http://baz");
-            subject.IsOriginAllowed("http://quux").Result.Should().Be(false);
+            subject.IsOriginAllowedAsync("http://quux").Result.Should().Be(false);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             policy.PolicyCallback = func;
 
             subject = new DefaultCorsPolicyService(policy);
-            var result = subject.IsOriginAllowed("http://foo").Result;
+            var result = subject.IsOriginAllowedAsync("http://foo").Result;
             result.Should().Be(true);
             wasCalled.Should().Be(true);
         }
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         public void IsOriginAllowed_AllowAllTrue_ReturnsTrue()
         {
             subject.AllowAll = true;
-            subject.IsOriginAllowed("http://foo").Result.Should().Be(true);
+            subject.IsOriginAllowedAsync("http://foo").Result.Should().Be(true);
         }
     }
 }

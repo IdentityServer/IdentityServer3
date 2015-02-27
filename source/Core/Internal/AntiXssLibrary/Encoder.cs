@@ -23,9 +23,6 @@
 namespace Microsoft.Security.Application
     // ReSharper restore CheckNamespace
 {
-    using System;
-    using System.Globalization;
-    using System.Text;
 
     /// <summary>
     /// Performs encoding of input strings to provide protection against

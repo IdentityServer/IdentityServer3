@@ -33,6 +33,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             EnableLocalLogin = true;
             EnableLoginHint = true;
             EnableSignOutPrompt = true;
+            EnablePostSignOutAutoRedirect = false;
+            PostSignOutAutoRedirectDelay = 0;
             CookieOptions = new CookieOptions();
         }
 
@@ -80,6 +82,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <c>true</c> if sign-out prompt is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableSignOutPrompt { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if automatic redirect after signout is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnablePostSignOutAutoRedirect { get; set; }
+
+        /// <summary>
+        /// Gets or sets the delay (in seconds) before redirecting to a post_logout_redirect_uri.
+        /// </summary>
+        /// <value>
+        /// The post sign out automatic redirect delay.
+        /// </value>
+        public int PostSignOutAutoRedirectDelay { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page. Defaults to false.
