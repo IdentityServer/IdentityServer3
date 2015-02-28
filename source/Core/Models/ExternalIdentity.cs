@@ -51,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public IEnumerable<Claim> Claims { get; set; }
 
-        internal static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
+        public static ExternalIdentity FromClaims(IEnumerable<Claim> claims)
         {
             if (claims == null) throw new ArgumentNullException("claims");
 
