@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Thinktecture.IdentityServer.Core</RootNamespace>
-    <AssemblyName>Thinktecture.IdentityServer.Core</AssemblyName>
+    <AssemblyName>Thinktecture.IdentityServer3</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
