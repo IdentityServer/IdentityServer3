@@ -43,6 +43,7 @@ namespace Owin
                 CookieName = options.Prefix + Constants.PrimaryAuthenticationType,
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
+                CookieSecure = GetCookieSecure(options.SecureMode),
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PrimaryAuthenticationType))
             };
             app.UseCookieAuthentication(primary);
@@ -54,6 +55,7 @@ namespace Owin
                 AuthenticationMode = AuthenticationMode.Passive,
                 ExpireTimeSpan = Constants.ExternalCookieTimeSpan,
                 SlidingExpiration = false,
+                CookieSecure = GetCookieSecure(options.SecureMode),
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.ExternalAuthenticationType))
             };
             app.UseCookieAuthentication(external);
@@ -65,6 +67,7 @@ namespace Owin
                 AuthenticationMode = AuthenticationMode.Passive,
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
+                CookieSecure = GetCookieSecure(options.SecureMode),
                 TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PartialSignInAuthenticationType))
             };
             app.UseCookieAuthentication(partial);
@@ -99,6 +102,19 @@ namespace Owin
             }
 
             return app;
+        }
+
+        private static CookieSecureOption GetCookieSecure(CookieSecureMode cookieSecureMode)
+        {
+            switch (cookieSecureMode)
+            {
+                case CookieSecureMode.Always:
+                    return CookieSecureOption.Always;
+                case CookieSecureMode.SameAsRequest:
+                    return CookieSecureOption.SameAsRequest;
+                default:
+                    throw new InvalidOperationException("Invalid CookieSecureMode");
+            }
         }
     }
 }
