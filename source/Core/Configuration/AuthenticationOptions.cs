@@ -84,7 +84,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnableSignOutPrompt { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint.
+        /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint. Defaults to false.
         /// </summary>
         /// <value>
         /// <c>true</c> if automatic redirect after signout is enabled; otherwise, <c>false</c>.
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnablePostSignOutAutoRedirect { get; set; }
 
         /// <summary>
-        /// Gets or sets the delay (in seconds) before redirecting to a post_logout_redirect_uri.
+        /// Gets or sets the delay (in seconds) before redirecting to a post_logout_redirect_uri. Defaults to 0.
         /// </summary>
         /// <value>
         /// The post sign out automatic redirect delay.
