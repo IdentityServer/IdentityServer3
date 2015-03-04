@@ -35,6 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             EnableSignOutPrompt = true;
             EnablePostSignOutAutoRedirect = false;
             PostSignOutAutoRedirectDelay = 0;
+            RequireAuthenticatedUserForSignOutMessage = false;
             CookieOptions = new CookieOptions();
         }
 
@@ -98,7 +99,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The post sign out automatic redirect delay.
         /// </value>
         public int PostSignOutAutoRedirectDelay { get; set; }
-        
+
+        /// <summary>
+        /// Indicates if user must be authenticated to accept parameters to end session endpoint. Defaults to false.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if required; otherwise, <c>false</c>.
+        /// </value>
+        public bool RequireAuthenticatedUserForSignOutMessage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page. Defaults to false.
         /// </summary>

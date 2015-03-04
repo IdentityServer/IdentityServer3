@@ -32,6 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         private readonly ValidatedEndSessionRequest _validatedRequest;
         private readonly TokenValidator _tokenValidator;
         private readonly IRedirectUriValidator _uriValidator;
+        private readonly IdentityServerOptions _options;
 
         public ValidatedEndSessionRequest ValidatedRequest
         {
@@ -45,6 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             _tokenValidator = tokenValidator;
             _uriValidator = uriValidator;
+            _options = options;
 
             _validatedRequest = new ValidatedEndSessionRequest
             {
@@ -59,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _validatedRequest.Raw = parameters;
             _validatedRequest.Subject = subject;
 
-            if (!subject.Identity.IsAuthenticated)
+            if (!subject.Identity.IsAuthenticated && _options.AuthenticationOptions.RequireAuthenticatedUserForSignOutMessage)
             {
                 Logger.Warn("User is anonymous. Ignoring end session parameters");
                 return Invalid();
@@ -80,7 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                 // validate sub claim against currently logged on user
                 var subClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
-                if (subClaim != null)
+                if (subClaim != null && subject.Identity.IsAuthenticated)
                 {
                     if (subject.GetSubjectId() != subClaim.Value)
                     {
