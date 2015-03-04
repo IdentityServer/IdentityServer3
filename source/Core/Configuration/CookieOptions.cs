@@ -30,9 +30,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             ExpireTimeSpan = Constants.DefaultCookieTimeSpan;
             SlidingExpiration = false;
-            
             AllowRememberMe = true;
             RememberMeDuration = Constants.DefaultRememberMeDuration;
+            SecureMode = CookieSecureMode.SameAsRequest;
         }
 
         /// <summary>
@@ -92,5 +92,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The duration of the "remember me" persistent cookie.
         /// </value>
         public TimeSpan RememberMeDuration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mode for issuing the secure flag on the cookies issued. Defaults to SameAsRequest.
+        /// </summary>
+        /// <value>
+        /// The secure.
+        /// </value>
+        public CookieSecureMode SecureMode { get; set; }
     }
 }
