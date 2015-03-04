@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (claims != null && claims.Any())
             {
-                resultClaims.AddRange(claims.Where(x => !Constants.CustomGrantProtocolClaimTypes.Contains(x.Type)));
+                resultClaims.AddRange(claims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type)));
             }
 
             var id = new ClaimsIdentity(authenticationMethod);
