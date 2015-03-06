@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
@@ -27,6 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     /// </summary>
     public class InMemoryCorsPolicyService : ICorsPolicyService
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         readonly IEnumerable<Client> clients;
 
         /// <summary>
@@ -51,6 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 select url.GetOrigin();
 
             var result = query.Contains(origin, StringComparer.OrdinalIgnoreCase);
+            
+            Logger.InfoFormat("Client list checked and origin: {0} is {1}allowed", origin, result ? "" : "not ");
             
             return Task.FromResult(result);
         }
