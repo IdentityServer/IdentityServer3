@@ -126,6 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (login == null) throw new ArgumentNullException("login");
 
             var options = env.ResolveDependency<IdentityServerOptions>();
+            var sessionCookie = env.ResolveDependency<SessionCookie>();
             var context = new OwinContext(env);
 
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
@@ -136,7 +137,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 if (login.PersistentLogin == true || options.AuthenticationOptions.CookieOptions.IsPersistent)
                 {
                     props.IsPersistent = true;
-                    props.ExpiresUtc = login.PersistentLoginExpiration;
+                    if (login.PersistentLogin == true)
+                    {
+                        var expires = login.PersistentLoginExpiration ?? DateTimeHelper.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                        props.ExpiresUtc = login.PersistentLoginExpiration;
+                    }
                 }
             }
 
@@ -166,6 +171,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             context.Authentication.SignIn(props, identity);
+            sessionCookie.IssueSessionId(login.PersistentLogin, login.PersistentLoginExpiration);
         }
 
         /// <summary>
