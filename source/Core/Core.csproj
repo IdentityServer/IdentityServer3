@@ -187,6 +187,7 @@
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ClientSecret.cs" />
+    <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Resources\T4resx.cs">
