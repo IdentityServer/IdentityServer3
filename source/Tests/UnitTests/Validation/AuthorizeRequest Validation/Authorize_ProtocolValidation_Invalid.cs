@@ -55,9 +55,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, Constants.StandardScopes.OpenId);
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
-            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
 
         [Fact]
@@ -73,9 +73,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
@@ -110,9 +110,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -232,9 +232,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, "unknown");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -250,9 +250,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Fragment);
 
@@ -269,9 +269,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
@@ -288,9 +288,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
@@ -359,15 +359,14 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
-
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public async Task Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "malformed");
 
@@ -384,9 +383,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Negative_MaxAge()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "-1");
 

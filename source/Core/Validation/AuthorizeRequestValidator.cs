@@ -236,33 +236,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             
             //////////////////////////////////////////////////////////
-            // check nonce
-            //////////////////////////////////////////////////////////
-            var nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce);
-            if (nonce.IsPresent())
-            {
-                if (nonce.Length > Constants.MaxNonceLength)
-                {
-                    LogError("Nonce too long", request);
-                    return Invalid(ErrorTypes.Client);
-                }
-
-                request.Nonce = nonce;
-            }
-            else
-            {
-                if (request.Flow == Flows.Implicit)
-                {
-                    // only openid requests require nonce
-                    if (request.IsOpenIdRequest)
-                    {
-                        LogError("Nonce required for implicit flow with openid scope", request);
-                        return Invalid(ErrorTypes.Client);
-                    }
-                }
-            }
-
-            //////////////////////////////////////////////////////////
             // check if flow is allowed for client
             //////////////////////////////////////////////////////////
             if (request.Flow != request.Client.Flow)
@@ -367,6 +340,34 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private AuthorizeRequestValidationResult ValidateOptionalParameters(ValidatedAuthorizeRequest request)
         {
+            //////////////////////////////////////////////////////////
+            // check nonce
+            //////////////////////////////////////////////////////////
+            var nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce);
+            if (nonce.IsPresent())
+            {
+                if (nonce.Length > Constants.MaxNonceLength)
+                {
+                    LogError("Nonce too long", request);
+                    return Invalid(ErrorTypes.Client);
+                }
+
+                request.Nonce = nonce;
+            }
+            else
+            {
+                if (request.Flow == Flows.Implicit)
+                {
+                    // only openid requests require nonce
+                    if (request.IsOpenIdRequest)
+                    {
+                        LogError("Nonce required for implicit flow with openid scope", request);
+                        return Invalid(ErrorTypes.Client);
+                    }
+                }
+            }
+
+
             //////////////////////////////////////////////////////////
             // check prompt
             //////////////////////////////////////////////////////////
