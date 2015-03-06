@@ -39,11 +39,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -57,11 +57,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -75,11 +75,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -93,11 +93,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -112,11 +112,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -131,11 +131,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -150,11 +150,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
 
         [Fact]
@@ -168,11 +168,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
+            var protocolResult = await validator.ValidateAsync(parameters);
             protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeFalse();
+            //var clientResult = await validator.ValidateClientAsync();
+            //clientResult.IsError.Should().BeFalse();
         }
     }
 }

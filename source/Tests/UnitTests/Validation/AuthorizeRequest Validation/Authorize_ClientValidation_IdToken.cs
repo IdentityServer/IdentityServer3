@@ -41,13 +41,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var protocolResult = validator.ValidateProtocol(parameters);
-            protocolResult.IsError.Should().BeFalse();
+            var result = await validator.ValidateAsync(parameters);
+            //protocolResult.IsError.Should().BeFalse();
 
-            var clientResult = await validator.ValidateClientAsync();
-            clientResult.IsError.Should().BeTrue();
-            clientResult.ErrorType.Should().Be(ErrorTypes.Client);
-            clientResult.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
+            //var clientResult = await validator.ValidateClientAsync();
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
     }
 }

@@ -17,6 +17,7 @@
 using FluentAssertions;
 using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
@@ -25,24 +26,23 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 {
     public class Authorize_ProtocolValidation_Invalid
     {
+        //[Fact]
+        //[Trait("Category", "AuthorizeRequest Protocol Validation")]
+        //public void Null_Parameter()
+        //{
+        //    var validator = Factory.CreateAuthorizeRequestValidator();
+
+        //    Action act = () => validator.ValidateProtocol(null);
+
+        //    act.ShouldThrow<ArgumentNullException>();
+        //}
+
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        
-        public void Null_Parameter()
+        public async Task Empty_Parameters()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
-
-            Action act = () => validator.ValidateProtocol(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Empty_Parameters()
-        {
-            var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(new NameValueCollection());
+            var result = await validator.ValidateAsync(new NameValueCollection());
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         // fails because openid scope is requested, but no response type that indicates an identity token
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void OpenId_Token_Only_Request()
+        public async Task OpenId_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Resource_Only_IdToken_Request()
+        public async Task Resource_Only_IdToken_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -89,7 +89,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Mixed_Token_Only_Request()
+        public async Task Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -107,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void OpenId_IdToken_Request_Nonce_Missing()
+        public async Task OpenId_IdToken_Request_Nonce_Missing()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Missing_ClientId()
+        public async Task Missing_ClientId()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
@@ -133,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -142,7 +142,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Missing_Scope()
+        public async Task Missing_Scope()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -159,7 +159,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Missing_RedirectUri()
+        public async Task Missing_RedirectUri()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -167,7 +167,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Malformed_RedirectUri()
+        public async Task Malformed_RedirectUri()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -185,7 +185,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -194,7 +194,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Malformed_RedirectUri_Triple_Slash()
+        public async Task Malformed_RedirectUri_Triple_Slash()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -203,17 +203,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Missing_ResponseType()
+        public async Task Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -221,7 +220,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -230,7 +229,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Unknown_ResponseType()
+        public async Task Unknown_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -239,7 +238,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseType, "unknown");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -248,7 +247,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_Code_ResponseType()
+        public async Task Invalid_ResponseMode_For_Code_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -258,7 +257,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Fragment);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -267,7 +266,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_IdToken_ResponseType()
+        public async Task Invalid_ResponseMode_For_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -277,7 +276,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -286,7 +285,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_IdTokenToken_ResponseType()
+        public async Task Invalid_ResponseMode_For_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -296,7 +295,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -305,7 +304,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_CodeToken_ResponseType()
+        public async Task Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -315,7 +314,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -324,7 +323,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_CodeIdToken_ResponseType()
+        public async Task Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -334,7 +333,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -343,7 +342,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
+        public async Task Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -353,7 +352,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.User);
@@ -363,7 +362,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Malformed_MaxAge()
+        public async Task Malformed_MaxAge()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -373,7 +372,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "malformed");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
@@ -382,7 +381,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
-        public void Negative_MaxAge()
+        public async Task Negative_MaxAge()
         {
             var parameters = new NameValueCollection();
             parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
@@ -392,7 +391,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.MaxAge, "-1");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = validator.ValidateProtocol(parameters);
+            var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
