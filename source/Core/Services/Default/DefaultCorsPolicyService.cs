@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -26,6 +27,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultCorsPolicyService : ICorsPolicyService
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCorsPolicyService"/> class.
         /// </summary>
@@ -69,6 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (AllowAll)
             {
+                Logger.InfoFormat("AllowAll true, so origin: {0} is allowed", origin);
                 return true;
             }
 
@@ -76,7 +80,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 if (AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))
                 {
+                    Logger.InfoFormat("AllowedOrigins configured and origin {0} is allowed", origin);
                     return true;
+                }
+                else
+                {
+                    Logger.InfoFormat("AllowedOrigins configured and origin {0} is not allowed", origin);
                 }
             }
 
@@ -84,10 +93,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 if (await policyCallback(origin))
                 {
+                    Logger.InfoFormat("policyCallback callback invoked and origin {0} is allowed", origin);
                     return true;
                 }
+                else
+                {
+                    Logger.InfoFormat("policyCallback callback invoked and origin {0} is not allowed", origin);
+                }
             }
-            
+
+            Logger.InfoFormat("Exiting; origin {0} is not allowed", origin);
+
             return false;
         }
     }

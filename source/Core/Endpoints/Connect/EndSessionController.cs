@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -96,8 +99,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         public IHttpActionResult LogoutCallback()
         {
             Logger.Info("End session callback requested");
-
-            return Ok();
+            
+            return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(String.Empty, Encoding.UTF8, "text/html")
+            });
         }
     }
 }

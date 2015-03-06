@@ -96,8 +96,8 @@ namespace Thinktecture.IdentityServer.Core.Models
             var user = IdentityServerPrincipal.Create(subject, name, authenticationMethod, identityProvider, authenticationType);
             if (claims != null && claims.Any())
             {
-                claims = claims.Where(x => !Constants.ExternalIdentityProviderProtocolClaimTypes.Contains(x.Type));
-                claims = claims.Where(x => !Constants.AuthenticateResultClaimTypes.Contains(x.Type));
+                claims = claims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type));
+                claims = claims.Where(x => x.Type != Constants.ClaimTypes.Name);
                 user.Identities.First().AddClaims(claims);
             }
 

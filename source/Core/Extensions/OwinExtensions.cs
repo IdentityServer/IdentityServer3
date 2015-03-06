@@ -111,6 +111,64 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         /// <summary>
+        /// Issues the login cookie for IdentityServer.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="login">The login information.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// login
+        /// </exception>
+        public static void IssueLoginCookie(this IDictionary<string, object> env, AuthenticatedLogin login)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (login == null) throw new ArgumentNullException("login");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var context = new OwinContext(env);
+
+            var props = new Microsoft.Owin.Security.AuthenticationProperties();
+
+            // if false, then they're explicit in preventing a persistent cookie
+            if (login.PersistentLogin != false)
+            {
+                if (login.PersistentLogin == true || options.AuthenticationOptions.CookieOptions.IsPersistent)
+                {
+                    props.IsPersistent = true;
+                    props.ExpiresUtc = login.PersistentLoginExpiration;
+                }
+            }
+
+            var authenticationMethod = login.AuthenticationMethod;
+            var identityProvider = login.IdentityProvider ?? Constants.BuiltInIdentityProvider;
+            if (String.IsNullOrWhiteSpace(authenticationMethod))
+            {
+                if (identityProvider == Constants.BuiltInIdentityProvider)
+                {
+                    authenticationMethod = Constants.AuthenticationMethods.Password;
+                }
+                else
+                {
+                    authenticationMethod = Constants.AuthenticationMethods.External;
+                }
+            }
+
+            var user = IdentityServerPrincipal.Create(login.Subject, login.Name, authenticationMethod, identityProvider, Constants.PrimaryAuthenticationType);
+            var identity = user.Identities.First();
+
+            var claims = login.Claims;
+            if (claims != null && claims.Any())
+            {
+                claims = claims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type));
+                claims = claims.Where(x => x.Type != Constants.ClaimTypes.Name);
+                identity.AddClaims(claims);
+            }
+
+            context.Authentication.SignIn(props, identity);
+        }
+
+        /// <summary>
         /// Gets the current request identifier.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
