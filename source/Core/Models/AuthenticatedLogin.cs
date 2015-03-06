@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// The identity provider. This should used when an external
         /// identity provider is used and will typically match the <c>AuthenticationType</c> as configured
-        /// on the Katana authentication middleware.</param>
+        /// on the Katana authentication middleware.
         /// </summary>
         /// <value>
         /// The identity provider.
