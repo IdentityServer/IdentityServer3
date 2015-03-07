@@ -52,20 +52,4 @@ namespace Thinktecture.IdentityServer.Core.Validation
             ErrorType = ErrorTypes.User;
         }
     }
-
-    /// <summary>
-    /// Indicates if a <see cref="ValidationResult"/> is an error to be displayed to the user or returned to the client.
-    /// </summary>
-    public enum ErrorTypes
-    {
-        /// <summary>
-        /// client error
-        /// </summary>
-        Client = 0,
-
-        /// <summary>
-        /// user error
-        /// </summary>
-        User = 1
-    }
 }

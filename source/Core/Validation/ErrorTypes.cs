@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    class AuthorizeRequestValidationResult : ValidationResultBase
+    /// <summary>
+    /// Indicates if a <see cref="ValidationResult"/> is an error to be displayed to the user or returned to the client.
+    /// </summary>
+    public enum ErrorTypes
     {
-        public AuthorizeRequestValidationResult()
-        {
-            IsError = true;
-            ErrorType = ErrorTypes.User;
-        }
+        /// <summary>
+        /// client error
+        /// </summary>
+        Client = 0,
 
-        public ErrorTypes ErrorType { get; set; }
-        public ValidatedAuthorizeRequest ValidatedRequest { get; set; }
+        /// <summary>
+        /// user error
+        /// </summary>
+        User = 1
     }
 }

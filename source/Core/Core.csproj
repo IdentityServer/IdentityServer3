@@ -251,6 +251,7 @@
     <Compile Include="Logging\Models\EndSessionRequestValidationLog.cs" />
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
+    <Compile Include="Validation\ErrorTypes.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
     <Compile Include="Validation\ValidationResultBase.cs" />
