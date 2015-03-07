@@ -106,41 +106,6 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             result.IsError.Should().BeFalse();
         }
 
-        //[Fact]
-        //[Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
-        //// is valid because protocol validation on its own cannot know about resource scopes
-        //public async Task Valid_Mixed_IdToken_Request()
-        //{
-        //    var parameters = new NameValueCollection();
-        //    parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
-        //    parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-        //    parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
-        //    parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
-        //    parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
-
-        //    var validator = Factory.CreateAuthorizeRequestValidator();
-        //    var result = await validator.ValidateAsync(parameters);
-
-        //    result.IsError.Should().BeFalse();
-        //}
-
-        //[Fact]
-        //[Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
-        //public async Task Valid_OpenId_IdTokenToken_Request()
-        //{
-        //    var parameters = new NameValueCollection();
-        //    parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
-        //    parameters.Add(Constants.AuthorizeRequest.Scope, Constants.StandardScopes.OpenId);
-        //    parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
-        //    parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
-        //    parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
-
-        //    var validator = Factory.CreateAuthorizeRequestValidator();
-        //    var result = await validator.ValidateAsync(parameters);
-
-        //    result.IsError.Should().BeFalse();
-        //}
-
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request()

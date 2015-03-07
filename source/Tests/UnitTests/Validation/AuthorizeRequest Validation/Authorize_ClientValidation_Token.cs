@@ -41,9 +41,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
-            //protocolResult.IsError.Should().Be(false);
-
-            //var clientResult = await validator.ValidateClientAsync();
+            
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);

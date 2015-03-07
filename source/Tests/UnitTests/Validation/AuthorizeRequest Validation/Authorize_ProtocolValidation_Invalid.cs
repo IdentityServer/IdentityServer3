@@ -26,16 +26,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 {
     public class Authorize_ProtocolValidation_Invalid
     {
-        //[Fact]
-        //[Trait("Category", "AuthorizeRequest Protocol Validation")]
-        //public void Null_Parameter()
-        //{
-        //    var validator = Factory.CreateAuthorizeRequestValidator();
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
+        public void Null_Parameter()
+        {
+            var validator = Factory.CreateAuthorizeRequestValidator();
 
-        //    Action act = () => validator.ValidateProtocol(null);
+            Func<Task> act = () => validator.ValidateAsync(null);
 
-        //    act.ShouldThrow<ArgumentNullException>();
-        //}
+            act.ShouldThrow<ArgumentNullException>();
+        }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
