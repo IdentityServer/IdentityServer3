@@ -17,7 +17,9 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -48,13 +50,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _sessionCookie = sessionCookie;
         }
 
-        public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters)
+        public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
         {
-            var request = new ValidatedAuthorizeRequest();
-            request.Options = _options;
-
             Logger.Info("Start authorize request protocol validation");
 
+            var request = new ValidatedAuthorizeRequest
+            {
+                Options = _options,
+                Subject = subject ?? Principal.Anonymous
+            };
+            
             if (parameters == null)
             {
                 Logger.Error("Parameters are null.");
