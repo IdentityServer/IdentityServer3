@@ -472,6 +472,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     request.SessionId = sessionId;
                 }
+                else
+                {
+                    LogError("Check session endpoint enabled, but SessionId is missing", request);
+                }
             }
 
             return Valid(request);
