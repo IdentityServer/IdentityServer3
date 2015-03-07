@@ -77,8 +77,6 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Request_missing_response_type_rejected()
         {
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
-
             host.Login();
 
             var state = Guid.NewGuid().ToString();
