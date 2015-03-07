@@ -63,30 +63,35 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             request.Raw = parameters;
 
+            // validate client_id and redirect_uri
             var clientResult = await ValidateClientAsync(request);
             if (clientResult.IsError)
             {
                 return clientResult;
             }
 
-            var mandatoryResult = ValidateMandatoryParameters(request);
+            // state, response_type, response_mode
+            var mandatoryResult = ValidateCoreParameters(request);
             if (mandatoryResult.IsError)
             {
                 return mandatoryResult;
             }
 
+            // scope, scope restrictions and plausability
             var scopeResult = await ValidateScopeAsync(request);
             if (scopeResult.IsError)
             {
                 return scopeResult;
             }
 
+            // nonce, prompt, acr_values, login_hint etc.
             var optionalResult = ValidateOptionalParameters(request);
             if (optionalResult.IsError)
             {
                 return optionalResult;
             }
 
+            // custom validator
             var customResult = await _customValidator.ValidateAuthorizeRequestAsync(request);
 
             if (customResult.IsError)
@@ -159,7 +164,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid(request);
         }
 
-        private AuthorizeRequestValidationResult ValidateMandatoryParameters(ValidatedAuthorizeRequest request)
+        private AuthorizeRequestValidationResult ValidateCoreParameters(ValidatedAuthorizeRequest request)
         {
             //////////////////////////////////////////////////////////
             // check state
@@ -242,18 +247,6 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 LogError("Invalid flow for client: " + request.Flow, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            
-            //////////////////////////////////////////////////////////
-            // check if sessionId is available and if session management is enabled
-            //////////////////////////////////////////////////////////
-            if (_options.Endpoints.EnableCheckSessionEndpoint)
-            {
-                if (request.SessionId.IsMissing())
-                {
-                    Logger.Warn("Session management is enabled, but session id cookie is missing.");
-                }
             }
 
             return Valid(request);
