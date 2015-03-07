@@ -26,13 +26,35 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             return new List<Client>
             {
                 new Client
-                    {
+                {
                         ClientName = "Code Client",
                         Enabled = true,
                         ClientId = "codeclient",
                         ClientSecrets = new List<Secret>
                         { 
                             new Secret("secret".Sha256())
+                        },
+
+                        Flow = Flows.AuthorizationCode,
+                        
+                        RequireConsent = false,
+                    
+                        RedirectUris = new List<string>
+                        {
+                            "https://server/cb",
+                        },
+
+                        AuthorizationCodeLifetime = 60
+                    },
+
+                    new Client
+                {
+                        ClientName = "Hybrid Client",
+                        Enabled = true,
+                        ClientId = "hybridclient",
+                        ClientSecrets = new List<ClientSecret>
+                        { 
+                            new ClientSecret("secret".Sha256())
                         },
 
                         Flow = Flows.AuthorizationCode,

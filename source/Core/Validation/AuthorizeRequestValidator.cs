@@ -31,21 +31,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly ValidatedAuthorizeRequest _validatedRequest;
         private readonly IdentityServerOptions _options;
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;
         private readonly ScopeValidator _scopeValidator;
         private readonly SessionCookie _sessionCookie;
-
-        public ValidatedAuthorizeRequest ValidatedRequest
-        {
-            get
-            {
-                return _validatedRequest;
-            }
-        }
 
         public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
@@ -55,16 +46,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _uriValidator = uriValidator;
             _scopeValidator = scopeValidator;
             _sessionCookie = sessionCookie;
-
-            _validatedRequest = new ValidatedAuthorizeRequest
-            {
-                Options = _options, 
-            };
         }
 
-        // basic protocol validation
-        public ValidationResult ValidateProtocol(NameValueCollection parameters)
+        public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters)
         {
+            var request = new ValidatedAuthorizeRequest();
+            request.Options = _options;
+
             Logger.Info("Start authorize request protocol validation");
 
             if (parameters == null)
@@ -73,83 +61,152 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 throw new ArgumentNullException("parameters");
             }
 
-            _validatedRequest.Raw = parameters;
+            request.Raw = parameters;
 
-            //////////////////////////////////////////////////////////
-            // check state
-            //////////////////////////////////////////////////////////
-            var state = parameters.Get(Constants.AuthorizeRequest.State);
-            if (state.IsPresent())
+            // validate client_id and redirect_uri
+            var clientResult = await ValidateClientAsync(request);
+            if (clientResult.IsError)
             {
-                _validatedRequest.State = state;
+                return clientResult;
             }
-            
+
+            // state, response_type, response_mode
+            var mandatoryResult = ValidateCoreParameters(request);
+            if (mandatoryResult.IsError)
+            {
+                return mandatoryResult;
+            }
+
+            // scope, scope restrictions and plausability
+            var scopeResult = await ValidateScopeAsync(request);
+            if (scopeResult.IsError)
+            {
+                return scopeResult;
+            }
+
+            // nonce, prompt, acr_values, login_hint etc.
+            var optionalResult = ValidateOptionalParameters(request);
+            if (optionalResult.IsError)
+            {
+                return optionalResult;
+            }
+
+            // custom validator
+            var customResult = await _customValidator.ValidateAuthorizeRequestAsync(request);
+
+            if (customResult.IsError)
+            {
+                LogError("Error in custom validation: " + customResult.Error, request);
+                return Invalid(request, customResult.ErrorType, customResult.Error);
+            }
+
+            LogSuccess(request);
+            return Valid(request);
+        }
+
+        public async Task<AuthorizeRequestValidationResult> ValidateClientAsync(ValidatedAuthorizeRequest request)
+        {
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
-            var clientId = parameters.Get(Constants.AuthorizeRequest.ClientId);
+            var clientId = request.Raw.Get(Constants.AuthorizeRequest.ClientId);
             if (clientId.IsMissingOrTooLong(Constants.MaxClientIdLength))
             {
-                LogError("client_id is missing or too long");
-                return Invalid();
+                LogError("client_id is missing or too long", request);
+                return Invalid(request);
             }
 
-            _validatedRequest.ClientId = clientId;
+            request.ClientId = clientId;
 
 
             //////////////////////////////////////////////////////////
             // redirect_uri must be present, and a valid uri
             //////////////////////////////////////////////////////////
-            var redirectUri = parameters.Get(Constants.AuthorizeRequest.RedirectUri);
+            var redirectUri = request.Raw.Get(Constants.AuthorizeRequest.RedirectUri);
 
             if (redirectUri.IsMissingOrTooLong(Constants.MaxRedirectUriLength))
             {
-                LogError("redirect_uri is missing or too long");
-                return Invalid();
+                LogError("redirect_uri is missing or too long", request);
+                return Invalid(request);
             }
 
             Uri uri;
             if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
             {
-                LogError("invalid redirect_uri: " + redirectUri);
-                return Invalid();
+                LogError("invalid redirect_uri: " + redirectUri, request);
+                return Invalid(request);
             }
 
-            _validatedRequest.RedirectUri = redirectUri;
+            request.RedirectUri = redirectUri;
 
+
+            //////////////////////////////////////////////////////////
+            // check for valid client
+            //////////////////////////////////////////////////////////
+            var client = await _clients.FindClientByIdAsync(request.ClientId);
+            if (client == null || client.Enabled == false)
+            {
+                LogError("Unknown client or not enabled: " + request.ClientId, request);
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+            }
+
+            request.Client = client;
+
+            //////////////////////////////////////////////////////////
+            // check if redirect_uri is valid
+            //////////////////////////////////////////////////////////
+            if (await _uriValidator.IsRedirectUriValidAsync(request.RedirectUri, request.Client) == false)
+            {
+                LogError("Invalid redirect_uri: " + request.RedirectUri, request);
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+            }
+
+            return Valid(request);
+        }
+
+        private AuthorizeRequestValidationResult ValidateCoreParameters(ValidatedAuthorizeRequest request)
+        {
+            //////////////////////////////////////////////////////////
+            // check state
+            //////////////////////////////////////////////////////////
+            var state = request.Raw.Get(Constants.AuthorizeRequest.State);
+            if (state.IsPresent())
+            {
+                request.State = state;
+            }
 
             //////////////////////////////////////////////////////////
             // response_type must be present and supported
             //////////////////////////////////////////////////////////
-            var responseType = parameters.Get(Constants.AuthorizeRequest.ResponseType);
+            var responseType = request.Raw.Get(Constants.AuthorizeRequest.ResponseType);
             if (responseType.IsMissing())
             {
-                LogError("Missing response_type");
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                LogError("Missing response_type", request);
+                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             if (!Constants.SupportedResponseTypes.Contains(responseType))
             {
-                LogError("Response type not supported: " + responseType);
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                LogError("Response type not supported: " + responseType, request);
+                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            _validatedRequest.ResponseType = responseType;
+            request.ResponseType = responseType;
 
 
             //////////////////////////////////////////////////////////
             // match response_type to flow
             //////////////////////////////////////////////////////////
-            _validatedRequest.Flow = Constants.ResponseTypeToFlowMapping[_validatedRequest.ResponseType];
-            
+            request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+
 
             //////////////////////////////////////////////////////////
             // check if flow is allowed at authorize endpoint
             //////////////////////////////////////////////////////////
-            if (!Constants.AllowedFlowsForAuthorizeEndpoint.Contains(_validatedRequest.Flow))
+            if (!Constants.AllowedFlowsForAuthorizeEndpoint.Contains(request.Flow))
             {
-                LogError("Invalid flow");
-                return Invalid();
+                LogError("Invalid flow", request);
+                return Invalid(request);
             }
 
             //////////////////////////////////////////////////////////
@@ -157,105 +214,162 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
 
             // set default response mode for flow first
-            _validatedRequest.ResponseMode = Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].First();
-            
+            request.ResponseMode = Constants.AllowedResponseModesForFlow[request.Flow].First();
+
             // check if response_mode parameter is present and valid
-            var responseMode = parameters.Get(Constants.AuthorizeRequest.ResponseMode);
+            var responseMode = request.Raw.Get(Constants.AuthorizeRequest.ResponseMode);
             if (responseMode.IsPresent())
             {
                 if (Constants.SupportedResponseModes.Contains(responseMode))
                 {
-                    if (Constants.AllowedResponseModesForFlow[_validatedRequest.Flow].Contains(responseMode))
+                    if (Constants.AllowedResponseModesForFlow[request.Flow].Contains(responseMode))
                     {
-                        _validatedRequest.ResponseMode = responseMode;
+                        request.ResponseMode = responseMode;
                     }
                     else
                     {
-                        LogError("Invalid response_mode for flow: " + responseMode);
-                        return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
+                        LogError("Invalid response_mode for flow: " + responseMode, request);
+                        return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                     }
                 }
                 else
                 {
-                    LogError("Unsupported response_mode: " + responseMode);
-                    return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    LogError("Unsupported response_mode: " + responseMode, request);
+                    return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
                 }
             }
 
+            
+            //////////////////////////////////////////////////////////
+            // check if flow is allowed for client
+            //////////////////////////////////////////////////////////
+            if (request.Flow != request.Client.Flow)
+            {
+                LogError("Invalid flow for client: " + request.Flow, request);
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+            }
+
+            return Valid(request);
+        }
+
+        private async Task<AuthorizeRequestValidationResult> ValidateScopeAsync(ValidatedAuthorizeRequest request)
+        {
             //////////////////////////////////////////////////////////
             // scope must be present
             //////////////////////////////////////////////////////////
-            var scope = parameters.Get(Constants.AuthorizeRequest.Scope);
+            var scope = request.Raw.Get(Constants.AuthorizeRequest.Scope);
             if (scope.IsMissing())
             {
-                LogError("scope is missing");
-                return Invalid(ErrorTypes.Client);
+                LogError("scope is missing", request);
+                return Invalid(request, ErrorTypes.Client);
             }
 
             if (scope.Length > Constants.MaxScopeLength)
             {
-                LogError("scopes too long.");
-                return Invalid(ErrorTypes.Client);
+                LogError("scopes too long.", request);
+                return Invalid(request, ErrorTypes.Client);
             }
 
-            _validatedRequest.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
-            
-            if (_validatedRequest.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
+            request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
+
+            if (request.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
             {
-                _validatedRequest.IsOpenIdRequest = true;
+                request.IsOpenIdRequest = true;
             }
 
             //////////////////////////////////////////////////////////
             // check scope vs response_type plausability
             //////////////////////////////////////////////////////////
-            var requirement = Constants.ResponseTypeToScopeRequirement[_validatedRequest.ResponseType];
+            var requirement = Constants.ResponseTypeToScopeRequirement[request.ResponseType];
             if (requirement == Constants.ScopeRequirement.Identity ||
                 requirement == Constants.ScopeRequirement.IdentityOnly)
             {
-                if (_validatedRequest.IsOpenIdRequest == false)
+                if (request.IsOpenIdRequest == false)
                 {
-                    LogError("response_type requires the openid scope");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("response_type requires the openid scope", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
             }
 
+            //////////////////////////////////////////////////////////
+            // check if scopes are valid/supported and check for resource scopes
+            //////////////////////////////////////////////////////////
+            if (await _scopeValidator.AreScopesValidAsync(request.RequestedScopes) == false)
+            {
+                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+            }
 
+            if (_scopeValidator.ContainsOpenIdScopes && !request.IsOpenIdRequest)
+            {
+                LogError("Identity related scope requests, but no openid scope", request);
+                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+            }
+
+            if (_scopeValidator.ContainsResourceScopes)
+            {
+                request.IsResourceRequest = true;
+            }
+
+            //////////////////////////////////////////////////////////
+            // check scopes and scope restrictions
+            //////////////////////////////////////////////////////////
+            if (!_scopeValidator.AreScopesAllowed(request.Client, request.RequestedScopes))
+            {
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+            }
+
+            request.ValidatedScopes = _scopeValidator;
+
+            //////////////////////////////////////////////////////////
+            // check id vs resource scopes and response types plausability
+            //////////////////////////////////////////////////////////
+            if (!_scopeValidator.IsResponseTypeValid(request.ResponseType))
+            {
+                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+            }
+
+            return Valid(request);
+        }
+
+        private AuthorizeRequestValidationResult ValidateOptionalParameters(ValidatedAuthorizeRequest request)
+        {
             //////////////////////////////////////////////////////////
             // check nonce
             //////////////////////////////////////////////////////////
-            var nonce = parameters.Get(Constants.AuthorizeRequest.Nonce);
+            var nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
                 if (nonce.Length > Constants.MaxNonceLength)
                 {
-                    LogError("Nonce too long");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("Nonce too long", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
 
-                _validatedRequest.Nonce = nonce;
+                request.Nonce = nonce;
             }
             else
             {
-                if (_validatedRequest.Flow == Flows.Implicit)
+                if (request.Flow == Flows.Implicit)
                 {
                     // only openid requests require nonce
-                    if (_validatedRequest.IsOpenIdRequest)
+                    if (request.IsOpenIdRequest)
                     {
-                        LogError("Nonce required for implicit flow with openid scope");
-                        return Invalid(ErrorTypes.Client);
+                        LogError("Nonce required for implicit flow with openid scope", request);
+                        return Invalid(request, ErrorTypes.Client);
                     }
                 }
             }
 
+
             //////////////////////////////////////////////////////////
             // check prompt
             //////////////////////////////////////////////////////////
-            var prompt = parameters.Get(Constants.AuthorizeRequest.Prompt);
+            var prompt = request.Raw.Get(Constants.AuthorizeRequest.Prompt);
             if (prompt.IsPresent())
             {
                 if (Constants.SupportedPromptModes.Contains(prompt))
                 {
-                    _validatedRequest.PromptMode = prompt;
+                    request.PromptMode = prompt;
                 }
                 else
                 {
@@ -266,27 +380,27 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check ui locales
             //////////////////////////////////////////////////////////
-            var uilocales = parameters.Get(Constants.AuthorizeRequest.UiLocales);
+            var uilocales = request.Raw.Get(Constants.AuthorizeRequest.UiLocales);
             if (uilocales.IsPresent())
             {
                 if (uilocales.Length > Constants.MaxUiLocaleLength)
                 {
-                    LogError("UI locale too long");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("UI locale too long", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
 
-                _validatedRequest.UiLocales = uilocales;
+                request.UiLocales = uilocales;
             }
 
             //////////////////////////////////////////////////////////
             // check display
             //////////////////////////////////////////////////////////
-            var display = parameters.Get(Constants.AuthorizeRequest.Display);
+            var display = request.Raw.Get(Constants.AuthorizeRequest.Display);
             if (display.IsPresent())
             {
                 if (Constants.SupportedDisplayModes.Contains(display))
                 {
-                    _validatedRequest.DisplayMode = display;
+                    request.DisplayMode = display;
                 }
 
                 Logger.Info("Unsupported display mode - ignored: " + display);
@@ -295,7 +409,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check max_age
             //////////////////////////////////////////////////////////
-            var maxAge = parameters.Get(Constants.AuthorizeRequest.MaxAge);
+            var maxAge = request.Raw.Get(Constants.AuthorizeRequest.MaxAge);
             if (maxAge.IsPresent())
             {
                 int seconds;
@@ -303,49 +417,49 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     if (seconds >= 0)
                     {
-                        _validatedRequest.MaxAge = seconds;
+                        request.MaxAge = seconds;
                     }
                     else
                     {
-                        LogError("Invalid max_age.");
-                        return Invalid(ErrorTypes.Client);
+                        LogError("Invalid max_age.", request);
+                        return Invalid(request, ErrorTypes.Client);
                     }
                 }
                 else
                 {
-                    LogError("Invalid max_age.");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("Invalid max_age.", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
             }
 
             //////////////////////////////////////////////////////////
             // check login_hint
             //////////////////////////////////////////////////////////
-            var loginHint = parameters.Get(Constants.AuthorizeRequest.LoginHint);
+            var loginHint = request.Raw.Get(Constants.AuthorizeRequest.LoginHint);
             if (loginHint.IsPresent())
             {
                 if (loginHint.Length > Constants.MaxLoginHintLength)
                 {
-                    LogError("Login hint too long");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("Login hint too long", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
 
-                _validatedRequest.LoginHint = loginHint;
+                request.LoginHint = loginHint;
             }
 
             //////////////////////////////////////////////////////////
             // check acr_values
             //////////////////////////////////////////////////////////
-            var acrValues = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            var acrValues = request.Raw.Get(Constants.AuthorizeRequest.AcrValues);
             if (acrValues.IsPresent())
             {
                 if (acrValues.Length > Constants.MaxAcrValuesLength)
                 {
-                    LogError("Acr values too long");
-                    return Invalid(ErrorTypes.Client);
+                    LogError("Acr values too long", request);
+                    return Invalid(request, ErrorTypes.Client);
                 }
 
-                _validatedRequest.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
+                request.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
             }
 
             //////////////////////////////////////////////////////////
@@ -356,148 +470,52 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var sessionId = _sessionCookie.GetSessionId();
                 if (sessionId.IsPresent())
                 {
-                    _validatedRequest.SessionId = sessionId;
+                    request.SessionId = sessionId;
                 }
-            }
-            
-            LogSuccess();
-            return Valid();
-        }
-
-        public async Task<ValidationResult> ValidateClientAsync()
-        {
-            Logger.Info("Start authorize request client validation");
-
-            if (_validatedRequest.ClientId.IsMissing())
-            {
-                throw new InvalidOperationException("ClientId is empty. Validate protocol first.");
-            }
-
-            //////////////////////////////////////////////////////////
-            // check for valid client
-            //////////////////////////////////////////////////////////
-            var client = await _clients.FindClientByIdAsync(_validatedRequest.ClientId);
-            if (client == null || client.Enabled == false)
-            {
-                LogError("Unknown client or not enabled: " + _validatedRequest.ClientId);
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            _validatedRequest.Client = client;
-
-            //////////////////////////////////////////////////////////
-            // check if redirect_uri is valid
-            //////////////////////////////////////////////////////////
-            if (await _uriValidator.IsRedirectUriValidAsync(_validatedRequest.RedirectUri, _validatedRequest.Client) == false)
-            {
-                LogError("Invalid redirect_uri: " + _validatedRequest.RedirectUri);
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            //////////////////////////////////////////////////////////
-            // check if flow is allowed for client
-            //////////////////////////////////////////////////////////
-            if (_validatedRequest.Flow != _validatedRequest.Client.Flow)
-            {
-                LogError("Invalid flow for client: " + _validatedRequest.Flow);
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            //////////////////////////////////////////////////////////
-            // check if scopes are valid/supported and check for resource scopes
-            //////////////////////////////////////////////////////////
-            if (await _scopeValidator.AreScopesValidAsync(_validatedRequest.RequestedScopes) == false)
-            {
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-            }
-
-            if (_scopeValidator.ContainsOpenIdScopes && !_validatedRequest.IsOpenIdRequest)
-            {
-                LogError("Identity related scope requests, but no openid scope");
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-            }
-
-            if (_scopeValidator.ContainsResourceScopes)
-            {
-                _validatedRequest.IsResourceRequest = true;
-            }
-
-            //////////////////////////////////////////////////////////
-            // check scopes and scope restrictions
-            //////////////////////////////////////////////////////////
-            if (!_scopeValidator.AreScopesAllowed(_validatedRequest.Client, _validatedRequest.RequestedScopes))
-            {
-                return Invalid(ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            _validatedRequest.ValidatedScopes = _scopeValidator;
-
-            //////////////////////////////////////////////////////////
-            // check id vs resource scopes and response types plausability
-            //////////////////////////////////////////////////////////
-            if (!_scopeValidator.IsResponseTypeValid(_validatedRequest.ResponseType))
-            {
-                return Invalid(ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
-            }
-
-            //////////////////////////////////////////////////////////
-            // check if sessionId is available and if session management is enabled
-            //////////////////////////////////////////////////////////
-            if (_options.Endpoints.EnableCheckSessionEndpoint)
-            {
-                if (_validatedRequest.SessionId.IsMissing())
+                else
                 {
-                    Logger.Warn("Session management is enabled, but session id cookie is missing.");
+                    LogError("Check session endpoint enabled, but SessionId is missing", request);
                 }
             }
 
-            var customResult = await _customValidator.ValidateAuthorizeRequestAsync(_validatedRequest);
-
-            if (customResult.IsError)
-            {
-                LogError("Error in custom validation: " + customResult.Error);
-            }
-            else
-            {
-                LogSuccess();
-            }
-
-            return customResult;
+            return Valid(request);
         }
 
-        private ValidationResult Invalid(ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)
+        private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)
         {
-            var result = new ValidationResult
+            var result = new AuthorizeRequestValidationResult
             {
-                IsError = true, 
-                Error = error, 
-                ErrorType = errorType
+                IsError = true,
+                Error = error,
+                ErrorType = errorType,
+                ValidatedRequest = request
             };
 
             return result;
         }
 
-        private ValidationResult Valid()
+        private AuthorizeRequestValidationResult Valid(ValidatedAuthorizeRequest request)
         {
-            var result = new ValidationResult
+            var result = new AuthorizeRequestValidationResult
             {
-                IsError = false
+                IsError = false,
+                ValidatedRequest = request
             };
 
             return result;
         }
 
-        private void LogError(string message)
+        private void LogError(string message, ValidatedAuthorizeRequest request)
         {
-            var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
+            var validationLog = new AuthorizeRequestValidationLog(request);
             var json = LogSerializer.Serialize(validationLog);
 
             Logger.ErrorFormat("{0}\n {1}", message, json);
         }
 
-        private void LogSuccess()
+        private void LogSuccess(ValidatedAuthorizeRequest request)
         {
-            var validationLog = new AuthorizeRequestValidationLog(_validatedRequest);
+            var validationLog = new AuthorizeRequestValidationLog(request);
             var json = LogSerializer.Serialize(validationLog);
 
             Logger.InfoFormat("{0}\n {1}", "Authorize request validation success", json);
