@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
 
@@ -76,6 +77,8 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Request_missing_response_type_rejected()
         {
+            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
+
             host.Login();
 
             var state = Guid.NewGuid().ToString();

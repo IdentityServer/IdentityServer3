@@ -92,9 +92,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Mixed_Token_Only_Request()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
 
             result.IsError.Should().BeTrue();
             result.ErrorType.Should().Be(ErrorTypes.Client);
-            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
         }
 
         [Fact]
@@ -145,8 +145,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Missing_Scope()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -215,9 +215,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Missing_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -307,9 +307,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "hybridclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeToken);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
@@ -326,9 +326,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_CodeIdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "hybridclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdToken);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
@@ -345,9 +345,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         public async Task Invalid_ResponseMode_For_CodeIdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "client");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "hybridclient");
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/callback");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdTokenToken);
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
