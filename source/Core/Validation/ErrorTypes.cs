@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+
+namespace Thinktecture.IdentityServer.Core.Validation
 {
     /// <summary>
-    /// Indicates if secure flag should be issued for a cookie.
+    /// Indicates if a <see cref="ValidationResult"/> is an error to be displayed to the user or returned to the client.
     /// </summary>
-    public enum CookieSecureMode
+    public enum ErrorTypes
     {
         /// <summary>
-        /// The secure flag will be issued if the request is HTTPS.
+        /// client error
         /// </summary>
-        SameAsRequest = 0,
+        Client = 0,
+
         /// <summary>
-        /// The secure flag will always be issued.
+        /// user error
         /// </summary>
-        Always = 1,
+        User = 1
     }
 }

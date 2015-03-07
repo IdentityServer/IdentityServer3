@@ -219,6 +219,7 @@
     <Compile Include="Services\InMemory\InMemoryCorsPolicyService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
+    <Compile Include="Validation\AuthorizeRequestValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageValidator.cs" />
@@ -250,8 +251,10 @@
     <Compile Include="Logging\Models\EndSessionRequestValidationLog.cs" />
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
+    <Compile Include="Validation\ErrorTypes.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
+    <Compile Include="Validation\ValidationResultBase.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
