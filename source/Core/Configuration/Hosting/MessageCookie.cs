@@ -220,7 +220,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var names = GetCookieNames();
             var toKeep = options.AuthenticationOptions.SignInMessageThreshold;
 
-            if (names.Count() > toKeep)
+            if (names.Count() >= toKeep)
             {
                 var rankedCookieNames =
                     from name in names
