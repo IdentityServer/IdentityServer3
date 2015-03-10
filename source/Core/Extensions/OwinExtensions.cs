@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var sessionCookie = env.ResolveDependency<SessionCookie>();
             var context = new OwinContext(env);
 
-            var props = new Microsoft.Owin.Security.AuthenticationProperties();
+            var props = new AuthenticationProperties();
 
             // if false, then they're explicit in preventing a persistent cookie
             if (login.PersistentLogin != false)
@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     if (login.PersistentLogin == true)
                     {
                         var expires = login.PersistentLoginExpiration ?? DateTimeHelper.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
-                        props.ExpiresUtc = login.PersistentLoginExpiration;
+                        props.ExpiresUtc = expires;
                     }
                 }
             }
