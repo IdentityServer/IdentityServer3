@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using System;
 using Autofac;
+using Autofac.Core;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Endpoints;
@@ -31,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     /// Autofac module which register Identity Server components. 
     /// This module can be used 
     /// </summary>
-    public class AutofacModule : Module
+    public class AutofacModule : IModule
     {
         private readonly IdentityServerOptions _options;
 
@@ -44,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             _options = options;
         }
 
-        protected override void Load(ContainerBuilder builder)
+        private void Load(ContainerBuilder builder)
         {
             var options = _options;
             var fact = options.Factory;
@@ -144,6 +146,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             {
                 builder.Register(registration, registration.Name);
             }
+        }
+
+        void IModule.Configure(IComponentRegistry componentRegistry)
+        {
+            if (componentRegistry == null) 
+                throw new ArgumentNullException("componentRegistry");
+            var builder = new ContainerBuilder();
+            Load(builder);
+            builder.Update(componentRegistry);
         }
     }
 }
