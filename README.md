@@ -40,12 +40,12 @@ For more information, e.g.
 check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/Thinktecture.IdentityServer3.Samples).
 
 ## Related repositories ##
-* [Access Token Validation](https://github.com/identityserver/Thinktecture.IdentityServer3.AccessTokenValidation)
-* [EntityFramework support](https://github.com/identityserver/Thinktecture.IdentityServer3.EntityFramework)
-* [MembershipReboot support](https://github.com/identityserver/Thinktecture.IdentityServer3.MembershipReboot)
-* [ASP.Net Identity support](https://github.com/identityserver/Thinktecture.IdentityServer3.AspNetIdentity)
-* [WS-Federation plugin](https://github.com/identityserver/Thinktecture.IdentityServer3.WsFederation)
-* [Samples](https://github.com/IdentityServer/Thinktecture.IdentityServer3.Samples)
+* [Access Token Validation](https://github.com/identityserver/IdentityServer3.AccessTokenValidation)
+* [EntityFramework support](https://github.com/identityserver/IdentityServer3.EntityFramework)
+* [MembershipReboot support](https://github.com/identityserver/IdentityServer3.MembershipReboot)
+* [ASP.Net Identity support](https://github.com/identityserver/IdentityServer3.AspNetIdentity)
+* [WS-Federation plugin](https://github.com/identityserver/IdentityServer3.WsFederation)
+* [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
