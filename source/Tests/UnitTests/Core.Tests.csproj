@@ -141,6 +141,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ClassVisibilityTests.cs" />
+    <Compile Include="Configuration\AuthenticationOptionsTests.cs" />
     <Compile Include="Configuration\Hosting\AntiForgeryTokenValidatorTest.cs" />
     <Compile Include="Conformance\Basic\RedirectUriTests.cs" />
     <Compile Include="Conformance\Basic\ClientAuthenticationTests.cs" />

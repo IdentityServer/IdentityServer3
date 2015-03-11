@@ -218,7 +218,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         private void ClearOverflow()
         {
             var names = GetCookieNames();
-            if (names.Count() > Constants.SignInMessageThreshold)
+            var toKeep = options.AuthenticationOptions.SignInMessageThreshold;
+
+            if (names.Count() >= toKeep)
             {
                 var rankedCookieNames =
                     from name in names
@@ -226,7 +228,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     orderby rank descending
                     select name;
 
-                var purge = rankedCookieNames.Skip(Constants.SignInMessageThreshold);
+                var purge = rankedCookieNames.Skip(Math.Max(0, toKeep - 1));
                 foreach (var name in purge)
                 {
                     ClearByCookieName(name);

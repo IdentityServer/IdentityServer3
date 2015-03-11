@@ -37,6 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             PostSignOutAutoRedirectDelay = 0;
             RequireAuthenticatedUserForSignOutMessage = false;
             CookieOptions = new CookieOptions();
+            SignInMessageThreshold = Constants.SignInMessageThreshold;
         }
 
         /// <summary>
@@ -123,5 +124,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// A callback function for configuring identity providers.
         /// </value>
         public Action<IAppBuilder, string> IdentityProviders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the limit after which old signin messages are purged.
+        /// Defaults to the value defined in <see cref="Constants.SignInMessageThreshold"/> value.
+        /// </summary>
+        /// <value>
+        /// The limit after which old signin messages are purged
+        /// </value>
+        public int SignInMessageThreshold { get; set; }
     }
 }

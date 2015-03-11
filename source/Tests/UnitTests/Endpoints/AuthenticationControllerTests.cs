@@ -977,6 +977,74 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_SigninMessageThresholdSetToX_GetLoginXTimesOnlyLatestXMessagesAreKept()
+        {
+            const int signInMessageThreshold = 3;
+            options.AuthenticationOptions.SignInMessageThreshold = signInMessageThreshold;
+
+            for (var i = 0; i < signInMessageThreshold; i++)
+            {
+                GetLoginPage();
+            }
+
+            var theNextRequest = GetLoginPage();
+            theNextRequest.RequestMessage.Headers
+                .GetValues("Cookie")
+                .Count(c => c.StartsWith("SignInMessage."))
+                .Should()
+                .Be(options.AuthenticationOptions.SignInMessageThreshold);
+        }
+
+        [Fact]
+        public void GetLogin_SigninMessageThresholdSetToX_GetLoginMoreThanXTimesOnlyLatestXMessagesAreKept()
+        {
+            options.AuthenticationOptions.SignInMessageThreshold = 3;
+            var moreThanSignInThreshold = options.AuthenticationOptions.SignInMessageThreshold + 1;
+
+            for (var i = 0; i < moreThanSignInThreshold; i++)
+            {
+                GetLoginPage();
+            }
+
+            var theNextRequest = GetLoginPage();
+            theNextRequest.RequestMessage.Headers
+                .GetValues("Cookie")
+                .Count(c => c.StartsWith("SignInMessage."))
+                .Should()
+                .Be(options.AuthenticationOptions.SignInMessageThreshold);
+        }
+
+        [Fact]
+        public void GetLogin_SigninMessageThresholdSetToZero_OneSignInMessageKept()
+        {
+            options.AuthenticationOptions.SignInMessageThreshold = 0;
+
+            GetLoginPage();
+
+            var theNextRequest = GetLoginPage();
+            theNextRequest.RequestMessage.Headers
+                .GetValues("Cookie")
+                .Count(c => c.StartsWith("SignInMessage."))
+                .Should()
+                .Be(1);
+        }
+
+        [Fact]
+        public void GetLogin_SigninMessageThresholdSetToNegative_OneSignInMessageKept()
+        {
+            options.AuthenticationOptions.SignInMessageThreshold = -42;
+
+            GetLoginPage();
+
+            var theNextRequest = GetLoginPage();
+            theNextRequest.RequestMessage.Headers
+                .GetValues("Cookie")
+                .Count(c => c.StartsWith("SignInMessage."))
+                .Should()
+                .Be(1);
+        }
+
+        [Fact]
         public void PostLogin_SignInIdTooLong_ReturnsError()
         {
             var resp = GetLoginPage();
