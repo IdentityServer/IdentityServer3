@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Thinktecture.IdentityServer.Core</RootNamespace>
-    <AssemblyName>Thinktecture.IdentityServer.Core</AssemblyName>
+    <AssemblyName>Thinktecture.IdentityServer3</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -128,6 +128,7 @@
     <Compile Include="App_Packages\LibLog.2.0\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
+    <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ClientSecret.cs" />
+    <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Resources\T4resx.cs">
@@ -217,6 +219,7 @@
     <Compile Include="Services\InMemory\InMemoryCorsPolicyService.cs" />
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
+    <Compile Include="Validation\AuthorizeRequestValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageValidator.cs" />
@@ -248,8 +251,10 @@
     <Compile Include="Logging\Models\EndSessionRequestValidationLog.cs" />
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
+    <Compile Include="Validation\ErrorTypes.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
+    <Compile Include="Validation\ValidationResultBase.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />

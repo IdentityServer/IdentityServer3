@@ -15,6 +15,7 @@
  */
 
 using Microsoft.Owin;
+using System;
 using System.ComponentModel;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -35,14 +36,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             this.identityServerOptions = options;
         }
 
-        public virtual void IssueSessionId()
+        public virtual void IssueSessionId(bool? persistent, DateTimeOffset? expires = null)
         {
             context.Response.Cookies.Append(
                 GetCookieName(), CryptoRandom.CreateUniqueId(), 
-                CreateCookieOptions());
+                CreateCookieOptions(persistent, expires));
         }
 
-        private Microsoft.Owin.CookieOptions CreateCookieOptions()
+        private Microsoft.Owin.CookieOptions CreateCookieOptions(bool? persistent, DateTimeOffset? expires = null)
         {
             var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
@@ -52,6 +53,23 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 Secure = context.Request.IsSecure,
                 Path = path
             };
+
+            if (persistent != false)
+            {
+                if (persistent == true || this.identityServerOptions.AuthenticationOptions.CookieOptions.IsPersistent)
+                {
+                    if (persistent == true)
+                    {
+                        expires = expires ?? DateTimeHelper.UtcNow.Add(this.identityServerOptions.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                    }
+                    else
+                    {
+                        expires = expires ?? DateTimeHelper.UtcNow.Add(this.identityServerOptions.AuthenticationOptions.CookieOptions.ExpireTimeSpan);
+                    }
+                    options.Expires = expires.Value.UtcDateTime;
+                }
+            }
+
             return options;
         }
 
@@ -67,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public virtual void ClearSessionId()
         {
-            var options = CreateCookieOptions();
+            var options = CreateCookieOptions(false);
             options.Expires = DateTimeHelper.UtcNow.AddYears(-1);
             
             var name = GetCookieName();

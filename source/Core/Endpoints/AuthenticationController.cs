@@ -588,8 +588,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
+            ClearAuthenticationCookies();
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
-            sessionCookie.IssueSessionId();
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
@@ -621,6 +621,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             else
             {
                 signInMessageCookie.Clear(signInMessageId);
+                sessionCookie.IssueSessionId(rememberMe);
             }
 
             if (!authResult.IsPartialSignIn)
@@ -642,8 +643,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 }
             }
 
-            ClearAuthenticationCookies();
-            
             context.Authentication.SignIn(props, id);
         }
 

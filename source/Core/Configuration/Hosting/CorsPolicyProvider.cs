@@ -21,12 +21,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal class CorsPolicyProvider : ICorsPolicyProvider
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        
         readonly string[] paths;
 
         public CorsPolicyProvider(IEnumerable<string> allowedPaths)
@@ -38,16 +41,26 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(IOwinRequest request)
         {
-            if (IsPathAllowed(request))
+            var path = request.Path.ToString();
+            var origin = request.Headers["Origin"];
+            
+            if (IsPathAllowed(request) && origin != null)
             {
-                var origin = request.Headers["Origin"];
-                if (origin != null)
+                Logger.InfoFormat("CORS request made for path: {0} from origin: {1}", path, origin);
+
+                if (await IsOriginAllowed(origin, request.Environment))
                 {
-                    if (await IsOriginAllowed(origin, request.Environment))
-                    {
-                        return Allow(origin);
-                    }
+                    Logger.Info("CorsPolicyService allowed origin");
+                    return Allow(origin);
                 }
+                else
+                {
+                    Logger.Info("CorsPolicyService did not allow origin");
+                }
+            }
+            else
+            {
+                Logger.WarnFormat("CORS request made for path: {0} from origin: {1} but rejected because invalid CORS path", path, origin);
             }
 
             return null;

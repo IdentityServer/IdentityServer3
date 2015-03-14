@@ -466,24 +466,26 @@ namespace Thinktecture.IdentityServer.Core
             ClaimTypes.IdentityProvider
         };
 
-        public static readonly string[] ExternalIdentityProviderProtocolClaimTypes = new string[]
+        public static readonly string[] OidcProtocolClaimTypes = new string[]
         {
+            ClaimTypes.Subject,
+            //ClaimTypes.Name,
+            ClaimTypes.AuthenticationMethod,
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.AuthenticationTime,
             ClaimTypes.Audience,
             ClaimTypes.Issuer,
             ClaimTypes.NotBefore,
             ClaimTypes.Expiration,
             ClaimTypes.UpdatedAt,
             ClaimTypes.IssuedAt,
-            ClaimTypes.AuthenticationMethod,
             ClaimTypes.AuthenticationContextClassReference,
-            ClaimTypes.AuthenticationTime,
             ClaimTypes.AuthorizedParty,
             ClaimTypes.AccessTokenHash,
             ClaimTypes.AuthorizationCodeHash,
             ClaimTypes.Nonce,
             ClaimTypes.JwtId,
             ClaimTypes.Scope,
-            ClaimTypes.IdentityProvider,
         };
 
         public static readonly string[] AuthenticateResultClaimTypes = new string[]
@@ -491,29 +493,6 @@ namespace Thinktecture.IdentityServer.Core
             ClaimTypes.Subject,
             ClaimTypes.Name,
             ClaimTypes.AuthenticationMethod,
-            ClaimTypes.IdentityProvider,
-            ClaimTypes.AuthenticationTime,
-        };
-
-        public static readonly string[] CustomGrantProtocolClaimTypes = new string[]
-        {
-            ClaimTypes.Audience,
-            ClaimTypes.Issuer,
-            ClaimTypes.NotBefore,
-            ClaimTypes.Expiration,
-            ClaimTypes.UpdatedAt,
-            ClaimTypes.IssuedAt,
-            ClaimTypes.AuthenticationMethod,
-            ClaimTypes.AuthenticationContextClassReference,
-            ClaimTypes.AuthenticationTime,
-            ClaimTypes.AuthorizedParty,
-            ClaimTypes.AccessTokenHash,
-            ClaimTypes.AuthorizationCodeHash,
-            ClaimTypes.Nonce,
-            ClaimTypes.JwtId,
-            ClaimTypes.Scope,
-            ClaimTypes.IdentityProvider,
-            ClaimTypes.Subject,
             ClaimTypes.IdentityProvider,
             ClaimTypes.AuthenticationTime,
         };

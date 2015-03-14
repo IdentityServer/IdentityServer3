@@ -35,7 +35,9 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             EnableSignOutPrompt = true;
             EnablePostSignOutAutoRedirect = false;
             PostSignOutAutoRedirectDelay = 0;
+            RequireAuthenticatedUserForSignOutMessage = false;
             CookieOptions = new CookieOptions();
+            SignInMessageThreshold = Constants.SignInMessageThreshold;
         }
 
         /// <summary>
@@ -84,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnableSignOutPrompt { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint.
+        /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint. Defaults to false.
         /// </summary>
         /// <value>
         /// <c>true</c> if automatic redirect after signout is enabled; otherwise, <c>false</c>.
@@ -92,13 +94,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnablePostSignOutAutoRedirect { get; set; }
 
         /// <summary>
-        /// Gets or sets the delay (in seconds) before redirecting to a post_logout_redirect_uri.
+        /// Gets or sets the delay (in seconds) before redirecting to a post_logout_redirect_uri. Defaults to 0.
         /// </summary>
         /// <value>
         /// The post sign out automatic redirect delay.
         /// </value>
         public int PostSignOutAutoRedirectDelay { get; set; }
-        
+
+        /// <summary>
+        /// Indicates if user must be authenticated to accept parameters to end session endpoint. Defaults to false.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if required; otherwise, <c>false</c>.
+        /// </value>
+        public bool RequireAuthenticatedUserForSignOutMessage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether IdentityServer will remember the last username entered on the login page. Defaults to false.
         /// </summary>
@@ -114,5 +124,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// A callback function for configuring identity providers.
         /// </value>
         public Action<IAppBuilder, string> IdentityProviders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the limit after which old signin messages are purged.
+        /// Defaults to the value defined in <see cref="Constants.SignInMessageThreshold"/> value.
+        /// </summary>
+        /// <value>
+        /// The limit after which old signin messages are purged
+        /// </value>
+        public int SignInMessageThreshold { get; set; }
     }
 }

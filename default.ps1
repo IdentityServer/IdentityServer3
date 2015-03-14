@@ -3,7 +3,7 @@ properties {
 	$src_directory = "$base_directory\source"
 	$output_directory = "$base_directory\build"
 	$dist_directory = "$base_directory\distribution"
-	$sln_file = "$src_directory\Thinktecture.IdentityServer3.sln"
+	$sln_file = "$src_directory\IdentityServer3.sln"
 	$target_config = "Release"
 	$framework_version = "v4.5"
 	$xunit_path = "$src_directory\packages\xunit.runners.1.9.2\tools\xunit.console.clr4.exe"
@@ -11,7 +11,7 @@ properties {
 	$nuget_path = "$src_directory\.nuget\nuget.exe"
 
 	$buildNumber = 0;
-	$version = "1.2.1.0"
+	$version = "1.3.0.0"
 	$preRelease = $null
 }
 
@@ -54,12 +54,12 @@ task RunTests -depends Compile {
 
 
 task ILMerge -depends Compile {
-	$input_dlls = "$output_directory\Thinktecture.IdentityServer.Core.dll"
+	$input_dlls = "$output_directory\Thinktecture.IdentityServer3.dll"
 
 	Get-ChildItem -Path $output_directory -Filter *.dll |
 		foreach-object {
-			# Exclude Thinktecture.IdentityServer.Core.dll as that will be the primary assembly
-			if ("$_" -ne "Thinktecture.IdentityServer.Core.dll" -and
+			# Exclude Thinktecture.IdentityServer3.dll as that will be the primary assembly
+			if ("$_" -ne "Thinktecture.IdentityServer3.dll" -and
 			    "$_" -ne "Owin.dll") {
 				$input_dlls = "$input_dlls $output_directory\$_"
 			}
@@ -88,7 +88,7 @@ task CreateNuGetPackage -depends ILMerge {
 	}
 
 
-	copy-item $src_directory\Thinktecture.IdentityServer3.nuspec $dist_directory
+	copy-item $src_directory\IdentityServer3.nuspec $dist_directory
 	copy-item $output_directory\Thinktecture.IdentityServer3.xml $dist_directory\lib\net45\
-	exec { . $nuget_path pack $dist_directory\Thinktecture.IdentityServer3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
+	exec { . $nuget_path pack $dist_directory\IdentityServer3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
 }

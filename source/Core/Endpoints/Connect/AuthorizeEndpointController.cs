@@ -118,20 +118,18 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            ///////////////////////////////////////////////////////////////
-            // validate protocol parameters
-            //////////////////////////////////////////////////////////////
-            var result = _validator.ValidateProtocol(parameters);
-            var request = _validator.ValidatedRequest;
-
+            // validate request
+            var result = await _validator.ValidateAsync(parameters, User as ClaimsPrincipal);
+            
             if (result.IsError)
             {
                 return this.AuthorizeError(
                     result.ErrorType,
                     result.Error,
-                    request);
+                    result.ValidatedRequest);
             }
 
+            var request = result.ValidatedRequest;
             var loginInteraction = await _interactionGenerator.ProcessLoginAsync(request, User as ClaimsPrincipal);
 
             if (loginInteraction.IsError)
@@ -153,19 +151,6 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             request.Subject = User as ClaimsPrincipal;
-
-            ///////////////////////////////////////////////////////////////
-            // validate client
-            //////////////////////////////////////////////////////////////
-            result = await _validator.ValidateClientAsync();
-
-            if (result.IsError)
-            {
-                return this.AuthorizeError(
-                    result.ErrorType,
-                    result.Error,
-                    request);
-            }
 
             // now that client configuration is loaded, we can do further validation
             loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
