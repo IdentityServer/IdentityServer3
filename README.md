@@ -1,11 +1,11 @@
-# Thinktecture IdentityServer3 #
+# IdentityServer3 #
 
 Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7c60xg7cb/branch/dev?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture/branch/dev)
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/IdentityServer/Thinktecture.IdentityServer3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/IdentityServer/IdentityServer3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview ##
 
-IdentityServer is a framework and a hostable component that allows implementing single sign-on and access control for modern web applications and APIs using protocols like OpenID Connect and OAuth2. It supports a wide range of clients like mobile, web, SPAs and desktop applications and is extensible to allow integration in new and existing architectures.
+IdentityServer is a .NET/Katana-based framework and hostable component that allows implementing single sign-on and access control for modern web applications and APIs using protocols like OpenID Connect and OAuth2. It supports a wide range of clients like mobile, web, SPAs and desktop applications and is extensible to allow integration in new and existing architectures.
 
 Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
 
@@ -40,12 +40,12 @@ For more information, e.g.
 check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/Thinktecture.IdentityServer3.Samples).
 
 ## Related repositories ##
-* [Access Token Validation](https://github.com/identityserver/Thinktecture.IdentityServer3.AccessTokenValidation)
-* [EntityFramework support](https://github.com/identityserver/Thinktecture.IdentityServer3.EntityFramework)
-* [MembershipReboot support](https://github.com/identityserver/Thinktecture.IdentityServer3.MembershipReboot)
-* [ASP.Net Identity support](https://github.com/identityserver/Thinktecture.IdentityServer3.AspNetIdentity)
-* [WS-Federation plugin](https://github.com/identityserver/Thinktecture.IdentityServer3.WsFederation)
-* [Samples](https://github.com/IdentityServer/Thinktecture.IdentityServer3.Samples)
+* [Access Token Validation](https://github.com/identityserver/IdentityServer3.AccessTokenValidation)
+* [EntityFramework support](https://github.com/identityserver/IdentityServer3.EntityFramework)
+* [MembershipReboot support](https://github.com/identityserver/IdentityServer3.MembershipReboot)
+* [ASP.Net Identity support](https://github.com/identityserver/IdentityServer3.AspNetIdentity)
+* [WS-Federation plugin](https://github.com/identityserver/IdentityServer3.WsFederation)
+* [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
 ## Credits ##
 IdentityServer is built using the following great open source projects:
