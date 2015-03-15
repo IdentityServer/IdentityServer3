@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             _events = events;
         }
 
-        public async Task<ValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
+        public async Task<TokenRequestValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
             Logger.Info("Start token request validation");
 
@@ -129,7 +129,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return result;
         }
 
-        async Task<ValidationResult> RunValidationAsync(Func<NameValueCollection, Task<ValidationResult>> validationFunc, NameValueCollection parameters)
+        async Task<TokenRequestValidationResult> RunValidationAsync(Func<NameValueCollection, Task<TokenRequestValidationResult>> validationFunc, NameValueCollection parameters)
         {
             // run standard validation
             var result = await validationFunc(parameters);
@@ -158,7 +158,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return customResult;
         }
 
-        private async Task<ValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
+        private async Task<TokenRequestValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
         {
             Logger.Info("Start validation of authorization code token request");
 
@@ -277,7 +277,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid();
         }
 
-        private async Task<ValidationResult> ValidateClientCredentialsRequestAsync(NameValueCollection parameters)
+        private async Task<TokenRequestValidationResult> ValidateClientCredentialsRequestAsync(NameValueCollection parameters)
         {
             Logger.Info("Start client credentials token request validation");
 
@@ -318,7 +318,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid();
         }
 
-        private async Task<ValidationResult> ValidateResourceOwnerCredentialRequestAsync(NameValueCollection parameters)
+        private async Task<TokenRequestValidationResult> ValidateResourceOwnerCredentialRequestAsync(NameValueCollection parameters)
         {
             Logger.Info("Start password token request validation");
 
@@ -434,7 +434,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid();
         }
 
-        private async Task<ValidationResult> ValidateRefreshTokenRequestAsync(NameValueCollection parameters)
+        private async Task<TokenRequestValidationResult> ValidateRefreshTokenRequestAsync(NameValueCollection parameters)
         {
             Logger.Info("Start validation of refresh token request");
 
@@ -522,7 +522,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid();
         }
 
-        private async Task<ValidationResult> ValidateCustomGrantRequestAsync(NameValueCollection parameters)
+        private async Task<TokenRequestValidationResult> ValidateCustomGrantRequestAsync(NameValueCollection parameters)
         {
             Logger.Info("Start validation of custom grant token request");
 
@@ -567,10 +567,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            if (result.ErrorMessage.IsPresent())
+            if (result.Error.IsPresent())
             {
-                LogError("Invalid custom grant: " + result.ErrorMessage);
-                return Invalid(result.ErrorMessage);
+                LogError("Invalid custom grant: " + result.Error);
+                return Invalid(result.Error);
             }
 
             if (result.Principal != null)
@@ -613,20 +613,19 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return true;
         }
 
-        private ValidationResult Valid()
+        private TokenRequestValidationResult Valid()
         {
-            return new ValidationResult
+            return new TokenRequestValidationResult
             {
                 IsError = false
             };
         }
 
-        private ValidationResult Invalid(string error)
+        private TokenRequestValidationResult Invalid(string error)
         {
-            return new ValidationResult
+            return new TokenRequestValidationResult
             {
                 IsError = true,
-                ErrorType = ErrorTypes.Client,
                 Error = error
             };
         }

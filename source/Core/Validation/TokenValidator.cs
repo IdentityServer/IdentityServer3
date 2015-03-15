@@ -210,6 +210,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                 return Task.FromResult(new TokenValidationResult
                 {
+                    IsError = false,
+
                     Claims = id.Claims,
                     Jwt = jwt
                 });
@@ -250,6 +252,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             return new TokenValidationResult
             {
+                IsError = false,
+
                 Claims = ReferenceTokenToClaims(token),
                 ReferenceToken = token,
                 ReferenceTokenId = tokenHandle

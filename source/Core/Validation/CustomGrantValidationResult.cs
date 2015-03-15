@@ -26,7 +26,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
     /// <summary>
     /// Models the result of custom grant validation.
     /// </summary>
-    public class CustomGrantValidationResult
+    public class CustomGrantValidationResult : ValidationResult
     {
         /// <summary>
         /// Gets or sets the principal which represents the result of the authentication.
@@ -37,20 +37,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public ClaimsPrincipal Principal { get; set; }
 
         /// <summary>
-        /// Gets or sets the error message.
-        /// </summary>
-        /// <value>
-        /// The error message.
-        /// </value>
-        public string ErrorMessage { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class with an error message.
         /// </summary>
         /// <param name="errorMessage">The error message.</param>
         public CustomGrantValidationResult(string errorMessage)
         {
-            ErrorMessage = errorMessage;
+            Error = errorMessage;
         }
 
         /// <summary>
@@ -89,6 +81,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             id.AddClaims(resultClaims.Distinct(new ClaimComparer()));
 
             Principal = new ClaimsPrincipal(id);
+
+            IsError = false;
         }
     }
 }

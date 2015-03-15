@@ -252,9 +252,10 @@
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
     <Compile Include="Validation\ErrorTypes.cs" />
+    <Compile Include="Validation\TokenRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
-    <Compile Include="Validation\ValidationResultBase.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -430,7 +431,6 @@
     <Compile Include="Validation\TokenRequestValidator.cs" />
     <Compile Include="Validation\ValidatedAuthorizeRequest.cs" />
     <Compile Include="Validation\ValidatedTokenRequest.cs" />
-    <Compile Include="Validation\ValidationResult.cs" />
     <Compile Include="Models\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
     <Compile Include="Services\IViewService.cs" />

@@ -16,12 +16,9 @@
 
 using System.ComponentModel;
 
-#pragma warning disable 1591
-
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class BearerTokenUsageValidationResult
+    internal class BearerTokenUsageValidationResult
     {
         public bool TokenFound { get; set; }
         public string Token { get; set; }
