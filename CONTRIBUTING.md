@@ -4,29 +4,29 @@ One of the easiest ways to contribute is to participate in discussions and discu
 
 
 ## General feedback and discussions?
-Please start a discussion on the [core repo issue tracker](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/issues).
+Please start a discussion on the [core repo issue tracker](https://github.com/IdentityServer/IdentityServer3/issues).
 
 
 ## Bugs and feature requests?
 Please log a new issue in the appropriate GitHub repo:
 
-* [Core](https://github.com/thinktecture/Thinktecture.IdentityServer.v3)
-* [WS-Federation plugin](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.WsFederation)
-* [EntityFramework support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.EntityFramework)
-* [ASP. NET Identity support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AspNetIdentity)
-* [MembershipReboot support](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.MembershipReboot)
-* [AccessToken validation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.AccessTokenValidation)
-* [Samples](https://github.com/thinktecture/Thinktecture.IdentityServer.v3.Samples)
+* [Core](https://github.com/IdentityServer/IdentityServer3)
+* [WS-Federation plugin](https://github.com/IdentityServer/IdentityServer3.WsFederation)
+* [EntityFramework support](https://github.com/IdentityServer/IdentityServer3.EntityFramework)
+* [ASP. NET Identity support](https://github.com/IdentityServer/IdentityServer3.AspNetIdentity)
+* [MembershipReboot support](https://github.com/IdentityServer/IdentityServer3.MembershipReboot)
+* [AccessToken validation](https://github.com/IdentityServer/IdentityServer3.AccessTokenValidation)
+* [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
 ## Other discussions
-https://gitter.im/thinktecture/Thinktecture.IdentityServer.v3
+https://gitter.im/IdentityServer/IdentityServer3
 
 ## Filing issues
 The best way to get your bug fixed is to be as detailed as you can be about the problem.
 Providing a minimal project with steps to reproduce the problem is ideal.
 Here are questions you can answer before you file a bug to make sure you're not missing any important information.
 
-1. Did you read the [documentation](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/wiki)?
+1. Did you read the [documentation](https://identityserver.github.io/Documentation)?
 2. Did you include the snippet of broken code in the issue?
 3. What are the *EXACT* steps to reproduce this problem?
 

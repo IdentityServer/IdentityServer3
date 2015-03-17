@@ -118,10 +118,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private async Task<IHttpActionResult> ProcessRequestAsync(NameValueCollection parameters, UserConsent consent = null)
         {
-            ///////////////////////////////////////////////////////////////
-            // validate protocol parameters
-            //////////////////////////////////////////////////////////////
-            var result = await _validator.ValidateAsync(parameters);
+            // validate request
+            var result = await _validator.ValidateAsync(parameters, User as ClaimsPrincipal);
             
             if (result.IsError)
             {
