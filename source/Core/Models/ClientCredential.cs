@@ -15,19 +15,61 @@
  */
 
 using System.ComponentModel;
-
-#pragma warning disable 1591
+using System.Security.Cryptography.X509Certificates;
 
 namespace Thinktecture.IdentityServer.Core.Models
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <summary>
+    /// Models a client credential
+    /// </summary>
     public class ClientCredential
     {
+        /// <summary>
+        /// Gets or sets the client id.
+        /// </summary>
+        /// <value>
+        /// The client id.
+        /// </value>
         public string ClientId { get; set; }
-        public string Secret { get; set; }
 
+        /// <summary>
+        /// Gets or sets the shared secret (if shared secrets are used).
+        /// </summary>
+        /// <value>
+        /// The shared secret.
+        /// </value>
+        public string SharedSecret { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client certificate (if client certificates are used).
+        /// </summary>
+        /// <value>
+        /// The client certificate.
+        /// </value>
+        public X509Certificate2 ClientCertificate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the secret is malformed.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is malformed; otherwise, <c>false</c>.
+        /// </value>
         public bool IsMalformed { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a secret is present.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is present; otherwise, <c>false</c>.
+        /// </value>
         public bool IsPresent { get; set; }
-        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the authentication method.
+        /// </summary>
+        /// <value>
+        /// The authentication method.
+        /// </value>
+        public ClientAuthenticationMethods AuthenticationMethod { get; set; }
     }
 }

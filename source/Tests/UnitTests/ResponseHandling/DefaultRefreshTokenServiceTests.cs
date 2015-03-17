@@ -63,9 +63,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_one_time_only",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,
@@ -80,9 +80,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_sliding_refresh_expiration_one_time_only",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,
@@ -98,9 +98,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_reuse",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,

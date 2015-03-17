@@ -22,36 +22,35 @@ using Thinktecture.IdentityServer.Core.Models;
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     /// <summary>
-    /// Client secret validator for plain text secrets
+    /// Client secret validator based on X.509 certificate thumbprints
     /// </summary>
-    public class PlainTextClientSecretValidator : IClientSecretValidator
+    public class X509CertificateThumbprintClientSecretValidator : IClientSecretValidator
     {
         /// <summary>
-        /// Validates the client secret
+        /// Validates the client secret.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="credential">The client credential.</param>
-        /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
+        /// <returns>
+        ///   <c>true</c> if the secret is valid; <c>false</c> otherwise.
+        /// </returns>
+        public Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
-                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
+            if (credential.AuthenticationMethod != ClientAuthenticationMethods.X509Certificate)
             {
-                foreach (var clientSecret in client.ClientSecrets)
+                return Task.FromResult(false);
+            }
+
+            var thumbprint = credential.ClientCertificate.Thumbprint;
+
+            foreach (var secret in client.ClientSecrets)
+            {
+                // check if client secret is still valid
+                if (secret.Expiration.HasExpired()) continue;
+
+                if (secret.Type == Constants.SecretTypes.X509CertificateThumbprint)
                 {
-                    // this validator is only applicable to shared secrets
-                    if (clientSecret.Type != Constants.SecretTypes.SharedSecret)
-                    {
-                        continue;
-                    }
-
-                    // check if client secret is still valid
-                    if (clientSecret.Expiration.HasExpired()) continue;
-
-                    // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.SharedSecret);
-
-                    if (isValid)
+                    if (ObfuscatingComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
                     {
                         return Task.FromResult(true);
                     }

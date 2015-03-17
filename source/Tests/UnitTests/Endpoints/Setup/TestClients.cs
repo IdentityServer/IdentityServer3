@@ -31,9 +31,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients",
                     Enabled = true,
                     ClientId = "codeclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -74,9 +74,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Implicit Clients",
                     Enabled = true,
                     ClientId = "implicitclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
                     
                     Flow = Flows.Implicit,
@@ -121,9 +121,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Client Credentials Flow Client",
                     Enabled = true,
                     ClientId = "client",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.ClientCredentials,
@@ -142,9 +142,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Resource Owner Flow Client",
                     Enabled = true,
                     ClientId = "roclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.ResourceOwner,
@@ -163,9 +163,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "no_external_idps",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -206,9 +206,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "any_external_idps",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
