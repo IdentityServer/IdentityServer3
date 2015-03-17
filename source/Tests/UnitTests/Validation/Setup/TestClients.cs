@@ -52,9 +52,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Hybrid Client",
                         Enabled = true,
                         ClientId = "hybridclient",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.AuthorizationCode,
@@ -91,9 +91,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         ClientName = "Implicit and Client Credentials Client",
                         Enabled = true,
                         ClientId = "implicit_and_client_creds_client",
-                        ClientSecrets = new List<ClientSecret>
+                        ClientSecrets = new List<Secret>
                         { 
-                            new ClientSecret("secret".Sha256())
+                            new Secret("secret".Sha256())
                         },
 
                         Flow = Flows.Implicit,
