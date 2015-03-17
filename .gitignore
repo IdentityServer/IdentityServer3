@@ -152,3 +152,4 @@ $RECYCLE.BIN/
 .DS_Store
 distribution/
 *_NCrunch_*
+source/IdentityServer3.sln.GhostDoc.xml
