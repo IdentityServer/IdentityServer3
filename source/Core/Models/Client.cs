@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Client secrets - only relevant for flows that require a secret
         /// </summary>
-        public List<ClientSecret> ClientSecrets { get; set; }
+        public List<Secret> ClientSecrets { get; set; }
 
         /// <summary>
         /// Client display name (used for logging and consent screen)
@@ -211,7 +211,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Flow = Flows.Implicit;
             
-            ClientSecrets = new List<ClientSecret>();
+            ClientSecrets = new List<Secret>();
             ScopeRestrictions = new List<string>();
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();

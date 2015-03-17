@@ -31,48 +31,58 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Validates the client secret
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="secret">The client secret.</param>
+        /// <param name="credential">The client credential.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, string secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            var secretSha256 = secret.Sha256();
-            var secretSha512 = secret.Sha512();
-
-            foreach (var clientSecret in client.ClientSecrets)
+            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
+                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
-                bool isValid = false;
-                byte[] clientSecretBytes;
+                var secretSha256 = credential.SharedSecret.Sha256();
+                var secretSha512 = credential.SharedSecret.Sha512();
 
-                // check if client secret is still valid
-                if (clientSecret.Expiration.HasExpired()) continue;
+                foreach (var clientSecret in client.ClientSecrets)
+                {
+                    // this validator is only applicable to shared secrets
+                    if (clientSecret.Type != Constants.SecretTypes.SharedSecret)
+                    {
+                        continue;
+                    }
 
-                try
-                {
-                    clientSecretBytes = Convert.FromBase64String(clientSecret.Value);
-                }
-                catch (FormatException)
-                {
-                    // todo: logging
-                    throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
-                }
-                
-                if (clientSecretBytes.Length == 32)
-                {
-                    isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha256);
-                }
-                else if (clientSecretBytes.Length == 64)
-                {
-                    isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha512);
-                }
-                else
-                {
-                    // todo: logging
-                    throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
-                }
+                    bool isValid = false;
+                    byte[] clientSecretBytes;
 
-                if (isValid)
-                {
-                    return Task.FromResult(true);
+                    // check if client secret is still valid
+                    if (clientSecret.Expiration.HasExpired()) continue;
+
+                    try
+                    {
+                        clientSecretBytes = Convert.FromBase64String(clientSecret.Value);
+                    }
+                    catch (FormatException)
+                    {
+                        // todo: logging
+                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                    }
+
+                    if (clientSecretBytes.Length == 32)
+                    {
+                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha256);
+                    }
+                    else if (clientSecretBytes.Length == 64)
+                    {
+                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha512);
+                    }
+                    else
+                    {
+                        // todo: logging
+                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                    }
+
+                    if (isValid)
+                    {
+                        return Task.FromResult(true);
+                    }
                 }
             }
 

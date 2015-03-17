@@ -47,7 +47,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 secretValidator = new HashedClientSecretValidator();
             }
 
-            return new ClientValidator(clients, secretValidator);
+            var owin = new OwinEnvironmentService(new OwinContext());
+
+            return new ClientValidator(clients, secretValidator, owin);
         }
 
         public static TokenRequestValidator CreateTokenRequestValidator(

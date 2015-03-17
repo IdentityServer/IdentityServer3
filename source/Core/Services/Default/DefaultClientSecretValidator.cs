@@ -14,51 +14,38 @@
  * limitations under the License.
  */
 
+using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     /// <summary>
-    /// Client secret validator for plain text secrets
+    /// Default client secret validator can deal with hashed shared secrets or client certificates using thumbprints
     /// </summary>
-    public class PlainTextClientSecretValidator : IClientSecretValidator
+    public class DefaultClientSecretValidator : IClientSecretValidator
     {
         /// <summary>
-        /// Validates the client secret
+        /// Validates the client secret.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="credential">The client credential.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
+        /// <exception cref="System.InvalidOperationException">Invalid client authentication method</exception>
+        public Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
             if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
                 credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
             {
-                foreach (var clientSecret in client.ClientSecrets)
-                {
-                    // this validator is only applicable to shared secrets
-                    if (clientSecret.Type != Constants.SecretTypes.SharedSecret)
-                    {
-                        continue;
-                    }
-
-                    // check if client secret is still valid
-                    if (clientSecret.Expiration.HasExpired()) continue;
-
-                    // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.SharedSecret);
-
-                    if (isValid)
-                    {
-                        return Task.FromResult(true);
-                    }
-                }
+                return new HashedClientSecretValidator().ValidateClientSecretAsync(client, credential);
             }
 
-            return Task.FromResult(false);
+            if (credential.AuthenticationMethod == ClientAuthenticationMethods.X509Certificate)
+            {
+                return new X509CertificateThumbprintClientSecretValidator().ValidateClientSecretAsync(client, credential);
+            }
+
+            throw new InvalidOperationException("Invalid client authentication method");
         }
     }
 }
