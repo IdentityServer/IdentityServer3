@@ -44,13 +44,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         
         private readonly IEventService _events;
-        private readonly ClientValidator _clientValidator;
+        private readonly IClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
         private readonly TokenRevocationRequestValidator _requestValidator;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly IRefreshTokenStore _refreshTokens;
 
-        public RevocationEndpointController(IdentityServerOptions options, ClientValidator clientValidator, TokenRevocationRequestValidator requestValidator, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens, IEventService events)
+        public RevocationEndpointController(IdentityServerOptions options, IClientValidator clientValidator, TokenRevocationRequestValidator requestValidator, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens, IEventService events)
         {
             _options = options;
             _clientValidator = clientValidator;
@@ -94,36 +94,36 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             // validate client credentials and client
-            var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);
-            if (client == null)
+            var clientResult = await _clientValidator.ValidateAsync(Request.GetOwinEnvironment());
+            if (clientResult.Client == null)
             {
                 return new RevocationErrorResult(Constants.TokenErrors.InvalidClient);
             }
 
             // validate the token request
-            var result = await _requestValidator.ValidateRequestAsync(parameters, client);
+            var requestResult = await _requestValidator.ValidateRequestAsync(parameters, clientResult.Client);
 
-            if (result.IsError)
+            if (requestResult.IsError)
             {
-                return new RevocationErrorResult(result.Error);
+                return new RevocationErrorResult(requestResult.Error);
             }
 
             // revoke tokens
-            if (result.TokenTypeHint == Constants.TokenTypeHints.AccessToken)
+            if (requestResult.TokenTypeHint == Constants.TokenTypeHints.AccessToken)
             {
-                await RevokeAccessTokenAsync(result.Token, client);
+                await RevokeAccessTokenAsync(requestResult.Token, clientResult.Client);
             }
-            else if (result.TokenTypeHint == Constants.TokenTypeHints.RefreshToken)
+            else if (requestResult.TokenTypeHint == Constants.TokenTypeHints.RefreshToken)
             {
-                await RevokeRefreshTokenAsync(result.Token, client);
+                await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
             }
             else
             {
-                var found = await RevokeAccessTokenAsync(result.Token, client);
+                var found = await RevokeAccessTokenAsync(requestResult.Token, clientResult.Client);
 
                 if (!found)
                 {
-                    await RevokeRefreshTokenAsync(result.Token, client);
+                    await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
                 }
             }
 

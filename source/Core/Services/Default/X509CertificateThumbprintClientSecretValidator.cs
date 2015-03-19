@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -36,12 +37,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (credential.AuthenticationMethod != ClientAuthenticationMethods.X509Certificate)
+            if (credential.CredentialType != Constants.ClientCredentialTypes.X509Certificate)
             {
                 return Task.FromResult(false);
             }
 
-            var thumbprint = credential.ClientCertificate.Thumbprint;
+            var cert = credential.Secret as X509Certificate2;
+            var thumbprint = cert.Thumbprint;
 
             foreach (var secret in client.ClientSecrets)
             {

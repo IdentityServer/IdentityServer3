@@ -505,6 +505,12 @@ namespace Thinktecture.IdentityServer.Core
             public const string External                = "external";
         }
 
+        public static class ClientCredentialTypes
+        {
+            public const string SharedSecret = "SharedSecret";
+            public const string X509Certificate = "X509Certificate";
+        }
+
         public static class SecretTypes
         {
             public const string SharedSecret              = "SharedSecret";

@@ -35,11 +35,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
-                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
+            if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
-                var secretSha256 = credential.SharedSecret.Sha256();
-                var secretSha512 = credential.SharedSecret.Sha512();
+                var secretSha256 = credential.Secret.ToString().Sha256();
+                var secretSha512 = credential.Secret.ToString().Sha512();
 
                 foreach (var clientSecret in client.ClientSecrets)
                 {

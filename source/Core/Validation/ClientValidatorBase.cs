@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -23,6 +24,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
 {
     public abstract class ClientValidatorBase : IClientValidator
     {
+        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         protected readonly IClientSecretValidator _secretValidator;
         protected readonly IClientStore _clients;
 
@@ -36,35 +39,71 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public async Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment)
         {
+            Logger.Info("Start client validation");
+            var log = new ClientValidationLog();
+
             var credential = await ExtractCredentialAsync(environment);
 
-            if (credential.IsPresent)
+            if (!credential.IsPresent)
             {
-                var client = await _clients.FindClientByIdAsync(credential.ClientId);
-                if (client == null)
-                {
-                    return new ClientValidationResult
-                    {
-                        IsError = true,
-                        Error = "Unknown client."
-                    };
-                }
+                Logger.Debug("No credential found: " + credential.CredentialType);
 
-                if (await _secretValidator.ValidateClientSecretAsync(client, credential))
+                return new ClientValidationResult
                 {
-                    return new ClientValidationResult
-                    {
-                        IsError = false,
-                        Client = client
-                    };
-                }
+                    IsError = true,
+                    Error = "No credential found"
+                };
             }
 
-            return new ClientValidationResult
+            log.ClientCredentialType = credential.CredentialType;
+            log.ClientId = credential.ClientId;
+
+            var client = await _clients.FindClientByIdAsync(credential.ClientId);
+            if (client == null)
             {
-                IsError = true,
-                Error = "Invalid or malformed client credentials."
-            };
+                LogError("Unknown client", log);
+
+                return new ClientValidationResult
+                {
+                    IsError = true,
+                    Error = "Unknown client."
+                };
+            }
+
+            log.ClientName = client.ClientName;
+
+            if (await _secretValidator.ValidateClientSecretAsync(client, credential))
+            {
+                LogSuccess(log);
+
+                return new ClientValidationResult
+                {
+                    IsError = false,
+                    Client = client
+                };
+            }
+            else
+            {
+                LogError("Invalid or malformed client credentials.", log);
+
+                return new ClientValidationResult
+                {
+                    IsError = true,
+                    Error = "Invalid or malformed client credentials."
+                };
+            }
+        }
+
+        private void LogError(string message, ClientValidationLog log)
+        {
+            var json = LogSerializer.Serialize(log);
+            Logger.ErrorFormat("{0}\n {1}", message, json);
+        }
+
+        private void LogSuccess(ClientValidationLog log)
+        {
+            var json = LogSerializer.Serialize(log);
+            Logger.InfoFormat("{0}\n {1}", "Client validation success", json);
         }
     }
 }

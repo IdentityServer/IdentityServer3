@@ -31,6 +31,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         protected override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
+            var credential = new ClientCredential
+            {
+                CredentialType = Constants.ClientCredentialTypes.SharedSecret
+            };
+
             var context = new OwinContext(environment);
             var body = await context.Request.ReadFormAsync();
             
@@ -41,21 +46,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                 if (id.IsPresent() && secret.IsPresent())
                 {
-                    return new ClientCredential
-                    {
-                        IsPresent = true,
+                    credential.IsPresent = true;
+                    credential.ClientId = id;
+                    credential.Secret = secret;
 
-                        ClientId = id,
-                        SharedSecret = secret,
-                        AuthenticationMethod = ClientAuthenticationMethods.FormPost
-                    };
+                    return credential;
                 }
             }
 
-            return new ClientCredential
-            {
-                IsPresent = false
-            };
+            credential.IsPresent = false;
+            return credential;
         }
     }
 }

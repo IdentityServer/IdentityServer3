@@ -33,24 +33,23 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         protected override Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
+            var credential = new ClientCredential
+            {
+                CredentialType = Constants.ClientCredentialTypes.SharedSecret,
+                IsPresent = false
+            };
+
             var context = new OwinContext(environment);
             var authorizationHeader = context.Request.Headers.Get("Authorization");
 
             if (authorizationHeader == null)
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    IsPresent = false
-                });
+                return Task.FromResult(credential);
             }
 
             if (!authorizationHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    IsPresent = false,
-                    IsMalformed = false
-                });
+                return Task.FromResult(credential);
             }
 
             var parameter = authorizationHeader.Substring("Basic ".Length);
@@ -63,29 +62,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
             catch (FormatException)
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    IsPresent = false,
-                    IsMalformed = true
-                });
+                return Task.FromResult(credential);
             }
             catch (ArgumentException)
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    IsPresent = false,
-                    IsMalformed = true
-                });
+                return Task.FromResult(credential);
             }
 
             var ix = pair.IndexOf(':');
             if (ix == -1)
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    IsPresent = false,
-                    IsMalformed = true
-                });
+                return Task.FromResult(credential);
             }
 
             var clientId = pair.Substring(0, ix);
@@ -93,22 +80,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (clientId.IsPresent() && secret.IsPresent())
             {
-                return Task.FromResult(new ClientCredential
-                {
-                    ClientId = clientId,
-                    SharedSecret = secret,
+                credential.IsPresent = true;
+                credential.ClientId = clientId;
+                credential.Secret = secret;
 
-                    IsPresent = true,
-                    IsMalformed = false,
-                    AuthenticationMethod = ClientAuthenticationMethods.Basic
-                });
+                return Task.FromResult(credential);
             }
 
-            return Task.FromResult(new ClientCredential
-            {
-                IsMalformed = true,
-                IsPresent = false
-            });
+            return Task.FromResult(credential);
         }
     }
 }

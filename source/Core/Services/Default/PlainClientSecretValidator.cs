@@ -34,8 +34,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (credential.AuthenticationMethod == ClientAuthenticationMethods.Basic ||
-                credential.AuthenticationMethod == ClientAuthenticationMethods.FormPost)
+            if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
                 foreach (var clientSecret in client.ClientSecrets)
                 {
@@ -49,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     if (clientSecret.Expiration.HasExpired()) continue;
 
                     // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.SharedSecret);
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.Secret.ToString());
 
                     if (isValid)
                     {

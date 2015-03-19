@@ -34,7 +34,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             var credential = new ClientCredential
             {
-                IsPresent = false
+                IsPresent = false,
+                CredentialType = Constants.ClientCredentialTypes.X509Certificate
             };
 
             var context = new OwinContext(environment);
@@ -55,15 +56,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (cert != null)
             {
-                return new ClientCredential
-                {
-                    IsPresent = true,
-                    IsMalformed = false,
+                credential.IsPresent = true;
+                credential.Secret = cert;
 
-                    ClientId = id,
-                    ClientCertificate = cert,
-                    AuthenticationMethod = ClientAuthenticationMethods.X509Certificate
-                };
+                return credential;
             }
 
             return credential;

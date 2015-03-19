@@ -38,23 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// The shared secret.
         /// </value>
-        public string SharedSecret { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client certificate (if client certificates are used).
-        /// </summary>
-        /// <value>
-        /// The client certificate.
-        /// </value>
-        public X509Certificate2 ClientCertificate { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the secret is malformed.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is malformed; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsMalformed { get; set; }
+        public object Secret { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a secret is present.
@@ -70,6 +54,6 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// The authentication method.
         /// </value>
-        public ClientAuthenticationMethods AuthenticationMethod { get; set; }
+        public string CredentialType { get; set; }
     }
 }
