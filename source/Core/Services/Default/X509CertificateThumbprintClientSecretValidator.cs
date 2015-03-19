@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 return Task.FromResult(false);
             }
 
-            var cert = credential.Secret as X509Certificate2;
+            var cert = credential.Credential as X509Certificate2;
             var thumbprint = cert.Thumbprint;
 
             foreach (var secret in client.ClientSecrets)

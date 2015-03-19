@@ -82,7 +82,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             {
                 credential.IsPresent = true;
                 credential.ClientId = clientId;
-                credential.Secret = secret;
+                credential.Credential = secret;
 
                 return Task.FromResult(credential);
             }

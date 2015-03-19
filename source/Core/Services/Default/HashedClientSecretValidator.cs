@@ -37,8 +37,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
-                var secretSha256 = credential.Secret.ToString().Sha256();
-                var secretSha512 = credential.Secret.ToString().Sha512();
+                var secretSha256 = credential.Credential.ToString().Sha256();
+                var secretSha512 = credential.Credential.ToString().Sha512();
 
                 foreach (var clientSecret in client.ClientSecrets)
                 {

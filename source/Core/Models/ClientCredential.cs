@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <value>
         /// The shared secret.
         /// </value>
-        public object Secret { get; set; }
+        public object Credential { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a secret is present.

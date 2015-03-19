@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     if (clientSecret.Expiration.HasExpired()) continue;
 
                     // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.Secret.ToString());
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.Credential.ToString());
 
                     if (isValid)
                     {
