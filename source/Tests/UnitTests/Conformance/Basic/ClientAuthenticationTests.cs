@@ -42,7 +42,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
                 ClientId = client_id,
                 ClientSecrets = new List<Secret>
                 {
-                    new Secret(client_secret)
+                    new Secret(client_secret.Sha256())
                 },
                 Flow = Flows.AuthorizationCode,
                 RequireConsent = false,

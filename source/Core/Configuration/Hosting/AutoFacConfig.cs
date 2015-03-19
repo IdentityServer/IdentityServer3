@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
-            builder.RegisterDefaultType<IClientSecretValidator, DefaultClientSecretValidator>(fact.ClientSecretValidator);
+            builder.RegisterDefaultType<IClientValidator, DefaultClientValidator>(fact.ClientValidator);
 
             if (fact.ViewService == null)
             {

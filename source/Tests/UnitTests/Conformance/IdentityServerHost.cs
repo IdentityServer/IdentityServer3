@@ -55,7 +55,6 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
                 ScopeStore = new Registration<IScopeStore>(scopeStore),
                 ClientStore = new Registration<IClientStore>(clientStore),
                 UserService = new Registration<IUserService>(userService),
-                ClientSecretValidator = new Registration<IClientSecretValidator, PlainTextClientSecretValidator>(),
             };
 
             Options = new IdentityServerOptions

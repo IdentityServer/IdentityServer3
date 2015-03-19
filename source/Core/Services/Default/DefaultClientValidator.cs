@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Validation;
 
@@ -49,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 var result = await val.ValidateAsync(environment);
 
-                if (!result.IsError)
+                if (result.Client != null)
                 {
                     return result;
                 }
