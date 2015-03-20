@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             : base(secretValidator, clients)
         { }
 
-        protected override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
+        public override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
             var credential = new ClientCredential
             {

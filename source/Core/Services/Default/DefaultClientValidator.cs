@@ -20,9 +20,12 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
+    /// <summary>
+    /// Default client validator implementation (supports basic authentication and post body values using hashed shared secrets and x.509 client certificates with thumbprint validation).
+    /// </summary>
     public class DefaultClientValidator : IClientValidator
     {
-        public List<IClientValidator> Validators { get; set; }
+        private List<IClientValidator> Validators { get; set; }
 
         public DefaultClientValidator(IClientStore clients)
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using System;
 /*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
@@ -30,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             : base(secretValidator, clients)
         { }
 
-        protected override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
+        public override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
             var context = new OwinContext(environment);
 

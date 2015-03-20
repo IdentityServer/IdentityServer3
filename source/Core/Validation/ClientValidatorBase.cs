@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         protected readonly IClientSecretValidator _secretValidator;
         protected readonly IClientStore _clients;
 
-        protected abstract Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment);
+        public abstract Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment);
 
         public ClientValidatorBase(IClientSecretValidator secretValidator, IClientStore clients)
         {

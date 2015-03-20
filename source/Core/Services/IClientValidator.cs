@@ -20,8 +20,16 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
+    /// <summary>
+    /// The client validator turn some credential on an incoming HTTP request into a Client
+    /// </summary>
     public interface IClientValidator
     {
+        /// <summary>
+        /// Validates the incoming HTTP request
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>A validation result</returns>
         Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment);
     }
 }
