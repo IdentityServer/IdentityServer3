@@ -131,25 +131,4 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         Absolute = 1
     }
-
-    /// <summary>
-    /// Client authentication methods
-    /// </summary>
-    public enum ClientAuthenticationMethods
-    {
-        /// <summary>
-        /// HTTP basic authentication
-        /// </summary>
-        Basic = 0,
-
-        /// <summary>
-        /// Form post
-        /// </summary>
-        FormPost = 1,
-
-        /// <summary>
-        /// X509 certificate
-        /// </summary>
-        X509Certificate = 2
-    }
 }
