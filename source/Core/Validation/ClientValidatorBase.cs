@@ -50,8 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                 return new ClientValidationResult
                 {
-                    IsError = true,
-                    Error = "No credential found"
+                    IsError = false
                 };
             }
 

@@ -205,7 +205,6 @@
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
-    <Compile Include="Services\Default\DefaultClientSecretValidator.cs" />
     <Compile Include="Services\Default\DefaultClientValidator.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
@@ -375,7 +374,6 @@
     <Compile Include="Services\ICustomRequestValidator.cs" />
     <Compile Include="Services\ICustomTokenValidator.cs" />
     <Compile Include="Services\ITransientDataRepository.cs" />
-    <Compile Include="Validation\ClientValidator.cs" />
     <Compile Include="Validation\ScopeValidator.cs" />
     <Compile Include="Validation\TokenValidationResult.cs" />
     <Compile Include="Validation\TokenValidator.cs" />

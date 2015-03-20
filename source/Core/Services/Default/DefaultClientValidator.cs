@@ -47,7 +47,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 var result = await val.ValidateAsync(environment);
 
-                if (result.Client != null)
+                if (result.IsError)
+                {
+                    return result;
+                }
+
+                if (result.IsError == false && result.Client != null)
                 {
                     return result;
                 }
