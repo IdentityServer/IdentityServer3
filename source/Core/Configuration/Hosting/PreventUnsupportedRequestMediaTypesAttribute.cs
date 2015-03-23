@@ -27,13 +27,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
     {
-        readonly bool allowJson;
-        readonly bool allowFormUrlEncoded;
+        readonly bool _allowJson;
+        readonly bool _allowFormUrlEncoded;
         
         public PreventUnsupportedRequestMediaTypesAttribute(bool allowJson = false, bool allowFormUrlEncoded = false)
         {
-            this.allowJson = allowJson;
-            this.allowFormUrlEncoded = allowFormUrlEncoded;
+            _allowJson = allowJson;
+            _allowFormUrlEncoded = allowFormUrlEncoded;
         }
 
         public override void OnAuthorization(HttpActionContext actionContext)
@@ -41,13 +41,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             if (actionContext.Request.Content != null &&
                 actionContext.Request.Content.Headers.ContentType != null)
             {
-                if (allowJson && 
+                if (_allowJson && 
                     actionContext.Request.Content.Headers.ContentType.MediaType == JsonMediaTypeFormatter.DefaultMediaType.MediaType)
                 {
                     return;
                 }
                 
-                if (allowFormUrlEncoded && 
+                if (_allowFormUrlEncoded && 
                     actionContext.Request.Content.Headers.ContentType.MediaType == FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType)
                 {
                     return;
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
                 actionContext.Response = actionContext.Request.CreateResponse(
                     HttpStatusCode.UnsupportedMediaType, 
-                    new { ErrorMessage = localization.GetMessage(MessageIds.UnsupportedMediaType) }
+                    new { ErrorMessage = localization.GetMessage(MessageIds.UNSUPPORTED_MEDIA_TYPE) }
                 );
             }
         }

@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         public Token()
         {
             Version = 3;
-            Type = Constants.TokenTypes.AccessToken;
+            Type = Constants.TokenTypes.ACCESS_TOKEN;
             CreationTime = DateTimeOffsetHelper.UtcNow;
         }
 
@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             get
             {
-                return Claims.Where(x => x.Type == Constants.ClaimTypes.Subject).Select(x => x.Value).SingleOrDefault();
+                return Claims.Where(x => x.Type == Constants.ClaimTypes.SUBJECT).Select(x => x.Value).SingleOrDefault();
             }
         }
 
@@ -146,7 +146,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </value>
         public IEnumerable<string> Scopes
         {
-            get { return Claims.Where(x => x.Type == Constants.ClaimTypes.Scope).Select(x => x.Value); }
+            get { return Claims.Where(x => x.Type == Constants.ClaimTypes.SCOPE).Select(x => x.Value); }
         }
     }
 }

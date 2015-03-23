@@ -15,14 +15,13 @@
  */
 
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Results;
-
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// Check session iframe endpoint
@@ -41,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Check session iframe page</returns>
-        [Route(Constants.RoutePaths.Oidc.CheckSession, Name=Constants.RouteNames.Oidc.CheckSession)]
+        [Route(Constants.RoutePaths.Oidc.CHECK_SESSION, Name=Constants.RouteNames.Oidc.CHECK_SESSION)]
         public IHttpActionResult Get()
         {
             Logger.Info("Check session iframe request");
@@ -52,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 return NotFound();
             }
 
-            return new CheckSessionResult(this._options, Request);
+            return new CheckSessionResult(_options, Request);
         }
    }
 }

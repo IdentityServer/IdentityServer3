@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         public IdentityServerServiceFactory()
         {
-            this.ExternalClaimsFilter = DefaultClaimsFilter;
+            ExternalClaimsFilter = DefaultClaimsFilter;
         }
 
         /// <summary>

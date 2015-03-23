@@ -20,24 +20,27 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.ViewModels;
+using Encoder = Microsoft.Security.Application.Encoder;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// Default view service.
     /// </summary>
     public class DefaultViewService : IViewService
     {
-        static readonly Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings()
+        static readonly JsonSerializerSettings Settings = new JsonSerializerSettings()
         {
-            ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        private readonly DefaultViewServiceOptions config;
-        private readonly IViewLoader viewLoader;
+        private readonly DefaultViewServiceOptions _config;
+        private readonly IViewLoader _viewLoader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
@@ -47,8 +50,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (config == null) throw new ArgumentNullException("config");
             if (viewLoader == null) throw new ArgumentNullException("viewLoader");
 
-            this.config = config;
-            this.viewLoader = viewLoader;
+            _config = config;
+            _viewLoader = viewLoader;
         }
 
         /// <summary>
@@ -132,9 +135,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
-            string html = this.viewLoader.Load(page);
+            var html = _viewLoader.Load(page);
 
-            var data = BuildModel(model, page, config.Stylesheets, config.Scripts);
+            var data = BuildModel(model, page, _config.Stylesheets, _config.Scripts);
             html = AssetManager.Format(html, data);
             
             return Task.FromResult(html.ToStream());
@@ -149,15 +152,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var applicationPath = new Uri(model.SiteUrl).AbsolutePath;
             if (applicationPath.EndsWith("/")) applicationPath = applicationPath.Substring(0, applicationPath.Length - 1);
 
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(model, Newtonsoft.Json.Formatting.None, settings);
+            var json = JsonConvert.SerializeObject(model, Formatting.None, Settings);
 
             var additionalStylesheets = BuildTags("<link href='{0}' rel='stylesheet'>", applicationPath, stylesheets);
             var additionalScripts = BuildTags("<script src='{0}'></script>", applicationPath, scripts);
 
             return new {
-                siteName = Microsoft.Security.Application.Encoder.HtmlEncode(model.SiteName),
+                siteName = Encoder.HtmlEncode(model.SiteName),
                 applicationPath,
-                model = Microsoft.Security.Application.Encoder.HtmlEncode(json),
+                model = Encoder.HtmlEncode(json),
                 page,
                 stylesheets = additionalStylesheets,
                 scripts = additionalScripts

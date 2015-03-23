@@ -20,8 +20,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -79,17 +79,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var scopeDetails = await _scopes.FindScopesAsync(scopes);
             var scopeClaims = new List<string>();
 
-            foreach (var scope in scopes)
-            {
-                var scopeDetail = scopeDetails.FirstOrDefault(s => s.Name == scope);
-                
-                if (scopeDetail != null)
-                {
-                    if (scopeDetail.Type == ScopeType.Identity)
-                    {
-                        scopeClaims.AddRange(scopeDetail.Claims.Select(c => c.Name));
-                    }
-                }
+            foreach (var scopeDetail in scopes.Select(scope => scopeDetails.FirstOrDefault(s => s.Name == scope)).Where(scopeDetail => scopeDetail != null && scopeDetail.Type == ScopeType.IDENTITY)) {
+                scopeClaims.AddRange(scopeDetail.Claims.Select(c => c.Name));
             }
 
             return scopeClaims;

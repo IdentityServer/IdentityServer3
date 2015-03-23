@@ -17,11 +17,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
@@ -39,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Results
             _options = options;
         }
 
-        public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(Execute());
         }
@@ -51,14 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Results
 
             var query = _response.ToNameValueCollection().ToQueryString();
 
-            if (_response.Request.ResponseMode == Constants.ResponseModes.Query)
-            {
-                url = url.AddQueryString(query);
-            }
-            else
-            {
-                url = url.AddHashFragment(query);
-            }
+            url = _response.Request.ResponseMode == Constants.ResponseModes.QUERY ? url.AddQueryString(query) : url.AddHashFragment(query);
 
             responseMessage.Headers.Location = new Uri(url);
 

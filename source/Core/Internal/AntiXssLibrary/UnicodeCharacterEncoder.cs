@@ -18,13 +18,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 // ReSharper disable CheckNamespace
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+
 namespace Microsoft.Security.Application
     // ReSharper restore CheckNamespace
 {
-    using System;
-    using System.Text;
-    using System.Threading;
-
     /// <summary>
     /// Provides HTML encoding methods.
     /// </summary>
@@ -48,37 +49,37 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// The current lower code chart settings.
         /// </summary>
-        private static LowerCodeCharts currentLowerCodeChartSettings = LowerCodeCharts.Default;
+        private static LowerCodeCharts _currentLowerCodeChartSettings = LowerCodeCharts.DEFAULT;
 
         /// <summary>
         /// The current lower middle code chart settings.
         /// </summary>
-        private static LowerMidCodeCharts currentLowerMidCodeChartSettings = LowerMidCodeCharts.None;
+        private static LowerMidCodeCharts _currentLowerMidCodeChartSettings = LowerMidCodeCharts.NONE;
 
         /// <summary>
         /// The current middle code chart settings.
         /// </summary>
-        private static MidCodeCharts currentMidCodeChartSettings = MidCodeCharts.None;
+        private static MidCodeCharts _currentMidCodeChartSettings = MidCodeCharts.NONE;
 
         /// <summary>
         /// The current upper middle code chart settings.
         /// </summary>
-        private static UpperMidCodeCharts currentUpperMidCodeChartSettings = UpperMidCodeCharts.None;
+        private static UpperMidCodeCharts _currentUpperMidCodeChartSettings = UpperMidCodeCharts.NONE;
 
         /// <summary>
         /// The current upper code chart settings.
         /// </summary>
-        private static UpperCodeCharts currentUpperCodeChartSettings = UpperCodeCharts.None;
+        private static UpperCodeCharts _currentUpperCodeChartSettings = UpperCodeCharts.NONE;
 
         /// <summary>
         /// The values to output for each character.
         /// </summary>
-        private static char[][] characterValues;
+        private static char[][] _characterValues;
 
         /// <summary>
         /// The values to output for HTML named entities.
         /// </summary>
-        private static Lazy<char[][]> namedEntitiesLazy = new Lazy<char[][]>(InitialiseNamedEntityList);
+        private static readonly Lazy<char[][]> NamedEntitiesLazy = new Lazy<char[][]>(InitialiseNamedEntityList);
 
 #if NET20
         /// <summary>
@@ -180,11 +181,11 @@ namespace Microsoft.Security.Application
             UpperMidCodeCharts upperMidCodeCharts,
             UpperCodeCharts upperCodeCharts)
         {
-            if (lowerCodeCharts == currentLowerCodeChartSettings
-                && lowerMidCodeCharts == currentLowerMidCodeChartSettings
-                && midCodeCharts == currentMidCodeChartSettings
-                && upperMidCodeCharts == currentUpperMidCodeChartSettings
-                && upperCodeCharts == currentUpperCodeChartSettings)
+            if (lowerCodeCharts == _currentLowerCodeChartSettings
+                && lowerMidCodeCharts == _currentLowerMidCodeChartSettings
+                && midCodeCharts == _currentMidCodeChartSettings
+                && upperMidCodeCharts == _currentUpperMidCodeChartSettings
+                && upperCodeCharts == _currentUpperCodeChartSettings)
             {
                 return;
             }
@@ -193,10 +194,10 @@ namespace Microsoft.Security.Application
             try
             {
                 // Reset back to everything hashed.
-                characterValues = SafeList.Generate(65536, SafeList.HashThenValueGenerator);
+                _characterValues = SafeList.Generate(65536, SafeList.HashThenValueGenerator);
 
                 SafeList.PunchUnicodeThrough(
-                    ref characterValues,
+                    ref _characterValues,
                     lowerCodeCharts,
                     lowerMidCodeCharts,
                     midCodeCharts,
@@ -205,11 +206,11 @@ namespace Microsoft.Security.Application
 
                 ApplyHtmlSpecificValues();
 
-                currentLowerCodeChartSettings = lowerCodeCharts;
-                currentLowerMidCodeChartSettings = lowerMidCodeCharts;
-                currentMidCodeChartSettings = midCodeCharts;
-                currentUpperMidCodeChartSettings = upperMidCodeCharts;
-                currentUpperCodeChartSettings = upperCodeCharts;
+                _currentLowerCodeChartSettings = lowerCodeCharts;
+                _currentLowerMidCodeChartSettings = lowerMidCodeCharts;
+                _currentMidCodeChartSettings = midCodeCharts;
+                _currentUpperMidCodeChartSettings = upperMidCodeCharts;
+                _currentUpperCodeChartSettings = upperCodeCharts;
             }
             finally
             {
@@ -278,11 +279,11 @@ namespace Microsoft.Security.Application
         /// </remarks>
         private static void ApplyHtmlSpecificValues()
         {
-            characterValues['<'] = "lt".ToCharArray();
-            characterValues['>'] = "gt".ToCharArray();
-            characterValues['&'] = "amp".ToCharArray();
-            characterValues['"'] = "quot".ToCharArray();
-            characterValues['\''] = "#39".ToCharArray();
+            _characterValues['<'] = "lt".ToCharArray();
+            _characterValues['>'] = "gt".ToCharArray();
+            _characterValues['&'] = "amp".ToCharArray();
+            _characterValues['"'] = "quot".ToCharArray();
+            _characterValues['\''] = "#39".ToCharArray();
         }
 
         /// <summary>
@@ -367,7 +368,7 @@ namespace Microsoft.Security.Application
                 return input;
             }
 
-            if (characterValues == null)
+            if (_characterValues == null)
             {
                 InitialiseSafeList();
             }
@@ -375,20 +376,20 @@ namespace Microsoft.Security.Application
             char[][] namedEntities = null;
             if (useNamedEntities)
             {
-                namedEntities = namedEntitiesLazy.Value;
+                namedEntities = NamedEntitiesLazy.Value;
             }
 
             // Setup a new StringBuilder for output.
             // Worse case scenario - the longest entity name, thetasym is 10 characters, including the & and ;.
-            StringBuilder builder = EncoderUtil.GetOutputStringBuilder(input.Length, 10);
+            var builder = EncoderUtil.GetOutputStringBuilder(input.Length, 10);
             
             AcquireReadLock();
             try
             {
-                Utf16StringReader stringReader = new Utf16StringReader(input);
+                var stringReader = new Utf16StringReader(input);
                 while (true)
                 {
-                    int currentCodePoint = stringReader.ReadNextScalarValue();
+                    var currentCodePoint = stringReader.ReadNextScalarValue();
                     if (currentCodePoint < 0)
                     {
                         break; // EOF
@@ -400,7 +401,7 @@ namespace Microsoft.Security.Application
                         // Plane (BMP), so we need to generate these encodings on-the-fly. We should encode
                         // the code point rather than the surrogate code units that make up this code point.
                         // See: http://www.w3.org/International/questions/qa-escapes#bytheway
-                        char[] encodedCharacter = SafeList.HashThenValueGenerator(currentCodePoint);
+                        var encodedCharacter = SafeList.HashThenValueGenerator(currentCodePoint);
                         builder.Append('&');
                         builder.Append(encodedCharacter);
                         builder.Append(';');
@@ -408,7 +409,7 @@ namespace Microsoft.Security.Application
                     else
                     {
                         // If we reached this point, the code point is within the BMP.
-                        char currentCharacter = (char)currentCodePoint;
+                        var currentCharacter = (char)currentCodePoint;
                         char[] tweekedValue;
 
                         if (encoderTweak != null && encoderTweak(currentCharacter, out tweekedValue))
@@ -417,15 +418,15 @@ namespace Microsoft.Security.Application
                         }
                         else if (useNamedEntities && namedEntities[currentCodePoint] != null)
                         {
-                            char[] encodedCharacter = namedEntities[currentCodePoint];
+                            var encodedCharacter = namedEntities[currentCodePoint];
                             builder.Append('&');
                             builder.Append(encodedCharacter);
                             builder.Append(';');
                         }
-                        else if (characterValues[currentCodePoint] != null)
+                        else if (_characterValues[currentCodePoint] != null)
                         {
                             // character needs to be encoded
-                            char[] encodedCharacter = characterValues[currentCodePoint];
+                            var encodedCharacter = _characterValues[currentCodePoint];
                             builder.Append('&');
                             builder.Append(encodedCharacter);
                             builder.Append(';');
@@ -454,17 +455,17 @@ namespace Microsoft.Security.Application
             AcquireWriteLock();
             try
             {
-                if (characterValues == null)
+                if (_characterValues == null)
                 {
                     // We use decimal encoding to support some older Japanese mobile browsers which don't support hex encoding.
-                    characterValues = SafeList.Generate(0xFFFF, SafeList.HashThenValueGenerator);
+                    _characterValues = SafeList.Generate(0xFFFF, SafeList.HashThenValueGenerator);
                     SafeList.PunchUnicodeThrough(
-                        ref characterValues,
-                        currentLowerCodeChartSettings,
-                        currentLowerMidCodeChartSettings,
-                        currentMidCodeChartSettings,
-                        currentUpperMidCodeChartSettings,
-                        currentUpperCodeChartSettings);
+                        ref _characterValues,
+                        _currentLowerCodeChartSettings,
+                        _currentLowerMidCodeChartSettings,
+                        _currentMidCodeChartSettings,
+                        _currentUpperMidCodeChartSettings,
+                        _currentUpperCodeChartSettings);
                     ApplyHtmlSpecificValues();
                 }
             }
@@ -478,13 +479,13 @@ namespace Microsoft.Security.Application
         /// Initializes the HTML named entities list.
         /// </summary>
         /// <returns>The HTML named entities list.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        [SuppressMessage(
             "Microsoft.Maintainability",
             "CA1505:AvoidUnmaintainableCode",
             Justification = "Splitting or initialising via lookups has too large a performance increase.")]
         private static char[][] InitialiseNamedEntityList()
         {
-            char[][] namedEntities = new char[65536][];
+            var namedEntities = new char[65536][];
             namedEntities[160] = "nbsp".ToCharArray();
             namedEntities[161] = "iexcl".ToCharArray();
             namedEntities[162] = "cent".ToCharArray();

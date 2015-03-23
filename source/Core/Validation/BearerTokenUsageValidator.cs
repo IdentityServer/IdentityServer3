@@ -16,8 +16,8 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
@@ -50,14 +50,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var authorizationHeader = request.Headers.Authorization;
 
             if (authorizationHeader != null &&
-                authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) &&
+                authorizationHeader.Scheme.Equals(Constants.TokenTypes.BEARER) &&
                 authorizationHeader.Parameter.IsPresent())
             {
                 return new BearerTokenUsageValidationResult
                 {
                     TokenFound = true,
                     Token = authorizationHeader.Parameter,
-                    UsageType = BearerTokenUsageType.AuthorizationHeader
+                    UsageType = BearerTokenUsageType.AUTHORIZATION_HEADER
                 };
             }
 
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 {
                     TokenFound = true,
                     Token = token,
-                    UsageType = BearerTokenUsageType.PostBody
+                    UsageType = BearerTokenUsageType.POST_BODY
                 };
             }
 

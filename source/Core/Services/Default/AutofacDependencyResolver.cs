@@ -20,20 +20,20 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     internal class AutofacDependencyResolver : IDependencyResolver
     {
-        readonly IComponentContext ctx;
+        readonly IComponentContext _ctx;
         public AutofacDependencyResolver(IComponentContext ctx)
         {
-            this.ctx = ctx;
+            _ctx = ctx;
         }
         
         public T Resolve<T>(string name)
         {
             if (name != null)
             {
-                return ctx.ResolveNamed<T>(name);
+                return _ctx.ResolveNamed<T>(name);
             }
 
-            return ctx.Resolve<T>();
+            return _ctx.Resolve<T>();
         }
     }
 }

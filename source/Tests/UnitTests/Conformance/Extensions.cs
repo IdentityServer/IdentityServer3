@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Microsoft.Owin;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -31,6 +27,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using FluentAssertions;
+using Microsoft.Owin;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -41,11 +41,11 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 {
     public static class Extensions
     {
-        public static NameValueCollection RequestAuthorizationCode(this IdentityServerHost host, string client_id, string redirect_uri, string scope, string nonce = null)
+        public static NameValueCollection RequestAuthorizationCode(this IdentityServerHost host, string clientId, string redirectUri, string scope, string nonce = null)
         {
             var state = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, scope, "code", state, nonce);
+            var url = host.GetAuthorizeUrl(clientId, redirectUri, scope, "code", state, nonce);
             var result = host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
 
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 
             var user = host.Users.Single(x=>x.Username == username);
             resp = host.PostForm(model.LoginUrl, new LoginCredentials { Username = user.Username, Password = user.Password }, model.AntiForgery);
-            resp.AssertCookie(Constants.PrimaryAuthenticationType);
+            resp.AssertCookie(Constants.PRIMARY_AUTHENTICATION_TYPE);
         }
 
         public static HttpResponseMessage GetLoginPage(this IdentityServerHost host, SignInMessage msg = null)
@@ -77,14 +77,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         public static string WriteMessageToCookie<T>(this IdentityServerHost host, T msg)
             where T : Message
         {
-            var request_headers = new Dictionary<string, string[]>();
-            var response_headers = new Dictionary<string, string[]>();
+            var requestHeaders = new Dictionary<string, string[]>();
+            var responseHeaders = new Dictionary<string, string[]>();
             var env = new Dictionary<string, object>()
             {
                 {"owin.RequestScheme", "https"},
-                {"owin.RequestHeaders", request_headers},
-                {"owin.ResponseHeaders", response_headers},
-                {Constants.OwinEnvironment.IdentityServerBasePath, "/"},
+                {"owin.RequestHeaders", requestHeaders},
+                {"owin.ResponseHeaders", responseHeaders},
+                {Constants.OwinEnvironment.IDENTITY_SERVER_BASE_PATH, "/"},
             };
 
             var ctx = new OwinContext(env);
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             var id = signInCookie.Write(msg);
 
             CookieHeaderValue cookie;
-            if (!CookieHeaderValue.TryParse(response_headers["Set-Cookie"].First(), out cookie))
+            if (!CookieHeaderValue.TryParse(responseHeaders["Set-Cookie"].First(), out cookie))
             {
                 throw new InvalidOperationException("MessageCookie failed to issue cookie");
             }
@@ -127,8 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             coll = new NameValueCollection();
             foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(values))
             {
-                var val = descriptor.GetValue(values);
-                if (val == null) val = "";
+                var val = descriptor.GetValue(values) ?? "";
                 coll.Add(descriptor.Name, val.ToString());
             }
             
@@ -149,7 +148,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
                 {
                     sb.Append("&");
                 }
-                sb.AppendFormat("{0}={1}", item, coll[item].ToString());
+                sb.AppendFormat("{0}={1}", item, coll[item]);
             }
             return sb.ToString();
         }
@@ -192,9 +191,9 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 
         public static string GetLoginUrl(this IdentityServerHost host, string signInId)
         {
-            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Login + "?signin=" + signInId;
+            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.LOGIN + "?signin=" + signInId;
         }
-        public static string GetAuthorizeUrl(this IdentityServerHost host, string client_id = null, string redirect_uri = null, string scope = null, string response_type = null, string state = null, string nonce = null)
+        public static string GetAuthorizeUrl(this IdentityServerHost host, string clientId = null, string redirectUri = null, string scope = null, string responseType = null, string state = null, string nonce = null)
         {
             var disco = host.GetDiscoveryDocument();
             disco["authorization_endpoint"].Should().NotBeNull();
@@ -206,21 +205,21 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             var url = disco["authorization_endpoint"].ToString();
             
             var query = "";
-            if (response_type.IsPresent())
+            if (responseType.IsPresent())
             {
-                query += "&response_type=" + HttpUtility.UrlEncode(response_type);
+                query += "&response_type=" + HttpUtility.UrlEncode(responseType);
             }
             if (scope.IsPresent())
             {
                 query += "&scope=" + HttpUtility.UrlEncode(scope);
             }
-            if (client_id.IsPresent())
+            if (clientId.IsPresent())
             {
-                query += "&client_id=" + HttpUtility.UrlEncode(client_id);
+                query += "&client_id=" + HttpUtility.UrlEncode(clientId);
             }
-            if (redirect_uri.IsPresent())
+            if (redirectUri.IsPresent())
             {
-                query += "&redirect_uri=" + HttpUtility.UrlEncode(redirect_uri);
+                query += "&redirect_uri=" + HttpUtility.UrlEncode(redirectUri);
             }
             if (state.IsPresent())
             {
@@ -240,23 +239,23 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         }
         public static string GetTokenUrl(this IdentityServerHost host)
         {
-            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.Token;
+            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.TOKEN;
         }
         
         public static string GetUserInfoUrl(this IdentityServerHost host)
         {
-            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.UserInfo;
+            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.USER_INFO;
         }
 
         public static string GetDiscoveryUrl(this IdentityServerHost host)
         {
-            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.DiscoveryConfiguration;
+            return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Oidc.DISCOVERY_CONFIGURATION;
         }
 
         public static JObject GetDiscoveryDocument(this IdentityServerHost host)
         {
-            var disco_url = host.GetDiscoveryUrl();
-            var result = host.Client.GetAsync(disco_url).Result;
+            var discoUrl = host.GetDiscoveryUrl();
+            var result = host.Client.GetAsync(discoUrl).Result;
             
             result.StatusCode.Should().Be(HttpStatusCode.OK);
             result.Content.Headers.ContentType.MediaType.Should().Be("application/json");
@@ -264,10 +263,10 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             var json = result.Content.ReadAsStringAsync().Result;
             var data = JObject.Parse(json);
 
-            string[] https_checks = new string[]{
+            string[] httpsChecks = {
                 "issuer", "jwks_uri", "authorization_endpoint", "token_endpoint", "userinfo_endpoint", "end_session_endpoint", "check_session_iframe"
             };
-            foreach (var url in https_checks)
+            foreach (var url in httpsChecks)
             {
                 data[url].Should().NotBeNull();
                 data[url].ToString().Should().StartWith("https://");
@@ -319,9 +318,9 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 
         public static T GetPageModel<T>(string html)
         {
-            var match = "<script id='modelJson' type='application/json'>";
-            var start = html.IndexOf(match);
-            var end = html.IndexOf("</script>", start);
+            const string match = "<script id='modelJson' type='application/json'>";
+            var start = html.IndexOf(match, StringComparison.Ordinal);
+            var end = html.IndexOf("</script>", start, StringComparison.Ordinal);
             var content = html.Substring(start + match.Length, end - start - match.Length);
             var json = HttpUtility.HtmlDecode(content);
             return JsonConvert.DeserializeObject<T>(json);
@@ -405,7 +404,9 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         public static NameValueCollection ParseHashFragment(this Uri uri)
         {
             var url = uri.AbsoluteUri;
-            if (!url.Contains("#")) return new NameValueCollection();
+            if (!url.Contains("#")) {
+                return new NameValueCollection();
+            }
 
             var hash = url.Substring(url.IndexOf('#') + 1);
             return new Uri("http://foo?" + hash).ParseQueryString();

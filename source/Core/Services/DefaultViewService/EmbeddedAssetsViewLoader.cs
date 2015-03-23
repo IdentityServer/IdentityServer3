@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// View loaded that loads HTML templates from the embedded assets.

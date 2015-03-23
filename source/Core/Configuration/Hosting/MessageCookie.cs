@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
+using Microsoft.Owin;
+using Newtonsoft.Json;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 #pragma warning disable 1591
@@ -36,22 +36,22 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        static readonly JsonSerializerSettings settings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
         };
 
-        readonly IOwinContext ctx;
-        readonly IdentityServerOptions options;
+        readonly IOwinContext _ctx;
+        readonly IdentityServerOptions _options;
 
         internal MessageCookie(IDictionary<string, object> env, IdentityServerOptions options)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");
 
-            this.ctx = new OwinContext(env);
-            this.options = options;
+            _ctx = new OwinContext(env);
+            _options = options;
         }
 
         internal MessageCookie(IOwinContext ctx, IdentityServerOptions options)
@@ -59,8 +59,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             if (ctx == null) throw new ArgumentNullException("ctx");
             if (options == null) throw new ArgumentNullException("options");
             
-            this.ctx = ctx;
-            this.options = options;
+            _ctx = ctx;
+            _options = options;
         }
 
         string MessageType
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         string Protect(IDataProtector protector, TMessage message)
         {
-            var json = JsonConvert.SerializeObject(message, settings);
+            var json = JsonConvert.SerializeObject(message, Settings);
             Logger.DebugFormat("Protecting message: {0}", json);
 
             return protector.Protect(json, MessageType);
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         string GetCookieName(string id = null)
         {
             return String.Format("{0}{1}.{2}", 
-                options.AuthenticationOptions.CookieOptions.Prefix, 
+                _options.AuthenticationOptions.CookieOptions.Prefix, 
                 MessageType, 
                 id);
         }
@@ -95,14 +95,14 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             get
             {
-                return ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
+                return _ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
             }
         }
 
         private IEnumerable<string> GetCookieNames()
         {
             var key = GetCookieName();
-            foreach (var cookie in ctx.Request.Cookies)
+            foreach (var cookie in _ctx.Request.Cookies)
             {
                 if (cookie.Key.StartsWith(key))
                 {
@@ -115,21 +115,21 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             if (message == null) throw new ArgumentNullException("message");
 
-            return Protect(options.DataProtector, message);
+            return Protect(_options.DataProtector, message);
         }
 
         private TMessage Unprotect(string data)
         {
             if (data == null) throw new ArgumentNullException("data");
             
-            return Unprotect(data, options.DataProtector);
+            return Unprotect(data, _options.DataProtector);
         }
 
         private bool Secure
         {
             get
             {
-                return ctx.Request.Scheme == Uri.UriSchemeHttps;
+                return _ctx.Request.Scheme == Uri.UriSchemeHttps;
             }
         }
 
@@ -143,7 +143,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             var name = GetCookieName(id);
             var data = Protect(message);
 
-            ctx.Response.Cookies.Append(
+            _ctx.Response.Cookies.Append(
                 name,
                 data,
                 new Microsoft.Owin.CookieOptions
@@ -165,7 +165,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         TMessage ReadByCookieName(string name)
         {
-            var data = ctx.Request.Cookies[name];
+            var data = _ctx.Request.Cookies[name];
             if (!String.IsNullOrWhiteSpace(data))
             {
                 return Unprotect(data);
@@ -181,7 +181,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         void ClearByCookieName(string name)
         {
-            ctx.Response.Cookies.Append(
+            _ctx.Response.Cookies.Append(
                 name,
                 ".",
                 new Microsoft.Owin.CookieOptions
@@ -218,7 +218,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         private void ClearOverflow()
         {
             var names = GetCookieNames();
-            var toKeep = options.AuthenticationOptions.SignInMessageThreshold;
+            var toKeep = _options.AuthenticationOptions.SignInMessageThreshold;
 
             if (names.Count() >= toKeep)
             {

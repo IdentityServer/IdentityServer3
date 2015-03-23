@@ -15,16 +15,17 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     /// <summary>
     /// Claims filter to aggregate other claims filters.
     /// </summary>
     public class AggregateExternalClaimsFilter : IExternalClaimsFilter
     {
-        readonly IExternalClaimsFilter[] filters;
+        readonly IExternalClaimsFilter[] _filters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AggregateExternalClaimsFilter"/> class.
@@ -32,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="filters">The filters to aggregate.</param>
         public AggregateExternalClaimsFilter(params IExternalClaimsFilter[] filters)
         {
-            this.filters = filters;
+            _filters = filters;
         }
 
         /// <summary>
@@ -43,13 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns>
         /// The transformed claims.
         /// </returns>
-        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
-        {
-            foreach (var filter in this.filters)
-            {
-                claims = filter.Filter(provider, claims);
-            }
-            return claims;
+        public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims){
+            return _filters.Aggregate(claims, (current, filter) => filter.Filter(provider, current));
         }
     }
 }

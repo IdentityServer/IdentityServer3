@@ -18,24 +18,24 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// Endpoint for validating identity tokens
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [RoutePrefix(Constants.RoutePaths.Oidc.IdentityTokenValidation)]
+    [RoutePrefix(Constants.RoutePaths.Oidc.IDENTITY_TOKEN_VALIDATION)]
     [NoCache]
     internal class IdentityTokenValidationController : ApiController
     {
@@ -64,7 +64,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
             {
-                var error = "Endpoint is disabled. Aborting";
+                const string error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
                 RaiseFailureEvent(error);
 
@@ -76,21 +76,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var token = parameters.Get("token");
             if (token.IsMissing())
             {
-                var error = "token is missing.";
+                const string error = "token is missing.";
                 Logger.Error(error);
                 RaiseFailureEvent(error);
 
-                return BadRequest(_localizationService.GetMessage(MessageIds.MissingToken));
+                return BadRequest(_localizationService.GetMessage(MessageIds.MISSING_TOKEN));
             }
 
             var clientId = parameters.Get("client_id");
             if (clientId.IsMissing())
             {
-                var error = "client_id is missing.";
+                const string error = "client_id is missing.";
                 Logger.Error(error);
                 RaiseFailureEvent(error);
 
-                return BadRequest(_localizationService.GetMessage(MessageIds.MissingClientId));
+                return BadRequest(_localizationService.GetMessage(MessageIds.MISSING_CLIENT_ID));
             }
 
             var result = await _validator.ValidateIdentityTokenAsync(token, clientId);
@@ -113,12 +113,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseSuccessEvent()
         {
-            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation);
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.IDENTITY_TOKEN_VALIDATION);
         }
 
         private void RaiseFailureEvent(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IdentityTokenValidation, error);
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.IDENTITY_TOKEN_VALIDATION, error);
         }
     }
 }

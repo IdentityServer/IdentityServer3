@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using Autofac;
 using System;
 using System.Net.Http;
 using System.Web.Http.Filters;
+using Autofac;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting

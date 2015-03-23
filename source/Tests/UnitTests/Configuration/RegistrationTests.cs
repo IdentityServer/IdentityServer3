@@ -14,68 +14,62 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Configuration
-{
-    
-    public class RegistrationTests
-    {
+namespace Thinktecture.IdentityServer.Tests.Configuration {
+    public class RegistrationTests {
         [Fact]
-        public void RegisterSingleton_NullInstance_Throws()
-        {
-            Action act = () => new Registration<object>((object)null);
+        public void RegisterSingleton_NullInstance_Throws(){
+            Action act = () => new Registration<object>((object) null);
 
             act.ShouldThrow<ArgumentNullException>()
                 .And.ParamName.Should().Be("instance");
         }
 
         [Fact]
-        public void RegisterSingleton_Instance_ReturnsSingleton()
-        {
-            object theSingleton = new object();
-            var reg = new Registration<object>((object)theSingleton);
+        public void RegisterSingleton_Instance_ReturnsSingleton(){
+            var theSingleton = new object();
+            var reg = new Registration<object>(theSingleton);
             var result = reg.Instance;
             result.Should().BeSameAs(theSingleton);
         }
 
         [Fact]
-        public void RegisterFactory_NullFunc_Throws()
-        {
-            Action act = () => new Registration<object>((Func<IDependencyResolver, object>)null);
+        public void RegisterFactory_NullFunc_Throws(){
+            Action act = () => new Registration<object>((Func<IDependencyResolver, object>) null);
 
             act.ShouldThrow<ArgumentNullException>()
                 .And.ParamName.Should().Be("factory");
         }
-        
+
         [Fact]
-        public void RegisterFactory_FactoryInvokesFunc()
-        {
+        public void RegisterFactory_FactoryInvokesFunc(){
             var wasCalled = false;
-            Func<IDependencyResolver, object> f = (resolver) => { wasCalled = true; return new object(); };
+            Func<IDependencyResolver, object> f = resolver => {
+                wasCalled = true;
+                return new object();
+            };
             var reg = new Registration<object>(f);
             var result = reg.Factory(null);
             wasCalled.Should().BeTrue();
         }
 
         [Fact]
-        public void RegisterType_NullType_Throws()
-        {
-            Action act = () => new Registration<object>((Type)null);
+        public void RegisterType_NullType_Throws(){
+            Action act = () => new Registration<object>((Type) null);
 
             act.ShouldThrow<ArgumentNullException>()
                 .And.ParamName.Should().Be("type");
         }
 
         [Fact]
-        public void RegisterType_SetsTypeOnRegistration()
-        {
-            var result = new Registration<object>(typeof(string));
-            result.Type.Should().Be(typeof(string));
+        public void RegisterType_SetsTypeOnRegistration(){
+            var result = new Registration<object>(typeof (string));
+            result.Type.Should().Be(typeof (string));
         }
     }
 }

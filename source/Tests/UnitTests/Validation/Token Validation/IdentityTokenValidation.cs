@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
+namespace Thinktecture.IdentityServer.Tests.Validation.Token_Validation
 {
     
     public class IdentityTokenValidation
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
 
             var result = await validator.ValidateIdentityTokenAsync(jwt, "invalid");
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INVALID_TOKEN);
         }
     }
 }

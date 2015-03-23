@@ -18,9 +18,11 @@ using System;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Logging.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -84,17 +86,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check grant type
             /////////////////////////////////////////////
-            var grantType = parameters.Get(Constants.TokenRequest.GrantType);
+            var grantType = parameters.Get(Constants.TokenRequest.GRANT_TYPE);
             if (grantType.IsMissing())
             {
                 LogError("Grant type is missing.");
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
             }
 
-            if (grantType.Length > Constants.MaxGrantTypeLength)
+            if (grantType.Length > Constants.MAX_GRANT_TYPE_LENGTH)
             {
                 LogError("Grant type is too long.");
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
             }
 
             _validatedRequest.GrantType = grantType;
@@ -102,13 +104,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             // standard grant types
             switch (grantType)
             {
-                case Constants.GrantTypes.AuthorizationCode:
+                case Constants.GrantTypes.AUTHORIZATION_CODE:
                     return await RunValidationAsync(ValidateAuthorizationCodeRequestAsync, parameters);
-                case Constants.GrantTypes.ClientCredentials:
+                case Constants.GrantTypes.CLIENT_CREDENTIALS:
                     return await RunValidationAsync(ValidateClientCredentialsRequestAsync, parameters);
-                case Constants.GrantTypes.Password:
+                case Constants.GrantTypes.PASSWORD:
                     return await RunValidationAsync(ValidateResourceOwnerCredentialRequestAsync, parameters);
-                case Constants.GrantTypes.RefreshToken:
+                case Constants.GrantTypes.REFRESH_TOKEN:
                     return await RunValidationAsync(ValidateRefreshTokenRequestAsync, parameters);
             }
 
@@ -123,7 +125,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 }
 
                 LogError("Unsupported grant_type: " + grantType);
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
             }
 
             return result;
@@ -165,24 +167,24 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.AuthorizationCode &&
-                _validatedRequest.Client.Flow != Flows.Hybrid)
+            if (_validatedRequest.Client.Flow != Flows.AUTHORIZATION_CODE &&
+                _validatedRequest.Client.Flow != Flows.HYBRID)
             {
                 LogError("Client not authorized for code flow");
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                return Invalid(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
             }
 
             /////////////////////////////////////////////
             // validate authorization code
             /////////////////////////////////////////////
-            var code = parameters.Get(Constants.TokenRequest.Code);
+            var code = parameters.Get(Constants.TokenRequest.CODE);
             if (code.IsMissing())
             {
-                var error = "Authorization code is missing.";
+                const string error = "Authorization code is missing.";
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(null, error);
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             _validatedRequest.AuthorizationCodeHandle = code;
@@ -193,7 +195,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError("Invalid authorization code: " + code);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, "Invalid handle");
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             await _authorizationCodes.RemoveAsync(code);
@@ -206,7 +208,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError(string.Format("Client {0} is trying to use a code from client {1}", _validatedRequest.Client.ClientId, authZcode.Client.ClientId));
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, "Invalid client binding");
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             /////////////////////////////////////////////
@@ -214,11 +216,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (authZcode.CreationTime.HasExceeded(_validatedRequest.Client.AuthorizationCodeLifetime))
             {
-                var error = "Authorization code is expired";
+                const string error = "Authorization code is expired";
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             _validatedRequest.AuthorizationCode = authZcode;
@@ -226,14 +228,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // validate redirect_uri
             /////////////////////////////////////////////
-            var redirectUri = parameters.Get(Constants.TokenRequest.RedirectUri);
+            var redirectUri = parameters.Get(Constants.TokenRequest.REDIRECT_URI);
             if (redirectUri.IsMissing())
             {
-                var error = "Redirect URI is missing.";
+                const string error = "Redirect URI is missing.";
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
 
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                return Invalid(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
             }
 
             if (redirectUri.Equals(_validatedRequest.AuthorizationCode.RedirectUri, StringComparison.Ordinal) == false)
@@ -242,7 +244,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
 
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                return Invalid(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
             }
 
             /////////////////////////////////////////////
@@ -251,11 +253,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (_validatedRequest.AuthorizationCode.RequestedScopes == null ||
                 !_validatedRequest.AuthorizationCode.RequestedScopes.Any())
             {
-                var error = "Authorization code has no associated scopes.";
+                const string error = "Authorization code has no associated scopes.";
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
 
-                return Invalid(Constants.TokenErrors.InvalidRequest);
+                return Invalid(Constants.TokenErrors.INVALID_REQUEST);
             }
 
 
@@ -268,7 +270,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError(error);
                 RaiseFailedAuthorizationCodeRedeemedEvent(code, error);
 
-                return Invalid(Constants.TokenErrors.InvalidRequest);
+                return Invalid(Constants.TokenErrors.INVALID_REQUEST);
             }
 
             Logger.Info("Validation of authorization code token request success");
@@ -284,12 +286,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.ClientCredentials)
+            if (_validatedRequest.Client.Flow != Flows.CLIENT_CREDENTIALS)
             {
                 if (_validatedRequest.Client.AllowClientCredentialsOnly == false)
                 {
                     LogError("Client not authorized for client credentials flow");
-                    return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                    return Invalid(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
                 }
             }
 
@@ -299,19 +301,19 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (!(await ValidateRequestedScopesAsync(parameters)))
             {
                 LogError("Invalid scopes.");
-                return Invalid(Constants.TokenErrors.InvalidScope);
+                return Invalid(Constants.TokenErrors.INVALID_SCOPE);
             }
 
             if (_validatedRequest.ValidatedScopes.ContainsOpenIdScopes)
             {
                 LogError("Client cannot request OpenID scopes in client credentials flow");
-                return Invalid(Constants.TokenErrors.InvalidScope);
+                return Invalid(Constants.TokenErrors.INVALID_SCOPE);
             }
 
             if (_validatedRequest.ValidatedScopes.ContainsOfflineAccessScope)
             {
                 LogError("Client cannot request a refresh token in client credentials flow");
-                return Invalid(Constants.TokenErrors.InvalidScope);
+                return Invalid(Constants.TokenErrors.INVALID_SCOPE);
             }
 
             Logger.Info("Client credentials token request validation success");
@@ -327,16 +329,16 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 _validatedRequest.Client.EnableLocalLogin == false)
             {
                 LogError("EnableLocalLogin is disabled, failing with UnsupportedGrantType");
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
             }
             
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.ResourceOwner)
+            if (_validatedRequest.Client.Flow != Flows.RESOURCE_OWNER)
             {
                 LogError("Client not authorized for resource owner flow");
-                return Invalid(Constants.TokenErrors.UnauthorizedClient);
+                return Invalid(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
             }
 
             /////////////////////////////////////////////
@@ -345,26 +347,26 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (!(await ValidateRequestedScopesAsync(parameters)))
             {
                 LogError("Invalid scopes.");
-                return Invalid(Constants.TokenErrors.InvalidScope);
+                return Invalid(Constants.TokenErrors.INVALID_SCOPE);
             }
 
             /////////////////////////////////////////////
             // check resource owner credentials
             /////////////////////////////////////////////
-            var userName = parameters.Get(Constants.TokenRequest.UserName);
-            var password = parameters.Get(Constants.TokenRequest.Password);
+            var userName = parameters.Get(Constants.TokenRequest.USER_NAME);
+            var password = parameters.Get(Constants.TokenRequest.PASSWORD);
 
             if (userName.IsMissing() || password.IsMissing())
             {
                 LogError("Username or password missing.");
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
-            if (userName.Length > Constants.MaxUserNameLength ||
-                password.Length > Constants.MaxPasswordLength)
+            if (userName.Length > Constants.MAX_USER_NAME_LENGTH ||
+                password.Length > Constants.MAX_PASSWORD_LENGTH)
             {
                 LogError("Username or password too long.");
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             _validatedRequest.UserName = userName;
@@ -372,36 +374,35 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check optional parameters and populate SignInMessage
             /////////////////////////////////////////////
-            var signInMessage = new SignInMessage();
+            var signInMessage = new SignInMessage {ClientId = _validatedRequest.Client.ClientId};
 
             // pass through client_id
-            signInMessage.ClientId = _validatedRequest.Client.ClientId;
 
             // process acr values
-            var acr = parameters.Get(Constants.AuthorizeRequest.AcrValues);
+            var acr = parameters.Get(Constants.AuthorizeRequest.ACR_VALUES);
             if (acr.IsPresent())
             {
-                if (acr.Length > Constants.MaxAcrValuesLength)
+                if (acr.Length > Constants.MAX_ACR_VALUES_LENGTH)
                 {
                     LogError("Acr values too long.");
-                    return Invalid(Constants.TokenErrors.InvalidRequest);
+                    return Invalid(Constants.TokenErrors.INVALID_REQUEST);
                 }
 
                 var acrValues = acr.FromSpaceSeparatedString().Distinct().ToList();
 
                 // look for well-known acr value -- idp
-                var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
+                var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HOME_REALM));
                 if (idp.IsPresent())
                 {
-                    signInMessage.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
+                    signInMessage.IdP = idp.Substring(Constants.KnownAcrValues.HOME_REALM.Length);
                     acrValues.Remove(idp);
                 }
 
                 // look for well-known acr value -- tenant
-                var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.Tenant));
+                var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.TENANT));
                 if (tenant.IsPresent())
                 {
-                    signInMessage.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
+                    signInMessage.Tenant = tenant.Substring(Constants.KnownAcrValues.TENANT.Length);
                     acrValues.Remove(tenant);
                 }
 
@@ -423,7 +424,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError("User authentication failed");
                 RaiseFailedResourceOwnerAuthenticationEvent(userName, signInMessage);
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             _validatedRequest.UserName = userName;
@@ -438,14 +439,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             Logger.Info("Start validation of refresh token request");
 
-            var refreshTokenHandle = parameters.Get(Constants.TokenRequest.RefreshToken);
+            var refreshTokenHandle = parameters.Get(Constants.TokenRequest.REFRESH_TOKEN);
             if (refreshTokenHandle.IsMissing())
             {
-                var error = "Refresh token is missing";
+                const string error = "Refresh token is missing";
                 LogError(error);
                 RaiseRefreshTokenRefreshFailureEvent(null, error);
 
-                return Invalid(Constants.TokenErrors.InvalidRequest);
+                return Invalid(Constants.TokenErrors.INVALID_REQUEST);
             }
 
             _validatedRequest.RefreshTokenHandle = refreshTokenHandle;
@@ -456,11 +457,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var refreshToken = await _refreshTokens.GetAsync(refreshTokenHandle);
             if (refreshToken == null)
             {
-                var error = "Refresh token is invalid";
+                const string error = "Refresh token is invalid";
                 LogWarn(error);
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             /////////////////////////////////////////////
@@ -468,12 +469,12 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (refreshToken.CreationTime.HasExceeded(refreshToken.LifeTime))
             {
-                var error = "Refresh token has expired";
+                const string error = "Refresh token has expired";
                 LogWarn(error);
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
                 await _refreshTokens.RemoveAsync(refreshTokenHandle);
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             /////////////////////////////////////////////
@@ -484,7 +485,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError(string.Format("Client {0} tries to refresh token belonging to client {1}", _validatedRequest.Client.ClientId, refreshToken.ClientId));
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, "Invalid client binding");
 
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             /////////////////////////////////////////////
@@ -492,13 +493,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             if (_validatedRequest.Client.ScopeRestrictions != null && _validatedRequest.Client.ScopeRestrictions.Count != 0)
             {
-                if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OfflineAccess))
+                if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OFFLINE_ACCESS))
                 {
-                    var error = "Client does not have access to offline_access scope anymore";
+                    const string error = "Client does not have access to offline_access scope anymore";
                     LogError(error);
                     RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
-                    return Invalid(Constants.TokenErrors.InvalidGrant);
+                    return Invalid(Constants.TokenErrors.INVALID_GRANT);
                 }
             }
 
@@ -515,7 +516,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError(error);
                 RaiseRefreshTokenRefreshFailureEvent(refreshTokenHandle, error);
 
-                return Invalid(Constants.TokenErrors.InvalidRequest);
+                return Invalid(Constants.TokenErrors.INVALID_REQUEST);
             }
 
             Logger.Info("Validation of refresh token request success");
@@ -529,10 +530,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client is authorized for custom grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.Custom)
+            if (_validatedRequest.Client.Flow != Flows.CUSTOM)
             {
                 LogError("Client not registered for custom grant type");
-                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
             }
 
             /////////////////////////////////////////////
@@ -543,7 +544,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 if (!_validatedRequest.Client.CustomGrantTypeRestrictions.Contains(_validatedRequest.GrantType))
                 {
                     LogError("Client has configured grant type restrictions. Requested grant is not allowed.");
-                    return Invalid(Constants.TokenErrors.UnsupportedGrantType);
+                    return Invalid(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
                 }
             }
 
@@ -553,7 +554,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (!(await ValidateRequestedScopesAsync(parameters)))
             {
                 LogError("Invalid scopes.");
-                return Invalid(Constants.TokenErrors.InvalidScope);
+                return Invalid(Constants.TokenErrors.INVALID_SCOPE);
             }
 
             /////////////////////////////////////////////
@@ -564,7 +565,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (result == null)
             {
                 LogError("Invalid custom grant.");
-                return Invalid(Constants.TokenErrors.InvalidGrant);
+                return Invalid(Constants.TokenErrors.INVALID_GRANT);
             }
 
             if (result.ErrorMessage.IsPresent())
@@ -584,8 +585,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
-            var scopes = parameters.Get(Constants.TokenRequest.Scope);
-            if (scopes.IsMissingOrTooLong(Constants.MaxScopeLength))
+            var scopes = parameters.Get(Constants.TokenRequest.SCOPE);
+            if (scopes.IsMissingOrTooLong(Constants.MAX_SCOPE_LENGTH))
             {
                 Logger.Warn("Scopes missing or too long");
                 return false;
@@ -626,7 +627,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return new ValidationResult
             {
                 IsError = true,
-                ErrorType = ErrorTypes.Client,
+                ErrorType = ErrorTypes.CLIENT,
                 Error = error
             };
         }

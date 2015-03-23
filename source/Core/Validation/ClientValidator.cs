@@ -20,8 +20,10 @@ using System.ComponentModel;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Logging.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -174,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                     IsPresent = true,
                     IsMalformed = false,
-                    Type = Constants.ClientAuthenticationMethods.Basic
+                    Type = Constants.ClientAuthenticationMethods.BASIC
                 };
             }
 
@@ -207,7 +209,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
                     IsMalformed = false,
                     IsPresent = true,
-                    Type = Constants.ClientAuthenticationMethods.FormPost
+                    Type = Constants.ClientAuthenticationMethods.FORM_POST
                 };
             }
 

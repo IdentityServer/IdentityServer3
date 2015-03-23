@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
@@ -28,37 +28,37 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
+namespace Thinktecture.IdentityServer.Tests.ResponseHandling
 {
     public class DefaultRefreshTokenServiceTests : IDisposable
     {
         const string Category = "Default RefreshToken Service";
 
-        IRefreshTokenStore refreshTokenStore;
-        DefaultRefreshTokenService service;
+        readonly IRefreshTokenStore _refreshTokenStore;
+        readonly DefaultRefreshTokenService _service;
 
-        Client roclient_absolute_refresh_expiration_one_time_only;
-        Client roclient_sliding_refresh_expiration_one_time_only;
-        Client roclient_absolute_refresh_expiration_reuse;
+        readonly Client _roclientAbsoluteRefreshExpirationOneTimeOnly;
+        readonly Client _roclientSlidingRefreshExpirationOneTimeOnly;
+        readonly Client _roclientAbsoluteRefreshExpirationReuse;
 
-        DateTimeOffset now;
+        DateTimeOffset _now;
         public DateTimeOffset UtcNow
         {
             get
             {
-                if (now > DateTimeOffset.MinValue) return now;
+                if (_now > DateTimeOffset.MinValue) return _now;
                 return DateTimeOffset.UtcNow;
             }
         }
 
-        Func<DateTimeOffset> originalNowFunc;
+        readonly Func<DateTimeOffset> _originalNowFunc;
 
         public DefaultRefreshTokenServiceTests()
         {
-            originalNowFunc = DateTimeOffsetHelper.UtcNowFunc;
+            _originalNowFunc = DateTimeOffsetHelper.UtcNowFunc;
             DateTimeOffsetHelper.UtcNowFunc = () => UtcNow;
 
-            roclient_absolute_refresh_expiration_one_time_only = new Client
+            _roclientAbsoluteRefreshExpirationOneTimeOnly = new Client
             {
                 ClientName = "Resource Owner Client",
                 Enabled = true,
@@ -68,14 +68,14 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                     new ClientSecret("secret".Sha256())
                 },
 
-                Flow = Flows.ResourceOwner,
+                Flow = Flows.RESOURCE_OWNER,
 
-                RefreshTokenExpiration = TokenExpiration.Absolute,
-                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                RefreshTokenExpiration = TokenExpiration.ABSOLUTE,
+                RefreshTokenUsage = TokenUsage.ONE_TIME_ONLY,
                 AbsoluteRefreshTokenLifetime = 200
             };
 
-            roclient_sliding_refresh_expiration_one_time_only = new Client
+            _roclientSlidingRefreshExpirationOneTimeOnly = new Client
             {
                 ClientName = "Resource Owner Client",
                 Enabled = true,
@@ -85,15 +85,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                     new ClientSecret("secret".Sha256())
                 },
 
-                Flow = Flows.ResourceOwner,
+                Flow = Flows.RESOURCE_OWNER,
 
-                RefreshTokenExpiration = TokenExpiration.Sliding,
-                RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                RefreshTokenExpiration = TokenExpiration.SLIDING,
+                RefreshTokenUsage = TokenUsage.ONE_TIME_ONLY,
                 AbsoluteRefreshTokenLifetime = 10,
                 SlidingRefreshTokenLifetime = 4
             };
 
-            roclient_absolute_refresh_expiration_reuse = new Client
+            _roclientAbsoluteRefreshExpirationReuse = new Client
             {
                 ClientName = "Resource Owner Client",
                 Enabled = true,
@@ -103,22 +103,22 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                     new ClientSecret("secret".Sha256())
                 },
 
-                Flow = Flows.ResourceOwner,
+                Flow = Flows.RESOURCE_OWNER,
 
-                RefreshTokenExpiration = TokenExpiration.Absolute,
-                RefreshTokenUsage = TokenUsage.ReUse,
+                RefreshTokenExpiration = TokenExpiration.ABSOLUTE,
+                RefreshTokenUsage = TokenUsage.RE_USE,
                 AbsoluteRefreshTokenLifetime = 200
             };
 
-            refreshTokenStore = new InMemoryRefreshTokenStore();
-            service = new DefaultRefreshTokenService(refreshTokenStore, new DefaultEventService());
+            _refreshTokenStore = new InMemoryRefreshTokenStore();
+            _service = new DefaultRefreshTokenService(_refreshTokenStore, new DefaultEventService());
         }
 
         public void Dispose()
         {
-            if (originalNowFunc != null)
+            if (_originalNowFunc != null)
             {
-                DateTimeOffsetHelper.UtcNowFunc = originalNowFunc;
+                DateTimeOffsetHelper.UtcNowFunc = _originalNowFunc;
             }
         }
 
@@ -132,7 +132,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             scopes.ToList().ForEach(s => claims.Add(new Claim("scope", s)));
 
-            var token = new Token(Constants.TokenTypes.AccessToken)
+            var token = new Token(Constants.TokenTypes.ACCESS_TOKEN)
             {
                 Audience = "https://idsrv3.com/resources",
                 Issuer = "https://idsrv3.com",
@@ -149,16 +149,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Absolute_Lifetime()
         {
-            var client = roclient_absolute_refresh_expiration_one_time_only;
+            var client = _roclientAbsoluteRefreshExpirationOneTimeOnly;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
-            var refreshToken = await refreshTokenStore.GetAsync(handle);
+            var refreshToken = await _refreshTokenStore.GetAsync(handle);
             refreshToken.Should().NotBeNull();
 
             // check refresh token values
@@ -170,16 +170,16 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task Create_Refresh_Token_Sliding_Lifetime()
         {
-            var client = roclient_sliding_refresh_expiration_one_time_only;
+            var client = _roclientSlidingRefreshExpirationOneTimeOnly;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
 
             // make sure refresh token is in store
-            var refreshToken = await refreshTokenStore.GetAsync(handle);
+            var refreshToken = await _refreshTokenStore.GetAsync(handle);
             refreshToken.Should().NotBeNull();
 
             // check refresh token values
@@ -191,19 +191,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task Sliding_Expiration_does_not_exceed_absolute_Expiration()
         {
-            now = DateTimeOffset.UtcNow;
+            _now = DateTimeOffset.UtcNow;
 
-            var client = roclient_sliding_refresh_expiration_one_time_only;
+            var client = _roclientSlidingRefreshExpirationOneTimeOnly;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
-            var refreshToken = await refreshTokenStore.GetAsync(handle);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
+            var refreshToken = await _refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
-            now = now.AddSeconds(8);
+            _now = _now.AddSeconds(8);
 
-            var newHandle = await service.UpdateRefreshTokenAsync(handle, refreshToken, client);
-            var newRefreshToken = await refreshTokenStore.GetAsync(newHandle);
+            var newHandle = await _service.UpdateRefreshTokenAsync(handle, refreshToken, client);
+            var newRefreshToken = await _refreshTokenStore.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
             newLifetime.Should().Be(client.AbsoluteRefreshTokenLifetime);
@@ -213,19 +213,19 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task Sliding_Expiration_within_absolute_Expiration()
         {
-            now = DateTimeOffset.UtcNow;
+            _now = DateTimeOffset.UtcNow;
 
-            var client = roclient_sliding_refresh_expiration_one_time_only;
+            var client = _roclientSlidingRefreshExpirationOneTimeOnly;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
-            var refreshToken = await refreshTokenStore.GetAsync(handle);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
+            var refreshToken = await _refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
-            now = now.AddSeconds(1);
+            _now = _now.AddSeconds(1);
 
-            var newHandle = await service.UpdateRefreshTokenAsync(handle, refreshToken, client);
-            var newRefreshToken = await refreshTokenStore.GetAsync(newHandle);
+            var newHandle = await _service.UpdateRefreshTokenAsync(handle, refreshToken, client);
+            var newRefreshToken = await _refreshTokenStore.GetAsync(newHandle);
             var newLifetime = newRefreshToken.LifeTime;
 
             (client.SlidingRefreshTokenLifetime + 1).Should().Be(newLifetime);
@@ -235,11 +235,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task ReUse_Handle_reuses_Handle()
         {
-            var client = roclient_absolute_refresh_expiration_reuse;
+            var client = _roclientAbsoluteRefreshExpirationReuse;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
-            var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
+            var newHandle = await _service.UpdateRefreshTokenAsync(handle, await _refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().Be(handle);
         }
@@ -248,11 +248,11 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Trait("Category", Category)]
         public async Task OneTime_Handle_creates_new_Handle()
         {
-            var client = roclient_absolute_refresh_expiration_one_time_only;
+            var client = _roclientAbsoluteRefreshExpirationOneTimeOnly;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
-            var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
+            var handle = await _service.CreateRefreshTokenAsync(token, client);
+            var newHandle = await _service.UpdateRefreshTokenAsync(handle, await _refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().NotBe(handle);
         }

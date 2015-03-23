@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation
 {
-
     public class TokenRequestValidation_RefreshToken_Invalid
     {
         const string Category = "TokenRequest Validation - RefreshToken - Invalid";
 
-        IClientStore _clients = Factory.CreateClientStore();
+        readonly IClientStore _clients = Factory.CreateClientStore();
 
         [Fact]
         [Trait("Category", Category)]
@@ -46,14 +46,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, "nonexistent");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, "nonexistent"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -76,14 +77,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -112,14 +114,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -148,14 +151,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 refreshTokens: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -165,7 +169,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var mock = new Mock<IUserService>();
             mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
 
-            var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+            var subjectClaim = new Claim(Constants.ClaimTypes.SUBJECT, "foo");
 
             var refreshToken = new RefreshToken
             {
@@ -188,9 +192,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 refreshTokens: store,
                 userService: mock.Object);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 

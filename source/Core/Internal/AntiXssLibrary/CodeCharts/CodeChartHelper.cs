@@ -18,13 +18,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 // ReSharper disable CheckNamespace
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Microsoft.Security.Application.CodeCharts
     // ReSharper restore CheckNamespace
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>
     /// Helper functions to simplify range/safe enumerations.
     /// </summary>

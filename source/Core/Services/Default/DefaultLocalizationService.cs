@@ -34,11 +34,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             switch(category)
             {
-                case Constants.LocalizationCategories.Messages:
+                case Constants.LocalizationCategories.MESSAGES:
                     return Messages.ResourceManager.GetString(id);
-                case Constants.LocalizationCategories.Events:
+                case Constants.LocalizationCategories.EVENTS:
                     return Resources.Events.ResourceManager.GetString(id);
-                case Constants.LocalizationCategories.Scopes:
+                case Constants.LocalizationCategories.SCOPES:
                     return Scopes.ResourceManager.GetString(id);
             }
             

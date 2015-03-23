@@ -209,7 +209,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public Client()
         {
-            Flow = Flows.Implicit;
+            Flow = Flows.IMPLICIT;
             
             ClientSecrets = new List<ClientSecret>();
             ScopeRestrictions = new List<string>();
@@ -240,10 +240,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             // 15 days
             SlidingRefreshTokenLifetime = 1296000;
 
-            RefreshTokenUsage = TokenUsage.OneTimeOnly;
-            RefreshTokenExpiration = TokenExpiration.Absolute;
+            RefreshTokenUsage = TokenUsage.ONE_TIME_ONLY;
+            RefreshTokenExpiration = TokenExpiration.ABSOLUTE;
 
-            AccessTokenType = AccessTokenType.Jwt;
+            AccessTokenType = AccessTokenType.JWT;
             
             RequireConsent = true;
             AllowRememberConsent = true;

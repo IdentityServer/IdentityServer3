@@ -28,9 +28,9 @@ namespace Thinktecture.IdentityServer.Core
         public static ClaimsPrincipal Create(
             string subject,
             string displayName,
-            string authenticationMethod = Constants.AuthenticationMethods.Password,
-            string idp = Constants.BuiltInIdentityProvider,
-            string authenticationType = Constants.PrimaryAuthenticationType,
+            string authenticationMethod = Constants.AuthenticationMethods.PASSWORD,
+            string idp = Constants.BUILT_IN_IDENTITY_PROVIDER,
+            string authenticationType = Constants.PRIMARY_AUTHENTICATION_TYPE,
             long authenticationTime = 0)
         {
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
@@ -43,36 +43,36 @@ namespace Thinktecture.IdentityServer.Core
 
             var claims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.Subject, subject),
-                new Claim(Constants.ClaimTypes.Name, displayName),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
-                new Claim(Constants.ClaimTypes.IdentityProvider, idp),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, authenticationTime.ToString(), ClaimValueTypes.Integer)
+                new Claim(Constants.ClaimTypes.SUBJECT, subject),
+                new Claim(Constants.ClaimTypes.NAME, displayName),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_METHOD, authenticationMethod),
+                new Claim(Constants.ClaimTypes.IDENTITY_PROVIDER, idp),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_TIME, authenticationTime.ToString(), ClaimValueTypes.Integer)
             };
 
-            var id = new ClaimsIdentity(claims, authenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
+            var id = new ClaimsIdentity(claims, authenticationType, Constants.ClaimTypes.NAME, Constants.ClaimTypes.ROLE);
             return new ClaimsPrincipal(id);
         }
 
         public static ClaimsPrincipal CreateFromPrincipal(ClaimsPrincipal principal, string authenticationType)
         {
             // we require the following claims
-            var subject = principal.FindFirst(Constants.ClaimTypes.Subject);
+            var subject = principal.FindFirst(Constants.ClaimTypes.SUBJECT);
             if (subject == null) throw new InvalidOperationException("sub claim is missing");
 
-            var name = principal.FindFirst(Constants.ClaimTypes.Name);
+            var name = principal.FindFirst(Constants.ClaimTypes.NAME);
             if (name == null) throw new InvalidOperationException("name claim is missing");
 
-            var authenticationMethod = principal.FindFirst(Constants.ClaimTypes.AuthenticationMethod);
+            var authenticationMethod = principal.FindFirst(Constants.ClaimTypes.AUTHENTICATION_METHOD);
             if (authenticationMethod == null) throw new InvalidOperationException("amr claim is missing");
 
-            var authenticationTime = principal.FindFirst(Constants.ClaimTypes.AuthenticationTime);
+            var authenticationTime = principal.FindFirst(Constants.ClaimTypes.AUTHENTICATION_TIME);
             if (authenticationTime == null) throw new InvalidOperationException("auth_time claim is missing");
 
-            var idp = principal.FindFirst(Constants.ClaimTypes.IdentityProvider);
+            var idp = principal.FindFirst(Constants.ClaimTypes.IDENTITY_PROVIDER);
             if (idp == null) throw new InvalidOperationException("idp claim is missing");
 
-            var id = new ClaimsIdentity(principal.Claims, authenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
+            var id = new ClaimsIdentity(principal.Claims, authenticationType, Constants.ClaimTypes.NAME, Constants.ClaimTypes.ROLE);
             return new ClaimsPrincipal(id);
         }
 
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core
         {
             var claims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.Subject, subjectId)
+                new Claim(Constants.ClaimTypes.SUBJECT, subjectId)
             };
 
             if (additionalClaims != null)
@@ -88,18 +88,18 @@ namespace Thinktecture.IdentityServer.Core
                 claims.AddRange(additionalClaims);
             }
 
-            return Principal.Create(Constants.PrimaryAuthenticationType,
+            return Principal.Create(Constants.PRIMARY_AUTHENTICATION_TYPE,
                 claims.Distinct(new ClaimComparer()).ToArray());
         }
 
         public static ClaimsPrincipal FromClaims(IEnumerable<Claim> claims, bool allowMissing = false)
         {
-            var sub = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
-            var amr = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
-            var idp = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.IdentityProvider);
-            var authTime = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationTime);
+            var sub = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SUBJECT);
+            var amr = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AUTHENTICATION_METHOD);
+            var idp = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.IDENTITY_PROVIDER);
+            var authTime = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AUTHENTICATION_TIME);
 
-            var id = new ClaimsIdentity(Constants.BuiltInIdentityProvider);
+            var id = new ClaimsIdentity(Constants.BUILT_IN_IDENTITY_PROVIDER);
 
             if (sub != null)
             {

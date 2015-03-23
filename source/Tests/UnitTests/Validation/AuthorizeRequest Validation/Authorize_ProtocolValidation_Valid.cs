@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest_Validation
 {
     
     public class Authorize_ProtocolValidation_Valid
@@ -29,11 +30,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_OpenId_Code_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -45,11 +47,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_Resource_Code_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -61,11 +64,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_Mixed_Code_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -77,11 +81,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_Resource_Token_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Token);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, "resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.TOKEN}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -93,12 +98,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_OpenId_IdToken_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -110,12 +116,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_Mixed_IdTokenToken_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN_TOKEN},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -127,13 +134,14 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_OpenId_IdToken_With_FormPost_ResponseMode_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, Constants.StandardScopes.OpenId);
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
-            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, Constants.StandardScopes.OPEN_ID},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN},
+                {Constants.AuthorizeRequest.RESPONSE_MODE, Constants.ResponseModes.FORM_POST},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -145,13 +153,14 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Protocol Validation - Valid")]
         public async Task Valid_OpenId_IdToken_Token_With_FormPost_ResponseMode_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
-            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.FormPost);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN_TOKEN},
+                {Constants.AuthorizeRequest.RESPONSE_MODE, Constants.ResponseModes.FORM_POST},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);

@@ -16,7 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (get == null) throw new ArgumentNullException("get");
             if (key == null) return null;
 
-            T item = await cache.GetAsync(key);
+            var item = await cache.GetAsync(key);
             
             if (item == null)
             {

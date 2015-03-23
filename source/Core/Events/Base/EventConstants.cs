@@ -16,31 +16,31 @@
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.Base
 {
     public static class EventConstants
     {
         public static class Categories
         {
-            public const string Authentication = "Authentication";
-            public const string TokenService = "TokenService";
-            public const string Endpoints = "Endpoints";
-            public const string Information = "Information";
-            public const string InternalError = "InternalError";
+            public const string AUTHENTICATION = "Authentication";
+            public const string TOKEN_SERVICE = "TokenService";
+            public const string ENDPOINTS = "Endpoints";
+            public const string INFORMATION = "Information";
+            public const string INTERNAL_ERROR = "InternalError";
         }
 
         public static class EndpointNames
         {
-            public const string Authenticate = "authenticate";
-            public const string Authorize = "authorize";
-            public const string Token = "token";
-            public const string Revocation = "revocation";
-            public const string UserInfo = "userinfo";
-            public const string EndSession = "endsession";
-            public const string AccessTokenValidation = "accesstokenvalidation";
-            public const string IdentityTokenValidation = "identitytokenvalidaton";
-            public const string CspReport = "cspreport";
-            public const string ClientPermissions = "clientpermissions";
+            public const string AUTHENTICATE = "authenticate";
+            public const string AUTHORIZE = "authorize";
+            public const string TOKEN = "token";
+            public const string REVOCATION = "revocation";
+            public const string USER_INFO = "userinfo";
+            public const string END_SESSION = "endsession";
+            public const string ACCESS_TOKEN_VALIDATION = "accesstokenvalidation";
+            public const string IDENTITY_TOKEN_VALIDATION = "identitytokenvalidaton";
+            public const string CSP_REPORT = "cspreport";
+            public const string CLIENT_PERMISSIONS = "clientpermissions";
         }
         
         public static class Ids
@@ -50,41 +50,41 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int AuthenticationEventsStart = 1000;
 
-            public const int PreLoginSuccess = AuthenticationEventsStart + 0;
-            public const int PreLoginFailure = AuthenticationEventsStart + 1;
+            public const int PRE_LOGIN_SUCCESS = AuthenticationEventsStart + 0;
+            public const int PRE_LOGIN_FAILURE = AuthenticationEventsStart + 1;
 
-            public const int LocalLoginSuccess = AuthenticationEventsStart + 10;
-            public const int LocalLoginFailure = AuthenticationEventsStart + 11;
+            public const int LOCAL_LOGIN_SUCCESS = AuthenticationEventsStart + 10;
+            public const int LOCAL_LOGIN_FAILURE = AuthenticationEventsStart + 11;
 
-            public const int ExternalLoginSuccess = AuthenticationEventsStart + 20;
-            public const int ExternalLoginFailure = AuthenticationEventsStart + 21;
-            public const int ExternalLoginError = AuthenticationEventsStart + 22;
+            public const int EXTERNAL_LOGIN_SUCCESS = AuthenticationEventsStart + 20;
+            public const int EXTERNAL_LOGIN_FAILURE = AuthenticationEventsStart + 21;
+            public const int EXTERNAL_LOGIN_ERROR = AuthenticationEventsStart + 22;
             
-            public const int Logout = AuthenticationEventsStart + 30;
+            public const int LOGOUT = AuthenticationEventsStart + 30;
 
-            public const int PartialLogin = AuthenticationEventsStart + 40;
-            public const int PartialLoginComplete = AuthenticationEventsStart + 41;
+            public const int PARTIAL_LOGIN = AuthenticationEventsStart + 40;
+            public const int PARTIAL_LOGIN_COMPLETE = AuthenticationEventsStart + 41;
 
-            public const int ResourceOwnerFlowLoginSuccess = AuthenticationEventsStart + 50;
-            public const int ResourceOwnerFlowLoginFailure = AuthenticationEventsStart + 51;
+            public const int RESOURCE_OWNER_FLOW_LOGIN_SUCCESS = AuthenticationEventsStart + 50;
+            public const int RESOURCE_OWNER_FLOW_LOGIN_FAILURE = AuthenticationEventsStart + 51;
 
             ///////////////////////////
             /// Token service related events
             ///////////////////////////
             private const int TokenServiceEventsStart = 2000;
 
-            public const int AccessTokenIssued = TokenServiceEventsStart + 0;
-            public const int IdentityTokenIssued = TokenServiceEventsStart + 1;
+            public const int ACCESS_TOKEN_ISSUED = TokenServiceEventsStart + 0;
+            public const int IDENTITY_TOKEN_ISSUED = TokenServiceEventsStart + 1;
 
-            public const int AuthorizationCodeIssued = TokenServiceEventsStart + 10;
-            public const int AuthorizationCodeRedeemedSuccess = TokenServiceEventsStart + 11;
-            public const int AuthorizationCodeRedeemedFailure = TokenServiceEventsStart + 12;
+            public const int AUTHORIZATION_CODE_ISSUED = TokenServiceEventsStart + 10;
+            public const int AUTHORIZATION_CODE_REDEEMED_SUCCESS = TokenServiceEventsStart + 11;
+            public const int AUTHORIZATION_CODE_REDEEMED_FAILURE = TokenServiceEventsStart + 12;
 
-            public const int RefreshTokenIssued = TokenServiceEventsStart + 20;
-            public const int RefreshTokenRefreshedSuccess = TokenServiceEventsStart + 21;
-            public const int RefreshTokenRefreshedFailure = TokenServiceEventsStart + 22;
+            public const int REFRESH_TOKEN_ISSUED = TokenServiceEventsStart + 20;
+            public const int REFRESH_TOKEN_REFRESHED_SUCCESS = TokenServiceEventsStart + 21;
+            public const int REFRESH_TOKEN_REFRESHED_FAILURE = TokenServiceEventsStart + 22;
 
-            public const int PermissionRevoked = TokenServiceEventsStart + 30;
+            public const int PERMISSION_REVOKED = TokenServiceEventsStart + 30;
             
             
             ///////////////////////////
@@ -92,21 +92,21 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int EndpointsEventsStart = 3000;
 
-            public const int EndpointSuccess = EndpointsEventsStart + 0;
-            public const int EndpointFailure = EndpointsEventsStart + 1;
+            public const int ENDPOINT_SUCCESS = EndpointsEventsStart + 0;
+            public const int ENDPOINT_FAILURE = EndpointsEventsStart + 1;
             
             ///////////////////////////
             /// Information events
             ///////////////////////////
             private const int InformationEventsStart = 4000;
 
-            public const int CertificateExpiration = InformationEventsStart + 0;
-            public const int CspReport = InformationEventsStart + 1;
-            public const int ClientPermissionRevoked = InformationEventsStart + 2;
+            public const int CERTIFICATE_EXPIRATION = InformationEventsStart + 0;
+            public const int CSP_REPORT = InformationEventsStart + 1;
+            public const int CLIENT_PERMISSION_REVOKED = InformationEventsStart + 2;
 
-            public const int NoSigningCertificateConfigured = InformationEventsStart + 10;
-            public const int SigningCertificateExpiringSoon = InformationEventsStart + 11;
-            public const int SigningCertificateValidated = InformationEventsStart + 12;
+            public const int NO_SIGNING_CERTIFICATE_CONFIGURED = InformationEventsStart + 10;
+            public const int SIGNING_CERTIFICATE_EXPIRING_SOON = InformationEventsStart + 11;
+            public const int SIGNING_CERTIFICATE_VALIDATED = InformationEventsStart + 12;
 
 
             ///////////////////////////
@@ -114,8 +114,8 @@ namespace Thinktecture.IdentityServer.Core.Events
             ///////////////////////////
             private const int InternalErrorEventsStart = 5000;
 
-            public const int UnhandledExceptionError = InternalErrorEventsStart + 0;
-            public const int SigningCertificatePrivatKeyNotAccessible = InternalErrorEventsStart + 1;
+            public const int UNHANDLED_EXCEPTION_ERROR = InternalErrorEventsStart + 0;
+            public const int SIGNING_CERTIFICATE_PRIVAT_KEY_NOT_ACCESSIBLE = InternalErrorEventsStart + 1;
         }
     }
 }

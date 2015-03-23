@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     /// <summary>
     /// Base external claims filter implementation. Will only execute for the configured provider and 
@@ -25,7 +25,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public abstract class ClaimsFilterBase : IExternalClaimsFilter
     {
-        readonly string provider;
+        readonly string _provider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ClaimsFilterBase"/> class.
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="provider">The provider this claims filter will operate against.</param>
         protected ClaimsFilterBase(string provider)
         {
-            this.provider = provider;
+            _provider = provider;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public IEnumerable<Claim> Filter(string provider, IEnumerable<Claim> claims)
         {
-            if (this.provider == provider)
+            if (_provider == provider)
             {
                 claims = TransformClaims(claims);
             }

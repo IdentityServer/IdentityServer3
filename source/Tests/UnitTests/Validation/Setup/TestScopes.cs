@@ -17,13 +17,13 @@
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace Thinktecture.IdentityServer.Tests.Validation.Setup
 {
     class TestScopes
     {
         public static IEnumerable<Scope> Get()
         {
-            return new Scope[]
+            return new[]
             {
                 StandardScopes.OpenId,
                 StandardScopes.Profile,
@@ -33,13 +33,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 {
                     Name = "resource",
                     Description = "resource scope",
-                    Type = ScopeType.Resource
+                    Type = ScopeType.RESOURCE
                 },
                 new Scope
                 {
                     Name = "resource2",
                     Description = "resource scope",
-                    Type = ScopeType.Resource
+                    Type = ScopeType.RESOURCE
                 },
              };
         }

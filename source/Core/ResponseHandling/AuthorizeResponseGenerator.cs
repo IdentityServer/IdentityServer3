@@ -21,8 +21,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -49,15 +49,15 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
         public async Task<AuthorizeResponse> CreateResponseAsync(ValidatedAuthorizeRequest request)
         {
-            if (request.Flow == Flows.AuthorizationCode)
+            if (request.Flow == Flows.AUTHORIZATION_CODE)
             {
                 return await CreateCodeFlowResponseAsync(request);
             }
-            if (request.Flow == Flows.Implicit)
+            if (request.Flow == Flows.IMPLICIT)
             {
                 return await CreateImplicitFlowResponseAsync(request);
             }
-            if (request.Flow == Flows.Hybrid)
+            if (request.Flow == Flows.HYBRID)
             {
                 return await CreateHybridFlowResponseAsync(request);
             }
@@ -128,11 +128,11 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             Logger.Info("Creating Implicit Flow response.");
 
             string accessTokenValue = null;
-            int accessTokenLifetime = 0;
+            var accessTokenLifetime = 0;
 
             var responseTypes = request.ResponseType.FromSpaceSeparatedString();
 
-            if (responseTypes.Contains(Constants.ResponseTypes.Token))
+            if (responseTypes.Contains(Constants.ResponseTypes.TOKEN))
             {
                 var tokenRequest = new TokenCreationRequest
                 {
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             }
 
             string jwt = null;
-            if (responseTypes.Contains(Constants.ResponseTypes.IdToken))
+            if (responseTypes.Contains(Constants.ResponseTypes.ID_TOKEN))
             {
                 var tokenRequest = new TokenCreationRequest
                 {
@@ -159,7 +159,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
 
-                    Nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce),
+                    Nonce = request.Raw.Get(Constants.AuthorizeRequest.NONCE),
                     IncludeAllIdentityClaims = !request.AccessTokenRequested,
                     AccessTokenToHash = accessTokenValue,
                     AuthorizationCodeToHash = authorizationCode

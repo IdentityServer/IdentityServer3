@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
+using Microsoft.Owin;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {

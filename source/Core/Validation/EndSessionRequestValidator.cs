@@ -18,9 +18,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Logging.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Validation
@@ -67,7 +69,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Invalid();
             }
 
-            var idTokenHint = parameters.Get(Constants.EndSessionRequest.IdTokenHint);
+            var idTokenHint = parameters.Get(Constants.EndSessionRequest.ID_TOKEN_HINT);
             if (idTokenHint.IsPresent())
             {
                 // validate id_token - no need to validate token life time
@@ -81,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 _validatedRequest.Client = tokenValidationResult.Client;
 
                 // validate sub claim against currently logged on user
-                var subClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
+                var subClaim = tokenValidationResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SUBJECT);
                 if (subClaim != null && subject.Identity.IsAuthenticated)
                 {
                     if (subject.GetSubjectId() != subClaim.Value)
@@ -91,7 +93,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     }
                 }
 
-                var redirectUri = parameters.Get(Constants.EndSessionRequest.PostLogoutRedirectUri);
+                var redirectUri = parameters.Get(Constants.EndSessionRequest.POST_LOGOUT_REDIRECT_URI);
                 if (redirectUri.IsPresent())
                 {
                     _validatedRequest.PostLogOutUri = redirectUri;
@@ -102,7 +104,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                         return Invalid();
                     }
 
-                    var state = parameters.Get(Constants.EndSessionRequest.State);
+                    var state = parameters.Get(Constants.EndSessionRequest.STATE);
                     if (state.IsPresent())
                     {
                         _validatedRequest.State = state;

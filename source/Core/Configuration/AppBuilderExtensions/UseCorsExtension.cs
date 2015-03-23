@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using Microsoft.Owin.Cors;
+using Owin;
+using CorsPolicyProvider = Thinktecture.IdentityServer.Core.Configuration.Hosting.CorsPolicyProvider;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class UseCorsExtension
     {
         public static void UseCors(this IAppBuilder app)
         {
-            app.UseCors(new Microsoft.Owin.Cors.CorsOptions
+            app.UseCors(new CorsOptions
             {
                 PolicyProvider = new CorsPolicyProvider(Constants.RoutePaths.CorsPaths)
             });

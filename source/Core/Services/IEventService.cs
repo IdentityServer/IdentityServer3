@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {

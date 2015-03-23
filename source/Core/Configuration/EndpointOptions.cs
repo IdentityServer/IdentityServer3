@@ -26,17 +26,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         public EndpointOptions()
         {
-            this.EnableAuthorizeEndpoint = true;
-            this.EnableTokenEndpoint = true;
-            this.EnableUserInfoEndpoint = true;
-            this.EnableDiscoveryEndpoint = true;
-            this.EnableAccessTokenValidationEndpoint = true;
-            this.EnableIdentityTokenValidationEndpoint = true;
-            this.EnableEndSessionEndpoint = true;
-            this.EnableClientPermissionsEndpoint = true;
-            this.EnableCspReportEndpoint = true;
-            this.EnableCheckSessionEndpoint = true;
-            this.EnableTokenRevocationEndpoint = true;
+            EnableAuthorizeEndpoint = true;
+            EnableTokenEndpoint = true;
+            EnableUserInfoEndpoint = true;
+            EnableDiscoveryEndpoint = true;
+            EnableAccessTokenValidationEndpoint = true;
+            EnableIdentityTokenValidationEndpoint = true;
+            EnableEndSessionEndpoint = true;
+            EnableClientPermissionsEndpoint = true;
+            EnableCspReportEndpoint = true;
+            EnableCheckSessionEndpoint = true;
+            EnableTokenRevocationEndpoint = true;
         }
 
         /// <summary>

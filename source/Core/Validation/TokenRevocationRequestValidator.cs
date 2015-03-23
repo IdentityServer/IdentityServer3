@@ -48,7 +48,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return Task.FromResult(new TokenRevocationRequestValidationResult
                 {
                     IsError = true,
-                    Error = Constants.TokenErrors.InvalidRequest
+                    Error = Constants.TokenErrors.INVALID_REQUEST
                 });
             }
 
@@ -71,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 else
                 {
                     result.IsError = true;
-                    result.Error = Constants.RevocationErrors.UnsupportedTokenType;
+                    result.Error = Constants.RevocationErrors.UNSUPPORTED_TOKEN_TYPE;
                 }
             }
 

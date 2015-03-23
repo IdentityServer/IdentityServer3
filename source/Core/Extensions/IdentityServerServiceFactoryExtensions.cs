@@ -17,12 +17,14 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Caching;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerServiceFactory"/>

@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Thinktecture.IdentityServer.Core.Logging
@@ -102,20 +103,20 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             switch (logLevel)
             {
-                case LogLevel.Trace:
-                case LogLevel.Debug:
+                case LogLevel.TRACE:
+                case LogLevel.DEBUG:
                     Trace.WriteLine(message, logLevel.ToString());
                     break;
-                case LogLevel.Info:
+                case LogLevel.INFO:
                     Trace.TraceInformation(message);
                     break;
-                case LogLevel.Warn:
+                case LogLevel.WARN:
                     Trace.TraceWarning(message);
                     break;
-                case LogLevel.Error:
+                case LogLevel.ERROR:
                     Trace.TraceError(message);
                     break;
-                case LogLevel.Fatal:
+                case LogLevel.FATAL:
                     Trace.TraceError(string.Format("FATAL : {0}", message));
                     break;
             }

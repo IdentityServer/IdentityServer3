@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+using Thinktecture.IdentityServer.Core.Configuration;
+
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class CookieOptionsExtensions
     {

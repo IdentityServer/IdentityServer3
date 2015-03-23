@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
@@ -30,42 +30,42 @@ namespace Thinktecture.IdentityServer.Tests.Validation
     {
         const string Category = "Scope Validation";
 
-        List<Scope> _allScopes = new List<Scope>
+        readonly List<Scope> _allScopes = new List<Scope>
             {
                 new Scope
                 {
                     Name = "openid",
-                    Type = ScopeType.Identity
+                    Type = ScopeType.IDENTITY
                 },
                 new Scope
                 {
                     Name = "email",
-                    Type = ScopeType.Identity
+                    Type = ScopeType.IDENTITY
                 },
                 new Scope
                 {
                     Name = "resource1",
-                    Type = ScopeType.Resource
+                    Type = ScopeType.RESOURCE
                 },
                 new Scope
                 {
                     Name = "resource2",
-                    Type = ScopeType.Resource
+                    Type = ScopeType.RESOURCE
                 },
                 new Scope
                 {
                     Name = "disabled",
                     Enabled = false,
-                    Type = ScopeType.Resource
+                    Type = ScopeType.RESOURCE
                 },
             };
 
-        Client _unrestrictedClient = new Client
+        readonly Client _unrestrictedClient = new Client
             {
                 ClientId = "unrestricted"
             };
 
-        Client _restrictedClient = new Client
+        readonly Client _restrictedClient = new Client
             {
                 ClientId = "restricted",
             
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 }
             };
 
-        IScopeStore _store;
+        readonly IScopeStore _store;
 
         public ScopeValidation()
         {

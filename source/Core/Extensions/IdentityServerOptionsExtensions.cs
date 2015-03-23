@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     internal static class IdentityServerOptionsExtensions
     {

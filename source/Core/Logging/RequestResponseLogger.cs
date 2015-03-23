@@ -17,6 +17,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
@@ -38,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
             var response = await base.SendAsync(request, cancellationToken);
 
-            string body = "";
+            var body = "";
 
             if (response.Content != null)
             {

@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-using Autofac;
-using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Autofac;
+using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
+using AuthenticateResult = Microsoft.Owin.Security.AuthenticateResult;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -40,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <returns></returns>
         public static string GetIdentityServerHost(this IDictionary<string, object> env)
         {
-            return env[Constants.OwinEnvironment.IdentityServerHost] as string;
+            return env[Constants.OwinEnvironment.IDENTITY_SERVER_HOST] as string;
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <returns></returns>
         public static string GetIdentityServerBasePath(this IDictionary<string, object> env)
         {
-            return env[Constants.OwinEnvironment.IdentityServerBasePath] as string;
+            return env[Constants.OwinEnvironment.IDENTITY_SERVER_BASE_PATH] as string;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         /// <returns></returns>
         public static string GetIdentityServerLogoutUrl(this IDictionary<string, object> env)
         {
-            return env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
+            return env.GetIdentityServerBaseUrl() + Constants.RoutePaths.LOGOUT;
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             var cookie = new MessageCookie<SignInMessage>(env, options);
             var id = cookie.Write(message);
 
-            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
+            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.LOGIN;
             var uri = new Uri(url.AddQueryString("signin=" + id));
 
             return uri.AbsoluteUri;
@@ -146,27 +147,22 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             var authenticationMethod = login.AuthenticationMethod;
-            var identityProvider = login.IdentityProvider ?? Constants.BuiltInIdentityProvider;
+            var identityProvider = login.IdentityProvider ?? Constants.BUILT_IN_IDENTITY_PROVIDER;
             if (String.IsNullOrWhiteSpace(authenticationMethod))
             {
-                if (identityProvider == Constants.BuiltInIdentityProvider)
-                {
-                    authenticationMethod = Constants.AuthenticationMethods.Password;
-                }
-                else
-                {
-                    authenticationMethod = Constants.AuthenticationMethods.External;
-                }
+                authenticationMethod = identityProvider == Constants.BUILT_IN_IDENTITY_PROVIDER 
+                    ? Constants.AuthenticationMethods.PASSWORD 
+                    : Constants.AuthenticationMethods.EXTERNAL;
             }
 
-            var user = IdentityServerPrincipal.Create(login.Subject, login.Name, authenticationMethod, identityProvider, Constants.PrimaryAuthenticationType);
+            var user = IdentityServerPrincipal.Create(login.Subject, login.Name, authenticationMethod, identityProvider);
             var identity = user.Identities.First();
 
             var claims = login.Claims;
             if (claims != null && claims.Any())
             {
                 claims = claims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type));
-                claims = claims.Where(x => x.Type != Constants.ClaimTypes.Name);
+                claims = claims.Where(x => x.Type != Constants.ClaimTypes.NAME);
                 identity.AddClaims(claims);
             }
 
@@ -182,7 +178,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetRequestId(this IDictionary<string, object> env)
         {
             object value;
-            if (env.TryGetValue(Constants.OwinEnvironment.RequestId, out value))
+            if (env.TryGetValue(Constants.OwinEnvironment.REQUEST_ID, out value))
             {
                 return value as string;
             }
@@ -197,29 +193,29 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static void SetRequestId(this IDictionary<string, object> env, string id)
         {
-            env[Constants.OwinEnvironment.RequestId] = id;
+            env[Constants.OwinEnvironment.REQUEST_ID] = id;
         }
 
 
         internal static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {
-            env[Constants.OwinEnvironment.IdentityServerHost] = value;
+            env[Constants.OwinEnvironment.IDENTITY_SERVER_HOST] = value;
         }
         
         internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
         {
-            env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
+            env[Constants.OwinEnvironment.IDENTITY_SERVER_BASE_PATH] = value;
         }
 
 
         internal static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
-            return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
+            return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AUTOFAC_SCOPE);
         }
 
         internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
         {
-            new OwinContext(env).Set(Constants.OwinEnvironment.AutofacScope, scope);
+            new OwinContext(env).Set(Constants.OwinEnvironment.AUTOFAC_SCOPE, scope);
         }
 
         internal static T ResolveDependency<T>(this IDictionary<string, object> env)
@@ -277,7 +273,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             return links.Where(x=>x.Text.IsPresent());
         }
 
-        static async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)
+        static async Task<AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)
         {
             if (context == null) throw new ArgumentNullException("context");
             if (authenticationType.IsMissing()) throw new ArgumentNullException("authenticationType");
@@ -299,21 +295,21 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static async Task<ClaimsIdentity> GetIdentityFromPartialSignIn(this IOwinContext context)
         {
-            return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
+            return await context.GetIdentityFrom(Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE);
         }
 
         internal static async Task<ClaimsIdentity> GetIdentityFromExternalSignIn(this IOwinContext context)
         {
-            return await context.GetIdentityFrom(Constants.ExternalAuthenticationType);
+            return await context.GetIdentityFrom(Constants.EXTERNAL_AUTHENTICATION_TYPE);
         }
 
         internal static async Task<string> GetSignInIdFromExternalProvider(this IOwinContext context)
         {
-            var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
+            var result = await context.GetAuthenticationFrom(Constants.EXTERNAL_AUTHENTICATION_TYPE);
             if (result != null)
             {
                 string val;
-                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SigninId, out val))
+                if (result.Properties.Dictionary.TryGetValue(Constants.Authentication.SIGNIN_ID, out val))
                 {
                     return val;
                 }
@@ -328,13 +324,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 // this is mapping from the external IdP's issuer to the name of the 
                 // katana middleware that's registered in startup
-                var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
-                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KatanaAuthenticationType))
+                var result = await context.GetAuthenticationFrom(Constants.EXTERNAL_AUTHENTICATION_TYPE);
+                if (!result.Properties.Dictionary.Keys.Contains(Constants.Authentication.KATANA_AUTHENTICATION_TYPE))
                 {
                     throw new InvalidOperationException("Missing KatanaAuthenticationType");
                 }
 
-                var provider = result.Properties.Dictionary[Constants.Authentication.KatanaAuthenticationType];
+                var provider = result.Properties.Dictionary[Constants.Authentication.KATANA_AUTHENTICATION_TYPE];
                 var newClaims = id.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType, provider));
                 id = new ClaimsIdentity(newClaims, id.AuthenticationType);
             }
@@ -343,22 +339,22 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static string GetCspReportUrl(this IOwinContext context)
         {
-            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CspReport;
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CSP_REPORT;
         }
 
         internal static string GetPartialLoginResumeUrl(this IOwinContext context, string resumeId)
         {
-            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.RESUME_LOGIN_FROM_REDIRECT + "?resume=" + resumeId;
         }
         
         internal static string GetPermissionsPageUrl(this IOwinContext context)
         {
-            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ClientPermissions;
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CLIENT_PERMISSIONS;
         }
 
         internal static string GetExternalProviderLoginUrl(this IOwinContext context, string provider, string signinId)
         {
-            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LoginExternal + "?provider=" + provider + "&signin=" + signinId;
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LOGIN_EXTERNAL + "?provider=" + provider + "&signin=" + signinId;
         }
 
 

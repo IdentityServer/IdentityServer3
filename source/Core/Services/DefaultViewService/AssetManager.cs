@@ -20,21 +20,21 @@ using System.ComponentModel;
 using System.IO;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     internal class AssetManager
     {
-        public const string HttpAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.HttpAssets";
-        public const string FontAssetsNamespace = HttpAssetsNamespace + ".libs.bootstrap.fonts";
+        public const string HTTP_ASSETS_NAMESPACE = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.HttpAssets";
+        public const string FONT_ASSETS_NAMESPACE = HTTP_ASSETS_NAMESPACE + ".libs.bootstrap.fonts";
 
-        public const string PageAssetsNamespace = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.PageAssets";
-        const string PagesPrefix = PageAssetsNamespace + ".";
+        public const string PAGE_ASSETS_NAMESPACE = "Thinktecture.IdentityServer.Core.Services.DefaultViewService.PageAssets";
+        const string PagesPrefix = PAGE_ASSETS_NAMESPACE + ".";
         const string Layout = PagesPrefix + "layout.html";
         const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
         const string CheckSession = PagesPrefix + "checksession.html";
         const string Welcome = PagesPrefix + "welcome.html";
 
-        static readonly ResourceCache cache = new ResourceCache();
+        static readonly ResourceCache Cache = new ResourceCache();
 
         const string PageNameTemplate = PagesPrefix + "{0}" + ".html";
         public static string LoadPage(string pageName)
@@ -93,14 +93,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         
         static string LoadResourceString(string name)
         {
-            string value = cache.Read(name);
+            var value = Cache.Read(name);
             if (value == null)
             {
                 var assembly = typeof(AssetManager).Assembly;
                 using (var sr = new StreamReader(assembly.GetManifestResourceStream(name)))
                 {
                     value = sr.ReadToEnd();
-                    cache.Write(name, value);
+                    Cache.Write(name, value);
                 }
             }
             return value;
@@ -108,7 +108,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         static string LoadResourceString(string name, object data)
         {
-            string value = LoadResourceString(name);
+            var value = LoadResourceString(name);
             value = Format(value, data);
             return value;
         }

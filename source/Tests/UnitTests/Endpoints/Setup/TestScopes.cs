@@ -17,13 +17,13 @@
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace Thinktecture.IdentityServer.Tests.Endpoints.Setup
 {
     public class TestScopes
     {
         public static IEnumerable<Scope> Get()
         {
-            return new Scope[]
+            return new[]
             {
                 StandardScopes.OpenId,
                 StandardScopes.Profile,
@@ -33,20 +33,20 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 {
                     Name = "read",
                     DisplayName = "Read data",
-                    Type = ScopeType.Resource,
+                    Type = ScopeType.RESOURCE,
                     Emphasize = false,
                 },
                 new Scope
                 {
                     Name = "write",
                     DisplayName = "Write data",
-                    Type = ScopeType.Resource,
+                    Type = ScopeType.RESOURCE,
                     Emphasize = true,
                 },
                 new Scope
                 {
                     Name = "forbidden",
-                    Type = ScopeType.Resource,
+                    Type = ScopeType.RESOURCE,
                     DisplayName = "Forbidden scope",
                     Emphasize = true
                 }

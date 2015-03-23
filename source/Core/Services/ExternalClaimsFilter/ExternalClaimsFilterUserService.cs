@@ -20,51 +20,51 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     internal class ExternalClaimsFilterUserService : IUserService
     {
-        readonly IExternalClaimsFilter filter;
-        readonly IUserService inner;
+        readonly IExternalClaimsFilter _filter;
+        readonly IUserService _inner;
 
         public ExternalClaimsFilterUserService(IExternalClaimsFilter filter, IUserService inner)
         {
             if (filter == null) throw new ArgumentNullException("filter");
             if (inner == null) throw new ArgumentNullException("inner");
 
-            this.filter = filter;
-            this.inner = inner;
+            _filter = filter;
+            _inner = inner;
         }
 
         public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
-            return inner.PreAuthenticateAsync(message);
+            return _inner.PreAuthenticateAsync(message);
         }
 
         public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return _inner.AuthenticateLocalAsync(username, password, message);
         }
 
         public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
         {
-            externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            externalUser.Claims = _filter.Filter(externalUser.Provider, externalUser.Claims);
+            return _inner.AuthenticateExternalAsync(externalUser, message);
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
-            return inner.GetProfileDataAsync(subject, requestedClaimTypes);
+            return _inner.GetProfileDataAsync(subject, requestedClaimTypes);
         }
 
         public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
-            return inner.IsActiveAsync(subject);
+            return _inner.IsActiveAsync(subject);
         }
 
         public Task SignOutAsync(ClaimsPrincipal subject)
         {
-            return inner.SignOutAsync(subject);
+            return _inner.SignOutAsync(subject);
         }
     }
 }

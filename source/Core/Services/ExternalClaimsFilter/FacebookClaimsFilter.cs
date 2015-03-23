@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     /// <summary>
     /// Claims filter for facebook. Converts the "urn:facebook:name" claim to the "name" claim.
@@ -54,8 +54,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 var list = claims.ToList();
                 list.Remove(nameClaim);
-                list.RemoveAll(x => x.Type == Constants.ClaimTypes.Name);
-                list.Add(new Claim(Constants.ClaimTypes.Name, nameClaim.Value));
+                list.RemoveAll(x => x.Type == Constants.ClaimTypes.NAME);
+                list.Add(new Claim(Constants.ClaimTypes.NAME, nameClaim.Value));
                 return list;
             }
             return claims;

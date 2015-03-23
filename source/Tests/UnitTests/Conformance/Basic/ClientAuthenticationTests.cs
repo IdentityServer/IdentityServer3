@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
-
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 {
@@ -29,26 +28,26 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
     {
         const string Category = "Conformance.Basic.ClientAuthenticationTests";
 
-        string client_id = "code_client";
-        string redirect_uri = "https://code_client/callback";
-        string client_secret = "secret";
+        private const string ClientId = "code_client";
+        private const string RedirectUri = "https://code_client/callback";
+        private const string ClientSecret = "secret";
 
         protected override void PreInit()
         {
-            host.Scopes.Add(StandardScopes.OpenId);
-            host.Clients.Add(new Client
+            Host.Scopes.Add(StandardScopes.OpenId);
+            Host.Clients.Add(new Client
             {
                 Enabled = true,
-                ClientId = client_id,
+                ClientId = ClientId,
                 ClientSecrets = new List<ClientSecret>
                 {
-                    new ClientSecret(client_secret)
+                    new ClientSecret(ClientSecret)
                 },
-                Flow = Flows.AuthorizationCode,
+                Flow = Flows.AUTHORIZATION_CODE,
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {
-                    redirect_uri
+                    RedirectUri
                 }
             });
         }
@@ -57,22 +56,22 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Token_endpoint_supports_client_authentication_with_basic_authentication_with_POST()
         {
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
+            var query = Host.RequestAuthorizationCode(ClientId, RedirectUri, "openid", nonce);
             var code = query["code"];
 
-            host.NewRequest();
+            Host.NewRequest();
 
-            host.Client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(client_id, client_secret);
+            Host.Client.DefaultRequestHeaders.Authorization = new BasicAuthenticationHeaderValue(ClientId, ClientSecret);
             
-            var result = host.PostForm(host.GetTokenUrl(), 
+            var result = Host.PostForm(Host.GetTokenUrl(), 
                 new {
                     grant_type="authorization_code", 
                     code, 
-                    client_id,
-                    redirect_uri 
+                    client_id = ClientId,
+                    redirect_uri = RedirectUri 
                 }
             );
             
@@ -92,22 +91,22 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Token_endpoint_supports_client_authentication_with_form_encoded_authentication_in_POST_body()
         {
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
+            var query = Host.RequestAuthorizationCode(ClientId, RedirectUri, "openid", nonce);
             var code = query["code"];
 
-            host.NewRequest();
+            Host.NewRequest();
 
-            var result = host.PostForm(host.GetTokenUrl(),
+            var result = Host.PostForm(Host.GetTokenUrl(),
                 new
                 {
                     grant_type = "authorization_code",
                     code,
-                    client_id,
-                    client_secret,
-                    redirect_uri,
+                    client_id = ClientId,
+                    client_secret = ClientSecret,
+                    redirect_uri = RedirectUri,
                 }
             );
 

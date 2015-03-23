@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (localization == null) throw new ArgumentNullException("localization");
 
-            return localization.GetString(Constants.LocalizationCategories.Messages, id);
+            return localization.GetString(Constants.LocalizationCategories.MESSAGES, id);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (localization == null) throw new ArgumentNullException("localization");
 
-            return localization.GetString(Constants.LocalizationCategories.Events, id);
+            return localization.GetString(Constants.LocalizationCategories.EVENTS, id);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (localization == null) throw new ArgumentNullException("localization");
             
-            return localization.GetString(Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDisplayNameSuffix);
+            return localization.GetString(Constants.LocalizationCategories.SCOPES, scope + Constants.SCOPE_DISPLAY_NAME_SUFFIX);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (localization == null) throw new ArgumentNullException("localization");
             
-            return localization.GetString(Constants.LocalizationCategories.Scopes, scope + Constants.ScopeDescriptionSuffix);
+            return localization.GetString(Constants.LocalizationCategories.SCOPES, scope + Constants.SCOPE_DESCRIPTION_SUFFIX);
         }
     }
 }

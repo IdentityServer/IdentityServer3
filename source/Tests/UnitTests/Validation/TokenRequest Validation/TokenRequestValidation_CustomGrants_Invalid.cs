@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation
 {
     
     public class TokenRequestValidation_CustomGrants_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
 
-        IClientStore _clients = Factory.CreateClientStore();
+        readonly IClientStore _clients = Factory.CreateClientStore();
 
         [Fact]
         [Trait("Category", Category)]
@@ -37,14 +38,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "customGrant");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "customGrant"},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
+            result.Error.Should().Be(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
         }
 
         [Fact]
@@ -55,14 +57,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "unknown_grant_type");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "unknown_grant_type"},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
+            result.Error.Should().Be(Constants.TokenErrors.UNSUPPORTED_GRANT_TYPE);
         }
     }
 }

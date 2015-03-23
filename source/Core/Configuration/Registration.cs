@@ -28,16 +28,16 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// The dependency is instantiated per HTTP request.
         /// </summary>
-        InstancePerHttpRequest = 0,
+        INSTANCE_PER_HTTP_REQUEST = 0,
         
         /// <summary>
         /// The dependency is instantiated per use (or per location it is used).
         /// </summary>
-        InstancePerUse = 1,
+        INSTANCE_PER_USE = 1,
         /// <summary>
         /// The dependency is instantiated once for the lifetime of the application.
         /// </summary>
-        Singleton = 2
+        SINGLETON = 2
     }
 
     /// <summary>
@@ -50,8 +50,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         protected Registration()
         {
-            this.Mode = RegistrationMode.InstancePerUse;
-            this.AdditionalRegistrations = new HashSet<Registration>();
+            Mode = RegistrationMode.INSTANCE_PER_USE;
+            AdditionalRegistrations = new HashSet<Registration>();
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <param name="name">The name.</param>
         public Registration(string name = null)
         {
-            this.Type = typeof(T);
-            this.Name = name;
+            Type = typeof(T);
+            Name = name;
         }
 
         /// <summary>
@@ -159,8 +159,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             if (type == null) throw new ArgumentNullException("type");
 
-            this.Type = type;
-            this.Name = name;
+            Type = type;
+            Name = name;
         }
 
         /// <summary>
@@ -173,8 +173,8 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         {
             if (factory == null) throw new ArgumentNullException("factory");
 
-            this.Factory = factory;
-            this.Name = name;
+            Factory = factory;
+            Name = name;
         }
 
         /// <summary>
@@ -185,11 +185,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <exception cref="System.ArgumentNullException">instance</exception>
         public Registration(T singleton, string name = null)
         {
-            if (singleton == null) throw new ArgumentNullException("instance");
+            if (singleton == null) {
+                throw new ArgumentNullException("instance");
+            }
 
-            this.Instance = singleton;
-            this.Name = name;
-            this.Mode = RegistrationMode.Singleton;
+            Instance = singleton;
+            Name = name;
+            Mode = RegistrationMode.SINGLETON;
         }
 
         internal Registration(Registration<T> registration, string name)
@@ -197,11 +199,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (registration == null) throw new ArgumentNullException("registration");
             if (name == null) throw new ArgumentNullException("name");
 
-            this.Mode = registration.Mode;
-            this.Type = registration.Type;
-            this.Factory = registration.Factory;
-            this.Instance = registration.Instance;
-            this.Name = name;
+            Mode = registration.Mode;
+            Type = registration.Type;
+            Factory = registration.Factory;
+            Instance = registration.Instance;
+            Name = name;
         }
     }
 

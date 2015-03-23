@@ -25,11 +25,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
         /// <summary>
         /// client error
         /// </summary>
-        Client = 0,
+        CLIENT = 0,
 
         /// <summary>
         /// user error
         /// </summary>
-        User = 1
+        USER = 1
     }
 }

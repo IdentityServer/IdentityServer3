@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
+using System;
 using Autofac;
+using Autofac.Core;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
-using System;
-using Thinktecture.IdentityServer.Core.Endpoints;
-using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
+using Thinktecture.IdentityServer.Core.Endpoints.Connect;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
+using Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
 
@@ -40,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
 
-            IdentityServerServiceFactory fact = options.Factory;
+            var fact = options.Factory;
             fact.Validate();
 
             var builder = new ContainerBuilder();
@@ -193,7 +196,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterType<TDecorator>();
             builder.Register<T>(ctx =>
             {
-                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(name);
+                var inner = ResolvedParameter.ForNamed<T>(name);
                 return ctx.Resolve<TDecorator>(inner);
             });
         }
@@ -224,7 +227,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             builder.RegisterType<TDecorator>();
             builder.Register<T>(ctx =>
             {
-                var inner = Autofac.Core.ResolvedParameter.ForNamed<T>(DecoratorRegistrationName);
+                var inner = ResolvedParameter.ForNamed<T>(DecoratorRegistrationName);
                 return ctx.Resolve<TDecorator>(inner);
             });
         }
@@ -244,12 +247,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 }
                 switch (registration.Mode)
                 {
-                    case RegistrationMode.Singleton:
+                    case RegistrationMode.SINGLETON:
                         // this is the only option when Instance is provided
                         break;
-                    case RegistrationMode.InstancePerHttpRequest:
+                    case RegistrationMode.INSTANCE_PER_HTTP_REQUEST:
                         throw new InvalidOperationException("RegistrationMode.InstancePerHttpRequest can't be used when an Instance is provided.");
-                    case RegistrationMode.InstancePerUse:
+                    case RegistrationMode.INSTANCE_PER_USE:
                         throw new InvalidOperationException("RegistrationMode.InstancePerUse can't be used when an Instance is provided.");
                 }
             }
@@ -267,11 +270,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
                 switch(registration.Mode)
                 {
-                    case RegistrationMode.InstancePerHttpRequest:
+                    case RegistrationMode.INSTANCE_PER_HTTP_REQUEST:
                         reg.InstancePerRequest(); break;
-                    case RegistrationMode.Singleton:
+                    case RegistrationMode.SINGLETON:
                         reg.SingleInstance(); break;
-                    case RegistrationMode.InstancePerUse:
+                    case RegistrationMode.INSTANCE_PER_USE:
                         // this is the default behavior
                         break;
                 }
@@ -290,12 +293,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
                 switch (registration.Mode)
                 {
-                    case RegistrationMode.InstancePerHttpRequest:
+                    case RegistrationMode.INSTANCE_PER_HTTP_REQUEST:
                         reg.InstancePerRequest(); break;
-                    case RegistrationMode.InstancePerUse:
+                    case RegistrationMode.INSTANCE_PER_USE:
                         // this is the default behavior
                         break;
-                    case RegistrationMode.Singleton:
+                    case RegistrationMode.SINGLETON:
                         throw new InvalidOperationException("RegistrationMode.Singleton can't be used when using a factory function.");
                 }
             }

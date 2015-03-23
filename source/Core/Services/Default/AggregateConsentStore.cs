@@ -24,19 +24,19 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     internal class AggregatePermissionsStore : IPermissionsStore
     {
-        readonly IPermissionsStore[] stores;
+        readonly IPermissionsStore[] _stores;
 
         public AggregatePermissionsStore(params IPermissionsStore[] stores)
         {
             if (stores == null) throw new ArgumentNullException("stores");
 
-            this.stores = stores;
+            _stores = stores;
         }
         
         public async Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
             var result = 
-                await stores
+                await _stores
                     .Select(x => x.LoadAllAsync(subject))
                     .Aggregate(async (t1, t2) => (await t1).Union(await t2));
 
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public async Task RevokeAsync(string subject, string client)
         {
-            foreach (var store in stores)
+            foreach (var store in _stores)
             {
                 await store.RevokeAsync(subject, client);
             }

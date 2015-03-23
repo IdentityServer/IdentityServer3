@@ -21,7 +21,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public AuthorizeRequestValidationResult()
         {
             IsError = true;
-            ErrorType = ErrorTypes.User;
+            ErrorType = ErrorTypes.USER;
         }
 
         public ErrorTypes ErrorType { get; set; }

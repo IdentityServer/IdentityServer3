@@ -79,12 +79,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.OpenId,
+                    Name = Constants.StandardScopes.OPEN_ID,
                     Required = true,
-                    Type = ScopeType.Identity,
+                    Type = ScopeType.IDENTITY,
                     Claims = new List<ScopeClaim>
                     {
-                        new ScopeClaim(Constants.ClaimTypes.Subject, alwaysInclude: true)
+                        new ScopeClaim(Constants.ClaimTypes.SUBJECT, alwaysInclude: true)
                     }
                 };
             }
@@ -102,10 +102,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Profile,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.PROFILE,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.PROFILE].Select(claim => new ScopeClaim(claim)).ToList())
                 };
             }
         }
@@ -122,10 +122,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Profile,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.PROFILE,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Profile].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.PROFILE].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
                 };
             }
         }
@@ -142,10 +142,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Email,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.EMAIL,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.EMAIL].Select(claim => new ScopeClaim(claim)).ToList())
                 };
             }
         }
@@ -162,10 +162,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Email,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.EMAIL,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Email].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.EMAIL].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
                 };
             }
         }
@@ -182,10 +182,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Phone,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.PHONE,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.PHONE].Select(claim => new ScopeClaim(claim)).ToList())
                 };
             }
         }
@@ -202,10 +202,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Phone,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.PHONE,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Phone].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.PHONE].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
                 };
             }
         }
@@ -222,10 +222,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Address,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.ADDRESS,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.ADDRESS].Select(claim => new ScopeClaim(claim)).ToList())
                 };
             }
         }
@@ -242,10 +242,10 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Address,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.ADDRESS,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
-                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.Address].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
+                    Claims = (Constants.ScopeToClaimsMapping[Constants.StandardScopes.ADDRESS].Select(claim => new ScopeClaim(claim, alwaysInclude: true)).ToList())
                 };
             }
         }
@@ -262,8 +262,8 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.AllClaims,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.ALL_CLAIMS,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
                     IncludeAllClaimsForUser = true
                 };
@@ -282,12 +282,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Roles,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.ROLES,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
                     Claims = new List<ScopeClaim> 
                     {
-                        new ScopeClaim(Constants.ClaimTypes.Role)
+                        new ScopeClaim(Constants.ClaimTypes.ROLE)
                     }
                 };
             }
@@ -305,12 +305,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.Roles,
-                    Type = ScopeType.Identity,
+                    Name = Constants.StandardScopes.ROLES,
+                    Type = ScopeType.IDENTITY,
                     Emphasize = true,
                     Claims = new List<ScopeClaim>
                     {
-                        new ScopeClaim(Constants.ClaimTypes.Role, alwaysInclude: true)
+                        new ScopeClaim(Constants.ClaimTypes.ROLE, alwaysInclude: true)
                     }
                 };
             }
@@ -328,8 +328,8 @@ namespace Thinktecture.IdentityServer.Core.Models
             {
                 return new Scope
                 {
-                    Name = Constants.StandardScopes.OfflineAccess,
-                    Type = ScopeType.Resource,
+                    Name = Constants.StandardScopes.OFFLINE_ACCESS,
+                    Type = ScopeType.RESOURCE,
                     Emphasize = true
                 };
             }

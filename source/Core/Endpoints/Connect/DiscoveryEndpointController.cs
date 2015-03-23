@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,15 +21,16 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// OpenID Connect discovery document endpoint
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Discovery document</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
+        [Route(Constants.RoutePaths.Oidc.DISCOVERY_CONFIGURATION)]
         public async Task<IHttpActionResult> GetConfiguration()
         {
             Logger.Info("Start discovery request");
@@ -69,12 +69,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             var baseUrl = Request.GetIdentityServerBaseUrl();
-            var scopes = await _scopes.GetScopesAsync(publicOnly: true);
+            var scopes = await _scopes.GetScopesAsync();
 
             var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
-            if (this._options.AuthenticationOptions.EnableLocalLogin == false)
+            if (_options.AuthenticationOptions.EnableLocalLogin == false)
             {
-                supportedGrantTypes = supportedGrantTypes.Where(type => type != Constants.GrantTypes.Password);
+                supportedGrantTypes = supportedGrantTypes.Where(type => type != Constants.GrantTypes.PASSWORD);
             }
 
             var dto = new DiscoveryDto
@@ -90,37 +90,37 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (_options.Endpoints.EnableAuthorizeEndpoint)
             {
-                dto.authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.Authorize;
+                dto.authorization_endpoint = baseUrl + Constants.RoutePaths.Oidc.AUTHORIZE;
             }
 
             if (_options.Endpoints.EnableTokenEndpoint)
             {
-                dto.token_endpoint = baseUrl + Constants.RoutePaths.Oidc.Token;
+                dto.token_endpoint = baseUrl + Constants.RoutePaths.Oidc.TOKEN;
             }
 
             if (_options.Endpoints.EnableUserInfoEndpoint)
             {
-                dto.userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.UserInfo;
+                dto.userinfo_endpoint = baseUrl + Constants.RoutePaths.Oidc.USER_INFO;
             }
 
             if (_options.Endpoints.EnableEndSessionEndpoint)
             {
-                dto.end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.EndSession;
+                dto.end_session_endpoint = baseUrl + Constants.RoutePaths.Oidc.END_SESSION;
             }
 
             if (_options.Endpoints.EnableCheckSessionEndpoint)
             {
-                dto.check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CheckSession;
+                dto.check_session_iframe = baseUrl + Constants.RoutePaths.Oidc.CHECK_SESSION;
             }
 
             if (_options.Endpoints.EnableTokenRevocationEndpoint)
             {
-                dto.revocation_endpoint = baseUrl + Constants.RoutePaths.Oidc.Revocation;
+                dto.revocation_endpoint = baseUrl + Constants.RoutePaths.Oidc.REVOCATION;
             }
 
             if (_options.SigningCertificate != null)
             {
-                dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
+                dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DISCOVERY_WEB_KEYS;
             }
 
             return Json(dto, Settings);
@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// GET for JWKs
         /// </summary>
         /// <returns>JSON Web Key set</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
+        [Route(Constants.RoutePaths.Oidc.DISCOVERY_WEB_KEYS)]
         public IHttpActionResult GetKeyData()
         {
             Logger.Info("Start key discovery request");

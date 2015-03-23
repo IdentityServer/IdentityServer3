@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation
 {
     
     public class TokenRequestValidation_Code_Invalid
     {
-        IClientStore _clients = Factory.CreateClientStore();
+        readonly IClientStore _clients = Factory.CreateClientStore();
         const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
 
         [Fact]
@@ -55,14 +56,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -84,15 +86,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "invalid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "invalid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -114,15 +117,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            Constants.TokenErrors.InvalidRequest.Should().Be(result.Error);
+            Constants.TokenErrors.INVALID_REQUEST.Should().Be(result.Error);
         }
 
         [Fact]
@@ -144,15 +148,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
+            result.Error.Should().Be(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
@@ -175,15 +180,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client2);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -205,14 +211,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
+            result.Error.Should().Be(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
@@ -234,15 +241,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server2/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server2/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
+            result.Error.Should().Be(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
@@ -265,15 +273,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -303,10 +312,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 authorizationCodeStore: store,
                 customRequestValidator: new DefaultCustomRequestValidator());
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             // request first time
             var result = await validator.ValidateRequestAsync(parameters, client);
@@ -321,7 +331,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -353,10 +363,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 authorizationCodeStore: store,
                 userService: mock.Object);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 

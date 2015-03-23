@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Logging;
+using Newtonsoft.Json;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Results
                 access_token = _response.AccessToken,
                 refresh_token = _response.RefreshToken,
                 expires_in = _response.AccessTokenLifetime,
-                token_type = Constants.TokenTypes.Bearer
+                token_type = Constants.TokenTypes.BEARER
             };
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)

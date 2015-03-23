@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation
 {
     
     public class TokenRequestValidation_Valid
     {
         const string Category = "TokenRequest Validation - General - Valid";
 
-        IClientStore _clients = Factory.CreateClientStore();
+        readonly IClientStore _clients = Factory.CreateClientStore();
 
         [Fact]
         [Trait("Category", Category)]
@@ -61,10 +62,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -100,10 +102,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var validator = Factory.CreateTokenRequestValidator(
                 authorizationCodeStore: store);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.AUTHORIZATION_CODE},
+                {Constants.TokenRequest.CODE, "valid"},
+                {Constants.TokenRequest.REDIRECT_URI, "https://server/cb"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -118,9 +121,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -135,9 +139,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -152,9 +157,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -169,11 +175,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -188,11 +195,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
-            parameters.Add(Constants.TokenRequest.Scope, "resource offline_access");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"},
+                {Constants.TokenRequest.SCOPE, "resource offline_access"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -207,11 +215,12 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -226,9 +235,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "custom_grant");
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "custom_grant"},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -242,7 +252,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var mock = new Mock<IUserService>();
             mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+            var subjectClaim = new Claim(Constants.ClaimTypes.SUBJECT, "foo");
 
             var refreshToken = new RefreshToken
             {
@@ -265,9 +275,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 refreshTokens: store,
                 userService: mock.Object);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
@@ -281,7 +292,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var mock = new Mock<IUserService>();
             mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+            var subjectClaim = new Claim(Constants.ClaimTypes.SUBJECT, "foo");
 
             var refreshToken = new RefreshToken
             {
@@ -305,9 +316,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
                 refreshTokens: store,
                 userService: mock.Object);
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
-            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, "refresh_token"},
+                {Constants.TokenRequest.REFRESH_TOKEN, handle}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 

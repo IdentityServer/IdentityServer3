@@ -28,14 +28,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
     {
         public static IEnumerable<ConsentScopeViewModel> GetIdentityScopes(this ValidatedAuthorizeRequest validatedRequest, ILocalizationService localizationService)
         {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x => x.Type == ScopeType.Identity);
+            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x => x.Type == ScopeType.IDENTITY);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
             return requestedScopes.ToConsentScopeViewModel(consentedScopeNames, localizationService);
         }
 
         public static IEnumerable<ConsentScopeViewModel> GetResourceScopes(this ValidatedAuthorizeRequest validatedRequest, ILocalizationService localizationService)
         {
-            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=> x.Type == ScopeType.Resource);
+            var requestedScopes = validatedRequest.ValidatedScopes.RequestedScopes.Where(x=> x.Type == ScopeType.RESOURCE);
             var consentedScopeNames = validatedRequest.ValidatedScopes.GrantedScopes.Select(x => x.Name);
             return requestedScopes.ToConsentScopeViewModel(consentedScopeNames, localizationService);
         }
@@ -60,7 +60,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (request == null) throw new ArgumentNullException("request");
 
-            return request.AuthenticationContextReferenceClasses.Any(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
+            return request.AuthenticationContextReferenceClasses.Any(x => x.StartsWith(Constants.KnownAcrValues.HOME_REALM));
         }
     }
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Owin;
 using System;
 using System.Collections.Generic;
+using Owin;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             PostSignOutAutoRedirectDelay = 0;
             RequireAuthenticatedUserForSignOutMessage = false;
             CookieOptions = new CookieOptions();
-            SignInMessageThreshold = Constants.SignInMessageThreshold;
+            SignInMessageThreshold = Constants.SIGN_IN_MESSAGE_THRESHOLD;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
 
         /// <summary>
         /// Gets or sets the limit after which old signin messages are purged.
-        /// Defaults to the value defined in <see cref="Constants.SignInMessageThreshold"/> value.
+        /// Defaults to the value defined in <see cref="Constants.SIGN_IN_MESSAGE_THRESHOLD"/> value.
         /// </summary>
         /// <value>
         /// The limit after which old signin messages are purged

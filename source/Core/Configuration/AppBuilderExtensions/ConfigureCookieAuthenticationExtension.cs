@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
+using System;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
-using System;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
+using Owin;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class UseCookieAuthenticationExtension
     {
@@ -39,36 +38,36 @@ namespace Owin
 
             var primary = new CookieAuthenticationOptions
             {
-                AuthenticationType = Constants.PrimaryAuthenticationType,
-                CookieName = options.Prefix + Constants.PrimaryAuthenticationType,
+                AuthenticationType = Constants.PRIMARY_AUTHENTICATION_TYPE,
+                CookieName = options.Prefix + Constants.PRIMARY_AUTHENTICATION_TYPE,
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
                 CookieSecure = GetCookieSecure(options.SecureMode),
-                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PrimaryAuthenticationType))
+                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PRIMARY_AUTHENTICATION_TYPE))
             };
             app.UseCookieAuthentication(primary);
 
             var external = new CookieAuthenticationOptions
             {
-                AuthenticationType = Constants.ExternalAuthenticationType,
-                CookieName = options.Prefix + Constants.ExternalAuthenticationType,
+                AuthenticationType = Constants.EXTERNAL_AUTHENTICATION_TYPE,
+                CookieName = options.Prefix + Constants.EXTERNAL_AUTHENTICATION_TYPE,
                 AuthenticationMode = AuthenticationMode.Passive,
                 ExpireTimeSpan = Constants.ExternalCookieTimeSpan,
                 SlidingExpiration = false,
                 CookieSecure = GetCookieSecure(options.SecureMode),
-                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.ExternalAuthenticationType))
+                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.EXTERNAL_AUTHENTICATION_TYPE))
             };
             app.UseCookieAuthentication(external);
 
             var partial = new CookieAuthenticationOptions
             {
-                AuthenticationType = Constants.PartialSignInAuthenticationType,
-                CookieName = options.Prefix + Constants.PartialSignInAuthenticationType,
+                AuthenticationType = Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE,
+                CookieName = options.Prefix + Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE,
                 AuthenticationMode = AuthenticationMode.Passive,
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
                 CookieSecure = GetCookieSecure(options.SecureMode),
-                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PartialSignInAuthenticationType))
+                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE))
             };
             app.UseCookieAuthentication(partial);
 
@@ -108,9 +107,9 @@ namespace Owin
         {
             switch (cookieSecureMode)
             {
-                case CookieSecureMode.Always:
+                case CookieSecureMode.ALWAYS:
                     return CookieSecureOption.Always;
-                case CookieSecureMode.SameAsRequest:
+                case CookieSecureMode.SAME_AS_REQUEST:
                     return CookieSecureOption.SameAsRequest;
                 default:
                     throw new InvalidOperationException("Invalid CookieSecureMode");

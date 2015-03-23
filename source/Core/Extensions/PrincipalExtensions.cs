@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static long GetAuthenticationTimeEpoch(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var claim = id.FindFirst(Constants.ClaimTypes.AuthenticationTime);
+            var claim = id.FindFirst(Constants.ClaimTypes.AUTHENTICATION_TIME);
 
             if (claim == null) throw new InvalidOperationException("auth_time is missing.");
            
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetSubjectId(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var claim = id.FindFirst(Constants.ClaimTypes.Subject);
+            var claim = id.FindFirst(Constants.ClaimTypes.SUBJECT);
 
             if (claim == null) throw new InvalidOperationException("sub claim is missing");
             return claim.Value;
@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetName(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var claim = id.FindFirst(Constants.ClaimTypes.Name);
+            var claim = id.FindFirst(Constants.ClaimTypes.NAME);
 
             if (claim == null) throw new InvalidOperationException("name claim is missing");
             return claim.Value;
@@ -140,7 +140,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetAuthenticationMethod(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var claim = id.FindFirst(Constants.ClaimTypes.AuthenticationMethod);
+            var claim = id.FindFirst(Constants.ClaimTypes.AUTHENTICATION_METHOD);
 
             if (claim == null) throw new InvalidOperationException("amr claim is missing");
             return claim.Value;
@@ -167,7 +167,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static string GetIdentityProvider(this IIdentity identity)
         {
             var id = identity as ClaimsIdentity;
-            var claim = id.FindFirst(Constants.ClaimTypes.IdentityProvider);
+            var claim = id.FindFirst(Constants.ClaimTypes.IDENTITY_PROVIDER);
 
             if (claim == null) throw new InvalidOperationException("idp claim is missing");
             return claim.Value;

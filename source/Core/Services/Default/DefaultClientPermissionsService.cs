@@ -28,10 +28,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class DefaultClientPermissionsService : IClientPermissionsService
     {
-        readonly IPermissionsStore permissionsStore;
-        readonly IClientStore clientStore;
-        readonly IScopeStore scopeStore;
-        readonly ILocalizationService localizationService;
+        readonly IPermissionsStore _permissionsStore;
+        readonly IClientStore _clientStore;
+        readonly IScopeStore _scopeStore;
+        readonly ILocalizationService _localizationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultClientPermissionsService" /> class.
@@ -56,10 +56,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (scopeStore == null) throw new ArgumentNullException("scopeStore");
             if (localizationService == null) throw new ArgumentNullException("localizationService");
 
-            this.permissionsStore = permissionsStore;
-            this.clientStore = clientStore;
-            this.scopeStore = scopeStore;
-            this.localizationService = localizationService;
+            _permissionsStore = permissionsStore;
+            _clientStore = clientStore;
+            _scopeStore = scopeStore;
+            _localizationService = localizationService;
         }
 
         /// <summary>
@@ -77,33 +77,33 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 throw new ArgumentNullException("subject");
             }
 
-            var consents = await this.permissionsStore.LoadAllAsync(subject);
+            var consents = await _permissionsStore.LoadAllAsync(subject);
 
             var scopesNeeded = consents.Select(x => x.Scopes).SelectMany(x=>x).Distinct();
-            var scopes = await scopeStore.FindScopesAsync(scopesNeeded);
+            var scopes = await _scopeStore.FindScopesAsync(scopesNeeded);
             
             var list = new List<ClientPermission>();
             foreach(var consent in consents)
             {
-                var client = await clientStore.FindClientByIdAsync(consent.ClientId);
+                var client = await _clientStore.FindClientByIdAsync(consent.ClientId);
                 if (client != null)
                 {
                     var identityScopes =
                         from s in scopes
-                        where s.Type == ScopeType.Identity && consent.Scopes.Contains(s.Name)
+                        where s.Type == ScopeType.IDENTITY && consent.Scopes.Contains(s.Name)
                         select new ClientPermissionDescription
                         {
-                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
-                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
+                            DisplayName = s.DisplayName ?? _localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? _localizationService.GetScopeDescription(s.Name)
                         };
 
                     var resourceScopes =
                         from s in scopes
-                        where s.Type == ScopeType.Resource && consent.Scopes.Contains(s.Name)
+                        where s.Type == ScopeType.RESOURCE && consent.Scopes.Contains(s.Name)
                         select new ClientPermissionDescription
                         {
-                            DisplayName = s.DisplayName ?? localizationService.GetScopeDisplayName(s.Name),
-                            Description = s.Description ?? localizationService.GetScopeDescription(s.Name)
+                            DisplayName = s.DisplayName ?? _localizationService.GetScopeDisplayName(s.Name),
+                            Description = s.Description ?? _localizationService.GetScopeDescription(s.Name)
                         };
 
                     list.Add(new ClientPermission
@@ -144,7 +144,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 throw new ArgumentNullException("clientId");
             }
 
-            await this.permissionsStore.RevokeAsync(subject, clientId);
+            await _permissionsStore.RevokeAsync(subject, clientId);
         }
     }
 }

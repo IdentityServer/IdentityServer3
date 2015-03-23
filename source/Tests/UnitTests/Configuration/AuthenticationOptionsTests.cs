@@ -13,7 +13,7 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
             new AuthenticationOptions()
                 .SignInMessageThreshold
                 .Should()
-                .Be(Constants.SignInMessageThreshold);
+                .Be(Constants.SIGN_IN_MESSAGE_THRESHOLD);
         }
     }
 }

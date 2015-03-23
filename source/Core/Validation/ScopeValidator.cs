@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -97,7 +97,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     return false;
                 }
 
-                if (scopeDetail.Type == ScopeType.Identity)
+                if (scopeDetail.Type == ScopeType.IDENTITY)
                 {
                     ContainsOpenIdScopes = true;
                 }
@@ -109,7 +109,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 GrantedScopes.Add(scopeDetail);
             }
 
-            if (requestedScopes.Contains(Constants.StandardScopes.OfflineAccess))
+            if (requestedScopes.Contains(Constants.StandardScopes.OFFLINE_ACCESS))
             {
                 ContainsOfflineAccessScope = true;
             }
@@ -143,7 +143,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             var requirement = Constants.ResponseTypeToScopeRequirement[responseType];
 
             // must include identity scopes
-            if (requirement == Constants.ScopeRequirement.Identity)
+            if (requirement == Constants.ScopeRequirement.IDENTITY)
             {
                 if (!ContainsOpenIdScopes)
                 {
@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             // must include identity scopes only
-            else if (requirement == Constants.ScopeRequirement.IdentityOnly)
+            else if (requirement == Constants.ScopeRequirement.IDENTITY_ONLY)
             {
                 if (!ContainsOpenIdScopes || ContainsResourceScopes)
                 {
@@ -163,7 +163,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             // must include resource scopes only
-            else if (requirement == Constants.ScopeRequirement.ResourceOnly)
+            else if (requirement == Constants.ScopeRequirement.RESOURCE_ONLY)
             {
                 if (ContainsOpenIdScopes || !ContainsResourceScopes)
                 {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.Diagnostics;
+using Microsoft.Owin;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -28,15 +28,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     {
         protected static readonly ILog Logger = LogProvider.GetLogger("Events");
 
-        private readonly IdentityServerOptions options;
-        private readonly OwinContext context;
-        private readonly IEventService inner;
+        private readonly IdentityServerOptions _options;
+        private readonly OwinContext _context;
+        private readonly IEventService _inner;
 
         public EventServiceDecorator(IdentityServerOptions options, OwinEnvironmentService owinEnvironment, IEventService inner)
         {
-            this.options = options;
-            this.context = new OwinContext(owinEnvironment.Environment);
-            this.inner = inner;
+            _options = options;
+            _context = new OwinContext(owinEnvironment.Environment);
+            _inner = inner;
         }
 
         public void Raise<T>(Event<T> evt)
@@ -45,7 +45,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 evt = PrepareEvent(evt);
                 evt.Prepare();
-                inner.Raise(evt);
+                _inner.Raise(evt);
             }
         }
 
@@ -53,14 +53,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             switch(evt.EventType)
             {
-                case EventTypes.Failure:
-                    return options.EventsOptions.RaiseFailureEvents;
-                case EventTypes.Information:
-                    return options.EventsOptions.RaiseInformationEvents;
-                case EventTypes.Success:
-                    return options.EventsOptions.RaiseSuccessEvents;
-                case EventTypes.Error:
-                    return options.EventsOptions.RaiseErrorEvents;
+                case EventTypes.FAILURE:
+                    return _options.EventsOptions.RaiseFailureEvents;
+                case EventTypes.INFORMATION:
+                    return _options.EventsOptions.RaiseInformationEvents;
+                case EventTypes.SUCCESS:
+                    return _options.EventsOptions.RaiseSuccessEvents;
+                case EventTypes.ERROR:
+                    return _options.EventsOptions.RaiseErrorEvents;
             }
 
             return false;
@@ -72,17 +72,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             evt.Context = new EventContext
             {
-                ActivityId = context.GetRequestId(),
+                ActivityId = _context.GetRequestId(),
                 TimeStamp = DateTimeOffsetHelper.UtcNow,
                 ProcessId = Process.GetCurrentProcess().Id,
                 MachineName = Environment.MachineName,
-                RemoteIpAddress = context.Request.RemoteIpAddress,
+                RemoteIpAddress = _context.Request.RemoteIpAddress,
             };
 
-            var principal = context.Authentication.User;
+            var principal = _context.Authentication.User;
             if (principal != null && principal.Identity != null)
             {
-                var subjectClaim = principal.FindFirst(Constants.ClaimTypes.Subject);
+                var subjectClaim = principal.FindFirst(Constants.ClaimTypes.SUBJECT);
                 if (subjectClaim != null)
                 {
                     evt.Context.SubjectId = subjectClaim.Value;

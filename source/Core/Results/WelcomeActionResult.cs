@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
     internal class WelcomeActionResult : IHttpActionResult
     {
-        readonly IOwinContext context;
+        readonly IOwinContext _context;
 
         public WelcomeActionResult(IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
 
-            this.context = context;
+            _context = context;
         }
 
-        public Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            var baseUrl = context.GetIdentityServerBaseUrl();
+            var baseUrl = _context.GetIdentityServerBaseUrl();
             
             var assembly = Assembly.GetExecutingAssembly();
             var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string version = fvi.FileVersion;
+            var version = fvi.FileVersion;
 
             var html = AssetManager.LoadWelcomePage(baseUrl, version);
             var content = new StringContent(html, Encoding.UTF8, "text/html");

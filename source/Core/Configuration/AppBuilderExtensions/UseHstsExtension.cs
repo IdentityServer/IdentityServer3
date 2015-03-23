@@ -15,8 +15,9 @@
  */
 
 using System;
+using Owin;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     /// <summary>
     /// Configure extensions for HSTS support

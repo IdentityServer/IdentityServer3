@@ -19,11 +19,11 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
@@ -31,13 +31,13 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// OAuth2/OpenID Conect token endpoint
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
+    [RoutePrefix(Constants.RoutePaths.Oidc.TOKEN)]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     internal class TokenEndpointController : ApiController
@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!_options.Endpoints.EnableTokenEndpoint)
             {
-                var error = "Endpoint is disabled. Aborting";
+                const string error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
                 RaiseFailureEvent(error);
 
@@ -94,7 +94,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
             else
             {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
+                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.TOKEN);
             }
 
             Logger.Info("End token request");
@@ -112,7 +112,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);
             if (client == null)
             {
-                return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);
+                return this.TokenErrorResponse(Constants.TokenErrors.INVALID_CLIENT);
             }
 
             // validate the token request
@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseFailureEvent(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
+            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.TOKEN, error);
         }
     }
 }

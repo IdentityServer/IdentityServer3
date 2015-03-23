@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
-using Thinktecture.IdentityServer.Core.Configuration;
+using Microsoft.Owin;
+using Owin;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class ConfigureIdentityServerIssuerExtension
     {

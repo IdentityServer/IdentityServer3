@@ -17,7 +17,12 @@
 using System;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using Newtonsoft.Json;
 using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Authentication;
+using Thinktecture.IdentityServer.Core.Events.Base;
+using Thinktecture.IdentityServer.Core.Events.Informational;
+using Thinktecture.IdentityServer.Core.Events.TokenService;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -29,10 +34,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.PreLoginSuccess,
-                EventTypes.Success, 
-                EventConstants.Ids.PreLoginSuccess,
+                EventTypes.SUCCESS, 
+                EventConstants.Ids.PRE_LOGIN_SUCCESS,
                 new LoginDetails {
                     SubjectId = authResult.HasSubject ?  authResult.User.GetSubjectId() : null,
                     Name = authResult.User.Identity.Name,
@@ -48,10 +53,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.PreLoginFailure,
-                EventTypes.Failure,
-                EventConstants.Ids.PreLoginFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.PRE_LOGIN_FAILURE,
                 new LoginDetails
                 {
                     SignInId = signInMessageId,
@@ -66,10 +71,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LocalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.LocalLoginSuccess,
-                EventTypes.Success,
-                EventConstants.Ids.LocalLoginSuccess,
+                EventTypes.SUCCESS,
+                EventConstants.Ids.LOCAL_LOGIN_SUCCESS,
                 new LocalLoginDetails
                 {
                     SubjectId = authResult.HasSubject ? authResult.User.GetSubjectId() : null,
@@ -87,10 +92,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string username, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LocalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.LocalLoginFailure,
-                EventTypes.Failure,
-                EventConstants.Ids.LocalLoginFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.LOCAL_LOGIN_FAILURE,
                 new LocalLoginDetails
                 {
                     SignInId = signInMessageId,
@@ -106,10 +111,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<ExternalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.ExternalLoginSuccess,
-                EventTypes.Success,
-                EventConstants.Ids.ExternalLoginSuccess,
+                EventTypes.SUCCESS,
+                EventConstants.Ids.EXTERNAL_LOGIN_SUCCESS,
                 new ExternalLoginDetails
                 {
                     SubjectId = authResult.HasSubject ? authResult.User.GetSubjectId() : null,
@@ -128,10 +133,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
         {
             var evt = new Event<ExternalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.ExternalLoginFailure,
-                EventTypes.Failure,
-                EventConstants.Ids.ExternalLoginFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.EXTERNAL_LOGIN_FAILURE,
                 new ExternalLoginDetails
                 {
                     SignInId = signInMessageId,
@@ -146,10 +151,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseExternalLoginErrorEvent(this IEventService events, string error)
         {
             var evt = new Event<object>(
-               EventConstants.Categories.Authentication,
+               EventConstants.Categories.AUTHENTICATION,
                Resources.Events.ExternalLoginError,
-               EventTypes.Error,
-               EventConstants.Ids.ExternalLoginError,
+               EventTypes.ERROR,
+               EventConstants.Ids.EXTERNAL_LOGIN_ERROR,
                error);
 
             events.RaiseEvent(evt);
@@ -159,10 +164,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string userName, string subjectId, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.ResourceOwnerFlowLoginSuccess,
-                EventTypes.Success,
-                EventConstants.Ids.ResourceOwnerFlowLoginSuccess,
+                EventTypes.SUCCESS,
+                EventConstants.Ids.RESOURCE_OWNER_FLOW_LOGIN_SUCCESS,
                 new LocalLoginDetails
                 {
                     SubjectId = subjectId,
@@ -177,10 +182,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             string userName, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.ResourceOwnerFlowLoginFailure,
-                EventTypes.Failure,
-                EventConstants.Ids.ResourceOwnerFlowLoginFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.RESOURCE_OWNER_FLOW_LOGIN_FAILURE,
                 new LocalLoginDetails
                 {
                     SignInMessage = message,
@@ -207,10 +212,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
         {
             var evt = new Event<LoginDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.PartialLoginComplete,
-                EventTypes.Information,
-                EventConstants.Ids.PartialLoginComplete,
+                EventTypes.INFORMATION,
+                EventConstants.Ids.PARTIAL_LOGIN_COMPLETE,
                 new LoginDetails
                 {
                     SubjectId = subject.GetSubjectId(),
@@ -226,10 +231,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
         {
             var evt = new Event<LogoutDetails>(
-                EventConstants.Categories.Authentication,
+                EventConstants.Categories.AUTHENTICATION,
                 Resources.Events.LogoutEvent,
-                EventTypes.Information,
-                EventConstants.Ids.Logout,
+                EventTypes.INFORMATION,
+                EventConstants.Ids.LOGOUT,
                 new LogoutDetails
                 {
                     SubjectId = subject.GetSubjectId(),
@@ -244,10 +249,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseCspReportEvent(this IEventService events, string report, ClaimsPrincipal user)
         {
             var evt = new Event<CspReportDetails>(
-                EventConstants.Categories.Information,
+                EventConstants.Categories.INFORMATION,
                 Resources.Events.CspReport,
-                EventTypes.Information,
-                EventConstants.Ids.CspReport);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.CSP_REPORT);
 
             evt.DetailsFunc = () => {
                 string subject = null;
@@ -258,12 +263,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     name = user.Identity.Name;
                 }
 
-                object reportData = null;
+                object reportData;
                 try
                 {
-                    reportData = Newtonsoft.Json.JsonConvert.DeserializeObject(report);
+                    reportData = JsonConvert.DeserializeObject(report);
                 }
-                catch(Newtonsoft.Json.JsonReaderException)
+                catch(JsonReaderException)
                 {
                     reportData = "Error reading CSP report JSON";
                     evt.Message = "Raw Report Data: " + report;
@@ -282,10 +287,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseClientPermissionsRevokedEvent(this IEventService events, ClaimsPrincipal user, string clientId)
         {
             var evt = new Event<ClientPermissionsRevokedDetails>(
-                EventConstants.Categories.Information,
+                EventConstants.Categories.INFORMATION,
                 Resources.Events.ClientPermissionsRevoked,
-                EventTypes.Information,
-                EventConstants.Ids.ClientPermissionRevoked,
+                EventTypes.INFORMATION,
+                EventConstants.Ids.CLIENT_PERMISSION_REVOKED,
                 new ClientPermissionsRevokedDetails
                 {
                     Subject = user.GetSubjectId(),
@@ -298,11 +303,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         public static void RaiseTokenIssuedEvent(this IEventService events, Token token)
         {
-            if (token.Type == Constants.TokenTypes.AccessToken)
+            if (token.Type == Constants.TokenTypes.ACCESS_TOKEN)
             {
                 events.RaiseAccessTokenIssuedEvent(token);
             }
-            else if (token.Type == Constants.TokenTypes.IdentityToken)
+            else if (token.Type == Constants.TokenTypes.IDENTITY_TOKEN)
             {
                 events.RaiseIdentityTokenIssuedEvent(token);
             }
@@ -311,39 +316,39 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseAccessTokenIssuedEvent(this IEventService events, Token token)
         {
             var evt = new Event<AccessTokenIssuedDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Access token issued",
-                EventTypes.Information,
-                EventConstants.Ids.AccessTokenIssued);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.ACCESS_TOKEN_ISSUED) {
+                    DetailsFunc = () => new AccessTokenIssuedDetails {
+                        SubjectId = token.SubjectId ?? "no subject id",
+                        ClientId = token.ClientId,
+                        TokenType = token.Client.AccessTokenType,
+                        Lifetime = token.Lifetime,
+                        Scopes = token.Scopes,
+                        Claims = token.Claims.ToClaimsDictionary()
+                    }
+                };
 
-            evt.DetailsFunc = () => new AccessTokenIssuedDetails
-            {
-                SubjectId = token.SubjectId ?? "no subject id",
-                ClientId = token.ClientId,
-                TokenType = token.Client.AccessTokenType,
-                Lifetime = token.Lifetime,
-                Scopes = token.Scopes,
-                Claims = token.Claims.ToClaimsDictionary()
-            };
-            
+
             events.Raise(evt);
         }
 
         public static void RaiseIdentityTokenIssuedEvent(this IEventService events, Token token)
         {
             var evt = new Event<TokenIssuedDetailsBase>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Identity token issued",
-                EventTypes.Information,
-                EventConstants.Ids.IdentityTokenIssued);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.IDENTITY_TOKEN_ISSUED) {
+                    DetailsFunc = () => new TokenIssuedDetailsBase {
+                        SubjectId = token.SubjectId,
+                        ClientId = token.ClientId,
+                        Lifetime = token.Lifetime,
+                        Claims = token.Claims.ToClaimsDictionary()
+                    }
+                };
 
-            evt.DetailsFunc = () => new TokenIssuedDetailsBase
-            {
-                SubjectId = token.SubjectId,
-                ClientId = token.ClientId,
-                Lifetime = token.Lifetime,
-                Claims = token.Claims.ToClaimsDictionary()
-            };
 
             events.RaiseEvent(evt);
         }
@@ -351,20 +356,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
         {
             var evt = new Event<AuthorizationCodeDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Authorization code issued",
-                EventTypes.Information,
-                EventConstants.Ids.AuthorizationCodeIssued);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.AUTHORIZATION_CODE_ISSUED) {
+                    DetailsFunc = () => new AuthorizationCodeDetails {
+                        HandleId = id,
+                        ClientId = code.ClientId,
+                        Scopes = code.Scopes,
+                        SubjectId = code.SubjectId,
+                        RedirectUri = code.RedirectUri,
+                        Lifetime = code.Client.AuthorizationCodeLifetime
+                    }
+                };
 
-            evt.DetailsFunc = () => new AuthorizationCodeDetails
-            {
-                HandleId = id,
-                ClientId = code.ClientId,
-                Scopes = code.Scopes,
-                SubjectId = code.SubjectId,
-                RedirectUri = code.RedirectUri,
-                Lifetime = code.Client.AuthorizationCodeLifetime
-            };
 
             events.RaiseEvent(evt);
         }
@@ -372,20 +377,20 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseRefreshTokenIssuedEvent(this IEventService events, string id, RefreshToken token)
         {
             var evt = new Event<RefreshTokenDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Refresh token issued",
-                EventTypes.Information,
-                EventConstants.Ids.RefreshTokenIssued);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.REFRESH_TOKEN_ISSUED) {
+                    DetailsFunc = () => new RefreshTokenDetails {
+                        HandleId = id,
+                        ClientId = token.ClientId,
+                        Scopes = token.Scopes,
+                        SubjectId = token.SubjectId,
+                        Lifetime = token.LifeTime,
+                        Version = token.Version
+                    }
+                };
 
-            evt.DetailsFunc = () => new RefreshTokenDetails
-            {
-                HandleId = id,
-                ClientId = token.ClientId,
-                Scopes = token.Scopes,
-                SubjectId = token.SubjectId,
-                Lifetime = token.LifeTime,
-                Version = token.Version
-            };
 
             events.RaiseEvent(evt);
         }
@@ -393,18 +398,18 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseSuccessfulRefreshTokenRefreshEvent(this IEventService events, string oldHandle, string newHandle, RefreshToken token)
         {
             var evt = new Event<RefreshTokenRefreshDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Refresh token refresh success",
-                EventTypes.Success,
-                EventConstants.Ids.RefreshTokenRefreshedSuccess);
+                EventTypes.SUCCESS,
+                EventConstants.Ids.REFRESH_TOKEN_REFRESHED_SUCCESS) {
+                    Details = new RefreshTokenRefreshDetails {
+                        OldHandle = oldHandle,
+                        NewHandle = newHandle,
+                        ClientId = token.ClientId,
+                        Lifetime = token.LifeTime
+                    }
+                };
 
-            evt.Details = new RefreshTokenRefreshDetails
-            {
-                OldHandle = oldHandle,
-                NewHandle = newHandle,
-                ClientId = token.ClientId,
-                Lifetime = token.LifeTime
-            };
 
             events.RaiseEvent(evt);
         }
@@ -412,10 +417,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
         {
             var evt = new Event<object>(
-                EventConstants.Categories.InternalError,
+                EventConstants.Categories.INTERNAL_ERROR,
                 "Unhandled exception",
-                EventTypes.Error,
-                EventConstants.Ids.UnhandledExceptionError, 
+                EventTypes.ERROR,
+                EventConstants.Ids.UNHANDLED_EXCEPTION_ERROR, 
                 exception.ToString());
 
             events.RaiseEvent(evt);
@@ -424,10 +429,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseSuccessfulEndpointEvent(this IEventService events, string endpointName)
         {
             var evt = new Event<EndpointDetail>(
-                EventConstants.Categories.Endpoints,
+                EventConstants.Categories.ENDPOINTS,
                 "Endpoint success",
-                EventTypes.Success,
-                EventConstants.Ids.EndpointSuccess,
+                EventTypes.SUCCESS,
+                EventConstants.Ids.ENDPOINT_SUCCESS,
                 new EndpointDetail { EndpointName = endpointName });
 
             events.Raise(evt);
@@ -436,10 +441,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseFailureEndpointEvent(this IEventService events, string endpointName, string error)
         {
             var evt = new Event<EndpointDetail>(
-                 EventConstants.Categories.Endpoints,
+                 EventConstants.Categories.ENDPOINTS,
                  "Endpoint failure",
-                 EventTypes.Failure,
-                 EventConstants.Ids.EndpointFailure,
+                 EventTypes.FAILURE,
+                 EventConstants.Ids.ENDPOINT_FAILURE,
                  new EndpointDetail { EndpointName = endpointName },
                  error);
 
@@ -449,10 +454,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseFailedAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle, string error)
         {
             var evt = new Event<AuthorizationCodeDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Authorization code redeem failure",
-                EventTypes.Failure,
-                EventConstants.Ids.AuthorizationCodeRedeemedFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.AUTHORIZATION_CODE_REDEEMED_FAILURE,
                 new AuthorizationCodeDetails
                 {
                     HandleId = handle,
@@ -466,10 +471,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseSuccessAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle)
         {
             var evt = new Event<AuthorizationCodeDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Authorization code redeem success",
-                EventTypes.Success,
-                EventConstants.Ids.AuthorizationCodeRedeemedSuccess,
+                EventTypes.SUCCESS,
+                EventConstants.Ids.AUTHORIZATION_CODE_REDEEMED_SUCCESS,
                 new AuthorizationCodeDetails
                 {
                     HandleId = handle,
@@ -482,10 +487,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseFailedRefreshTokenRefreshEvent(this IEventService events, Client client, string handle, string error)
         {
             var evt = new Event<RefreshTokenDetails>(
-                EventConstants.Categories.TokenService,
+                EventConstants.Categories.TOKEN_SERVICE,
                 "Refresh token refresh failure",
-                EventTypes.Failure,
-                EventConstants.Ids.RefreshTokenRefreshedFailure,
+                EventTypes.FAILURE,
+                EventConstants.Ids.REFRESH_TOKEN_REFRESHED_FAILURE,
                 new RefreshTokenDetails
                 {
                     HandleId = handle,
@@ -504,10 +509,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseNoCertificateConfiguredEvent(this IEventService events)
         {
             var evt = new Event<object>(
-                EventConstants.Categories.Information,
+                EventConstants.Categories.INFORMATION,
                 "No signing certificate configured",
-                EventTypes.Information,
-                EventConstants.Ids.NoSigningCertificateConfigured);
+                EventTypes.INFORMATION,
+                EventConstants.Ids.NO_SIGNING_CERTIFICATE_CONFIGURED);
 
             events.Raise(evt);
         }
@@ -515,10 +520,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseCertificatePrivateKeyNotAccessibleEvent(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
-                EventConstants.Categories.InternalError,
+                EventConstants.Categories.INTERNAL_ERROR,
                 "Signing certificate has no private key, or key is not accessible",
-                EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventTypes.ERROR,
+                EventConstants.Ids.SIGNING_CERTIFICATE_PRIVAT_KEY_NOT_ACCESSIBLE,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
@@ -532,10 +537,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseCertificateKeyLengthTooShortEvent(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
-                EventConstants.Categories.InternalError,
+                EventConstants.Categories.INTERNAL_ERROR,
                 "Signing certificate key length is less than 2048 bits.",
-                EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventTypes.ERROR,
+                EventConstants.Ids.SIGNING_CERTIFICATE_PRIVAT_KEY_NOT_ACCESSIBLE,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
@@ -548,10 +553,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseCertificateExpiringSoonEvent(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
-                EventConstants.Categories.Information,
+                EventConstants.Categories.INFORMATION,
                 "The signing certificate will expire in the next 30 days",
-                EventTypes.Information,
-                EventConstants.Ids.SigningCertificateExpiringSoon,
+                EventTypes.INFORMATION,
+                EventConstants.Ids.SIGNING_CERTIFICATE_EXPIRING_SOON,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
@@ -564,10 +569,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static void RaiseCertificateValidatedEvent(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
-                EventConstants.Categories.Information,
+                EventConstants.Categories.INFORMATION,
                 "Signing certificate validation success",
-                EventTypes.Information,
-                EventConstants.Ids.SigningCertificateValidated,
+                EventTypes.INFORMATION,
+                EventConstants.Ids.SIGNING_CERTIFICATE_VALIDATED,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,

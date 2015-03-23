@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Owin;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
 #pragma warning disable 1591
@@ -38,19 +38,19 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         const string CookieEntropy = TokenName + "AntiForgeryTokenCookie";
         const string HiddenInputEntropy = TokenName + "AntiForgeryTokenHidden";
 
-        readonly IOwinContext context;
-        readonly IdentityServerOptions options;
+        readonly IOwinContext _context;
+        readonly IdentityServerOptions _options;
 
         internal AntiForgeryToken(IOwinContext context, IdentityServerOptions options)
         {
-            this.context = context;
-            this.options = options;
+            _context = context;
+            _options = options;
         }
 
         internal AntiForgeryTokenViewModel GetAntiForgeryToken()
         {
             var tokenBytes = GetCookieToken();
-            var protectedTokenBytes = options.DataProtector.Protect(tokenBytes, HiddenInputEntropy);
+            var protectedTokenBytes = _options.DataProtector.Protect(tokenBytes, HiddenInputEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
 
             return new AntiForgeryTokenViewModel
@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             if (cookieToken == null || hiddenInputToken == null) return false;
             if (cookieToken.Length != hiddenInputToken.Length) return false;
             
-            bool same = true;
+            var same = true;
             for(var i = 0; i < cookieToken.Length; i++)
             {
                 same &= (cookieToken[i] == hiddenInputToken[i]);
@@ -91,15 +91,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         byte[] GetCookieToken()
         {
-            var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + TokenName;
-            var cookie = context.Request.Cookies[cookieName];
+            var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + TokenName;
+            var cookie = _context.Request.Cookies[cookieName];
 
             if (cookie != null)
             {
                 try
                 {
                     var protectedCookieBytes = Base64Url.Decode(cookie);
-                    var tokenBytes = options.DataProtector.Unprotect(protectedCookieBytes, CookieEntropy);
+                    var tokenBytes = _options.DataProtector.Unprotect(protectedCookieBytes, CookieEntropy);
                     return tokenBytes;
                 }
                 catch(Exception ex)
@@ -110,12 +110,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             }
 
             var bytes = CryptoRandom.CreateRandomKey(16);
-            var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
+            var protectedTokenBytes = _options.DataProtector.Protect(bytes, CookieEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
             
-            var secure = context.Request.Scheme == Uri.UriSchemeHttps;
-            var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
-            context.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
+            var secure = _context.Request.Scheme == Uri.UriSchemeHttps;
+            var path = _context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
+            _context.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
             {
                 HttpOnly = true,
                 Secure = secure,
@@ -128,26 +128,26 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         async Task<byte[]> GetHiddenInputTokenAsync()
         {
             // hack to clear a possible cached type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
+            _context.Environment.Remove("Microsoft.Owin.Form#collection");
 
-            if (!context.Request.Body.CanSeek)
+            if (!_context.Request.Body.CanSeek)
             {
                 var copy = new MemoryStream();
-                await context.Request.Body.CopyToAsync(copy);
+                await _context.Request.Body.CopyToAsync(copy);
                 copy.Seek(0L, SeekOrigin.Begin);
-                context.Request.Body = copy;
+                _context.Request.Body = copy;
             }
-            var form = await context.Request.ReadFormAsync();
-            context.Request.Body.Seek(0L, SeekOrigin.Begin);
+            var form = await _context.Request.ReadFormAsync();
+            _context.Request.Body.Seek(0L, SeekOrigin.Begin);
 
             // hack to prevent caching of an internalized type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
+            _context.Environment.Remove("Microsoft.Owin.Form#collection");
 
             var token = form[TokenName];
             if (token == null) return null;
 
             var tokenBytes = Base64Url.Decode(token);
-            var unprotectedTokenBytes = options.DataProtector.Unprotect(tokenBytes, HiddenInputEntropy);
+            var unprotectedTokenBytes = _options.DataProtector.Unprotect(tokenBytes, HiddenInputEntropy);
             
             return unprotectedTokenBytes;
         }

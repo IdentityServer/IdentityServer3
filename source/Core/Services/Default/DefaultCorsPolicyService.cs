@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
 {
@@ -53,14 +54,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </value>
         public bool AllowAll { get; set; }
 
-        readonly Func<string, Task<bool>> policyCallback;
+        readonly Func<string, Task<bool>> _policyCallback;
         
         internal DefaultCorsPolicyService(CorsPolicy policy)
         {
             if (policy == null) throw new ArgumentNullException("policy");
             
             AllowedOrigins = policy.AllowedOrigins;
-            policyCallback = policy.PolicyCallback;
+            _policyCallback = policy.PolicyCallback;
         }
 
         /// <summary>
@@ -76,30 +77,22 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 return true;
             }
 
-            if (AllowedOrigins != null)
-            {
+            if (AllowedOrigins != null) {
                 if (AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))
                 {
                     Logger.InfoFormat("AllowedOrigins configured and origin {0} is allowed", origin);
                     return true;
                 }
-                else
-                {
-                    Logger.InfoFormat("AllowedOrigins configured and origin {0} is not allowed", origin);
-                }
+                Logger.InfoFormat("AllowedOrigins configured and origin {0} is not allowed", origin);
             }
 
-            if (policyCallback != null)
-            {
-                if (await policyCallback(origin))
+            if (_policyCallback != null) {
+                if (await _policyCallback(origin))
                 {
                     Logger.InfoFormat("policyCallback callback invoked and origin {0} is allowed", origin);
                     return true;
                 }
-                else
-                {
-                    Logger.InfoFormat("policyCallback callback invoked and origin {0} is not allowed", origin);
-                }
+                Logger.InfoFormat("policyCallback callback invoked and origin {0} is not allowed", origin);
             }
 
             Logger.InfoFormat("Exiting; origin {0} is not allowed", origin);

@@ -15,11 +15,12 @@
  */
 
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
@@ -46,7 +47,7 @@ namespace Thinktecture.IdentityServer.Core.Results
             return AssetManager.LoadFormPost(root, redirect, fields);
         }
 
-        public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public override Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             Logger.Info("Posting to " + _response.RedirectUri);
             return base.ExecuteAsync(cancellationToken);

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.ComponentModel;
+using Microsoft.Owin;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
 
@@ -27,44 +27,44 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class SessionCookie
     {
-        readonly IOwinContext context;
-        readonly IdentityServerOptions identityServerOptions;
+        readonly IOwinContext _context;
+        readonly IdentityServerOptions _identityServerOptions;
 
         protected internal SessionCookie(IOwinContext ctx, IdentityServerOptions options)
         {
-            this.context = ctx;
-            this.identityServerOptions = options;
+            _context = ctx;
+            _identityServerOptions = options;
         }
 
         public virtual void IssueSessionId(bool? persistent, DateTimeOffset? expires = null)
         {
-            context.Response.Cookies.Append(
+            _context.Response.Cookies.Append(
                 GetCookieName(), CryptoRandom.CreateUniqueId(), 
                 CreateCookieOptions(persistent, expires));
         }
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions(bool? persistent, DateTimeOffset? expires = null)
         {
-            var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
+            var path = _context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
             var options = new Microsoft.Owin.CookieOptions
             {
                 HttpOnly = false,
-                Secure = context.Request.IsSecure,
+                Secure = _context.Request.IsSecure,
                 Path = path
             };
 
             if (persistent != false)
             {
-                if (persistent == true || this.identityServerOptions.AuthenticationOptions.CookieOptions.IsPersistent)
+                if (persistent == true || _identityServerOptions.AuthenticationOptions.CookieOptions.IsPersistent)
                 {
                     if (persistent == true)
                     {
-                        expires = expires ?? DateTimeHelper.UtcNow.Add(this.identityServerOptions.AuthenticationOptions.CookieOptions.RememberMeDuration);
+                        expires = expires ?? DateTimeHelper.UtcNow.Add(_identityServerOptions.AuthenticationOptions.CookieOptions.RememberMeDuration);
                     }
                     else
                     {
-                        expires = expires ?? DateTimeHelper.UtcNow.Add(this.identityServerOptions.AuthenticationOptions.CookieOptions.ExpireTimeSpan);
+                        expires = expires ?? DateTimeHelper.UtcNow.Add(_identityServerOptions.AuthenticationOptions.CookieOptions.ExpireTimeSpan);
                     }
                     options.Expires = expires.Value.UtcDateTime;
                 }
@@ -75,12 +75,12 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         private string GetCookieName()
         {
-            return identityServerOptions.AuthenticationOptions.CookieOptions.GetSessionCookieName();
+            return _identityServerOptions.AuthenticationOptions.CookieOptions.GetSessionCookieName();
         }
 
         public virtual string GetSessionId()
         {
-            return context.Request.Cookies[GetCookieName()];
+            return _context.Request.Cookies[GetCookieName()];
         }
 
         public virtual void ClearSessionId()
@@ -89,7 +89,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
             options.Expires = DateTimeHelper.UtcNow.AddYears(-1);
             
             var name = GetCookieName();
-            context.Response.Cookies.Append(name, ".", options);
+            _context.Response.Cookies.Append(name, ".", options);
         }
     }
 }

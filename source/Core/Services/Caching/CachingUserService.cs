@@ -29,8 +29,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
     /// </summary>
     public class CachingUserService : IUserService
     {
-        readonly IUserService inner;
-        readonly ICache<IEnumerable<Claim>> cache;
+        readonly IUserService _inner;
+        readonly ICache<IEnumerable<Claim>> _cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CachingUserService"/> class.
@@ -47,8 +47,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             if (inner == null) throw new ArgumentNullException("inner");
             if (cache == null) throw new ArgumentNullException("cache");
 
-            this.inner = inner;
-            this.cache = cache;
+            _inner = inner;
+            _cache = cache;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </returns>
         public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
         {
-            return inner.PreAuthenticateAsync(message);
+            return _inner.PreAuthenticateAsync(message);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </returns>
         public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return _inner.AuthenticateLocalAsync(username, password, message);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </returns>
         public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
         {
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            return _inner.AuthenticateExternalAsync(externalUser, message);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// <returns></returns>
         public Task SignOutAsync(ClaimsPrincipal subject)
         {
-            return inner.SignOutAsync(subject);
+            return _inner.SignOutAsync(subject);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
         {
             var key = GetKey(subject, requestedClaimTypes);
-            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(subject, requestedClaimTypes));
+            return _cache.GetAsync(key, ()=>_inner.GetProfileDataAsync(subject, requestedClaimTypes));
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </returns>
         public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
         {
-            return inner.IsActiveAsync(subject);
+            return _inner.IsActiveAsync(subject);
         }
 
         private string GetKey(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes)

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
 namespace Thinktecture.IdentityServer.Tests.Validation
@@ -29,10 +30,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
     {
         const string Category = "Revocation Request Validationn Tests";
 
-        TokenRevocationRequestValidator _validator;
-        IRefreshTokenStore _refreshTokens;
-        ITokenHandleStore _tokenHandles;
-        IClientStore _clients;
+        readonly TokenRevocationRequestValidator _validator;
+        readonly IRefreshTokenStore _refreshTokens;
+        readonly ITokenHandleStore _tokenHandles;
+        readonly IClientStore _clients;
 
         public RevocationRequestValidation()
         {
@@ -53,7 +54,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             var result = await _validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidRequest);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_REQUEST);
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             var result = await _validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidRequest);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_REQUEST);
         }
 
         [Fact]
@@ -144,7 +145,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             var result = await _validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.RevocationErrors.UnsupportedTokenType);
+            result.Error.Should().Be(Constants.RevocationErrors.UNSUPPORTED_TOKEN_TYPE);
         }
     }
 }

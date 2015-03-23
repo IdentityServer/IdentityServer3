@@ -19,7 +19,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// In-memory cache used by the view service
@@ -27,12 +27,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class ResourceCache
     {
-        readonly ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
+        readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
         public string Read(string name)
         {
             string value;
-            if (cache.TryGetValue(name, out value))
+            if (_cache.TryGetValue(name, out value))
             {
                 return value;
             }
@@ -41,7 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public void Write(string name, string value)
         {
-            cache[name] = value;
+            _cache[name] = value;
         }
     }
 }

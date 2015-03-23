@@ -11,8 +11,8 @@
     (function () {
         var app = angular.module("app", []);
 
-        app.controller("LayoutCtrl", function ($scope, Model) {
-            $scope.model = Model;
+        app.controller("LayoutCtrl", function ($scope, model) {
+            $scope.model = model;
         });
 
         app.directive("antiForgeryToken", function () {

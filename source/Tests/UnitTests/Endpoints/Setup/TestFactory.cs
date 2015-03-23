@@ -18,7 +18,7 @@ using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace Thinktecture.IdentityServer.Tests.Endpoints.Setup
 {
     public class TestFactory
     {
@@ -29,8 +29,8 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             
             var fact = new IdentityServerServiceFactory
             {
-                ScopeStore = new Registration<IScopeStore>((resolver) => scopes),
-                ClientStore = new Registration<IClientStore>((resolver) => clients)
+                ScopeStore = new Registration<IScopeStore>(resolver => scopes),
+                ClientStore = new Registration<IClientStore>(resolver => clients)
             };
 
             return fact;

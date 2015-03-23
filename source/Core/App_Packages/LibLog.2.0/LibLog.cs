@@ -1,4 +1,4 @@
-//===============================================================================
+﻿//===============================================================================
 // LibLog
 //
 // https://github.com/damianh/LibLog
@@ -24,15 +24,15 @@
 // SOFTWARE.
 //===============================================================================
 
-#pragma warning disable 1591
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Text;
 
-namespace Thinktecture.IdentityServer.Core.Logging
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using Thinktecture.IdentityServer.Core.Logging.LogProviders;
+namespace Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0 {
+#pragma warning disable 1591
 
     /// <summary>
     /// Simple interface that represent a logger.
@@ -60,12 +60,12 @@ namespace Thinktecture.IdentityServer.Core.Logging
     /// </summary>
     public enum LogLevel
     {
-        Trace,
-        Debug,
-        Info,
-        Warn,
-        Error,
-        Fatal
+        TRACE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
+        FATAL
     }
 
     public static class LogExtensions
@@ -73,50 +73,50 @@ namespace Thinktecture.IdentityServer.Core.Logging
         public static bool IsDebugEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Debug, null);
+            return logger.Log(LogLevel.DEBUG, null);
         }
 
         public static bool IsErrorEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Error, null);
+            return logger.Log(LogLevel.ERROR, null);
         }
 
         public static bool IsFatalEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Fatal, null);
+            return logger.Log(LogLevel.FATAL, null);
         }
 
         public static bool IsInfoEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Info, null);
+            return logger.Log(LogLevel.INFO, null);
         }
 
         public static bool IsTraceEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Trace, null);
+            return logger.Log(LogLevel.TRACE, null);
         }
 
         public static bool IsWarnEnabled(this ILog logger)
         {
             GuardAgainstNullLogger(logger);
-            return logger.Log(LogLevel.Warn, null);
+            return logger.Log(LogLevel.WARN, null);
         }
 
         public static void Debug(this ILog logger, Func<string> messageFunc)
         {
             GuardAgainstNullLogger(logger);
-            logger.Log(LogLevel.Debug, messageFunc);
+            logger.Log(LogLevel.DEBUG, messageFunc);
         }
 
         public static void Debug(this ILog logger, string message)
         {
             if (logger.IsDebugEnabled())
             {
-                logger.Log(LogLevel.Debug, message.AsFunc());
+                logger.Log(LogLevel.DEBUG, message.AsFunc());
             }
         }
 
@@ -124,7 +124,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsDebugEnabled())
             {
-                logger.LogFormat(LogLevel.Debug, message, args);
+                logger.LogFormat(LogLevel.DEBUG, message, args);
             }
         }
 
@@ -132,20 +132,20 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsDebugEnabled())
             {
-                logger.Log(LogLevel.Debug, message.AsFunc(), exception);
+                logger.Log(LogLevel.DEBUG, message.AsFunc(), exception);
             }
         }
 
         public static void Error(this ILog logger, Func<string> messageFunc)
         {
-            logger.Log(LogLevel.Error, messageFunc);
+            logger.Log(LogLevel.ERROR, messageFunc);
         }
 
         public static void Error(this ILog logger, string message)
         {
             if (logger.IsErrorEnabled())
             {
-                logger.Log(LogLevel.Error, message.AsFunc());
+                logger.Log(LogLevel.ERROR, message.AsFunc());
             }
         }
 
@@ -153,7 +153,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsErrorEnabled())
             {
-                logger.LogFormat(LogLevel.Error, message, args);
+                logger.LogFormat(LogLevel.ERROR, message, args);
             }
         }
 
@@ -161,20 +161,20 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsErrorEnabled())
             {
-                logger.Log(LogLevel.Error, message.AsFunc(), exception);
+                logger.Log(LogLevel.ERROR, message.AsFunc(), exception);
             }
         }
 
         public static void Fatal(this ILog logger, Func<string> messageFunc)
         {
-            logger.Log(LogLevel.Fatal, messageFunc);
+            logger.Log(LogLevel.FATAL, messageFunc);
         }
 
         public static void Fatal(this ILog logger, string message)
         {
             if (logger.IsFatalEnabled())
             {
-                logger.Log(LogLevel.Fatal, message.AsFunc());
+                logger.Log(LogLevel.FATAL, message.AsFunc());
             }
         }
 
@@ -182,7 +182,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsFatalEnabled())
             {
-                logger.LogFormat(LogLevel.Fatal, message, args);
+                logger.LogFormat(LogLevel.FATAL, message, args);
             }
         }
 
@@ -190,21 +190,21 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsFatalEnabled())
             {
-                logger.Log(LogLevel.Fatal, message.AsFunc(), exception);
+                logger.Log(LogLevel.FATAL, message.AsFunc(), exception);
             }
         }
 
         public static void Info(this ILog logger, Func<string> messageFunc)
         {
             GuardAgainstNullLogger(logger);
-            logger.Log(LogLevel.Info, messageFunc);
+            logger.Log(LogLevel.INFO, messageFunc);
         }
 
         public static void Info(this ILog logger, string message)
         {
             if (logger.IsInfoEnabled())
             {
-                logger.Log(LogLevel.Info, message.AsFunc());
+                logger.Log(LogLevel.INFO, message.AsFunc());
             }
         }
 
@@ -212,7 +212,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsInfoEnabled())
             {
-                logger.LogFormat(LogLevel.Info, message, args);
+                logger.LogFormat(LogLevel.INFO, message, args);
             }
         }
 
@@ -220,21 +220,21 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsInfoEnabled())
             {
-                logger.Log(LogLevel.Info, message.AsFunc(), exception);
+                logger.Log(LogLevel.INFO, message.AsFunc(), exception);
             }
         }
 
         public static void Trace(this ILog logger, Func<string> messageFunc)
         {
             GuardAgainstNullLogger(logger);
-            logger.Log(LogLevel.Trace, messageFunc);
+            logger.Log(LogLevel.TRACE, messageFunc);
         }
 
         public static void Trace(this ILog logger, string message)
         {
             if (logger.IsTraceEnabled())
             {
-                logger.Log(LogLevel.Trace, message.AsFunc());
+                logger.Log(LogLevel.TRACE, message.AsFunc());
             }
         }
 
@@ -242,7 +242,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsTraceEnabled())
             {
-                logger.LogFormat(LogLevel.Trace, message, args);
+                logger.LogFormat(LogLevel.TRACE, message, args);
             }
         }
 
@@ -250,21 +250,21 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsTraceEnabled())
             {
-                logger.Log(LogLevel.Trace, message.AsFunc(), exception);
+                logger.Log(LogLevel.TRACE, message.AsFunc(), exception);
             }
         }
 
         public static void Warn(this ILog logger, Func<string> messageFunc)
         {
             GuardAgainstNullLogger(logger);
-            logger.Log(LogLevel.Warn, messageFunc);
+            logger.Log(LogLevel.WARN, messageFunc);
         }
 
         public static void Warn(this ILog logger, string message)
         {
             if (logger.IsWarnEnabled())
             {
-                logger.Log(LogLevel.Warn, message.AsFunc());
+                logger.Log(LogLevel.WARN, message.AsFunc());
             }
         }
 
@@ -272,7 +272,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsWarnEnabled())
             {
-                logger.LogFormat(LogLevel.Warn, message, args);
+                logger.LogFormat(LogLevel.WARN, message, args);
             }
         }
 
@@ -280,7 +280,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             if (logger.IsWarnEnabled())
             {
-                logger.Log(LogLevel.Warn, message.AsFunc(), exception);
+                logger.Log(LogLevel.WARN, message.AsFunc(), exception);
             }
         }
 
@@ -363,7 +363,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         /// <returns>An instance of <see cref="ILog"/></returns>
         public static ILog GetLogger(string name)
         {
-            ILogProvider logProvider = _currentLogProvider ?? ResolveLogProvider();
+            var logProvider = _currentLogProvider ?? ResolveLogProvider();
             return logProvider == null ? new NoOpLogger() : (ILog)new LoggerExecutionWrapper(logProvider.GetLogger(name));
         }
 
@@ -382,13 +382,13 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public static readonly List<Tuple<IsLoggerAvailable, CreateLogProvider>> LogProviderResolvers =
             new List<Tuple<IsLoggerAvailable, CreateLogProvider>>
-        {
-            new Tuple<IsLoggerAvailable, CreateLogProvider>(SerilogLogProvider.IsLoggerAvailable, () => new SerilogLogProvider()),
-            new Tuple<IsLoggerAvailable, CreateLogProvider>(NLogLogProvider.IsLoggerAvailable, () => new NLogLogProvider()),
-            new Tuple<IsLoggerAvailable, CreateLogProvider>(Log4NetLogProvider.IsLoggerAvailable, () => new Log4NetLogProvider()),
-            new Tuple<IsLoggerAvailable, CreateLogProvider>(EntLibLogProvider.IsLoggerAvailable, () => new EntLibLogProvider()),
-            new Tuple<IsLoggerAvailable, CreateLogProvider>(LoupeLogProvider.IsLoggerAvailable, () => new LoupeLogProvider())
-        };
+            {
+                new Tuple<IsLoggerAvailable, CreateLogProvider>(SerilogLogProvider.IsLoggerAvailable, () => new SerilogLogProvider()),
+                new Tuple<IsLoggerAvailable, CreateLogProvider>(NLogLogProvider.IsLoggerAvailable, () => new NLogLogProvider()),
+                new Tuple<IsLoggerAvailable, CreateLogProvider>(Log4NetLogProvider.IsLoggerAvailable, () => new Log4NetLogProvider()),
+                new Tuple<IsLoggerAvailable, CreateLogProvider>(EntLibLogProvider.IsLoggerAvailable, () => new EntLibLogProvider()),
+                new Tuple<IsLoggerAvailable, CreateLogProvider>(LoupeLogProvider.IsLoggerAvailable, () => new LoupeLogProvider())
+            };
 
         private static ILogProvider ResolveLogProvider()
         {
@@ -424,7 +424,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
     public class LoggerExecutionWrapper : ILog
     {
         private readonly ILog _logger;
-        public const string FailedToGenerateLogMessage = "Failed to generate log message";
+        public const string FAILED_TO_GENERATE_LOG_MESSAGE = "Failed to generate log message";
 
         public ILog WrappedLogger
         {
@@ -451,24 +451,13 @@ namespace Thinktecture.IdentityServer.Core.Logging
                 }
                 catch (Exception ex)
                 {
-                    Log(LogLevel.Error, () => FailedToGenerateLogMessage, ex);
+                    Log(LogLevel.ERROR, () => FAILED_TO_GENERATE_LOG_MESSAGE, ex);
                 }
                 return null;
             };
             return _logger.Log(logLevel, wrappedMessageFunc, exception);
         }
     }
-}
-
-namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Text;
 
     public class NLogLogProvider : ILogProvider
     {
@@ -507,10 +496,10 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
         private static Func<string, object> GetGetLoggerMethodCall()
         {
-            Type logManagerType = GetLogManagerType();
-            MethodInfo method = logManagerType.GetMethod("GetLogger", new[] { typeof(string) });
-            ParameterExpression nameParam = Expression.Parameter(typeof(string), "name");
-            MethodCallExpression methodCall = Expression.Call(null, method, new Expression[] { nameParam });
+            var logManagerType = GetLogManagerType();
+            var method = logManagerType.GetMethod("GetLogger", new[] { typeof(string) });
+            var nameParam = Expression.Parameter(typeof(string), "name");
+            var methodCall = Expression.Call(null, method, new Expression[] { nameParam });
             return Expression.Lambda<Func<string, object>>(methodCall, new[] { nameParam }).Compile();
         }
 
@@ -535,35 +524,35 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
                 }
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         if (_logger.IsDebugEnabled)
                         {
                             _logger.Debug(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (_logger.IsInfoEnabled)
                         {
                             _logger.Info(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (_logger.IsWarnEnabled)
                         {
                             _logger.Warn(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (_logger.IsErrorEnabled)
                         {
                             _logger.Error(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (_logger.IsFatalEnabled)
                         {
                             _logger.Fatal(messageFunc());
@@ -585,35 +574,35 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         if (_logger.IsDebugEnabled)
                         {
                             _logger.DebugException(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (_logger.IsInfoEnabled)
                         {
                             _logger.InfoException(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (_logger.IsWarnEnabled)
                         {
                             _logger.WarnException(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (_logger.IsErrorEnabled)
                         {
                             _logger.ErrorException(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (_logger.IsFatalEnabled)
                         {
                             _logger.FatalException(messageFunc(), exception);
@@ -635,15 +624,15 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         return _logger.IsDebugEnabled;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         return _logger.IsInfoEnabled;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         return _logger.IsWarnEnabled;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         return _logger.IsErrorEnabled;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         return _logger.IsFatalEnabled;
                     default:
                         return _logger.IsTraceEnabled;
@@ -689,10 +678,10 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
         private static Func<string, object> GetGetLoggerMethodCall()
         {
-            Type logManagerType = GetLogManagerType();
-            MethodInfo method = logManagerType.GetMethod("GetLogger", new[] { typeof(string) });
-            ParameterExpression nameParam = Expression.Parameter(typeof(string), "name");
-            MethodCallExpression methodCall = Expression.Call(null, method, new Expression[] { nameParam });
+            var logManagerType = GetLogManagerType();
+            var method = logManagerType.GetMethod("GetLogger", new[] { typeof(string) });
+            var nameParam = Expression.Parameter(typeof(string), "name");
+            var methodCall = Expression.Call(null, method, new Expression[] { nameParam });
             return Expression.Lambda<Func<string, object>>(methodCall, new[] { nameParam }).Compile();
         }
 
@@ -717,28 +706,28 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
                 }
                 switch (logLevel)
                 {
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (_logger.IsInfoEnabled)
                         {
                             _logger.Info(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (_logger.IsWarnEnabled)
                         {
                             _logger.Warn(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (_logger.IsErrorEnabled)
                         {
                             _logger.Error(messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (_logger.IsFatalEnabled)
                         {
                             _logger.Fatal(messageFunc());
@@ -760,28 +749,28 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (_logger.IsDebugEnabled)
                         {
                             _logger.Info(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (_logger.IsWarnEnabled)
                         {
                             _logger.Warn(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (_logger.IsErrorEnabled)
                         {
                             _logger.Error(messageFunc(), exception);
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (_logger.IsFatalEnabled)
                         {
                             _logger.Fatal(messageFunc(), exception);
@@ -803,15 +792,15 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         return _logger.IsDebugEnabled;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         return _logger.IsInfoEnabled;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         return _logger.IsWarnEnabled;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         return _logger.IsErrorEnabled;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         return _logger.IsFatalEnabled;
                     default:
                         return _logger.IsDebugEnabled;
@@ -827,7 +816,7 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
         private static readonly Type LogEntryType;
         private static readonly Type LoggerType;
         private static readonly Action<string, string, TraceEventType> WriteLogEntry;
-        private static Func<string, TraceEventType, bool> ShouldLogEntry;
+        private static Func<string, TraceEventType, bool> _shouldLogEntry;
 
         static EntLibLogProvider()
         {
@@ -838,7 +827,7 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
                 return;
             }
             WriteLogEntry = GetWriteLogEntry();
-            ShouldLogEntry = GetShouldLogEntry();
+            _shouldLogEntry = GetShouldLogEntry();
         }
 
         public EntLibLogProvider()
@@ -857,7 +846,7 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
         public ILog GetLogger(string name)
         {
-            return new EntLibLogger(name, WriteLogEntry, ShouldLogEntry);
+            return new EntLibLogger(name, WriteLogEntry, _shouldLogEntry);
         }
 
         public static bool IsLoggerAvailable()
@@ -872,10 +861,10 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             var messageParameter = Expression.Parameter(typeof(string), "message");
             var severityParameter = Expression.Parameter(typeof(TraceEventType), "severity");
 
-            MemberInitExpression memberInit = GetWriteLogExpression(messageParameter, severityParameter, logNameParameter);
+            var memberInit = GetWriteLogExpression(messageParameter, severityParameter, logNameParameter);
 
             //Logger.Write(new LogEntry(....));
-            MethodInfo writeLogEntryMethod = LoggerType.GetMethod("Write", new[] { LogEntryType });
+            var writeLogEntryMethod = LoggerType.GetMethod("Write", new[] { LogEntryType });
             var writeLogEntryExpression = Expression.Call(writeLogEntryMethod, memberInit);
 
             return Expression.Lambda<Action<string, string, TraceEventType>>(
@@ -891,10 +880,10 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             var logNameParameter = Expression.Parameter(typeof(string), "logName");
             var severityParameter = Expression.Parameter(typeof(TraceEventType), "severity");
 
-            MemberInitExpression memberInit = GetWriteLogExpression(Expression.Constant("***dummy***"), severityParameter, logNameParameter);
+            var memberInit = GetWriteLogExpression(Expression.Constant("***dummy***"), severityParameter, logNameParameter);
 
             //Logger.Write(new LogEntry(....));
-            MethodInfo writeLogEntryMethod = LoggerType.GetMethod("ShouldLog", new[] { LogEntryType });
+            var writeLogEntryMethod = LoggerType.GetMethod("ShouldLog", new[] { LogEntryType });
             var writeLogEntryExpression = Expression.Call(writeLogEntryMethod, memberInit);
 
             return Expression.Lambda<Func<string, TraceEventType, bool>>(
@@ -907,7 +896,7 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             ParameterExpression severityParameter, ParameterExpression logNameParameter)
         {
             var entryType = LogEntryType;
-            MemberInitExpression memberInit = Expression.MemberInit(Expression.New(entryType), new MemberBinding[]
+            var memberInit = Expression.MemberInit(Expression.New(entryType), new MemberBinding[]
             {
                 Expression.Bind(entryType.GetProperty("Message"), message),
                 Expression.Bind(entryType.GetProperty("Severity"), severityParameter),
@@ -962,13 +951,13 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         return TraceEventType.Critical;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         return TraceEventType.Error;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         return TraceEventType.Warning;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         return TraceEventType.Information;
                     default:
                         return TraceEventType.Verbose;
@@ -1014,12 +1003,12 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
         private static Func<string, object> GetForContextMethodCall()
         {
-            Type logManagerType = GetLogManagerType();
-            MethodInfo method = logManagerType.GetMethod("ForContext", new[] { typeof(string), typeof(object), typeof(bool) });
-            ParameterExpression propertyNameParam = Expression.Parameter(typeof(string), "propertyName");
-            ParameterExpression valueParam = Expression.Parameter(typeof(object), "value");
-            ParameterExpression destructureObjectsParam = Expression.Parameter(typeof(bool), "destructureObjects");
-            MethodCallExpression methodCall = Expression.Call(null, method, new Expression[]
+            var logManagerType = GetLogManagerType();
+            var method = logManagerType.GetMethod("ForContext", new[] { typeof(string), typeof(object), typeof(bool) });
+            var propertyNameParam = Expression.Parameter(typeof(string), "propertyName");
+            var valueParam = Expression.Parameter(typeof(object), "value");
+            var destructureObjectsParam = Expression.Parameter(typeof(bool), "destructureObjects");
+            var methodCall = Expression.Call(null, method, new Expression[]
             {
                 propertyNameParam, 
                 valueParam,
@@ -1059,12 +1048,12 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
                 // Func<object, object, bool> isEnabled = (logger, level) => { return ((SeriLog.ILogger)logger).IsEnabled(level); }
                 var loggerType = Type.GetType("Serilog.ILogger, Serilog");
-                MethodInfo isEnabledMethodInfo = loggerType.GetMethod("IsEnabled");
-                ParameterExpression instanceParam = Expression.Parameter(typeof(object));
-                UnaryExpression instanceCast = Expression.Convert(instanceParam, loggerType);
-                ParameterExpression levelParam = Expression.Parameter(typeof(object));
-                UnaryExpression levelCast = Expression.Convert(levelParam, logEventTypeType);
-                MethodCallExpression isEnabledMethodCall = Expression.Call(instanceCast, isEnabledMethodInfo, levelCast);
+                var isEnabledMethodInfo = loggerType.GetMethod("IsEnabled");
+                var instanceParam = Expression.Parameter(typeof(object));
+                var instanceCast = Expression.Convert(instanceParam, loggerType);
+                var levelParam = Expression.Parameter(typeof(object));
+                var levelCast = Expression.Convert(levelParam, logEventTypeType);
+                var isEnabledMethodCall = Expression.Call(instanceCast, isEnabledMethodInfo, levelCast);
                 IsEnabled = Expression.Lambda<Func<object, object, bool>>(isEnabledMethodCall, new[]
                 {
                     instanceParam,
@@ -1073,10 +1062,10 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
                 // Action<object, object, string> Write =
                 // (logger, level, message) => { ((SeriLog.ILoggerILogger)logger).Write(level, message, new object[]); }
-                MethodInfo writeMethodInfo = loggerType.GetMethod("Write", new[] { logEventTypeType, typeof(string), typeof(object[]) });
-                ParameterExpression messageParam = Expression.Parameter(typeof(string));
-                ConstantExpression propertyValuesParam = Expression.Constant(new object[0]);
-                MethodCallExpression writeMethodExp = Expression.Call(instanceCast, writeMethodInfo, levelCast, messageParam, propertyValuesParam);
+                var writeMethodInfo = loggerType.GetMethod("Write", new[] { logEventTypeType, typeof(string), typeof(object[]) });
+                var messageParam = Expression.Parameter(typeof(string));
+                var propertyValuesParam = Expression.Constant(new object[0]);
+                var writeMethodExp = Expression.Call(instanceCast, writeMethodInfo, levelCast, messageParam, propertyValuesParam);
                 Write = Expression.Lambda<Action<object, object, string>>(writeMethodExp, new[]
                 {
                     instanceParam,
@@ -1086,14 +1075,14 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
                 // Action<object, object, string, Exception> WriteException =
                 // (logger, level, exception, message) => { ((ILogger)logger).Write(level, exception, message, new object[]); }
-                MethodInfo writeExceptionMethodInfo = loggerType.GetMethod("Write", new[]
+                var writeExceptionMethodInfo = loggerType.GetMethod("Write", new[]
                 {
                     logEventTypeType,
                     typeof(Exception), 
                     typeof(string),
                     typeof(object[])
                 });
-                ParameterExpression exceptionParam = Expression.Parameter(typeof(Exception));
+                var exceptionParam = Expression.Parameter(typeof(Exception));
                 writeMethodExp = Expression.Call(
                     instanceCast,
                     writeExceptionMethodInfo,
@@ -1128,35 +1117,35 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         if (IsEnabled(_logger, DebugLevel))
                         {
                             Write(_logger, DebugLevel, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (IsEnabled(_logger, InformationLevel))
                         {
                             Write(_logger, InformationLevel, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (IsEnabled(_logger, WarningLevel))
                         {
                             Write(_logger, WarningLevel, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (IsEnabled(_logger, ErrorLevel))
                         {
                             Write(_logger, ErrorLevel, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (IsEnabled(_logger, FatalLevel))
                         {
                             Write(_logger, FatalLevel, messageFunc());
@@ -1178,35 +1167,35 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         if (IsEnabled(_logger, DebugLevel))
                         {
                             WriteException(_logger, DebugLevel, exception, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         if (IsEnabled(_logger, InformationLevel))
                         {
                             WriteException(_logger, InformationLevel, exception, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         if (IsEnabled(_logger, WarningLevel))
                         {
                             WriteException(_logger, WarningLevel, exception, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         if (IsEnabled(_logger, ErrorLevel))
                         {
                             WriteException(_logger, ErrorLevel, exception, messageFunc());
                             return true;
                         }
                         break;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         if (IsEnabled(_logger, FatalLevel))
                         {
                             WriteException(_logger, FatalLevel, exception, messageFunc());
@@ -1270,15 +1259,15 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
         private static WriteDelegate GetLogWriteDelegate()
         {
-            Type logManagerType = GetLogManagerType();
-            Type logMessageSeverityType = Type.GetType("Gibraltar.Agent.LogMessageSeverity, Gibraltar.Agent");
-            Type logWriteModeType = Type.GetType("Gibraltar.Agent.LogWriteMode, Gibraltar.Agent");
+            var logManagerType = GetLogManagerType();
+            var logMessageSeverityType = Type.GetType("Gibraltar.Agent.LogMessageSeverity, Gibraltar.Agent");
+            var logWriteModeType = Type.GetType("Gibraltar.Agent.LogWriteMode, Gibraltar.Agent");
 
-            MethodInfo method = logManagerType.GetMethod("Write", new[]
-                                                                  {
-                                                                      logMessageSeverityType, typeof(string), typeof(int), typeof(Exception), typeof(bool), 
-                                                                      logWriteModeType, typeof(string), typeof(string), typeof(string), typeof(string), typeof(object[])
-                                                                  });
+            var method = logManagerType.GetMethod("Write", new[]
+            {
+                logMessageSeverityType, typeof(string), typeof(int), typeof(Exception), typeof(bool), 
+                logWriteModeType, typeof(string), typeof(string), typeof(string), typeof(string), typeof(object[])
+            });
 
             var callDelegate = (WriteDelegate)Delegate.CreateDelegate(typeof(WriteDelegate), method);
             return callDelegate;
@@ -1317,17 +1306,17 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
             {
                 switch (logLevel)
                 {
-                    case LogLevel.Trace:
+                    case LogLevel.TRACE:
                         return TraceEventType.Verbose;
-                    case LogLevel.Debug:
+                    case LogLevel.DEBUG:
                         return TraceEventType.Verbose;
-                    case LogLevel.Info:
+                    case LogLevel.INFO:
                         return TraceEventType.Information;
-                    case LogLevel.Warn:
+                    case LogLevel.WARN:
                         return TraceEventType.Warning;
-                    case LogLevel.Error:
+                    case LogLevel.ERROR:
                         return TraceEventType.Error;
-                    case LogLevel.Fatal:
+                    case LogLevel.FATAL:
                         return TraceEventType.Critical;
                     default:
                         throw new ArgumentOutOfRangeException("logLevel");
@@ -1359,13 +1348,13 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
         {
             MessageFormatter = DefaultMessageFormatter;
             Colors = new Dictionary<LogLevel, ConsoleColor> {
-                        { LogLevel.Fatal, ConsoleColor.Red },
-                        { LogLevel.Error, ConsoleColor.Yellow },
-                        { LogLevel.Warn, ConsoleColor.Magenta },
-                        { LogLevel.Info, ConsoleColor.White },
-                        { LogLevel.Debug, ConsoleColor.Gray },
-                        { LogLevel.Trace, ConsoleColor.DarkGray },
-                    };
+                { LogLevel.FATAL, ConsoleColor.Red },
+                { LogLevel.ERROR, ConsoleColor.Yellow },
+                { LogLevel.WARN, ConsoleColor.Magenta },
+                { LogLevel.INFO, ConsoleColor.White },
+                { LogLevel.DEBUG, ConsoleColor.Gray },
+                { LogLevel.TRACE, ConsoleColor.DarkGray },
+            };
         }
 
         public ILog GetLogger(string name)
@@ -1440,7 +1429,7 @@ namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
 
             protected void Write(LogLevel logLevel, string message, Exception e = null)
             {
-                var formattedMessage = MessageFormatter(this._name, logLevel, message, e);
+                var formattedMessage = MessageFormatter(_name, logLevel, message, e);
                 ConsoleColor color;
 
                 if (Colors.TryGetValue(logLevel, out color))

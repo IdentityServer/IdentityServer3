@@ -21,10 +21,10 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
@@ -33,9 +33,9 @@ namespace Thinktecture.IdentityServer.Core.Results
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly SignOutMessage message;
-        private readonly IDictionary<string, object> env;
-        private readonly IdentityServerOptions options;
+        private readonly SignOutMessage _message;
+        private readonly IDictionary<string, object> _env;
+        private readonly IdentityServerOptions _options;
 
         public static string GetRedirectUrl(SignOutMessage message, IDictionary<string, object> env, IdentityServerOptions options)
         {
@@ -50,10 +50,10 @@ namespace Thinktecture.IdentityServer.Core.Results
             if (env == null) throw new ArgumentNullException("env");
             if (options == null) throw new ArgumentNullException("options");
 
-            this.env = env;
-            this.options = options;
+            _env = env;
+            _options = options;
 
-            this.message = message;
+            _message = message;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -65,12 +65,12 @@ namespace Thinktecture.IdentityServer.Core.Results
         {
             Logger.Info("Redirecting to logout page");
 
-            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
+            var url = _env.GetIdentityServerBaseUrl() + Constants.RoutePaths.LOGOUT;
 
-            if (message != null)
+            if (_message != null)
             {
-                var cookie = new MessageCookie<SignOutMessage>(this.env, this.options);
-                var id = cookie.Write(this.message);
+                var cookie = new MessageCookie<SignOutMessage>(_env, _options);
+                var id = cookie.Write(_message);
 
                 url = url.AddQueryString("id=" + id);
             }

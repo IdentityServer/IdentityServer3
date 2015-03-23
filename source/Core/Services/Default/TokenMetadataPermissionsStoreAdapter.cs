@@ -24,8 +24,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 {
     internal class TokenMetadataPermissionsStoreAdapter : IPermissionsStore
     {
-        readonly Func<string, Task<IEnumerable<ITokenMetadata>>> get;
-        readonly Func<string, string, Task> delete;
+        readonly Func<string, Task<IEnumerable<ITokenMetadata>>> _get;
+        readonly Func<string, string, Task> _delete;
 
         public TokenMetadataPermissionsStoreAdapter(
             Func<string, Task<IEnumerable<ITokenMetadata>>> get, 
@@ -34,13 +34,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (get == null) throw new ArgumentNullException("get");
             if (delete == null) throw new ArgumentNullException("delete");
 
-            this.get = get;
-            this.delete = delete;
+            _get = get;
+            _delete = delete;
         }
 
         public async Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
-            var tokens = await get(subject);
+            var tokens = await _get(subject);
             
             var query =
                 from token in tokens
@@ -56,7 +56,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public async Task RevokeAsync(string subject, string client)
         {
-            await delete(subject, client);
+            await _delete(subject, client);
         }
     }
 }

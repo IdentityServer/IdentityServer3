@@ -24,12 +24,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Scope representing identity data (e.g. profile or email)
         /// </summary>
-        Identity = 0,
+        IDENTITY = 0,
 
         /// <summary>
         /// Scope representing a resource (e.g. a web api)
         /// </summary>
-        Resource = 1
+        RESOURCE = 1
     }
 
     /// <summary>
@@ -40,32 +40,32 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// authorization code flow
         /// </summary>
-        AuthorizationCode = 0,
+        AUTHORIZATION_CODE = 0,
 
         /// <summary>
         /// implicit flow
         /// </summary>
-        Implicit = 1,
+        IMPLICIT = 1,
 
         /// <summary>
         /// hybrid flow
         /// </summary>
-        Hybrid = 2,
+        HYBRID = 2,
 
         /// <summary>
         /// client credentials flow
         /// </summary>
-        ClientCredentials = 3,
+        CLIENT_CREDENTIALS = 3,
 
         /// <summary>
         /// resource owner password credential flow
         /// </summary>
-        ResourceOwner = 4,
+        RESOURCE_OWNER = 4,
 
         /// <summary>
         /// custom grant
         /// </summary>
-        Custom = 5
+        CUSTOM = 5
     }
 
     /// <summary>
@@ -76,12 +76,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// global - use the native subject id
         /// </summary>
-        Global = 0,
+        GLOBAL = 0,
 
         /// <summary>
         /// ppid - scope the subject id to the client
         /// </summary>
-        Ppid = 1
+        PPID = 1
     };
 
     /// <summary>
@@ -92,12 +92,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Self-contained Json Web Token
         /// </summary>
-        Jwt = 0,
+        JWT = 0,
 
         /// <summary>
         /// Reference token
         /// </summary>
-        Reference = 1
+        REFERENCE = 1
     }
 
     /// <summary>
@@ -108,12 +108,12 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Re-use the refresh token handle
         /// </summary>
-        ReUse = 0,
+        RE_USE = 0,
 
         /// <summary>
         /// Issue a new refresh token handle every time
         /// </summary>
-        OneTimeOnly = 1
+        ONE_TIME_ONLY = 1
     }
 
     /// <summary>
@@ -124,11 +124,11 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Sliding token expiration
         /// </summary>
-        Sliding = 0,
+        SLIDING = 0,
 
         /// <summary>
         /// Absolute token expiration
         /// </summary>
-        Absolute = 1
+        ABSOLUTE = 1
     }
 }

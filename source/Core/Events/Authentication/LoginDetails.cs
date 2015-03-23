@@ -15,7 +15,8 @@
  */
 
 using Thinktecture.IdentityServer.Core.Models;
-namespace Thinktecture.IdentityServer.Core.Events
+
+namespace Thinktecture.IdentityServer.Core.Events.Authentication
 {
     /// <summary>
     /// Event details for login events

@@ -21,53 +21,53 @@ namespace Thinktecture.IdentityServer.Core.Resources
 {
 	public class EventIds
 	{
-			public const string ClientPermissionsRevoked = "ClientPermissionsRevoked";
-			public const string CspReport = "CspReport";
-			public const string ExternalLoginError = "ExternalLoginError";
-			public const string ExternalLoginFailure = "ExternalLoginFailure";
-			public const string ExternalLoginSuccess = "ExternalLoginSuccess";
-			public const string LocalLoginFailure = "LocalLoginFailure";
-			public const string LocalLoginSuccess = "LocalLoginSuccess";
-			public const string LogoutEvent = "LogoutEvent";
-			public const string PartialLogin = "PartialLogin";
-			public const string PartialLoginComplete = "PartialLoginComplete";
-			public const string PreLoginFailure = "PreLoginFailure";
-			public const string PreLoginSuccess = "PreLoginSuccess";
-			public const string ResourceOwnerFlowLoginFailure = "ResourceOwnerFlowLoginFailure";
-			public const string ResourceOwnerFlowLoginSuccess = "ResourceOwnerFlowLoginSuccess";
+			public const string CLIENT_PERMISSIONS_REVOKED = "ClientPermissionsRevoked";
+			public const string CSP_REPORT = "CspReport";
+			public const string EXTERNAL_LOGIN_ERROR = "ExternalLoginError";
+			public const string EXTERNAL_LOGIN_FAILURE = "ExternalLoginFailure";
+			public const string EXTERNAL_LOGIN_SUCCESS = "ExternalLoginSuccess";
+			public const string LOCAL_LOGIN_FAILURE = "LocalLoginFailure";
+			public const string LOCAL_LOGIN_SUCCESS = "LocalLoginSuccess";
+			public const string LOGOUT_EVENT = "LogoutEvent";
+			public const string PARTIAL_LOGIN = "PartialLogin";
+			public const string PARTIAL_LOGIN_COMPLETE = "PartialLoginComplete";
+			public const string PRE_LOGIN_FAILURE = "PreLoginFailure";
+			public const string PRE_LOGIN_SUCCESS = "PreLoginSuccess";
+			public const string RESOURCE_OWNER_FLOW_LOGIN_FAILURE = "ResourceOwnerFlowLoginFailure";
+			public const string RESOURCE_OWNER_FLOW_LOGIN_SUCCESS = "ResourceOwnerFlowLoginSuccess";
 	}
 	public class MessageIds
 	{
-			public const string ClientIdRequired = "ClientIdRequired";
-			public const string ExternalProviderError = "ExternalProviderError";
-			public const string Invalid_request = "invalid_request";
-			public const string Invalid_scope = "invalid_scope";
-			public const string InvalidUsernameOrPassword = "InvalidUsernameOrPassword";
-			public const string MissingClientId = "MissingClientId";
-			public const string MissingToken = "MissingToken";
-			public const string MustSelectAtLeastOnePermission = "MustSelectAtLeastOnePermission";
-			public const string NoExternalProvider = "NoExternalProvider";
-			public const string NoMatchingExternalAccount = "NoMatchingExternalAccount";
-			public const string NoSignInCookie = "NoSignInCookie";
-			public const string NoSubjectFromExternalProvider = "NoSubjectFromExternalProvider";
-			public const string PasswordRequired = "PasswordRequired";
-			public const string SslRequired = "SslRequired";
-			public const string Unauthorized_client = "unauthorized_client";
-			public const string UnexpectedError = "UnexpectedError";
-			public const string Unsupported_response_type = "unsupported_response_type";
-			public const string UnsupportedMediaType = "UnsupportedMediaType";
-			public const string UsernameRequired = "UsernameRequired";
+			public const string CLIENT_ID_REQUIRED = "ClientIdRequired";
+			public const string EXTERNAL_PROVIDER_ERROR = "ExternalProviderError";
+			public const string INVALID_REQUEST = "invalid_request";
+			public const string INVALID_SCOPE = "invalid_scope";
+			public const string INVALID_USERNAME_OR_PASSWORD = "InvalidUsernameOrPassword";
+			public const string MISSING_CLIENT_ID = "MissingClientId";
+			public const string MISSING_TOKEN = "MissingToken";
+			public const string MUST_SELECT_AT_LEAST_ONE_PERMISSION = "MustSelectAtLeastOnePermission";
+			public const string NO_EXTERNAL_PROVIDER = "NoExternalProvider";
+			public const string NO_MATCHING_EXTERNAL_ACCOUNT = "NoMatchingExternalAccount";
+			public const string NO_SIGN_IN_COOKIE = "NoSignInCookie";
+			public const string NO_SUBJECT_FROM_EXTERNAL_PROVIDER = "NoSubjectFromExternalProvider";
+			public const string PASSWORD_REQUIRED = "PasswordRequired";
+			public const string SSL_REQUIRED = "SslRequired";
+			public const string UNAUTHORIZED_CLIENT = "unauthorized_client";
+			public const string UNEXPECTED_ERROR = "UnexpectedError";
+			public const string UNSUPPORTED_RESPONSE_TYPE = "unsupported_response_type";
+			public const string UNSUPPORTED_MEDIA_TYPE = "UnsupportedMediaType";
+			public const string USERNAME_REQUIRED = "UsernameRequired";
 	}
 	public class ScopeIds
 	{
-			public const string Address_DisplayName = "address_DisplayName";
-			public const string All_claims_DisplayName = "all_claims_DisplayName";
-			public const string Email_DisplayName = "email_DisplayName";
-			public const string Offline_access_DisplayName = "offline_access_DisplayName";
-			public const string Openid_DisplayName = "openid_DisplayName";
-			public const string Phone_DisplayName = "phone_DisplayName";
-			public const string Profile_Description = "profile_Description";
-			public const string Profile_DisplayName = "profile_DisplayName";
-			public const string Roles_DisplayName = "roles_DisplayName";
+			public const string ADDRESS_DISPLAY_NAME = "address_DisplayName";
+			public const string ALL_CLAIMS_DISPLAY_NAME = "all_claims_DisplayName";
+			public const string EMAIL_DISPLAY_NAME = "email_DisplayName";
+			public const string OFFLINE_ACCESS_DISPLAY_NAME = "offline_access_DisplayName";
+			public const string OPENID_DISPLAY_NAME = "openid_DisplayName";
+			public const string PHONE_DISPLAY_NAME = "phone_DisplayName";
+			public const string PROFILE_DESCRIPTION = "profile_Description";
+			public const string PROFILE_DISPLAY_NAME = "profile_DisplayName";
+			public const string ROLES_DISPLAY_NAME = "roles_DisplayName";
 	}
 }

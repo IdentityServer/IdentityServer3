@@ -17,14 +17,14 @@
 using System;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// View loader that loads HTML templates from the file system.
     /// </summary>
     public class FileSystemViewLoader : IViewLoader
     {
-        readonly string directory;
+        readonly string _directory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemViewLoader"/> class.
@@ -35,7 +35,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (String.IsNullOrWhiteSpace(directory)) throw new ArgumentNullException("directory");
             
-            this.directory = directory;
+            _directory = directory;
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public string Load(string page)
         {
-            if (Directory.Exists(directory))
+            if (Directory.Exists(_directory))
             {
                 var name = page + ".html";
-                var path = Path.Combine(directory, name);
+                var path = Path.Combine(_directory, name);
 
                 // look for full file with name login.html
                 if (File.Exists(path))
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     return File.ReadAllText(path);
                 }
 
-                var layoutName = Path.Combine(directory, "_layout.html");
+                var layoutName = Path.Combine(_directory, "_layout.html");
                 string layout = null;
                 if (File.Exists(layoutName))
                 {
@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 // look for partial with name _login.html
                 name = "_" + name;
-                path = Path.Combine(directory, name);
+                path = Path.Combine(_directory, name);
                 if (File.Exists(path))
                 {
                     var partial = File.ReadAllText(path);

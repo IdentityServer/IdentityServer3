@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using Autofac;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dependencies;
+using Autofac;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 return Enumerable.Empty<object>();
             }
 
-            Type type = typeof(IEnumerable<>).MakeGenericType(serviceType);
+            var type = typeof(IEnumerable<>).MakeGenericType(serviceType);
             return (IEnumerable<object>)_scope.Resolve(type);
         }
 

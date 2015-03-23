@@ -26,8 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
     /// </summary>
     public class CachingClientStore : IClientStore
     {
-        readonly IClientStore inner;
-        readonly ICache<Client> cache;
+        readonly IClientStore _inner;
+        readonly ICache<Client> _cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CachingClientStore"/> class.
@@ -44,8 +44,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             if (inner == null) throw new ArgumentNullException("inner");
             if (cache == null) throw new ArgumentNullException("cache");
 
-            this.inner = inner;
-            this.cache = cache;
+            _inner = inner;
+            _cache = cache;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         /// </returns>
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            return await cache.GetAsync(clientId, async () => await inner.FindClientByIdAsync(clientId));
+            return await _cache.GetAsync(clientId, async () => await _inner.FindClientByIdAsync(clientId));
         }
     }
 }
