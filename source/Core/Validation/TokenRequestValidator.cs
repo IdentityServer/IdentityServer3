@@ -490,9 +490,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             /////////////////////////////////////////////
             // check if client still has offline_access scope
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.ScopeRestrictions != null && _validatedRequest.Client.ScopeRestrictions.Count != 0)
+            if (!_validatedRequest.Client.AllowAccessToAllScopes)
             {
-                if (!_validatedRequest.Client.ScopeRestrictions.Contains(Constants.StandardScopes.OfflineAccess))
+                if (!_validatedRequest.Client.AllowedScopes.Contains(Constants.StandardScopes.OfflineAccess))
                 {
                     var error = "Client does not have access to offline_access scope anymore";
                     LogError(error);

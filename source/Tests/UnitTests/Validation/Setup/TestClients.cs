@@ -27,27 +27,28 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             {
                 new Client
                 {
-                        ClientName = "Code Client",
-                        Enabled = true,
-                        ClientId = "codeclient",
-                        ClientSecrets = new List<Secret>
-                        { 
-                            new Secret("secret".Sha256())
-                        },
-
-                        Flow = Flows.AuthorizationCode,
-                        
-                        RequireConsent = false,
-                    
-                        RedirectUris = new List<string>
-                        {
-                            "https://server/cb",
-                        },
-
-                        AuthorizationCodeLifetime = 60
+                    ClientName = "Code Client",
+                    Enabled = true,
+                    ClientId = "codeclient",
+                    ClientSecrets = new List<Secret>
+                    { 
+                        new Secret("secret".Sha256())
                     },
 
-                    new Client
+                    Flow = Flows.AuthorizationCode,
+                    AllowAccessToAllScopes = true,
+                        
+                    RequireConsent = false,
+                    
+                    RedirectUris = new List<string>
+                    {
+                        "https://server/cb",
+                    },
+
+                    AuthorizationCodeLifetime = 60
+                },
+
+                new Client
                 {
                         ClientName = "Hybrid Client",
                         Enabled = true,
@@ -58,6 +59,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.AuthorizationCode,
+                        AllowAccessToAllScopes = true,
                         
                         RequireConsent = false,
                     
@@ -79,6 +81,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Implicit,
+                        AllowAccessToAllScopes = true,
+
                         RequireConsent = false,
                     
                         RedirectUris = new List<string>
@@ -97,6 +101,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Implicit,
+                        AllowAccessToAllScopes = true,
                         AllowClientCredentialsOnly = true,
                         RequireConsent = false,
                     
@@ -118,7 +123,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         Flow = Flows.AuthorizationCode,
                         RequireConsent = false,
 
-                        ScopeRestrictions = new List<string>
+                        AllowedScopes = new List<string>
                         {
                             "openid"
                         },
@@ -139,6 +144,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ClientCredentials,
+                        AllowAccessToAllScopes = true,
+
                         AccessTokenType = AccessTokenType.Jwt
                     },
                     new Client
@@ -153,7 +160,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
                         Flow = Flows.ClientCredentials,
 
-                        ScopeRestrictions = new List<string>
+                        AllowedScopes = new List<string>
                         {
                             "resource"
                         },       
@@ -169,6 +176,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ResourceOwner,
+                        AllowAccessToAllScopes = true,
                     },
                     new Client
                     {
@@ -181,6 +189,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ResourceOwner,
+                        AllowAccessToAllScopes = true,
 
                         RefreshTokenExpiration = TokenExpiration.Absolute,
                         RefreshTokenUsage = TokenUsage.OneTimeOnly,
@@ -197,6 +206,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ResourceOwner,
+                        AllowAccessToAllScopes = true,
 
                         RefreshTokenExpiration = TokenExpiration.Absolute,
                         RefreshTokenUsage = TokenUsage.ReUse,
@@ -213,6 +223,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ResourceOwner,
+                        AllowAccessToAllScopes = true,
 
                         RefreshTokenExpiration = TokenExpiration.Sliding,
                         RefreshTokenUsage = TokenUsage.OneTimeOnly,
@@ -230,6 +241,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.ResourceOwner,
+                        AllowAccessToAllScopes = true,
 
                         RefreshTokenExpiration = TokenExpiration.Sliding,
                         RefreshTokenUsage = TokenUsage.ReUse,
@@ -248,7 +260,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
                         Flow = Flows.ResourceOwner,
 
-                        ScopeRestrictions = new List<string>
+                        AllowedScopes = new List<string>
                         {
                             "resource"
                         },       
@@ -265,7 +277,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
                         Flow = Flows.ResourceOwner,
 
-                        ScopeRestrictions = new List<string>
+                        AllowedScopes = new List<string>
                         {
                             "resource",
                             "offline_access"
@@ -282,6 +294,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Custom,
+                        AllowAccessToAllScopes = true,
+
                         CustomGrantTypeRestrictions = new List<string>
                         {
                             "custom_grant"
@@ -299,6 +313,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Custom,
+                        AllowAccessToAllScopes = true,
                     },
                     new Client
                     {
@@ -312,6 +327,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                         },
 
                         Flow = Flows.Implicit,
+                        AllowAccessToAllScopes = true,
 
                         AccessTokenType = AccessTokenType.Reference
                     }

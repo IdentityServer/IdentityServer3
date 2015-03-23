@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "http://localhost:2671/",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -128,7 +128,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
                     Flow = Flows.ClientCredentials,
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         "read",
                         "write"
@@ -149,7 +149,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
                     Flow = Flows.ResourceOwner,
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         "read",
                         "write"
@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -229,7 +229,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,

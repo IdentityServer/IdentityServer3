@@ -47,7 +47,10 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
                 {
                     new Secret(client_secret)
                 },
+
                 Flow = Flows.AuthorizationCode,
+                AllowAccessToAllScopes = true,
+
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {

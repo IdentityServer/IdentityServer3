@@ -121,14 +121,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
         public bool AreScopesAllowed(Client client, IEnumerable<string> requestedScopes)
         {
-            if (client.ScopeRestrictions == null || client.ScopeRestrictions.Count == 0)
+            if (client.AllowAccessToAllScopes)
             {
                 return true;
             }
 
             foreach (var scope in requestedScopes)
             {
-                if (!client.ScopeRestrictions.Contains(scope))
+                if (!client.AllowedScopes.Contains(scope))
                 {
                     Logger.ErrorFormat("Requested scope not allowed: {0}", scope);
                     return false;
