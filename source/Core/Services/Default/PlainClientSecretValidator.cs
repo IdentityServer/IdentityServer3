@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -36,6 +37,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
+                if (credential.ClientId.IsMissing() || credential.Credential == null || credential.Credential.ToString().IsMissing())
+                {
+                    throw new ArgumentNullException("Credential.ClientId or Credential.Credential");
+                }
+
                 foreach (var clientSecret in client.ClientSecrets)
                 {
                     // this validator is only applicable to shared secrets

@@ -155,5 +155,40 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Client_Validation
             var result = await _validator.ValidateClientSecretAsync(client, credential);
             result.Should().BeFalse();
         }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Client_with_no_Secret_Should_Throw()
+        {
+            var clientId = "client_no_secret";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var credential = new ClientCredential
+            {
+                ClientId = clientId,
+                CredentialType = Constants.ClientCredentialTypes.SharedSecret
+            };
+
+            Func<Task> act = () => _validator.ValidateClientSecretAsync(client, credential);
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Client_with_no_Secret_or_Id_Should_Throw()
+        {
+            var clientId = "client_no_secret";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var credential = new ClientCredential
+            {
+                CredentialType = Constants.ClientCredentialTypes.SharedSecret
+            };
+
+            Func<Task> act = () => _validator.ValidateClientSecretAsync(client, credential);
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
     }
 }

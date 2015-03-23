@@ -37,6 +37,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
+                if (credential.ClientId.IsMissing() || credential.Credential == null || credential.Credential.ToString().IsMissing())
+                {
+                    throw new ArgumentNullException("Credential.ClientId or Credential.Credential");
+                }
+
                 var secretSha256 = credential.Credential.ToString().Sha256();
                 var secretSha512 = credential.Credential.ToString().Sha512();
 

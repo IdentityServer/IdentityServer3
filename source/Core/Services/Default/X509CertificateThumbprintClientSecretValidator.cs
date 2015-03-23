@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
@@ -43,6 +44,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             }
 
             var cert = credential.Credential as X509Certificate2;
+
+            if (cert == null)
+            {
+                throw new ArgumentNullException("ClientCredential.Credential");
+            }
+
             var thumbprint = cert.Thumbprint;
 
             foreach (var secret in client.ClientSecrets)
