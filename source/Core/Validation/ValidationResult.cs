@@ -49,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
         public ValidationResult()
         {
             IsError = true;
-            ErrorType = ErrorTypes.User;
+            ErrorType = ErrorTypes.USER;
         }
     }
 }

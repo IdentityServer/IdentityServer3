@@ -24,9 +24,11 @@ using System.Security.Claims;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Logging.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -66,7 +68,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 if (clientId.IsMissing())
                 {
                     Logger.Error("No clientId supplied, can't find id in identity token.");
-                    return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+                    return Invalid(Constants.ProtectedResourceErrors.INVALID_TOKEN);
                 }
             }
 
@@ -77,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (client == null)
             {
                 LogError("Unknown or diabled client.");
-                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+                return Invalid(Constants.ProtectedResourceErrors.INVALID_TOKEN);
             }
 
             _log.ClientName = client.ClientName;
@@ -126,15 +128,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (token.Contains("."))
             {
-                _log.AccessTokenType = AccessTokenType.Jwt.ToString();
+                _log.AccessTokenType = AccessTokenType.JWT.ToString();
                 result = await ValidateJwtAsync(
                     token,
-                    string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
+                    string.Format(Constants.ACCESS_TOKEN_AUDIENCE, _options.IssuerUri.EnsureTrailingSlash()),
                     new X509SecurityKey(_options.SigningCertificate));
             }
             else
             {
-                _log.AccessTokenType = AccessTokenType.Reference.ToString();
+                _log.AccessTokenType = AccessTokenType.REFERENCE.ToString();
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
@@ -150,11 +152,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (expectedScope.IsPresent())
             {
-                var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Scope && c.Value == expectedScope);
+                var scope = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SCOPE && c.Value == expectedScope);
                 if (scope == null)
                 {
                     LogError(string.Format("Checking for expected scope {0} failed", expectedScope));
-                    return Invalid(Constants.ProtectedResourceErrors.InsufficientScope);
+                    return Invalid(Constants.ProtectedResourceErrors.INSUFFICIENT_SCOPE);
                 }
             }
 
@@ -202,7 +204,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 var id = handler.ValidateToken(jwt, parameters, out jwtToken);
 
                 // if access token contains an ID, log it
-                var jwtId = id.FindFirst(Constants.ClaimTypes.JwtId);
+                var jwtId = id.FindFirst(Constants.ClaimTypes.JWT_ID);
                 if (jwtId != null)
                 {
                     _log.JwtId = jwtId.Value;
@@ -217,7 +219,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             catch (Exception ex)
             {
                 Logger.ErrorException("JWT token validation error", ex);
-                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.INVALID_TOKEN));
             }
         }
 
@@ -229,15 +231,15 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (token == null)
             {
                 LogError("Token handle not found");
-                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+                return Invalid(Constants.ProtectedResourceErrors.INVALID_TOKEN);
             }
 
-            if (token.Type != Constants.TokenTypes.AccessToken)
+            if (token.Type != Constants.TokenTypes.ACCESS_TOKEN)
             {
                 LogError("Token handle does not resolve to an access token - but instead to: " + token.Type);
 
                 await _tokenHandles.RemoveAsync(tokenHandle);
-                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+                return Invalid(Constants.ProtectedResourceErrors.INVALID_TOKEN);
             }
 
             if (DateTimeOffsetHelper.UtcNow >= token.CreationTime.AddSeconds(token.Lifetime))
@@ -245,7 +247,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError("Token expired.");
 
                 await _tokenHandles.RemoveAsync(tokenHandle);
-                return Invalid(Constants.ProtectedResourceErrors.ExpiredToken);
+                return Invalid(Constants.ProtectedResourceErrors.EXPIRED_TOKEN);
             }
 
             return new TokenValidationResult
@@ -260,10 +262,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             var claims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.Audience, token.Audience),
-                new Claim(Constants.ClaimTypes.Issuer, token.Issuer),
-                new Claim(Constants.ClaimTypes.NotBefore, token.CreationTime.ToEpochTime().ToString()),
-                new Claim(Constants.ClaimTypes.Expiration, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString())
+                new Claim(Constants.ClaimTypes.AUDIENCE, token.Audience),
+                new Claim(Constants.ClaimTypes.ISSUER, token.Issuer),
+                new Claim(Constants.ClaimTypes.NOT_BEFORE, token.CreationTime.ToEpochTime().ToString()),
+                new Claim(Constants.ClaimTypes.EXPIRATION, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString())
             };
 
             claims.AddRange(token.Claims);

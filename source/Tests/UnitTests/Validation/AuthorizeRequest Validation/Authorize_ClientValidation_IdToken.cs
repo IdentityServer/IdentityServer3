@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest_Validation
 {
     
     public class Authorize_ClientValidation_IdToken
@@ -33,19 +34,20 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Client Validation - IdToken")]
         public async Task Mixed_IdToken_Request()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid resource");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "implicitclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid resource"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "oob://implicit/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
-            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
+            result.ErrorType.Should().Be(ErrorTypes.CLIENT);
+            result.Error.Should().Be(Constants.AuthorizeErrors.INVALID_SCOPE);
         }
     }
 }

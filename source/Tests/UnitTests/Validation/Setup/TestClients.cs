@@ -15,9 +15,10 @@
  */
 
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace Thinktecture.IdentityServer.Tests.Validation.Setup
 {
     class TestClients
     {
@@ -35,7 +36,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.AuthorizationCode,
+                        Flow = Flows.AUTHORIZATION_CODE,
                         
                         RequireConsent = false,
                     
@@ -57,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.AuthorizationCode,
+                        Flow = Flows.AUTHORIZATION_CODE,
                         
                         RequireConsent = false,
                     
@@ -78,7 +79,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.Implicit,
+                        Flow = Flows.IMPLICIT,
                         RequireConsent = false,
                     
                         RedirectUris = new List<string>
@@ -96,7 +97,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.Implicit,
+                        Flow = Flows.IMPLICIT,
                         AllowClientCredentialsOnly = true,
                         RequireConsent = false,
                     
@@ -115,7 +116,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.AuthorizationCode,
+                        Flow = Flows.AUTHORIZATION_CODE,
                         RequireConsent = false,
 
                         ScopeRestrictions = new List<string>
@@ -138,8 +139,8 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ClientCredentials,
-                        AccessTokenType = AccessTokenType.Jwt
+                        Flow = Flows.CLIENT_CREDENTIALS,
+                        AccessTokenType = AccessTokenType.JWT
                     },
                     new Client
                     {
@@ -151,7 +152,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ClientCredentials,
+                        Flow = Flows.CLIENT_CREDENTIALS,
 
                         ScopeRestrictions = new List<string>
                         {
@@ -168,7 +169,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
                     },
                     new Client
                     {
@@ -180,10 +181,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
-                        RefreshTokenExpiration = TokenExpiration.Absolute,
-                        RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                        RefreshTokenExpiration = TokenExpiration.ABSOLUTE,
+                        RefreshTokenUsage = TokenUsage.ONE_TIME_ONLY,
                         AbsoluteRefreshTokenLifetime = 200
                     },
                     new Client
@@ -196,10 +197,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
-                        RefreshTokenExpiration = TokenExpiration.Absolute,
-                        RefreshTokenUsage = TokenUsage.ReUse,
+                        RefreshTokenExpiration = TokenExpiration.ABSOLUTE,
+                        RefreshTokenUsage = TokenUsage.RE_USE,
                         AbsoluteRefreshTokenLifetime = 200
                     },
                     new Client
@@ -212,10 +213,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
-                        RefreshTokenExpiration = TokenExpiration.Sliding,
-                        RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                        RefreshTokenExpiration = TokenExpiration.SLIDING,
+                        RefreshTokenUsage = TokenUsage.ONE_TIME_ONLY,
                         AbsoluteRefreshTokenLifetime = 10,
                         SlidingRefreshTokenLifetime = 4
                     },
@@ -229,10 +230,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
-                        RefreshTokenExpiration = TokenExpiration.Sliding,
-                        RefreshTokenUsage = TokenUsage.ReUse,
+                        RefreshTokenExpiration = TokenExpiration.SLIDING,
+                        RefreshTokenUsage = TokenUsage.RE_USE,
                         AbsoluteRefreshTokenLifetime = 200,
                         SlidingRefreshTokenLifetime = 100
                     },
@@ -246,7 +247,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
                         ScopeRestrictions = new List<string>
                         {
@@ -263,7 +264,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.ResourceOwner,
+                        Flow = Flows.RESOURCE_OWNER,
 
                         ScopeRestrictions = new List<string>
                         {
@@ -281,7 +282,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.Custom,
+                        Flow = Flows.CUSTOM,
                         CustomGrantTypeRestrictions = new List<string>
                         {
                             "custom_grant"
@@ -298,7 +299,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("invalid".Sha256())
                         },
 
-                        Flow = Flows.Custom,
+                        Flow = Flows.CUSTOM,
                     },
                     new Client
                     {
@@ -311,9 +312,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                             new ClientSecret("secret".Sha256())
                         },
 
-                        Flow = Flows.Implicit,
+                        Flow = Flows.IMPLICIT,
 
-                        AccessTokenType = AccessTokenType.Reference
+                        AccessTokenType = AccessTokenType.REFERENCE
                     }
             };
         }

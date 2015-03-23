@@ -24,10 +24,10 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <summary>
         /// The secure flag will be issued if the request is HTTPS.
         /// </summary>
-        SameAsRequest = 0,
+        SAME_AS_REQUEST = 0,
         /// <summary>
         /// The secure flag will always be issued.
         /// </summary>
-        Always = 1,
+        ALWAYS = 1,
     }
 }

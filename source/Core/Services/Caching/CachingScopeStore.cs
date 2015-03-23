@@ -31,8 +31,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         const string AllScopes = "CachingScopeStore.allscopes";
         const string AllScopesPublic = AllScopes + ".public";
 
-        readonly IScopeStore inner;
-        readonly ICache<IEnumerable<Scope>> cache;
+        readonly IScopeStore _inner;
+        readonly ICache<IEnumerable<Scope>> _cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CachingScopeStore"/> class.
@@ -49,8 +49,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
             if (inner == null) throw new ArgumentNullException("inner");
             if (cache == null) throw new ArgumentNullException("cache");
 
-            this.inner = inner;
-            this.cache = cache;
+            _inner = inner;
+            _cache = cache;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
             var key = GetKey(scopeNames);
-            return await cache.GetAsync(key, async () => await inner.FindScopesAsync(scopeNames));
+            return await _cache.GetAsync(key, async () => await _inner.FindScopesAsync(scopeNames));
         }
 
         /// <summary>
@@ -74,19 +74,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Caching
         public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
             var key = GetKey(publicOnly);
-            return await cache.GetAsync(key, async () => await inner.GetScopesAsync(publicOnly));
+            return await _cache.GetAsync(key, async () => await _inner.GetScopesAsync(publicOnly));
         }
 
-        private string GetKey(IEnumerable<string> scopeNames)
+        private static string GetKey(IEnumerable<string> scopeNames)
         {
             if (scopeNames == null || !scopeNames.Any()) return "";
             return scopeNames.OrderBy(x => x).Aggregate((x, y) => x + "," + y);
         }
 
-        private string GetKey(bool publicOnly)
-        {
-            if (publicOnly) return AllScopesPublic;
-            return AllScopes;
+        private static string GetKey(bool publicOnly){
+            return publicOnly ? AllScopesPublic : AllScopes;
         }
     }
 }

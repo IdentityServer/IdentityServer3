@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// Configures the assets for the default view service.

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using Thinktecture.IdentityServer.Core.Logging;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Xunit;
 
@@ -29,26 +28,26 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
     {
         const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
 
-        string client_id = "code_client";
-        string redirect_uri = "https://code_client/callback";
-        string client_secret = "secret";
+        private const string ClientId = "code_client";
+        private const string RedirectUri = "https://code_client/callback";
+        private const string ClientSecret = "secret";
 
         protected override void PreInit()
         {
-            host.Scopes.Add(StandardScopes.OpenId);
-            host.Clients.Add(new Client
+            Host.Scopes.Add(StandardScopes.OpenId);
+            Host.Clients.Add(new Client
             {
                 Enabled = true,
-                ClientId = client_id,
+                ClientId = ClientId,
                 ClientSecrets = new List<ClientSecret>
                 {
-                    new ClientSecret(client_secret)
+                    new ClientSecret(ClientSecret)
                 },
-                Flow = Flows.AuthorizationCode,
+                Flow = Flows.AUTHORIZATION_CODE,
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {
-                    redirect_uri
+                    RedirectUri
                 }
             });
         }
@@ -57,14 +56,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Request_with_response_type_code_supported()
         {
-            host.Login();
-            var cert = host.GetSigningCertificate();
+            Host.Login();
+            var cert = Host.GetSigningCertificate();
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, "openid", "code", state, nonce);
-            var result = host.Client.GetAsync(url).Result;
+            var url = Host.GetAuthorizeUrl(ClientId, RedirectUri, "openid", "code", state, nonce);
+            var result = Host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
 
             var query = result.Headers.Location.ParseQueryString();
@@ -77,14 +76,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Request_missing_response_type_rejected()
         {
-            host.Login();
+            Host.Login();
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, "openid", /*response_type*/ null, state, nonce);
+            var url = Host.GetAuthorizeUrl(ClientId, RedirectUri, "openid", /*response_type*/ null, state, nonce);
 
-            var result = host.Client.GetAsync(url).Result;
+            var result = Host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
             result.Headers.Location.AbsoluteUri.Should().Contain("#");
 

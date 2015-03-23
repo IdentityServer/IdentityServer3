@@ -17,27 +17,27 @@
 using System.Net.Http;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
 
 namespace Thinktecture.IdentityServer.Core.Results
 {
     internal class CheckSessionResult : HtmlActionResult
     {
-        private readonly IdentityServerOptions options;
-        private readonly HttpRequestMessage request;
+        private readonly IdentityServerOptions _options;
+        private readonly HttpRequestMessage _request;
 
         public CheckSessionResult(IdentityServerOptions options, HttpRequestMessage request)
         {
-            this.options = options;
-            this.request = request;
+            _options = options;
+            _request = request;
         }
 
         protected override string GetHtml()
         {
-            var root = request.GetIdentityServerBaseUrl();
+            var root = _request.GetIdentityServerBaseUrl();
             if (root.EndsWith("/")) root = root.Substring(0, root.Length - 1);
 
-            return AssetManager.LoadCheckSession(root, options.AuthenticationOptions.CookieOptions.GetSessionCookieName());
+            return AssetManager.LoadCheckSession(root, _options.AuthenticationOptions.CookieOptions.GetSessionCookieName());
         }
     }
 }

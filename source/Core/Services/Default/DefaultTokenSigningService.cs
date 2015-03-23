@@ -31,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The identity server options
         /// </summary>
-        protected readonly IdentityServerOptions _options;
+        protected readonly IdentityServerOptions Options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="options">The options.</param>
         public DefaultTokenSigningService(IdentityServerOptions options)
         {
-            _options = options;
+            Options = options;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <exception cref="System.InvalidOperationException">Invalid token type</exception>
         public virtual Task<string> SignTokenAsync(Token token)
         {
-            return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(_options.SigningCertificate)));
+            return Task.FromResult(CreateJsonWebToken(token, new X509SigningCredentials(Options.SigningCertificate)));
         }
 
         /// <summary>
@@ -71,10 +71,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
-            var x509credential = credentials as X509SigningCredentials;
-            if (x509credential != null)
+            var x509Credential = credentials as X509SigningCredentials;
+            if (x509Credential != null)
             {
-                jwt.Header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+                jwt.Header.Add("kid", Base64Url.Encode(x509Credential.Certificate.GetCertHash()));
             }
 
             var handler = new JwtSecurityTokenHandler();

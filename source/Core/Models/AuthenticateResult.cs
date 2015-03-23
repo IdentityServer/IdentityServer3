@@ -67,14 +67,14 @@ namespace Thinktecture.IdentityServer.Core.Models
         internal AuthenticateResult(ClaimsPrincipal user)
         {
             if (user == null) throw new ArgumentNullException("user");
-            this.User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PrimaryAuthenticationType);
+            User = IdentityServerPrincipal.CreateFromPrincipal(user, Constants.PRIMARY_AUTHENTICATION_TYPE);
         }
 
         void Init(string subject, string name,
             IEnumerable<Claim> claims = null,
-            string identityProvider = Constants.BuiltInIdentityProvider,
+            string identityProvider = Constants.BUILT_IN_IDENTITY_PROVIDER,
             string authenticationMethod = null,
-            string authenticationType = Constants.PrimaryAuthenticationType
+            string authenticationType = Constants.PRIMARY_AUTHENTICATION_TYPE
         )
         {
             if (String.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException("subject");
@@ -83,25 +83,20 @@ namespace Thinktecture.IdentityServer.Core.Models
 
             if (String.IsNullOrWhiteSpace(authenticationMethod))
             {
-                if (identityProvider == Constants.BuiltInIdentityProvider)
-                {
-                    authenticationMethod = Constants.AuthenticationMethods.Password;
-                }
-                else
-                {
-                    authenticationMethod = Constants.AuthenticationMethods.External;
-                }
+                authenticationMethod = identityProvider == Constants.BUILT_IN_IDENTITY_PROVIDER 
+                    ? Constants.AuthenticationMethods.PASSWORD 
+                    : Constants.AuthenticationMethods.EXTERNAL;
             }
 
             var user = IdentityServerPrincipal.Create(subject, name, authenticationMethod, identityProvider, authenticationType);
             if (claims != null && claims.Any())
             {
                 claims = claims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type));
-                claims = claims.Where(x => x.Type != Constants.ClaimTypes.Name);
+                claims = claims.Where(x => x.Type != Constants.ClaimTypes.NAME);
                 user.Identities.First().AddClaims(claims);
             }
 
-            this.User = user;
+            User = user;
         }
 
         /// <summary>
@@ -121,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </param>
         public AuthenticateResult(string subject, string name,
             IEnumerable<Claim> claims = null,
-            string identityProvider = Constants.BuiltInIdentityProvider,
+            string identityProvider = Constants.BUILT_IN_IDENTITY_PROVIDER,
             string authenticationMethod = null
         )
         {
@@ -150,7 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <exception cref="System.ArgumentException">redirectPath must start with / or ~/</exception>
         public AuthenticateResult(string redirectPath, string subject, string name, 
             IEnumerable<Claim> claims = null,
-            string identityProvider = Constants.BuiltInIdentityProvider,
+            string identityProvider = Constants.BUILT_IN_IDENTITY_PROVIDER,
             string authenticationMethod = null
         )
         {
@@ -160,8 +155,8 @@ namespace Thinktecture.IdentityServer.Core.Models
                 throw new ArgumentException("redirectPath must start with / or ~/");
             }
 
-            Init(subject, name, claims, identityProvider, authenticationMethod, Constants.PartialSignInAuthenticationType);
-            this.PartialSignInRedirectPath = redirectPath;
+            Init(subject, name, claims, identityProvider, authenticationMethod, Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE);
+            PartialSignInRedirectPath = redirectPath;
         }
 
         /// <summary>
@@ -191,12 +186,12 @@ namespace Thinktecture.IdentityServer.Core.Models
             }
             if (externalId == null) throw new ArgumentNullException("externalId");
 
-            this.PartialSignInRedirectPath = redirectPath;
+            PartialSignInRedirectPath = redirectPath;
 
-            var id = new ClaimsIdentity(externalId.Claims, Constants.PartialSignInAuthenticationType);
+            var id = new ClaimsIdentity(externalId.Claims, Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE);
             // we're keeping the external provider info for the partial signin so we can re-execute AuthenticateExternalAsync
             // once the user is re-directed back into identityserver from the external redirect
-            id.AddClaim(new Claim(Constants.ClaimTypes.ExternalProviderUserId, externalId.ProviderId, ClaimValueTypes.String, externalId.Provider));
+            id.AddClaim(new Claim(Constants.ClaimTypes.EXTERNAL_PROVIDER_USER_ID, externalId.ProviderId, ClaimValueTypes.String, externalId.Provider));
             User = new ClaimsPrincipal(id);
         }
 
@@ -235,7 +230,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             get
             {
-                return User != null && User.HasClaim(Constants.ClaimTypes.Subject);
+                return User != null && User.HasClaim(Constants.ClaimTypes.SUBJECT);
             }
         }
     }

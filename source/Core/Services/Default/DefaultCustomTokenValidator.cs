@@ -18,8 +18,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -37,12 +37,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The user service
         /// </summary>
-        protected readonly IUserService _users;
+        protected readonly IUserService Users;
 
         /// <summary>
         /// The client store
         /// </summary>
-        protected readonly IClientStore _clients;
+        protected readonly IClientStore Clients;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCustomTokenValidator"/> class.
@@ -51,8 +51,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="clients">The client store.</param>
         public DefaultCustomTokenValidator(IUserService users, IClientStore clients)
         {
-            _users = users;
-            _clients = clients;
+            Users = users;
+            Clients = clients;
         }
 
         /// <summary>
@@ -70,22 +70,22 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             }
 
             // make sure user is still active (if sub claim is present)
-            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
+            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SUBJECT);
             if (subClaim != null)
             {
                 var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
                 if (result.ReferenceTokenId.IsPresent())
                 {
-                    principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
+                    principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.REFERENCE_TOKEN_ID, result.ReferenceTokenId));
                 }
 
-                if (await _users.IsActiveAsync(principal) == false)
+                if (await Users.IsActiveAsync(principal) == false)
                 {
                     Logger.Warn("User marked as not active: " + subClaim.Value);
 
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
+                    result.Error = Constants.ProtectedResourceErrors.INVALID_TOKEN;
                     result.Claims = null;
 
                     return result;
@@ -93,16 +93,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             }
 
             // make sure client is still active (if client_id claim is present)
-            var clientClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.ClientId);
+            var clientClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.CLIENT_ID);
             if (clientClaim != null)
             {
-                var client = await _clients.FindClientByIdAsync(clientClaim.Value);
+                var client = await Clients.FindClientByIdAsync(clientClaim.Value);
                 if (client == null || client.Enabled == false)
                 {
                     Logger.Warn("Client deleted or disabled: " + clientClaim.Value);
 
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
+                    result.Error = Constants.ProtectedResourceErrors.INVALID_TOKEN;
                     result.Claims = null;
 
                     return result;
@@ -122,17 +122,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(TokenValidationResult result)
         {
             // make sure user is still active (if sub claim is present)
-            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
+            var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SUBJECT);
             if (subClaim != null)
             {
                 var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (await _users.IsActiveAsync(principal) == false)
+                if (await Users.IsActiveAsync(principal) == false)
                 {
                     Logger.Warn("User marked as not active: " + subClaim.Value);
 
                     result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
+                    result.Error = Constants.ProtectedResourceErrors.INVALID_TOKEN;
                     result.Claims = null;
 
                     return result;

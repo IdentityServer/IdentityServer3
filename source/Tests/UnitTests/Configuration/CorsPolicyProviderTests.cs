@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Cors;
+using FluentAssertions;
+using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Xunit;
-using CorsPolicy = System.Web.Cors.CorsPolicy;
 
 namespace Thinktecture.IdentityServer.Tests.Configuration
 {
@@ -42,19 +42,18 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
     {
         IOwinRequest Request(string origin = null, string path = null)
         {
-            var env = new Dictionary<string, object>();
-            env.Add("owin.RequestHeaders", new Dictionary<string, string[]>());
+            var env = new Dictionary<string, object> {{"owin.RequestHeaders", new Dictionary<string, string[]>()}};
 
             var ctx = new OwinContext(env);
             ctx.Request.Path = new PathString(path);
             if (origin != null)
             {
-                ctx.Request.Headers.Add("Origin", new string[] { origin });
+                ctx.Request.Headers.Add("Origin", new[] { origin });
             }
             return ctx.Request;
         }
 
-        void AssertAllowed(string origin, CorsPolicy cp)
+        static void AssertAllowed(string origin, CorsPolicy cp)
         {
             cp.AllowAnyHeader.Should().BeTrue();
             cp.AllowAnyMethod.Should().BeTrue();
@@ -74,10 +73,10 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_MatchingPath_AllowsOrigin()
         {
-            var origin = "http://foo.com";
-            var path = "/bar";
+            const string origin = "http://foo.com";
+            const string path = "/bar";
 
-            var subject = new TestCorsPolicyProvider(new string[] { path });
+            var subject = new TestCorsPolicyProvider(new[] { path });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, path)).Result;
             AssertAllowed(origin, cp);
@@ -86,22 +85,21 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_NoOrigin_DoesNotAllowrigin()
         {
-            string origin = null;
-            var path = "/bar";
+            const string path = "/bar";
 
-            var subject = new TestCorsPolicyProvider(new string[] { path });
+            var subject = new TestCorsPolicyProvider(new[] { path });
 
-            var cp = subject.GetCorsPolicyAsync(Request(origin, path)).Result;
+            var cp = subject.GetCorsPolicyAsync(Request(null, path)).Result;
             cp.Should().BeNull();
         }
 
         [Fact]
         public void GetCorsPolicyAsync_NoMatchingPath_DoesNotAllowOrigin()
         {
-            var origin = "http://foo.com";
-            var path = "/bar";
+            const string origin = "http://foo.com";
+            const string path = "/bar";
 
-            var subject = new TestCorsPolicyProvider(new string[] { path });
+            var subject = new TestCorsPolicyProvider(new[] { path });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/baz")).Result;
             cp.Should().BeNull();
@@ -110,9 +108,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_MatchingPaths_AllowsOrigin()
         {
-            var origin = "http://foo.com";
+            const string origin = "http://foo.com";
 
-            var subject = new TestCorsPolicyProvider(new string[] { "/bar", "/baz", "/quux" });
+            var subject = new TestCorsPolicyProvider(new[] { "/bar", "/baz", "/quux" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/baz")).Result;
             AssertAllowed(origin, cp);
@@ -121,9 +119,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_NoMatchingPaths_DoesNotAllowOrigin()
         {
-            var origin = "http://foo.com";
+            const string origin = "http://foo.com";
 
-            var subject = new TestCorsPolicyProvider(new string[] { "/bar", "/baz", "/quux" });
+            var subject = new TestCorsPolicyProvider(new[] { "/bar", "/baz", "/quux" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bad")).Result;
             cp.Should().BeNull();
@@ -132,9 +130,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_PathDoesNotStartWithSlash_NormalizesPathCorrectly()
         {
-            var origin = "http://foo.com";
+            const string origin = "http://foo.com";
 
-            var subject = new TestCorsPolicyProvider(new string[] { "bar" });
+            var subject = new TestCorsPolicyProvider(new[] { "bar" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bar")).Result;
             AssertAllowed(origin, cp);
@@ -143,9 +141,9 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         [Fact]
         public void GetCorsPolicyAsync_PathEndsWithSlash_NormalizesPathCorrectly()
         {
-            var origin = "http://foo.com";
+            const string origin = "http://foo.com";
 
-            var subject = new TestCorsPolicyProvider(new string[] { "bar/" });
+            var subject = new TestCorsPolicyProvider(new[] { "bar/" });
 
             var cp = subject.GetCorsPolicyAsync(Request(origin, "/bar")).Result;
             AssertAllowed(origin, cp);

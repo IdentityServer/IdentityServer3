@@ -18,10 +18,10 @@ using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using Owin;
+using Thinktecture.IdentityServer.Core.Services.DefaultViewService;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class UseEmbeddedFileServerExtension
     {
@@ -30,14 +30,14 @@ namespace Owin
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.HttpAssetsNamespace)
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.HTTP_ASSETS_NAMESPACE)
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 
             app.UseFileServer(new FileServerOptions
             {
                 RequestPath = new PathString("/assets/libs/fonts"),
-                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.FontAssetsNamespace)
+                FileSystem = new EmbeddedResourceFileSystem(typeof(Constants).Assembly, AssetManager.FONT_ASSETS_NAMESPACE)
             });
             app.UseStageMarker(PipelineStage.MapHandler);
 

@@ -19,9 +19,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services;
@@ -79,18 +79,18 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
             
             // look for well-known acr value -- idp
-            var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
+            var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HOME_REALM));
             if (idp.IsPresent())
             {
-                _signIn.IdP = idp.Substring(Constants.KnownAcrValues.HomeRealm.Length);
+                _signIn.IdP = idp.Substring(Constants.KnownAcrValues.HOME_REALM.Length);
                 acrValues.Remove(idp);
             }
 
             // look for well-known acr value -- tenant
-            var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.Tenant));
+            var tenant = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.TENANT));
             if (tenant.IsPresent())
             {
-                _signIn.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
+                _signIn.Tenant = tenant.Substring(Constants.KnownAcrValues.TENANT.Length);
                 acrValues.Remove(tenant);
             }
 
@@ -100,11 +100,11 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 _signIn.AcrValues = acrValues;
             }
 
-            if (request.PromptMode == Constants.PromptModes.Login)
+            if (request.PromptMode == Constants.PromptModes.LOGIN)
             {
                 // remove prompt so when we redirect back in from login page
                 // we won't think we need to force a prompt again
-                request.Raw.Remove(Constants.AuthorizeRequest.Prompt);
+                request.Raw.Remove(Constants.AuthorizeRequest.PROMPT);
 
                 Logger.Info("Redirecting to login page because of prompt=login");
 
@@ -119,7 +119,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             if (!isAuthenticated) Logger.Info("User is not authenticated. Redirecting to login.");
             
             // user de-activated
-            bool isActive = false;
+            var isActive = false;
 
             if (isAuthenticated)
             {
@@ -130,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             if (!isAuthenticated || !isActive)
             {
                 // prompt=none means user must be signed in already
-                if (request.PromptMode == Constants.PromptModes.None)
+                if (request.PromptMode == Constants.PromptModes.NONE)
                 {
                     Logger.Info("prompt=none was requested. But user is not authenticated.");
 
@@ -138,8 +138,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                     {
                         Error = new AuthorizeError
                         {
-                            ErrorType = ErrorTypes.Client,
-                            Error = Constants.AuthorizeErrors.LoginRequired,
+                            ErrorType = ErrorTypes.CLIENT,
+                            Error = Constants.AuthorizeErrors.LOGIN_REQUIRED,
                             ResponseMode = request.ResponseMode,
                             ErrorUri = request.RedirectUri,
                             State = request.State
@@ -208,7 +208,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             }
 
             // check if idp is local and local logins are not allowed
-            if (currentIdp == Constants.BuiltInIdentityProvider)
+            if (currentIdp == Constants.BUILT_IN_IDENTITY_PROVIDER)
             {
                 if (_options.AuthenticationOptions.EnableLocalLogin == false || 
                     request.Client.EnableLocalLogin == false)
@@ -232,15 +232,15 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             if (request == null) throw new ArgumentNullException("request");
 
             if (request.PromptMode != null && 
-                request.PromptMode != Constants.PromptModes.None &&
-                request.PromptMode != Constants.PromptModes.Consent)
+                request.PromptMode != Constants.PromptModes.NONE &&
+                request.PromptMode != Constants.PromptModes.CONSENT)
             {
                 throw new ArgumentException("Invalid PromptMode");
             }
 
             var consentRequired = await _consent.RequiresConsentAsync(request.Client, request.Subject, request.RequestedScopes);
 
-            if (consentRequired && request.PromptMode == Constants.PromptModes.None)
+            if (consentRequired && request.PromptMode == Constants.PromptModes.NONE)
             {
                 Logger.Info("Prompt=none requested, but consent is required.");
 
@@ -248,8 +248,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 {
                     Error = new AuthorizeError
                     {
-                        ErrorType = ErrorTypes.Client,
-                        Error = Constants.AuthorizeErrors.InteractionRequired,
+                        ErrorType = ErrorTypes.CLIENT,
+                        Error = Constants.AuthorizeErrors.INTERACTION_REQUIRED,
                         ResponseMode = request.ResponseMode,
                         ErrorUri = request.RedirectUri,
                         State = request.State
@@ -257,7 +257,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 };
             }
 
-            if (request.PromptMode == Constants.PromptModes.Consent || consentRequired)
+            if (request.PromptMode == Constants.PromptModes.CONSENT || consentRequired)
             {
                 var response = new ConsentInteractionResponse();
 
@@ -277,8 +277,8 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                         // no need to show consent screen again
                         // build access denied error to return to client
                         response.Error = new AuthorizeError { 
-                            ErrorType = ErrorTypes.Client,
-                            Error = Constants.AuthorizeErrors.AccessDenied,
+                            ErrorType = ErrorTypes.CLIENT,
+                            Error = Constants.AuthorizeErrors.ACCESS_DENIED,
                             ResponseMode = request.ResponseMode,
                             ErrorUri = request.RedirectUri, 
                             State = request.State
@@ -294,7 +294,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                             // they said yes, but didn't pick any scopes
                             // show consent again and provide error message
                             response.IsConsent = true;
-                            response.ConsentError = _localizationService.GetMessage(MessageIds.MustSelectAtLeastOnePermission);
+                            response.ConsentError = _localizationService.GetMessage(MessageIds.MUST_SELECT_AT_LEAST_ONE_PERMISSION);
                         }
                         else if (request.Client.AllowRememberConsent)
                         {

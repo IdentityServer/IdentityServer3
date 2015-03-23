@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// <see cref="IViewLoader"/> decorator implementation that caches HTML templates in-memory.
     /// </summary>
     public class CachingLoader : IViewLoader
     {
-        readonly ResourceCache cache;
-        readonly IViewLoader inner;
+        readonly ResourceCache _cache;
+        readonly IViewLoader _inner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CachingLoader" /> class.
@@ -31,8 +31,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="inner">The inner.</param>
         public CachingLoader(ResourceCache cache, IViewLoader inner)
         {
-            this.cache = cache;
-            this.inner = inner;
+            _cache = cache;
+            _inner = inner;
         }
 
         /// <summary>
@@ -42,11 +42,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public string Load(string name)
         {
-            var value = cache.Read(name);
+            var value = _cache.Read(name);
             if (value == null)
             {
-                value = inner.Load(name);
-                cache.Write(name, value);
+                value = _inner.Load(name);
+                _cache.Write(name, value);
             }
             return value;
         }

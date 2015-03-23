@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Text;
+using FluentAssertions;
 using Thinktecture.IdentityModel.Http;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Clients
+namespace Thinktecture.IdentityServer.Tests.Validation.Client_Validation
 {
     public class Request_Validation
     {
         const string Category = "Client Credentials - Request Validation";
 
-        ClientValidator _validator = Factory.CreateClientValidator();
+        readonly ClientValidator _validator = Factory.CreateClientValidator();
 
         [Fact]
         [Trait("Category", Category)]
@@ -42,7 +43,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.BASIC);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");
@@ -52,15 +53,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public void Valid_FormPost_Request()
         {
-            var body = new NameValueCollection();
-            body.Add("client_id", "client");
-            body.Add("client_secret", "secret");
+            var body = new NameValueCollection {{"client_id", "client"}, {"client_secret", "secret"}};
 
             var credential = _validator.ValidateHttpRequest(null, body);
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.FormPost);
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.FORM_POST);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");
@@ -72,15 +71,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         {
             var header = new BasicAuthenticationHeaderValue("client", "secret");
 
-            var body = new NameValueCollection();
-            body.Add("client_id", "client");
-            body.Add("client_secret", "secret");
+            var body = new NameValueCollection {{"client_id", "client"}, {"client_secret", "secret"}};
 
             var credential = _validator.ValidateHttpRequest(header, null);
 
             credential.IsMalformed.Should().BeFalse();
             credential.IsPresent.Should().BeTrue();
-            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.Basic);
+            credential.Type.Should().Be(Constants.ClientAuthenticationMethods.BASIC);
 
             credential.ClientId.Should().Be("client");
             credential.Secret.Should().Be("secret");
@@ -136,7 +133,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
-            var invalidCred = "username";
+            const string invalidCred = "username";
             var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(invalidCred));
             var header = new AuthenticationHeaderValue("Basic", encoded);
 
@@ -150,7 +147,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only_With_Colon()
         {
-            var invalidCred = "username:";
+            const string invalidCred = "username:";
             var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(invalidCred));
             var header = new AuthenticationHeaderValue("Basic", encoded);
 

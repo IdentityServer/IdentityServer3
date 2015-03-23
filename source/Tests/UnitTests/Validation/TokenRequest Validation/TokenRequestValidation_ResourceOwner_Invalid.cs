@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation
 {
     
     public class TokenRequestValidation_ResourceOwner_Invalid
     {
         const string Category = "TokenRequest Validation - ResourceOwner - Invalid";
 
-        IClientStore _clients = Factory.CreateClientStore();
+        readonly IClientStore _clients = Factory.CreateClientStore();
 
         [Fact]
         [Trait("Category", Category)]
@@ -37,14 +38,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
+            result.Error.Should().Be(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
@@ -54,15 +56,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
@@ -72,16 +75,17 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "unknown");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "unknown"},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
@@ -91,16 +95,17 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource unknown");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource unknown"},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
@@ -110,16 +115,17 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient_restricted");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource2");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource2"},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
@@ -129,16 +135,17 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient_restricted");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource resource2");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource resource2"},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
@@ -148,14 +155,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -165,15 +173,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
-            parameters.Add(Constants.TokenRequest.Password, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource"},
+                {Constants.TokenRequest.PASSWORD, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -183,15 +192,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource"},
+                {Constants.TokenRequest.USER_NAME, "bob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
 
         [Fact]
@@ -201,16 +211,17 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.Password);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
-            parameters.Add(Constants.TokenRequest.UserName, "bob");
-            parameters.Add(Constants.TokenRequest.Password, "notbob");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.PASSWORD},
+                {Constants.TokenRequest.SCOPE, "resource"},
+                {Constants.TokenRequest.USER_NAME, "bob"},
+                {Constants.TokenRequest.PASSWORD, "notbob"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_GRANT);
         }
     }
 }

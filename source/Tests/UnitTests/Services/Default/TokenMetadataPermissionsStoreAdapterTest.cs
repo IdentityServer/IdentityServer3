@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Xunit;
@@ -28,27 +28,27 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
     
     public class TokenMetadataPermissionsStoreAdapterTest
     {
-        List<ITokenMetadata> tokens;
-        Func<string, Task<IEnumerable<ITokenMetadata>>> get;
-        
-        Func<string, string, Task> delete;
-        string subjectDeleted;
-        string clientDeleted;
+        readonly List<ITokenMetadata> _tokens;
+        readonly Func<string, Task<IEnumerable<ITokenMetadata>>> _get;
 
-        TokenMetadataPermissionsStoreAdapter subject;
+        readonly Func<string, string, Task> _delete;
+        string _subjectDeleted;
+        string _clientDeleted;
+
+        readonly TokenMetadataPermissionsStoreAdapter _subject;
 
         
         public TokenMetadataPermissionsStoreAdapterTest()
         {
-            tokens = new List<ITokenMetadata>();
-            get = s => Task.FromResult(tokens.AsEnumerable());
-            delete = (subject, client) =>
+            _tokens = new List<ITokenMetadata>();
+            _get = s => Task.FromResult(_tokens.AsEnumerable());
+            _delete = (subject, client) =>
             {
-                subjectDeleted = subject;
-                clientDeleted = client;
+                _subjectDeleted = subject;
+                _clientDeleted = client;
                 return Task.FromResult(0);
             };
-            this.subject = new TokenMetadataPermissionsStoreAdapter(get, delete);
+            _subject = new TokenMetadataPermissionsStoreAdapter(_get, _delete);
         }
 
         class TokenMeta : ITokenMetadata
@@ -59,18 +59,18 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
                 ClientId = client;
                 Scopes = scopes;
             }
-            public string SubjectId {get; set;}
-            public string ClientId {get; set;}
-            public IEnumerable<string> Scopes {get; set;}
+            public string SubjectId {get; private set;}
+            public string ClientId {get; private set;}
+            public IEnumerable<string> Scopes {get; private set;}
         }
 
         [Fact]
         public void LoadAllAsync_CallsGet_MapsResultsToConsent()
         {
-            tokens.Add(new TokenMeta("sub", "client1", new string[] { "foo", "bar" }));
-            tokens.Add(new TokenMeta("sub", "client2", new string[] { "baz", "quux" }));
+            _tokens.Add(new TokenMeta("sub", "client1", new[] { "foo", "bar" }));
+            _tokens.Add(new TokenMeta("sub", "client2", new[] { "baz", "quux" }));
 
-            var result = subject.LoadAllAsync("sub").Result;
+            var result = _subject.LoadAllAsync("sub").Result;
             result.Count().Should().Be(2);
 
             var c1 = result.Single(x=>x.ClientId == "client1");
@@ -85,9 +85,9 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         [Fact]
         public void RevokeAsync_CallsRevoke()
         {
-            subject.RevokeAsync("sub34", "client12").Wait();
-            subjectDeleted.Should().Be("sub34");
-            clientDeleted.Should().Be("client12");
+            _subject.RevokeAsync("sub34", "client12").Wait();
+            _subjectDeleted.Should().Be("sub34");
+            _clientDeleted.Should().Be("client12");
         }
     }
 }

@@ -18,8 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The user service
         /// </summary>
-        protected readonly IUserService _users;
+        protected readonly IUserService Users;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultClaimsProvider"/> class.
@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="users">The users service</param>
         public DefaultClaimsProvider(IUserService users)
         {
-            _users = users;
+            Users = users;
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             var additionalClaims = new List<string>();
 
             // if a include all claims rule exists, call the user service without a claims filter
-            if (scopes.IncludesAllClaimsForUserRule(ScopeType.Identity))
+            if (scopes.IncludesAllClaimsForUserRule(ScopeType.IDENTITY))
             {
                 Logger.Info("All claims rule found - emitting all claims for user.");
 
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
+                var claims = FilterProtocolClaims(await Users.GetProfileDataAsync(subject));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -86,7 +86,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // fetch all identity claims that need to go into the id token
             foreach (var scope in scopes)
             {
-                if (scope.Type == ScopeType.Identity)
+                if (scope.Type == ScopeType.IDENTITY)
                 {
                     foreach (var scopeClaim in scope.Claims)
                     {
@@ -100,7 +100,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             if (additionalClaims.Count > 0)
             {
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims));
+                var claims = FilterProtocolClaims(await Users.GetProfileDataAsync(subject, additionalClaims));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -125,7 +125,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // add client_id
             var outputClaims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
+                new Claim(Constants.ClaimTypes.CLIENT_ID, client.ClientId),
             };
 
             // check for client claims
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // add scopes
             foreach (var scope in scopes)
             {
-                outputClaims.Add(new Claim(Constants.ClaimTypes.Scope, scope.Name));
+                outputClaims.Add(new Claim(Constants.ClaimTypes.SCOPE, scope.Name));
             }
 
             // a user is involved
@@ -160,9 +160,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 outputClaims.AddRange(GetOptionalClaims(subject));
 
                 // if a include all claims rule exists, call the user service without a claims filter
-                if (scopes.IncludesAllClaimsForUserRule(ScopeType.Resource))
+                if (scopes.IncludesAllClaimsForUserRule(ScopeType.RESOURCE))
                 {
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
+                    var claims = FilterProtocolClaims(await Users.GetProfileDataAsync(subject));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -176,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 var additionalClaims = new List<string>();
                 foreach (var scope in scopes)
                 {
-                    if (scope.Type == ScopeType.Resource)
+                    if (scope.Type == ScopeType.RESOURCE)
                     {
                         if (scope.Claims != null)
                         {
@@ -190,7 +190,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
                 if (additionalClaims.Count > 0)
                 {
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims.Distinct()));
+                    var claims = FilterProtocolClaims(await Users.GetProfileDataAsync(subject, additionalClaims.Distinct()));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -210,10 +210,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             var claims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.Subject, subject.GetSubjectId()),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, subject.GetAuthenticationMethod()),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, subject.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
-                new Claim(Constants.ClaimTypes.IdentityProvider, subject.GetIdentityProvider()),
+                new Claim(Constants.ClaimTypes.SUBJECT, subject.GetSubjectId()),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_METHOD, subject.GetAuthenticationMethod()),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_TIME, subject.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
+                new Claim(Constants.ClaimTypes.IDENTITY_PROVIDER, subject.GetIdentityProvider()),
             };
 
             return claims;
@@ -228,7 +228,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             var claims = new List<Claim>();
 
-            var acr = subject.FindFirst(Constants.ClaimTypes.AuthenticationContextClassReference);
+            var acr = subject.FindFirst(Constants.ClaimTypes.AUTHENTICATION_CONTEXT_CLASS_REFERENCE);
             if (acr.HasValue()) claims.Add(acr);
 
             return claims;

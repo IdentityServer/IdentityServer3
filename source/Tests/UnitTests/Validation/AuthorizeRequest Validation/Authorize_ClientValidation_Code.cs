@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
+namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest_Validation
 {
     
     public class Authorize_ClientValidation_Code
@@ -33,110 +34,116 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task Code_Request_Unknown_Scope()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "unknown");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "unknown"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
-            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidScope);
+            result.ErrorType.Should().Be(ErrorTypes.CLIENT);
+            result.Error.Should().Be(Constants.AuthorizeErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://invalid");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://invalid"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
+            result.ErrorType.Should().Be(ErrorTypes.USER);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdToken);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
+            result.ErrorType.Should().Be(ErrorTypes.USER);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.IdTokenToken);
-            parameters.Add(Constants.AuthorizeRequest.Nonce, "abc");
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.ID_TOKEN_TOKEN},
+                {Constants.AuthorizeRequest.NONCE, "abc"}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
+            result.ErrorType.Should().Be(ErrorTypes.USER);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Unknown_Client()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "unknown");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "unknown"},
+                {Constants.AuthorizeRequest.SCOPE, "openid"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
+            result.ErrorType.Should().Be(ErrorTypes.USER);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Client Validation - Code")]
         public async Task OpenId_Code_Request_With_Restricted_Scope()
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codeclient_restricted");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            var parameters = new NameValueCollection {
+                {Constants.AuthorizeRequest.CLIENT_ID, "codeclient_restricted"},
+                {Constants.AuthorizeRequest.SCOPE, "openid profile"},
+                {Constants.AuthorizeRequest.REDIRECT_URI, "https://server/cb"},
+                {Constants.AuthorizeRequest.RESPONSE_TYPE, Constants.ResponseTypes.CODE}
+            };
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
             
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
+            result.ErrorType.Should().Be(ErrorTypes.USER);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
         }
     }
 }

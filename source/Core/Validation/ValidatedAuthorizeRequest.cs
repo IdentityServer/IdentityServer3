@@ -186,10 +186,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
         {
             get
             {
-                return (ResponseType == Constants.ResponseTypes.IdTokenToken ||
-                        ResponseType == Constants.ResponseTypes.Code ||
-                        ResponseType == Constants.ResponseTypes.CodeToken ||
-                        ResponseType == Constants.ResponseTypes.CodeIdTokenToken);
+                return (ResponseType == Constants.ResponseTypes.ID_TOKEN_TOKEN ||
+                        ResponseType == Constants.ResponseTypes.CODE ||
+                        ResponseType == Constants.ResponseTypes.CODE_TOKEN ||
+                        ResponseType == Constants.ResponseTypes.CODE_ID_TOKEN_TOKEN);
             }
         }
 

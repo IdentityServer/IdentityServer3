@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.TokenService
 {
     /// <summary>
     /// Details class for authorization code issued events

@@ -7,22 +7,22 @@ code.google.com/p/crypto-js/wiki/License
 /**
  * CryptoJS core components.
  */
-var CryptoJS = CryptoJS || (function (Math, undefined) {
+var CryptoJS = CryptoJS || (function (math, undefined) {
     /**
      * CryptoJS namespace.
      */
-    var C = {};
+    var c = {};
 
     /**
      * Library namespace.
      */
-    var C_lib = C.lib = {};
+    var cLib = c.lib = {};
 
     /**
      * Base object for prototypal inheritance.
      */
-    var Base = C_lib.Base = (function () {
-        function F() { }
+    var base = cLib.Base = (function () {
+        function f() { }
 
         return {
             /**
@@ -45,8 +45,8 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
              */
             extend: function (overrides) {
                 // Spawn
-                F.prototype = this;
-                var subtype = new F();
+                f.prototype = this;
+                var subtype = new f();
 
                 // Augment
                 if (overrides) {
@@ -148,7 +148,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
      * @property {Array} words The array of 32-bit words.
      * @property {number} sigBytes The number of significant bytes in this word array.
      */
-    var WordArray = C_lib.WordArray = Base.extend({
+    var WordArray = cLib.WordArray = base.extend({
         /**
          * Initializes a newly created word array.
          *
@@ -185,7 +185,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *     var string = wordArray.toString(CryptoJS.enc.Utf8);
          */
         toString: function (encoder) {
-            return (encoder || Hex).stringify(this);
+            return (encoder || hex).stringify(this);
         },
 
         /**
@@ -245,7 +245,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
 
             // Clamp
             words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
-            words.length = Math.ceil(sigBytes / 4);
+            words.length = math.ceil(sigBytes / 4);
         },
 
         /**
@@ -258,7 +258,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *     var clone = wordArray.clone();
          */
         clone: function () {
-            var clone = Base.clone.call(this);
+            var clone = base.clone.call(this);
             clone.words = this.words.slice(0);
 
             return clone;
@@ -280,7 +280,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         random: function (nBytes) {
             var words = [];
             for (var i = 0; i < nBytes; i += 4) {
-                words.push((Math.random() * 0x100000000) | 0);
+                words.push((math.random() * 0x100000000) | 0);
             }
 
             return new WordArray.init(words, nBytes);
@@ -290,12 +290,12 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
     /**
      * Encoder namespace.
      */
-    var C_enc = C.enc = {};
+    var cEnc = c.enc = {};
 
     /**
      * Hex encoding strategy.
      */
-    var Hex = C_enc.Hex = {
+    var hex = cEnc.Hex = {
         /**
          * Converts a word array to a hex string.
          *
@@ -355,7 +355,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
     /**
      * Latin1 encoding strategy.
      */
-    var Latin1 = C_enc.Latin1 = {
+    var latin1 = cEnc.Latin1 = {
         /**
          * Converts a word array to a Latin1 string.
          *
@@ -414,7 +414,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
     /**
      * UTF-8 encoding strategy.
      */
-    var Utf8 = C_enc.Utf8 = {
+    var utf8 = cEnc.Utf8 = {
         /**
          * Converts a word array to a UTF-8 string.
          *
@@ -430,7 +430,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          */
         stringify: function (wordArray) {
             try {
-                return decodeURIComponent(escape(Latin1.stringify(wordArray)));
+                return decodeURIComponent(escape(latin1.stringify(wordArray)));
             } catch (e) {
                 throw new Error('Malformed UTF-8 data');
             }
@@ -450,7 +450,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *     var wordArray = CryptoJS.enc.Utf8.parse(utf8String);
          */
         parse: function (utf8Str) {
-            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
+            return latin1.parse(unescape(encodeURIComponent(utf8Str)));
         }
     };
 
@@ -461,7 +461,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
      *
      * @property {number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
      */
-    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({
+    var bufferedBlockAlgorithm = cLib.BufferedBlockAlgorithm = base.extend({
         /**
          * Resets this block algorithm's data buffer to its initial state.
          *
@@ -488,7 +488,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
         _append: function (data) {
             // Convert string to WordArray, else assume WordArray already
             if (typeof data == 'string') {
-                data = Utf8.parse(data);
+                data = utf8.parse(data);
             }
 
             // Append
@@ -522,18 +522,18 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
             var nBlocksReady = dataSigBytes / blockSizeBytes;
             if (doFlush) {
                 // Round up to include partial blocks
-                nBlocksReady = Math.ceil(nBlocksReady);
+                nBlocksReady = math.ceil(nBlocksReady);
             } else {
                 // Round down to include only full blocks,
                 // less the number of blocks that must remain in the buffer
-                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
+                nBlocksReady = math.max((nBlocksReady | 0) - this._minBufferSize, 0);
             }
 
             // Count words ready
             var nWordsReady = nBlocksReady * blockSize;
 
             // Count bytes ready
-            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
+            var nBytesReady = math.min(nWordsReady * 4, dataSigBytes);
 
             // Process blocks
             if (nWordsReady) {
@@ -561,7 +561,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          *     var clone = bufferedBlockAlgorithm.clone();
          */
         clone: function () {
-            var clone = Base.clone.call(this);
+            var clone = base.clone.call(this);
             clone._data = this._data.clone();
 
             return clone;
@@ -575,11 +575,11 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
      *
      * @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
      */
-    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({
+    var Hasher = cLib.Hasher = bufferedBlockAlgorithm.extend({
         /**
          * Configuration options.
          */
-        cfg: Base.extend(),
+        cfg: base.extend(),
 
         /**
          * Initializes a newly created hasher.
@@ -607,7 +607,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          */
         reset: function () {
             // Reset data buffer
-            BufferedBlockAlgorithm.reset.call(this);
+            bufferedBlockAlgorithm.reset.call(this);
 
             // Perform concrete-hasher logic
             this._doReset();
@@ -698,7 +698,7 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
          */
         _createHmacHelper: function (hasher) {
             return function (message, key) {
-                return new C_algo.HMAC.init(hasher, key).finalize(message);
+                return new cAlgo.HMAC.init(hasher, key).finalize(message);
             };
         }
     });
@@ -706,9 +706,9 @@ var CryptoJS = CryptoJS || (function (Math, undefined) {
     /**
      * Algorithm namespace.
      */
-    var C_algo = C.algo = {};
+    var cAlgo = c.algo = {};
 
-    return C;
+    return c;
 }(Math));
 
 /*
@@ -720,47 +720,47 @@ code.google.com/p/crypto-js/wiki/License
 (function () {
     // Shortcuts
     var C = CryptoJS;
-    var C_lib = C.lib;
-    var WordArray = C_lib.WordArray;
-    var Hasher = C_lib.Hasher;
-    var C_algo = C.algo;
+    var cLib = C.lib;
+    var wordArray = cLib.WordArray;
+    var hasher = cLib.Hasher;
+    var cAlgo = C.algo;
 
     // Reusable object
-    var W = [];
+    var w = [];
 
     /**
      * SHA-1 hash algorithm.
      */
-    var SHA1 = C_algo.SHA1 = Hasher.extend({
+    var sha1 = cAlgo.SHA1 = hasher.extend({
         _doReset: function () {
-            this._hash = new WordArray.init([
+            this._hash = new wordArray.init([
                 0x67452301, 0xefcdab89,
                 0x98badcfe, 0x10325476,
                 0xc3d2e1f0
             ]);
         },
 
-        _doProcessBlock: function (M, offset) {
+        _doProcessBlock: function (m, offset) {
             // Shortcut
-            var H = this._hash.words;
+            var h = this._hash.words;
 
             // Working variables
-            var a = H[0];
-            var b = H[1];
-            var c = H[2];
-            var d = H[3];
-            var e = H[4];
+            var a = h[0];
+            var b = h[1];
+            var c = h[2];
+            var d = h[3];
+            var e = h[4];
 
             // Computation
             for (var i = 0; i < 80; i++) {
                 if (i < 16) {
-                    W[i] = M[offset + i] | 0;
+                    w[i] = m[offset + i] | 0;
                 } else {
-                    var n = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16];
-                    W[i] = (n << 1) | (n >>> 31);
+                    var n = w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16];
+                    w[i] = (n << 1) | (n >>> 31);
                 }
 
-                var t = ((a << 5) | (a >>> 27)) + e + W[i];
+                var t = ((a << 5) | (a >>> 27)) + e + w[i];
                 if (i < 20) {
                     t += ((b & c) | (~b & d)) + 0x5a827999;
                 } else if (i < 40) {
@@ -779,11 +779,11 @@ code.google.com/p/crypto-js/wiki/License
             }
 
             // Intermediate hash value
-            H[0] = (H[0] + a) | 0;
-            H[1] = (H[1] + b) | 0;
-            H[2] = (H[2] + c) | 0;
-            H[3] = (H[3] + d) | 0;
-            H[4] = (H[4] + e) | 0;
+            h[0] = (h[0] + a) | 0;
+            h[1] = (h[1] + b) | 0;
+            h[2] = (h[2] + c) | 0;
+            h[3] = (h[3] + d) | 0;
+            h[4] = (h[4] + e) | 0;
         },
 
         _doFinalize: function () {
@@ -808,7 +808,7 @@ code.google.com/p/crypto-js/wiki/License
         },
 
         clone: function () {
-            var clone = Hasher.clone.call(this);
+            var clone = hasher.clone.call(this);
             clone._hash = this._hash.clone();
 
             return clone;
@@ -829,7 +829,7 @@ code.google.com/p/crypto-js/wiki/License
      *     var hash = CryptoJS.SHA1('message');
      *     var hash = CryptoJS.SHA1(wordArray);
      */
-    C.SHA1 = Hasher._createHelper(SHA1);
+    C.SHA1 = hasher._createHelper(sha1);
 
     /**
      * Shortcut function to the HMAC's object interface.
@@ -845,7 +845,7 @@ code.google.com/p/crypto-js/wiki/License
      *
      *     var hmac = CryptoJS.HmacSHA1(message, key);
      */
-    C.HmacSHA1 = Hasher._createHmacHelper(SHA1);
+    C.HmacSHA1 = hasher._createHmacHelper(sha1);
 }());
 
 /*
@@ -854,22 +854,22 @@ code.google.com/p/crypto-js
 (c) 2009-2013 by Jeff Mott. All rights reserved.
 code.google.com/p/crypto-js/wiki/License
 */
-(function (Math) {
+(function (math) {
     // Shortcuts
     var C = CryptoJS;
-    var C_lib = C.lib;
-    var WordArray = C_lib.WordArray;
-    var Hasher = C_lib.Hasher;
-    var C_algo = C.algo;
+    var cLib = C.lib;
+    var wordArray = cLib.WordArray;
+    var hasher = cLib.Hasher;
+    var cAlgo = C.algo;
 
     // Initialization and round constants tables
     var H = [];
-    var K = [];
+    var k = [];
 
     // Compute constants
     (function () {
         function isPrime(n) {
-            var sqrtN = Math.sqrt(n);
+            var sqrtN = math.sqrt(n);
             for (var factor = 2; factor <= sqrtN; factor++) {
                 if (!(n % factor)) {
                     return false;
@@ -888,9 +888,9 @@ code.google.com/p/crypto-js/wiki/License
         while (nPrime < 64) {
             if (isPrime(n)) {
                 if (nPrime < 8) {
-                    H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));
+                    H[nPrime] = getFractionalBits(math.pow(n, 1 / 2));
                 }
-                K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));
+                k[nPrime] = getFractionalBits(math.pow(n, 1 / 3));
 
                 nPrime++;
             }
@@ -900,17 +900,17 @@ code.google.com/p/crypto-js/wiki/License
     }());
 
     // Reusable object
-    var W = [];
+    var w = [];
 
     /**
      * SHA-256 hash algorithm.
      */
-    var SHA256 = C_algo.SHA256 = Hasher.extend({
+    var sha256 = cAlgo.SHA256 = hasher.extend({
         _doReset: function () {
-            this._hash = new WordArray.init(H.slice(0));
+            this._hash = new wordArray.init(H.slice(0));
         },
 
-        _doProcessBlock: function (M, offset) {
+        _doProcessBlock: function (m, offset) {
             // Shortcut
             var H = this._hash.words;
 
@@ -927,19 +927,19 @@ code.google.com/p/crypto-js/wiki/License
             // Computation
             for (var i = 0; i < 64; i++) {
                 if (i < 16) {
-                    W[i] = M[offset + i] | 0;
+                    w[i] = m[offset + i] | 0;
                 } else {
-                    var gamma0x = W[i - 15];
-                    var gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^
-                                  ((gamma0x << 14) | (gamma0x >>> 18)) ^
-                                   (gamma0x >>> 3);
+                    var gamma0X = w[i - 15];
+                    var gamma0 = ((gamma0X << 25) | (gamma0X >>> 7)) ^
+                                  ((gamma0X << 14) | (gamma0X >>> 18)) ^
+                                   (gamma0X >>> 3);
 
-                    var gamma1x = W[i - 2];
-                    var gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^
-                                  ((gamma1x << 13) | (gamma1x >>> 19)) ^
-                                   (gamma1x >>> 10);
+                    var gamma1X = w[i - 2];
+                    var gamma1 = ((gamma1X << 15) | (gamma1X >>> 17)) ^
+                                  ((gamma1X << 13) | (gamma1X >>> 19)) ^
+                                   (gamma1X >>> 10);
 
-                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
+                    w[i] = gamma0 + w[i - 7] + gamma1 + w[i - 16];
                 }
 
                 var ch = (e & f) ^ (~e & g);
@@ -948,7 +948,7 @@ code.google.com/p/crypto-js/wiki/License
                 var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
                 var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));
 
-                var t1 = h + sigma1 + ch + K[i] + W[i];
+                var t1 = h + sigma1 + ch + k[i] + w[i];
                 var t2 = sigma0 + maj;
 
                 h = g;
@@ -982,7 +982,7 @@ code.google.com/p/crypto-js/wiki/License
 
             // Add padding
             dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
-            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = math.floor(nBitsTotal / 0x100000000);
             dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
             data.sigBytes = dataWords.length * 4;
 
@@ -994,7 +994,7 @@ code.google.com/p/crypto-js/wiki/License
         },
 
         clone: function () {
-            var clone = Hasher.clone.call(this);
+            var clone = hasher.clone.call(this);
             clone._hash = this._hash.clone();
 
             return clone;
@@ -1015,7 +1015,7 @@ code.google.com/p/crypto-js/wiki/License
      *     var hash = CryptoJS.SHA256('message');
      *     var hash = CryptoJS.SHA256(wordArray);
      */
-    C.SHA256 = Hasher._createHelper(SHA256);
+    C.SHA256 = hasher._createHelper(sha256);
 
     /**
      * Shortcut function to the HMAC's object interface.
@@ -1031,7 +1031,7 @@ code.google.com/p/crypto-js/wiki/License
      *
      *     var hmac = CryptoJS.HmacSHA256(message, key);
      */
-    C.HmacSHA256 = Hasher._createHmacHelper(SHA256);
+    C.HmacSHA256 = hasher._createHmacHelper(sha256);
 }(Math));
 
 /*
@@ -1042,20 +1042,20 @@ code.google.com/p/crypto-js/wiki/License
 */
 (function (undefined) {
     // Shortcuts
-    var C = CryptoJS;
-    var C_lib = C.lib;
-    var Base = C_lib.Base;
-    var X32WordArray = C_lib.WordArray;
+    var c = CryptoJS;
+    var cLib = c.lib;
+    var base = cLib.Base;
+    var x32WordArray = cLib.WordArray;
 
     /**
      * x64 namespace.
      */
-    var C_x64 = C.x64 = {};
+    var cX64 = c.x64 = {};
 
     /**
      * A 64-bit word.
      */
-    var X64Word = C_x64.Word = Base.extend({
+    var X64Word = cX64.Word = base.extend({
         /**
          * Initializes a newly created 64-bit word.
          *
@@ -1243,7 +1243,7 @@ code.google.com/p/crypto-js/wiki/License
      * @property {Array} words The array of CryptoJS.x64.Word objects.
      * @property {number} sigBytes The number of significant bytes in this word array.
      */
-    var X64WordArray = C_x64.WordArray = Base.extend({
+    var x64WordArray = cX64.WordArray = base.extend({
         /**
          * Initializes a newly created word array.
          *
@@ -1296,7 +1296,7 @@ code.google.com/p/crypto-js/wiki/License
                 x32Words.push(x64Word.low);
             }
 
-            return X32WordArray.create(x32Words, this.sigBytes);
+            return x32WordArray.create(x32Words, this.sigBytes);
         },
 
         /**
@@ -1309,7 +1309,7 @@ code.google.com/p/crypto-js/wiki/License
          *     var clone = x64WordArray.clone();
          */
         clone: function () {
-            var clone = Base.clone.call(this);
+            var clone = base.clone.call(this);
 
             // Clone "words" array
             var words = clone.words = this.words.slice(0);
@@ -1332,173 +1332,173 @@ code.google.com/p/crypto-js/wiki/License
 */
 (function () {
     // Shortcuts
-    var C = CryptoJS;
-    var C_lib = C.lib;
-    var Hasher = C_lib.Hasher;
-    var C_x64 = C.x64;
-    var X64Word = C_x64.Word;
-    var X64WordArray = C_x64.WordArray;
-    var C_algo = C.algo;
+    var c = CryptoJS;
+    var cLib = c.lib;
+    var hasher = cLib.Hasher;
+    var cX64 = c.x64;
+    var x64Word = cX64.Word;
+    var x64WordArray = cX64.WordArray;
+    var cAlgo = c.algo;
 
-    function X64Word_create() {
-        return X64Word.create.apply(X64Word, arguments);
+    function x64WordCreate() {
+        return x64Word.create.apply(x64Word, arguments);
     }
 
     // Constants
-    var K = [
-        X64Word_create(0x428a2f98, 0xd728ae22), X64Word_create(0x71374491, 0x23ef65cd),
-        X64Word_create(0xb5c0fbcf, 0xec4d3b2f), X64Word_create(0xe9b5dba5, 0x8189dbbc),
-        X64Word_create(0x3956c25b, 0xf348b538), X64Word_create(0x59f111f1, 0xb605d019),
-        X64Word_create(0x923f82a4, 0xaf194f9b), X64Word_create(0xab1c5ed5, 0xda6d8118),
-        X64Word_create(0xd807aa98, 0xa3030242), X64Word_create(0x12835b01, 0x45706fbe),
-        X64Word_create(0x243185be, 0x4ee4b28c), X64Word_create(0x550c7dc3, 0xd5ffb4e2),
-        X64Word_create(0x72be5d74, 0xf27b896f), X64Word_create(0x80deb1fe, 0x3b1696b1),
-        X64Word_create(0x9bdc06a7, 0x25c71235), X64Word_create(0xc19bf174, 0xcf692694),
-        X64Word_create(0xe49b69c1, 0x9ef14ad2), X64Word_create(0xefbe4786, 0x384f25e3),
-        X64Word_create(0x0fc19dc6, 0x8b8cd5b5), X64Word_create(0x240ca1cc, 0x77ac9c65),
-        X64Word_create(0x2de92c6f, 0x592b0275), X64Word_create(0x4a7484aa, 0x6ea6e483),
-        X64Word_create(0x5cb0a9dc, 0xbd41fbd4), X64Word_create(0x76f988da, 0x831153b5),
-        X64Word_create(0x983e5152, 0xee66dfab), X64Word_create(0xa831c66d, 0x2db43210),
-        X64Word_create(0xb00327c8, 0x98fb213f), X64Word_create(0xbf597fc7, 0xbeef0ee4),
-        X64Word_create(0xc6e00bf3, 0x3da88fc2), X64Word_create(0xd5a79147, 0x930aa725),
-        X64Word_create(0x06ca6351, 0xe003826f), X64Word_create(0x14292967, 0x0a0e6e70),
-        X64Word_create(0x27b70a85, 0x46d22ffc), X64Word_create(0x2e1b2138, 0x5c26c926),
-        X64Word_create(0x4d2c6dfc, 0x5ac42aed), X64Word_create(0x53380d13, 0x9d95b3df),
-        X64Word_create(0x650a7354, 0x8baf63de), X64Word_create(0x766a0abb, 0x3c77b2a8),
-        X64Word_create(0x81c2c92e, 0x47edaee6), X64Word_create(0x92722c85, 0x1482353b),
-        X64Word_create(0xa2bfe8a1, 0x4cf10364), X64Word_create(0xa81a664b, 0xbc423001),
-        X64Word_create(0xc24b8b70, 0xd0f89791), X64Word_create(0xc76c51a3, 0x0654be30),
-        X64Word_create(0xd192e819, 0xd6ef5218), X64Word_create(0xd6990624, 0x5565a910),
-        X64Word_create(0xf40e3585, 0x5771202a), X64Word_create(0x106aa070, 0x32bbd1b8),
-        X64Word_create(0x19a4c116, 0xb8d2d0c8), X64Word_create(0x1e376c08, 0x5141ab53),
-        X64Word_create(0x2748774c, 0xdf8eeb99), X64Word_create(0x34b0bcb5, 0xe19b48a8),
-        X64Word_create(0x391c0cb3, 0xc5c95a63), X64Word_create(0x4ed8aa4a, 0xe3418acb),
-        X64Word_create(0x5b9cca4f, 0x7763e373), X64Word_create(0x682e6ff3, 0xd6b2b8a3),
-        X64Word_create(0x748f82ee, 0x5defb2fc), X64Word_create(0x78a5636f, 0x43172f60),
-        X64Word_create(0x84c87814, 0xa1f0ab72), X64Word_create(0x8cc70208, 0x1a6439ec),
-        X64Word_create(0x90befffa, 0x23631e28), X64Word_create(0xa4506ceb, 0xde82bde9),
-        X64Word_create(0xbef9a3f7, 0xb2c67915), X64Word_create(0xc67178f2, 0xe372532b),
-        X64Word_create(0xca273ece, 0xea26619c), X64Word_create(0xd186b8c7, 0x21c0c207),
-        X64Word_create(0xeada7dd6, 0xcde0eb1e), X64Word_create(0xf57d4f7f, 0xee6ed178),
-        X64Word_create(0x06f067aa, 0x72176fba), X64Word_create(0x0a637dc5, 0xa2c898a6),
-        X64Word_create(0x113f9804, 0xbef90dae), X64Word_create(0x1b710b35, 0x131c471b),
-        X64Word_create(0x28db77f5, 0x23047d84), X64Word_create(0x32caab7b, 0x40c72493),
-        X64Word_create(0x3c9ebe0a, 0x15c9bebc), X64Word_create(0x431d67c4, 0x9c100d4c),
-        X64Word_create(0x4cc5d4be, 0xcb3e42b6), X64Word_create(0x597f299c, 0xfc657e2a),
-        X64Word_create(0x5fcb6fab, 0x3ad6faec), X64Word_create(0x6c44198c, 0x4a475817)
+    var k = [
+        x64WordCreate(0x428a2f98, 0xd728ae22), x64WordCreate(0x71374491, 0x23ef65cd),
+        x64WordCreate(0xb5c0fbcf, 0xec4d3b2f), x64WordCreate(0xe9b5dba5, 0x8189dbbc),
+        x64WordCreate(0x3956c25b, 0xf348b538), x64WordCreate(0x59f111f1, 0xb605d019),
+        x64WordCreate(0x923f82a4, 0xaf194f9b), x64WordCreate(0xab1c5ed5, 0xda6d8118),
+        x64WordCreate(0xd807aa98, 0xa3030242), x64WordCreate(0x12835b01, 0x45706fbe),
+        x64WordCreate(0x243185be, 0x4ee4b28c), x64WordCreate(0x550c7dc3, 0xd5ffb4e2),
+        x64WordCreate(0x72be5d74, 0xf27b896f), x64WordCreate(0x80deb1fe, 0x3b1696b1),
+        x64WordCreate(0x9bdc06a7, 0x25c71235), x64WordCreate(0xc19bf174, 0xcf692694),
+        x64WordCreate(0xe49b69c1, 0x9ef14ad2), x64WordCreate(0xefbe4786, 0x384f25e3),
+        x64WordCreate(0x0fc19dc6, 0x8b8cd5b5), x64WordCreate(0x240ca1cc, 0x77ac9c65),
+        x64WordCreate(0x2de92c6f, 0x592b0275), x64WordCreate(0x4a7484aa, 0x6ea6e483),
+        x64WordCreate(0x5cb0a9dc, 0xbd41fbd4), x64WordCreate(0x76f988da, 0x831153b5),
+        x64WordCreate(0x983e5152, 0xee66dfab), x64WordCreate(0xa831c66d, 0x2db43210),
+        x64WordCreate(0xb00327c8, 0x98fb213f), x64WordCreate(0xbf597fc7, 0xbeef0ee4),
+        x64WordCreate(0xc6e00bf3, 0x3da88fc2), x64WordCreate(0xd5a79147, 0x930aa725),
+        x64WordCreate(0x06ca6351, 0xe003826f), x64WordCreate(0x14292967, 0x0a0e6e70),
+        x64WordCreate(0x27b70a85, 0x46d22ffc), x64WordCreate(0x2e1b2138, 0x5c26c926),
+        x64WordCreate(0x4d2c6dfc, 0x5ac42aed), x64WordCreate(0x53380d13, 0x9d95b3df),
+        x64WordCreate(0x650a7354, 0x8baf63de), x64WordCreate(0x766a0abb, 0x3c77b2a8),
+        x64WordCreate(0x81c2c92e, 0x47edaee6), x64WordCreate(0x92722c85, 0x1482353b),
+        x64WordCreate(0xa2bfe8a1, 0x4cf10364), x64WordCreate(0xa81a664b, 0xbc423001),
+        x64WordCreate(0xc24b8b70, 0xd0f89791), x64WordCreate(0xc76c51a3, 0x0654be30),
+        x64WordCreate(0xd192e819, 0xd6ef5218), x64WordCreate(0xd6990624, 0x5565a910),
+        x64WordCreate(0xf40e3585, 0x5771202a), x64WordCreate(0x106aa070, 0x32bbd1b8),
+        x64WordCreate(0x19a4c116, 0xb8d2d0c8), x64WordCreate(0x1e376c08, 0x5141ab53),
+        x64WordCreate(0x2748774c, 0xdf8eeb99), x64WordCreate(0x34b0bcb5, 0xe19b48a8),
+        x64WordCreate(0x391c0cb3, 0xc5c95a63), x64WordCreate(0x4ed8aa4a, 0xe3418acb),
+        x64WordCreate(0x5b9cca4f, 0x7763e373), x64WordCreate(0x682e6ff3, 0xd6b2b8a3),
+        x64WordCreate(0x748f82ee, 0x5defb2fc), x64WordCreate(0x78a5636f, 0x43172f60),
+        x64WordCreate(0x84c87814, 0xa1f0ab72), x64WordCreate(0x8cc70208, 0x1a6439ec),
+        x64WordCreate(0x90befffa, 0x23631e28), x64WordCreate(0xa4506ceb, 0xde82bde9),
+        x64WordCreate(0xbef9a3f7, 0xb2c67915), x64WordCreate(0xc67178f2, 0xe372532b),
+        x64WordCreate(0xca273ece, 0xea26619c), x64WordCreate(0xd186b8c7, 0x21c0c207),
+        x64WordCreate(0xeada7dd6, 0xcde0eb1e), x64WordCreate(0xf57d4f7f, 0xee6ed178),
+        x64WordCreate(0x06f067aa, 0x72176fba), x64WordCreate(0x0a637dc5, 0xa2c898a6),
+        x64WordCreate(0x113f9804, 0xbef90dae), x64WordCreate(0x1b710b35, 0x131c471b),
+        x64WordCreate(0x28db77f5, 0x23047d84), x64WordCreate(0x32caab7b, 0x40c72493),
+        x64WordCreate(0x3c9ebe0a, 0x15c9bebc), x64WordCreate(0x431d67c4, 0x9c100d4c),
+        x64WordCreate(0x4cc5d4be, 0xcb3e42b6), x64WordCreate(0x597f299c, 0xfc657e2a),
+        x64WordCreate(0x5fcb6fab, 0x3ad6faec), x64WordCreate(0x6c44198c, 0x4a475817)
     ];
 
     // Reusable objects
-    var W = [];
+    var w = [];
     (function () {
         for (var i = 0; i < 80; i++) {
-            W[i] = X64Word_create();
+            w[i] = x64WordCreate();
         }
     }());
 
     /**
      * SHA-512 hash algorithm.
      */
-    var SHA512 = C_algo.SHA512 = Hasher.extend({
+    var sha512 = cAlgo.SHA512 = hasher.extend({
         _doReset: function () {
-            this._hash = new X64WordArray.init([
-                new X64Word.init(0x6a09e667, 0xf3bcc908), new X64Word.init(0xbb67ae85, 0x84caa73b),
-                new X64Word.init(0x3c6ef372, 0xfe94f82b), new X64Word.init(0xa54ff53a, 0x5f1d36f1),
-                new X64Word.init(0x510e527f, 0xade682d1), new X64Word.init(0x9b05688c, 0x2b3e6c1f),
-                new X64Word.init(0x1f83d9ab, 0xfb41bd6b), new X64Word.init(0x5be0cd19, 0x137e2179)
+            this._hash = new x64WordArray.init([
+                new x64Word.init(0x6a09e667, 0xf3bcc908), new x64Word.init(0xbb67ae85, 0x84caa73b),
+                new x64Word.init(0x3c6ef372, 0xfe94f82b), new x64Word.init(0xa54ff53a, 0x5f1d36f1),
+                new x64Word.init(0x510e527f, 0xade682d1), new x64Word.init(0x9b05688c, 0x2b3e6c1f),
+                new x64Word.init(0x1f83d9ab, 0xfb41bd6b), new x64Word.init(0x5be0cd19, 0x137e2179)
             ]);
         },
 
-        _doProcessBlock: function (M, offset) {
+        _doProcessBlock: function (m, offset) {
             // Shortcuts
-            var H = this._hash.words;
+            var h = this._hash.words;
 
-            var H0 = H[0];
-            var H1 = H[1];
-            var H2 = H[2];
-            var H3 = H[3];
-            var H4 = H[4];
-            var H5 = H[5];
-            var H6 = H[6];
-            var H7 = H[7];
+            var h0 = h[0];
+            var h1 = h[1];
+            var h2 = h[2];
+            var h3 = h[3];
+            var h4 = h[4];
+            var h5 = h[5];
+            var h6 = h[6];
+            var h7 = h[7];
 
-            var H0h = H0.high;
-            var H0l = H0.low;
-            var H1h = H1.high;
-            var H1l = H1.low;
-            var H2h = H2.high;
-            var H2l = H2.low;
-            var H3h = H3.high;
-            var H3l = H3.low;
-            var H4h = H4.high;
-            var H4l = H4.low;
-            var H5h = H5.high;
-            var H5l = H5.low;
-            var H6h = H6.high;
-            var H6l = H6.low;
-            var H7h = H7.high;
-            var H7l = H7.low;
+            var h0H = h0.high;
+            var h0L = h0.low;
+            var h1H = h1.high;
+            var h1L = h1.low;
+            var h2H = h2.high;
+            var h2L = h2.low;
+            var h3H = h3.high;
+            var h3L = h3.low;
+            var h4H = h4.high;
+            var h4L = h4.low;
+            var h5H = h5.high;
+            var h5L = h5.low;
+            var h6H = h6.high;
+            var h6L = h6.low;
+            var h7H = h7.high;
+            var h7L = h7.low;
 
             // Working variables
-            var ah = H0h;
-            var al = H0l;
-            var bh = H1h;
-            var bl = H1l;
-            var ch = H2h;
-            var cl = H2l;
-            var dh = H3h;
-            var dl = H3l;
-            var eh = H4h;
-            var el = H4l;
-            var fh = H5h;
-            var fl = H5l;
-            var gh = H6h;
-            var gl = H6l;
-            var hh = H7h;
-            var hl = H7l;
+            var ah = h0H;
+            var al = h0L;
+            var bh = h1H;
+            var bl = h1L;
+            var ch = h2H;
+            var cl = h2L;
+            var dh = h3H;
+            var dl = h3L;
+            var eh = h4H;
+            var el = h4L;
+            var fh = h5H;
+            var fl = h5L;
+            var gh = h6H;
+            var gl = h6L;
+            var hh = h7H;
+            var hl = h7L;
 
             // Rounds
             for (var i = 0; i < 80; i++) {
                 // Shortcut
-                var Wi = W[i];
+                var wi = w[i];
 
                 // Extend message
                 if (i < 16) {
-                    var Wih = Wi.high = M[offset + i * 2] | 0;
-                    var Wil = Wi.low = M[offset + i * 2 + 1] | 0;
+                    var wih = wi.high = m[offset + i * 2] | 0;
+                    var wil = wi.low = m[offset + i * 2 + 1] | 0;
                 } else {
                     // Gamma0
-                    var gamma0x = W[i - 15];
-                    var gamma0xh = gamma0x.high;
-                    var gamma0xl = gamma0x.low;
-                    var gamma0h = ((gamma0xh >>> 1) | (gamma0xl << 31)) ^ ((gamma0xh >>> 8) | (gamma0xl << 24)) ^ (gamma0xh >>> 7);
-                    var gamma0l = ((gamma0xl >>> 1) | (gamma0xh << 31)) ^ ((gamma0xl >>> 8) | (gamma0xh << 24)) ^ ((gamma0xl >>> 7) | (gamma0xh << 25));
+                    var gamma0X = w[i - 15];
+                    var gamma0Xh = gamma0X.high;
+                    var gamma0Xl = gamma0X.low;
+                    var gamma0H = ((gamma0Xh >>> 1) | (gamma0Xl << 31)) ^ ((gamma0Xh >>> 8) | (gamma0Xl << 24)) ^ (gamma0Xh >>> 7);
+                    var gamma0L = ((gamma0Xl >>> 1) | (gamma0Xh << 31)) ^ ((gamma0Xl >>> 8) | (gamma0Xh << 24)) ^ ((gamma0Xl >>> 7) | (gamma0Xh << 25));
 
                     // Gamma1
-                    var gamma1x = W[i - 2];
-                    var gamma1xh = gamma1x.high;
-                    var gamma1xl = gamma1x.low;
-                    var gamma1h = ((gamma1xh >>> 19) | (gamma1xl << 13)) ^ ((gamma1xh << 3) | (gamma1xl >>> 29)) ^ (gamma1xh >>> 6);
-                    var gamma1l = ((gamma1xl >>> 19) | (gamma1xh << 13)) ^ ((gamma1xl << 3) | (gamma1xh >>> 29)) ^ ((gamma1xl >>> 6) | (gamma1xh << 26));
+                    var gamma1X = w[i - 2];
+                    var gamma1Xh = gamma1X.high;
+                    var gamma1Xl = gamma1X.low;
+                    var gamma1H = ((gamma1Xh >>> 19) | (gamma1Xl << 13)) ^ ((gamma1Xh << 3) | (gamma1Xl >>> 29)) ^ (gamma1Xh >>> 6);
+                    var gamma1L = ((gamma1Xl >>> 19) | (gamma1Xh << 13)) ^ ((gamma1Xl << 3) | (gamma1Xh >>> 29)) ^ ((gamma1Xl >>> 6) | (gamma1Xh << 26));
 
                     // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
-                    var Wi7 = W[i - 7];
-                    var Wi7h = Wi7.high;
-                    var Wi7l = Wi7.low;
+                    var wi7 = w[i - 7];
+                    var wi7H = wi7.high;
+                    var wi7L = wi7.low;
 
-                    var Wi16 = W[i - 16];
-                    var Wi16h = Wi16.high;
-                    var Wi16l = Wi16.low;
+                    var wi16 = w[i - 16];
+                    var wi16H = wi16.high;
+                    var wi16L = wi16.low;
 
-                    var Wil = gamma0l + Wi7l;
-                    var Wih = gamma0h + Wi7h + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0);
-                    var Wil = Wil + gamma1l;
-                    var Wih = Wih + gamma1h + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0);
-                    var Wil = Wil + Wi16l;
-                    var Wih = Wih + Wi16h + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0);
+                    var wil = gamma0L + wi7L;
+                    var wih = gamma0H + wi7H + ((wil >>> 0) < (gamma0L >>> 0) ? 1 : 0);
+                    var wil = wil + gamma1L;
+                    var wih = wih + gamma1H + ((wil >>> 0) < (gamma1L >>> 0) ? 1 : 0);
+                    var wil = wil + wi16L;
+                    var wih = wih + wi16H + ((wil >>> 0) < (wi16L >>> 0) ? 1 : 0);
 
-                    Wi.high = Wih;
-                    Wi.low = Wil;
+                    wi.high = wih;
+                    wi.low = wil;
                 }
 
                 var chh = (eh & fh) ^ (~eh & gh);
@@ -1506,28 +1506,28 @@ code.google.com/p/crypto-js/wiki/License
                 var majh = (ah & bh) ^ (ah & ch) ^ (bh & ch);
                 var majl = (al & bl) ^ (al & cl) ^ (bl & cl);
 
-                var sigma0h = ((ah >>> 28) | (al << 4)) ^ ((ah << 30) | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
-                var sigma0l = ((al >>> 28) | (ah << 4)) ^ ((al << 30) | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
-                var sigma1h = ((eh >>> 14) | (el << 18)) ^ ((eh >>> 18) | (el << 14)) ^ ((eh << 23) | (el >>> 9));
-                var sigma1l = ((el >>> 14) | (eh << 18)) ^ ((el >>> 18) | (eh << 14)) ^ ((el << 23) | (eh >>> 9));
+                var sigma0H = ((ah >>> 28) | (al << 4)) ^ ((ah << 30) | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
+                var sigma0L = ((al >>> 28) | (ah << 4)) ^ ((al << 30) | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
+                var sigma1H = ((eh >>> 14) | (el << 18)) ^ ((eh >>> 18) | (el << 14)) ^ ((eh << 23) | (el >>> 9));
+                var sigma1L = ((el >>> 14) | (eh << 18)) ^ ((el >>> 18) | (eh << 14)) ^ ((el << 23) | (eh >>> 9));
 
                 // t1 = h + sigma1 + ch + K[i] + W[i]
-                var Ki = K[i];
-                var Kih = Ki.high;
-                var Kil = Ki.low;
+                var ki = k[i];
+                var kih = ki.high;
+                var kil = ki.low;
 
-                var t1l = hl + sigma1l;
-                var t1h = hh + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0);
-                var t1l = t1l + chl;
-                var t1h = t1h + chh + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0);
-                var t1l = t1l + Kil;
-                var t1h = t1h + Kih + ((t1l >>> 0) < (Kil >>> 0) ? 1 : 0);
-                var t1l = t1l + Wil;
-                var t1h = t1h + Wih + ((t1l >>> 0) < (Wil >>> 0) ? 1 : 0);
+                var t1L = hl + sigma1L;
+                var t1H = hh + sigma1H + ((t1L >>> 0) < (hl >>> 0) ? 1 : 0);
+                var t1L = t1L + chl;
+                var t1H = t1H + chh + ((t1L >>> 0) < (chl >>> 0) ? 1 : 0);
+                var t1L = t1L + kil;
+                var t1H = t1H + kih + ((t1L >>> 0) < (kil >>> 0) ? 1 : 0);
+                var t1L = t1L + wil;
+                var t1H = t1H + wih + ((t1L >>> 0) < (wil >>> 0) ? 1 : 0);
 
                 // t2 = sigma0 + maj
-                var t2l = sigma0l + majl;
-                var t2h = sigma0h + majh + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0);
+                var t2L = sigma0L + majl;
+                var t2H = sigma0H + majh + ((t2L >>> 0) < (sigma0L >>> 0) ? 1 : 0);
 
                 // Update working variables
                 hh = gh;
@@ -1536,35 +1536,35 @@ code.google.com/p/crypto-js/wiki/License
                 gl = fl;
                 fh = eh;
                 fl = el;
-                el = (dl + t1l) | 0;
-                eh = (dh + t1h + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
+                el = (dl + t1L) | 0;
+                eh = (dh + t1H + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
                 dh = ch;
                 dl = cl;
                 ch = bh;
                 cl = bl;
                 bh = ah;
                 bl = al;
-                al = (t1l + t2l) | 0;
-                ah = (t1h + t2h + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0;
+                al = (t1L + t2L) | 0;
+                ah = (t1H + t2H + ((al >>> 0) < (t1L >>> 0) ? 1 : 0)) | 0;
             }
 
             // Intermediate hash value
-            H0l = H0.low = (H0l + al);
-            H0.high = (H0h + ah + ((H0l >>> 0) < (al >>> 0) ? 1 : 0));
-            H1l = H1.low = (H1l + bl);
-            H1.high = (H1h + bh + ((H1l >>> 0) < (bl >>> 0) ? 1 : 0));
-            H2l = H2.low = (H2l + cl);
-            H2.high = (H2h + ch + ((H2l >>> 0) < (cl >>> 0) ? 1 : 0));
-            H3l = H3.low = (H3l + dl);
-            H3.high = (H3h + dh + ((H3l >>> 0) < (dl >>> 0) ? 1 : 0));
-            H4l = H4.low = (H4l + el);
-            H4.high = (H4h + eh + ((H4l >>> 0) < (el >>> 0) ? 1 : 0));
-            H5l = H5.low = (H5l + fl);
-            H5.high = (H5h + fh + ((H5l >>> 0) < (fl >>> 0) ? 1 : 0));
-            H6l = H6.low = (H6l + gl);
-            H6.high = (H6h + gh + ((H6l >>> 0) < (gl >>> 0) ? 1 : 0));
-            H7l = H7.low = (H7l + hl);
-            H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0));
+            h0L = h0.low = (h0L + al);
+            h0.high = (h0H + ah + ((h0L >>> 0) < (al >>> 0) ? 1 : 0));
+            h1L = h1.low = (h1L + bl);
+            h1.high = (h1H + bh + ((h1L >>> 0) < (bl >>> 0) ? 1 : 0));
+            h2L = h2.low = (h2L + cl);
+            h2.high = (h2H + ch + ((h2L >>> 0) < (cl >>> 0) ? 1 : 0));
+            h3L = h3.low = (h3L + dl);
+            h3.high = (h3H + dh + ((h3L >>> 0) < (dl >>> 0) ? 1 : 0));
+            h4L = h4.low = (h4L + el);
+            h4.high = (h4H + eh + ((h4L >>> 0) < (el >>> 0) ? 1 : 0));
+            h5L = h5.low = (h5L + fl);
+            h5.high = (h5H + fh + ((h5L >>> 0) < (fl >>> 0) ? 1 : 0));
+            h6L = h6.low = (h6L + gl);
+            h6.high = (h6H + gh + ((h6L >>> 0) < (gl >>> 0) ? 1 : 0));
+            h7L = h7.low = (h7L + hl);
+            h7.high = (h7H + hh + ((h7L >>> 0) < (hl >>> 0) ? 1 : 0));
         },
 
         _doFinalize: function () {
@@ -1592,7 +1592,7 @@ code.google.com/p/crypto-js/wiki/License
         },
 
         clone: function () {
-            var clone = Hasher.clone.call(this);
+            var clone = hasher.clone.call(this);
             clone._hash = this._hash.clone();
 
             return clone;
@@ -1615,7 +1615,7 @@ code.google.com/p/crypto-js/wiki/License
      *     var hash = CryptoJS.SHA512('message');
      *     var hash = CryptoJS.SHA512(wordArray);
      */
-    C.SHA512 = Hasher._createHelper(SHA512);
+    c.SHA512 = hasher._createHelper(sha512);
 
     /**
      * Shortcut function to the HMAC's object interface.
@@ -1631,7 +1631,7 @@ code.google.com/p/crypto-js/wiki/License
      *
      *     var hmac = CryptoJS.HmacSHA512(message, key);
      */
-    C.HmacSHA512 = Hasher._createHmacHelper(SHA512);
+    c.HmacSHA512 = hasher._createHmacHelper(sha512);
 }());
 
 /*! (c) Tom Wu | http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -3015,31 +3015,31 @@ function oaep_pad(s, n, hash) {
         throw "Message too long for RSA";
     }
 
-    var PS = '', i;
+    var ps = '', i;
 
     for (i = 0; i < n - s.length - 2 * SHA1_SIZE - 2; i += 1) {
-        PS += '\x00';
+        ps += '\x00';
     }
 
-    var DB = rstr_sha1('') + PS + '\x01' + s;
+    var db = rstr_sha1('') + ps + '\x01' + s;
     var seed = new Array(SHA1_SIZE);
     new SecureRandom().nextBytes(seed);
 
-    var dbMask = oaep_mgf1_arr(seed, DB.length, hash || rstr_sha1);
-    var maskedDB = [];
+    var dbMask = oaep_mgf1_arr(seed, db.length, hash || rstr_sha1);
+    var maskedDb = [];
 
-    for (i = 0; i < DB.length; i += 1) {
-        maskedDB[i] = DB.charCodeAt(i) ^ dbMask.charCodeAt(i);
+    for (i = 0; i < db.length; i += 1) {
+        maskedDb[i] = db.charCodeAt(i) ^ dbMask.charCodeAt(i);
     }
 
-    var seedMask = oaep_mgf1_arr(maskedDB, seed.length, rstr_sha1);
+    var seedMask = oaep_mgf1_arr(maskedDb, seed.length, rstr_sha1);
     var maskedSeed = [0];
 
     for (i = 0; i < seed.length; i += 1) {
         maskedSeed[i + 1] = seed[i] ^ seedMask.charCodeAt(i);
     }
 
-    return new BigInteger(maskedSeed.concat(maskedDB));
+    return new BigInteger(maskedSeed.concat(maskedDb));
 }
 
 // "empty" RSA key constructor
@@ -3055,15 +3055,15 @@ function RSAKey() {
 }
 
 // Set the public key fields N and e from hex strings
-function RSASetPublic(N, E) {
+function RSASetPublic(n, e) {
     this.isPublic = true;
-    if (typeof N !== "string") {
-        this.n = N;
-        this.e = E;
+    if (typeof n !== "string") {
+        this.n = n;
+        this.e = e;
     }
-    else if (N != null && E != null && N.length > 0 && E.length > 0) {
-        this.n = parseBigInt(N, 16);
-        this.e = parseInt(E, 16);
+    else if (n != null && e != null && n.length > 0 && e.length > 0) {
+        this.n = parseBigInt(n, 16);
+        this.e = parseInt(e, 16);
     }
     else
         alert("Invalid RSA public key");
@@ -3183,9 +3183,9 @@ function oaep_unpad(d, n, hash) {
     }
 
     var maskedSeed = d.substr(1, SHA1_SIZE)
-    var maskedDB = d.substr(SHA1_SIZE + 1);
+    var maskedDb = d.substr(SHA1_SIZE + 1);
 
-    var seedMask = oaep_mgf1_str(maskedDB, SHA1_SIZE, hash || rstr_sha1);
+    var seedMask = oaep_mgf1_str(maskedDb, SHA1_SIZE, hash || rstr_sha1);
     var seed = [], i;
 
     for (i = 0; i < maskedSeed.length; i += 1) {
@@ -3195,78 +3195,78 @@ function oaep_unpad(d, n, hash) {
     var dbMask = oaep_mgf1_str(String.fromCharCode.apply(String, seed),
                            d.length - SHA1_SIZE, rstr_sha1);
 
-    var DB = [];
+    var db = [];
 
-    for (i = 0; i < maskedDB.length; i += 1) {
-        DB[i] = maskedDB.charCodeAt(i) ^ dbMask.charCodeAt(i);
+    for (i = 0; i < maskedDb.length; i += 1) {
+        db[i] = maskedDb.charCodeAt(i) ^ dbMask.charCodeAt(i);
     }
 
-    DB = String.fromCharCode.apply(String, DB);
+    db = String.fromCharCode.apply(String, db);
 
-    if (DB.substr(0, SHA1_SIZE) !== rstr_sha1('')) {
+    if (db.substr(0, SHA1_SIZE) !== rstr_sha1('')) {
         throw "Hash mismatch";
     }
 
-    DB = DB.substr(SHA1_SIZE);
+    db = db.substr(SHA1_SIZE);
 
-    var first_one = DB.indexOf('\x01');
-    var last_zero = (first_one != -1) ? DB.substr(0, first_one).lastIndexOf('\x00') : -1;
+    var firstOne = db.indexOf('\x01');
+    var lastZero = (firstOne != -1) ? db.substr(0, firstOne).lastIndexOf('\x00') : -1;
 
-    if (last_zero + 1 != first_one) {
+    if (lastZero + 1 != firstOne) {
         throw "Malformed data";
     }
 
-    return DB.substr(first_one + 1);
+    return db.substr(firstOne + 1);
 }
 
 // Set the private key fields N, e, and d from hex strings
-function RSASetPrivate(N, E, D) {
+function RSASetPrivate(n, e, d) {
     this.isPrivate = true;
-    if (typeof N !== "string") {
-        this.n = N;
-        this.e = E;
-        this.d = D;
+    if (typeof n !== "string") {
+        this.n = n;
+        this.e = e;
+        this.d = d;
     }
-    else if (N != null && E != null && N.length > 0 && E.length > 0) {
-        this.n = parseBigInt(N, 16);
-        this.e = parseInt(E, 16);
-        this.d = parseBigInt(D, 16);
+    else if (n != null && e != null && n.length > 0 && e.length > 0) {
+        this.n = parseBigInt(n, 16);
+        this.e = parseInt(e, 16);
+        this.d = parseBigInt(d, 16);
     }
     else
         alert("Invalid RSA private key");
 }
 
 // Set the private key fields N, e, d and CRT params from hex strings
-function RSASetPrivateEx(N, E, D, P, Q, DP, DQ, C) {
+function RSASetPrivateEx(n, e, d, p, q, dp, dq, c) {
     this.isPrivate = true;
-    if (N == null) throw "RSASetPrivateEx N == null";
-    if (E == null) throw "RSASetPrivateEx E == null";
-    if (N.length == 0) throw "RSASetPrivateEx N.length == 0";
-    if (E.length == 0) throw "RSASetPrivateEx E.length == 0";
+    if (n == null) throw "RSASetPrivateEx N == null";
+    if (e == null) throw "RSASetPrivateEx E == null";
+    if (n.length == 0) throw "RSASetPrivateEx N.length == 0";
+    if (e.length == 0) throw "RSASetPrivateEx E.length == 0";
 
-    if (N != null && E != null && N.length > 0 && E.length > 0) {
-        this.n = parseBigInt(N, 16);
-        this.e = parseInt(E, 16);
-        this.d = parseBigInt(D, 16);
-        this.p = parseBigInt(P, 16);
-        this.q = parseBigInt(Q, 16);
-        this.dmp1 = parseBigInt(DP, 16);
-        this.dmq1 = parseBigInt(DQ, 16);
-        this.coeff = parseBigInt(C, 16);
+    if (n != null && e != null && n.length > 0 && e.length > 0) {
+        this.n = parseBigInt(n, 16);
+        this.e = parseInt(e, 16);
+        this.d = parseBigInt(d, 16);
+        this.p = parseBigInt(p, 16);
+        this.q = parseBigInt(q, 16);
+        this.dmp1 = parseBigInt(dp, 16);
+        this.dmq1 = parseBigInt(dq, 16);
+        this.coeff = parseBigInt(c, 16);
     } else {
         alert("Invalid RSA private key in RSASetPrivateEx");
     }
 }
 
 // Generate a new random private key B bits long, using public expt E
-function RSAGenerate(B, E) {
+function RSAGenerate(b, e) {
     var rng = new SecureRandom();
-    var qs = B >> 1;
-    this.e = parseInt(E, 16);
-    var ee = new BigInteger(E, 16);
+    var qs = b >> 1;
+    this.e = parseInt(e, 16);
+    var ee = new BigInteger(e, 16);
     for (; ;) {
         for (; ;) {
-            this.p = new BigInteger(B - qs, 1, rng);
+            this.p = new BigInteger(b - qs, 1, rng);
             if (this.p.subtract(BigInteger.ONE).gcd(ee).compareTo(BigInteger.ONE) == 0 && this.p.isProbablePrime(10)) break;
         }
         for (; ;) {
@@ -3380,8 +3380,8 @@ RSAKey.prototype.decryptOAEP = RSADecryptOAEP;
  * @version 1.1
  * @license <a href="http://kjur.github.io/jsrsasign/license/">MIT License</a>
  */
-function _rsapem_pemToBase64(sPEMPrivateKey) {
-    var s = sPEMPrivateKey;
+function _rsapem_pemToBase64(sPemPrivateKey) {
+    var s = sPemPrivateKey;
     s = s.replace("-----BEGIN RSA PRIVATE KEY-----", "");
     s = s.replace("-----END RSA PRIVATE KEY-----", "");
     s = s.replace(/[ \n]+/g, "");
@@ -3439,8 +3439,8 @@ function _rsapem_readPrivateKeyFromASN1HexString(keyHex) {
  * @function
  * @param {String} keyPEM string of PKCS#1 private key.
  */
-function _rsapem_readPrivateKeyFromPEMString(keyPEM) {
-    var keyB64 = _rsapem_pemToBase64(keyPEM);
+function _rsapem_readPrivateKeyFromPEMString(keyPem) {
+    var keyB64 = _rsapem_pemToBase64(keyPem);
     var keyHex = b64tohex(keyB64) // depends base64.js
     var a = _rsapem_getHexValueArrayOfChildrenFromHex(keyHex);
     this.setPrivateEx(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
@@ -3562,9 +3562,9 @@ var ASN1HEX = new function () {
      * @param {Number} pos string index
      */
     this.getStartPosOfV_AtObj = function (s, pos) {
-        var l_len = this.getByteLengthOfL_AtObj(s, pos);
-        if (l_len < 0) return l_len;
-        return pos + (l_len + 1) * 2;
+        var lLen = this.getByteLengthOfL_AtObj(s, pos);
+        if (lLen < 0) return lLen;
+        return pos + (lLen + 1) * 2;
     };
 
     /**
@@ -3925,8 +3925,8 @@ function X509() {
      * @function
      * @param {String} sCertPEM string for PEM formatted X.509 certificate
      */
-    this.readCertPEM = function (sCertPEM) {
-        var hCert = X509.pemToHex(sCertPEM);
+    this.readCertPEM = function (sCertPem) {
+        var hCert = X509.pemToHex(sCertPem);
         var a = X509.getPublicKeyHexArrayFromCertHex(hCert);
         var rsa = new RSAKey();
         rsa.setPublic(a[0], a[1]);
@@ -3936,8 +3936,8 @@ function X509() {
         this.hex = hCert;
     };
 
-    this.readCertPEMWithoutRSAInit = function (sCertPEM) {
-        var hCert = X509.pemToHex(sCertPEM);
+    this.readCertPEMWithoutRSAInit = function (sCertPem) {
+        var hCert = X509.pemToHex(sCertPem);
         var a = X509.getPublicKeyHexArrayFromCertHex(hCert);
         this.subjectPublicKeyRSA.setPublic(a[0], a[1]);
         this.subjectPublicKeyRSA_hN = a[0];
@@ -3946,16 +3946,16 @@ function X509() {
     };
 };
 
-X509.pemToBase64 = function (sCertPEM) {
-    var s = sCertPEM;
+X509.pemToBase64 = function (sCertPem) {
+    var s = sCertPem;
     s = s.replace("-----BEGIN CERTIFICATE-----", "");
     s = s.replace("-----END CERTIFICATE-----", "");
     s = s.replace(/[ \n]+/g, "");
     return s;
 };
 
-X509.pemToHex = function (sCertPEM) {
-    var b64Cert = X509.pemToBase64(sCertPEM);
+X509.pemToHex = function (sCertPem) {
+    var b64Cert = X509.pemToBase64(sCertPem);
     var hCert = b64tohex(b64Cert);
     return hCert;
 };
@@ -4007,25 +4007,25 @@ X509.getHexTbsCertificateFromCert = function (hCert) {
     return pTbsCert;
 };
 
-X509.getPublicKeyHexArrayFromCertPEM = function (sCertPEM) {
-    var hCert = X509.pemToHex(sCertPEM);
+X509.getPublicKeyHexArrayFromCertPEM = function (sCertPem) {
+    var hCert = X509.pemToHex(sCertPem);
     var a = X509.getPublicKeyHexArrayFromCertHex(hCert);
     return a;
 };
 
-X509.hex2dn = function (hDN) {
+X509.hex2dn = function (hDn) {
     var s = "";
-    var a = ASN1HEX.getPosArrayOfChildren_AtObj(hDN, 0);
+    var a = ASN1HEX.getPosArrayOfChildren_AtObj(hDn, 0);
     for (var i = 0; i < a.length; i++) {
-        var hRDN = ASN1HEX.getHexOfTLV_AtObj(hDN, a[i]);
-        s = s + "/" + X509.hex2rdn(hRDN);
+        var hRdn = ASN1HEX.getHexOfTLV_AtObj(hDn, a[i]);
+        s = s + "/" + X509.hex2rdn(hRdn);
     }
     return s;
 };
 
-X509.hex2rdn = function (hRDN) {
-    var hType = ASN1HEX.getDecendantHexTLVByNthList(hRDN, 0, [0, 0]);
-    var hValue = ASN1HEX.getDecendantHexVByNthList(hRDN, 0, [0, 1]);
+X509.hex2rdn = function (hRdn) {
+    var hType = ASN1HEX.getDecendantHexTLVByNthList(hRdn, 0, [0, 0]);
+    var hValue = ASN1HEX.getDecendantHexVByNthList(hRdn, 0, [0, 1]);
     var type = "";
     try { type = X509.DN_ATTRHEX[hType]; } catch (ex) { type = hType; }
     hValue = hValue.replace(/(..)/g, "%$1");
@@ -4054,13 +4054,13 @@ X509.DN_ATTRHEX = {
  * @description
  * NOTE: DSA is also supported since x509 1.1.2.
  */
-X509.getPublicKeyFromCertPEM = function (sCertPEM) {
-    var info = X509.getPublicKeyInfoPropOfCertPEM(sCertPEM);
+X509.getPublicKeyFromCertPEM = function (sCertPem) {
+    var info = X509.getPublicKeyInfoPropOfCertPEM(sCertPem);
 
     if (info.algoid == "2a864886f70d010101") { // RSA
-        var aRSA = KEYUTIL.parsePublicRawRSAKeyHex(info.keyhex);
+        var aRsa = KEYUTIL.parsePublicRawRSAKeyHex(info.keyhex);
         var key = new RSAKey();
-        key.setPublic(aRSA.n, aRSA.e);
+        key.setPublic(aRsa.n, aRsa.e);
         return key;
     } else if (info.algoid == "2a8648ce3d0201") { // ECC
         var curveName = KJUR.crypto.OID.oidhex2name[info.algparam];
@@ -4101,10 +4101,10 @@ X509.getPublicKeyFromCertPEM = function (sCertPEM) {
  * </ul>
  * @since x509 1.1.1
  */
-X509.getPublicKeyInfoPropOfCertPEM = function (sCertPEM) {
+X509.getPublicKeyInfoPropOfCertPEM = function (sCertPem) {
     var result = {};
     result.algparam = null;
-    var hCert = X509.pemToHex(sCertPEM);
+    var hCert = X509.pemToHex(sCertPem);
 
     // 1. Certificate ASN.1
     var a1 = ASN1HEX.getPosArrayOfChildren_AtObj(hCert, 0);
@@ -4979,9 +4979,9 @@ KJUR.crypto.Signature = function (params) {
                 this.state = "VERIFY";
             };
 
-            this.initVerifyByCertificatePEM = function (certPEM) {
+            this.initVerifyByCertificatePEM = function (certPem) {
                 var x509 = new X509();
-                x509.readCertPEM(certPEM);
+                x509.readCertPEM(certPem);
                 this.pubKey = x509.subjectPublicKeyRSA;
                 this.state = "VERIFY";
             };
@@ -5123,7 +5123,7 @@ KJUR.crypto.Signature = function (params) {
      * @example
      * sig.initVerifyByCertificatePEM(certPEM)
      */
-    this.initVerifyByCertificatePEM = function (certPEM) {
+    this.initVerifyByCertificatePEM = function (certPem) {
         throw "initVerifyByCertificatePEM(certPEM) not supported for this alg:prov=" +
             this.algProvName;
     };
@@ -5601,9 +5601,9 @@ function hextob64(s) {
  */
 function hextob64nl(s) {
     var b64 = hextob64(s);
-    var b64nl = b64.replace(/(.{64})/g, "$1\r\n");
-    b64nl = b64nl.replace(/\r\n$/, '');
-    return b64nl;
+    var b64Nl = b64.replace(/(.{64})/g, "$1\r\n");
+    b64Nl = b64Nl.replace(/\r\n$/, '');
+    return b64Nl;
 }
 
 /*

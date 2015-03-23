@@ -24,7 +24,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
     /// </summary>
     public static class LogSerializer
     {
-        static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+        static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
@@ -33,7 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         static LogSerializer()
         {
-            jsonSettings.Converters.Add(new StringEnumConverter());
+            JsonSettings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
         /// <returns></returns>
         public static string Serialize(object logObject)
         {
-            return JsonConvert.SerializeObject(logObject, jsonSettings);
+            return JsonConvert.SerializeObject(logObject, JsonSettings);
         }
     }
 }

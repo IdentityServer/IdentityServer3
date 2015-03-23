@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Owin;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-
 
 #pragma warning disable 1591
 
@@ -35,31 +34,31 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         const string LastUsernameCookieName = "idsvr.username";
 
-        readonly IOwinContext ctx;
-        readonly IdentityServerOptions options;
+        readonly IOwinContext _ctx;
+        readonly IdentityServerOptions _options;
 
         internal LastUserNameCookie(IOwinContext ctx, IdentityServerOptions options)
         {
             if (ctx == null) throw new ArgumentNullException("ctx");
             if (options == null) throw new ArgumentNullException("options");
             
-            this.ctx = ctx;
-            this.options = options;
+            _ctx = ctx;
+            _options = options;
         }
 
         internal string GetValue()
         {
-            if (options.AuthenticationOptions.RememberLastUsername)
+            if (_options.AuthenticationOptions.RememberLastUsername)
             {
                 try
                 {
-                    var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
-                    var value = ctx.Request.Cookies[cookieName];
+                    var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
+                    var value = _ctx.Request.Cookies[cookieName];
 
                     var bytes = Base64Url.Decode(value);
                     try
                     {
-                        bytes = options.DataProtector.Unprotect(bytes, cookieName);
+                        bytes = _options.DataProtector.Unprotect(bytes, cookieName);
                     }
                     catch(CryptographicException)
                     {
@@ -80,11 +79,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         internal void SetValue(string username)
         {
-            if (options.AuthenticationOptions.RememberLastUsername)
+            if (_options.AuthenticationOptions.RememberLastUsername)
             {
-                var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
-                var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
-                var path = ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
+                var cookieName = _options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
+                var secure = _ctx.Request.Scheme == Uri.UriSchemeHttps;
+                var path = _ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
                 var cookieOptions = new Microsoft.Owin.CookieOptions
                 {
@@ -96,7 +95,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 if (!String.IsNullOrWhiteSpace(username))
                 {
                     var bytes = Encoding.UTF8.GetBytes(username);
-                    bytes = options.DataProtector.Protect(bytes, cookieName);
+                    bytes = _options.DataProtector.Protect(bytes, cookieName);
                     username = Base64Url.Encode(bytes);
                     cookieOptions.Expires = DateTimeHelper.UtcNow.AddYears(1);
                 }
@@ -106,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     cookieOptions.Expires = DateTimeHelper.UtcNow.AddYears(-1);
                 }
 
-                ctx.Response.Cookies.Append(cookieName, username, cookieOptions);
+                _ctx.Response.Cookies.Append(cookieName, username, cookieOptions);
             }
         }
     }

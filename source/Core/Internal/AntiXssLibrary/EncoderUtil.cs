@@ -18,12 +18,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 // ReSharper disable CheckNamespace
+
+using System;
+using System.Text;
+
 namespace Microsoft.Security.Application
     // ReSharper restore CheckNamespace
 {
-    using System;
-    using System.Text;
-
     /// <summary>
     /// Provides helper methods common to all Anti-XSS encoders.
     /// </summary>
@@ -40,10 +41,10 @@ namespace Microsoft.Security.Application
             // We treat 32KB byte size (16k chars) as a soft upper boundary for the length of any StringBuilder
             // that we allocate. We'll try to avoid going above this boundary if we can avoid it so that we
             // don't allocate objects on the LOH.
-            const int UpperBound = 16 * 1024;
+            const int upperBound = 16 * 1024;
 
             int charsToAllocate;
-            if (inputLength >= UpperBound)
+            if (inputLength >= upperBound)
             {
                 // We know that the output will contain at least as many characters as the input, so if the
                 // input length exceeds the soft upper boundary just pre-allocate the entire builder and hope for
@@ -53,8 +54,8 @@ namespace Microsoft.Security.Application
             else
             {
                 // Allocate the worst-case if we can, but don't exceed the soft upper boundary.
-                long worstCaseTotalChars = (long)inputLength * worstCaseOutputCharsPerInputChar; // don't overflow Int32
-                charsToAllocate = (int)Math.Min(UpperBound, worstCaseTotalChars);
+                var worstCaseTotalChars = (long)inputLength * worstCaseOutputCharsPerInputChar; // don't overflow Int32
+                charsToAllocate = (int)Math.Min(upperBound, worstCaseTotalChars);
             }
 
             // Once we have chosen an initial value for the StringBuilder size, the StringBuilder type will

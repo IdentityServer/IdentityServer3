@@ -18,8 +18,8 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Validation;
@@ -48,12 +48,12 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
         {
             Logger.Info("Creating token response");
 
-            if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
+            if (request.GrantType == Constants.GrantTypes.AUTHORIZATION_CODE)
             {
                 return await ProcessAuthorizationCodeRequestAsync(request);
             }
 
-            if (request.GrantType == Constants.GrantTypes.RefreshToken)
+            if (request.GrantType == Constants.GrantTypes.REFRESH_TOKEN)
             {
                 return await ProcessRefreshTokenRequestAsync(request);
             }
@@ -173,7 +173,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
 
             if (request.AuthorizationCode != null)
             {
-                createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
+                createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OFFLINE_ACCESS);
                 
                 tokenRequest = new TokenCreationRequest
                 {
@@ -196,9 +196,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 };
             }
 
-            Token accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
+            var accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
 
-            string refreshToken = "";
+            var refreshToken = "";
             if (createRefreshToken)
             {
                 refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(accessToken, request.Client);

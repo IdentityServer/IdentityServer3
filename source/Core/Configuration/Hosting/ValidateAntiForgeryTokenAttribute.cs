@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
+using Microsoft.Owin;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.ViewModels;
@@ -86,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     RequestId = env.GetRequestId(),
                     SiteName = options.SiteName,
                     SiteUrl = env.GetIdentityServerBaseUrl(),
-                    ErrorMessage = localization.GetMessage(Resources.MessageIds.UnexpectedError),
+                    ErrorMessage = localization.GetMessage(MessageIds.UNEXPECTED_ERROR),
                     CurrentUser = env.GetCurrentUserDisplayName(),
                     LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 };

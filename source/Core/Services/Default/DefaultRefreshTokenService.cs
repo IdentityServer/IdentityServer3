@@ -16,8 +16,8 @@
 
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -35,12 +35,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The refresh token store
         /// </summary>
-        protected readonly IRefreshTokenStore _store;
+        protected readonly IRefreshTokenStore Store;
 
         /// <summary>
         /// The _events
         /// </summary>
-        protected readonly IEventService _events;
+        protected readonly IEventService Events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRefreshTokenService" /> class.
@@ -49,8 +49,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="events">The events.</param>
         public DefaultRefreshTokenService(IRefreshTokenStore store, IEventService events)
         {
-            _store = store;
-            _events = events;
+            Store = store;
+            Events = events;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             Logger.Debug("Creating refresh token");
 
             int lifetime;
-            if (client.RefreshTokenExpiration == TokenExpiration.Absolute)
+            if (client.RefreshTokenExpiration == TokenExpiration.ABSOLUTE)
             {
                 Logger.Debug("Setting an absolute lifetime: " + client.AbsoluteRefreshTokenLifetime);
                 lifetime = client.AbsoluteRefreshTokenLifetime;
@@ -85,7 +85,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 AccessToken = accessToken
             };
 
-            await _store.StoreAsync(handle, refreshToken);
+            await Store.StoreAsync(handle, refreshToken);
 
             RaiseRefreshTokenIssuedEvent(handle, refreshToken);
             return handle;
@@ -104,9 +104,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             Logger.Debug("Updating refresh token");
 
-            bool needsUpdate = false;
+            var needsUpdate = false;
 
-            if (client.RefreshTokenUsage == TokenUsage.OneTimeOnly)
+            if (client.RefreshTokenUsage == TokenUsage.ONE_TIME_ONLY)
             {
                 Logger.Debug("Token usage is one-time only. Generating new handle");
 
@@ -114,7 +114,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 needsUpdate = true;
             }
 
-            if (client.RefreshTokenExpiration == TokenExpiration.Sliding)
+            if (client.RefreshTokenExpiration == TokenExpiration.SLIDING)
             {
                 Logger.Debug("Refresh token expiration is sliding - extending lifetime");
 
@@ -139,11 +139,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (needsUpdate)
             {
                 // delete old one
-                await _store.RemoveAsync(handle);
+                await Store.RemoveAsync(handle);
 
                 // create new one
-                string newHandle = CryptoRandom.CreateUniqueId();
-                await _store.StoreAsync(newHandle, refreshToken);
+                var newHandle = CryptoRandom.CreateUniqueId();
+                await Store.StoreAsync(newHandle, refreshToken);
 
                 RaiseRefreshTokenRefreshedEvent(handle, newHandle, refreshToken);
                 Logger.Debug("Updated refresh token in store");
@@ -164,7 +164,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="token">The token.</param>
         protected void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
         {
-            _events.RaiseRefreshTokenIssuedEvent(handle, token);
+            Events.RaiseRefreshTokenIssuedEvent(handle, token);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="token">The token.</param>
         protected void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
         {
-            _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
+            Events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
         }
     }
 }

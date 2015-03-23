@@ -20,7 +20,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace Thinktecture.IdentityServer.Tests.Validation.Setup
 {
     static class TokenFactory
     {
@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
             scopes.ToList().ForEach(s => claims.Add(new Claim("scope", s)));
 
-            var token = new Token(Constants.TokenTypes.AccessToken)
+            var token = new Token(Constants.TokenTypes.ACCESS_TOKEN)
             {
                 Audience = "https://idsrv3.com/resources",
                 Issuer = "https://idsrv3.com",
@@ -55,7 +55,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 new Claim("sub", subjectId)
             };
 
-            var token = new Token(Constants.TokenTypes.IdentityToken)
+            var token = new Token(Constants.TokenTypes.IDENTITY_TOKEN)
             {
                 Audience = clientId,
                 Client = clients.FindClientByIdAsync(clientId).Result,

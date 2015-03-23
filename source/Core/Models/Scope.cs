@@ -83,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public Scope()
         {
-            Type = ScopeType.Resource;
+            Type = ScopeType.RESOURCE;
             Claims = new List<ScopeClaim>();
             IncludeAllClaimsForUser = false;
             Enabled = true;

@@ -14,51 +14,49 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Net;
-using System.Net.Http;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Tests.Endpoints;
+using Thinktecture.IdentityServer.Tests.Endpoints.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
+namespace Thinktecture.IdentityServer.Tests.Endpoints.Connect
 {
     
     public class AuthorizeEndpointControllerTests : IdSvrHostTestBase
     {
-        HttpResponseMessage GetAuthorizePage()
+        void GetAuthorizePage()
         {
-            var resp = Get(Constants.RoutePaths.Oidc.Authorize);
+            var resp = Get(Constants.RoutePaths.Oidc.AUTHORIZE);
             ProcessXsrf(resp);
-            return resp;
         }
 
         [Fact]
         public void GetAuthorize_AuthorizeEndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableAuthorizeEndpoint = false;
-            var resp = Get(Constants.RoutePaths.Oidc.Authorize);
+            Options.Endpoints.EnableAuthorizeEndpoint = false;
+            var resp = Get(Constants.RoutePaths.Oidc.AUTHORIZE);
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
         public void GetAuthorize_NoQueryStringParams_ReturnsErrorPage()
         {
-            var resp = Get(Constants.RoutePaths.Oidc.Authorize);
+            var resp = Get(Constants.RoutePaths.Oidc.AUTHORIZE);
             resp.AssertPage("error");
         }
 
         [Fact]
         public void PostConsent_JsonMediaType_ReturnsUnsupportedMediaType()
         {
-            var resp = Post(Constants.RoutePaths.Oidc.Consent, (object)null);
+            var resp = Post(Constants.RoutePaths.Oidc.CONSENT, (object)null);
             resp.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
         }
 
         [Fact]
         public void PostConsent_NoAntiCsrf_ReturnsErrorPage()
         {
-            var resp = PostForm(Constants.RoutePaths.Oidc.Consent, (object)null);
+            var resp = PostForm(Constants.RoutePaths.Oidc.CONSENT, null);
             resp.AssertPage("error");
         }
         
@@ -66,7 +64,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
         public void PostConsent_NoBody_ReturnsErrorPage()
         {
             GetAuthorizePage();
-            var resp = PostForm(Constants.RoutePaths.Oidc.Consent, (object)null);
+            var resp = PostForm(Constants.RoutePaths.Oidc.CONSENT, null);
             resp.AssertPage("error");
         }
     }

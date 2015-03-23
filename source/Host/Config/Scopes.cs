@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Collections.Generic;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Models;
@@ -45,28 +46,28 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         Name = "read",
                         DisplayName = "Read data",
-                        Type = ScopeType.Resource,
+                        Type = ScopeType.RESOURCE,
                         Emphasize = false,
                     },
                     new Scope
                     {
                         Name = "write",
                         DisplayName = "Write data",
-                        Type = ScopeType.Resource,
+                        Type = ScopeType.RESOURCE,
                         Emphasize = true,
                     },
                     new Scope
                     {
                         Name = "idmgr",
                         DisplayName = "IdentityManager",
-                        Type = ScopeType.Resource,
+                        Type = ScopeType.RESOURCE,
                         Emphasize = true,
                         ShowInDiscoveryDocument = false,
                         
                         Claims = new List<ScopeClaim>
                         {
-                            new ScopeClaim(Constants.ClaimTypes.Name),
-                            new ScopeClaim(Constants.ClaimTypes.Role)
+                            new ScopeClaim(Constants.ClaimTypes.NAME),
+                            new ScopeClaim(Constants.ClaimTypes.ROLE)
                         }
                     }
                 };

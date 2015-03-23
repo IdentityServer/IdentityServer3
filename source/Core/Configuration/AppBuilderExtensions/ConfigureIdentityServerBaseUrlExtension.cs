@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+using Owin;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class ConfigureIdentityServerBaseUrlExtension
     {

@@ -21,8 +21,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Results
@@ -31,16 +31,16 @@ namespace Thinktecture.IdentityServer.Core.Results
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IDictionary<string, object> env;
-        private readonly SignInMessage message;
+        private readonly IDictionary<string, object> _env;
+        private readonly SignInMessage _message;
 
         public LoginResult(IDictionary<string, object> env, SignInMessage message)
         {
             if (env == null) throw new ArgumentNullException("env");
             if (message == null) throw new ArgumentNullException("message");
 
-            this.env = env;
-            this.message = message;
+            _env = env;
+            _message = message;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -54,7 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Results
 
             var response = new HttpResponseMessage(HttpStatusCode.Redirect);
 
-            var url = this.env.CreateSignInRequest(this.message);
+            var url = _env.CreateSignInRequest(_message);
             response.Headers.Location = new Uri(url);
 
             return response;

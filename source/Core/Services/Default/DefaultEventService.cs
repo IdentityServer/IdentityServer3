@@ -15,7 +15,8 @@
  */
 
 using System;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Logging;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default

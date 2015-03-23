@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
-using Microsoft.Owin.Cors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Owin;
+using Microsoft.Owin.Cors;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
@@ -30,13 +30,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
-        readonly string[] paths;
+        readonly string[] _paths;
 
         public CorsPolicyProvider(IEnumerable<string> allowedPaths)
         {
             if (allowedPaths == null) throw new ArgumentNullException("allowedPaths");
 
-            this.paths = allowedPaths.Select(Normalize).ToArray();
+            _paths = allowedPaths.Select(Normalize).ToArray();
         }
 
         public async Task<System.Web.Cors.CorsPolicy> GetCorsPolicyAsync(IOwinRequest request)
@@ -53,10 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                     Logger.Info("CorsPolicyService allowed origin");
                     return Allow(origin);
                 }
-                else
-                {
-                    Logger.Info("CorsPolicyService did not allow origin");
-                }
+                Logger.Info("CorsPolicyService did not allow origin");
             }
             else
             {
@@ -75,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         private bool IsPathAllowed(IOwinRequest request)
         {
             var requestPath = Normalize(request.Path.Value);
-            return paths.Any(path => requestPath.Equals(path, StringComparison.OrdinalIgnoreCase));
+            return _paths.Any(path => requestPath.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
         private string Normalize(string path)

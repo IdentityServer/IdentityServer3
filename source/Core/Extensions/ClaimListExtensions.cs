@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Newtonsoft.Json;
 using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -67,7 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         private static object GetValue(Claim claim)
         {
-            if (claim.Type == Constants.ClaimTypes.Address)
+            if (claim.Type == Constants.ClaimTypes.ADDRESS)
             {
                 try
                 {

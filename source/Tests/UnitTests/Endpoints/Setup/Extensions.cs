@@ -15,9 +15,6 @@
  */
 
 using System;
-using System.Globalization;
-using FluentAssertions;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,9 +22,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Web;
+using FluentAssertions;
+using Newtonsoft.Json;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace Thinktecture.IdentityServer.Tests.Endpoints.Setup
 {
     static class Extensions
     {
@@ -98,9 +97,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
         static T GetModel<T>(string html)
         {
-            var match = "<script id='modelJson' type='application/json'>";
-            var start = html.IndexOf(match);
-            var end = html.IndexOf("</script>", start);
+            const string match = "<script id='modelJson' type='application/json'>";
+            var start = html.IndexOf(match, StringComparison.Ordinal);
+            var end = html.IndexOf("</script>", start, StringComparison.Ordinal);
             var content = html.Substring(start + match.Length, end - start - match.Length);
             var json = HttpUtility.HtmlDecode(content);
             return JsonConvert.DeserializeObject<T>(json);

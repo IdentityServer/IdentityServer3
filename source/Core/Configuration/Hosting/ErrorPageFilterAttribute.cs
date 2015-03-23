@@ -15,9 +15,11 @@
  */
 
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http.Filters;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
@@ -29,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
-        public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
+        public override async Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
             Logger.ErrorException("Exception accessing: " + actionExecutedContext.Request.RequestUri.AbsolutePath, actionExecutedContext.Exception);
 
@@ -42,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 RequestId = env.GetRequestId(),
                 SiteName = options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
-                ErrorMessage = localization.GetMessage(MessageIds.UnexpectedError),
+                ErrorMessage = localization.GetMessage(MessageIds.UNEXPECTED_ERROR),
                 CurrentUser = env.GetCurrentUserDisplayName(),
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
             };

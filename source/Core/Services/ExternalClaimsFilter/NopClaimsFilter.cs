@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     internal class NopClaimsFilter : IExternalClaimsFilter
     {

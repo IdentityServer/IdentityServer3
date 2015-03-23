@@ -23,9 +23,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -43,27 +43,27 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The identity server options
         /// </summary>
-        protected readonly IdentityServerOptions _options;
+        protected readonly IdentityServerOptions Options;
 
         /// <summary>
         /// The claims provider
         /// </summary>
-        protected readonly IClaimsProvider _claimsProvider;
+        protected readonly IClaimsProvider ClaimsProvider;
 
         /// <summary>
         /// The token handles
         /// </summary>
-        protected readonly ITokenHandleStore _tokenHandles;
+        protected readonly ITokenHandleStore TokenHandles;
 
         /// <summary>
         /// The signing service
         /// </summary>
-        protected readonly ITokenSigningService _signingService;
+        protected readonly ITokenSigningService SigningService;
 
         /// <summary>
         /// The events service
         /// </summary>
-        protected readonly IEventService _events;
+        protected readonly IEventService Events;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenService" /> class.
@@ -75,11 +75,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="events">The events service.</param>
         public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService, IEventService events)
         {
-            _options = options;
-            _claimsProvider = claimsProvider;
-            _tokenHandles = tokenHandles;
-            _signingService = signingService;
-            _events = events;
+            Options = options;
+            ClaimsProvider = claimsProvider;
+            TokenHandles = tokenHandles;
+            SigningService = signingService;
+            Events = events;
         }
 
         /// <summary>
@@ -100,35 +100,35 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             // if nonce was sent, must be mirrored in id token
             if (request.Nonce.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Nonce, request.Nonce));
+                claims.Add(new Claim(Constants.ClaimTypes.NONCE, request.Nonce));
             }
 
             // add iat claim
-            claims.Add(new Claim(Constants.ClaimTypes.IssuedAt, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
+            claims.Add(new Claim(Constants.ClaimTypes.ISSUED_AT, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer));
 
             // add at_hash claim
             if (request.AccessTokenToHash.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.AccessTokenHash, HashAdditionalData(request.AccessTokenToHash)));
+                claims.Add(new Claim(Constants.ClaimTypes.ACCESS_TOKEN_HASH, HashAdditionalData(request.AccessTokenToHash)));
             }
 
             // add c_hash claim
             if (request.AuthorizationCodeToHash.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalData(request.AuthorizationCodeToHash)));
+                claims.Add(new Claim(Constants.ClaimTypes.AUTHORIZATION_CODE_HASH, HashAdditionalData(request.AuthorizationCodeToHash)));
             }
 
-            claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
+            claims.AddRange(await ClaimsProvider.GetIdentityTokenClaimsAsync(
                 request.Subject,
                 request.Client,
                 request.Scopes,
                 request.IncludeAllIdentityClaims,
                 request.ValidatedRequest));
 
-            var token = new Token(Constants.TokenTypes.IdentityToken)
+            var token = new Token(Constants.TokenTypes.IDENTITY_TOKEN)
             {
                 Audience = request.Client.ClientId,
-                Issuer = _options.IssuerUri,
+                Issuer = Options.IssuerUri,
                 Lifetime = request.Client.IdentityTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
                 Client = request.Client
@@ -150,7 +150,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             request.Validate();
 
             var claims = new List<Claim>();
-            claims.AddRange(await _claimsProvider.GetAccessTokenClaimsAsync(
+            claims.AddRange(await ClaimsProvider.GetAccessTokenClaimsAsync(
                 request.Subject,
                 request.Client,
                 request.Scopes,
@@ -158,13 +158,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             if (request.Client.IncludeJwtId)
             {
-                claims.Add(new Claim(Constants.ClaimTypes.JwtId, CryptoRandom.CreateUniqueId()));
+                claims.Add(new Claim(Constants.ClaimTypes.JWT_ID, CryptoRandom.CreateUniqueId()));
             }
 
-            var token = new Token(Constants.TokenTypes.AccessToken)
+            var token = new Token(Constants.TokenTypes.ACCESS_TOKEN)
             {
-                Audience = string.Format(Constants.AccessTokenAudience, _options.IssuerUri.EnsureTrailingSlash()),
-                Issuer = _options.IssuerUri,
+                Audience = string.Format(Constants.ACCESS_TOKEN_AUDIENCE, Options.IssuerUri.EnsureTrailingSlash()),
+                Issuer = Options.IssuerUri,
                 Lifetime = request.Client.AccessTokenLifetime,
                 Claims = claims.Distinct(new ClaimComparer()).ToList(),
                 Client = request.Client
@@ -185,36 +185,36 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             string tokenResult;
 
-            if (token.Type == Constants.TokenTypes.AccessToken)
+            if (token.Type == Constants.TokenTypes.ACCESS_TOKEN)
             {
-                if (token.Client.AccessTokenType == AccessTokenType.Jwt)
+                if (token.Client.AccessTokenType == AccessTokenType.JWT)
                 {
                     Logger.Debug("Creating JWT access token");
 
-                    tokenResult = await _signingService.SignTokenAsync(token);
+                    tokenResult = await SigningService.SignTokenAsync(token);
                 }
                 else
                 {
                     Logger.Debug("Creating reference access token");
 
                     var handle = CryptoRandom.CreateUniqueId();
-                    await _tokenHandles.StoreAsync(handle, token);
+                    await TokenHandles.StoreAsync(handle, token);
 
                     tokenResult = handle;
                 }
             }
-            else if (token.Type == Constants.TokenTypes.IdentityToken)
+            else if (token.Type == Constants.TokenTypes.IDENTITY_TOKEN)
             {
                 Logger.Debug("Creating JWT identity token");
 
-                tokenResult = await _signingService.SignTokenAsync(token);
+                tokenResult = await SigningService.SignTokenAsync(token);
             }
             else
             {
                 throw new InvalidOperationException("Invalid token type.");
             }
 
-            _events.RaiseTokenIssuedEvent(token);
+            Events.RaiseTokenIssuedEvent(token);
             return tokenResult;
         }
 

@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The consent store
         /// </summary>
-        protected readonly IConsentStore _store;
+        protected readonly IConsentStore Store;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConsentService"/> class.
@@ -43,7 +43,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (store == null) throw new ArgumentNullException("store");
 
-            this._store = store;
+            Store = store;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 return false;
             }
             
-            var consent = await _store.LoadAsync(subject.GetSubjectId(), client.ClientId);
+            var consent = await Store.LoadAsync(subject.GetSubjectId(), client.ClientId);
             if (consent != null && consent.Scopes != null)
             {
                 var intersect = scopes.Intersect(consent.Scopes);
@@ -109,11 +109,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                         ClientId = clientId,
                         Scopes = scopes
                     };
-                    await _store.UpdateAsync(consent);
+                    await Store.UpdateAsync(consent);
                 }
                 else
                 {
-                    await _store.RevokeAsync(subjectId, clientId);
+                    await Store.RevokeAsync(subjectId, clientId);
                 }
             }
         }

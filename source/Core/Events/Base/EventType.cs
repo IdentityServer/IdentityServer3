@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.Base
 {
     /// <summary>
     /// Indicates if the event is a success or fail event.
@@ -24,21 +24,21 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <summary>
         /// Success event
         /// </summary>
-        Success = 1,
+        SUCCESS = 1,
 
         /// <summary>
         /// Failure event
         /// </summary>
-        Failure = 2,
+        FAILURE = 2,
 
         /// <summary>
         /// Information event
         /// </summary>
-        Information = 3,
+        INFORMATION = 3,
         
         /// <summary>
         /// Error event
         /// </summary>
-        Error = 4,
+        ERROR = 4,
     }
 }

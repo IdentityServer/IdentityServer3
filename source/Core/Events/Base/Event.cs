@@ -15,8 +15,9 @@
  */
 
 using System;
+using Newtonsoft.Json;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.Base
 {
     /// <summary>
     /// Models base class for events raised from IdentityServer.
@@ -80,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Events
         /// <value>
         /// The details function.
         /// </value>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public Func<T> DetailsFunc { get; set; }
 
         /// <summary>

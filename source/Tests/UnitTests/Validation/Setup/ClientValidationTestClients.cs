@@ -16,9 +16,10 @@
 
 using System;
 using System.Collections.Generic;
+using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace Thinktecture.IdentityServer.Tests.Validation.Setup
 {
     static class ClientValidationTestClients
     {

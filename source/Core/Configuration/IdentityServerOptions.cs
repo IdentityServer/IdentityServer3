@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Logging;
+using Owin;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 
 namespace Thinktecture.IdentityServer.Core.Configuration
 {
@@ -34,17 +34,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// </summary>
         public IdentityServerOptions()
         {
-            SiteName = Constants.IdentityServerName;
+            SiteName = Constants.IDENTITY_SERVER_NAME;
 
-            this.ProtocolLogoutUrls = new List<string>();
-            this.RequireSsl = true;
-            this.Endpoints = new EndpointOptions();
-            this.CorsPolicy = new CorsPolicy();
-            this.AuthenticationOptions = new AuthenticationOptions();
-            this.CspOptions = new CspOptions();
-            this.LoggingOptions = new LoggingOptions();
-            this.EventsOptions = new EventsOptions();
-            this.EnableWelcomePage = true;
+            ProtocolLogoutUrls = new List<string>();
+            RequireSsl = true;
+            Endpoints = new EndpointOptions();
+            CorsPolicy = new CorsPolicy();
+            AuthenticationOptions = new AuthenticationOptions();
+            CspOptions = new CspOptions();
+            LoggingOptions = new LoggingOptions();
+            EventsOptions = new EventsOptions();
+            EnableWelcomePage = true;
         }
 
         internal void Validate()

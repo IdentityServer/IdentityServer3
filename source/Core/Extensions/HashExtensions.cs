@@ -17,9 +17,8 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace Thinktecture.IdentityServer.Core.Extensions
 {
     /// <summary>
     /// Extension methods for hashing strings

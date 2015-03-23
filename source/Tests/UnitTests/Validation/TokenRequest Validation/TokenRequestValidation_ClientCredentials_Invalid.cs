@@ -14,155 +14,153 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
-{
-    
-    public class TokenRequestValidation_ClientCredentials_Invalid
-    {
-        const string Category = "TokenRequest Validation - ClientCredentials - Invalid";
+namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest_Validation {
+    public class TokenRequestValidation_ClientCredentials_Invalid {
+        private const string Category = "TokenRequest Validation - ClientCredentials - Invalid";
 
-        IClientStore _clients = Factory.CreateClientStore();
+        private readonly IClientStore _clients = Factory.CreateClientStore();
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Invalid_GrantType_For_Client()
-        {
+        public async Task Invalid_GrantType_For_Client(){
             var client = await _clients.FindClientByIdAsync("roclient");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.UnauthorizedClient);
+            result.Error.Should().Be(Constants.TokenErrors.UNAUTHORIZED_CLIENT);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task No_Scopes()
-        {
+        public async Task No_Scopes(){
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Unknown_Scope()
-        {
-            var client = await _clients.FindClientByIdAsync("client");
-            var validator = Factory.CreateTokenRequestValidator();
-            
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "unknown");
-
-            var result = await validator.ValidateRequestAsync(parameters, client);
-
-            result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Unknown_Scope_Multiple()
-        {
+        public async Task Unknown_Scope(){
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource unknown");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "unknown"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Restricted_Scope()
-        {
+        public async Task Unknown_Scope_Multiple(){
+            var client = await _clients.FindClientByIdAsync("client");
+            var validator = Factory.CreateTokenRequestValidator();
+
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource unknown"}
+            };
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Restricted_Scope(){
             var client = await _clients.FindClientByIdAsync("client_restricted");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource2");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource2"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Restricted_Scope_Multiple()
-        {
+        public async Task Restricted_Scope_Multiple(){
             var client = await _clients.FindClientByIdAsync("client_restricted");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource resource2");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource resource2"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Identity_Scope()
-        {
+        public async Task Identity_Scope(){
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "openid");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "openid"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Resource_and_Refresh_Token()
-        {
+        public async Task Resource_and_Refresh_Token(){
             var client = await _clients.FindClientByIdAsync("client");
             var validator = Factory.CreateTokenRequestValidator();
 
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.ClientCredentials);
-            parameters.Add(Constants.TokenRequest.Scope, "resource offline_access");
+            var parameters = new NameValueCollection {
+                {Constants.TokenRequest.GRANT_TYPE, Constants.GrantTypes.CLIENT_CREDENTIALS},
+                {Constants.TokenRequest.SCOPE, "resource offline_access"}
+            };
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.TokenErrors.InvalidScope);
+            result.Error.Should().Be(Constants.TokenErrors.INVALID_SCOPE);
         }
     }
 }

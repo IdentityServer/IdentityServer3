@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Microsoft.Owin;
-using Microsoft.Owin.Security.DataHandler;
-using Microsoft.Owin.Security.Google;
-using Microsoft.Owin.Testing;
-using Moq;
-using Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -29,36 +22,44 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
+using FluentAssertions;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.DataHandler;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Testing;
+using Moq;
+using Owin;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace Thinktecture.IdentityServer.Tests.Endpoints.Setup
 {
     public class IdSvrHostTestBase
     {
-        protected TestServer server;
-        protected HttpClient client;
-        protected IDataProtector protector;
-        protected TicketDataFormat ticketFormatter;
+        protected TestServer Server;
+        protected HttpClient Client;
+        protected IDataProtector Protector;
+        protected TicketDataFormat TicketFormatter;
 
-        protected Mock<InMemoryUserService> mockUserService;
-        protected IdentityServerOptions options;
+        protected Mock<InMemoryUserService> MockUserService;
+        protected IdentityServerOptions Options;
 
-        protected IAppBuilder appBuilder;
+        protected IAppBuilder AppBuilder;
         protected Action<IAppBuilder, string> OverrideIdentityProviderConfiguration { get; set; }
 
-        protected List<Client> clients;
+        protected List<Client> Clients;
 
         protected Action<IdentityServerOptions> ConfigureIdentityServerOptions;
 
-        protected GoogleOAuth2AuthenticationOptions google;
-        protected GoogleOAuth2AuthenticationOptions google2;
-        protected GoogleOAuth2AuthenticationOptions hiddenGoogle;
+        protected GoogleOAuth2AuthenticationOptions Google;
+        protected GoogleOAuth2AuthenticationOptions Google2;
+        protected GoogleOAuth2AuthenticationOptions HiddenGoogle;
 
         public IdSvrHostTestBase()
         {
@@ -67,38 +68,37 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
 
         protected void Init()
         {
-            clients = TestClients.Get();
-            var clientStore = new InMemoryClientStore(clients);
+            Clients = TestClients.Get();
+            var clientStore = new InMemoryClientStore(Clients);
             var scopeStore = new InMemoryScopeStore(TestScopes.Get());
 
             var factory = new IdentityServerServiceFactory
             {
-                ScopeStore = new Registration<IScopeStore>((resolver) => scopeStore),
-                ClientStore = new Registration<IClientStore>((resolver) => clientStore)
+                ScopeStore = new Registration<IScopeStore>(resolver => scopeStore),
+                ClientStore = new Registration<IClientStore>(resolver => clientStore)
             };
 
-            server = TestServer.Create(app =>
+            Server = TestServer.Create(app =>
             {
-                appBuilder = app;
+                AppBuilder = app;
 
-                mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
-                mockUserService.CallBase = true;
-                factory.UserService = new Registration<IUserService>((resolver) => mockUserService.Object);
+                MockUserService = new Mock<InMemoryUserService>(TestUsers.Get()) {CallBase = true};
+                factory.UserService = new Registration<IUserService>(resolver => MockUserService.Object);
 
-                options = TestIdentityServerOptions.Create();
-                options.Factory = factory;
-                options.AuthenticationOptions.IdentityProviders = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
+                Options = TestIdentityServerOptions.Create();
+                Options.Factory = factory;
+                Options.AuthenticationOptions.IdentityProviders = OverrideIdentityProviderConfiguration ?? ConfigureAdditionalIdentityProviders;
 
-                protector = options.DataProtector;
+                Protector = Options.DataProtector;
 
-                if (ConfigureIdentityServerOptions != null) ConfigureIdentityServerOptions(options);
-                app.UseIdentityServer(options);
+                if (ConfigureIdentityServerOptions != null) ConfigureIdentityServerOptions(Options);
+                app.UseIdentityServer(Options);
 
-                ticketFormatter = new TicketDataFormat(
-                    new DataProtectorAdapter(protector, options.AuthenticationOptions.CookieOptions.Prefix + Constants.PartialSignInAuthenticationType));
+                TicketFormatter = new TicketDataFormat(
+                    new DataProtectorAdapter(Protector, Options.AuthenticationOptions.CookieOptions.Prefix + Constants.PARTIAL_SIGN_IN_AUTHENTICATION_TYPE));
             });
 
-            client = server.HttpClient;
+            Client = Server.HttpClient;
         }
 
         public virtual void ConfigureAdditionalIdentityProviders(IAppBuilder app, string signInAsType)
@@ -110,16 +110,16 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 Postprocess(ctx);
             });
 
-            google = new GoogleOAuth2AuthenticationOptions
+            Google = new GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "Google",
                 SignInAsAuthenticationType = signInAsType,
                 ClientId = "foo",
                 ClientSecret = "bar"
             };
-            app.UseGoogleAuthentication(google);
+            app.UseGoogleAuthentication(Google);
 
-            google2 = new GoogleOAuth2AuthenticationOptions
+            Google2 = new GoogleOAuth2AuthenticationOptions
             {
                 Caption = "Google2",
                 AuthenticationType = "Google2",
@@ -127,9 +127,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 ClientId = "g2",
                 ClientSecret = "g2"
             };
-            app.UseGoogleAuthentication(google2);
+            app.UseGoogleAuthentication(Google2);
 
-            hiddenGoogle = new GoogleOAuth2AuthenticationOptions
+            HiddenGoogle = new GoogleOAuth2AuthenticationOptions
             {
                 AuthenticationType = "HiddenGoogle",
                 Caption = null,
@@ -137,7 +137,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 ClientId = "baz",
                 ClientSecret = "quux"
             };
-            app.UseGoogleAuthentication(hiddenGoogle);
+            app.UseGoogleAuthentication(HiddenGoogle);
         }
 
         public AntiForgeryTokenViewModel Xsrf { get; set; }
@@ -151,7 +151,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 {
                     Xsrf = model.AntiForgery;
                     var cookies = resp.GetCookies().Where(x => x.Name == Xsrf.Name);
-                    client.SetCookies(cookies);
+                    Client.SetCookies(cookies);
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
         protected HttpResponseMessage Get(string path)
         {
-            return client.GetAsync(Url(path)).Result;
+            return Client.GetAsync(Url(path)).Result;
         }
 
         protected T Get<T>(string path)
@@ -190,8 +190,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             coll = new NameValueCollection();
             foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(values))
             {
-                var val = descriptor.GetValue(values);
-                if (val == null) val = "";
+                var val = descriptor.GetValue(values) ?? "";
                 coll.Add(descriptor.Name, val.ToString());
             }
             return coll;
@@ -206,7 +205,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                 {
                     sb.Append("&");
                 }
-                sb.AppendFormat("{0}={1}", item, coll[item].ToString());
+                sb.AppendFormat("{0}={1}", item, coll[item]);
             }
             return sb.ToString();
         }
@@ -226,48 +225,48 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var form = includeCsrf ? MapAndAddXsrf(value) : Map(value);
             var body = ToFormBody(form);
             var content = new StringContent(body, Encoding.UTF8, FormUrlEncodedMediaTypeFormatter.DefaultMediaType.MediaType);
-            return client.PostAsync(Url(path), content).Result;
+            return Client.PostAsync(Url(path), content).Result;
         }
 
         protected HttpResponseMessage Post<T>(string path, T value)
         {
-            return client.PostAsJsonAsync(Url(path), value).Result;
+            return Client.PostAsJsonAsync(Url(path), value).Result;
         }
 
         protected HttpResponseMessage Put<T>(string path, T value)
         {
-            return client.PutAsJsonAsync(Url(path), value).Result;
+            return Client.PutAsJsonAsync(Url(path), value).Result;
         }
 
         protected HttpResponseMessage Delete(string path)
         {
-            return client.DeleteAsync(Url(path)).Result;
+            return Client.DeleteAsync(Url(path)).Result;
         }
 
         protected string WriteMessageToCookie<T>(T msg)
             where T : Message
         {
-            var cookieStates = client.DefaultRequestHeaders.GetCookies().SelectMany(c => c.Cookies);
+            var cookieStates = Client.DefaultRequestHeaders.GetCookies().SelectMany(c => c.Cookies);
             var requestCookies = cookieStates.Select(c => c.ToString()).ToArray();
-            var request_headers = new Dictionary<string, string[]>
+            var requestHeaders = new Dictionary<string, string[]>
             {
                 {"Cookie", requestCookies}
             };
 
-            var response_headers = new Dictionary<string, string[]>();
+            var responseHeaders = new Dictionary<string, string[]>();
             var env = new Dictionary<string, object>()
             {
                 {"owin.RequestScheme", "https"},
-                {"owin.RequestHeaders", request_headers},
-                {"owin.ResponseHeaders", response_headers},
-                {Constants.OwinEnvironment.IdentityServerBasePath, "/"},
+                {"owin.RequestHeaders", requestHeaders},
+                {"owin.ResponseHeaders", responseHeaders},
+                {Constants.OwinEnvironment.IDENTITY_SERVER_BASE_PATH, "/"},
             };
 
             var ctx = new OwinContext(env);
-            var signInCookie = new MessageCookie<T>(ctx, options);
+            var signInCookie = new MessageCookie<T>(ctx, Options);
             var id = signInCookie.Write(msg);
 
-            client.SetCookies(response_headers["Set-Cookie"]);
+            Client.SetCookies(responseHeaders["Set-Cookie"]);
 
             return id;
         }

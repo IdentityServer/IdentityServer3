@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.ViewModels;
 using Xunit;
-
 
 namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
 {
@@ -31,27 +30,27 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
     {
         const string Category = "Conformance.Basic.RedirectUriTests";
 
-        Client client;
-        string client_id = "code_client";
-        string redirect_uri = "https://code_client/callback";
-        string client_secret = "secret";
+        Client _client;
+        private const string ClientId = "code_client";
+        private const string RedirectUri = "https://code_client/callback";
+        private const string ClientSecret = "secret";
 
         protected override void PreInit()
         {
-            host.Scopes.Add(StandardScopes.OpenId);
-            host.Clients.Add(client = new Client
+            Host.Scopes.Add(StandardScopes.OpenId);
+            Host.Clients.Add(_client = new Client
             {
                 Enabled = true,
-                ClientId = client_id,
+                ClientId = ClientId,
                 ClientSecrets = new List<ClientSecret>
                 {
-                    new ClientSecret(client_secret)
+                    new ClientSecret(ClientSecret)
                 },
-                Flow = Flows.AuthorizationCode,
+                Flow = Flows.AUTHORIZATION_CODE,
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {
-                    redirect_uri
+                    RedirectUri
                 }
             });
         }
@@ -60,13 +59,13 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Reject_redirect_uri_not_matching_registered_redirect_uri()
         {
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
             var state = Guid.NewGuid().ToString();
-            var url = host.GetAuthorizeUrl(client_id, "http://bad", "openid", "code", state, nonce);
+            var url = Host.GetAuthorizeUrl(ClientId, "http://bad", "openid", "code", state, nonce);
 
-            var result = host.Client.GetAsync(url).Result;
+            var result = Host.Client.GetAsync(url).Result;
 
             result.AssertPage("error");
             var model = result.GetPageModel<ErrorViewModel>();
@@ -77,13 +76,13 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Reject_request_without_redirect_uri_when_multiple_registered()
         {
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
             var state = Guid.NewGuid().ToString();
-            var url = host.GetAuthorizeUrl(client_id, /*redirect_uri*/ null, "openid", "code", state, nonce);
+            var url = Host.GetAuthorizeUrl(ClientId, /*redirect_uri*/ null, "openid", "code", state, nonce);
 
-            var result = host.Client.GetAsync(url).Result;
+            var result = Host.Client.GetAsync(url).Result;
 
             result.AssertPage("error");
             var model = result.GetPageModel<ErrorViewModel>();
@@ -94,41 +93,41 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         [Trait("Category", Category)]
         public void Preserves_query_parameters_in_redirect_uri()
         {
-            var query_redirect_uri = redirect_uri + "?foo=bar&baz=quux";
-            client.RedirectUris.Add(query_redirect_uri);
+            const string queryRedirectUri = RedirectUri + "?foo=bar&baz=quux";
+            _client.RedirectUris.Add(queryRedirectUri);
 
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
             var state = Guid.NewGuid().ToString();
-            var url = host.GetAuthorizeUrl(client_id, query_redirect_uri, "openid", "code", state, nonce);
+            var url = Host.GetAuthorizeUrl(ClientId, queryRedirectUri, "openid", "code", state, nonce);
 
-            var result = host.Client.GetAsync(url).Result;
+            var result = Host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Redirect);
             result.Headers.Location.AbsoluteUri.Should().StartWith("https://code_client/callback");
             result.Headers.Location.AbsolutePath.Should().Be("/callback");
             var query = result.Headers.Location.ParseQueryString();
             query.AllKeys.Should().Contain("foo");
-            query["foo"].ToString().Should().Be("bar");
+            query["foo"].Should().Be("bar");
             query.AllKeys.Should().Contain("baz");
-            query["baz"].ToString().Should().Be("quux");
+            query["baz"].Should().Be("quux");
         }
 
         [Fact]
         [Trait("Category", Category)]
         public void Rejects_redirect_uri_when_query_parameter_does_not_match()
         {
-            var query_redirect_uri = redirect_uri + "?foo=bar&baz=quux";
-            client.RedirectUris.Add(query_redirect_uri);
-            query_redirect_uri = redirect_uri + "?baz=quux&foo=bar";
+            var queryRedirectUri = RedirectUri + "?foo=bar&baz=quux";
+            _client.RedirectUris.Add(queryRedirectUri);
+            queryRedirectUri = RedirectUri + "?baz=quux&foo=bar";
 
-            host.Login();
+            Host.Login();
 
             var nonce = Guid.NewGuid().ToString();
             var state = Guid.NewGuid().ToString();
-            var url = host.GetAuthorizeUrl(client_id, query_redirect_uri, "openid", "code", state, nonce);
+            var url = Host.GetAuthorizeUrl(ClientId, queryRedirectUri, "openid", "code", state, nonce);
 
-            var result = host.Client.GetAsync(url).Result;
+            var result = Host.Client.GetAsync(url).Result;
             
             result.AssertPage("error");
             var model = result.GetPageModel<ErrorViewModel>();

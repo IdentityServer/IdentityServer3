@@ -19,11 +19,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Services;
@@ -31,13 +31,13 @@ using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// OpenID Connect userinfo endpoint
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
+    [RoutePrefix(Constants.RoutePaths.Oidc.USER_INFO)]
     [NoCache]
     internal class UserInfoEndpointController : ApiController
     {
@@ -79,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (!_options.Endpoints.EnableUserInfoEndpoint)
             {
-                var error = "Endpoint is disabled. Aborting";
+                const string error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
                 RaiseFailureEvent(error);
 
@@ -89,18 +89,18 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request);
             if (tokenUsageResult.TokenFound == false)
             {
-                var error = "No token found.";
+                const string error = "No token found.";
 
                 Logger.Error(error);
                 RaiseFailureEvent(error);
-                return Error(Constants.ProtectedResourceErrors.InvalidToken);
+                return Error(Constants.ProtectedResourceErrors.INVALID_TOKEN);
             }
 
             Logger.Info("Token found: " + tokenUsageResult.UsageType.ToString());
 
             var tokenResult = await _tokenValidator.ValidateAccessTokenAsync(
                 tokenUsageResult.Token,
-                Constants.StandardScopes.OpenId);
+                Constants.StandardScopes.OPEN_ID);
 
             if (tokenResult.IsError)
             {
@@ -110,8 +110,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
 
             // pass scopes/claims to profile service
-            var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
-            var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
+            var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.SUBJECT).Value;
+            var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.SCOPE).Select(c => c.Value);
 
             var payload = await _generator.ProcessAsync(subject, scopes);
 
@@ -128,14 +128,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private void RaiseSuccessEvent()
         {
-            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.UserInfo);
+            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.USER_INFO);
         }
 
         private void RaiseFailureEvent(string error)
         {
             if (_options.EventsOptions.RaiseFailureEvents)
             {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.UserInfo, error);
+                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.USER_INFO, error);
             }
         }
     }

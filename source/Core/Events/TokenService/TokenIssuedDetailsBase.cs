@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.TokenService
 {
     /// <summary>
     /// Details base class for issued token events

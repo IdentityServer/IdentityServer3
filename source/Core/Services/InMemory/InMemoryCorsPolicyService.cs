@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.InMemory
@@ -30,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
-        readonly IEnumerable<Client> clients;
+        readonly IEnumerable<Client> _clients;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryCorsPolicyService"/> class.
@@ -38,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         /// <param name="clients">The clients.</param>
         public InMemoryCorsPolicyService(IEnumerable<Client> clients)
         {
-            this.clients = clients ?? Enumerable.Empty<Client>();
+            _clients = clients ?? Enumerable.Empty<Client>();
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         public Task<bool> IsOriginAllowedAsync(string origin)
         {
             var query =
-                from client in clients
+                from client in _clients
                 from url in client.AllowedCorsOrigins
                 select url.GetOrigin();
 

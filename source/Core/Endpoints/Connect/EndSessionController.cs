@@ -22,16 +22,16 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.ResponseHandling;
 using Thinktecture.IdentityServer.Core.Results;
 using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace Thinktecture.IdentityServer.Core.Endpoints.Connect
 {
     /// <summary>
     /// OpenID Connect end session endpoint
@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     [EditorBrowsable(EditorBrowsableState.Never)]
     [SecurityHeaders]
     [NoCache]
-    [HostAuthentication(Constants.PrimaryAuthenticationType)]
+    [HostAuthentication(Constants.PRIMARY_AUTHENTICATION_TYPE)]
     internal class EndSessionController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -65,7 +65,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
+        [Route(Constants.RoutePaths.Oidc.END_SESSION, Name = Constants.RouteNames.Oidc.END_SESSION)]
         [HttpGet]
         public async Task<IHttpActionResult> Logout()
         {
@@ -81,20 +81,20 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (result.IsError)
             {
                 // if anything went wrong, ignore the params the RP sent
-                return new LogoutResult(null, Request.GetOwinEnvironment(), this._options);
+                return new LogoutResult(null, Request.GetOwinEnvironment(), _options);
             }
         
             var message = _generator.CreateSignoutMessage(_validator.ValidatedRequest);
 
             Logger.Info("End end session request");
-            return new LogoutResult(message, Request.GetOwinEnvironment(), this._options);
+            return new LogoutResult(message, Request.GetOwinEnvironment(), _options);
         }
 
         /// <summary>
         /// Logout callback
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
+        [Route(Constants.RoutePaths.Oidc.END_SESSION_CALLBACK, Name = Constants.RouteNames.Oidc.END_SESSION_CALLBACK)]
         [HttpGet]
         public IHttpActionResult LogoutCallback()
         {

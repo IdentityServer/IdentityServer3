@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.ExternalClaimsFilter
 {
     /// <summary>
     /// Claims filter to convert from WIF claim types to OpenID Connect claim types.

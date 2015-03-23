@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Validation;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Clients
+namespace Thinktecture.IdentityServer.Tests.Validation.Client_Validation
 {
     public class Client_Validation
     {
-        ClientValidator _validatorHashed = Factory.CreateClientValidator(
+        readonly ClientValidator _validatorHashed = Factory.CreateClientValidator(
             secretValidator: new HashedClientSecretValidator());
-        ClientValidator _validatorPlain = Factory.CreateClientValidator(
+
+        readonly ClientValidator _validatorPlain = Factory.CreateClientValidator(
             secretValidator: new PlainTextClientSecretValidator());
 
         const string Category = "Client validation";
@@ -37,7 +39,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Valid_Single_Secret_No_Protection()
         {
-            var clientId = "single_secret_no_protection_no_expiration";
+            const string clientId = "single_secret_no_protection_no_expiration";
 
             var credential = new ClientCredential
             {
@@ -56,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Valid_Single_Secret_Hashed()
         {
-            var clientId = "single_secret_hashed_no_expiration";
+            const string clientId = "single_secret_hashed_no_expiration";
 
             var credential = new ClientCredential
             {
@@ -74,7 +76,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Valid_Multiple_Secrets_No_Protection()
         {
-            var clientId = "multiple_secrets_no_protection";
+            const string clientId = "multiple_secrets_no_protection";
 
             var credential = new ClientCredential
             {
@@ -125,7 +127,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Valid_Multiple_Secrets_Hashed()
         {
-            var clientId = "multiple_secrets_hashed";
+            const string clientId = "multiple_secrets_hashed";
 
             var credential = new ClientCredential
             {
@@ -177,7 +179,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Invalid_Single_Secret_No_Protection()
         {
-            var clientId = "single_secret_no_protection_no_expiration";
+            const string clientId = "single_secret_no_protection_no_expiration";
 
             var credential = new ClientCredential
             {
@@ -194,7 +196,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Expired_Secret_No_Protection()
         {
-            var clientId = "multiple_secrets_no_protection";
+            const string clientId = "multiple_secrets_no_protection";
 
             var credential = new ClientCredential
             {
@@ -211,7 +213,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Invalid_Multiple_Secrets_No_Protection()
         {
-            var clientId = "multiple_secrets_no_protection";
+            const string clientId = "multiple_secrets_no_protection";
 
             var credential = new ClientCredential
             {
@@ -228,7 +230,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Clients
         [Trait("Category", Category)]
         public async Task Invalid_Multiple_Secrets_Hashed()
         {
-            var clientId = "multiple_secrets_hashed";
+            const string clientId = "multiple_secrets_hashed";
 
             var credential = new ClientCredential
             {

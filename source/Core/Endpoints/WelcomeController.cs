@@ -18,8 +18,8 @@ using System;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Results;
 
 #pragma warning disable 1591
@@ -31,21 +31,21 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IdentityServerOptions options;
+        private readonly IdentityServerOptions _options;
 
         public WelcomeController(IdentityServerOptions options)
         {
             if (options == null) throw new ArgumentNullException("options");
 
-            this.options = options;
+            _options = options;
         }
 
-        [Route(Constants.RoutePaths.Welcome, Name=Constants.RouteNames.Welcome)]
+        [Route(Constants.RoutePaths.WELCOME, Name=Constants.RouteNames.WELCOME)]
         public IHttpActionResult Get()
         {
             Logger.Info("Welcome page requested");
 
-            if (!options.EnableWelcomePage)
+            if (!_options.EnableWelcomePage)
             {
                 Logger.Error("welcome page disabled, returning 404");
                 return NotFound();

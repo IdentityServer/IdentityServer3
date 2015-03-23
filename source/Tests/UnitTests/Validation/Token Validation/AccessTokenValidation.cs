@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Moq;
 using System;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -28,9 +28,10 @@ using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Services.InMemory;
+using Thinktecture.IdentityServer.Tests.Validation.Setup;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
+namespace Thinktecture.IdentityServer.Tests.Validation.Token_Validation
 {
     public class AccessTokenValidation : IDisposable
     {
@@ -43,29 +44,27 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
         }
 
-        DateTimeOffset now;
+        DateTimeOffset _now;
         public DateTimeOffset UtcNow
         {
-            get
-            {
-                if (now > DateTimeOffset.MinValue) return now;
-                return DateTimeOffset.UtcNow;
+            get{
+                return _now > DateTimeOffset.MinValue ? _now : DateTimeOffset.UtcNow;
             }
         }
 
-        Func<DateTimeOffset> originalNowFunc;
+        readonly Func<DateTimeOffset> _originalNowFunc;
         
         public AccessTokenValidation()
         {
-            originalNowFunc = DateTimeOffsetHelper.UtcNowFunc;
+            _originalNowFunc = DateTimeOffsetHelper.UtcNowFunc;
             DateTimeOffsetHelper.UtcNowFunc = () => UtcNow;
         }
 
         public void Dispose()
         {
-            if (originalNowFunc != null)
+            if (_originalNowFunc != null)
             {
-                DateTimeOffsetHelper.UtcNowFunc = originalNowFunc;
+                DateTimeOffsetHelper.UtcNowFunc = _originalNowFunc;
             }
         }
 
@@ -78,7 +77,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var validator = Factory.CreateTokenValidator(store);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
 
@@ -86,7 +85,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
 
             result.IsError.Should().BeFalse();
             result.Claims.Count().Should().Be(8);
-            result.Claims.First(c => c.Type == Constants.ClaimTypes.ClientId).Value.Should().Be("roclient");
+            result.Claims.First(c => c.Type == Constants.ClaimTypes.CLIENT_ID).Value.Should().Be("roclient");
         }
 
         [Fact]
@@ -97,7 +96,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var validator = Factory.CreateTokenValidator(store);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
 
@@ -114,14 +113,14 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var validator = Factory.CreateTokenValidator(store);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
 
             var result = await validator.ValidateAccessTokenAsync("123", "missing");
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InsufficientScope);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INSUFFICIENT_SCOPE);
         }
 
         [Fact]
@@ -134,29 +133,29 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("unknown");
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INVALID_TOKEN);
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
-            now = DateTimeOffset.UtcNow;
+            _now = DateTimeOffset.UtcNow;
 
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(store);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 2, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
             
-            now = now.AddMilliseconds(2000);
+            _now = _now.AddMilliseconds(2000);
 
             var result = await validator.ValidateAccessTokenAsync("123");
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.ExpiredToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.EXPIRED_TOKEN);
         }
 
         [Fact]
@@ -169,7 +168,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var result = await validator.ValidateAccessTokenAsync("unk.nown");
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INVALID_TOKEN);
         }
 
         [Fact]
@@ -179,7 +178,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
             var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write"));
 
-            var validator = Factory.CreateTokenValidator(null);
+            var validator = Factory.CreateTokenValidator();
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             result.IsError.Should().BeFalse();
@@ -194,11 +193,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             token.Issuer = "invalid";
             var jwt = await signer.SignTokenAsync(token);
 
-            var validator = Factory.CreateTokenValidator(null);
+            var validator = Factory.CreateTokenValidator();
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INVALID_TOKEN);
         }
 
         [Fact]
@@ -210,11 +209,11 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             token.Audience = "invalid";
             var jwt = await signer.SignTokenAsync(token);
 
-            var validator = Factory.CreateTokenValidator(null);
+            var validator = Factory.CreateTokenValidator();
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
             result.IsError.Should().BeTrue();
-            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.INVALID_TOKEN);
         }
 
         [Fact]
@@ -228,7 +227,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var validator = Factory.CreateTokenValidator(tokenStore: store, users: mock.Object);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "invalid", 600, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
 
@@ -245,7 +244,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
             var validator = Factory.CreateTokenValidator(store);
 
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "unknown" }, "valid", 600, "read", "write");
-            var handle = "123";
+            const string handle = "123";
 
             await store.StoreAsync(handle, token);
 

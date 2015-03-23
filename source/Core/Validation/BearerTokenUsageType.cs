@@ -23,8 +23,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
     [EditorBrowsable(EditorBrowsableState.Never)]
     public enum BearerTokenUsageType
     {
-        AuthorizationHeader = 0,
-        PostBody = 1,
-        QueryString = 2
+        AUTHORIZATION_HEADER = 0,
+        POST_BODY = 1,
+        QUERY_STRING = 2
     }
 }

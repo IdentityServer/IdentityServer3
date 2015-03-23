@@ -15,7 +15,7 @@
  */
 
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.Authentication
 {
     /// <summary>
     /// Event details for authentication events

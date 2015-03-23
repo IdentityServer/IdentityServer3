@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Net.Http.Headers;
 using System.Web.Http.Filters;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
@@ -28,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
                 actionExecutedContext.Response != null &&
                 actionExecutedContext.Response.IsSuccessStatusCode)
             {
-                var cc = new System.Net.Http.Headers.CacheControlHeaderValue
+                var cc = new CacheControlHeaderValue
                 {
                     NoStore = true,
                     NoCache = true,

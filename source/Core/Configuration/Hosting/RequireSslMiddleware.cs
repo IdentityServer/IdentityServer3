@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Owin;
 using Thinktecture.IdentityServer.Core.Resources;
 
 namespace Thinktecture.IdentityServer.Core.Configuration.Hosting

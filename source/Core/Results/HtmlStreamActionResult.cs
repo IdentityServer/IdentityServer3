@@ -17,7 +17,9 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -25,16 +27,16 @@ namespace Thinktecture.IdentityServer.Core.Results
 {
     internal class HtmlStreamActionResult : IHttpActionResult
     {
-        readonly Func<Task<Stream>> renderFunc;
+        readonly Func<Task<Stream>> _renderFunc;
 
         public HtmlStreamActionResult(Func<Task<Stream>> renderFunc)
         {
-            this.renderFunc = renderFunc;
+            _renderFunc = renderFunc;
         }
 
         async Task<Stream> Render()
         {
-            return await renderFunc();
+            return await _renderFunc();
         }
 
         public async Task<HttpResponseMessage> GetResponseMessage()
@@ -42,7 +44,7 @@ namespace Thinktecture.IdentityServer.Core.Results
             var stream = await Render();
 
             var content = new StreamContent(stream);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/html")
+            content.Headers.ContentType = new MediaTypeHeaderValue("text/html")
             {
                 CharSet = Encoding.UTF8.WebName
             };
@@ -53,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Results
             };
         }
 
-        public async Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public async Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             return await GetResponseMessage();
         }

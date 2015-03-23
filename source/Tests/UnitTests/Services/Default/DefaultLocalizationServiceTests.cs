@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Services.Default;
 using Xunit;
@@ -12,19 +13,19 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         [Fact]
         public void GetString_ForAllMessageIds_ReturnsValues()
         {
-            AssertTranslationExists(GetAllMessageIds(), Core.Constants.LocalizationCategories.Messages);    
+            AssertTranslationExists(GetAllMessageIds(), Constants.LocalizationCategories.MESSAGES);    
         }
 
         [Fact]
         public void GetString_ForAllEventIds_ReturnsValues()
         {
-            AssertTranslationExists(GetAllEventIds(), Core.Constants.LocalizationCategories.Events);
+            AssertTranslationExists(GetAllEventIds(), Constants.LocalizationCategories.EVENTS);
         }
 
         [Fact]
         public void GetString_ForAllScopeIds_ReturnsValues()
         {
-            AssertTranslationExists(GetAllScopeIds(), Core.Constants.LocalizationCategories.Scopes);
+            AssertTranslationExists(GetAllScopeIds(), Constants.LocalizationCategories.SCOPES);
         }
 
         private static void AssertTranslationExists(IEnumerable<string> ids, string category)

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using FluentAssertions;
-using Moq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -29,22 +29,22 @@ using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
+namespace Thinktecture.IdentityServer.Tests.ResponseHandling
 {
     
     public class AuthorizeInteractionResponseGeneratorTests_Login
     {
-        IdentityServerOptions options;
+        readonly IdentityServerOptions _options;
 
         public AuthorizeInteractionResponseGeneratorTests_Login()
         {
-            options = new IdentityServerOptions();
+            _options = new IdentityServerOptions();
         }
 
         [Fact]
         public async Task Anonymous_User_must_SignIn()
         {
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, null, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, null, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -60,9 +60,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -79,9 +79,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -91,7 +91,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 {
                     IdentityProviderRestrictions = new List<string> 
                     {
-                        Constants.BuiltInIdentityProvider
+                        Constants.BUILT_IN_IDENTITY_PROVIDER
                     }
                 }
             };
@@ -105,9 +105,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_restricted_current_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -131,15 +131,15 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_allowed_requested_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
                  AuthenticationContextReferenceClasses = new List<string>{
-                    "idp:" + Constants.BuiltInIdentityProvider
+                    "idp:" + Constants.BUILT_IN_IDENTITY_PROVIDER
                 }
             };
 
@@ -153,9 +153,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_different_requested_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -174,12 +174,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Fact]
         public async Task Authenticated_User_with_local_Idp_must_SignIn_when_global_options_does_not_allow_local_logins()
         {
-            options.AuthenticationOptions.EnableLocalLogin = false;
+            _options.AuthenticationOptions.EnableLocalLogin = false;
 
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {
@@ -201,12 +201,12 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         [Fact]
         public async Task Authenticated_User_with_local_Idp_must_SignIn_when_client_options_does_not_allow_local_logins()
         {
-            options.AuthenticationOptions.EnableLocalLogin = true;
+            _options.AuthenticationOptions.EnableLocalLogin = true;
 
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
 
-            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+            var generator = new AuthorizeInteractionResponseGenerator(_options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
             {

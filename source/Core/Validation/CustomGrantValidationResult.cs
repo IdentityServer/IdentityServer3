@@ -70,14 +70,14 @@ namespace Thinktecture.IdentityServer.Core.Validation
             string subject, 
             string authenticationMethod,
             IEnumerable<Claim> claims = null,
-            string identityProvider = Constants.BuiltInIdentityProvider)
+            string identityProvider = Constants.BUILT_IN_IDENTITY_PROVIDER)
         {
             var resultClaims = new List<Claim>
             {
-                new Claim(Constants.ClaimTypes.Subject, subject),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, authenticationMethod),
-                new Claim(Constants.ClaimTypes.IdentityProvider, identityProvider),
-                new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer)
+                new Claim(Constants.ClaimTypes.SUBJECT, subject),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_METHOD, authenticationMethod),
+                new Claim(Constants.ClaimTypes.IDENTITY_PROVIDER, identityProvider),
+                new Claim(Constants.ClaimTypes.AUTHENTICATION_TIME, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString(), ClaimValueTypes.Integer)
             };
 
             if (claims != null && claims.Any())

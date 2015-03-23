@@ -16,7 +16,7 @@
 
 using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace Thinktecture.IdentityServer.Core.Events.TokenService
 {
     /// <summary>
     /// Details class for access token issued events

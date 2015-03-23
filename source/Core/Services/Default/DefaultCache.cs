@@ -28,8 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     public class DefaultCache<T> : ICache<T>
         where T : class
     {
-        readonly MemoryCache cache;
-        readonly TimeSpan duration;
+        readonly MemoryCache _cache;
+        readonly TimeSpan _duration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCache{T}"/> class.
@@ -48,8 +48,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         {
             if (duration <= TimeSpan.Zero) throw new ArgumentOutOfRangeException("duration", "Duration must be greater than zero");
 
-            this.cache = new MemoryCache("cache");
-            this.duration = duration;
+            _cache = new MemoryCache("cache");
+            _duration = duration;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public Task<T> GetAsync(string key)
         {
-            return Task.FromResult((T)cache.Get(key));
+            return Task.FromResult((T)_cache.Get(key));
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public Task SetAsync(string key, T item)
         {
-            var expiration = UtcNow.Add(this.duration);
-            cache.Set(key, item, expiration);
+            var expiration = UtcNow.Add(_duration);
+            _cache.Set(key, item, expiration);
             return Task.FromResult(0);
         }
 

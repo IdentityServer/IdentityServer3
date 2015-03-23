@@ -42,20 +42,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         [DebuggerStepThrough]
-        public static bool IncludesAllClaimsForUserRule(this IEnumerable<Scope> scopes, ScopeType type)
-        {
-            foreach (var scope in scopes)
-            {
-                if (scope.Type == type)
-                {
-                    if (scope.IncludeAllClaimsForUser)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+        public static bool IncludesAllClaimsForUserRule(this IEnumerable<Scope> scopes, ScopeType type){
+            return scopes.Any(scope => scope.Type == type && scope.IncludeAllClaimsForUser);
         }
     }
 }

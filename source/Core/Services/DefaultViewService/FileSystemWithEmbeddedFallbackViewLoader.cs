@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace Thinktecture.IdentityServer.Core.Services.DefaultViewService
 {
     /// <summary>
     /// View loader implementation that uses a combination of the file system view loader 
@@ -26,8 +26,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class FileSystemWithEmbeddedFallbackViewLoader : IViewLoader
     {
-        readonly FileSystemViewLoader file;
-        readonly EmbeddedAssetsViewLoader embedded;
+        readonly FileSystemViewLoader _file;
+        readonly EmbeddedAssetsViewLoader _embedded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemWithEmbeddedFallbackViewLoader"/> class.
@@ -43,8 +43,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="directory">The directory.</param>
         public FileSystemWithEmbeddedFallbackViewLoader(string directory)
         {
-            this.file = new FileSystemViewLoader(directory);
-            this.embedded = new EmbeddedAssetsViewLoader();
+            _file = new FileSystemViewLoader(directory);
+            _embedded = new EmbeddedAssetsViewLoader();
         }
 
         static string GetDefaultDirectory()
@@ -61,10 +61,10 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         public string Load(string name)
         {
-            var value = file.Load(name);
+            var value = _file.Load(name);
             if (value == null)
             {
-                value = embedded.Load(name);
+                value = _embedded.Load(name);
             }
             return value;
         }

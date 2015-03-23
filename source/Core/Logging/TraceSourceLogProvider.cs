@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {
@@ -41,11 +42,11 @@ namespace Thinktecture.IdentityServer.Core.Logging
     public class TraceSourceLogger : ILog
     {
         private readonly string _name;
-        private static readonly TraceSource _source;
+        private static readonly TraceSource Source;
 
         static TraceSourceLogger()
         {
-            _source = new TraceSource("Thinktecture.IdentityServer");
+            Source = new TraceSource("Thinktecture.IdentityServer");
         }
 
         /// <summary>
@@ -71,14 +72,10 @@ namespace Thinktecture.IdentityServer.Core.Logging
                 var eventType = GetEventType(logLevel);
                 EnsureCorrelationId();
 
-                if (exception == null)
-                {
-                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}", _name, messageFunc()));
-                }
-                else
-                {
-                    _source.TraceEvent(eventType, 0, string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception));
-                }
+                Source.TraceEvent(eventType, 0,
+                    exception == null
+                        ? string.Format("{0}: {1}", _name, messageFunc())
+                        : string.Format("{0}: {1}\n{2}", _name, messageFunc(), exception));
             }
 
             return true;
@@ -88,17 +85,17 @@ namespace Thinktecture.IdentityServer.Core.Logging
         {
             switch (logLevel)
             {
-                case LogLevel.Debug:
+                case LogLevel.DEBUG:
                     return TraceEventType.Verbose;
-                case LogLevel.Error:
+                case LogLevel.ERROR:
                     return TraceEventType.Error;
-                case LogLevel.Fatal:
+                case LogLevel.FATAL:
                     return TraceEventType.Critical;
-                case LogLevel.Info:
+                case LogLevel.INFO:
                     return TraceEventType.Information;
-                case LogLevel.Trace:
+                case LogLevel.TRACE:
                     return TraceEventType.Verbose;
-                case LogLevel.Warn:
+                case LogLevel.WARN:
                     return TraceEventType.Warning;
             }
 

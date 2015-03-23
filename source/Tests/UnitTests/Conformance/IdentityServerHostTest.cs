@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Security.Claims;
 using Thinktecture.IdentityServer.Core;
@@ -22,22 +23,22 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 {
     public class IdentityServerHostTest : IDisposable
     {
-        protected IdentityServerHost host = new IdentityServerHost();
+        protected IdentityServerHost Host = new IdentityServerHost();
         
         public IdentityServerHostTest()
         {
-            host.Users.Add(new InMemoryUser{
+            Host.Users.Add(new InMemoryUser{
                 Subject = "818727", Username = "bob", Password = "bob", 
-                Claims = new Claim[]
+                Claims = new[]
                 {
-                    new Claim(Constants.ClaimTypes.Name, "Bob Loblaw"),
-                    new Claim(Constants.ClaimTypes.GivenName, "Bob"),
-                    new Claim(Constants.ClaimTypes.FamilyName, "Loblaw"),
-                    new Claim(Constants.ClaimTypes.Email, "bob@email.com"),
-                    new Claim(Constants.ClaimTypes.Role, "Admin"),
-                    new Claim(Constants.ClaimTypes.Role, "Geek"),
-                    new Claim(Constants.ClaimTypes.WebSite, "http://bob.com"),
-                    new Claim(Constants.ClaimTypes.Address, "{ \"street_address\": \"One Hacker Way\", \"locality\": \"Heidelberg\", \"postal_code\": 69118, \"country\": \"Germany\" }")
+                    new Claim(Constants.ClaimTypes.NAME, "Bob Loblaw"),
+                    new Claim(Constants.ClaimTypes.GIVEN_NAME, "Bob"),
+                    new Claim(Constants.ClaimTypes.FAMILY_NAME, "Loblaw"),
+                    new Claim(Constants.ClaimTypes.EMAIL, "bob@email.com"),
+                    new Claim(Constants.ClaimTypes.ROLE, "Admin"),
+                    new Claim(Constants.ClaimTypes.ROLE, "Geek"),
+                    new Claim(Constants.ClaimTypes.WEB_SITE, "http://bob.com"),
+                    new Claim(Constants.ClaimTypes.ADDRESS, "{ \"street_address\": \"One Hacker Way\", \"locality\": \"Heidelberg\", \"postal_code\": 69118, \"country\": \"Germany\" }")
                 }
             });
 
@@ -47,7 +48,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
         protected virtual void Init()
         {
             PreInit();
-            host.Init();
+            Host.Init();
             PostInit();
         }
 
@@ -61,7 +62,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
 
         public void Dispose()
         {
-            host.Dispose();
+            Host.Dispose();
         }
     }
 }

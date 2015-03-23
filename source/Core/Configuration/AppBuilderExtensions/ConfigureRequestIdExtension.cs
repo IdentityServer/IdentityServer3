@@ -16,9 +16,10 @@
 
 using System;
 using System.Diagnostics;
+using Owin;
 using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class ConfigureRequestIdExtension
     {

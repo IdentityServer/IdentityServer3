@@ -20,7 +20,7 @@ using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace Thinktecture.IdentityServer.Core.Logging.Models
 {
     internal class AuthorizeRequestValidationLog
     {
@@ -59,17 +59,9 @@ namespace Thinktecture.IdentityServer.Core.Logging
                 AllowedRedirectUris = request.Client.RedirectUris;
             }
 
-            if (request.Subject != null)
-            {
-                var subjectClaim = request.Subject.FindFirst(Constants.ClaimTypes.Subject);
-                if (subjectClaim != null)
-                {
-                    SubjectId = subjectClaim.Value;
-                }
-                else
-                {
-                    SubjectId = "unknown";
-                }
+            if (request.Subject != null) {
+                var subjectClaim = request.Subject.FindFirst(Constants.ClaimTypes.SUBJECT);
+                SubjectId = subjectClaim != null ? subjectClaim.Value : "unknown";
             }
 
             if (request.AuthenticationContextReferenceClasses.Any())

@@ -18,11 +18,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 // ReSharper disable CheckNamespace
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.Security.Application
     // ReSharper restore CheckNamespace
 {
-    using System;
-
     /// <summary>
     /// Values for the lowest section of the UTF8 Unicode code tables, from U0000 to U0FFF.
     /// </summary>
@@ -32,199 +34,199 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
         /// </summary>
-        None                                        = 0,
+        NONE                                        = 0,
 
         /// <summary>
         /// The Basic Latin code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0000.pdf</remarks>
-        BasicLatin                                  = 1 << 0x00,
+        BASIC_LATIN                                  = 1 << 0x00,
         
         /// <summary>
         /// The C1 Controls and Latin-1 Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0080.pdf</remarks>
-        C1ControlsAndLatin1Supplement               = 1 << 0x01,
+        C1_CONTROLS_AND_LATIN1_SUPPLEMENT               = 1 << 0x01,
 
         /// <summary>
         /// The Latin Extended-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0100.pdf</remarks>
-        LatinExtendedA                              = 1 << 0x02,
+        LATIN_EXTENDED_A                              = 1 << 0x02,
         
         /// <summary>
         /// The Latin Extended-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0180.pdf</remarks>
-        LatinExtendedB                              = 1 << 0x03,
+        LATIN_EXTENDED_B                              = 1 << 0x03,
         
         /// <summary>
         /// The IPA Extensions code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0250.pdf</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ipa", Justification = "Unicode Standard")]
-        IpaExtensions                               = 1 << 0x04,
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ipa", Justification = "Unicode Standard")]
+        IPA_EXTENSIONS                               = 1 << 0x04,
         
         /// <summary>
         /// The Spacing Modifier Letters code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U02B0.pdf</remarks>
-        SpacingModifierLetters                      = 1 << 0x05,
+        SPACING_MODIFIER_LETTERS                      = 1 << 0x05,
 
         /// <summary>
         /// The Combining Diacritical Marks code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0300.pdf</remarks>
-        CombiningDiacriticalMarks                   = 1 << 0x06,        
+        COMBINING_DIACRITICAL_MARKS                   = 1 << 0x06,        
 
         /// <summary>
         /// The Greek and Coptic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0370.pdf</remarks>
-        GreekAndCoptic                              = 1 << 0x07,
+        GREEK_AND_COPTIC                              = 1 << 0x07,
         
         /// <summary>
         /// The Cyrillic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0400.pdf</remarks>
-        Cyrillic                                    = 1 << 0x08,
+        CYRILLIC                                    = 1 << 0x08,
 
         /// <summary>
         /// The Cyrillic Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0500.pdf</remarks>
-        CyrillicSupplement                          = 1 << 0x09,
+        CYRILLIC_SUPPLEMENT                          = 1 << 0x09,
         
         /// <summary>
         /// The Armenian code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0530.pdf</remarks>
-        Armenian                                    = 1 << 0x0A,
+        ARMENIAN                                    = 1 << 0x0A,
 
         /// <summary>
         /// The Hebrew code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0590.pdf</remarks>
-        Hebrew                                      = 1 << 0x0B,
+        HEBREW                                      = 1 << 0x0B,
         
         /// <summary>
         /// The Arabic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0600.pdf</remarks>
-        Arabic                                      = 1 << 0x0C,
+        ARABIC                                      = 1 << 0x0C,
                 
         /// <summary>
         /// The Syriac code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0700.pdf</remarks>
-        Syriac                                      = 1 << 0x0D,
+        SYRIAC                                      = 1 << 0x0D,
         
         /// <summary>
         /// The Arabic Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0750.pdf</remarks>
-        ArabicSupplement                            = 1 << 0x0E,
+        ARABIC_SUPPLEMENT                            = 1 << 0x0E,
         
         /// <summary>
         /// The Thaana code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0780.pdf</remarks>
-        Thaana                                      = 1 << 0x0F,
+        THAANA                                      = 1 << 0x0F,
 
         /// <summary>
         /// The Nko code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U07C0.pdf</remarks>
-        Nko                                         = 1 << 0x10,
+        NKO                                         = 1 << 0x10,
         
         /// <summary>
         /// The Samaritan code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0800.pdf</remarks>
-        Samaritan                                   = 1 << 0x11,
+        SAMARITAN                                   = 1 << 0x11,
         
         /// <summary>
         /// The Devanagari code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0900.pdf</remarks>
-        Devanagari                                  = 1 << 0x12,
+        DEVANAGARI                                  = 1 << 0x12,
         
         /// <summary>
         /// The Bengali code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0980.pdf</remarks>
-        Bengali                                     = 1 << 0x13,
+        BENGALI                                     = 1 << 0x13,
         
         /// <summary>
         /// The Gurmukhi code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0A00.pdf</remarks>
-        Gurmukhi                                    = 1 << 0x14,
+        GURMUKHI                                    = 1 << 0x14,
         
         /// <summary>
         /// The Gujarati code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0A80.pdf</remarks>
-        Gujarati                                    = 1 << 0x15,
+        GUJARATI                                    = 1 << 0x15,
 
         /// <summary>
         /// The Oriya code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0B00.pdf</remarks>
-        Oriya                                       = 1 << 0x16,
+        ORIYA                                       = 1 << 0x16,
         
         /// <summary>
         /// The Tamil code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0B80.pdf</remarks>
-        Tamil                                       = 1 << 0x17,
+        TAMIL                                       = 1 << 0x17,
 
         /// <summary>
         /// The Telugu code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0C00.pdf</remarks>
-        Telugu                                      = 1 << 0x18,
+        TELUGU                                      = 1 << 0x18,
 
         /// <summary>
         /// The Kannada code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0C80.pdf</remarks>
-        Kannada                                     = 1 << 0x19,
+        KANNADA                                     = 1 << 0x19,
 
         /// <summary>
         /// The Malayalam code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0D00.pdf</remarks>
-        Malayalam                                   = 1 << 0x1A,
+        MALAYALAM                                   = 1 << 0x1A,
 
         /// <summary>
         /// The Sinhala code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0D80.pdf</remarks>
-        Sinhala                                     = 1 << 0x1B,
+        SINHALA                                     = 1 << 0x1B,
 
         /// <summary>
         /// The Thai code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0E00.pdf</remarks>
-        Thai                                        = 1 << 0x1C,
+        THAI                                        = 1 << 0x1C,
 
         /// <summary>
         /// The Lao code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0E80.pdf</remarks>
-        Lao                                         = 1 << 0x1D,
+        LAO                                         = 1 << 0x1D,
 
         /// <summary>
         /// The Tibetan code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U0F00.pdf</remarks>
-        Tibetan                                     = 1 << 0x1E,
+        TIBETAN                                     = 1 << 0x1E,
 
         /// <summary>
         /// The default code tables marked as safe on initialisation.
         /// </summary>
-        Default = BasicLatin | C1ControlsAndLatin1Supplement | LatinExtendedA | LatinExtendedB | SpacingModifierLetters | IpaExtensions | CombiningDiacriticalMarks
+        DEFAULT = BASIC_LATIN | C1_CONTROLS_AND_LATIN1_SUPPLEMENT | LATIN_EXTENDED_A | LATIN_EXTENDED_B | SPACING_MODIFIER_LETTERS | IPA_EXTENSIONS | COMBINING_DIACRITICAL_MARKS
     }
 
     /// <summary>
@@ -236,193 +238,193 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// No code charts from the lower-mid region of the Unicode tables are safe-listed.
         /// </summary>
-        None                                        = 0,
+        NONE                                        = 0,
 
         /// <summary>
         /// The Myanmar code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1000.pdf</remarks>
-        Myanmar                                      = 1 << 0x00,
+        MYANMAR                                      = 1 << 0x00,
 
         /// <summary>
         /// The Georgian code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U10A0.pdf</remarks>
-        Georgian                                    = 1 << 0x01,
+        GEORGIAN                                    = 1 << 0x01,
 
         /// <summary>
         /// The Hangul Jamo code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1100.pdf</remarks>
-        HangulJamo                                  = 1 << 0x02,
+        HANGUL_JAMO                                  = 1 << 0x02,
 
         /// <summary>
         /// The Ethiopic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1200.pdf</remarks>
-        Ethiopic                                    = 1 << 0x03,
+        ETHIOPIC                                    = 1 << 0x03,
 
         /// <summary>
         /// The Ethiopic supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1380.pdf</remarks>
-        EthiopicSupplement                          = 1 << 0x04,
+        ETHIOPIC_SUPPLEMENT                          = 1 << 0x04,
 
         /// <summary>
         /// The Cherokee code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U13A0.pdf</remarks>
-        Cherokee                                    = 1 << 0x05,
+        CHEROKEE                                    = 1 << 0x05,
 
         /// <summary>
         /// The Unified Canadian Aboriginal Syllabics code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1400.pdf</remarks>
-        UnifiedCanadianAboriginalSyllabics          = 1 << 0x06,
+        UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS          = 1 << 0x06,
         
         /// <summary>
         /// The Ogham code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1680.pdf</remarks>
-        Ogham                                       = 1 << 0x07,
+        OGHAM                                       = 1 << 0x07,
                         
         /// <summary>
         /// The Runic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U16A0.pdf</remarks>
-        Runic                                       = 1 << 0x08,
+        RUNIC                                       = 1 << 0x08,
 
         /// <summary>
         /// The Tagalog code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1700.pdf</remarks>
-        Tagalog                                     = 1 << 0x09,
+        TAGALOG                                     = 1 << 0x09,
 
         /// <summary>
         /// The Hanunoo code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1720.pdf</remarks>
-        Hanunoo                                     = 1 << 0x0A,
+        HANUNOO                                     = 1 << 0x0A,
 
         /// <summary>
         /// The Buhid code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1740.pdf</remarks>
-        Buhid                                       = 1 << 0x0B,
+        BUHID                                       = 1 << 0x0B,
 
         /// <summary>
         /// The Tagbanwa code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1760.pdf</remarks>
-        Tagbanwa                                    = 1 << 0x0C,
+        TAGBANWA                                    = 1 << 0x0C,
 
         /// <summary>
         /// The Khmer code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1780.pdf</remarks>
-        Khmer                                       = 1 << 0x0D,
+        KHMER                                       = 1 << 0x0D,
 
         /// <summary>
         /// The Mongolian code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1800.pdf</remarks>
-        Mongolian                                   = 1 << 0x0E,
+        MONGOLIAN                                   = 1 << 0x0E,
                 
         /// <summary>
         /// The Unified Canadian Aboriginal Syllabics Extended code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U18B0.pdf</remarks>
-        UnifiedCanadianAboriginalSyllabicsExtended  = 1 << 0x0F,
+        UNIFIED_CANADIAN_ABORIGINAL_SYLLABICS_EXTENDED  = 1 << 0x0F,
 
         /// <summary>
         /// The Limbu code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1900.pdf</remarks>
-        Limbu                                       = 1 << 0x10,
+        LIMBU                                       = 1 << 0x10,
         
         /// <summary>
         /// The Tai Le code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1950.pdf</remarks>
-        TaiLe                                       = 1 << 0x11,
+        TAI_LE                                       = 1 << 0x11,
 
         /// <summary>
         /// The New Tai Lue code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1980.pdf</remarks>
-        NewTaiLue                                   = 1 << 0x12,
+        NEW_TAI_LUE                                   = 1 << 0x12,
 
         /// <summary>
         /// The Khmer Symbols code table
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U19E0.pdf</remarks>
-        KhmerSymbols                                = 1 << 0x13,
+        KHMER_SYMBOLS                                = 1 << 0x13,
 
         /// <summary>
         /// The Buginese code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1A00.pdf</remarks>
-        Buginese                                    = 1 << 0x14,
+        BUGINESE                                    = 1 << 0x14,
         
         /// <summary>
         /// The Tai Tham code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1A20.pdf</remarks>
-        TaiTham                                     = 1 << 0x15,
+        TAI_THAM                                     = 1 << 0x15,
 
         /// <summary>
         /// The Balinese code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1B00.pdf</remarks>
-        Balinese                                    = 1 << 0x16,
+        BALINESE                                    = 1 << 0x16,
 
         /// <summary>
         /// The Sudanese code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1B80.pdf</remarks>
-        Sudanese                                    = 1 << 0x17,
+        SUDANESE                                    = 1 << 0x17,
         
         /// <summary>
         /// The Lepcha code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1C00.pdf</remarks>
-        Lepcha                                      = 1 << 0x18,
+        LEPCHA                                      = 1 << 0x18,
         
         /// <summary>
         /// The Ol Chiki code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1C50.pdf</remarks>
-        OlChiki                                     = 1 << 0x19,
+        OL_CHIKI                                     = 1 << 0x19,
         
         /// <summary>
         /// The Vedic Extensions code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1CD0.pdf</remarks>
-        VedicExtensions                             = 1 << 0x1A,
+        VEDIC_EXTENSIONS                             = 1 << 0x1A,
         
         /// <summary>
         /// The Phonetic Extensions code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1D00.pdf</remarks>
-        PhoneticExtensions                          = 1 << 0x1B,
+        PHONETIC_EXTENSIONS                          = 1 << 0x1B,
         
         /// <summary>
         /// The Phonetic Extensions Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1D80.pdf</remarks>
-        PhoneticExtensionsSupplement                = 1 << 0x1C,        
+        PHONETIC_EXTENSIONS_SUPPLEMENT                = 1 << 0x1C,        
         
         /// <summary>
         /// The Combining Diacritical Marks Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1DC0.pdf</remarks>        
-        CombiningDiacriticalMarksSupplement         = 1 << 0x1D,
+        COMBINING_DIACRITICAL_MARKS_SUPPLEMENT         = 1 << 0x1D,
 
         /// <summary>
         /// The Latin Extended Additional code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1E00.pdf</remarks>
-        LatinExtendedAdditional                     = 1 << 0x1E
+        LATIN_EXTENDED_ADDITIONAL                     = 1 << 0x1E
     }
 
     /// <summary>
@@ -434,193 +436,193 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
         /// </summary>
-        None                                        = 0,
+        NONE                                        = 0,
         
         /// <summary>
         /// The Greek Extended code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U1F00.pdf</remarks>
-        GreekExtended                               = 1 << 0x00,
+        GREEK_EXTENDED                               = 1 << 0x00,
 
         /// <summary>
         /// The General Punctuation code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2000.pdf</remarks>
-        GeneralPunctuation                          = 1 << 0x01,
+        GENERAL_PUNCTUATION                          = 1 << 0x01,
         
         /// <summary>
         /// The Superscripts and Subscripts code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2070.pdf</remarks>
-        SuperscriptsAndSubscripts                   = 1 << 0x02,
+        SUPERSCRIPTS_AND_SUBSCRIPTS                   = 1 << 0x02,
         
         /// <summary>
         /// The Currency Symbols code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U20A0.pdf</remarks>
-        CurrencySymbols                             = 1 << 0x03,
+        CURRENCY_SYMBOLS                             = 1 << 0x03,
 
         /// <summary>
         /// The Combining Diacritical Marks for Symbols code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U20D0.pdf</remarks>
-        CombiningDiacriticalMarksForSymbols         = 1 << 0x04,
+        COMBINING_DIACRITICAL_MARKS_FOR_SYMBOLS         = 1 << 0x04,
 
         /// <summary>
         /// The Letterlike Symbols code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2100.pdf</remarks>
-        LetterlikeSymbols                           = 1 << 0x05,
+        LETTERLIKE_SYMBOLS                           = 1 << 0x05,
 
         /// <summary>
         /// The Number Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2150.pdf</remarks>
-        NumberForms                                 = 1 << 0x06,
+        NUMBER_FORMS                                 = 1 << 0x06,
 
         /// <summary>
         /// The Arrows code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2190.pdf</remarks>
-        Arrows                                      = 1 << 0x07,
+        ARROWS                                      = 1 << 0x07,
 
         /// <summary>
         /// The Mathematical Operators code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2200.pdf</remarks>
-        MathematicalOperators                       = 1 << 0x08,
+        MATHEMATICAL_OPERATORS                       = 1 << 0x08,
         
         /// <summary>
         /// The Miscellaneous Technical code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2300.pdf</remarks>
-        MiscellaneousTechnical                      = 1 << 0x09,
+        MISCELLANEOUS_TECHNICAL                      = 1 << 0x09,
 
         /// <summary>
         /// The Control Pictures code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2400.pdf</remarks>
-        ControlPictures                             = 1 << 0x0A,
+        CONTROL_PICTURES                             = 1 << 0x0A,
 
         /// <summary>
         /// The Optical Character Recognition table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2440.pdf</remarks>
-        OpticalCharacterRecognition                 = 1 << 0x0B,
+        OPTICAL_CHARACTER_RECOGNITION                 = 1 << 0x0B,
 
         /// <summary>
         /// The Enclosed Alphanumeric code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2460.pdf</remarks>
-        EnclosedAlphanumerics                       = 1 << 0x0C,
+        ENCLOSED_ALPHANUMERICS                       = 1 << 0x0C,
 
         /// <summary>
         /// The Box Drawing code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2500.pdf</remarks>
-        BoxDrawing                                  = 1 << 0x0D,
+        BOX_DRAWING                                  = 1 << 0x0D,
 
         /// <summary>
         /// The Block Elements code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2580.pdf</remarks>
-        BlockElements                               = 1 << 0x0E,
+        BLOCK_ELEMENTS                               = 1 << 0x0E,
 
         /// <summary>
         /// The Geometric Shapes code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U25A0.pdf</remarks>
-        GeometricShapes                             = 1 << 0x0F,
+        GEOMETRIC_SHAPES                             = 1 << 0x0F,
 
         /// <summary>
         /// The Miscellaneous Symbols code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2600.pdf</remarks>
-        MiscellaneousSymbols                        = 1 << 0x10,
+        MISCELLANEOUS_SYMBOLS                        = 1 << 0x10,
 
         /// <summary>
         /// The Dingbats code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2700.pdf</remarks>
-        Dingbats                                    = 1 << 0x11,
+        DINGBATS                                    = 1 << 0x11,
         
         /// <summary>
         /// The Miscellaneous Mathematical Symbols-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U27C0.pdf</remarks>
-        MiscellaneousMathematicalSymbolsA           = 1 << 0x12,
+        MISCELLANEOUS_MATHEMATICAL_SYMBOLS_A           = 1 << 0x12,
         
         /// <summary>
         /// The Supplemental Arrows-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U27F0.pdf</remarks>
-        SupplementalArrowsA                         = 1 << 0x13,
+        SUPPLEMENTAL_ARROWS_A                         = 1 << 0x13,
 
         /// <summary>
         /// The Braille Patterns code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2800.pdf</remarks>
-        BraillePatterns                             = 1 << 0x14,
+        BRAILLE_PATTERNS                             = 1 << 0x14,
         
         /// <summary>
         /// The Supplemental Arrows-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2900.pdf</remarks>
-        SupplementalArrowsB                         = 1 << 0x15,
+        SUPPLEMENTAL_ARROWS_B                         = 1 << 0x15,
 
         /// <summary>
         /// The Miscellaneous Mathematical Symbols-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2980.pdf</remarks>                
-        MiscellaneousMathematicalSymbolsB           = 1 << 0x16,
+        MISCELLANEOUS_MATHEMATICAL_SYMBOLS_B           = 1 << 0x16,
                 
         /// <summary>
         /// The Supplemental Mathematical Operators code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2A00.pdf</remarks>
-        SupplementalMathematicalOperators           = 1 << 0x17,
+        SUPPLEMENTAL_MATHEMATICAL_OPERATORS           = 1 << 0x17,
 
         /// <summary>
         /// The Miscellaneous Symbols and Arrows code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2B00.pdf</remarks>        
-        MiscellaneousSymbolsAndArrows               = 1 << 0x18,
+        MISCELLANEOUS_SYMBOLS_AND_ARROWS               = 1 << 0x18,
         
         /// <summary>
         /// The Glagolitic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2C00.pdf</remarks>
-        Glagolitic                                  = 1 << 0x19,
+        GLAGOLITIC                                  = 1 << 0x19,
         
         /// <summary>
         /// The Latin Extended-C code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2C60.pdf</remarks>        
-        LatinExtendedC                              = 1 << 0x1A,
+        LATIN_EXTENDED_C                              = 1 << 0x1A,
         
         /// <summary>
         /// The Coptic code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2C80.pdf</remarks>
-        Coptic                                      = 1 << 0x1B,
+        COPTIC                                      = 1 << 0x1B,
         
         /// <summary>
         /// The Georgian Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2D00.pdf</remarks>
-        GeorgianSupplement                          = 1 << 0x1C,
+        GEORGIAN_SUPPLEMENT                          = 1 << 0x1C,
 
         /// <summary>
         /// The Tifinagh code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2D30.pdf</remarks>
-        Tifinagh                                    = 1 << 0x1D,
+        TIFINAGH                                    = 1 << 0x1D,
 
         /// <summary>
         /// The Ethiopic Extended code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2D80.pdf</remarks>
-        EthiopicExtended                            = 1 << 0x0E,    
+        ETHIOPIC_EXTENDED                            = 1 << 0x0E,    
     }
 
     /// <summary>
@@ -632,195 +634,195 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// No code charts from the lower region of the Unicode tables are safe-listed.
         /// </summary>
-        None                                        = 0,                  
+        NONE                                        = 0,                  
         
         /// <summary>
         /// The Cyrillic Extended-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2DE0.pdf</remarks>
-        CyrillicExtendedA                           = 1 << 0x00,
+        CYRILLIC_EXTENDED_A                           = 1 << 0x00,
         
         /// <summary>
         /// The Supplemental Punctuation code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2E00.pdf</remarks>
-        SupplementalPunctuation                     = 1 << 0x01,
+        SUPPLEMENTAL_PUNCTUATION                     = 1 << 0x01,
         
         /// <summary>
         /// The CJK Radicials Supplement code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2E80.pdf</remarks>
-        CjkRadicalsSupplement                       = 1 << 0x02,
+        CJK_RADICALS_SUPPLEMENT                       = 1 << 0x02,
         
         /// <summary>
         /// The Kangxi Radicials code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2F00.pdf</remarks>
-        KangxiRadicals                              = 1 << 0x03,
+        KANGXI_RADICALS                              = 1 << 0x03,
         
         /// <summary>
         /// The Ideographic Description Characters code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U2FF0.pdf</remarks>
-        IdeographicDescriptionCharacters            = 1 << 0x04,
+        IDEOGRAPHIC_DESCRIPTION_CHARACTERS            = 1 << 0x04,
         
         /// <summary>
         /// The CJK Symbols and Punctuation code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3000.pdf</remarks>
-        CjkSymbolsAndPunctuation                    = 1 << 0x05,
+        CJK_SYMBOLS_AND_PUNCTUATION                    = 1 << 0x05,
 
         /// <summary>
         /// The Hiragana code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3040.pdf</remarks>
-        Hiragana                                    = 1 << 0x06,
+        HIRAGANA                                    = 1 << 0x06,
         
         /// <summary>
         /// The Katakana code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U30A0.pdf</remarks>
-        Katakana                                    = 1 << 0x07,
+        KATAKANA                                    = 1 << 0x07,
 
         /// <summary>
         /// The Bopomofo code table.
-        /// <seealso cref="BopomofoExtended"/>
+        /// <seealso cref="BOPOMOFO_EXTENDED"/>
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3100.pdf</remarks>
-        Bopomofo                                    = 1 << 0x08,
+        BOPOMOFO                                    = 1 << 0x08,
 
         /// <summary>
         /// The Hangul Compatbility Jamo code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3130.pdf</remarks>
-        HangulCompatibilityJamo                     = 1 << 0x09,
+        HANGUL_COMPATIBILITY_JAMO                     = 1 << 0x09,
 
         /// <summary>
         /// The Kanbun code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3190.pdf</remarks>
-        Kanbun                                      = 1 << 0x0A,
+        KANBUN                                      = 1 << 0x0A,
 
         /// <summary>
         /// The Bopomofu Extended code table.
-        /// <seealso cref="Bopomofo"/>
+        /// <seealso cref="BOPOMOFO"/>
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U31A0.pdf</remarks>
-        BopomofoExtended                            = 1 << 0x0B,
+        BOPOMOFO_EXTENDED                            = 1 << 0x0B,
 
         /// <summary>
         /// The CJK Strokes code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U31C0.pdf</remarks>
-        CjkStrokes                                  = 1 << 0x0C,
+        CJK_STROKES                                  = 1 << 0x0C,
         
         /// <summary>
         /// The Katakana Phonetic Extensoins code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U31F0.pdf</remarks>
-        KatakanaPhoneticExtensions                  = 1 << 0x0D,
+        KATAKANA_PHONETIC_EXTENSIONS                  = 1 << 0x0D,
 
         /// <summary>
         /// The Enclosed CJK Letters and Months code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3200.pdf</remarks>
-        EnclosedCjkLettersAndMonths                 = 1 << 0x0E,
+        ENCLOSED_CJK_LETTERS_AND_MONTHS                 = 1 << 0x0E,
 
         /// <summary>
         /// The CJK Compatibility code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3300.pdf</remarks>
-        CjkCompatibility                            = 1 << 0x0F,
+        CJK_COMPATIBILITY                            = 1 << 0x0F,
 
         /// <summary>
         /// The CJK Unified Ideographs Extension A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U3400.pdf</remarks>
-        CjkUnifiedIdeographsExtensionA              = 1 << 0x10,
+        CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A              = 1 << 0x10,
 
         /// <summary>
         /// The Yijing Hexagram Symbols code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U4DC0.pdf</remarks>
-        YijingHexagramSymbols                       = 1 << 0x11,
+        YIJING_HEXAGRAM_SYMBOLS                       = 1 << 0x11,
         
         /// <summary>
         /// The CJK Unified Ideographs code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/U4E00.pdf</remarks>
-        CjkUnifiedIdeographs                        = 1 << 0x12,
+        CJK_UNIFIED_IDEOGRAPHS                        = 1 << 0x12,
         
         /// <summary>
         /// The Yi Syllables code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA000.pdf</remarks>
-        YiSyllables                                 = 1 << 0x13,
+        YI_SYLLABLES                                 = 1 << 0x13,
 
         /// <summary>
         /// The Yi Radicals code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA490.pdf</remarks>
-        YiRadicals                                  = 1 << 0x14,
+        YI_RADICALS                                  = 1 << 0x14,
 
         /// <summary>
         /// The Lisu code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA4D0.pdf</remarks>        
-        Lisu                                        = 1 << 0x15,
+        LISU                                        = 1 << 0x15,
 
         /// <summary>
         /// The Vai code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA500.pdf</remarks>
-        Vai                                         = 1 << 0x16,
+        VAI                                         = 1 << 0x16,
 
         /// <summary>
         /// The Cyrillic Extended-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA640.pdf</remarks>
-        CyrillicExtendedB                           = 1 << 0x17,
+        CYRILLIC_EXTENDED_B                           = 1 << 0x17,
 
         /// <summary>
         /// The Bamum code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA6A0.pdf</remarks>
-        Bamum                                       = 1 << 0x18,
+        BAMUM                                       = 1 << 0x18,
 
         /// <summary>
         /// The Modifier Tone Letters code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA700.pdf</remarks>
-        ModifierToneLetters                         = 1 << 0x19,
+        MODIFIER_TONE_LETTERS                         = 1 << 0x19,
 
         /// <summary>
         /// The Latin Extended-D code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA720.pdf</remarks>
-        LatinExtendedD                              = 1 << 0x1A,
+        LATIN_EXTENDED_D                              = 1 << 0x1A,
 
         /// <summary>
         /// The Syloti Nagri code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA800.pdf</remarks>
-        SylotiNagri                                 = 1 << 0x1B,
+        SYLOTI_NAGRI                                 = 1 << 0x1B,
 
         /// <summary>
         /// The Common Indic Number Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA830.pdf</remarks>
-        CommonIndicNumberForms                      = 1 << 0x1C,
+        COMMON_INDIC_NUMBER_FORMS                      = 1 << 0x1C,
 
         /// <summary>
         /// The Phags-pa code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA840.pdf</remarks>
-        Phagspa                                     = 1 << 0x1D,
+        PHAGSPA                                     = 1 << 0x1D,
 
         /// <summary>
         /// The Saurashtra code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA880.pdf</remarks>
-        Saurashtra                                  = 1 << 0x1E,
+        SAURASHTRA                                  = 1 << 0x1E,
     }
 
     /// <summary>
@@ -832,138 +834,138 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// No code charts from the upper region of the Unicode tables are safe-listed.
         /// </summary>
-        None                                        = 0,
+        NONE                                        = 0,
 
         /// <summary>
         /// The Devanagari Extended code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA8E0.pdf</remarks>
-        DevanagariExtended                          = 1 << 0x00,
+        DEVANAGARI_EXTENDED                          = 1 << 0x00,
 
         /// <summary>
         /// The Kayah Li code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA900.pdf</remarks>
-        KayahLi                                     = 1 << 0x01,
+        KAYAH_LI                                     = 1 << 0x01,
 
         /// <summary>
         /// The Rejang code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA930.pdf</remarks>
-        Rejang                                      = 1 << 0x02,
+        REJANG                                      = 1 << 0x02,
 
         /// <summary>
         /// The Hangul Jamo Extended-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA960.pdf</remarks>
-        HangulJamoExtendedA                         = 1 << 0x03,
+        HANGUL_JAMO_EXTENDED_A                         = 1 << 0x03,
 
         /// <summary>
         /// The Javanese code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UA980.pdf</remarks>
-        Javanese                                    = 1 << 0x04,
+        JAVANESE                                    = 1 << 0x04,
 
         /// <summary>
         /// The Cham code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UAA00.pdf</remarks>
-        Cham                                        = 1 << 0x05,
+        CHAM                                        = 1 << 0x05,
 
         /// <summary>
         /// The Myanmar Extended-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UAA60.pdf</remarks>
-        MyanmarExtendedA                            = 1 << 0x06,
+        MYANMAR_EXTENDED_A                            = 1 << 0x06,
 
         /// <summary>
         /// The Tai Viet code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UAA80.pdf</remarks>
-        TaiViet                                     = 1 << 0x07,
+        TAI_VIET                                     = 1 << 0x07,
 
         /// <summary>
         /// The Meetei Mayek code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UABC0.pdf</remarks>
-        MeeteiMayek                                 = 1 << 0x08,
+        MEETEI_MAYEK                                 = 1 << 0x08,
 
         /// <summary>
         /// The Hangul Syllables code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UAC00.pdf</remarks>
-        HangulSyllables                             = 1 << 0x09,
+        HANGUL_SYLLABLES                             = 1 << 0x09,
 
         /// <summary>
         /// The Hangul Jamo Extended-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UD7B0.pdf</remarks>
-        HangulJamoExtendedB                         = 1 << 0x0A,
+        HANGUL_JAMO_EXTENDED_B                         = 1 << 0x0A,
         
         /// <summary>
         /// The CJK Compatibility Ideographs code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UF900.pdf</remarks>
-        CjkCompatibilityIdeographs                  = 1 << 0x0B,
+        CJK_COMPATIBILITY_IDEOGRAPHS                  = 1 << 0x0B,
         
         /// <summary>
         /// The Alphabetic Presentation Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFB00.pdf</remarks>
-        AlphabeticPresentationForms                 = 1 << 0x0C,
+        ALPHABETIC_PRESENTATION_FORMS                 = 1 << 0x0C,
         
         /// <summary>
         /// The Arabic Presentation Forms-A code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFB50.pdf</remarks>
-        ArabicPresentationFormsA                    = 1 << 0x0D,
+        ARABIC_PRESENTATION_FORMS_A                    = 1 << 0x0D,
         
         /// <summary>
         /// The Variation Selectors code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE00.pdf</remarks>
-        VariationSelectors                          = 1 << 0x0E,
+        VARIATION_SELECTORS                          = 1 << 0x0E,
         
         /// <summary>
         /// The Vertical Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE10.pdf</remarks>
-        VerticalForms                               = 1 << 0x0F,
+        VERTICAL_FORMS                               = 1 << 0x0F,
         
         /// <summary>
         /// The Combining Half Marks code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE20.pdf</remarks>
-        CombiningHalfMarks                          = 1 << 0x10,
+        COMBINING_HALF_MARKS                          = 1 << 0x10,
         
         /// <summary>
         /// The CJK Compatibility Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE30.pdf</remarks>
-        CjkCompatibilityForms                       = 1 << 0x11,
+        CJK_COMPATIBILITY_FORMS                       = 1 << 0x11,
         
         /// <summary>
         /// The Small Form Variants code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE50.pdf</remarks>
-        SmallFormVariants                           = 1 << 0x12,
+        SMALL_FORM_VARIANTS                           = 1 << 0x12,
         
         /// <summary>
         /// The Arabic Presentation Forms-B code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFE70.pdf</remarks>
-        ArabicPresentationFormsB                    = 1 << 0x13,
+        ARABIC_PRESENTATION_FORMS_B                    = 1 << 0x13,
         
         /// <summary>
         /// The half width and full width Forms code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFF00.pdf</remarks>
-        HalfWidthAndFullWidthForms                  = 1 << 0x14,
+        HALF_WIDTH_AND_FULL_WIDTH_FORMS                  = 1 << 0x14,
         
         /// <summary>
         /// The Specials code table.
         /// </summary>
         /// <remarks>http://www.unicode.org/charts/PDF/UFFF0.pdf</remarks>
-        Specials                                    = 1 << 0x15,
+        SPECIALS                                    = 1 << 0x15,
     }
 }

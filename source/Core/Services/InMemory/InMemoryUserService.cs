@@ -72,7 +72,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user != null)
             {
-                var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
+                var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.PASSWORD, Constants.BUILT_IN_IDENTITY_PROVIDER);
                 var result = new AuthenticateResult(p);
                 return Task.FromResult(result);
             }
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             {
                 string displayName;
 
-                var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+                var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.NAME);
                 if (name == null)
                 {
                     displayName = externalUser.ProviderId;
@@ -123,7 +123,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
                 _users.Add(user);
             }
 
-            var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.External, user.Provider);
+            var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.EXTERNAL, user.Provider);
             var result = new AuthenticateResult(p);
             return Task.FromResult(result);
         }
@@ -145,7 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
             var user = query.Single();
 
             var claims = new List<Claim>{
-                new Claim(Constants.ClaimTypes.Subject, user.Subject),
+                new Claim(Constants.ClaimTypes.SUBJECT, user.Subject),
             };
 
             claims.AddRange(user.Claims);
@@ -202,7 +202,7 @@ namespace Thinktecture.IdentityServer.Core.Services.InMemory
         /// <returns></returns>
         protected virtual string GetDisplayName(InMemoryUser user)
         {
-            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+            var nameClaim = user.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.NAME);
             if (nameClaim != null)
             {
                 return nameClaim.Value;

@@ -20,10 +20,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Logging.Models;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
@@ -114,8 +116,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // client_id must be present
             /////////////////////////////////////////////////////////
-            var clientId = request.Raw.Get(Constants.AuthorizeRequest.ClientId);
-            if (clientId.IsMissingOrTooLong(Constants.MaxClientIdLength))
+            var clientId = request.Raw.Get(Constants.AuthorizeRequest.CLIENT_ID);
+            if (clientId.IsMissingOrTooLong(Constants.MAX_CLIENT_ID_LENGTH))
             {
                 LogError("client_id is missing or too long", request);
                 return Invalid(request);
@@ -127,9 +129,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // redirect_uri must be present, and a valid uri
             //////////////////////////////////////////////////////////
-            var redirectUri = request.Raw.Get(Constants.AuthorizeRequest.RedirectUri);
+            var redirectUri = request.Raw.Get(Constants.AuthorizeRequest.REDIRECT_URI);
 
-            if (redirectUri.IsMissingOrTooLong(Constants.MaxRedirectUriLength))
+            if (redirectUri.IsMissingOrTooLong(Constants.MAX_REDIRECT_URI_LENGTH))
             {
                 LogError("redirect_uri is missing or too long", request);
                 return Invalid(request);
@@ -152,7 +154,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (client == null || client.Enabled == false)
             {
                 LogError("Unknown client or not enabled: " + request.ClientId, request);
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+                return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
             }
 
             request.Client = client;
@@ -163,7 +165,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (await _uriValidator.IsRedirectUriValidAsync(request.RedirectUri, request.Client) == false)
             {
                 LogError("Invalid redirect_uri: " + request.RedirectUri, request);
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+                return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
             }
 
             return Valid(request);
@@ -174,7 +176,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check state
             //////////////////////////////////////////////////////////
-            var state = request.Raw.Get(Constants.AuthorizeRequest.State);
+            var state = request.Raw.Get(Constants.AuthorizeRequest.STATE);
             if (state.IsPresent())
             {
                 request.State = state;
@@ -183,17 +185,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // response_type must be present and supported
             //////////////////////////////////////////////////////////
-            var responseType = request.Raw.Get(Constants.AuthorizeRequest.ResponseType);
+            var responseType = request.Raw.Get(Constants.AuthorizeRequest.RESPONSE_TYPE);
             if (responseType.IsMissing())
             {
                 LogError("Missing response_type", request);
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                return Invalid(request, ErrorTypes.CLIENT, Constants.AuthorizeErrors.UNSUPPORTED_RESPONSE_TYPE);
             }
 
             if (!Constants.SupportedResponseTypes.Contains(responseType))
             {
                 LogError("Response type not supported: " + responseType, request);
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                return Invalid(request, ErrorTypes.CLIENT, Constants.AuthorizeErrors.UNSUPPORTED_RESPONSE_TYPE);
             }
 
             request.ResponseType = responseType;
@@ -222,7 +224,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             request.ResponseMode = Constants.AllowedResponseModesForFlow[request.Flow].First();
 
             // check if response_mode parameter is present and valid
-            var responseMode = request.Raw.Get(Constants.AuthorizeRequest.ResponseMode);
+            var responseMode = request.Raw.Get(Constants.AuthorizeRequest.RESPONSE_MODE);
             if (responseMode.IsPresent())
             {
                 if (Constants.SupportedResponseModes.Contains(responseMode))
@@ -234,13 +236,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     else
                     {
                         LogError("Invalid response_mode for flow: " + responseMode, request);
-                        return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
+                        return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNSUPPORTED_RESPONSE_TYPE);
                     }
                 }
                 else
                 {
                     LogError("Unsupported response_mode: " + responseMode, request);
-                    return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
+                    return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNSUPPORTED_RESPONSE_TYPE);
                 }
             }
 
@@ -251,7 +253,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (request.Flow != request.Client.Flow)
             {
                 LogError("Invalid flow for client: " + request.Flow, request);
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+                return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
             }
 
             return Valid(request);
@@ -262,22 +264,22 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // scope must be present
             //////////////////////////////////////////////////////////
-            var scope = request.Raw.Get(Constants.AuthorizeRequest.Scope);
+            var scope = request.Raw.Get(Constants.AuthorizeRequest.SCOPE);
             if (scope.IsMissing())
             {
                 LogError("scope is missing", request);
-                return Invalid(request, ErrorTypes.Client);
+                return Invalid(request, ErrorTypes.CLIENT);
             }
 
-            if (scope.Length > Constants.MaxScopeLength)
+            if (scope.Length > Constants.MAX_SCOPE_LENGTH)
             {
                 LogError("scopes too long.", request);
-                return Invalid(request, ErrorTypes.Client);
+                return Invalid(request, ErrorTypes.CLIENT);
             }
 
             request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
 
-            if (request.RequestedScopes.Contains(Constants.StandardScopes.OpenId))
+            if (request.RequestedScopes.Contains(Constants.StandardScopes.OPEN_ID))
             {
                 request.IsOpenIdRequest = true;
             }
@@ -286,13 +288,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             // check scope vs response_type plausability
             //////////////////////////////////////////////////////////
             var requirement = Constants.ResponseTypeToScopeRequirement[request.ResponseType];
-            if (requirement == Constants.ScopeRequirement.Identity ||
-                requirement == Constants.ScopeRequirement.IdentityOnly)
+            if (requirement == Constants.ScopeRequirement.IDENTITY ||
+                requirement == Constants.ScopeRequirement.IDENTITY_ONLY)
             {
                 if (request.IsOpenIdRequest == false)
                 {
                     LogError("response_type requires the openid scope", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
             }
 
@@ -301,13 +303,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             if (await _scopeValidator.AreScopesValidAsync(request.RequestedScopes) == false)
             {
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                return Invalid(request, ErrorTypes.CLIENT, Constants.AuthorizeErrors.INVALID_SCOPE);
             }
 
             if (_scopeValidator.ContainsOpenIdScopes && !request.IsOpenIdRequest)
             {
                 LogError("Identity related scope requests, but no openid scope", request);
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                return Invalid(request, ErrorTypes.CLIENT, Constants.AuthorizeErrors.INVALID_SCOPE);
             }
 
             if (_scopeValidator.ContainsResourceScopes)
@@ -320,7 +322,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             if (!_scopeValidator.AreScopesAllowed(request.Client, request.RequestedScopes))
             {
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+                return Invalid(request, ErrorTypes.USER, Constants.AuthorizeErrors.UNAUTHORIZED_CLIENT);
             }
 
             request.ValidatedScopes = _scopeValidator;
@@ -330,7 +332,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             if (!_scopeValidator.IsResponseTypeValid(request.ResponseType))
             {
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.InvalidScope);
+                return Invalid(request, ErrorTypes.CLIENT, Constants.AuthorizeErrors.INVALID_SCOPE);
             }
 
             return Valid(request);
@@ -341,26 +343,26 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check nonce
             //////////////////////////////////////////////////////////
-            var nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce);
+            var nonce = request.Raw.Get(Constants.AuthorizeRequest.NONCE);
             if (nonce.IsPresent())
             {
-                if (nonce.Length > Constants.MaxNonceLength)
+                if (nonce.Length > Constants.MAX_NONCE_LENGTH)
                 {
                     LogError("Nonce too long", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
 
                 request.Nonce = nonce;
             }
             else
             {
-                if (request.Flow == Flows.Implicit)
+                if (request.Flow == Flows.IMPLICIT)
                 {
                     // only openid requests require nonce
                     if (request.IsOpenIdRequest)
                     {
                         LogError("Nonce required for implicit flow with openid scope", request);
-                        return Invalid(request, ErrorTypes.Client);
+                        return Invalid(request, ErrorTypes.CLIENT);
                     }
                 }
             }
@@ -369,7 +371,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check prompt
             //////////////////////////////////////////////////////////
-            var prompt = request.Raw.Get(Constants.AuthorizeRequest.Prompt);
+            var prompt = request.Raw.Get(Constants.AuthorizeRequest.PROMPT);
             if (prompt.IsPresent())
             {
                 if (Constants.SupportedPromptModes.Contains(prompt))
@@ -385,13 +387,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check ui locales
             //////////////////////////////////////////////////////////
-            var uilocales = request.Raw.Get(Constants.AuthorizeRequest.UiLocales);
+            var uilocales = request.Raw.Get(Constants.AuthorizeRequest.UI_LOCALES);
             if (uilocales.IsPresent())
             {
-                if (uilocales.Length > Constants.MaxUiLocaleLength)
+                if (uilocales.Length > Constants.MAX_UI_LOCALE_LENGTH)
                 {
                     LogError("UI locale too long", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
 
                 request.UiLocales = uilocales;
@@ -400,7 +402,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check display
             //////////////////////////////////////////////////////////
-            var display = request.Raw.Get(Constants.AuthorizeRequest.Display);
+            var display = request.Raw.Get(Constants.AuthorizeRequest.DISPLAY);
             if (display.IsPresent())
             {
                 if (Constants.SupportedDisplayModes.Contains(display))
@@ -414,7 +416,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check max_age
             //////////////////////////////////////////////////////////
-            var maxAge = request.Raw.Get(Constants.AuthorizeRequest.MaxAge);
+            var maxAge = request.Raw.Get(Constants.AuthorizeRequest.MAX_AGE);
             if (maxAge.IsPresent())
             {
                 int seconds;
@@ -427,26 +429,26 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     else
                     {
                         LogError("Invalid max_age.", request);
-                        return Invalid(request, ErrorTypes.Client);
+                        return Invalid(request, ErrorTypes.CLIENT);
                     }
                 }
                 else
                 {
                     LogError("Invalid max_age.", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
             }
 
             //////////////////////////////////////////////////////////
             // check login_hint
             //////////////////////////////////////////////////////////
-            var loginHint = request.Raw.Get(Constants.AuthorizeRequest.LoginHint);
+            var loginHint = request.Raw.Get(Constants.AuthorizeRequest.LOGIN_HINT);
             if (loginHint.IsPresent())
             {
-                if (loginHint.Length > Constants.MaxLoginHintLength)
+                if (loginHint.Length > Constants.MAX_LOGIN_HINT_LENGTH)
                 {
                     LogError("Login hint too long", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
 
                 request.LoginHint = loginHint;
@@ -455,13 +457,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check acr_values
             //////////////////////////////////////////////////////////
-            var acrValues = request.Raw.Get(Constants.AuthorizeRequest.AcrValues);
+            var acrValues = request.Raw.Get(Constants.AuthorizeRequest.ACR_VALUES);
             if (acrValues.IsPresent())
             {
-                if (acrValues.Length > Constants.MaxAcrValuesLength)
+                if (acrValues.Length > Constants.MAX_ACR_VALUES_LENGTH)
                 {
                     LogError("Acr values too long", request);
-                    return Invalid(request, ErrorTypes.Client);
+                    return Invalid(request, ErrorTypes.CLIENT);
                 }
 
                 request.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
@@ -486,7 +488,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
             return Valid(request);
         }
 
-        private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)
+        private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, ErrorTypes errorType = ErrorTypes.USER, string error = Constants.AuthorizeErrors.INVALID_REQUEST)
         {
             var result = new AuthorizeRequestValidationResult
             {

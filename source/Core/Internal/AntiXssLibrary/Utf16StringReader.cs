@@ -50,12 +50,12 @@ namespace Microsoft.Security.Application
         /// <summary>
         /// The input string we're iterating on.
         /// </summary>
-        private readonly string input;
+        private readonly string _input;
 
         /// <summary>
         /// The current offset into 'input'.
         /// </summary>
-        private int currentOffset;
+        private int _currentOffset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Utf16StringReader"/> struct with the given UTF-16 input string.
@@ -63,8 +63,8 @@ namespace Microsoft.Security.Application
         /// <param name="input">The input string to decompose into scalar values.</param>
         public Utf16StringReader(string input)
         {
-            this.input = input;
-            this.currentOffset = 0;
+            _input = input;
+            _currentOffset = 0;
         }
 
         /// <summary>
@@ -75,25 +75,25 @@ namespace Microsoft.Security.Application
         /// is reached, returns -1.</returns>
         public int ReadNextScalarValue()
         {
-            if (this.currentOffset >= this.input.Length)
+            if (_currentOffset >= _input.Length)
             {
                 return -1; // EOF
             }
 
-            char thisCodeUnit = this.input[this.currentOffset++];
+            var thisCodeUnit = _input[_currentOffset++];
             int thisCodePoint = thisCodeUnit;
 
             if (char.IsHighSurrogate(thisCodeUnit))
             {
-                if (this.currentOffset < this.input.Length)
+                if (_currentOffset < _input.Length)
                 {
-                    char nextCodeUnit = this.input[this.currentOffset];
+                    var nextCodeUnit = _input[_currentOffset];
                     if (char.IsLowSurrogate(nextCodeUnit))
                     {
                         // We encountered a high (leading) surrogate followed by a low
                         // (trailing) surrogate. Bump 'currentOffset' up by one more
                         // since we're consuming both code units.
-                        this.currentOffset++;
+                        _currentOffset++;
                         thisCodePoint = ConvertToUtf32(thisCodeUnit, nextCodeUnit);
                     }
                 }

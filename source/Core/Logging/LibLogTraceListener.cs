@@ -15,6 +15,7 @@
  */
 
 using System.Diagnostics;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 
 namespace Thinktecture.IdentityServer.Core.Logging
 {

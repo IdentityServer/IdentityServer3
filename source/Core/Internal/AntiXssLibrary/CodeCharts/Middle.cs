@@ -18,11 +18,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 // ReSharper disable CheckNamespace
+
+using System.Collections;
+
 namespace Microsoft.Security.Application.CodeCharts
     // ReSharper restore CheckNamespace
 {
-    using System.Collections;
-
     /// <summary>
     /// Provides safe character positions for the middle section of the UTF code tables.
     /// </summary>

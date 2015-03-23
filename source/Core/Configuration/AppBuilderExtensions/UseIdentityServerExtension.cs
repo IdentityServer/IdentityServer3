@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-using Autofac;
-using Microsoft.Owin.Infrastructure;
 using System;
 using System.IdentityModel.Tokens;
+using Autofac;
+using Microsoft.Owin.Infrastructure;
+using Owin;
 using Thinktecture.IdentityModel.Tokens;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     /// <summary>
     /// Configuration extensions for identity server
@@ -64,7 +63,7 @@ namespace Owin
 
             app.ConfigureRequestId();
 
-            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
+            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.END_SESSION_CALLBACK);
             app.ConfigureDataProtectionProvider(options);
 
             app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
@@ -83,7 +82,7 @@ namespace Owin
 
             if (options.AuthenticationOptions.IdentityProviders != null)
             {
-                options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
+                options.AuthenticationOptions.IdentityProviders(app, Constants.EXTERNAL_AUTHENTICATION_TYPE);
             }
 
             app.UseEmbeddedFileServer();

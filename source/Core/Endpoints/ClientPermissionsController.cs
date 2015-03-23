@@ -21,11 +21,11 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Resources;
 using Thinktecture.IdentityServer.Core.Results;
@@ -38,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     [ErrorPageFilter]
-    [HostAuthentication(Constants.PrimaryAuthenticationType)]
+    [HostAuthentication(Constants.PRIMARY_AUTHENTICATION_TYPE)]
     [SecurityHeaders]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
@@ -46,12 +46,12 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IClientPermissionsService clientPermissionsService;
-        private readonly IdentityServerOptions options;
-        private readonly IViewService viewSvc;
-        private readonly ILocalizationService localizationService;
-        private readonly IEventService eventService;
-        private readonly AntiForgeryToken antiForgeryToken;
+        private readonly IClientPermissionsService _clientPermissionsService;
+        private readonly IdentityServerOptions _options;
+        private readonly IViewService _viewSvc;
+        private readonly ILocalizationService _localizationService;
+        private readonly IEventService _eventService;
+        private readonly AntiForgeryToken _antiForgeryToken;
 
         public ClientPermissionsController(
             IClientPermissionsService clientPermissionsService, 
@@ -61,24 +61,24 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             IEventService eventService,
             AntiForgeryToken antiForgeryToken)
         {
-            this.clientPermissionsService = clientPermissionsService;
-            this.options = options;
-            this.viewSvc = viewSvc;
-            this.localizationService = localizationService;
-            this.eventService = eventService;
-            this.antiForgeryToken = antiForgeryToken;
+            _clientPermissionsService = clientPermissionsService;
+            _options = options;
+            _viewSvc = viewSvc;
+            _localizationService = localizationService;
+            _eventService = eventService;
+            _antiForgeryToken = antiForgeryToken;
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions)]
+        [Route(Constants.RoutePaths.CLIENT_PERMISSIONS)]
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
             Logger.Info("Permissions page requested");
 
-            if (!options.Endpoints.EnableClientPermissionsEndpoint)
+            if (!_options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 Logger.Error("Permissions page disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
+                _eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CLIENT_PERMISSIONS, "endpoint disabled");
                 return NotFound();
             }
 
@@ -93,17 +93,17 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return await RenderPermissionsPage();
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
+        [Route(Constants.RoutePaths.CLIENT_PERMISSIONS, Name = Constants.RouteNames.CLIENT_PERMISSIONS)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
             Logger.Info("Revoke permissions requested");
             
-            if (!options.Endpoints.EnableClientPermissionsEndpoint)
+            if (!_options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 Logger.Error("Permissions page disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
+                _eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CLIENT_PERMISSIONS, "endpoint disabled");
                 return NotFound();
             }
             
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (model != null && String.IsNullOrWhiteSpace(model.ClientId))
             {
                 Logger.Warn("No model or client id submitted");
-                ModelState.AddModelError("ClientId", localizationService.GetMessage(MessageIds.ClientIdRequired));
+                ModelState.AddModelError("ClientId", _localizationService.GetMessage(MessageIds.CLIENT_ID_REQUIRED));
             }
 
             if (model == null || ModelState.IsValid == false)
@@ -128,20 +128,20 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             Logger.InfoFormat("Revoking permissions for sub: {0}, name: {1}, clientID: {2}", User.GetSubjectId(), User.Identity.Name, model.ClientId);
             
-            await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
+            await _clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
             
-            eventService.RaiseClientPermissionsRevokedEvent(User as ClaimsPrincipal, model.ClientId);
+            _eventService.RaiseClientPermissionsRevokedEvent(User as ClaimsPrincipal, model.ClientId);
 
             Logger.Info("Redirecting back to permissions page");
 
-            return RedirectToRoute(Constants.RouteNames.ClientPermissions, null);
+            return RedirectToRoute(Constants.RouteNames.CLIENT_PERMISSIONS, null);
         }
 
         private IHttpActionResult RedirectToLogin()
         {
             var message = new SignInMessage();
 
-            var path = Url.Route(Constants.RouteNames.ClientPermissions, null);
+            var path = Url.Route(Constants.RouteNames.CLIENT_PERMISSIONS, null);
             var host = new Uri(Request.GetOwinEnvironment().GetIdentityServerHost());
             var url = new Uri(host, path);
             message.ReturnUrl = url.AbsoluteUri;
@@ -151,20 +151,20 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         private async Task<IHttpActionResult> RenderPermissionsPage(string error = null)
         {
             var env = Request.GetOwinEnvironment();
-            var clients = await this.clientPermissionsService.GetClientPermissionsAsync(User.GetSubjectId());
+            var clients = await _clientPermissionsService.GetClientPermissionsAsync(User.GetSubjectId());
             var vm = new ClientPermissionsViewModel
             {
                 RequestId = env.GetRequestId(),
-                SiteName = options.SiteName,
+                SiteName = _options.SiteName,
                 SiteUrl = env.GetIdentityServerBaseUrl(),
                 CurrentUser = env.GetCurrentUserDisplayName(),
                 LogoutUrl = env.GetIdentityServerLogoutUrl(),
                 RevokePermissionUrl = Request.GetOwinContext().GetPermissionsPageUrl(),
-                AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
+                AntiForgery = _antiForgeryToken.GetAntiForgeryToken(),
                 Clients = clients,
                 ErrorMessage = error
             };
-            return new ClientPermissionsActionResult(this.viewSvc, Request.GetOwinEnvironment(), vm);
+            return new ClientPermissionsActionResult(_viewSvc, Request.GetOwinEnvironment(), vm);
         }
     }
 }

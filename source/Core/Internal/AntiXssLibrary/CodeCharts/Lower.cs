@@ -17,10 +17,13 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Microsoft.Security.Application.CodeCharts
-{
-    using System.Collections;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Security.Application;
+using Microsoft.Security.Application.CodeCharts;
 
+namespace Thinktecture.IdentityServer.Core.Internal.AntiXssLibrary.CodeCharts
+{
     /// <summary>
     /// Provides safe character positions for the lower section of the UTF code tables.
     /// </summary>
@@ -355,7 +358,7 @@ namespace Microsoft.Security.Application.CodeCharts
         /// Provides the safe characters for the Tamil code table.
         /// </summary>
         /// <returns>The safe characters for the code table.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Lots of range exclusions, cannot be simplified.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Lots of range exclusions, cannot be simplified.")]
         public static IEnumerable Tamil()
         {
             return CodeChartHelper.GetRange(
@@ -510,7 +513,7 @@ namespace Microsoft.Security.Application.CodeCharts
         /// Provides the safe characters for the Lao code table.
         /// </summary>
         /// <returns>The safe characters for the code table.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Lots of range exclusions, cannot be simplified.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Lots of range exclusions, cannot be simplified.")]
         public static IEnumerable Lao()
         {
             return CodeChartHelper.GetRange(

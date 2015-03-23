@@ -20,14 +20,14 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
 {
     public class DefaultClientPermissionsServiceTests
     {
-        InMemoryConsentStore consentStore;
+        InMemoryConsentStore _consentStore;
         //InMemoryClientStore clientStore;
         //InMemoryScopeStore scopeStore;
         //DefaultClientPermissionsService subject;
 
         public DefaultClientPermissionsServiceTests()
         {
-            consentStore = new InMemoryConsentStore();
+            _consentStore = new InMemoryConsentStore();
 
             //subject = new DefaultClientPermissionsService(
             //    consentStore,

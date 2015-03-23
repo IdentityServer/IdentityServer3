@@ -20,6 +20,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Encoder = Microsoft.Security.Application.Encoder;
 
 namespace Thinktecture.IdentityServer.Core.Extensions
 {
@@ -33,21 +34,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             }
 
             var builder = new StringBuilder(128);
-            bool first = true;
-            foreach (string name in collection)
-            {
-                string[] values = collection.GetValues(name);
-                if (values == null || values.Length == 0)
-                {
-                    first = AppendNameValuePair(builder, first, true, name, String.Empty);
-                }
-                else
-                {
-                    foreach (string value in values)
-                    {
-                        first = AppendNameValuePair(builder, first, true, name, value);
-                    }
-                }
+            var first = true;
+            foreach (string name in collection) {
+                var values = collection.GetValues(name);
+                first = values == null || values.Length == 0
+                    ? AppendNameValuePair(builder, first, true, name, String.Empty)
+                    : values.Aggregate(first,
+                        (current, value) => AppendNameValuePair(builder, current, true, name, value));
             }
 
             return builder.ToString();
@@ -62,7 +55,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 var values = collection.GetValues(name);
                 var value = values.First();
-                value = Microsoft.Security.Application.Encoder.HtmlEncode(value);
+                value = Encoder.HtmlEncode(value);
                 builder.AppendFormat(inputFieldFormat, name, value);
             }
 
@@ -102,11 +95,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         private static bool AppendNameValuePair(StringBuilder builder, bool first, bool urlEncode, string name, string value)
         {
-            string effectiveName = name ?? String.Empty;
-            string encodedName = urlEncode ? WebUtility.UrlEncode(effectiveName) : effectiveName;
+            var effectiveName = name ?? String.Empty;
+            var encodedName = urlEncode ? WebUtility.UrlEncode(effectiveName) : effectiveName;
 
-            string effectiveValue = value ?? String.Empty;
-            string encodedValue = urlEncode ? WebUtility.UrlEncode(effectiveValue) : effectiveValue;
+            var effectiveValue = value ?? String.Empty;
+            var encodedValue = urlEncode ? WebUtility.UrlEncode(effectiveValue) : effectiveValue;
             encodedValue = ConvertFormUrlEncodedSpacesToUrlEncodedSpaces(encodedValue);
 
             if (first)

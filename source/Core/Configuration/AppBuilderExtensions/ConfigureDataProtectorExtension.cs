@@ -15,11 +15,10 @@
  */
 
 using Microsoft.Owin.Security.DataProtection;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
+using Owin;
 using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 
-namespace Owin
+namespace Thinktecture.IdentityServer.Core.Configuration.AppBuilderExtensions
 {
     internal static class ConfigureDataProtectorExtension
     {
@@ -30,7 +29,7 @@ namespace Owin
                 var provider = app.GetDataProtectionProvider();
                 if (provider == null)
                 {
-                    provider = new DpapiDataProtectionProvider(Constants.PrimaryAuthenticationType);
+                    provider = new DpapiDataProtectionProvider(Constants.PRIMARY_AUTHENTICATION_TYPE);
                 }
 
                 options.DataProtector = new HostDataProtector(provider);

@@ -40,7 +40,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             foreach (var clientSecret in client.ClientSecrets)
             {
-                bool isValid = false;
+                var isValid = false;
                 byte[] clientSecretBytes;
 
                 // check if client secret is still valid

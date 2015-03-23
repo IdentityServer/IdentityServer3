@@ -51,11 +51,11 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     internal class KeyHashingTransientDataRepository<T> : ITransientDataRepository<T>
         where T : ITokenMetadata
     {
-        readonly string hashName;
-        readonly ITransientDataRepository<T> inner;
+        readonly string _hashName;
+        readonly ITransientDataRepository<T> _inner;
 
         public KeyHashingTransientDataRepository(ITransientDataRepository<T> inner)
-            : this(Constants.DefaultHashAlgorithm, inner)
+            : this(Constants.DEFAULT_HASH_ALGORITHM, inner)
         {
         }
 
@@ -64,15 +64,15 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (String.IsNullOrWhiteSpace(hashName)) throw new ArgumentNullException("hashName");
             if (inner == null) throw new ArgumentNullException("inner");
 
-            this.hashName = hashName;
-            this.inner = inner;
+            _hashName = hashName;
+            _inner = inner;
         }
 
         protected string Hash(string value)
         {
             if (String.IsNullOrWhiteSpace(value)) throw new ArgumentNullException("value");
 
-            using (var hash = HashAlgorithm.Create(hashName))
+            using (var hash = HashAlgorithm.Create(_hashName))
             {
                 var bytes = Encoding.UTF8.GetBytes(value);
                 var hashedBytes = hash.ComputeHash(bytes);
@@ -83,27 +83,27 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
         public Task StoreAsync(string key, T value)
         {
-            return inner.StoreAsync(Hash(key), value);
+            return _inner.StoreAsync(Hash(key), value);
         }
 
         public Task<T> GetAsync(string key)
         {
-            return inner.GetAsync(Hash(key));
+            return _inner.GetAsync(Hash(key));
         }
 
         public Task RemoveAsync(string key)
         {
-            return inner.RemoveAsync(Hash(key));
+            return _inner.RemoveAsync(Hash(key));
         }
 
         public Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject)
         {
-            return inner.GetAllAsync(subject);
+            return _inner.GetAllAsync(subject);
         }
 
         public Task RevokeAsync(string subject, string client)
         {
-            return inner.RevokeAsync(subject, client);
+            return _inner.RevokeAsync(subject, client);
         }
     }
 }

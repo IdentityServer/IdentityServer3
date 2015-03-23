@@ -20,10 +20,10 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Thinktecture.IdentityServer.Core.App_Packages.LibLog._2._0;
 using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Events;
+using Thinktecture.IdentityServer.Core.Events.Base;
 using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
@@ -31,54 +31,54 @@ using Thinktecture.IdentityServer.Core.Services;
 namespace Thinktecture.IdentityServer.Core.Endpoints
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [HostAuthentication(Constants.PrimaryAuthenticationType)]
+    [HostAuthentication(Constants.PRIMARY_AUTHENTICATION_TYPE)]
     internal class CspReportController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IdentityServerOptions options;
-        private readonly IEventService eventService;
+        private readonly IdentityServerOptions _options;
+        private readonly IEventService _eventService;
 
         public CspReportController(IdentityServerOptions options, IEventService eventService)
         {
-            this.options = options;
-            this.eventService = eventService;
+            _options = options;
+            _eventService = eventService;
         }
 
-        [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
+        [Route(Constants.RoutePaths.CSP_REPORT, Name=Constants.RouteNames.CSP_REPORT)]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("CSP Report endpoint requested");
 
-            if (!options.Endpoints.EnableCspReportEndpoint)
+            if (!_options.Endpoints.EnableCspReportEndpoint)
             {
                 Logger.Error("endpoint disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, "endpoint disabled");
+                _eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CSP_REPORT, "endpoint disabled");
                 return NotFound();
             }
 
             if (Request.Content.Headers.ContentLength.HasValue && 
-                Request.Content.Headers.ContentLength.Value > Constants.MaxCspReportLength)
+                Request.Content.Headers.ContentLength.Value > Constants.MAX_CSP_REPORT_LENGTH)
             {
-                var msg = "Request content exceeds max length";
+                const string msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                _eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CSP_REPORT, msg);
                 return BadRequest();
             }
 
             var json = await Request.Content.ReadAsStringAsync();
-            if (json.Length > Constants.MaxCspReportLength)
+            if (json.Length > Constants.MAX_CSP_REPORT_LENGTH)
             {
-                var msg = "Request content exceeds max length";
+                const string msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                _eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CSP_REPORT, msg);
                 return BadRequest();
             }
 
             if (json.IsPresent())
             {
                 Logger.InfoFormat("CSP Report data: {0}", json);
-                eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
+                _eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
             }
 
             Logger.Info("Rendering 204");

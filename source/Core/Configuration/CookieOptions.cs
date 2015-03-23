@@ -32,7 +32,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             SlidingExpiration = false;
             AllowRememberMe = true;
             RememberMeDuration = Constants.DefaultRememberMeDuration;
-            SecureMode = CookieSecureMode.SameAsRequest;
+            SecureMode = CookieSecureMode.SAME_AS_REQUEST;
         }
 
         /// <summary>

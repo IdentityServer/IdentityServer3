@@ -61,7 +61,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             if (claims == null) throw new ArgumentNullException("claims");
 
-            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Subject);
+            var subClaim = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.SUBJECT);
             if (subClaim == null)
             {
                 subClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
