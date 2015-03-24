@@ -421,6 +421,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 context.Request.Body = copy;
             }
 
+            context.Request.Body.Seek(0L, SeekOrigin.Begin);
             var form = await context.Request.ReadFormAsync();
             context.Request.Body.Seek(0L, SeekOrigin.Begin);
 
