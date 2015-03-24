@@ -194,7 +194,8 @@ namespace Thinktecture.IdentityServer.Host.Config
                     {
                         new Claim("client_type", "headless")
                     },
-                    PrefixClientClaims = false
+                    PrefixClientClaims = false,
+                    AllowedScopes = new List<string> {"read", "write"},
                 },
 
                 new Client
