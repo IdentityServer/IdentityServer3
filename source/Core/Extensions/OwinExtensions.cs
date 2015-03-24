@@ -19,6 +19,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -82,7 +83,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return new OwinContext(env).GetCurrentUserDisplayName();
         }
-        
+
 
         /// <summary>
         /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
@@ -186,7 +187,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             {
                 return value as string;
             }
-            
+
             return null;
         }
 
@@ -205,7 +206,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
-        
+
         internal static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
         {
             env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
@@ -239,12 +240,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (context == null) throw new ArgumentNullException("context");
 
             var types = context.Authentication.GetAuthenticationTypes().Where(x => !Constants.IdentityServerAuthenticationTypes.Contains(x.AuthenticationType));
-            
+
             if (filter != null && filter.Any())
             {
-                types = types.Where(x=>filter.Contains(x.AuthenticationType));
+                types = types.Where(x => filter.Contains(x.AuthenticationType));
             }
-            
+
             return types;
         }
 
@@ -267,21 +268,21 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
                 });
             }
-            
+
             return Enumerable.Empty<LoginPageLink>();
         }
 
         internal static IEnumerable<LoginPageLink> FilterHiddenLinks(this IEnumerable<LoginPageLink> links)
         {
             if (links == null) throw new ArgumentNullException("links");
-            return links.Where(x=>x.Text.IsPresent());
+            return links.Where(x => x.Text.IsPresent());
         }
 
         static async Task<Microsoft.Owin.Security.AuthenticateResult> GetAuthenticationFrom(this IOwinContext context, string authenticationType)
         {
             if (context == null) throw new ArgumentNullException("context");
             if (authenticationType.IsMissing()) throw new ArgumentNullException("authenticationType");
-            
+
             return await context.Authentication.AuthenticateAsync(authenticationType);
         }
 
@@ -350,7 +351,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;
         }
-        
+
         internal static string GetPermissionsPageUrl(this IOwinContext context)
         {
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ClientPermissions;
@@ -385,17 +386,17 @@ namespace Thinktecture.IdentityServer.Core.Extensions
             if (context == null) throw new ArgumentNullException("context");
             return context.Environment.GetIdentityServerLogoutUrl();
         }
-        
+
         internal static string GetCurrentUserDisplayName(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
-            
-            if (context.Authentication.User != null && 
+
+            if (context.Authentication.User != null &&
                 context.Authentication.User.Identity != null)
             {
                 return context.Authentication.User.Identity.Name;
             }
-            
+
             return null;
         }
 
@@ -403,6 +404,30 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             if (context == null) throw new ArgumentNullException("context");
             return context.Environment.CreateSignInRequest(message);
+        }
+
+        internal async static Task<IFormCollection> ReadRequestFormAsync(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            // hack to clear a possible cached type from Katana in environment
+            context.Environment.Remove("Microsoft.Owin.Form#collection");
+
+            if (!context.Request.Body.CanSeek)
+            {
+                var copy = new MemoryStream();
+                await context.Request.Body.CopyToAsync(copy);
+                copy.Seek(0L, SeekOrigin.Begin);
+                context.Request.Body = copy;
+            }
+
+            var form = await context.Request.ReadFormAsync();
+            context.Request.Body.Seek(0L, SeekOrigin.Begin);
+
+            // hack to prevent caching of an internalized type from Katana in environment
+            context.Environment.Remove("Microsoft.Owin.Form#collection");
+
+            return form;
         }
     }
 }

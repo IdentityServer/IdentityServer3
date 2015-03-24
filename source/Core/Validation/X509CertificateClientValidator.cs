@@ -41,22 +41,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             var context = new OwinContext(environment);
 
-            // hack to clear a possible cached type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
-
-            if (!context.Request.Body.CanSeek)
-            {
-                var copy = new MemoryStream();
-                await context.Request.Body.CopyToAsync(copy);
-                copy.Seek(0L, SeekOrigin.Begin);
-                context.Request.Body = copy;
-            }
-
-            var body = await context.Request.ReadFormAsync();
-
-            // hack to clear a possible cached type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
-            
+            var body = await context.ReadRequestFormAsync();
 
             if (body == null)
             {
