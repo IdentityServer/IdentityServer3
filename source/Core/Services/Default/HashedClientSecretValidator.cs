@@ -18,6 +18,7 @@ using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
+using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 
 namespace Thinktecture.IdentityServer.Core.Services.Default
@@ -27,6 +28,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
     /// </summary>
     public class HashedClientSecretValidator : IClientSecretValidator
     {
+        protected static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Validates the client secret
         /// </summary>
@@ -65,8 +68,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     }
                     catch (FormatException)
                     {
-                        // todo: logging
-                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                        Logger.ErrorFormat("Invalid hashing algorithm for secret for clientId: {0}", credential.ClientId);
+                        return Task.FromResult(false);
                     }
 
                     if (clientSecretBytes.Length == 32)
@@ -79,8 +82,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                     }
                     else
                     {
-                        // todo: logging
-                        throw new InvalidOperationException("Invalid hashing algorithm for client secret.");
+                        Logger.ErrorFormat("Invalid hashing algorithm for secret for clientId: {0}", credential.ClientId);
+                        return Task.FromResult(false);
                     }
 
                     if (isValid)
