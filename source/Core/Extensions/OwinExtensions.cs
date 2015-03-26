@@ -176,6 +176,34 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         }
 
         /// <summary>
+        /// Gets the current fully logged in IdentityServer user. Returns null if the user is not logged in.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        public static async Task<ClaimsIdentity> GetIdentityServerFullLogin(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return await context.GetIdentityFrom(Constants.PrimaryAuthenticationType);
+        }
+        
+        /// <summary>
+        /// Gets the current partial logged in IdentityServer user. Returns null if the user is not logged in.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        public static async Task<ClaimsIdentity> GetIdentityServerPartialLogin(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
+        }
+
+        /// <summary>
         /// Gets the current request identifier.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
