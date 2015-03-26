@@ -7,7 +7,7 @@
     <authors>Brock Allen, Dominick Baier</authors>
     <owners>Brock Allen, Dominick Baier</owners>
     <projectUrl>https://github.com/IdentityServer/IdentityServer3</projectUrl>
-    <iconUrl>http://www.thinktecture.com/images/favicon.ico</iconUrl>
+    <iconUrl>https://identityserver.github.io/Documentation/assets/images/icons/IDserver_icon128.jpg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/IdentityServer/IdentityServer3/blob/master/LICENSE</licenseUrl>
     
