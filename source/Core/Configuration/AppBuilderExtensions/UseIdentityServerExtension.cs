@@ -18,6 +18,7 @@ using Autofac;
 using Microsoft.Owin.Infrastructure;
 using System;
 using System.IdentityModel.Tokens;
+using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
 using Thinktecture.IdentityServer.Core;
 using Thinktecture.IdentityServer.Core.Configuration;
@@ -94,34 +95,35 @@ namespace Owin
             using (var child = container.CreateScopeWithEmptyOwinContext())
             {
                 var eventSvc = child.Resolve<IEventService>();
-                DoStartupDiagnostics(options, eventSvc);
+                // TODO -- perhaps use AsyncHelper instead?
+                DoStartupDiagnosticsAsync(options, eventSvc).Wait();
             }
             
             return app;
         }
 
-        private static void DoStartupDiagnostics(IdentityServerOptions options, IEventService eventSvc)
+        private static async Task DoStartupDiagnosticsAsync(IdentityServerOptions options, IEventService eventSvc)
         {
             var cert = options.SigningCertificate;
             
             if (cert == null)
             {
                 Logger.Warn("No signing certificate configured.");
-                eventSvc.RaiseNoCertificateConfiguredEvent();
+                await eventSvc.RaiseNoCertificateConfiguredEventAsync();
 
                 return;
             }
             if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
             {
                 Logger.Error("Signing certificate has not private key or private key is not accessible. Make sure the account running your application has access to the private key");
-                eventSvc.RaiseCertificatePrivateKeyNotAccessibleEvent(cert);
+                await eventSvc.RaiseCertificatePrivateKeyNotAccessibleEventAsync(cert);
 
                 return;
             }
             if (cert.PublicKey.Key.KeySize < 2048)
             {
                 Logger.Error("Signing certificate key length is less than 2048 bits.");
-                eventSvc.RaiseCertificateKeyLengthTooShortEvent(cert);
+                await eventSvc.RaiseCertificateKeyLengthTooShortEventAsync(cert);
 
                 return;
             }
@@ -130,12 +132,12 @@ namespace Owin
             if (timeSpanToExpire < TimeSpan.FromDays(30))
             {
                 Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());
-                eventSvc.RaiseCertificateExpiringSoonEvent(cert);
+                await eventSvc.RaiseCertificateExpiringSoonEventAsync(cert);
 
                 return;
             }
 
-            eventSvc.RaiseCertificateValidatedEvent(cert);
+            await eventSvc.RaiseCertificateValidatedEventAsync(cert);
         }
     }
 }

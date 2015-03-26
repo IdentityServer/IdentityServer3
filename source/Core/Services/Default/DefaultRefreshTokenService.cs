@@ -87,7 +87,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
 
             await _store.StoreAsync(handle, refreshToken);
 
-            RaiseRefreshTokenIssuedEvent(handle, refreshToken);
+            await RaiseRefreshTokenIssuedEventAsync(handle, refreshToken);
             return handle;
         }
 
@@ -145,13 +145,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 string newHandle = CryptoRandom.CreateUniqueId();
                 await _store.StoreAsync(newHandle, refreshToken);
 
-                RaiseRefreshTokenRefreshedEvent(handle, newHandle, refreshToken);
+                await RaiseRefreshTokenRefreshedEventAsync(handle, newHandle, refreshToken);
                 Logger.Debug("Updated refresh token in store");
 
                 return newHandle;
             }
 
-            RaiseRefreshTokenRefreshedEvent(handle, handle, refreshToken);
+            await RaiseRefreshTokenRefreshedEventAsync(handle, handle, refreshToken);
             Logger.Debug("No updates to refresh token done");
 
             return handle;
@@ -162,9 +162,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="token">The token.</param>
-        protected void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
+        protected async Task RaiseRefreshTokenIssuedEventAsync(string handle, RefreshToken token)
         {
-            _events.RaiseRefreshTokenIssuedEvent(handle, token);
+            await _events.RaiseRefreshTokenIssuedEventAsync(handle, token);
         }
 
         /// <summary>
@@ -173,9 +173,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="oldHandle">The old handle.</param>
         /// <param name="newHandle">The new handle.</param>
         /// <param name="token">The token.</param>
-        protected void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
+        protected async Task RaiseRefreshTokenRefreshedEventAsync(string oldHandle, string newHandle, RefreshToken token)
         {
-            _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
+            await _events.RaiseSuccessfulRefreshTokenRefreshEventAsync(oldHandle, newHandle, token);
         }
     }
 }

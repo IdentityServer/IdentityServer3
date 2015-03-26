@@ -126,15 +126,15 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 if (authResult.IsError)
                 {
                     Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
-                    
-                    eventService.RaisePreLoginFailureEvent(signin, signInMessage, authResult.ErrorMessage);
+
+                    await eventService.RaisePreLoginFailureEventAsync(signin, signInMessage, authResult.ErrorMessage);
                     
                     return RenderErrorPage(authResult.ErrorMessage);
                 }
 
                 Logger.Info("user service returned a login result");
 
-                eventService.RaisePreLoginSuccessEvent(signin, signInMessage, authResult);
+                await eventService.RaisePreLoginSuccessEventAsync(signin, signInMessage, authResult);
                 
                 return SignInAndRedirect(signInMessage, signin, authResult);
             }
@@ -222,7 +222,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
                 
                 var errorMessage = localizationService.GetMessage(MessageIds.InvalidUsernameOrPassword);
-                eventService.RaiseLocalLoginFailureEvent(model.Username, signin, signInMessage, errorMessage);
+                await eventService.RaiseLocalLoginFailureEventAsync(model.Username, signin, signInMessage, errorMessage);
                 
                 return await RenderLoginPage(signInMessage, signin, errorMessage, model.Username, model.RememberMe == true);
             }
@@ -231,14 +231,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
 
-                eventService.RaiseLocalLoginFailureEvent(model.Username, signin, signInMessage, authResult.ErrorMessage);
+                await eventService.RaiseLocalLoginFailureEventAsync(model.Username, signin, signInMessage, authResult.ErrorMessage);
                 
                 return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage, model.Username, model.RememberMe == true);
             }
 
             Logger.Info("Login credentials successfully validated by user service");
 
-            eventService.RaiseLocalLoginSuccessEvent(model.Username, signin, signInMessage, authResult);
+            await eventService.RaiseLocalLoginSuccessEventAsync(model.Username, signin, signInMessage, authResult);
 
             lastUserNameCookie.SetValue(model.Username);
 
@@ -286,7 +286,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var msg = String.Format("External login error: provider {0} not allowed for client: {1}", provider, signInMessage.ClientId);
                 Logger.ErrorFormat(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authenticate, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Authenticate, msg);
                 return RenderErrorPage();
             }
             
@@ -294,7 +294,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var msg = String.Format("External login error: provider requested {0} is not a configured external provider", provider);
                 Logger.ErrorFormat(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authenticate, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Authenticate, msg);
                 return RenderErrorPage();
             }
 
@@ -324,7 +324,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 if (error.Length > MaxInputParamLength) error = error.Substring(0, MaxInputParamLength);
 
                 Logger.ErrorFormat("External identity provider returned error: {0}", error);
-                eventService.RaiseExternalLoginErrorEvent(error);
+                await eventService.RaiseExternalLoginErrorEventAsync(error);
                 return RenderErrorPage(String.Format(localizationService.GetMessage(MessageIds.ExternalProviderError), error));
             }
 
@@ -365,7 +365,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 Logger.Warn("user service failed to authenticate external identity");
                 
                 var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
-                eventService.RaiseExternalLoginFailureEvent(externalIdentity, signInId, signInMessage, msg);
+                await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, msg);
                 
                 return await RenderLoginPage(signInMessage, signInId, msg);
             }
@@ -374,14 +374,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 Logger.WarnFormat("user service returned error message: {0}", authResult.ErrorMessage);
 
-                eventService.RaiseExternalLoginFailureEvent(externalIdentity, signInId, signInMessage, authResult.ErrorMessage);
+                await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, authResult.ErrorMessage);
                 
                 return await RenderLoginPage(signInMessage, signInId, authResult.ErrorMessage);
             }
 
             Logger.Info("External identity successfully validated by user service");
 
-            eventService.RaiseExternalLoginSuccessEvent(externalIdentity, signInId, signInMessage, authResult);
+            await eventService.RaiseExternalLoginSuccessEventAsync(externalIdentity, signInId, signInMessage, authResult);
 
             return SignInAndRedirect(signInMessage, signInId, authResult);
         }
@@ -455,7 +455,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 
                 result = new AuthenticateResult(new ClaimsPrincipal(user));
 
-                eventService.RaisePartialLoginCompleteEvent(user, signInId, signInMessage);
+                await eventService.RaisePartialLoginCompleteEventAsync(user, signInId, signInMessage);
             }
             else
             {
@@ -488,7 +488,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     Logger.Warn("user service failed to authenticate external identity");
                     
                     var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
-                    eventService.RaiseExternalLoginFailureEvent(externalId, signInId, signInMessage, msg);
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalId, signInId, signInMessage, msg);
                     
                     return await RenderLoginPage(signInMessage, signInId, msg);
                 }
@@ -497,14 +497,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 {
                     Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
 
-                    eventService.RaiseExternalLoginFailureEvent(externalId, signInId, signInMessage, result.ErrorMessage);
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalId, signInId, signInMessage, result.ErrorMessage);
                     
                     return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
                 }
 
                 Logger.Info("External identity successfully validated by user service");
 
-                eventService.RaiseExternalLoginSuccessEvent(externalId, signInId, signInMessage, result);
+                await eventService.RaiseExternalLoginSuccessEventAsync(externalId, signInId, signInMessage, result);
             }
 
             return SignInAndRedirect(signInMessage, signInId, result);
@@ -580,7 +580,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 await this.userService.SignOutAsync(user);
 
                 var message = signOutMessageCookie.Read(id);
-                eventService.RaiseLogoutEvent(user, id, message);
+                await eventService.RaiseLogoutEventAsync(user, id, message);
             }
 
             return await RenderLoggedOutPage(id);

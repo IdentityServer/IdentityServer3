@@ -28,15 +28,13 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
+        public async Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
             Logger.ErrorException("Unhandled exception", context.Exception);
 
             var env = context.Request.GetOwinEnvironment();
             var events = env.ResolveDependency<IEventService>();
-            events.RaiseUnhandledExceptionEvent(context.Exception);
-
-            return Task.FromResult<object>(null);
+            await events.RaiseUnhandledExceptionEventAsync(context.Exception);
         }
     }
 }

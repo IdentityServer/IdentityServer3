@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var id = CryptoRandom.CreateUniqueId();
             await _authorizationCodes.StoreAsync(id, code);
 
-            RaiseCodeIssuedEvent(id, code);
+            await RaiseCodeIssuedEventAsync(id, code);
 
             return id;
         }
@@ -214,9 +214,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             return Base64Url.Encode(hash) + "." + salt;
         }
 
-        private void RaiseCodeIssuedEvent(string id, AuthorizationCode code)
+        private async Task RaiseCodeIssuedEventAsync(string id, AuthorizationCode code)
         {
-            _events.RaiseAuthorizationCodeIssuedEvent(id, code);
+            await _events.RaiseAuthorizationCodeIssuedEventAsync(id, code);
         }
     }
 }

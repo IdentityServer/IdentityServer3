@@ -81,7 +81,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -92,7 +92,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 var error = "No token found.";
 
                 Logger.Error(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
                 return Error(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
@@ -105,7 +105,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (tokenResult.IsError)
             {
                 Logger.Error(tokenResult.Error);
-                RaiseFailureEvent(tokenResult.Error);
+                await RaiseFailureEventAsync(tokenResult.Error);
                 return Error(tokenResult.Error);
             }
 
@@ -116,7 +116,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var payload = await _generator.ProcessAsync(subject, scopes);
 
             Logger.Info("End userinfo request");
-            RaiseSuccessEvent();
+            await RaiseSuccessEventAsync();
 
             return new UserInfoResult(payload);
         }
@@ -126,16 +126,16 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new ProtectedResourceErrorResult(error, description);
         }
 
-        private void RaiseSuccessEvent()
+        private async Task RaiseSuccessEventAsync()
         {
-            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.UserInfo);
+            await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.UserInfo);
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
             if (_options.EventsOptions.RaiseFailureEvents)
             {
-                _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.UserInfo, error);
+                await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.UserInfo, error);
             }
         }
     }
