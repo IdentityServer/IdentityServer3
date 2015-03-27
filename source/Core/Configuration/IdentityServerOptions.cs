@@ -39,7 +39,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.ProtocolLogoutUrls = new List<string>();
             this.RequireSsl = true;
             this.Endpoints = new EndpointOptions();
-            this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
             this.LoggingOptions = new LoggingOptions();
@@ -155,14 +154,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The plugin configuration.
         /// </value>
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CORS policy.
-        /// </summary>
-        /// <value>
-        /// The CORS policy.
-        /// </value>
-        public CorsPolicy CorsPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the protocol logout urls.
