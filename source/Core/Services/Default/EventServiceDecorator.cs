@@ -17,6 +17,7 @@
 using Microsoft.Owin;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -39,14 +40,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.inner = inner;
         }
 
-        public void Raise<T>(Event<T> evt)
+        public Task RaiseAsync<T>(Event<T> evt)
         {
             if (CanRaiseEvent(evt))
             {
                 evt = PrepareEvent(evt);
                 evt.Prepare();
-                inner.Raise(evt);
+                inner.RaiseAsync(evt);
             }
+
+            return Task.FromResult(0);
         }
 
         bool CanRaiseEvent<T>(Event<T> evt)

@@ -70,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -80,11 +80,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (response is RevocationErrorResult)
             {
                 var details = response as RevocationErrorResult;
-                RaiseFailureEvent(details.Error);
+                await RaiseFailureEventAsync(details.Error);
             }
             else
             {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
+                await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Token);
             }
 
             Logger.Info("End token revocation request");
@@ -146,7 +146,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     var message = string.Format("Client {0} tried to revoke an access token belonging to a different client: {1}", client.ClientId, token.ClientId);
 
                     Logger.Warn(message);
-                    RaiseFailureEvent(message);
+                    await RaiseFailureEventAsync(message);
                 }
 
                 return true;
@@ -171,7 +171,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                     var message = string.Format("Client {0} tried to revoke a refresh token belonging to a different client: {1}", client.ClientId, token.ClientId);
                     
                     Logger.Warn(message);
-                    RaiseFailureEvent(message);
+                    await RaiseFailureEventAsync(message);
                 }
 
                 return true;
@@ -180,9 +180,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return false;
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Revocation, error);
+            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Revocation, error);
         }
     }
 }

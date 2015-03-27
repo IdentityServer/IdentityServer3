@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -90,11 +90,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (response is TokenErrorResult)
             {
                 var details = response as TokenErrorResult;
-                RaiseFailureEvent(details.Error);
+                await RaiseFailureEventAsync(details.Error);
             }
             else
             {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
+                await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Token);
             }
 
             Logger.Info("End token request");
@@ -128,9 +128,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return this.TokenResponse(response);
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
+            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Token, error);
         }
     }
 }

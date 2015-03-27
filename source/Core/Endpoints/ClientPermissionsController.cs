@@ -78,7 +78,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 Logger.Error("Permissions page disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
 
@@ -103,7 +103,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!options.Endpoints.EnableClientPermissionsEndpoint)
             {
                 Logger.Error("Permissions page disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
                 return NotFound();
             }
             
@@ -129,8 +129,8 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             Logger.InfoFormat("Revoking permissions for sub: {0}, name: {1}, clientID: {2}", User.GetSubjectId(), User.Identity.Name, model.ClientId);
             
             await this.clientPermissionsService.RevokeClientPermissionsAsync(User.GetSubjectId(), model.ClientId);
-            
-            eventService.RaiseClientPermissionsRevokedEvent(User as ClaimsPrincipal, model.ClientId);
+
+            await eventService.RaiseClientPermissionsRevokedEventAsync(User as ClaimsPrincipal, model.ClientId);
 
             Logger.Info("Redirecting back to permissions page");
 
