@@ -162,6 +162,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 if (_signIn.IdP != currentIdp)
                 {
                     Logger.Info("Current IdP is not the requested IdP. Redirecting to login");
+                    Logger.InfoFormat("Current: {0} -- Requested: {1}", currentIdp, _signIn.IdP);
 
                     return new LoginInteractionResponse
                     {
