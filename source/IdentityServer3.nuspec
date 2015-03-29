@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Thinktecture.IdentityServer3</id>
+    <id>IdentityServer3</id>
     <version>0.0.0</version>
-    <title>Thinktecture IdentityServer3</title>
+    <title>IdentityServer3</title>
     <authors>Brock Allen, Dominick Baier</authors>
     <owners>Brock Allen, Dominick Baier</owners>
     <projectUrl>https://github.com/IdentityServer/IdentityServer3</projectUrl>

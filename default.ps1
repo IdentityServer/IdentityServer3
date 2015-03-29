@@ -47,26 +47,26 @@ task UpdateVersion {
 }
 
 task RunTests -depends Compile {
-	$project = "Thinktecture.IdentityServer.Core.Tests"
+	$project = "IdentityServer3.Tests"
 	mkdir $output_directory\xunit\$project -ea SilentlyContinue
 	.$xunit_path "$src_directory\Tests\UnitTests\bin\Release\$project.dll"
 }
 
 
 task ILMerge -depends Compile {
-	$input_dlls = "$output_directory\Thinktecture.IdentityServer3.dll"
+	$input_dlls = "$output_directory\IdentityServer3.dll"
 
 	Get-ChildItem -Path $output_directory -Filter *.dll |
 		foreach-object {
 			# Exclude Thinktecture.IdentityServer3.dll as that will be the primary assembly
-			if ("$_" -ne "Thinktecture.IdentityServer3.dll" -and
+			if ("$_" -ne "IdentityServer3.dll" -and
 			    "$_" -ne "Owin.dll") {
 				$input_dlls = "$input_dlls $output_directory\$_"
 			}
 	}
 
 	New-Item $dist_directory\lib\net45 -Type Directory
-	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize /allowDup /target:library /out:$dist_directory\lib\net45\Thinktecture.IdentityServer3.dll $input_dlls"
+	Invoke-Expression "$ilmerge_path /targetplatform:v4 /internalize /allowDup /target:library /out:$dist_directory\lib\net45\IdentityServer3.dll $input_dlls"
 }
 
 task CreateNuGetPackage -depends ILMerge {
@@ -89,6 +89,6 @@ task CreateNuGetPackage -depends ILMerge {
 
 
 	copy-item $src_directory\IdentityServer3.nuspec $dist_directory
-	copy-item $output_directory\Thinktecture.IdentityServer3.xml $dist_directory\lib\net45\
+	copy-item $output_directory\IdentityServer3.xml $dist_directory\lib\net45\
 	exec { . $nuget_path pack $dist_directory\IdentityServer3.nuspec -BasePath $dist_directory -o $dist_directory -version $packageVersion }
 }

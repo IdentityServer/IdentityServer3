@@ -37,4 +37,4 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("8fd81f8c-9a47-479e-9a83-bdf66f883d78")]
-[assembly: InternalsVisibleTo("Thinktecture.IdentityServer.Core.Tests")]
+[assembly: InternalsVisibleTo("IdentityServer3.Tests")]
