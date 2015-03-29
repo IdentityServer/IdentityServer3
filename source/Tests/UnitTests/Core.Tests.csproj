@@ -161,6 +161,10 @@
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
+    <Compile Include="Validation\Client Validation\BasicAuthenticationCredentialExtraction.cs" />
+    <Compile Include="Validation\Client Validation\FormPostCredentialExtraction.cs" />
+    <Compile Include="Validation\Client Validation\HashedClientSecretValidation.cs" />
+    <Compile Include="Validation\Client Validation\PlainTextClientSecretValidation.cs" />
     <Compile Include="Validation\RevocationRequestValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
@@ -200,8 +204,6 @@
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
-    <Compile Include="Validation\Client Validation\Request_Validation.cs" />
-    <Compile Include="Validation\Client Validation\Client_Validation.cs" />
     <Compile Include="Validation\Token Validation\AccessTokenValidation.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />

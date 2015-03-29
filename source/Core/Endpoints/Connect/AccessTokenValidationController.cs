@@ -66,7 +66,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -79,7 +79,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 var error = "token is missing";
 
                 Logger.Error(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
                 return BadRequest(_localizationService.GetMessage(MessageIds.MissingToken));
             }
 
@@ -88,7 +88,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (result.IsError)
             {
                 Logger.Info("Returning error: " + result.Error);
-                RaiseFailureEvent(result.Error);
+                await RaiseFailureEventAsync(result.Error);
 
                 return BadRequest(result.Error);
             }
@@ -96,19 +96,19 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var response = result.Claims.ToClaimsDictionary();
 
             Logger.Info("End access token validation request");
-            RaiseSuccessEvent();
+            await RaiseSuccessEventAsync();
 
             return Json(response);
         }
 
-        private void RaiseSuccessEvent()
+        private async Task RaiseSuccessEventAsync()
         {
-            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation);
+            await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.AccessTokenValidation);
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.AccessTokenValidation, error);
+            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.AccessTokenValidation, error);
         }
     }
 }

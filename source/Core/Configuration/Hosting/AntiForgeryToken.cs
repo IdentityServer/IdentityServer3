@@ -127,21 +127,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 
         async Task<byte[]> GetHiddenInputTokenAsync()
         {
-            // hack to clear a possible cached type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
-
-            if (!context.Request.Body.CanSeek)
-            {
-                var copy = new MemoryStream();
-                await context.Request.Body.CopyToAsync(copy);
-                copy.Seek(0L, SeekOrigin.Begin);
-                context.Request.Body = copy;
-            }
-            var form = await context.Request.ReadFormAsync();
-            context.Request.Body.Seek(0L, SeekOrigin.Begin);
-
-            // hack to prevent caching of an internalized type from Katana in environment
-            context.Environment.Remove("Microsoft.Owin.Form#collection");
+            var form = await context.ReadRequestFormAsync();
 
             var token = form[TokenName];
             if (token == null) return null;

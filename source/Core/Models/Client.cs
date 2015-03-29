@@ -37,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// <summary>
         /// Client secrets - only relevant for flows that require a secret
         /// </summary>
-        public List<ClientSecret> ClientSecrets { get; set; }
+        public List<Secret> ClientSecrets { get; set; }
 
         /// <summary>
         /// Client display name (used for logging and consent screen)
@@ -87,11 +87,20 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Specifies allowed URIs to redirect to after logout
         /// </summary>
         public List<string> PostLogoutRedirectUris { get; set; }
-        
+
         /// <summary>
-        /// Specifies the scopes that the client is allowed to request. If empty, the client can request all scopes (defaults to empty)
+        /// Gets or sets a value indicating whether the client has access to all scopes. Defaults to false.
+        /// You can set the allowed scopes via the AllowedScopes list.
         /// </summary>
-        public List<string> ScopeRestrictions { get; set; }
+        /// <value>
+        /// <c>true</c> if client has access to all scopes; otherwise, <c>false</c>.
+        /// </value>
+        public bool AllowAccessToAllScopes { get; set; }
+
+        /// <summary>
+        /// Specifies the scopes that the client is allowed to request. If empty, the client can't access any scope
+        /// </summary>
+        public List<string> AllowedScopes { get; set; }
         
         /// <summary>
         /// Lifetime of identity token in seconds (defaults to 300 seconds / 5 minutes)
@@ -211,8 +220,8 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             Flow = Flows.Implicit;
             
-            ClientSecrets = new List<ClientSecret>();
-            ScopeRestrictions = new List<string>();
+            ClientSecrets = new List<Secret>();
+            AllowedScopes = new List<string>();
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
@@ -221,6 +230,7 @@ namespace Thinktecture.IdentityServer.Core.Models
 
             Enabled = true;
             EnableLocalLogin = true;
+            AllowAccessToAllScopes = false;
             
             // client claims settings
             Claims = new List<Claim>();

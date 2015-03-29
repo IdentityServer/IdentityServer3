@@ -271,7 +271,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The client secret validator.
         /// </value>
-        public Registration<IClientSecretValidator> ClientSecretValidator { get; set; }
+        public Registration<IClientValidator> ClientValidator { get; set; }
 
         /// <summary>
         /// Gets or sets the CORS policy service.

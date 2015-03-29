@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+using Thinktecture.IdentityServer.Core.Models;
+
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    internal class ValidationResultBase
+    public class ClientValidationResult : ValidationResult
     {
-        public bool IsError { get; set; }
-        public string Error { get; set; }
+        public Client Client { get; set; }
     }
 }

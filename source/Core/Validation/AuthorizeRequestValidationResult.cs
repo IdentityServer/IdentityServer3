@@ -16,7 +16,7 @@
 
 namespace Thinktecture.IdentityServer.Core.Validation
 {
-    class AuthorizeRequestValidationResult : ValidationResultBase
+    public class AuthorizeRequestValidationResult : ValidationResult
     {
         public AuthorizeRequestValidationResult()
         {

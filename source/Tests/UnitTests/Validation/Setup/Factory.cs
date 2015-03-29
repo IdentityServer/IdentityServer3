@@ -33,22 +33,24 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             return new InMemoryClientStore(TestClients.Get());
         }
 
-        public static ClientValidator CreateClientValidator(
-            IClientStore clients = null,
-            IClientSecretValidator secretValidator = null)
-        {
-            if (clients == null)
-            {
-                clients = new InMemoryClientStore(ClientValidationTestClients.Get());
-            }
+        //public static ClientValidator CreateClientValidator(
+        //    IClientStore clients = null,
+        //    IClientSecretValidator secretValidator = null)
+        //{
+        //    if (clients == null)
+        //    {
+        //        clients = new InMemoryClientStore(ClientValidationTestClients.Get());
+        //    }
 
-            if (secretValidator == null)
-            {
-                secretValidator = new HashedClientSecretValidator();
-            }
+        //    if (secretValidator == null)
+        //    {
+        //        secretValidator = new HashedClientSecretValidator();
+        //    }
 
-            return new ClientValidator(clients, secretValidator);
-        }
+        //    var owin = new OwinEnvironmentService(new OwinContext());
+
+        //    return new ClientValidator(clients, secretValidator, owin);
+        //}
 
         public static TokenRequestValidator CreateTokenRequestValidator(
             IdentityServerOptions options = null,

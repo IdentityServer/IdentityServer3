@@ -206,14 +206,17 @@
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
+    <Compile Include="Services\Default\DefaultClientValidator.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
     <Compile Include="Services\Default\HashedClientSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />
     <Compile Include="Services\Default\DefaultLocalizationService.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
+    <Compile Include="Services\Default\X509CertificateThumbprintClientSecretValidator.cs" />
     <Compile Include="Services\ICache.cs" />
     <Compile Include="Services\IClientSecretValidator.cs" />
+    <Compile Include="Services\IClientValidator.cs" />
     <Compile Include="Services\ICorsPolicyService.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="Services\IRedirectUriValidator.cs" />
     <Compile Include="Services\OwinEnvironmentService.cs" />
     <Compile Include="Validation\AuthorizeRequestValidationResult.cs" />
+    <Compile Include="Validation\BasicAuthenticationClientValidator.cs" />
     <Compile Include="Validation\BearerTokenUsageType.cs" />
     <Compile Include="Validation\BearerTokenUsageValidationResult.cs" />
     <Compile Include="Validation\BearerTokenUsageValidator.cs" />
@@ -245,6 +249,8 @@
     <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="Services\IEventService.cs" />
+    <Compile Include="Validation\ClientValidationResult.cs" />
+    <Compile Include="Validation\ClientValidatorBase.cs" />
     <Compile Include="Validation\CustomGrantValidationResult.cs" />
     <Compile Include="Logging\Models\AuthorizeRequestValidationLog.cs" />
     <Compile Include="Logging\Models\ClientValidationLog.cs" />
@@ -253,9 +259,12 @@
     <Compile Include="Logging\Models\TokenValidationLog.cs" />
     <Compile Include="Logging\Models\TokenRequestValidationLog.cs" />
     <Compile Include="Validation\ErrorTypes.cs" />
+    <Compile Include="Validation\PostBodyClientValidator.cs" />
+    <Compile Include="Validation\TokenRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
-    <Compile Include="Validation\ValidationResultBase.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\X509CertificateClientValidator.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -322,7 +331,6 @@
     <Compile Include="Configuration\AuthenticationOptions.cs" />
     <Compile Include="Configuration\Hosting\AutofacConfig.cs" />
     <Compile Include="Configuration\CookieOptions.cs" />
-    <Compile Include="Configuration\CorsPolicy.cs" />
     <Compile Include="Configuration\Hosting\CorsPolicyProvider.cs" />
     <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Models\RefreshToken.cs" />
@@ -366,7 +374,6 @@
     <Compile Include="Services\ICustomRequestValidator.cs" />
     <Compile Include="Services\ICustomTokenValidator.cs" />
     <Compile Include="Services\ITransientDataRepository.cs" />
-    <Compile Include="Validation\ClientValidator.cs" />
     <Compile Include="Validation\ScopeValidator.cs" />
     <Compile Include="Validation\TokenValidationResult.cs" />
     <Compile Include="Validation\TokenValidator.cs" />
@@ -431,7 +438,6 @@
     <Compile Include="Validation\TokenRequestValidator.cs" />
     <Compile Include="Validation\ValidatedAuthorizeRequest.cs" />
     <Compile Include="Validation\ValidatedTokenRequest.cs" />
-    <Compile Include="Validation\ValidationResult.cs" />
     <Compile Include="Models\SignInMessage.cs" />
     <Compile Include="Extensions\StringsExtensions.cs" />
     <Compile Include="Services\IViewService.cs" />

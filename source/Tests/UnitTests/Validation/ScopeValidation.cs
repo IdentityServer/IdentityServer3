@@ -62,14 +62,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation
 
         Client _unrestrictedClient = new Client
             {
-                ClientId = "unrestricted"
+                ClientId = "unrestricted",
+                AllowAccessToAllScopes = true
             };
 
         Client _restrictedClient = new Client
             {
                 ClientId = "restricted",
             
-                ScopeRestrictions = new List<string>
+                AllowedScopes = new List<string>
                 {
                     "openid",
                     "resource1",

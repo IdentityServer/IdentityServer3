@@ -31,9 +31,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients",
                     Enabled = true,
                     ClientId = "codeclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -74,9 +74,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Implicit Clients",
                     Enabled = true,
                     ClientId = "implicitclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
                     
                     Flow = Flows.Implicit,
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "http://localhost:2671/",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -121,14 +121,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Client Credentials Flow Client",
                     Enabled = true,
                     ClientId = "client",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.ClientCredentials,
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         "read",
                         "write"
@@ -142,14 +142,14 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Resource Owner Flow Client",
                     Enabled = true,
                     ClientId = "roclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.ResourceOwner,
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         "read",
                         "write"
@@ -163,9 +163,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "no_external_idps",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -186,7 +186,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
@@ -206,9 +206,9 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                     ClientName = "Code Flow Clients (NoExternal)",
                     Enabled = true,
                     ClientId = "any_external_idps",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -229,7 +229,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
                         "https://localhost:44312/callback",
                     },
                     
-                    ScopeRestrictions = new List<string>
+                    AllowedScopes = new List<string>
                     { 
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,

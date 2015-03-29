@@ -40,11 +40,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             {
                 Enabled = true,
                 ClientId = client_id,
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 {
-                    new ClientSecret(client_secret)
+                    new Secret(client_secret)
                 },
+
                 Flow = Flows.AuthorizationCode,
+                AllowAccessToAllScopes = true,
+                
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {

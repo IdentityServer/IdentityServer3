@@ -54,6 +54,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             var result = new TokenRevocationRequestValidationResult
             {
+                IsError = false,
                 Token = token
             };
 

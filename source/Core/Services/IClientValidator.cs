@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
+using Thinktecture.IdentityServer.Core.Validation;
 
 namespace Thinktecture.IdentityServer.Core.Services
 {
     /// <summary>
-    /// Abstraction for client secret validation
+    /// The client validator turn some credential on an incoming HTTP request into a Client
     /// </summary>
-    public interface IClientSecretValidator
+    public interface IClientValidator
     {
         /// <summary>
-        /// Validates the client secret.
+        /// Validates the incoming HTTP request
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="credential">The client credential.</param>
-        /// <returns><c>true</c> if the secret is valid; <c>false</c> otherwise.</returns>
-        Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential);
+        /// <param name="environment">The environment.</param>
+        /// <returns>A validation result</returns>
+        Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment);
     }
 }

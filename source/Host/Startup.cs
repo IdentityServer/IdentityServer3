@@ -24,6 +24,7 @@ using Owin;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Services;
+using Thinktecture.IdentityServer.Core.Services.Default;
 using Thinktecture.IdentityServer.Host;
 using Thinktecture.IdentityServer.Host.Config;
 
@@ -56,12 +57,12 @@ namespace Thinktecture.IdentityServer.Host
                     factory.ConfigureScopeStoreCache();
                     factory.ConfigureUserServiceCache();
 
+                    factory.CorsPolicyService = new Registration<ICorsPolicyService>(new DefaultCorsPolicyService { AllowAll = true });
+
                     var idsrvOptions = new IdentityServerOptions
                     {
                         Factory = factory,
                         SigningCertificate = Cert.Load(),
-
-                        CorsPolicy = CorsPolicy.AllowAll,
 
                         AuthenticationOptions = new AuthenticationOptions 
                         {

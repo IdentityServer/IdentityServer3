@@ -32,9 +32,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     Enabled = true,
 
                     ClientId = "codeclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
@@ -51,6 +51,16 @@ namespace Thinktecture.IdentityServer.Host.Config
                         "https://localhost:44312/callback",
                     },
 
+                    AllowedScopes = new List<string>
+                    {
+                        Constants.StandardScopes.OpenId,
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.Email,
+                        Constants.StandardScopes.OfflineAccess,
+                        "read",
+                        "write"
+                    },
+                    
                     AccessTokenType = AccessTokenType.Reference,
                 },
 
@@ -60,9 +70,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     Enabled = true,
 
                     ClientId = "implicitclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.Implicit,
@@ -120,9 +130,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientName = "Hybrid Native Client Demo",
                     Enabled = true,
                     ClientId = "hybridclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.Hybrid,
@@ -144,9 +154,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientName = "Katana Hybrid Client Demo",
                     Enabled = true,
                     ClientId = "katanaclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.Hybrid,
@@ -173,9 +183,34 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientName = "Client Credentials Flow Client",
                     Enabled = true,
                     ClientId = "client",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.ClientCredentials,
+                    
+                    Claims = new List<Claim>
+                    {
+                        new Claim("client_type", "headless")
+                    },
+                    PrefixClientClaims = false,
+                    AllowedScopes = new List<string> {"read", "write"},
+                },
+
+                new Client
+                {
+                    ClientName = "Client Credentials Flow Client with Client Certificate",
+                    Enabled = true,
+                    
+                    ClientId = "certclient",
+                    ClientSecrets = new List<Secret>
+                    { 
+                        new Secret
+                        {
+                            Value = "61B754C541BBCFC6A45A9E9EC5E47D8702B78C29",
+                            Type = Constants.SecretTypes.X509CertificateThumbprint,
+                        }
                     },
 
                     Flow = Flows.ClientCredentials,
@@ -192,9 +227,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientName = "Custom Grant Client",
                     Enabled = true,
                     ClientId = "customclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.Custom
@@ -205,9 +240,9 @@ namespace Thinktecture.IdentityServer.Host.Config
                     ClientName = "Resource Owner Flow Client",
                     Enabled = true,
                     ClientId = "roclient",
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     { 
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.ResourceOwner,

@@ -46,7 +46,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
-        private readonly ClientValidator _clientValidator;
+        private readonly IClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
         private readonly IEventService _events;
 
@@ -58,7 +58,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         /// <param name="clientValidator">The client validator.</param>
         /// <param name="generator">The generator.</param>
         /// <param name="events">The events service.</param>
-        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
+        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, IClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
         {
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
@@ -80,7 +80,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -90,11 +90,11 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (response is TokenErrorResult)
             {
                 var details = response as TokenErrorResult;
-                RaiseFailureEvent(details.Error);
+                await RaiseFailureEventAsync(details.Error);
             }
             else
             {
-                _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Token);
+                await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Token);
             }
 
             Logger.Info("End token request");
@@ -109,18 +109,18 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             // validate client credentials and client
-            var client = await _clientValidator.ValidateClientAsync(parameters, Request.Headers.Authorization);
-            if (client == null)
+            var clientResult = await _clientValidator.ValidateAsync(Request.GetOwinEnvironment());
+            if (clientResult.IsError)
             {
                 return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);
             }
 
             // validate the token request
-            var result = await _requestValidator.ValidateRequestAsync(parameters, client);
+            var requestResult = await _requestValidator.ValidateRequestAsync(parameters, clientResult.Client);
 
-            if (result.IsError)
+            if (requestResult.IsError)
             {
-                return this.TokenErrorResponse(result.Error);
+                return this.TokenErrorResponse(requestResult.Error);
             }
 
             // return response
@@ -128,9 +128,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return this.TokenResponse(response);
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Token, error);
+            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Token, error);
         }
     }
 }

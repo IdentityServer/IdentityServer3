@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 using Thinktecture.IdentityServer.Core.Events;
 using Thinktecture.IdentityServer.Core.Logging;
 
@@ -35,12 +36,14 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="evt">The event.</param>
         /// <exception cref="System.ArgumentNullException">evt</exception>
-        public virtual void Raise<T>(Event<T> evt)
+        public virtual Task RaiseAsync<T>(Event<T> evt)
         {
             if (evt == null) throw new ArgumentNullException("evt");
             
             var json = LogSerializer.Serialize(evt);
             Logger.Info(json);
+
+            return Task.FromResult(0);
         }
     }
 }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Extensions;
@@ -30,21 +31,35 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// Validates the client secret
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="secret">The client secret.</param>
+        /// <param name="credential">The client credential.</param>
         /// <returns></returns>
-        public virtual Task<bool> ValidateClientSecretAsync(Client client, string secret)
+        public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            foreach (var clientSecret in client.ClientSecrets)
+            if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
             {
-                // check if client secret is still valid
-                if (clientSecret.Expiration.HasExpired()) continue;
-                
-                // use time constant string comparison
-                var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secret);
-
-                if (isValid)
+                if (credential.ClientId.IsMissing() || credential.Credential == null || credential.Credential.ToString().IsMissing())
                 {
-                    return Task.FromResult(true);
+                    throw new ArgumentNullException("Credential.ClientId or Credential.Credential");
+                }
+
+                foreach (var clientSecret in client.ClientSecrets)
+                {
+                    // this validator is only applicable to shared secrets
+                    if (clientSecret.Type != Constants.SecretTypes.SharedSecret)
+                    {
+                        continue;
+                    }
+
+                    // check if client secret is still valid
+                    if (clientSecret.Expiration.HasExpired()) continue;
+
+                    // use time constant string comparison
+                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.Credential.ToString());
+
+                    if (isValid)
+                    {
+                        return Task.FromResult(true);
+                    }
                 }
             }
 

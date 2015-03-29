@@ -36,15 +36,19 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
         protected override void PreInit()
         {
             host.Scopes.Add(StandardScopes.OpenId);
+            
             host.Clients.Add(new Client
             {
                 Enabled = true,
                 ClientId = client_id,
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 {
-                    new ClientSecret(client_secret)
+                    new Secret(client_secret.Sha256())
                 },
+
                 Flow = Flows.AuthorizationCode,
+                AllowAccessToAllScopes = true,
+                
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {

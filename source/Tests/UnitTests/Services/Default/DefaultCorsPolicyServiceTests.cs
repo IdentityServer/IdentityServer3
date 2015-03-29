@@ -65,35 +65,6 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
         }
 
         [Fact]
-        public void ctor_CopiesCorsPolicyOrigins()
-        {
-            var policy = new CorsPolicy();
-            policy.AllowedOrigins.Add("http://foo");
-            policy.AllowedOrigins.Add("http://bar");
-            policy.AllowedOrigins.Add("http://baz");
-
-            Func<string, Task<bool>> func = s => Task.FromResult(true);
-            policy.PolicyCallback = func;
-
-            subject = new DefaultCorsPolicyService(policy);
-            subject.AllowedOrigins.ShouldAllBeEquivalentTo(new string[] { "http://foo", "http://bar", "http://baz" });
-        }
-
-        [Fact]
-        public void ctor_UsesCorsPolicyCallback()
-        {
-            var wasCalled = false;
-            var policy = new CorsPolicy();
-            Func<string, Task<bool>> func = s => { wasCalled = true; return Task.FromResult(true); };
-            policy.PolicyCallback = func;
-
-            subject = new DefaultCorsPolicyService(policy);
-            var result = subject.IsOriginAllowedAsync("http://foo").Result;
-            result.Should().Be(true);
-            wasCalled.Should().Be(true);
-        }
-        
-        [Fact]
         public void IsOriginAllowed_AllowAllTrue_ReturnsTrue()
         {
             subject.AllowAll = true;

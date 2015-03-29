@@ -53,7 +53,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!options.Endpoints.EnableCspReportEndpoint)
             {
                 Logger.Error("endpoint disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, "endpoint disabled");
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, "endpoint disabled");
                 return NotFound();
             }
 
@@ -62,7 +62,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, msg);
                 return BadRequest();
             }
 
@@ -71,14 +71,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, msg);
                 return BadRequest();
             }
 
             if (json.IsPresent())
             {
                 Logger.InfoFormat("CSP Report data: {0}", json);
-                eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
+                await eventService.RaiseCspReportEventAsync(json, User as ClaimsPrincipal);
             }
 
             Logger.Info("Rendering 204");
