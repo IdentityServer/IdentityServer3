@@ -133,5 +133,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The limit after which old signin messages are purged
         /// </value>
         public int SignInMessageThreshold { get; set; }
+
+        /// <summary>
+        /// Gets or sets the invalid sign in redirect URL. If the user arrives at the login page without
+        /// a valid sign-in request, then they will be redirected to this URL. The URL must be absolute or
+        /// can relative URLs (starting with "~/").
+        /// </summary>
+        /// <value>
+        /// The invalid sign in redirect URL.
+        /// </value>
+        public string InvalidSignInRedirectUrl { get; set; }
     }
 }

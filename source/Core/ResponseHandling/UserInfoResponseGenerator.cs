@@ -25,12 +25,9 @@ using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
-#pragma warning disable 1591
-
 namespace Thinktecture.IdentityServer.Core.ResponseHandling
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class UserInfoResponseGenerator
+    internal class UserInfoResponseGenerator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IUserService _users;
@@ -48,10 +45,19 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var profileData = new Dictionary<string, object>();
             
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
-            Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ToSpaceSeparatedString());
-
             var principal = Principal.Create("UserInfo", new Claim("sub", subject));
-            var profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes);
+
+            IEnumerable<Claim> profileClaims;
+            if (requestedClaimTypes.IncludeAllClaims)
+            {
+                Logger.InfoFormat("Requested claim types: all");
+                profileClaims = await _users.GetProfileDataAsync(principal);
+            }
+            else
+            {
+                Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ClaimTypes.ToSpaceSeparatedString());
+                profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes.ClaimTypes);
+            }
             
             if (profileClaims != null)
             {
@@ -66,11 +72,11 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             return profileData;
         }
 
-        public async Task<IEnumerable<string>> GetRequestedClaimTypesAsync(IEnumerable<string> scopes)
+        public async Task<RequestedClaimTypes> GetRequestedClaimTypesAsync(IEnumerable<string> scopes)
         {
             if (scopes == null || !scopes.Any())
             {
-                return Enumerable.Empty<string>();
+                return new RequestedClaimTypes();
             }
 
             var scopeString = string.Join(" ", scopes);
@@ -87,12 +93,20 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
                 {
                     if (scopeDetail.Type == ScopeType.Identity)
                     {
+                        if (scopeDetail.IncludeAllClaimsForUser)
+                        {
+                            return new RequestedClaimTypes
+                            {
+                                IncludeAllClaims = true
+                            };
+                        }
+
                         scopeClaims.AddRange(scopeDetail.Claims.Select(c => c.Name));
                     }
                 }
             }
 
-            return scopeClaims;
+            return new RequestedClaimTypes(scopeClaims);
         }
     }
 }

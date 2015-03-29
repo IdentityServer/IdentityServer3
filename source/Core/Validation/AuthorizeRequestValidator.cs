@@ -470,7 +470,8 @@ namespace Thinktecture.IdentityServer.Core.Validation
             //////////////////////////////////////////////////////////
             // check session cookie
             //////////////////////////////////////////////////////////
-            if (_options.Endpoints.EnableCheckSessionEndpoint)
+            if (_options.Endpoints.EnableCheckSessionEndpoint && 
+                request.Subject.Identity.IsAuthenticated)
             {
                 var sessionId = _sessionCookie.GetSessionId();
                 if (sessionId.IsPresent())

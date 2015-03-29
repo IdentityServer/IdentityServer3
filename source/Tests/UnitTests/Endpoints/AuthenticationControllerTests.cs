@@ -158,10 +158,37 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         }
 
         [Fact]
-        public void GetLogin_NoSignInMessage_ReturnNotFound()
+        public void GetLogin_NoSignInMessage_ReturnError()
         {
             var resp = Get(Constants.RoutePaths.Login);
-            resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            resp.AssertPage("error");
+        }
+
+        [Fact]
+        public void GetLogin_NoSignInMessage_InvalidSignInRedirectUrl_ConfiguredWithRelativePath_RedirectsCorrectly()
+        {
+            this.options.AuthenticationOptions.InvalidSignInRedirectUrl = "~/fail";
+            var resp = Get(Constants.RoutePaths.Login);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("/fail"));
+        }
+
+        [Fact]
+        public void GetLogin_NoSignInMessage_InvalidSignInRedirectUrl_ConfiguredWithAbsolutePath_RedirectsCorrectly()
+        {
+            this.options.AuthenticationOptions.InvalidSignInRedirectUrl = "/fail";
+            var resp = Get(Constants.RoutePaths.Login);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("/fail"));
+        }
+
+        [Fact]
+        public void GetLogin_NoSignInMessage_InvalidSignInRedirectUrl_ConfiguredWithUrl_RedirectsCorrectly()
+        {
+            this.options.AuthenticationOptions.InvalidSignInRedirectUrl = "http://fail/fail";
+            var resp = Get(Constants.RoutePaths.Login);
+            resp.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            resp.Headers.Location.AbsoluteUri.Should().Be("http://fail/fail");
         }
 
         [Fact]
