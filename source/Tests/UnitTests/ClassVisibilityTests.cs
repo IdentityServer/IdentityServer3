@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core;
+using IdentityServer3.Core;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests
+namespace IdentityServer3.Tests
 {
     public class InternalizedDependencyCompatibilityTests
     {

@@ -17,14 +17,14 @@
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
+using IdentityServer3.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     static class Factory
     {

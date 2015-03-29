@@ -16,7 +16,7 @@
 
 using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Abstract interface to model data caching

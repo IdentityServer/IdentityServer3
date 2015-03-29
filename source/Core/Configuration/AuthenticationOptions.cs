@@ -18,7 +18,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Configures the login and logout views and behavior.

@@ -18,11 +18,11 @@ using FluentAssertions;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Services.Default;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Tokens
+namespace IdentityServer3.Tests.Validation.Tokens
 {
     
     public class IdentityTokenValidation

@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace IdentityServer3.Core.Events
 {
     /// <summary>
     /// Contextual information included with every event.

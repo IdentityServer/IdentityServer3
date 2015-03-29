@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace IdentityServer3.Core.ViewModels
 {
     /// <summary>
     /// Models values needed for Cross-Site Request Forgery (CSRF) prevention. These

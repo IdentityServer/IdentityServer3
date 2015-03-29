@@ -15,17 +15,17 @@
  */
 
 using Autofac;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin.Infrastructure;
 using System;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel.Tokens;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 
 namespace Owin
 {
@@ -40,7 +40,7 @@ namespace Owin
         /// Extension method to configure IdentityServer in the hosting application.
         /// </summary>
         /// <param name="app">The application.</param>
-        /// <param name="options">The <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerOptions"/>.</param>
+        /// <param name="options">The <see cref="IdentityServer3.Core.Configuration.IdentityServerOptions"/>.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">
         /// app

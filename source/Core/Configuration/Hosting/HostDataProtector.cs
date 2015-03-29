@@ -16,7 +16,7 @@
 
 using Microsoft.Owin.Security.DataProtection;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class HostDataProtector : IDataProtector
     {

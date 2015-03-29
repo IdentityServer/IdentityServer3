@@ -15,14 +15,14 @@
  */
 
 using Autofac;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class AutofacContainerMiddleware
     {

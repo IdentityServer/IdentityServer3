@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Configuration;
+using IdentityServer3.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     public class NoDataProtector : IDataProtector
     {

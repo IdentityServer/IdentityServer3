@@ -15,10 +15,10 @@
  */
 
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Host.Config
+namespace IdentityServer3.Host.Config
 {
     public class CustomGrantValidator : ICustomGrantValidator
     {

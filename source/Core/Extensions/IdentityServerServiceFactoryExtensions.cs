@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Caching;
+using IdentityServer3.Core.Services.Default;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Caching;
-using Thinktecture.IdentityServer.Core.Services.Default;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
-    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerServiceFactory"/>
+    /// Extension methods for <see cref="IdentityServer3.Core.Configuration.IdentityServerServiceFactory"/>
     /// </summary>
     public static class IdentityServerServiceFactoryExtensions
     {

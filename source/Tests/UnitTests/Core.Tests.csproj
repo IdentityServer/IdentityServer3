@@ -8,7 +8,7 @@
     <ProjectGuid>{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Thinktecture.IdentityServer.Tests</RootNamespace>
+    <RootNamespace>IdentityServer3.Tests</RootNamespace>
     <AssemblyName>IdentityServer3.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

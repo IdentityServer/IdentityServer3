@@ -17,7 +17,7 @@
 using System.IdentityModel;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// X.509 certificate based data protector

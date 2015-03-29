@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class KatanaDependencyResolver : DelegatingHandler
     {

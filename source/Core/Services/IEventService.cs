@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Events;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Events;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Models a recipient of notification of events

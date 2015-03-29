@@ -25,9 +25,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Web;
-using Thinktecture.IdentityServer.Core.Extensions;
+using IdentityServer3.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     static class Extensions
     {

@@ -15,10 +15,10 @@
  */
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
 
-namespace Thinktecture.IdentityServer.Host.Config
+namespace IdentityServer3.Host.Config
 {
     public class Clients
     {
@@ -82,6 +82,7 @@ namespace Thinktecture.IdentityServer.Host.Config
 
                     RequireConsent = true,
                     AllowRememberConsent = true,
+                    AllowAccessToAllScopes = true,
 
                     RedirectUris = new List<string>
                     {

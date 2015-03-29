@@ -17,13 +17,13 @@
 using FluentAssertions;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Services.Default
+namespace IdentityServer3.Tests.Services.Default
 {
     public class DefaultConsentServiceTests
     {

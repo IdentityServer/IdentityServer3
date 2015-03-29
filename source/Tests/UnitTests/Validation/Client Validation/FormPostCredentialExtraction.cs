@@ -18,11 +18,11 @@ using FluentAssertions;
 using Microsoft.Owin;
 using System.IO;
 using System.Text;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.Client_Validation
+namespace IdentityServer3.Tests.Validation.Client_Validation
 {
     public class FormPostCredentialExtraction
     {

@@ -17,13 +17,13 @@
 using FluentAssertions;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.InMemory;
+using IdentityServer3.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     public class RevocationRequestValidation
     {

@@ -16,7 +16,7 @@
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace IdentityServer3.Core.Events
 {
     public static class EventConstants
     {

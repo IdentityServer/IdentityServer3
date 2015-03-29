@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     public class TestFactory
     {

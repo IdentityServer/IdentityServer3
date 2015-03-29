@@ -18,11 +18,11 @@ using FluentAssertions;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
+namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 {
     public class Authorize_ProtocolValidation_Invalid
     {

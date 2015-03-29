@@ -16,7 +16,7 @@
 using Autofac;
 using Microsoft.Owin;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class IContainerExtensions
     {

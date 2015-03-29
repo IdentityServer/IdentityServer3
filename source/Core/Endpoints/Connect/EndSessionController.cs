@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.ResponseHandling;
+using IdentityServer3.Core.Results;
+using IdentityServer3.Core.Validation;
 using System;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.ResponseHandling;
-using Thinktecture.IdentityServer.Core.Results;
-using Thinktecture.IdentityServer.Core.Validation;
 
-#pragma warning disable 1591
-
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace IdentityServer3.Core.Endpoints
 {
     /// <summary>
     /// OpenID Connect end session endpoint
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     [SecurityHeaders]
     [NoCache]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]

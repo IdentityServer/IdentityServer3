@@ -21,7 +21,7 @@ using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
 
-namespace Thinktecture.IdentityServer.Core
+namespace IdentityServer3.Core
 {
     internal static class IdentityServerPrincipal
     {

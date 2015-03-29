@@ -19,11 +19,11 @@ using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
+using IdentityServer3.Core.Configuration.Hosting;
 using Xunit;
 using CorsPolicy = System.Web.Cors.CorsPolicy;
 
-namespace Thinktecture.IdentityServer.Tests.Configuration
+namespace IdentityServer3.Tests.Configuration
 {
     internal class TestCorsPolicyProvider : CorsPolicyProvider
     {

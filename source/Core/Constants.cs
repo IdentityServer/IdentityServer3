@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Thinktecture.IdentityServer.Core.Models;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core
+namespace IdentityServer3.Core
 {
     public static class Constants
     {

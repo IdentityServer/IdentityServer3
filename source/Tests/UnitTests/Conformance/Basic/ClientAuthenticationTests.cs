@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Thinktecture.IdentityModel.Http;
-using Thinktecture.IdentityServer.Core.Models;
+using IdentityServer3.Core.Models;
 using Xunit;
 
 
-namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
+namespace IdentityServer3.Tests.Conformance.Basic
 {
     public class ClientAuthenticationTests : IdentityServerHostTest
     {

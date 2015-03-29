@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// In-memory, time based implementation of <see cref="ICache{T}"/>

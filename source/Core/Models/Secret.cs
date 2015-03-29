@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models a client secret with identifier and expiration

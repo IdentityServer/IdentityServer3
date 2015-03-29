@@ -20,14 +20,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests.Conformance
+namespace IdentityServer3.Tests.Conformance
 {
     public class IdentityServerHost : IDisposable
     {
@@ -103,7 +103,7 @@ namespace Thinktecture.IdentityServer.Tests.Conformance
             get
             {
                 var assembly = typeof(IdentityServerHost).Assembly;
-                using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Tests.idsrv3test.pfx"))
+                using (var stream = assembly.GetManifestResourceStream("IdentityServer3.Tests.idsrv3test.pfx"))
                 {
                     return new X509Certificate2(ReadStream(stream), "idsrv3test");
                 }

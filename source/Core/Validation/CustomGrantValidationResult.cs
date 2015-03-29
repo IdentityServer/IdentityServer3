@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Thinktecture.IdentityModel;
 using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
     /// <summary>
     /// Models the result of custom grant validation.

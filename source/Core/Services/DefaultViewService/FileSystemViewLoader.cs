@@ -17,7 +17,7 @@
 using System;
 using System.IO;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// View loader that loads HTML templates from the file system.

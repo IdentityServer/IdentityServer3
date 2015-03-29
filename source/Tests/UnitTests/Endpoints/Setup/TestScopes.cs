@@ -15,9 +15,9 @@
  */
 
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Models;
+using IdentityServer3.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     public class TestScopes
     {

@@ -18,10 +18,10 @@ using FluentAssertions;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Validation;
+using IdentityServer3.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     public class BearerTokenUsageValidation
     {

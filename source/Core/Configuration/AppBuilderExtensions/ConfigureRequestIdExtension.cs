@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System;
 using System.Diagnostics;
-using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
 {

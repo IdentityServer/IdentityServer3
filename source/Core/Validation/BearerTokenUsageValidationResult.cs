@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
     internal class BearerTokenUsageValidationResult
     {

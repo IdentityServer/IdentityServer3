@@ -15,12 +15,12 @@
  */
 
 using Autofac;
+using IdentityServer3.Core.Extensions;
 using System;
 using System.Net.Http;
 using System.Web.Http.Filters;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class SecurityHeadersAttribute : ActionFilterAttribute
     {

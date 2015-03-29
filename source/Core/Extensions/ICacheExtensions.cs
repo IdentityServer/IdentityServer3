@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Services.ICache{T}"/>
+    /// Extension methods for <see cref="IdentityServer3.Core.Services.ICache{T}"/>
     /// </summary>
     public static class ICacheExtensions
     {

@@ -15,10 +15,10 @@
  */
 using System;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests.Conformance
+namespace IdentityServer3.Tests.Conformance
 {
     public class IdentityServerHostTest : IDisposable
     {

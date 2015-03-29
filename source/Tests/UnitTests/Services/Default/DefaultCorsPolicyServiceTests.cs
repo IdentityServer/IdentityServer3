@@ -17,11 +17,11 @@
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services.Default;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Services.Default
+namespace IdentityServer3.Tests.Services.Default
 {
     public class DefaultCorsPolicyServiceTests
     {

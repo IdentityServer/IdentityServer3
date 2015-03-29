@@ -21,16 +21,16 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Host;
-using Thinktecture.IdentityServer.Host.Config;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Host;
+using IdentityServer3.Host.Config;
 
 [assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
 
-namespace Thinktecture.IdentityServer.Host
+namespace IdentityServer3.Host
 {
     public class Startup_LocalTest
     {

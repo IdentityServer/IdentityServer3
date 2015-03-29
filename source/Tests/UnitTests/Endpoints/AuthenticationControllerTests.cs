@@ -27,14 +27,14 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.ViewModels;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ViewModels;
 using Xunit;
-using AuthenticateResult = Thinktecture.IdentityServer.Core.Models.AuthenticateResult;
+using AuthenticateResult = IdentityServer3.Core.Models.AuthenticateResult;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     public class AuthenticationControllerTests : IdSvrHostTestBase
     {
@@ -990,7 +990,7 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
         string GetLongString()
         {
             string value = "x";
-            var parts = new string[Thinktecture.IdentityServer.Core.Endpoints.AuthenticationController.MaxInputParamLength+1];
+            var parts = new string[IdentityServer3.Core.Endpoints.AuthenticationController.MaxInputParamLength+1];
             return parts.Aggregate((x, y) => (x??value) + value);
         }
 

@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
-using System.Security.Cryptography.X509Certificates;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models a client credential

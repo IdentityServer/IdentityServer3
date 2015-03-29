@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services.Default;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Services.Default
+namespace IdentityServer3.Tests.Services.Default
 {
     
     public class TokenMetadataPermissionsStoreAdapterTest

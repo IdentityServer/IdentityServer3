@@ -26,13 +26,13 @@
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace IdentityServer3.Core.Logging
 {
+    using IdentityServer3.Core.Logging.LogProviders;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using Thinktecture.IdentityServer.Core.Logging.LogProviders;
 
     /// <summary>
     /// Simple interface that represent a logger.
@@ -460,7 +460,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
     }
 }
 
-namespace Thinktecture.IdentityServer.Core.Logging.LogProviders
+namespace IdentityServer3.Core.Logging.LogProviders
 {
     using System;
     using System.Collections.Generic;
