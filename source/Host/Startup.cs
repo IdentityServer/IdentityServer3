@@ -67,6 +67,7 @@ namespace IdentityServer3.Host
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,
+                            EnablePostSignOutAutoRedirect = true
                         },
 
                         LoggingOptions = new LoggingOptions
