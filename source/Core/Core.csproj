@@ -125,7 +125,7 @@
     <Compile Include="..\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="App_Packages\LibLog.2.0\LibLog.cs" />
+    <Compile Include="App_Packages\LibLog.3.1\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
