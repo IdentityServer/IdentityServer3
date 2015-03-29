@@ -190,6 +190,7 @@
     <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\RequestedClaimTypes.cs" />
     <Compile Include="Resources\T4resx.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
