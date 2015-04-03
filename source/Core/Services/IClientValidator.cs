@@ -26,7 +26,7 @@ namespace IdentityServer3.Core.Services
     public interface IClientValidator
     {
         /// <summary>
-        /// Validates the incoming HTTP request
+        /// Parses the incoming HTTP request and turns some client credential into a client model
         /// </summary>
         /// <param name="environment">The environment.</param>
         /// <returns>A validation result</returns>

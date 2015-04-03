@@ -24,11 +24,11 @@ using Thinktecture.IdentityModel;
 namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
-    /// Default client secret validator.
+    /// Client secret validator for hashed secrets.
     /// </summary>
     public class HashedClientSecretValidator : IClientSecretValidator
     {
-        protected static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// Validates the client secret

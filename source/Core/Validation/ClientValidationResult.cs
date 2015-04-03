@@ -18,8 +18,17 @@ using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Validation result for client validation
+    /// </summary>
     public class ClientValidationResult : ValidationResult
     {
+        /// <summary>
+        /// Gets or sets the client.
+        /// </summary>
+        /// <value>
+        /// The client.
+        /// </value>
         public Client Client { get; set; }
     }
 }

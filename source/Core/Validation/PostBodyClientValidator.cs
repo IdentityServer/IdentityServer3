@@ -23,12 +23,25 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Client validator for client secrets posted in the body
+    /// </summary>
     public class PostBodyClientValidator : ClientValidatorBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostBodyClientValidator"/> class.
+        /// </summary>
+        /// <param name="secretValidator">The secret validator.</param>
+        /// <param name="clients">The client store.</param>
         public PostBodyClientValidator(IClientSecretValidator secretValidator, IClientStore clients)
             : base(secretValidator, clients)
         { }
 
+        /// <summary>
+        /// Extracts the credential from the HTTP request.
+        /// </summary>
+        /// <param name="environment">The OWIN environment.</param>
+        /// <returns></returns>
         public override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
             var context = new OwinContext(environment);

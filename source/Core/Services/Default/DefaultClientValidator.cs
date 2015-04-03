@@ -27,6 +27,10 @@ namespace IdentityServer3.Core.Services.Default
     {
         private List<IClientValidator> Validators { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultClientValidator"/> class.
+        /// </summary>
+        /// <param name="clients">The clients.</param>
         public DefaultClientValidator(IClientStore clients)
         {
             var hashedSharedSecretValidator = new HashedClientSecretValidator();
@@ -44,6 +48,13 @@ namespace IdentityServer3.Core.Services.Default
             };
         }
 
+        /// <summary>
+        /// Parses the incoming HTTP request and turns some client credential into a client model
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A validation result
+        /// </returns>
         public async Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment)
         {
             foreach (var val in Validators)

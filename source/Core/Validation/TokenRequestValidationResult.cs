@@ -16,7 +16,9 @@
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Validation result for token requests
+    /// </summary>
     public class TokenRequestValidationResult : ValidationResult
-    {
-    }
+    { }
 }

@@ -25,12 +25,25 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Client validator for client secrets using HTTP Basic Authentication
+    /// </summary>
     public class BasicAuthenticationClientValidator : ClientValidatorBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasicAuthenticationClientValidator"/> class.
+        /// </summary>
+        /// <param name="secretValidator">The secret validator.</param>
+        /// <param name="clients">The client store.</param>
         public BasicAuthenticationClientValidator(IClientSecretValidator secretValidator, IClientStore clients)
             : base(secretValidator, clients)
         { }
 
+        /// <summary>
+        /// Extracts the credential from the HTTP request.
+        /// </summary>
+        /// <param name="environment">The OWIN environment.</param>
+        /// <returns></returns>
         public override Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
         {
             var credential = new ClientCredential

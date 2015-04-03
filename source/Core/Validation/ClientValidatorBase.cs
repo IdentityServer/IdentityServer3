@@ -22,21 +22,51 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Base class for client validators
+    /// </summary>
     public abstract class ClientValidatorBase : IClientValidator
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
         protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        /// <summary>
+        /// The client secret validator
+        /// </summary>
         protected readonly IClientSecretValidator _secretValidator;
+
+        /// <summary>
+        /// The client store
+        /// </summary>
         protected readonly IClientStore _clients;
 
+        /// <summary>
+        /// Extracts the credential from the HTTP request.
+        /// </summary>
+        /// <param name="environment">The OWIN environment.</param>
+        /// <returns></returns>
         public abstract Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClientValidatorBase"/> class.
+        /// </summary>
+        /// <param name="secretValidator">The secret validator.</param>
+        /// <param name="clients">The client store.</param>
         public ClientValidatorBase(IClientSecretValidator secretValidator, IClientStore clients)
         {
             _secretValidator = secretValidator;
             _clients = clients;
         }
 
+        /// <summary>
+        /// Parses the incoming HTTP request and turns some client credential into a client model
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A validation result
+        /// </returns>
         public async Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment)
         {
             Logger.Info("Start client validation");
