@@ -35,11 +35,28 @@ namespace IdentityServer3.Core.Logging
             return new DiagnosticsTraceLogger(name).Log;
         }
 
+        /// <summary>
+        /// Opens a nested diagnostics context. Not supported in EntLib logging.
+        /// </summary>
+        /// <param name="message">The message to add to the diagnostics context.</param>
+        /// <returns>
+        /// A disposable that when disposed removes the message from the context.
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public IDisposable OpenNestedContext(string message)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Opens a mapped diagnostics context. Not supported in EntLib logging.
+        /// </summary>
+        /// <param name="key">A key.</param>
+        /// <param name="value">A value.</param>
+        /// <returns>
+        /// A disposable that when disposed removes the map from the context.
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public IDisposable OpenMappedContext(string key, string value)
         {
             throw new NotImplementedException();
