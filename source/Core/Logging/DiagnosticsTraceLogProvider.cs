@@ -30,9 +30,19 @@ namespace IdentityServer3.Core.Logging
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public ILog GetLogger(string name)
+        public Logger GetLogger(string name)
         {
-            return new DiagnosticsTraceLogger(name);
+            return new DiagnosticsTraceLogger(name).Log;
+        }
+
+        public IDisposable OpenNestedContext(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable OpenMappedContext(string key, string value)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -59,7 +69,7 @@ namespace IdentityServer3.Core.Logging
         /// <param name="messageFunc">The message function.</param>
         /// <param name="exception">The exception.</param>
         /// <returns></returns>
-        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null)
+        public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
         {
             if (messageFunc != null)
             {
@@ -76,26 +86,6 @@ namespace IdentityServer3.Core.Logging
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Log a message and exception at the specified log level.
-        /// </summary>
-        /// <typeparam name="TException">The type of the exception.</typeparam>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="messageFunc">The message function.</param>
-        /// <param name="exception">The exception.</param>
-        /// <remarks>
-        /// Note to implementors: the message func should not be called if the loglevel is not enabled
-        /// so as not to incur perfomance penalties.
-        /// </remarks>
-        public void Log<TException>(LogLevel logLevel, Func<string> messageFunc, TException exception) where TException : Exception
-        {
-            if (messageFunc != null && exception != null)
-            {
-                var message = string.Format("{0}: {1} -- {2}\n{3}", _name, DateTimeOffsetHelper.UtcNow.ToString(), messageFunc(), exception);
-                TraceMsg(logLevel, message);
-            }
         }
 
         private static void TraceMsg(LogLevel logLevel, string message)
