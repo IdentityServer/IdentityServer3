@@ -15,6 +15,8 @@ if(Test-Path Env:\APPVEYOR_BUILD_NUMBER){
 	Write-Host "Using APPVEYOR_BUILD_NUMBER"
 
 	$task = "appVeyor"
+
+    ${env:IdentityServer3.Core_LIBLOG_DISABLE} = "true"
 }
 
 "Build number $buildNumber"
