@@ -12,9 +12,11 @@ Import-Module .\source\packages\psake.4.4.1\tools\psake.psm1
 
 if(Test-Path Env:\APPVEYOR_BUILD_NUMBER){
 	$buildNumber = [int]$Env:APPVEYOR_BUILD_NUMBER
-	Write-Host "Using APPVEYOR_BUILD_NUMBER"
-
 	$task = "appVeyor"
+    ${env:IdentityServer3.Core_LIBLOG_DISABLE} = "true"
+
+    Write-Host "Using APPVEYOR_BUILD_NUMBER"
+    Write-Host "Disabling LibLog console output"
 }
 
 "Build number $buildNumber"

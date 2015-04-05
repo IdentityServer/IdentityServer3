@@ -1,29 +1,3 @@
-//===============================================================================
-// LibLog
-//
-// https://github.com/damianh/LibLog
-//===============================================================================
-// Copyright © 2011-2015 Damian Hickey.  All rights reserved.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-//===============================================================================
-
 // ReSharper disable PossibleNullReferenceException
 
 // Define LIBLOG_PORTABLE conditional compilation symbol for PCL compatibility
@@ -32,20 +6,40 @@
 // this can have unintendend consequences of consumers of your library using your library to resolve a logger. If the
 // reason is because you want to open this functionality to other projects within your solution,
 // consider [InternalVisibleTo] instead.
+// 
+// Define LIBLOG_PROVIDERS_ONLY if your library provides its own logging API and you just want to use the
+// LibLog providers internally to provide built in support for popular logging frameworks.
 
 #pragma warning disable 1591
 
-// If you copied this file manually, you need to change this namespace so not to clash with other libraries
+// If you copied this file manually, you need to change all "YourRootNameSpace" so not to clash with other libraries
 // that use LibLog
+#if LIBLOG_PROVIDERS_ONLY
+namespace IdentityServer3.Core.LibLog
+#else
 namespace IdentityServer3.Core.Logging
+#endif
 {
     using System.Collections.Generic;
+#if LIBLOG_PROVIDERS_ONLY
+    using IdentityServer3.Core.LibLog.LogProviders;
+#else
     using IdentityServer3.Core.Logging.LogProviders;
+#endif
     using System;
+#if !LIBLOG_PROVIDERS_ONLY
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+#endif
 
-    public delegate bool Logger(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters);
+#if LIBLOG_PROVIDERS_ONLY
+    internal
+#else
+    public
+#endif
+    delegate bool Logger(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters);
 
+#if !LIBLOG_PROVIDERS_ONLY
     /// <summary>
     /// Simple interface that represent a logger.
     /// </summary>
@@ -67,11 +61,17 @@ namespace IdentityServer3.Core.Logging
         /// </remarks>
         bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters );
     }
+#endif
 
     /// <summary>
     /// The log level.
     /// </summary>
-    public enum LogLevel
+#if LIBLOG_PROVIDERS_ONLY
+    internal
+#else
+    public
+#endif
+    enum LogLevel
     {
         Trace,
         Debug,
@@ -81,6 +81,7 @@ namespace IdentityServer3.Core.Logging
         Fatal
     }
 
+#if !LIBLOG_PROVIDERS_ONLY
 #if LIBLOG_PUBLIC
     public
 #else
@@ -335,11 +336,17 @@ namespace IdentityServer3.Core.Logging
             return value;
         }
     }
+#endif
 
     /// <summary>
     /// Represents a way to get a <see cref="ILog"/>
     /// </summary>
-    public interface ILogProvider
+#if LIBLOG_PROVIDERS_ONLY
+    internal
+#else
+    public
+#endif
+    interface ILogProvider
     {
         /// <summary>
         /// Gets the specified named logger.
@@ -367,12 +374,28 @@ namespace IdentityServer3.Core.Logging
     /// <summary>
     /// Provides a mechanism to create instances of <see cref="ILog" /> objects.
     /// </summary>
-    public static class LogProvider
+#if LIBLOG_PROVIDERS_ONLY
+    internal
+#else
+    public
+#endif
+    static class LogProvider
     {
+#if !LIBLOG_PROVIDERS_ONLY
+        /// <summary>
+        /// The disable logging environment variable. If the environment variable is set to 'true', then logging
+        /// will be disabled.
+        /// </summary>
+        public const string DisableLoggingEnvironmentVariable = "IdentityServer3.Core_LIBLOG_DISABLE";
         private const string NullLogProvider = "Current Log Provider is not set. Call SetCurrentLogProvider " +
                                                "with a non-null value first.";
         private static dynamic _currentLogProvider;
         private static Action<ILogProvider> _onCurrentLogProviderSet;
+
+        static LogProvider()
+        {
+            IsDisabled = false;
+        }
 
         /// <summary>
         /// Sets the current log provider.
@@ -384,6 +407,14 @@ namespace IdentityServer3.Core.Logging
 
             RaiseOnCurrentLogProviderSet();
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this is logging is disabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if logging is disabled; otherwise, <c>false</c>.
+        /// </value>
+        public static bool IsDisabled { get; set; }
 
         /// <summary>
         /// Sets an action that is invoked when a consumer of your library has called SetCurrentLogProvider. It is 
@@ -428,6 +459,7 @@ namespace IdentityServer3.Core.Logging
         /// Gets a logger for the current class.
         /// </summary>
         /// <returns>An instance of <see cref="ILog"/></returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
 #if LIBLOG_PUBLIC
         public
 #else
@@ -468,7 +500,9 @@ namespace IdentityServer3.Core.Logging
         static ILog GetLogger(string name)
         {
             ILogProvider logProvider = CurrentLogProvider ?? ResolveLogProvider();
-            return logProvider == null ? new NoOpLogger() : (ILog)new LoggerExecutionWrapper(logProvider.GetLogger(name));
+            return logProvider == null 
+                ? NoOpLogger.Instance
+                : (ILog)new LoggerExecutionWrapper(logProvider.GetLogger(name), () => IsDisabled);
         }
 
         /// <summary>
@@ -509,12 +543,28 @@ namespace IdentityServer3.Core.Logging
             }
             return CurrentLogProvider.OpenMappedContext(key, value);
         }
+#endif
 
-        internal delegate bool IsLoggerAvailable();
+#if LIBLOG_PROVIDERS_ONLY
+    private
+#else
+    internal
+#endif
+    delegate bool IsLoggerAvailable();
 
-        internal delegate ILogProvider CreateLogProvider();
+#if LIBLOG_PROVIDERS_ONLY
+    private
+#else
+    internal
+#endif
+    delegate ILogProvider CreateLogProvider();
 
-        internal static readonly List<Tuple<IsLoggerAvailable, CreateLogProvider>> LogProviderResolvers =
+#if LIBLOG_PROVIDERS_ONLY
+    private
+#else
+    internal
+#endif
+    static readonly List<Tuple<IsLoggerAvailable, CreateLogProvider>> LogProviderResolvers =
             new List<Tuple<IsLoggerAvailable, CreateLogProvider>>
         {
             new Tuple<IsLoggerAvailable, CreateLogProvider>(SerilogLogProvider.IsLoggerAvailable, () => new SerilogLogProvider()),
@@ -525,6 +575,7 @@ namespace IdentityServer3.Core.Logging
             new Tuple<IsLoggerAvailable, CreateLogProvider>(ColouredConsoleLogProvider.IsLoggerAvailable, () => new ColouredConsoleLogProvider()),
         };
 
+#if !LIBLOG_PROVIDERS_ONLY
         private static void RaiseOnCurrentLogProviderSet()
         {
             if (_onCurrentLogProviderSet != null)
@@ -532,6 +583,7 @@ namespace IdentityServer3.Core.Logging
                 _onCurrentLogProviderSet(_currentLogProvider);
             }
         }
+#endif
 
         internal static ILogProvider ResolveLogProvider()
         {
@@ -559,23 +611,30 @@ namespace IdentityServer3.Core.Logging
             return null;
         }
 
+#if !LIBLOG_PROVIDERS_ONLY
         internal class NoOpLogger : ILog
         {
+            internal static readonly NoOpLogger Instance = new NoOpLogger();
+
             public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception, params object[] formatParameters)
             {
                 return false;
             }
         }
+#endif
     }
 
+#if !LIBLOG_PROVIDERS_ONLY
     internal class LoggerExecutionWrapper : ILog
     {
         private readonly Logger _logger;
+        private readonly Func<bool> _getIsDisabled;
         internal const string FailedToGenerateLogMessage = "Failed to generate log message";
 
-        internal LoggerExecutionWrapper(Logger logger)
+        internal LoggerExecutionWrapper(Logger logger, Func<bool> getIsDisabled = null)
         {
             _logger = logger;
+            _getIsDisabled = getIsDisabled ?? (() => false);
         }
 
         internal Logger WrappedLogger
@@ -585,6 +644,20 @@ namespace IdentityServer3.Core.Logging
 
         public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
         {
+#if LIBLOG_PORTABLE
+            if (_getIsDisabled())
+            {
+                return false;
+            }
+#else
+            var envVar = Environment.GetEnvironmentVariable(LogProvider.DisableLoggingEnvironmentVariable);
+
+            if (_getIsDisabled() || (envVar != null && envVar.Equals("true", StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+#endif
+
             if (messageFunc == null)
             {
                 return _logger(logLevel, null);
@@ -605,9 +678,14 @@ namespace IdentityServer3.Core.Logging
             return _logger(logLevel, wrappedMessageFunc, exception, formatParameters);
         }
     }
+#endif
 }
 
+#if LIBLOG_PROVIDERS_ONLY
+namespace IdentityServer3.Core.LibLog.LogProviders
+#else
 namespace IdentityServer3.Core.Logging.LogProviders
+#endif
 {
     using System;
     using System.Collections.Generic;
@@ -1825,7 +1903,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
                 setForegroundExpression, colorParameter).Compile();
         }
 
-        public class ColouredConsoleLogger : ILog
+        public class ColouredConsoleLogger
         {
             private readonly string _name;
             private readonly Action<string> _write;
