@@ -2,13 +2,17 @@
     <h1>Login</h1>
 </div>
 
-<div class="row">
-    <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
+<div class="row" ng-show="model.errorMessage">
+    <div class="col-md-12 col-sm-12">
         <div ng-show="model.errorMessage" class="alert alert-danger">
             <strong>Error:</strong>
             {{model.errorMessage}}
         </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Local Login</h3>
