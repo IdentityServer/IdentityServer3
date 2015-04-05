@@ -27,6 +27,7 @@ using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Host;
 using IdentityServer3.Host.Config;
+using Serilog;
 
 [assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
 
@@ -36,8 +37,10 @@ namespace IdentityServer3.Host
     {
         public void Configuration(IAppBuilder app)
         {
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
-            //LogProvider.SetCurrentLogProvider(new TraceSourceLogProvider());
+            // setup serilog to use diagnostics trace
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Trace()
+                .CreateLogger();
 
             // uncomment to enable HSTS headers for the host
             // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
