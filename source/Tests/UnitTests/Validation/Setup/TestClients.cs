@@ -296,7 +296,7 @@ namespace IdentityServer3.Tests.Validation
                         Flow = Flows.Custom,
                         AllowAccessToAllScopes = true,
 
-                        CustomGrantTypeRestrictions = new List<string>
+                        AllowedCustomGrantTypes = new List<string>
                         {
                             "custom_grant"
                         }

@@ -536,13 +536,13 @@ namespace IdentityServer3.Core.Validation
             }
 
             /////////////////////////////////////////////
-            // check if client has grant type restrictions
+            // check if client is allowed grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.CustomGrantTypeRestrictions.Any())
+            if (_validatedRequest.Client.AllowAccessToAllCustomGrantTypes == false)
             {
-                if (!_validatedRequest.Client.CustomGrantTypeRestrictions.Contains(_validatedRequest.GrantType))
+                if (!_validatedRequest.Client.AllowedCustomGrantTypes.Contains(_validatedRequest.GrantType))
                 {
-                    LogError("Client has configured grant type restrictions. Requested grant is not allowed.");
+                    LogError("Client does not have the custom grant type in the allowed list, therefore requested grant is not allowed.");
                     return Invalid(Constants.TokenErrors.UnsupportedGrantType);
                 }
             }

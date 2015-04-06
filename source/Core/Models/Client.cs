@@ -198,12 +198,21 @@ namespace IdentityServer3.Core.Models
         public bool PrefixClientClaims { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of allowed custom grant types when Flow is set to Custom. If the list is empty, all custom grant types are allowed.
+        /// Gets or sets a value indicating whether the client has access to all custom grant types. Defaults to false.
+        /// You can set the allowed custom grant types via the AllowedCustomGrantTypes list.
         /// </summary>
         /// <value>
-        /// The custom grant restrictions.
+        /// <c>true</c> if client has access to all custom grant types; otherwise, <c>false</c>.
         /// </value>
-        public List<string> CustomGrantTypeRestrictions { get; set; }
+        public bool AllowAccessToAllCustomGrantTypes { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a list of allowed custom grant types when Flow is set to Custom.
+        /// </summary>
+        /// <value>
+        /// The allowed custom grant types.
+        /// </value>
+        public List<string> AllowedCustomGrantTypes { get; set; }
 
         /// <summary>
         /// Gets or sets the allowed CORS origins for JavaScript clients.
@@ -225,13 +234,14 @@ namespace IdentityServer3.Core.Models
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();
             IdentityProviderRestrictions = new List<string>();
-            CustomGrantTypeRestrictions = new List<string>();
+            AllowedCustomGrantTypes = new List<string>();
             AllowedCorsOrigins = new List<string>();
 
             Enabled = true;
             EnableLocalLogin = true;
             AllowAccessToAllScopes = false;
-            
+            AllowAccessToAllCustomGrantTypes = false;
+
             // client claims settings
             Claims = new List<Claim>();
             AlwaysSendClientClaims = false;
