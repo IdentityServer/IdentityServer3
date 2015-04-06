@@ -61,7 +61,7 @@ namespace IdentityServer3.Tests.Conformance
             {
                 Factory = factory,
                 DataProtector = new NoDataProtector(),
-                SiteName = "Thinktecture IdentityServer3 Host",
+                SiteName = "IdentityServer3 Host",
                 SigningCertificate = SigningCertificate
             };
         }

@@ -27,7 +27,7 @@ namespace IdentityServer3.Tests.Endpoints
             var options = new IdentityServerOptions
             {
                 IssuerUri = "https://idsrv3.com",
-                SiteName = "Thinktecture IdentityServer3 - test",
+                SiteName = "IdentityServer3 - test",
                 DataProtector = new NoDataProtector(),
             };
 
