@@ -34,7 +34,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 return Task.FromResult(new AuthenticateResult(p));
             }
 
-            return Task.FromResult<AuthenticateResult>(null);
+            return Task.FromResult<AuthenticateResult>(new AuthenticateResult("Username and/or password incorrect"));
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)

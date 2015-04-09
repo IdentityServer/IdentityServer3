@@ -120,7 +120,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (result.IsError)
             {
-                return this.TokenErrorResponse(result.Error);
+                return this.TokenErrorResponse(result.Error, result.ErrorDescription);
             }
 
             // return response

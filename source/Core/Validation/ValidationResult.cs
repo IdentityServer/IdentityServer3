@@ -42,6 +42,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
         /// The type of the error.
         /// </value>
         public ErrorTypes ErrorType { get; set; }
+        /// <summary>
+        /// Gets or sets the description of the error.
+        /// </summary>
+        /// <value>
+        /// The description of the error.
+        /// </value>
+        public string ErrorDescription { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationResult"/> class.
