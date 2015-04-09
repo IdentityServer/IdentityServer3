@@ -29,10 +29,17 @@ namespace Thinktecture.IdentityServer.Core.Results
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
         public string Error { get; internal set; }
+        public string ErrorDescription { get; internal set; }
 
         public TokenErrorResult(string error)
         {
             Error = error;
+        }
+
+        public TokenErrorResult(string error, string errorDescription)
+        {
+            Error = error;
+            ErrorDescription = errorDescription;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -44,7 +51,8 @@ namespace Thinktecture.IdentityServer.Core.Results
         {
             var dto = new ErrorDto
             {
-                error = Error 
+                error = Error,
+                error_description = ErrorDescription,
             };
 
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -59,6 +67,7 @@ namespace Thinktecture.IdentityServer.Core.Results
         internal class ErrorDto
         {
             public string error { get; set; }
+            public string error_description { get; set; }
         }    
     }
 }

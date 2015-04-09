@@ -423,6 +423,11 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 LogError("User authentication failed");
                 RaiseFailedResourceOwnerAuthenticationEvent(userName, signInMessage);
 
+                if (authnResult != null)
+                {
+                    return Invalid(Constants.TokenErrors.InvalidGrant, authnResult.ErrorMessage);
+                }
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -628,6 +633,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 IsError = true,
                 ErrorType = ErrorTypes.Client,
                 Error = error
+            };
+        }
+
+        private ValidationResult Invalid(string error, string errorDescription)
+        {
+            return new ValidationResult
+            {
+                IsError = true,
+                ErrorType = ErrorTypes.Client,
+                Error = error,
+                ErrorDescription = errorDescription
             };
         }
 
