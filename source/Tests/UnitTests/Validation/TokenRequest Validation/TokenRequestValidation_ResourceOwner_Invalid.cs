@@ -211,6 +211,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
 
             result.IsError.Should().BeTrue();
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+            result.ErrorDescription.Should().Be("Username and/or password incorrect");
         }
     }
 }

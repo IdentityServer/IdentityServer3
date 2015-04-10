@@ -423,6 +423,11 @@ namespace IdentityServer3.Core.Validation
                 LogError("User authentication failed");
                 await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, signInMessage);
 
+                if (authnResult != null)
+                {
+                    return Invalid(Constants.TokenErrors.InvalidGrant, authnResult.ErrorMessage);
+                }
+
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
@@ -627,6 +632,16 @@ namespace IdentityServer3.Core.Validation
             {
                 IsError = true,
                 Error = error
+            };
+        }
+
+        private TokenRequestValidationResult Invalid(string error, string errorDescription)
+        {
+            return new TokenRequestValidationResult
+            {
+                IsError = true,
+                Error = error,
+                ErrorDescription = errorDescription
             };
         }
 

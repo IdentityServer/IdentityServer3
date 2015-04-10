@@ -21,6 +21,7 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace IdentityServer3.Core.Results
 {
@@ -29,11 +30,19 @@ namespace IdentityServer3.Core.Results
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
         public string Error { get; internal set; }
+        public string ErrorDescription { get; internal set; }
 
         public TokenErrorResult(string error)
         {
             Error = error;
         }
+
+        public TokenErrorResult(string error, string errorDescription)
+        {
+            Error = error;
+            ErrorDescription = errorDescription;
+        }
+
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
@@ -44,7 +53,8 @@ namespace IdentityServer3.Core.Results
         {
             var dto = new ErrorDto
             {
-                error = Error 
+                error = Error,
+                error_description = ErrorDescription
             };
 
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -59,6 +69,8 @@ namespace IdentityServer3.Core.Results
         internal class ErrorDto
         {
             public string error { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string error_description { get; set; }
         }    
     }
 }

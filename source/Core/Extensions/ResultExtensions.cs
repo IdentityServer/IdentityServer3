@@ -31,5 +31,10 @@ namespace IdentityServer3.Core.Extensions
         {
             return new TokenErrorResult(error);
         }
+
+        public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error, string errorDescription)
+        {
+            return new TokenErrorResult(error, errorDescription);
+        }
     }
 }

@@ -44,5 +44,13 @@ namespace IdentityServer3.Core.Validation
         /// The error.
         /// </value>
         public string Error { get; set; }
+
+        /// <summary>
+        /// Gets or sets the error description.
+        /// </summary>
+        /// <value>
+        /// The error description.
+        /// </value>
+        public string ErrorDescription { get; set; }
     }
 }
