@@ -126,7 +126,7 @@ namespace IdentityServer3.Core.Extensions
         }
 
         public static async Task RaiseExternalLoginFailureEventAsync(this IEventService events, 
-            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
+            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<ExternalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -139,7 +139,8 @@ namespace IdentityServer3.Core.Extensions
                     SignInMessage = signInMessage,
                     Provider = externalIdentity.Provider,
                     ProviderId = externalIdentity.ProviderId,
-                });
+                }, 
+                error);
 
             await events.RaiseEventAsync(evt);
         }
@@ -175,7 +176,7 @@ namespace IdentityServer3.Core.Extensions
         }
 
         public static async Task RaiseFailedResourceOwnerFlowAuthenticationEventAsync(this IEventService events, 
-            string userName, SignInMessage message)
+            string userName, SignInMessage message, string error)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -186,7 +187,8 @@ namespace IdentityServer3.Core.Extensions
                 {
                     SignInMessage = message,
                     LoginUserName = userName
-                });
+                },
+                error);
 
             await events.RaiseEventAsync(evt);
         }

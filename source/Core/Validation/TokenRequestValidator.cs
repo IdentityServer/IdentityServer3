@@ -420,8 +420,17 @@ namespace IdentityServer3.Core.Validation
             var authnResult = await _users.AuthenticateLocalAsync(userName, password, signInMessage);
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
-                LogError("User authentication failed");
-                await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, signInMessage);
+                var error = Resources.Messages.InvalidUsernameOrPassword;
+                if (authnResult != null && authnResult.IsError)
+                {
+                    error = authnResult.ErrorMessage;
+                }
+                if (authnResult != null && authnResult.IsPartialSignIn)
+                {
+                    error = "Partial signin returned from AuthenticateLocalAsync";
+                }
+                LogError("User authentication failed: " + error);
+                await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, signInMessage, error);
 
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
@@ -659,9 +668,9 @@ namespace IdentityServer3.Core.Validation
             await _events.RaiseSuccessfulResourceOwnerFlowAuthenticationEventAsync(userName, subjectId, signInMessage);
         }
 
-        private async Task RaiseFailedResourceOwnerAuthenticationEventAsync(string userName, SignInMessage signInMessage)
+        private async Task RaiseFailedResourceOwnerAuthenticationEventAsync(string userName, SignInMessage signInMessage, string error)
         {
-            await _events.RaiseFailedResourceOwnerFlowAuthenticationEventAsync(userName, signInMessage);
+            await _events.RaiseFailedResourceOwnerFlowAuthenticationEventAsync(userName, signInMessage, error);
         }
 
         private async Task RaiseFailedAuthorizationCodeRedeemedEventAsync(string handle, string error)
