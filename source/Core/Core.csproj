@@ -159,6 +159,7 @@
     <Compile Include="Extensions\IContainerExtensions.cs" />
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
+    <Compile Include="Extensions\PublicOwinExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\CodeChartHelper.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\Lower.cs" />
@@ -335,7 +336,7 @@
     <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
-    <Compile Include="Extensions\OwinExtensions.cs" />
+    <Compile Include="Extensions\InternalOwinExtensions.cs" />
     <Compile Include="Endpoints\CspReportController.cs" />
     <Compile Include="Configuration\Hosting\NoCacheAttribute.cs" />
     <Compile Include="Configuration\Hosting\SecurityHeadersAttribute.cs" />
