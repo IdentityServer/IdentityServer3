@@ -57,6 +57,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// Creates the refresh token.
         /// </summary>
+        /// <param name="subject">The subject.</param>
         /// <param name="accessToken">The access token.</param>
         /// <param name="client">The client.</param>
         /// <returns>
