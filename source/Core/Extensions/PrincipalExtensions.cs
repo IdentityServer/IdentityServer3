@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityModel.Extensions;
 using System;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace IdentityServer3.Core.Extensions
 {

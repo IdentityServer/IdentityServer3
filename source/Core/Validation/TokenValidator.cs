@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel.Extensions;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
@@ -28,7 +29,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Extensions;
 
 #pragma warning disable 1591
 

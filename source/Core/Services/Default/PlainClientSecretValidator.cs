@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -54,7 +54,7 @@ namespace IdentityServer3.Core.Services.Default
                     if (clientSecret.Expiration.HasExpired()) continue;
 
                     // use time constant string comparison
-                    var isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, credential.Credential.ToString());
+                    var isValid = TimeConstantComparer.IsEqual(clientSecret.Value, credential.Credential.ToString());
 
                     if (isValid)
                     {

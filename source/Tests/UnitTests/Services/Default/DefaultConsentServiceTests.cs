@@ -15,12 +15,12 @@
  */
 
 using FluentAssertions;
-using System.Collections.Generic;
-using System.Security.Claims;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
+using System.Collections.Generic;
+using System.Security.Claims;
 using Xunit;
 
 namespace IdentityServer3.Tests.Services.Default

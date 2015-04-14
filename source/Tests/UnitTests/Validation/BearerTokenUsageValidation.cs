@@ -15,10 +15,10 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityServer3.Core.Validation;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation

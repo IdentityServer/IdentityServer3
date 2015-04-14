@@ -15,11 +15,11 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Validation;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.AuthorizeRequest

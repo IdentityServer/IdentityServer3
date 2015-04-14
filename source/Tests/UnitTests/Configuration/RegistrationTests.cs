@@ -15,9 +15,9 @@
  */
 
 using FluentAssertions;
-using System;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
+using System;
 using Xunit;
 
 namespace IdentityServer3.Tests.Configuration

@@ -15,11 +15,11 @@
  */
 
 using FluentAssertions;
-using System.IdentityModel.Tokens;
-using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Tokens;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Services.Default;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.Tokens
@@ -31,7 +31,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
 
         static IdentityTokenValidation()
         {
-            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
         }
 
         [Fact]

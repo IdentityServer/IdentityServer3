@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using System;
@@ -21,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 
 namespace IdentityServer3.Core.Services.InMemory
 {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using Microsoft.Owin;
@@ -21,7 +22,6 @@ using System;
 using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
-using Thinktecture.IdentityModel;
 
 
 #pragma warning disable 1591

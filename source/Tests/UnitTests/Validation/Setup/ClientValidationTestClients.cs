@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
-using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Tests.Validation
 {

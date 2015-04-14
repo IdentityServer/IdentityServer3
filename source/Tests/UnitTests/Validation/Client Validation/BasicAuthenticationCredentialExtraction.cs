@@ -15,12 +15,12 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Validation;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.Client_Validation

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Events;
@@ -33,8 +34,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace IdentityServer3.Core.Endpoints
 {
@@ -432,20 +431,20 @@ namespace IdentityServer3.Core.Endpoints
 
             // check to see if the partial login has all the claim types needed to login
             AuthenticateResult result = null;
-            if (Constants.AuthenticateResultClaimTypes.All(claimType => user.HasClaim(claimType)))
+            if (Constants.AuthenticateResultClaimTypes.All(claimType => user.HasClaim(c => c.Type == claimType)))
             {
                 Logger.Info("Authentication claims found -- logging user in");
                 
                 // the user/subject was known, so pass thru (without the redirect claims)
-                if (user.HasClaim(Constants.ClaimTypes.PartialLoginReturnUrl))
+                if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
                 {
                     user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
                 }
-                if (user.HasClaim(Constants.ClaimTypes.ExternalProviderUserId))
+                if (user.HasClaim(c => c.Type == Constants.ClaimTypes.ExternalProviderUserId))
                 {
                     user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId));
                 }
-                if (user.HasClaim(GetClaimTypeForResumeId(resume)))
+                if (user.HasClaim(c => c.Type == GetClaimTypeForResumeId(resume)))
                 {
                     user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
                 }

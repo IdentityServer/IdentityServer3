@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-using Autofac;
 using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

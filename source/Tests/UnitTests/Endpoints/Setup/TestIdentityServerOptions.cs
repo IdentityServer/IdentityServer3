@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer3.Core.Configuration;
 
 namespace IdentityServer3.Tests.Endpoints
 {

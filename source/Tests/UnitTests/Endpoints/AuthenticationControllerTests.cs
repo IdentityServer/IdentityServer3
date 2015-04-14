@@ -15,6 +15,10 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ViewModels;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Google;
@@ -27,10 +31,6 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Resources;
-using IdentityServer3.Core.ViewModels;
 using Xunit;
 using AuthenticateResult = IdentityServer3.Core.Models.AuthenticateResult;
 

@@ -1,4 +1,9 @@
-﻿using Microsoft.Owin.Testing;
+﻿using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.InMemory;
+using Microsoft.Owin.Testing;
 using Owin;
 /*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
@@ -20,12 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
-using IdentityServer3.Core.Services.InMemory;
 
 namespace IdentityServer3.Tests.Conformance
 {

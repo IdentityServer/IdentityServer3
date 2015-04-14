@@ -23,9 +23,9 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Tokens;
 
 namespace Owin
 {
@@ -55,8 +55,8 @@ namespace Owin
             options.Validate();
 
             // turn off weird claim mappings for JWTs
-            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
-            JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.OutboundClaimTypeMap = new Dictionary<string, string>();
 
             if (options.RequireSsl)
             {

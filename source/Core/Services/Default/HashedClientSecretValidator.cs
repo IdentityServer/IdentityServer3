@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -74,11 +74,11 @@ namespace IdentityServer3.Core.Services.Default
 
                     if (clientSecretBytes.Length == 32)
                     {
-                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha256);
+                        isValid = TimeConstantComparer.IsEqual(clientSecret.Value, secretSha256);
                     }
                     else if (clientSecretBytes.Length == 64)
                     {
-                        isValid = ObfuscatingComparer.IsEqual(clientSecret.Value, secretSha512);
+                        isValid = TimeConstantComparer.IsEqual(clientSecret.Value, secretSha512);
                     }
                     else
                     {

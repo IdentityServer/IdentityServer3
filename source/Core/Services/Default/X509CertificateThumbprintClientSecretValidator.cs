@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -59,7 +59,7 @@ namespace IdentityServer3.Core.Services.Default
 
                 if (secret.Type == Constants.SecretTypes.X509CertificateThumbprint)
                 {
-                    if (ObfuscatingComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
+                    if (TimeConstantComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
                     {
                         return Task.FromResult(true);
                     }

@@ -15,11 +15,11 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Configuration.Hosting;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using IdentityServer3.Core.Configuration.Hosting;
 using Xunit;
 using CorsPolicy = System.Web.Cors.CorsPolicy;
 

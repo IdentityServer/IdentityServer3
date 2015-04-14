@@ -15,11 +15,7 @@
  */
 
 using FluentAssertions;
-using Moq;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
+using IdentityModel;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Models;
@@ -27,6 +23,10 @@ using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
+using Moq;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer3.Tests.Connect.ResponseHandling

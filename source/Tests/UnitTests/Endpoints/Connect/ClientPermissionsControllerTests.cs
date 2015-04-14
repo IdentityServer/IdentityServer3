@@ -15,13 +15,13 @@
  */
 
 using FluentAssertions;
-using System.Linq;
-using System.Net;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Resources;
 using IdentityServer3.Core.ViewModels;
 using IdentityServer3.Tests.Endpoints;
+using System.Linq;
+using System.Net;
 using Xunit;
 
 namespace IdentityServer3.Tests.Connect.Endpoints

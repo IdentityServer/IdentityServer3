@@ -15,9 +15,9 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using IdentityServer3.Core;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.AuthorizeRequest

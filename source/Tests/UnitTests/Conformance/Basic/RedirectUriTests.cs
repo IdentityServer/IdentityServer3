@@ -15,13 +15,13 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Resources;
-using IdentityServer3.Core.ViewModels;
 using Xunit;
 
 

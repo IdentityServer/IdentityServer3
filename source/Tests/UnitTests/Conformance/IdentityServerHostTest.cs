@@ -1,4 +1,6 @@
-﻿/*
+﻿using IdentityServer3.Core;
+using IdentityServer3.Core.Services.InMemory;
+/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +17,6 @@
  */
 using System;
 using System.Security.Claims;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Services.InMemory;
 
 namespace IdentityServer3.Tests.Conformance
 {

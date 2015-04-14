@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using System.Text;
-using Thinktecture.IdentityModel;
 
 namespace IdentityServer3.Core.Extensions
 {

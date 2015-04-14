@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace IdentityServer3.Core.Models
 {
@@ -235,7 +234,7 @@ namespace IdentityServer3.Core.Models
         {
             get
             {
-                return User != null && User.HasClaim(Constants.ClaimTypes.Subject);
+                return User != null && User.HasClaim(c => c.Type == Constants.ClaimTypes.Subject);
             }
         }
     }

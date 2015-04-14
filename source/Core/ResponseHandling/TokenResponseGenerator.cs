@@ -22,7 +22,6 @@ using IdentityServer3.Core.Validation;
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591

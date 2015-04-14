@@ -16,7 +16,6 @@
 
 using Autofac;
 using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;

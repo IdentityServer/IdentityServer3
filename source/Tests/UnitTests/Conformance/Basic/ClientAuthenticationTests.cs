@@ -15,11 +15,11 @@
  */
 
 using FluentAssertions;
+using IdentityModel.Client;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Thinktecture.IdentityModel.Http;
-using IdentityServer3.Core.Models;
 using Xunit;
 
 

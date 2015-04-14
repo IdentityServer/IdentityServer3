@@ -15,9 +15,6 @@
  */
 
 using FluentAssertions;
-using System;
-using System.Threading.Tasks;
-using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services.Default;
 using Xunit;
 

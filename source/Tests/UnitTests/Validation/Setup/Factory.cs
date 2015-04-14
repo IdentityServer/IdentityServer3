@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-using Microsoft.Owin;
-using Moq;
-using System.Collections.Generic;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
 using IdentityServer3.Core.Validation;
+using Microsoft.Owin;
+using Moq;
+using System.Collections.Generic;
 
 namespace IdentityServer3.Tests.Validation
 {

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Tests.Validation
 {

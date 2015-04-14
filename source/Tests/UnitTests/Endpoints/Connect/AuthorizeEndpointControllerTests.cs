@@ -15,10 +15,10 @@
  */
 
 using FluentAssertions;
-using System.Net;
-using System.Net.Http;
 using IdentityServer3.Core;
 using IdentityServer3.Tests.Endpoints;
+using System.Net;
+using System.Net.Http;
 using Xunit;
 
 namespace IdentityServer3.Tests.Connect.Endpoints

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityModel.Extensions;
 using IdentityServer3.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace IdentityServer3.Core.Validation
 {

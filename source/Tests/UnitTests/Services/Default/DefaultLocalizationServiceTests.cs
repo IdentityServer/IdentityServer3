@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using IdentityServer3.Core.Resources;
+﻿using IdentityServer3.Core.Resources;
 using IdentityServer3.Core.Services.Default;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Sdk;
 

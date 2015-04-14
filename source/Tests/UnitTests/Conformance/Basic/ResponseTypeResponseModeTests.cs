@@ -15,12 +15,11 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Models;
 using Xunit;
 
 namespace IdentityServer3.Tests.Conformance.Basic

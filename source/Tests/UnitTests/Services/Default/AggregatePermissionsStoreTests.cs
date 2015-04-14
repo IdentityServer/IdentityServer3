@@ -15,10 +15,10 @@
  */
 
 using FluentAssertions;
-using System.Linq;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
+using System.Linq;
 using Xunit;
 
 namespace IdentityServer3.Tests.Services.Default

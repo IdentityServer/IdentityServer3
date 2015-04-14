@@ -714,7 +714,6 @@ namespace IdentityServer3.Core.Logging.LogProviders
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Text;
     using System.Text.RegularExpressions;
 
     internal abstract class LogProviderBase : ILogProvider

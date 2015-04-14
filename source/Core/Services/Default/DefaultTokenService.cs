@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityModel.Extensions;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
@@ -25,8 +27,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityModel.Extensions;
 
 namespace IdentityServer3.Core.Services.Default
 {
