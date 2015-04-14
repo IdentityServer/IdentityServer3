@@ -17,6 +17,7 @@
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Thinktecture.IdentityModel;
 
@@ -61,7 +62,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// The refresh token handle
         /// </returns>
-        public virtual async Task<string> CreateRefreshTokenAsync(Token accessToken, Client client)
+        public virtual async Task<string> CreateRefreshTokenAsync(ClaimsPrincipal subject, Token accessToken, Client client)
         {
             Logger.Debug("Creating refresh token");
 
@@ -82,7 +83,8 @@ namespace IdentityServer3.Core.Services.Default
             {
                 CreationTime = DateTimeOffsetHelper.UtcNow,
                 LifeTime = lifetime,
-                AccessToken = accessToken
+                AccessToken = accessToken,
+                Subject = subject
             };
 
             await _store.StoreAsync(handle, refreshToken);

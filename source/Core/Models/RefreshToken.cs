@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace IdentityServer3.Core.Models
 {
@@ -29,7 +30,7 @@ namespace IdentityServer3.Core.Models
         /// </summary>
         public RefreshToken()
         {
-            Version = 3;
+            Version = 4;
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace IdentityServer3.Core.Models
         /// </value>
         
         public DateTimeOffset CreationTime { get; set; }
+
         /// <summary>
         /// Gets or sets the life time.
         /// </summary>
@@ -63,6 +65,14 @@ namespace IdentityServer3.Core.Models
         /// The access token.
         /// </value>
         public Token AccessToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the original subject that requiested the token.
+        /// </summary>
+        /// <value>
+        /// The subject.
+        /// </value>
+        public ClaimsPrincipal Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the version number.
@@ -92,6 +102,18 @@ namespace IdentityServer3.Core.Models
         public IEnumerable<string> Scopes
         {
             get { return AccessToken.Scopes; }
+        }
+
+        internal ClaimsPrincipal GetOriginalSubject()
+        {
+            if (Version <= 3)
+            {
+                return IdentityServerPrincipal.FromClaims(AccessToken.Claims, allowMissing: true);
+            }
+            else
+            {
+                return Subject;
+            }
         }
     }
 }

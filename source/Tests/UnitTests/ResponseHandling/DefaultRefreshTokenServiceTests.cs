@@ -41,6 +41,8 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         Client roclient_sliding_refresh_expiration_one_time_only;
         Client roclient_absolute_refresh_expiration_reuse;
 
+        ClaimsPrincipal user;
+
         DateTimeOffset now;
         public DateTimeOffset UtcNow
         {
@@ -112,6 +114,8 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
 
             refreshTokenStore = new InMemoryRefreshTokenStore();
             service = new DefaultRefreshTokenService(refreshTokenStore, new DefaultEventService());
+
+            user = IdentityServerPrincipal.Create("bob", "Bob Loblaw");
         }
 
         public void Dispose()
@@ -152,7 +156,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
@@ -173,7 +177,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
@@ -196,7 +200,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
@@ -218,7 +222,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
@@ -238,7 +242,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_reuse;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().Be(handle);
@@ -251,7 +255,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().NotBe(handle);

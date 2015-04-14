@@ -22,6 +22,7 @@ using IdentityServer3.Core.Validation;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
@@ -134,8 +135,7 @@ namespace IdentityServer3.Core.ResponseHandling
             
             if (request.Client.UpdateAccessTokenClaimsOnRefresh)
             {
-                // re-create original subject
-                var subject = IdentityServerPrincipal.FromClaims(oldAccessToken.Claims, allowMissing: true);
+                var subject = request.RefreshToken.GetOriginalSubject();
 
                 var creationRequest = new TokenCreationRequest
                 {
@@ -201,7 +201,7 @@ namespace IdentityServer3.Core.ResponseHandling
             string refreshToken = "";
             if (createRefreshToken)
             {
-                refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(accessToken, request.Client);
+                refreshToken = await _refreshTokenService.CreateRefreshTokenAsync(tokenRequest.Subject, accessToken, request.Client);
             }
 
             var securityToken = await _tokenService.CreateSecurityTokenAsync(accessToken);
