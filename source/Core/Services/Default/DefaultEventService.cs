@@ -29,7 +29,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// The logger
         /// </summary>
-        protected static readonly ILog Logger = LogProvider.GetLogger("Events");
+        private static readonly ILog Logger = LogProvider.GetLogger("Events");
 
         /// <summary>
         /// Raises the specified event.

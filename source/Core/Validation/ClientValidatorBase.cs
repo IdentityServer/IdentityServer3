@@ -30,7 +30,7 @@ namespace IdentityServer3.Core.Validation
         /// <summary>
         /// The logger
         /// </summary>
-        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// The client secret validator

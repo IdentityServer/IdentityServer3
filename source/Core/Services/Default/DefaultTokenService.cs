@@ -38,7 +38,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// The logger
         /// </summary>
-        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// The identity server options

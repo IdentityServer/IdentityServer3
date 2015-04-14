@@ -32,7 +32,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// The logger
         /// </summary>
-        protected static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// The user service
