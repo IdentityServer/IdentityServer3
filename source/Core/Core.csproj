@@ -542,6 +542,9 @@
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\login.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\logout.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\permissions.html" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\favicon.ico" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\icon.jpg" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\icon.png" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.2.13.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.2.13.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\bootstrap\css\bootstrap-theme.css" />
