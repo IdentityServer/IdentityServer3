@@ -98,7 +98,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (signin.IsMissing())
             {
-                Logger.Error("No signin id passed");
+                Logger.Info("No signin id passed");
                 return HandleNoSignin();
             }
 
@@ -111,7 +111,7 @@ namespace IdentityServer3.Core.Endpoints
             var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
-                Logger.Error("No cookie matching signin id found");
+                Logger.Info("No cookie matching signin id found");
                 return HandleNoSignin();
             }
 
@@ -160,7 +160,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (signin.IsMissing())
             {
-                Logger.Error("No signin id passed");
+                Logger.Info("No signin id passed");
                 return HandleNoSignin();
             }
 
@@ -173,7 +173,7 @@ namespace IdentityServer3.Core.Endpoints
             var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
-                Logger.Error("No cookie matching signin id found");
+                Logger.Info("No cookie matching signin id found");
                 return HandleNoSignin();
             }
 
@@ -262,7 +262,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (signin.IsMissing())
             {
-                Logger.Error("No signin id passed");
+                Logger.Info("No signin id passed");
                 return HandleNoSignin();
             }
 
@@ -275,7 +275,7 @@ namespace IdentityServer3.Core.Endpoints
             var signInMessage = signInMessageCookie.Read(signin);
             if (signInMessage == null)
             {
-                Logger.Error("No cookie matching signin id found");
+                Logger.Info("No cookie matching signin id found");
                 return HandleNoSignin();
             }
 
@@ -328,14 +328,14 @@ namespace IdentityServer3.Core.Endpoints
             var signInId = await context.GetSignInIdFromExternalProvider();
             if (signInId.IsMissing())
             {
-                Logger.Error("No signin id passed");
+                Logger.Info("No signin id passed");
                 return HandleNoSignin();
             }
 
             var signInMessage = signInMessageCookie.Read(signInId);
             if (signInMessage == null)
             {
-                Logger.Error("No cookie matching signin id found");
+                Logger.Info("No cookie matching signin id found");
                 return HandleNoSignin();
             }
 
