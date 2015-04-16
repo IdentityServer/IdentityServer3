@@ -6,6 +6,10 @@ Param(
 gci .\source -Recurse "packages.config" |% {
 	"Restoring " + $_.FullName
 	.\source\.nuget\nuget.exe i $_.FullName -o .\source\packages
+    
+    if ($LastExitCode -ne 0) {
+        exit $LastExitCode
+    }
 }
 
 Import-Module .\source\packages\psake.4.4.1\tools\psake.psm1
