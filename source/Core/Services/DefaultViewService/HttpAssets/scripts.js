@@ -251,7 +251,7 @@ Encoder={EncodeType:"entity",isEmpty:function(n){return n?n===null||n.length==0|
     })();
 
     (function () {
-        var encodedJson = document.getElementById("modelJson").textContent;
+        var encodedJson = document.getElementById("modelJson").innerHTML;
         var json = Encoder.htmlDecode(encodedJson);
         var model = JSON.parse(json);
         angular.module("app").constant("Model", model);
