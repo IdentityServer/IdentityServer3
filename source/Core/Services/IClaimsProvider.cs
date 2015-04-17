@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Services
         Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Client client, IEnumerable<Scope> scopes, bool includeAllIdentityClaims, ValidatedRequest request);
 
         /// <summary>
-        /// Returns claims for an identity token.
+        /// Returns claims for an access token.
         /// </summary>
         /// <param name="subject">The subject.</param>
         /// <param name="client">The client.</param>
