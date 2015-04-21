@@ -1,8 +1,4 @@
-﻿using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using Microsoft.Owin;
-/*
+﻿/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +14,10 @@ using Microsoft.Owin;
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using Microsoft.Owin;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -48,7 +48,8 @@ namespace IdentityServer3.Core.Validation
 
             var credential = new ClientCredential
             {
-                CredentialType = Constants.ClientCredentialTypes.SharedSecret
+                CredentialType = Constants.ClientCredentialTypes.SharedSecret,
+                IsPresent = false
             };
 
             var body = await context.ReadRequestFormAsync();
@@ -68,7 +69,6 @@ namespace IdentityServer3.Core.Validation
                 }
             }
 
-            credential.IsPresent = false;
             return credential;
         }
     }

@@ -69,7 +69,6 @@ namespace IdentityServer3.Core.Validation
         /// </returns>
         public async Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment)
         {
-            Logger.Info("Start client validation");
             var log = new ClientValidationLog();
 
             var credential = await ExtractCredentialAsync(environment);

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace IdentityServer3.Core.Services.Default
     /// </summary>
     public class DefaultClientValidator : IClientValidator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private List<IClientValidator> Validators { get; set; }
 
         /// <summary>
@@ -57,6 +60,8 @@ namespace IdentityServer3.Core.Services.Default
         /// </returns>
         public async Task<ClientValidationResult> ValidateAsync(IDictionary<string, object> environment)
         {
+            Logger.Info("Starting client validation.");
+
             foreach (var val in Validators)
             {
                 var result = await val.ValidateAsync(environment);
@@ -71,6 +76,8 @@ namespace IdentityServer3.Core.Services.Default
                     return result;
                 }
             }
+
+            Logger.Info("No client credentials found.");
 
             return new ClientValidationResult
             {
