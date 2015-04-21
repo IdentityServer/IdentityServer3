@@ -16,7 +16,7 @@
     
     <copyright>Copyright 2015</copyright>
     
-    <tags>Thinktecture IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
+    <tags>IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
     <dependencies>
       <dependency id="Owin" version="1.0"/>
     </dependencies>
