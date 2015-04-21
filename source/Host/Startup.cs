@@ -39,6 +39,7 @@ namespace IdentityServer3.Host
         {
             // setup serilog to use diagnostics trace
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
                 .WriteTo.Trace()
                 .CreateLogger();
 
