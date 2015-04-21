@@ -37,7 +37,7 @@ For more information, e.g.
 * support for WS-Federation
 * extensibility
 
-check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/Thinktecture.IdentityServer3.Samples).
+check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/IdentityServer3.Samples).
 
 ## Related repositories ##
 * [Access Token Validation](https://github.com/identityserver/IdentityServer3.AccessTokenValidation)
@@ -67,4 +67,4 @@ IdentityServer is built using the following great open source projects:
 - [AppVeyor](http://appveyor.com)
 - [MyGet](http://myget.org)
 
-...and last but not least thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
+...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
