@@ -76,7 +76,7 @@ namespace IdentityServer3.Core.Validation
 
             if (!credential.IsPresent)
             {
-                Logger.Debug("No credential found: " + credential.CredentialType);
+                Logger.Debug("No credential found: " + this.GetType().Name);
 
                 return new ClientValidationResult
                 {
