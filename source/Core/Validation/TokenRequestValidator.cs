@@ -405,6 +405,14 @@ namespace IdentityServer3.Core.Validation
                     acrValues.Remove(tenant);
                 }
 
+                // look for well-known acr value -- linkaccount
+                var linkAccountId = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.LinkAccount));
+                if (linkAccountId.IsPresent())
+                {
+                    signInMessage.LinkAccountId = linkAccountId.Substring(Constants.KnownAcrValues.LinkAccount.Length);
+                    acrValues.Remove(linkAccountId);
+                }
+
                 // pass through any remaining acr values
                 if (acrValues.Any())
                 {

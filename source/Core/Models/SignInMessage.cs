@@ -60,6 +60,16 @@ namespace IdentityServer3.Core.Models
         public string Tenant { get; set; }
         
         /// <summary>
+        /// The local user account identifier. Can be used to link an external account
+        /// to a local user account. This is provided via the <c>"linkaccount:"</c>
+        /// prefix to the <c>acr</c> parameter on the authorize request.
+        /// </summary>
+        /// <value>
+        /// The local user account identifier.
+        /// </value>
+        public string LinkAccountId { get; set; }
+
+        /// <summary>
         /// The expected username the user will use to login. This is requested from the client 
         /// via the <c>login_hint</c> parameter on the authorize request.
         /// </summary>
