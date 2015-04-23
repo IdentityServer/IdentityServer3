@@ -109,6 +109,28 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Returns the SignInMessage object for a give id.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="id">The signIn identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// message
+        /// </exception>
+        public static SignInMessage GetSignInMessage(this IDictionary<string, object> env, string id)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (string.IsNullOrEmpty(id)) throw new ArgumentNullException("message");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var cookie = new MessageCookie<SignInMessage>(env, options);
+
+            return cookie.Read(id);
+        }
+
+        /// <summary>
         /// Issues the login cookie for IdentityServer.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
