@@ -21,6 +21,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -266,6 +267,23 @@ namespace IdentityServer3.Core.Extensions
             context.Environment.Remove("Microsoft.Owin.Form#collection");
 
             return form;
+        }
+
+        public async static Task<NameValueCollection> ReadRequestFormAsNameValueCollectionAsync(this IOwinContext context)
+        {
+            var form = await context.ReadRequestFormAsync();
+
+            NameValueCollection nv = new NameValueCollection();
+
+            foreach (var item in form)
+            {
+                if (item.Value.Any())
+                {
+                    nv.Add(item.Key, item.Value[0]);
+                }
+            }
+
+            return nv;
         }
     }
 }
