@@ -35,7 +35,11 @@ namespace IdentityServer3.Core.Configuration.Hosting
         {
             var context = new OwinContext(env);
 
-            if (context.Request.Uri.Scheme != Uri.UriSchemeHttps)
+            var isSecureConnection = context.Request.IsSecure ||
+                String.Equals(context.Request.Headers["X-Forwarded-Proto"], Uri.UriSchemeHttps,
+                StringComparison.InvariantCultureIgnoreCase);
+
+            if (!isSecureConnection)
             {
                 context.Response.StatusCode = 403;
                 context.Response.ReasonPhrase = Messages.SslRequired;
