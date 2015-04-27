@@ -71,6 +71,7 @@ namespace IdentityServer3.Core.Validation
             {
                 credential.IsPresent = true;
                 credential.Credential = cert;
+                credential.ClientId = id;
 
                 return credential;
             }
