@@ -81,8 +81,8 @@ namespace IdentityServer3.Core.Endpoints
                 return NotFound();
             }
 
-            var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
-
+            var response = await ProcessAsync(await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync());
+            
             if (response is TokenErrorResult)
             {
                 var details = response as TokenErrorResult;
