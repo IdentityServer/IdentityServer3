@@ -43,7 +43,6 @@ namespace IdentityServer3.Core.Results
             ErrorDescription = errorDescription;
         }
 
-
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(Execute());
