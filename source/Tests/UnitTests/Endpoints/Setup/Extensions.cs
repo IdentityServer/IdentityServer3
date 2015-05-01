@@ -112,6 +112,17 @@ namespace IdentityServer3.Tests.Endpoints
             return GetModel<T>(html);
         }
 
+        public static T GetJson<T>(this HttpResponseMessage resp, Boolean successExpected = true)
+        {
+            if (successExpected)
+            {
+                resp.IsSuccessStatusCode.Should().BeTrue();
+            }
+
+            var json = resp.Content.ReadAsStringAsync().Result;
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
         private static void RemoveCookieByName(this HttpClient client, string cookieString)
         {
             Conformance.Extensions.RemoveCookie(client, cookieString.Split('=').First());
