@@ -518,6 +518,12 @@ namespace IdentityServer3.Core
             public const string X509CertificateName       = "X509Name";
         }
 
+        public static class TokenEndpointAuthenticationMethods
+        {
+            public const string PostBody = "client_secret_post";
+            public const string BasicAuthentication = "client_secret_basic";
+        }
+
         public static class RouteNames
         {
             public const string Welcome = "idsrv.welcome";

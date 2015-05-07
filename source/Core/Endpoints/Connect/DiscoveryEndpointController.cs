@@ -81,7 +81,8 @@ namespace IdentityServer3.Core.Endpoints
                 response_modes_supported = Constants.SupportedResponseModes.ToArray(),
                 grant_types_supported = supportedGrantTypes.ToArray(),
                 subject_types_supported = new[] { "public" },
-                id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 }
+                id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 },
+                token_endpoint_auth_methods_supported = new[] { Constants.TokenEndpointAuthenticationMethods.PostBody, Constants.TokenEndpointAuthenticationMethods.BasicAuthentication }
             };
 
             if (_options.Endpoints.EnableAuthorizeEndpoint)
@@ -183,6 +184,7 @@ namespace IdentityServer3.Core.Endpoints
             public string[] grant_types_supported { get; set; }
             public string[] subject_types_supported { get; set; }
             public string[] id_token_signing_alg_values_supported { get; set; }
+            public string[] token_endpoint_auth_methods_supported { get; set; }
         };
 
         private class JsonWebKeyDto
