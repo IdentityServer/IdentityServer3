@@ -511,6 +511,12 @@ namespace Thinktecture.IdentityServer.Core
             public const string FormPost = "FormPost";
         }
 
+        public static class TokenEndpointAuthenticationMethods
+        {
+            public const string PostBody = "client_secret_post";
+            public const string BasicAuthentication = "client_secret_basic";
+        }
+
         public static class RouteNames
         {
             public const string Welcome = "idsrv.welcome";
