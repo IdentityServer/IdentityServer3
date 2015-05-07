@@ -18,6 +18,7 @@ using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Newtonsoft.Json;
 using System;
@@ -67,6 +68,14 @@ namespace IdentityServer3.Core.Endpoints
             var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync(publicOnly: true);
 
+            var claims = new List<string>();
+            foreach (var s in scopes)
+            {
+                claims.AddRange(from c in s.Claims 
+                                where s.Type == ScopeType.Identity 
+                                select c.Name);
+            }
+
             var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
             if (this._options.AuthenticationOptions.EnableLocalLogin == false)
             {
@@ -77,6 +86,7 @@ namespace IdentityServer3.Core.Endpoints
             {
                 issuer = _options.IssuerUri,
                 scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name).ToArray(),
+                claim_types_supported = claims.Distinct().ToArray(),
                 response_types_supported = Constants.SupportedResponseTypes.ToArray(),
                 response_modes_supported = Constants.SupportedResponseModes.ToArray(),
                 grant_types_supported = supportedGrantTypes.ToArray(),
@@ -179,6 +189,7 @@ namespace IdentityServer3.Core.Endpoints
             public string check_session_iframe { get; set; }
             public string revocation_endpoint { get; set; }
             public string[] scopes_supported { get; set; }
+            public string[] claim_types_supported { get; set; }
             public string[] response_types_supported { get; set; }
             public string[] response_modes_supported { get; set; }
             public string[] grant_types_supported { get; set; }
