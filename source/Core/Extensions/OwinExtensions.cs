@@ -15,6 +15,7 @@
  */
 
 using Autofac;
+using Autofac.Integration.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
@@ -236,12 +237,7 @@ namespace Thinktecture.IdentityServer.Core.Extensions
 
         internal static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
-            return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
-        }
-
-        internal static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
-        {
-            new OwinContext(env).Set(Constants.OwinEnvironment.AutofacScope, scope);
+            return new OwinContext(env).GetAutofacLifetimeScope();
         }
 
         internal static T ResolveDependency<T>(this IDictionary<string, object> env)

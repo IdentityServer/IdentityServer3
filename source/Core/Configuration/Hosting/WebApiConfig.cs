@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using Autofac;
+using Autofac.Integration.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,14 +30,15 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
 {
     internal static class WebApiConfig
     {
-        public static HttpConfiguration Configure(IdentityServerOptions options)
+        public static HttpConfiguration Configure(IdentityServerOptions options, ILifetimeScope container)
         {
             var config = new HttpConfiguration();
 
             config.MapHttpAttributeRoutes();
             config.SuppressDefaultHostAuthentication();
 
-            config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
             config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
             config.Services.Replace(typeof(IHttpControllerTypeResolver), new HttpControllerTypeResolver());
             config.Formatters.Remove(config.Formatters.XmlFormatter);
