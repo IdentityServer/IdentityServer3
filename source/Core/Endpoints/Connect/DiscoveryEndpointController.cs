@@ -26,6 +26,7 @@ using Thinktecture.IdentityModel;
 using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Extensions;
 using Thinktecture.IdentityServer.Core.Logging;
+using Thinktecture.IdentityServer.Core.Models;
 using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
@@ -71,6 +72,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync(publicOnly: true);
 
+            var claims = new List<string>();
+            foreach (var s in scopes)
+            {
+                claims.AddRange(from c in s.Claims 
+                                where s.Type == ScopeType.Identity 
+                                select c.Name);
+            }
+
             var supportedGrantTypes = Constants.SupportedGrantTypes.AsEnumerable();
             if (this._options.AuthenticationOptions.EnableLocalLogin == false)
             {
@@ -81,6 +90,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 issuer = _options.IssuerUri,
                 scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name).ToArray(),
+                claims_supported = claims.Distinct().ToArray(),
                 response_types_supported = Constants.SupportedResponseTypes.ToArray(),
                 response_modes_supported = Constants.SupportedResponseModes.ToArray(),
                 grant_types_supported = supportedGrantTypes.ToArray(),
@@ -183,6 +193,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             public string check_session_iframe { get; set; }
             public string revocation_endpoint { get; set; }
             public string[] scopes_supported { get; set; }
+            public string[] claims_supported { get; set; }
             public string[] response_types_supported { get; set; }
             public string[] response_modes_supported { get; set; }
             public string[] grant_types_supported { get; set; }

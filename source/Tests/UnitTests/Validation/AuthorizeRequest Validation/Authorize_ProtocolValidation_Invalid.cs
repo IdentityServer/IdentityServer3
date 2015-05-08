@@ -223,7 +223,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
@@ -241,7 +241,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
