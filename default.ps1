@@ -11,7 +11,7 @@ properties {
 	$nuget_path = "$src_directory\.nuget\nuget.exe"
 
 	$buildNumber = 0;
-	$version = "1.5.3.0"
+	$version = "1.5.4.0"
 	$preRelease = $null
 }
 
