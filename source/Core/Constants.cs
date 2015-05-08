@@ -590,7 +590,6 @@ namespace IdentityServer3.Core
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
             public const string IdentityServerHost     = "idsrv:IdentityServerHost";
 
-            public const string AutofacScope = "idsrv:AutofacScope";
             public const string RequestId    = "idsrv:RequestId";
         }
         

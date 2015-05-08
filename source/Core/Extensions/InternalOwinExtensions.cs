@@ -15,6 +15,7 @@
  */
 
 using Autofac;
+using Autofac.Integration.Owin;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
@@ -53,12 +54,7 @@ namespace IdentityServer3.Core.Extensions
 
         public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
-            return new OwinContext(env).Get<ILifetimeScope>(Constants.OwinEnvironment.AutofacScope);
-        }
-
-        public static void SetLifetimeScope(this IDictionary<string, object> env, ILifetimeScope scope)
-        {
-            new OwinContext(env).Set(Constants.OwinEnvironment.AutofacScope, scope);
+            return new OwinContext(env).GetAutofacLifetimeScope();
         }
 
         public static T ResolveDependency<T>(this IDictionary<string, object> env)

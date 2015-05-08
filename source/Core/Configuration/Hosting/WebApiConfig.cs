@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Logging;
+using Autofac;
+using Autofac.Integration.WebApi;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,19 +24,21 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
+using IdentityServer3.Core.Logging;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal static class WebApiConfig
     {
-        public static HttpConfiguration Configure(IdentityServerOptions options)
+        public static HttpConfiguration Configure(IdentityServerOptions options, ILifetimeScope container)
         {
             var config = new HttpConfiguration();
 
             config.MapHttpAttributeRoutes();
             config.SuppressDefaultHostAuthentication();
 
-            config.MessageHandlers.Insert(0, new KatanaDependencyResolver());
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
             config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
             config.Services.Replace(typeof(IHttpControllerTypeResolver), new HttpControllerTypeResolver());
             config.Formatters.Remove(config.Formatters.XmlFormatter);

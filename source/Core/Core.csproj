@@ -50,12 +50,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Owin.3.1.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="IdentityModel.Net45">
       <HintPath>..\packages\IdentityModel.1.0.0-build00005\lib\net45\IdentityModel.Net45.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi.Owin, Version=3.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.Owin.3.2.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -346,13 +354,11 @@
     <Compile Include="Services\IRefreshTokenStore.cs" />
     <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
     <Compile Include="Services\ITokenSigningService.cs" />
-    <Compile Include="Configuration\Hosting\AutofacContainerMiddleware.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
     <Compile Include="Configuration\IDataProtector.cs" />
     <Compile Include="Configuration\IdentityServerOptions.cs" />
     <Compile Include="Configuration\IdentityServerServiceFactory.cs" />
-    <Compile Include="Configuration\Hosting\KatanaDependencyResolver.cs" />
     <Compile Include="Configuration\Hosting\WebApiConfig.cs" />
     <Compile Include="Endpoints\Connect\AccessTokenValidationController.cs" />
     <Compile Include="Endpoints\Connect\DiscoveryEndpointController.cs" />
