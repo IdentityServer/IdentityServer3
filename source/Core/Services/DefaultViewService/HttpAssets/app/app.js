@@ -28,7 +28,13 @@
     })();
 
     (function () {
-        var encodedJson = document.getElementById("modelJson").textContent;
+        var modelJson = document.getElementById("modelJson");
+        var encodedJson = '';
+        if (typeof(modelJson.textContent) !== undefined) {
+            encodedJson = modelJson.textContent;
+        } else {
+            encodedJson = modelJson.innerHTML;
+        }
         var json = Encoder.htmlDecode(encodedJson);
         var model = JSON.parse(json);
         angular.module("app").constant("Model", model);
