@@ -36,7 +36,7 @@ namespace IdentityServer3.Tests.Connect.Endpoints
     public class IdentityTokenValidationControllerTests : IdSvrHostTestBase
     {
         const String Category = "Identity token validation endpoint";
-        static readonly String Url = Constants.RoutePaths.Oidc.IdentityTokenValidation;
+        static readonly String TestUrl = Constants.RoutePaths.Oidc.IdentityTokenValidation;
 
         [Fact]
         [Trait("Category", Category)]
@@ -124,7 +124,7 @@ namespace IdentityServer3.Tests.Connect.Endpoints
                 parameters.Add("client_id", clientId);
             }
 
-            var url = Url.AddQueryString(parameters.ToQueryString());
+            var url = TestUrl.AddQueryString(parameters.ToQueryString());
             return base.Get(url);
         }
 
