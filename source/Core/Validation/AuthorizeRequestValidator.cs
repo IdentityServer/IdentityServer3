@@ -354,12 +354,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
             else
             {
-                if (request.Flow == Flows.Implicit)
+                if (request.Flow == Flows.Implicit ||
+                    request.Flow == Flows.Hybrid)
                 {
                     // only openid requests require nonce
                     if (request.IsOpenIdRequest)
                     {
-                        LogError("Nonce required for implicit flow with openid scope", request);
+                        LogError("Nonce required for implicit and hybrid flow with openid scope", request);
                         return Invalid(request, ErrorTypes.Client);
                     }
                 }
