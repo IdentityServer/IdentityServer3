@@ -157,6 +157,7 @@
     <Compile Include="Conformance\Extensions.cs" />
     <Compile Include="Conformance\IdentityServerHostTest.cs" />
     <Compile Include="Conformance\NoDataProtector.cs" />
+    <Compile Include="Endpoints\Connect\IdentityTokenValidationControllerTests.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
