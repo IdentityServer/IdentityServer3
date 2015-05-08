@@ -187,13 +187,13 @@ namespace Thinktecture.IdentityServer.Core.Validation
             if (responseType.IsMissing())
             {
                 LogError("Missing response_type", request);
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             if (!Constants.SupportedResponseTypes.Contains(responseType))
             {
                 LogError("Response type not supported: " + responseType, request);
-                return Invalid(request, ErrorTypes.Client, Constants.AuthorizeErrors.UnsupportedResponseType);
+                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
             request.ResponseType = responseType;
