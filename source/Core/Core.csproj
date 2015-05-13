@@ -50,17 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.Owin.3.1.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.WebApi.Owin, Version=3.2.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.WebApi2.Owin.3.2.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -180,6 +172,12 @@
     <Compile Include="Internal\AntiXssLibrary\CodeCharts.cs" />
     <Compile Include="Internal\AntiXssLibrary\Encoder.cs" />
     <Compile Include="Internal\AntiXssLibrary\Utf16StringReader.cs" />
+    <Compile Include="Internal\Autofac.Integration.Owin\AutofacAppBuilderExtensions.cs" />
+    <Compile Include="Internal\Autofac.Integration.Owin\AutofacMiddleware.cs" />
+    <Compile Include="Internal\Autofac.Integration.Owin\Constants.cs" />
+    <Compile Include="Internal\Autofac.Integration.Owin\OwinContextExtensions.cs" />
+    <Compile Include="Internal\Autofac.Integration.WebApi.Owin\AutofacWebApiAppBuilderExtensions.cs" />
+    <Compile Include="Internal\Autofac.Integration.WebApi.Owin\DependencyScopeHandler.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
