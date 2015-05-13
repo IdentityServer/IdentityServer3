@@ -4,6 +4,7 @@ Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/IdentityServer/IdentityServer3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![openid_certified](https://cloud.githubusercontent.com/assets/1454075/7611268/4d19de32-f97b-11e4-895b-31b2455a7ca6.png)
+[Certified](http://openid.net/certification/) OpenID Connect implementation.
 
 ## Overview ##
 
