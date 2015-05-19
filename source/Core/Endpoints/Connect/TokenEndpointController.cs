@@ -116,7 +116,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (requestResult.IsError)
             {
-                return this.TokenErrorResponse(requestResult.Error);
+                return this.TokenErrorResponse(requestResult.Error, requestResult.ErrorDescription);
             }
 
             // return response
