@@ -62,11 +62,11 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <returns>
         /// The authentication result
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             var query =
                 from u in _users
-                where u.Username == username && u.Password == password
+                where u.Username == context.UserName && u.Password == context.Password
                 select u;
 
             var user = query.SingleOrDefault();

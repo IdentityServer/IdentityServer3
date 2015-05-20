@@ -26,11 +26,11 @@ namespace IdentityServer3.Tests.Validation
 {
     class TestUserService : IUserService
     {
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            if (username == password)
+            if (context.UserName == context.Password)
             {
-                var p = IdentityServerPrincipal.Create(username, username, "password", "idsvr");
+                var p = IdentityServerPrincipal.Create(context.UserName, context.UserName, "password", "idsvr");
                 return Task.FromResult(new AuthenticateResult(p));
             }
 

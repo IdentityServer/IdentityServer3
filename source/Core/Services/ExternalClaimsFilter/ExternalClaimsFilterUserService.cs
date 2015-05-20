@@ -41,9 +41,9 @@ namespace IdentityServer3.Core.Services.Default
             return inner.PreAuthenticateAsync(message);
         }
 
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return inner.AuthenticateLocalAsync(context);
         }
 
         public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)

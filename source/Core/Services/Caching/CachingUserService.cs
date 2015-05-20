@@ -73,9 +73,9 @@ namespace IdentityServer3.Core.Services.Caching
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return inner.AuthenticateLocalAsync(context);
         }
 
         /// <summary>

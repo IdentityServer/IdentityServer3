@@ -417,7 +417,14 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             // authenticate user
             /////////////////////////////////////////////
-            var authnResult = await _users.AuthenticateLocalAsync(userName, password, signInMessage);
+            var authenticationContext = new LocalAuthenticationContext
+            {
+                UserName = userName,
+                Password = password,
+                SignInMessage = signInMessage
+            };
+
+            var authnResult = await _users.AuthenticateLocalAsync(authenticationContext);
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 var error = Resources.Messages.InvalidUsernameOrPassword;

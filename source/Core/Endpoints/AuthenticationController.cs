@@ -211,8 +211,15 @@ namespace IdentityServer3.Core.Endpoints
                 Logger.Error("username or password submitted beyond allowed length");
                 return await RenderLoginPage(signInMessage, signin);
             }
-            
-            var authResult = await userService.AuthenticateLocalAsync(model.Username, model.Password, signInMessage);
+
+            var authenticationContext = new LocalAuthenticationContext
+            {
+                UserName = model.Username,
+                Password = model.Password,
+                SignInMessage = signInMessage
+            };
+
+            var authResult = await userService.AuthenticateLocalAsync(authenticationContext);
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);

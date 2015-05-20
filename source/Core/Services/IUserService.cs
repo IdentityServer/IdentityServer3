@@ -40,7 +40,7 @@ namespace IdentityServer3.Core.Services
         /// <param name="password">The password.</param>
         /// <param name="message">The signin message.</param>
         /// <returns>The authentication result. </returns>
-        Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message);
+        Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context);
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.

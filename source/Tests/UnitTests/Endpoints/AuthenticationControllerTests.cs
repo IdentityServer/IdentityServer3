@@ -513,7 +513,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_UserServiceReturnsError_ShowErrorPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("bad stuff")));
 
             GetLoginPage();
@@ -526,7 +526,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_UserServiceReturnsNull_ShowErrorPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult((AuthenticateResult)null));
 
             GetLoginPage();
@@ -539,7 +539,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesPartialLoginCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
@@ -550,7 +550,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_UserServiceReturnsParialLogin_IssuesRedirect()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
@@ -609,7 +609,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_CookieOptionsIsPersistentIsTrueButResponseIsPartialLogin_DoesNotIssuePersistentCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
             
             options.AuthenticationOptions.CookieOptions.IsPersistent = true;
@@ -623,7 +623,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
@@ -636,7 +636,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesRedirectToAuthorizationPage()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
@@ -651,7 +651,7 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void ResumeLoginFromRedirect_WithoutPartialCookie_ShowsError()
         {
-            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<SignInMessage>()))
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             GetLoginPage();
