@@ -55,7 +55,7 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method gets called before the login page is shown. This allows you to authenticate the
         /// user somehow based on data coming from the host (e.g. client certificates or trusted headers)
         /// </summary>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result or null to continue the flow.
         /// </returns>
@@ -67,9 +67,7 @@ namespace IdentityServer3.Core.Services.Caching
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>
@@ -81,8 +79,7 @@ namespace IdentityServer3.Core.Services.Caching
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
-        /// <param name="externalUser">The external user.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>

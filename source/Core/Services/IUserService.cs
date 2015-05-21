@@ -29,26 +29,27 @@ namespace IdentityServer3.Core.Services
         /// <summary>
         /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
         /// </summary>
-        /// <param name="message">The signin message.</param>
-        /// <returns>The authentication result or null to continue the flow.</returns>
+        /// <param name="context">The context.</param>
+        /// <returns>
+        /// The authentication result or null to continue the flow.
+        /// </returns>
         Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context);
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
-        /// <returns>The authentication result. </returns>
+        /// <param name="context">The context.</param>
+        /// <returns>
+        /// The authentication result.
+        /// </returns>
         Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context);
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
-        /// The user's identity from the external provider is passed via the `externalUser` parameter which contains the 
+        /// The user's identity from the external provider is passed via the `externalUser` parameter which contains the
         /// provider identifier, the provider's identifier for the user, and the claims from the provider for the external user.
         /// </summary>
-        /// <param name="externalUser">The external user.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>

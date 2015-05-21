@@ -16,8 +16,17 @@
 
 namespace IdentityServer3.Core.Models
 {
+    /// <summary>
+    /// Class describing the context of the pre-authentication stage
+    /// </summary>
     public class PreAuthenticationContext
     {
+        /// <summary>
+        /// Gets or sets the sign in message.
+        /// </summary>
+        /// <value>
+        /// The sign in message.
+        /// </value>
         public SignInMessage SignInMessage { get; set; }
     }
 }
