@@ -80,5 +80,29 @@ namespace Thinktecture.IdentityServer.Core.ViewModels
         /// The additional links.
         /// </value>
         public IEnumerable<LoginPageLink> AdditionalLinks { get; set; }
+
+        /// <summary>
+        /// The display name of the client.
+        /// </summary>
+        /// <value>
+        /// The name of the client.
+        /// </value>
+        public string ClientName { get; set; }
+
+        /// <summary>
+        /// The URL for more information about the client.
+        /// </summary>
+        /// <value>
+        /// The client URL.
+        /// </value>
+        public string ClientUrl { get; set; }
+
+        /// <summary>
+        /// The URL for the client's logo image.
+        /// </summary>
+        /// <value>
+        /// The client logo URL.
+        /// </value>
+        public string ClientLogoUrl { get; set; }
     }
 }
