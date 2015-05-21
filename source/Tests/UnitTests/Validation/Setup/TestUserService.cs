@@ -47,7 +47,7 @@ namespace IdentityServer3.Tests.Validation
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
             return Task.FromResult(true);
         }

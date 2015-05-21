@@ -193,6 +193,7 @@
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ExternalAuthenticationContext.cs" />
+    <Compile Include="Models\IsActiveContext.cs" />
     <Compile Include="Models\LocalAuthenticationContext.cs" />
     <Compile Include="Models\PreAuthenticationContext.cs" />
     <Compile Include="Models\Secret.cs" />

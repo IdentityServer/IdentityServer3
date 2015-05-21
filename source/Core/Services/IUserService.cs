@@ -75,8 +75,10 @@ namespace IdentityServer3.Core.Services
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
         /// (e.g. during token issuance or validation).
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <returns><c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.</returns>
-        Task<bool> IsActiveAsync(ClaimsPrincipal subject);
+        /// <param name="context">The context.</param>
+        /// <returns>
+        ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
+        /// </returns>
+        Task<bool> IsActiveAsync(IsActiveContext context);
     }
 }

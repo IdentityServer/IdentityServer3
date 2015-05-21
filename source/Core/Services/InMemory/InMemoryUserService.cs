@@ -157,19 +157,19 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// true or false
         /// </returns>
         /// <exception cref="System.ArgumentNullException">subject</exception>
-        public virtual Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public virtual Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            if (subject == null) throw new ArgumentNullException("subject");
+            if (context.Subject == null) throw new ArgumentNullException("subject");
 
             var query =
                 from u in _users
                 where
-                    u.Subject == subject.GetSubjectId()
+                    u.Subject == context.Subject.GetSubjectId()
                 select u;
 
             var user = query.SingleOrDefault();

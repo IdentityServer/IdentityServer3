@@ -117,13 +117,13 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method gets called whenever identity server needs to determine if the user is valid or active
         /// (e.g. during token issuance or validation).
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
         /// </returns>
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            return inner.IsActiveAsync(subject);
+            return inner.IsActiveAsync(context);
         }
 
         private string GetKey(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes)

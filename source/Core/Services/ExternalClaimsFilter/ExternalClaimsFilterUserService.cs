@@ -57,9 +57,9 @@ namespace IdentityServer3.Core.Services.Default
             return inner.GetProfileDataAsync(subject, requestedClaimTypes);
         }
 
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            return inner.IsActiveAsync(subject);
+            return inner.IsActiveAsync(context);
         }
 
         public Task SignOutAsync(SignOutContext context)

@@ -240,7 +240,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         public async Task Valid_RefreshToken_Request()
         {
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult(true));
 
             var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
 
@@ -279,7 +279,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         public async Task Valid_RefreshToken_Request_using_Restricted_Client()
         {
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(true));
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult(true));
 
             var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
 
