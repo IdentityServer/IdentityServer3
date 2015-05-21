@@ -42,7 +42,7 @@ namespace IdentityServer3.Tests.Validation
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             throw new NotImplementedException();
         }

@@ -46,10 +46,10 @@ namespace IdentityServer3.Core.Services.Default
             return inner.AuthenticateLocalAsync(context);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            context.ExternalIdentity.Claims = filter.Filter(context.ExternalIdentity.Provider, context.ExternalIdentity.Claims);
+            return inner.AuthenticateExternalAsync(context);
         }
 
         public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)

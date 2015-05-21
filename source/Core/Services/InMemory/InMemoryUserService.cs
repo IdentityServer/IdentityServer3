@@ -88,13 +88,13 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             var query =
                 from u in _users
                 where
-                    u.Provider == externalUser.Provider &&
-                    u.ProviderId == externalUser.ProviderId
+                    u.Provider == context.ExternalIdentity.Provider &&
+                    u.ProviderId == context.ExternalIdentity.ProviderId
                 select u;
 
             var user = query.SingleOrDefault();
@@ -102,10 +102,10 @@ namespace IdentityServer3.Core.Services.InMemory
             {
                 string displayName;
 
-                var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+                var name = context.ExternalIdentity.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
                 if (name == null)
                 {
-                    displayName = externalUser.ProviderId;
+                    displayName = context.ExternalIdentity.ProviderId;
                 }
                 else
                 {
@@ -115,10 +115,10 @@ namespace IdentityServer3.Core.Services.InMemory
                 user = new InMemoryUser
                 {
                     Subject = CryptoRandom.CreateUniqueId(),
-                    Provider = externalUser.Provider,
-                    ProviderId = externalUser.ProviderId,
+                    Provider = context.ExternalIdentity.Provider,
+                    ProviderId = context.ExternalIdentity.ProviderId,
                     Username = displayName,
-                    Claims = externalUser.Claims
+                    Claims = context.ExternalIdentity.Claims
                 };
                 _users.Add(user);
             }

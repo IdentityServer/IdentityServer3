@@ -362,7 +362,13 @@ namespace IdentityServer3.Core.Endpoints
 
             Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
 
-            var authResult = await userService.AuthenticateExternalAsync(externalIdentity, signInMessage);
+            var externalContext = new ExternalAuthenticationContext
+            {
+                ExternalIdentity = externalIdentity,
+                SignInMessage = signInMessage
+            };
+
+            var authResult = await userService.AuthenticateExternalAsync(externalContext);
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
@@ -475,23 +481,29 @@ namespace IdentityServer3.Core.Endpoints
 
                 var provider = externalProviderClaim.Issuer;
                 var providerId = externalProviderClaim.Value;
-                var externalId = new ExternalIdentity
+                var externalIdentity = new ExternalIdentity
                 {
                     Provider = provider,
                     ProviderId = providerId,
                     Claims = user.Claims
                 };
 
-                Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalId.Provider, externalId.ProviderId);
-                
-                result = await userService.AuthenticateExternalAsync(externalId, signInMessage);
+                Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
+
+                var externalContext = new ExternalAuthenticationContext
+                {
+                    ExternalIdentity = externalIdentity,
+                    SignInMessage = signInMessage
+                };
+
+                result = await userService.AuthenticateExternalAsync(externalContext);
 
                 if (result == null)
                 {
                     Logger.Warn("user service failed to authenticate external identity");
                     
                     var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
-                    await eventService.RaiseExternalLoginFailureEventAsync(externalId, signInId, signInMessage, msg);
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, msg);
                     
                     return await RenderLoginPage(signInMessage, signInId, msg);
                 }
@@ -500,14 +512,14 @@ namespace IdentityServer3.Core.Endpoints
                 {
                     Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
 
-                    await eventService.RaiseExternalLoginFailureEventAsync(externalId, signInId, signInMessage, result.ErrorMessage);
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, result.ErrorMessage);
                     
                     return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
                 }
 
                 Logger.Info("External identity successfully validated by user service");
 
-                await eventService.RaiseExternalLoginSuccessEventAsync(externalId, signInId, signInMessage, result);
+                await eventService.RaiseExternalLoginSuccessEventAsync(externalIdentity, signInId, signInMessage, result);
             }
 
             return SignInAndRedirect(signInMessage, signInId, result);

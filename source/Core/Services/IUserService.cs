@@ -52,7 +52,7 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// The authentication result.
         /// </returns>
-        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message);
+        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context);
 
         /// <summary>
         /// This method gets called when the user signs out.

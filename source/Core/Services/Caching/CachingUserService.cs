@@ -86,9 +86,9 @@ namespace IdentityServer3.Core.Services.Caching
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            return inner.AuthenticateExternalAsync(context);
         }
 
         /// <summary>
