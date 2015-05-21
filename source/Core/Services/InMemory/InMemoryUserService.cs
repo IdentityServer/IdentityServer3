@@ -48,7 +48,7 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <returns>
         /// The authentication result or null to continue the flow
         /// </returns>
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
             return Task.FromResult<AuthenticateResult>(null);
         }

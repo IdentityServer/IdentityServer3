@@ -52,7 +52,7 @@ namespace IdentityServer3.Tests.Validation
             return Task.FromResult(true);
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
             throw new NotImplementedException();
         }

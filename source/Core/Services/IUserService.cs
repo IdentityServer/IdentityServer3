@@ -31,7 +31,7 @@ namespace IdentityServer3.Core.Services
         /// </summary>
         /// <param name="message">The signin message.</param>
         /// <returns>The authentication result or null to continue the flow.</returns>
-        Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message);
+        Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context);
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).

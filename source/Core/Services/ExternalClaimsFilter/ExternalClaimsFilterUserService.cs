@@ -36,9 +36,9 @@ namespace IdentityServer3.Core.Services.Default
             this.inner = inner;
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
-            return inner.PreAuthenticateAsync(message);
+            return inner.PreAuthenticateAsync(context);
         }
 
         public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)

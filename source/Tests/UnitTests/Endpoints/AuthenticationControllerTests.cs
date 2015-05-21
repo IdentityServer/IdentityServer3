@@ -202,7 +202,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsError_ShowsErrorPage()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .ReturnsAsync(new AuthenticateResult("SomeError"));
 
             var resp = GetLoginPage();
@@ -215,7 +215,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
 
             var resp = GetLoginPage();
@@ -226,7 +226,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsFullLogin_RedirectsToReturnUrl()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult(IdentityServerPrincipal.Create("sub", "name"))));
 
             var resp = GetLoginPage();
@@ -238,7 +238,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesPartialLoginCookie()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             var resp = GetLoginPage();
@@ -249,7 +249,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void GetLogin_PreAuthenticateReturnsParialLogin_IssuesRedirect()
         {
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             var resp = GetLoginPage();
@@ -283,7 +283,7 @@ namespace IdentityServer3.Tests.Endpoints
             Init();
 
             mockUserService
-                .Setup(x => x.PreAuthenticateAsync(It.IsAny<SignInMessage>()))
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
                 .Returns(Task.FromResult(new AuthenticateResult("/foo", "tempsub", "tempname")));
 
             var resp = GetLoginPage();
