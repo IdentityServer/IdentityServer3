@@ -62,9 +62,9 @@ namespace IdentityServer3.Core.Services.Default
             return inner.IsActiveAsync(subject);
         }
 
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
-            return inner.SignOutAsync(subject);
+            return inner.SignOutAsync(context);
         }
     }
 }

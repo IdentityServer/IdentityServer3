@@ -185,9 +185,9 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method gets called when the user signs out (allows to cleanup resources)
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        public virtual Task SignOutAsync(ClaimsPrincipal subject)
+        public virtual Task SignOutAsync(SignOutContext context)
         {
             return Task.FromResult(0);
         }

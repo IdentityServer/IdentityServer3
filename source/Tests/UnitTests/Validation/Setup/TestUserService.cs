@@ -57,7 +57,7 @@ namespace IdentityServer3.Tests.Validation
             throw new NotImplementedException();
         }
         
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
             throw new NotImplementedException();
         }

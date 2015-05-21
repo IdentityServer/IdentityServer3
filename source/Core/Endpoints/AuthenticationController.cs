@@ -592,7 +592,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (user != null && user.Identity.IsAuthenticated)
             {
-                await this.userService.SignOutAsync(user);
+                await this.userService.SignOutAsync(new SignOutContext { Subject = user });
 
                 var message = signOutMessageCookie.Read(id);
                 await eventService.RaiseLogoutEventAsync(user, id, message);

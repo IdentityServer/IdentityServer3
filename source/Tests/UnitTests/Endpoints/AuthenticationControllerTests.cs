@@ -700,7 +700,7 @@ namespace IdentityServer3.Tests.Endpoints
         public void PostToLogout_AnonymousUser_DoesNotInvokeUserServiceSignOut()
         {
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
-            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()), Times.Never());
+            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<SignOutContext>()), Times.Never());
         }
         
         [Fact]
@@ -709,7 +709,7 @@ namespace IdentityServer3.Tests.Endpoints
             Login();
 
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
-            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<ClaimsPrincipal>()));
+            this.mockUserService.Verify(x => x.SignOutAsync(It.IsAny<SignOutContext>()));
         }
 
         [Fact]

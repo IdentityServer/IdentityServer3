@@ -91,11 +91,11 @@ namespace IdentityServer3.Core.Services.Caching
         /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
-            return inner.SignOutAsync(subject);
+            return inner.SignOutAsync(context);
         }
 
         /// <summary>

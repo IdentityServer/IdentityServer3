@@ -58,9 +58,9 @@ namespace IdentityServer3.Core.Services
         /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        Task SignOutAsync(ClaimsPrincipal subject);
+        Task SignOutAsync(SignOutContext context);
 
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
