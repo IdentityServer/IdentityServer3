@@ -52,9 +52,9 @@ namespace IdentityServer3.Core.Services.Default
             return inner.AuthenticateExternalAsync(context);
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            return inner.GetProfileDataAsync(subject, requestedClaimTypes);
+            return inner.GetProfileDataAsync(context);
         }
 
         public Task<bool> IsActiveAsync(IsActiveContext context)

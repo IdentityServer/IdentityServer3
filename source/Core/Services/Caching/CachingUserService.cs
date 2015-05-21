@@ -101,16 +101,14 @@ namespace IdentityServer3.Core.Services.Caching
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types. The user service is expected to filter based
-        /// upon the requested claim types. <c>null</c> is passed if there is no filtering to be performed.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// Claims for the subject
         /// </returns>
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            var key = GetKey(subject, requestedClaimTypes);
-            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(subject, requestedClaimTypes));
+            var key = GetKey(context.Subject, context.RequestedClaimTypes);
+            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(context));
         }
 
         /// <summary>

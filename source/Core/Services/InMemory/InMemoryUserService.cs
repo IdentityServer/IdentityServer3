@@ -128,16 +128,15 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// Claims
         /// </returns>
-        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var query =
                 from u in _users
-                where u.Subject == subject.GetSubjectId()
+                where u.Subject == context.Subject.GetSubjectId()
                 select u;
             var user = query.Single();
 
@@ -146,9 +145,9 @@ namespace IdentityServer3.Core.Services.InMemory
             };
 
             claims.AddRange(user.Claims);
-            if (requestedClaimTypes != null)
+            if (!context.AllClaimsRequested)
             {
-                claims = claims.Where(x => requestedClaimTypes.Contains(x.Type)).ToList();
+                claims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
             }
 
             return Task.FromResult<IEnumerable<Claim>>(claims);

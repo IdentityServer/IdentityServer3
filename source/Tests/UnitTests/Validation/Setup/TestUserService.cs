@@ -37,7 +37,7 @@ namespace IdentityServer3.Tests.Validation
             return Task.FromResult<AuthenticateResult>(new AuthenticateResult("Username and/or password incorrect"));
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
             throw new NotImplementedException();
         }

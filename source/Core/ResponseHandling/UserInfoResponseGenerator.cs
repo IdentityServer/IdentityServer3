@@ -50,12 +50,27 @@ namespace IdentityServer3.Core.ResponseHandling
             if (requestedClaimTypes.IncludeAllClaims)
             {
                 Logger.InfoFormat("Requested claim types: all");
-                profileClaims = await _users.GetProfileDataAsync(principal);
+
+                // todo: add clientId
+                var context = new ProfileDataRequestContext(
+                    principal, 
+                    null, 
+                    Constants.ProfileDataCallers.UserInfoEndpoint);
+
+                profileClaims = await _users.GetProfileDataAsync(context);
             }
             else
             {
                 Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ClaimTypes.ToSpaceSeparatedString());
-                profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes.ClaimTypes);
+
+                // todo: add clientId
+                var context = new ProfileDataRequestContext(
+                    principal,
+                    null,
+                    Constants.ProfileDataCallers.UserInfoEndpoint,
+                    requestedClaimTypes.ClaimTypes);
+
+                profileClaims = await _users.GetProfileDataAsync(context);
             }
             
             if (profileClaims != null)

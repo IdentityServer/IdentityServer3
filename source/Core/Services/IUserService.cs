@@ -65,11 +65,11 @@ namespace IdentityServer3.Core.Services
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types. The user service is expected to filter based 
-        /// upon the requested claim types. <c>null</c> is passed if there is no filtering to be performed.</param>
-        /// <returns>Claims for the subject</returns>
-        Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
+        /// <param name="context">The context.</param>
+        /// <returns>
+        /// Claims for the subject
+        /// </returns>
+        Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context);
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).

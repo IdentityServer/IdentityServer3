@@ -622,5 +622,12 @@ namespace IdentityServer3.Core
         {
             public const string UnsupportedTokenType = "unsupported_token_type";
         }
+
+        public static class ProfileDataCallers
+        {
+            public const string UserInfoEndpoint = "UserInfoEndpoint";
+            public const string ClaimsProviderIdentityToken = "ClaimsProviderIdentityToken";
+            public const string ClaimsProviderAccessToken = "ClaimsProviderAccessToken";
+        }
     }
 }
