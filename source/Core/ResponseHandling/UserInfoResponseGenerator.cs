@@ -62,7 +62,6 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ClaimTypes.ToSpaceSeparatedString());
 
-                // todo: add clientId
                 var context = new ProfileDataRequestContext(
                     principal,
                     client,
