@@ -54,7 +54,7 @@ namespace IdentityServer3.Core.Models
         /// <value>
         /// The client id.
         /// </value>
-        public string ClientId { get; set; }
+        public Client Client { get; set; }
 
         /// <summary>
         /// Gets or sets the caller.
@@ -65,16 +65,16 @@ namespace IdentityServer3.Core.Models
         public string Caller { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProfileDataRequestContext"/> class.
+        /// Initializes a new instance of the <see cref="ProfileDataRequestContext" /> class.
         /// </summary>
         /// <param name="subject">The subject.</param>
-        /// <param name="clientId">The client identifier.</param>
+        /// <param name="client">The client.</param>
         /// <param name="caller">The caller.</param>
         /// <param name="requestedClaimTypes">The requested claim types.</param>
-        public ProfileDataRequestContext(ClaimsPrincipal subject, string clientId, string caller, IEnumerable<string> requestedClaimTypes = null)
+        public ProfileDataRequestContext(ClaimsPrincipal subject, Client client, string caller, IEnumerable<string> requestedClaimTypes = null)
         {
             Subject = subject;
-            ClientId = ClientId;
+            Client = client;
             Caller = caller;
 
             if (requestedClaimTypes == null)

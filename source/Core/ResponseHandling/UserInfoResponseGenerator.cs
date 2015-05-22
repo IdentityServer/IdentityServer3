@@ -53,7 +53,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
                 var context = new ProfileDataRequestContext(
                     principal, 
-                    client.ClientId, 
+                    client, 
                     Constants.ProfileDataCallers.UserInfoEndpoint);
 
                 profileClaims = await _users.GetProfileDataAsync(context);
@@ -65,7 +65,7 @@ namespace IdentityServer3.Core.ResponseHandling
                 // todo: add clientId
                 var context = new ProfileDataRequestContext(
                     principal,
-                    client.ClientId,
+                    client,
                     Constants.ProfileDataCallers.UserInfoEndpoint,
                     requestedClaimTypes.ClaimTypes);
 

@@ -76,7 +76,7 @@ namespace IdentityServer3.Core.Services.Default
 
                 var context = new ProfileDataRequestContext(
                     subject,
-                    client.ClientId,
+                    client,
                     Constants.ProfileDataCallers.ClaimsProviderIdentityToken);
 
                 var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
@@ -107,7 +107,7 @@ namespace IdentityServer3.Core.Services.Default
             {
                 var context = new ProfileDataRequestContext(
                     subject,
-                    client.ClientId,
+                    client,
                     Constants.ProfileDataCallers.ClaimsProviderIdentityToken,
                     additionalClaims);
 
@@ -175,7 +175,7 @@ namespace IdentityServer3.Core.Services.Default
                 {
                     var context = new ProfileDataRequestContext(
                     subject,
-                    client.ClientId,
+                    client,
                     Constants.ProfileDataCallers.ClaimsProviderAccessToken);
 
                     var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
@@ -208,7 +208,7 @@ namespace IdentityServer3.Core.Services.Default
                 {
                     var context = new ProfileDataRequestContext(
                     subject,
-                    client.ClientId,
+                    client,
                     Constants.ProfileDataCallers.ClaimsProviderAccessToken,
                     additionalClaims.Distinct());
 
