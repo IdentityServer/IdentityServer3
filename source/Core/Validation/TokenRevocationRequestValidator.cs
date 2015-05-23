@@ -68,11 +68,33 @@ namespace IdentityServer3.Core.Validation
                 if (Constants.SupportedTokenTypeHints.Contains(hint))
                 {
                     result.TokenTypeHint = hint;
+                    if (hint != Constants.TokenTypeHints.RefreshToken)
+                    {
+                        return Task.FromResult(result);
+                    }
                 }
                 else
                 {
                     result.IsError = true;
                     result.Error = Constants.RevocationErrors.UnsupportedTokenType;
+                }
+            }
+
+            ////////////////////////////
+            // check optional cascade flag
+            ///////////////////////////
+            var cascade = parameters.Get("cascade");
+            if (cascade.IsPresent())
+            {
+                bool value;
+                if (bool.TryParse(cascade, out value))
+                {
+                    result.Cascade = value;
+                }
+                else
+                {
+                    result.IsError = true;
+                    result.Error = Constants.TokenErrors.InvalidRequest;
                 }
             }
 
