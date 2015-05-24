@@ -149,6 +149,7 @@ namespace IdentityServer3.Tests.Validation
 
             result.IsError.Should().BeFalse();
             result.Token.Should().Be("foo");
+            result.TokenTypeHint.Should().BeNull();
             result.Cascade.Should().Be(false);
         }
 
