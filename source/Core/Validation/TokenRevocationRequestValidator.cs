@@ -68,10 +68,6 @@ namespace IdentityServer3.Core.Validation
                 if (Constants.SupportedTokenTypeHints.Contains(hint))
                 {
                     result.TokenTypeHint = hint;
-                    if (hint != Constants.TokenTypeHints.RefreshToken)
-                    {
-                        return Task.FromResult(result);
-                    }
                 }
                 else
                 {
