@@ -76,6 +76,24 @@ namespace IdentityServer3.Core.Validation
                 }
             }
 
+            ////////////////////////////
+            // check optional cascade flag
+            ///////////////////////////
+            var cascade = parameters.Get("cascade");
+            if (cascade.IsPresent())
+            {
+                bool value;
+                if (bool.TryParse(cascade, out value))
+                {
+                    result.Cascade = value;
+                }
+                else
+                {
+                    result.IsError = true;
+                    result.Error = Constants.TokenErrors.InvalidRequest;
+                }
+            }
+
             return Task.FromResult(result);
         }
     }

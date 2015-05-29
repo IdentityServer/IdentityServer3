@@ -38,7 +38,7 @@ namespace IdentityServer3.Core.Endpoints
     internal class RevocationEndpointController : ApiController
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         private readonly IEventService _events;
         private readonly IClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
@@ -111,7 +111,7 @@ namespace IdentityServer3.Core.Endpoints
             }
             else if (requestResult.TokenTypeHint == Constants.TokenTypeHints.RefreshToken)
             {
-                await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
+                await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client, requestResult.Cascade);
             }
             else
             {
@@ -119,7 +119,7 @@ namespace IdentityServer3.Core.Endpoints
 
                 if (!found)
                 {
-                    await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
+                    await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client, requestResult.Cascade);
                 }
             }
 
@@ -152,7 +152,7 @@ namespace IdentityServer3.Core.Endpoints
         }
 
         // revoke refresh token only if it belongs to client doing the request
-        private async Task<bool> RevokeRefreshTokenAsync(string handle, Client client)
+        private async Task<bool> RevokeRefreshTokenAsync(string handle, Client client, bool cascade)
         {
             var token = await _refreshTokens.GetAsync(handle);
 
@@ -160,12 +160,19 @@ namespace IdentityServer3.Core.Endpoints
             {
                 if (token.ClientId == client.ClientId)
                 {
-                    await _refreshTokens.RemoveAsync(handle);
+                    if (cascade)
+                    {
+                        await _refreshTokens.RevokeAsync(token.SubjectId, token.ClientId);
+                    }
+                    else
+                    {
+                        await _refreshTokens.RemoveAsync(handle);
+                    }
                 }
                 else
                 {
                     var message = string.Format("Client {0} tried to revoke a refresh token belonging to a different client: {1}", client.ClientId, token.ClientId);
-                    
+
                     Logger.Warn(message);
                     await RaiseFailureEventAsync(message);
                 }

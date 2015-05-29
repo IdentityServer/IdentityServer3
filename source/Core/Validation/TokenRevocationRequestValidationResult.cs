@@ -18,6 +18,7 @@ namespace IdentityServer3.Core.Validation
 {
     internal class TokenRevocationRequestValidationResult : ValidationResult
     {
+        public bool Cascade { get; set; }
         public string TokenTypeHint { get; set; }
         public string Token { get; set; }
     }

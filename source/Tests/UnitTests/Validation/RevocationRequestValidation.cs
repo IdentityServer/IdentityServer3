@@ -27,7 +27,7 @@ namespace IdentityServer3.Tests.Validation
 {
     public class RevocationRequestValidation
     {
-        const string Category = "Revocation Request Validationn Tests";
+        const string Category = "Revocation Request Validation Tests";
 
         TokenRevocationRequestValidator _validator;
         IRefreshTokenStore _refreshTokens;
@@ -61,7 +61,7 @@ namespace IdentityServer3.Tests.Validation
         public async Task Missing_Token_Valid_Hint()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
-            
+
             var parameters = new NameValueCollection
             {
                 { "token_type_hint", "access_token" }
@@ -109,11 +109,34 @@ namespace IdentityServer3.Tests.Validation
             result.IsError.Should().BeFalse();
             result.Token.Should().Be("foo");
             result.TokenTypeHint.Should().Be("refresh_token");
+            result.Cascade.Should().Be(false);
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Valid_Token_And_Missing_Hint()
+        public async Task Valid_Token_and_RefreshTokenHint_and_Cascade()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+
+            var parameters = new NameValueCollection
+            {
+                { "token", "foo" },
+                { "token_type_hint", "refresh_token" },
+                { "cascade", "true" }
+            };
+
+            var result = await _validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeFalse();
+            result.Token.Should().Be("foo");
+            result.TokenTypeHint.Should().Be("refresh_token");
+            result.Cascade.Should().Be(true);
+        }
+
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Valid_Token_And_Missing_Hint_And_Missing_Cascade()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
 
@@ -127,6 +150,7 @@ namespace IdentityServer3.Tests.Validation
             result.IsError.Should().BeFalse();
             result.Token.Should().Be("foo");
             result.TokenTypeHint.Should().BeNull();
+            result.Cascade.Should().Be(false);
         }
 
         [Fact]
@@ -145,6 +169,24 @@ namespace IdentityServer3.Tests.Validation
 
             result.IsError.Should().BeTrue();
             result.Error.Should().Be(Constants.RevocationErrors.UnsupportedTokenType);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Valid_Token_And_Invalid_Cascade()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+
+            var parameters = new NameValueCollection
+            {
+                { "token", "foo" },
+                { "cascade", "non_boolean_value" }
+            };
+
+            var result = await _validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidRequest);
         }
     }
 }
