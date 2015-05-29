@@ -280,10 +280,15 @@ namespace IdentityServer3.Host.Config
 
                     Flow = Flows.Custom,
 
-                     AllowedScopes = new List<string> 
+                    AllowedScopes = new List<string> 
                     {
                         "read", 
                         "write"
+                    },
+
+                    AllowedCustomGrantTypes = new List<string>
+                    {
+                        "custom"
                     }
                 },
 
