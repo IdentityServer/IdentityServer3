@@ -74,7 +74,12 @@ namespace IdentityServer3.Core.Services.Default
             {
                 Logger.Info("All claims rule found - emitting all claims for user.");
 
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
+                var context = new ProfileDataRequestContext(
+                    subject,
+                    client,
+                    Constants.ProfileDataCallers.ClaimsProviderIdentityToken);
+
+                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -100,7 +105,13 @@ namespace IdentityServer3.Core.Services.Default
 
             if (additionalClaims.Count > 0)
             {
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims));
+                var context = new ProfileDataRequestContext(
+                    subject,
+                    client,
+                    Constants.ProfileDataCallers.ClaimsProviderIdentityToken,
+                    additionalClaims);
+
+                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -162,7 +173,12 @@ namespace IdentityServer3.Core.Services.Default
                 // if a include all claims rule exists, call the user service without a claims filter
                 if (scopes.IncludesAllClaimsForUserRule(ScopeType.Resource))
                 {
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject));
+                    var context = new ProfileDataRequestContext(
+                    subject,
+                    client,
+                    Constants.ProfileDataCallers.ClaimsProviderAccessToken);
+
+                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -190,7 +206,13 @@ namespace IdentityServer3.Core.Services.Default
 
                 if (additionalClaims.Count > 0)
                 {
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(subject, additionalClaims.Distinct()));
+                    var context = new ProfileDataRequestContext(
+                    subject,
+                    client,
+                    Constants.ProfileDataCallers.ClaimsProviderAccessToken,
+                    additionalClaims.Distinct());
+
+                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);

@@ -26,38 +26,38 @@ namespace IdentityServer3.Tests.Validation
 {
     class TestUserService : IUserService
     {
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            if (username == password)
+            if (context.UserName == context.Password)
             {
-                var p = IdentityServerPrincipal.Create(username, username, "password", "idsvr");
+                var p = IdentityServerPrincipal.Create(context.UserName, context.UserName, "password", "idsvr");
                 return Task.FromResult(new AuthenticateResult(p));
             }
 
             return Task.FromResult<AuthenticateResult>(new AuthenticateResult("Username and/or password incorrect"));
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal sub, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
             throw new NotImplementedException();
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity user, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
             return Task.FromResult(true);
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
             throw new NotImplementedException();
         }
         
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
             throw new NotImplementedException();
         }

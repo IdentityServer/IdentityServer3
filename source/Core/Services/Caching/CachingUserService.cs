@@ -55,78 +55,73 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method gets called before the login page is shown. This allows you to authenticate the
         /// user somehow based on data coming from the host (e.g. client certificates or trusted headers)
         /// </summary>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result or null to continue the flow.
         /// </returns>
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
-            return inner.PreAuthenticateAsync(message);
+            return inner.PreAuthenticateAsync(context);
         }
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return inner.AuthenticateLocalAsync(context);
         }
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
-        /// <param name="externalUser">The external user.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            return inner.AuthenticateExternalAsync(context);
         }
 
         /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
-            return inner.SignOutAsync(subject);
+            return inner.SignOutAsync(context);
         }
 
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types. The user service is expected to filter based
-        /// upon the requested claim types. <c>null</c> is passed if there is no filtering to be performed.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// Claims for the subject
         /// </returns>
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            var key = GetKey(subject, requestedClaimTypes);
-            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(subject, requestedClaimTypes));
+            var key = GetKey(context.Subject, context.RequestedClaimTypes);
+            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(context));
         }
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active
         /// (e.g. during token issuance or validation).
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
         /// </returns>
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            return inner.IsActiveAsync(subject);
+            return inner.IsActiveAsync(context);
         }
 
         private string GetKey(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes)
