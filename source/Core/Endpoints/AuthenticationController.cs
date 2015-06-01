@@ -763,6 +763,7 @@ namespace IdentityServer3.Core.Endpoints
             var providers = context.GetExternalAuthenticationProviders(idpRestrictions);
             var providerLinks = context.GetLinksFromProviders(providers, signInMessageId);
             var visibleLinks = providerLinks.FilterHiddenLinks();
+            var client = await clientStore.FindClientByIdAsync(message.ClientId);
 
             if (errorMessage != null)
             {
@@ -825,7 +826,10 @@ namespace IdentityServer3.Core.Endpoints
                 CurrentUser = context.GetCurrentUserDisplayName(),
                 LogoutUrl = context.GetIdentityServerLogoutUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
-                Username = username
+                Username = username,
+                ClientName = client.ClientName,
+                ClientUrl = client.ClientUri,
+                ClientLogoUrl = client.LogoUri
             };
 
             return new LoginActionResult(viewService, loginModel, message);
