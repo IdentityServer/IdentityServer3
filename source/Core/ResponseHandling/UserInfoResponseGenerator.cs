@@ -56,7 +56,8 @@ namespace IdentityServer3.Core.ResponseHandling
                     client, 
                     Constants.ProfileDataCallers.UserInfoEndpoint);
 
-                profileClaims = await _users.GetProfileDataAsync(context);
+                await _users.GetProfileDataAsync(context);
+                profileClaims = context.IssuedClaims;
             }
             else
             {
@@ -68,7 +69,8 @@ namespace IdentityServer3.Core.ResponseHandling
                     Constants.ProfileDataCallers.UserInfoEndpoint,
                     requestedClaimTypes.ClaimTypes);
 
-                profileClaims = await _users.GetProfileDataAsync(context);
+                await _users.GetProfileDataAsync(context);
+                profileClaims = context.IssuedClaims;
             }
             
             if (profileClaims != null)

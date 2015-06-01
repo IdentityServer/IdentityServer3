@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace IdentityServer3.Core.Models
@@ -24,6 +25,14 @@ namespace IdentityServer3.Core.Models
     /// </summary>
     public class ProfileDataRequestContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileDataRequestContext"/> class.
+        /// </summary>
+        public ProfileDataRequestContext()
+        {
+            IssuedClaims = Enumerable.Empty<Claim>();
+        }
+
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
@@ -63,6 +72,14 @@ namespace IdentityServer3.Core.Models
         /// The caller.
         /// </value>
         public string Caller { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issued claims.
+        /// </summary>
+        /// <value>
+        /// The issued claims.
+        /// </value>
+        public IEnumerable<Claim> IssuedClaims { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProfileDataRequestContext" /> class.

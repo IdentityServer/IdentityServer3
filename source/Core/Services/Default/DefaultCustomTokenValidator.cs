@@ -81,7 +81,10 @@ namespace IdentityServer3.Core.Services.Default
                     principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
                 }
 
-                if (await _users.IsActiveAsync(new IsActiveContext { Subject = principal }) == false)
+                var isActiveCtx = new IsActiveContext { Subject = principal };
+                await _users.IsActiveAsync(isActiveCtx);
+                
+                if (isActiveCtx.IsActive == false)
                 {
                     Logger.Warn("User marked as not active: " + subClaim.Value);
 
@@ -128,7 +131,10 @@ namespace IdentityServer3.Core.Services.Default
             {
                 var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                if (await _users.IsActiveAsync(new IsActiveContext { Subject = principal }) == false)
+                var isActiveCtx = new IsActiveContext { Subject = principal };
+                await _users.IsActiveAsync(isActiveCtx);
+                
+                if (isActiveCtx.IsActive == false)
                 {
                     Logger.Warn("User marked as not active: " + subClaim.Value);
 

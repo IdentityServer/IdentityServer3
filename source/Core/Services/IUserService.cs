@@ -30,19 +30,15 @@ namespace IdentityServer3.Core.Services
         /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result or null to continue the flow.
-        /// </returns>
-        Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context);
+        /// <returns></returns>
+        Task PreAuthenticateAsync(PreAuthenticationContext context);
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context);
+        /// <returns></returns>
+        Task AuthenticateLocalAsync(LocalAuthenticationContext context);
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
@@ -50,10 +46,8 @@ namespace IdentityServer3.Core.Services
         /// provider identifier, the provider's identifier for the user, and the claims from the provider for the external user.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context);
+        /// <returns></returns>
+        Task AuthenticateExternalAsync(ExternalAuthenticationContext context);
 
         /// <summary>
         /// This method is called after a partial login. It allows the user service
@@ -74,19 +68,15 @@ namespace IdentityServer3.Core.Services
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// Claims for the subject
-        /// </returns>
-        Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context);
+        /// <returns></returns>
+        Task GetProfileDataAsync(ProfileDataRequestContext context);
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
         /// (e.g. during token issuance or validation).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
-        /// </returns>
-        Task<bool> IsActiveAsync(IsActiveContext context);
+        /// <returns></returns>
+        Task IsActiveAsync(IsActiveContext context);
     }
 }

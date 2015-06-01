@@ -60,7 +60,11 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>()))
+                .Callback<IsActiveContext>(ctx=>{
+                    ctx.IsActive = true;
+                })
+                .Returns(Task.FromResult(0));
 
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
@@ -131,7 +135,12 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_allowed_requested_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
+            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>()))
+                .Callback<IsActiveContext>(ctx =>
+                {
+                    ctx.IsActive = true;
+                })
+                .Returns(Task.FromResult(0));
 
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 

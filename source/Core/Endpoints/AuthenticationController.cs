@@ -116,7 +116,10 @@ namespace IdentityServer3.Core.Endpoints
 
             Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
 
-            var authResult = await userService.PreAuthenticateAsync(new PreAuthenticationContext { SignInMessage = signInMessage });
+            var preAuthContext = new PreAuthenticationContext { SignInMessage = signInMessage };
+            await userService.PreAuthenticateAsync(preAuthContext);
+
+            var authResult = preAuthContext.AuthenticateResult;
             if (authResult != null)
             {
                 if (authResult.IsError)
@@ -219,7 +222,9 @@ namespace IdentityServer3.Core.Endpoints
                 SignInMessage = signInMessage
             };
 
-            var authResult = await userService.AuthenticateLocalAsync(authenticationContext);
+            await userService.AuthenticateLocalAsync(authenticationContext);
+            
+            var authResult = authenticationContext.AuthenticateResult;
             if (authResult == null)
             {
                 Logger.WarnFormat("user service indicated incorrect username or password for username: {0}", model.Username);
@@ -368,7 +373,9 @@ namespace IdentityServer3.Core.Endpoints
                 SignInMessage = signInMessage
             };
 
-            var authResult = await userService.AuthenticateExternalAsync(externalContext);
+            await userService.AuthenticateExternalAsync(externalContext);
+            
+            var authResult = externalContext.AuthenticateResult;
             if (authResult == null)
             {
                 Logger.Warn("user service failed to authenticate external identity");
@@ -518,8 +525,9 @@ namespace IdentityServer3.Core.Endpoints
                     SignInMessage = signInMessage
                 };
 
-                result = await userService.AuthenticateExternalAsync(externalContext);
-
+                await userService.AuthenticateExternalAsync(externalContext);
+                
+                result = externalContext.AuthenticateResult;
                 if (result == null)
                 {
                     Logger.Warn("user service failed to authenticate external identity");

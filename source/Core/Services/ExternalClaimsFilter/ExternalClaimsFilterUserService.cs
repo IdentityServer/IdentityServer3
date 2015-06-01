@@ -36,28 +36,28 @@ namespace IdentityServer3.Core.Services.Default
             this.inner = inner;
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
+        public Task PreAuthenticateAsync(PreAuthenticationContext context)
         {
             return inner.PreAuthenticateAsync(context);
         }
 
-        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        public Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             return inner.AuthenticateLocalAsync(context);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        public Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             context.ExternalIdentity.Claims = filter.Filter(context.ExternalIdentity.Provider, context.ExternalIdentity.Claims);
             return inner.AuthenticateExternalAsync(context);
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             return inner.GetProfileDataAsync(context);
         }
 
-        public Task<bool> IsActiveAsync(IsActiveContext context)
+        public Task IsActiveAsync(IsActiveContext context)
         {
             return inner.IsActiveAsync(context);
         }

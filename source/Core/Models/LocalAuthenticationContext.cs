@@ -44,5 +44,13 @@ namespace IdentityServer3.Core.Models
         /// The sign in message.
         /// </value>
         public SignInMessage SignInMessage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the authenticate result.
+        /// </summary>
+        /// <value>
+        /// The authenticate result.
+        /// </value>
+        public AuthenticateResult AuthenticateResult { get; set; }
     }
 }

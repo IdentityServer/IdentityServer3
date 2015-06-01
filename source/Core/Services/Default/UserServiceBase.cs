@@ -32,24 +32,20 @@ namespace IdentityServer3.Core.Services.Default
         /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result or null to continue the flow.
-        /// </returns>
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
+        /// <returns></returns>
+        public virtual Task PreAuthenticateAsync(PreAuthenticationContext context)
         {
-            return Task.FromResult<AuthenticateResult>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        /// <returns></returns>
+        public virtual Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            return Task.FromResult<AuthenticateResult>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -58,12 +54,10 @@ namespace IdentityServer3.Core.Services.Default
         /// provider identifier, the provider's identifier for the user, and the claims from the provider for the external user.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        /// <returns></returns>
+        public virtual Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            return Task.FromResult<AuthenticateResult>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -80,12 +74,10 @@ namespace IdentityServer3.Core.Services.Default
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// Claims for the subject
-        /// </returns>
-        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        /// <returns></returns>
+        public virtual Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            return Task.FromResult<IEnumerable<Claim>>(Enumerable.Empty<Claim>());
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -93,12 +85,10 @@ namespace IdentityServer3.Core.Services.Default
         /// (e.g. during token issuance or validation).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
-        /// </returns>
-        public virtual Task<bool> IsActiveAsync(Models.IsActiveContext context)
+        /// <returns></returns>
+        public virtual Task IsActiveAsync(Models.IsActiveContext context)
         {
-            return Task.FromResult(false);
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -107,7 +97,6 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public virtual Task PostPartialLoginAsync(PostPartialLoginContext context)
         {
             return Task.FromResult(0);

@@ -79,7 +79,9 @@ namespace IdentityServer3.Core.Services.Default
                     client,
                     Constants.ProfileDataCallers.ClaimsProviderIdentityToken);
 
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
+                await _users.GetProfileDataAsync(context);
+                
+                var claims = FilterProtocolClaims(context.IssuedClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -110,8 +112,10 @@ namespace IdentityServer3.Core.Services.Default
                     client,
                     Constants.ProfileDataCallers.ClaimsProviderIdentityToken,
                     additionalClaims);
+                
+                await _users.GetProfileDataAsync(context);
 
-                var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
+                var claims = FilterProtocolClaims(context.IssuedClaims);
                 if (claims != null)
                 {
                     outputClaims.AddRange(claims);
@@ -178,7 +182,9 @@ namespace IdentityServer3.Core.Services.Default
                     client,
                     Constants.ProfileDataCallers.ClaimsProviderAccessToken);
 
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
+                    await _users.GetProfileDataAsync(context);
+
+                    var claims = FilterProtocolClaims(context.IssuedClaims);
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);
@@ -212,7 +218,9 @@ namespace IdentityServer3.Core.Services.Default
                     Constants.ProfileDataCallers.ClaimsProviderAccessToken,
                     additionalClaims.Distinct());
 
-                    var claims = FilterProtocolClaims(await _users.GetProfileDataAsync(context));
+                    await _users.GetProfileDataAsync(context);
+
+                    var claims = FilterProtocolClaims(context.IssuedClaims);
                     if (claims != null)
                     {
                         outputClaims.AddRange(claims);

@@ -24,11 +24,27 @@ namespace IdentityServer3.Core.Models
     public class IsActiveContext
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="IsActiveContext"/> class.
+        /// </summary>
+        public IsActiveContext()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>
         /// The subject.
         /// </value>
         public ClaimsPrincipal Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the subject is active and can recieve tokens.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the subject is active; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsActive { get; set; }
     }
 }

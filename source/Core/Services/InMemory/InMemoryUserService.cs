@@ -46,10 +46,8 @@ namespace IdentityServer3.Core.Services.InMemory
         /// This methods gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result
-        /// </returns>
-        public override Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        /// <returns></returns>
+        public override Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             var query =
                 from u in _users
@@ -60,21 +58,18 @@ namespace IdentityServer3.Core.Services.InMemory
             if (user != null)
             {
                 var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
-                var result = new AuthenticateResult(p);
-                return Task.FromResult(result);
+                context.AuthenticateResult = new AuthenticateResult(p);
             }
 
-            return Task.FromResult<AuthenticateResult>(null);
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        public override Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        /// <returns></returns>
+        public override Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             var query =
                 from u in _users
@@ -110,18 +105,17 @@ namespace IdentityServer3.Core.Services.InMemory
             }
 
             var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.External, user.Provider);
-            var result = new AuthenticateResult(p);
-            return Task.FromResult(result);
+            context.AuthenticateResult = new AuthenticateResult(p);
+            
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// Claims
-        /// </returns>
-        public override Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        /// <returns></returns>
+        public override Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var query =
                 from u in _users
@@ -139,18 +133,18 @@ namespace IdentityServer3.Core.Services.InMemory
                 claims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
             }
 
-            return Task.FromResult<IEnumerable<Claim>>(claims);
+            context.IssuedClaims = claims;
+
+            return Task.FromResult(0);
         }
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// true or false
-        /// </returns>
+        /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">subject</exception>
-        public override Task<bool> IsActiveAsync(IsActiveContext context)
+        public override Task IsActiveAsync(IsActiveContext context)
         {
             if (context.Subject == null) throw new ArgumentNullException("subject");
 
@@ -162,12 +156,12 @@ namespace IdentityServer3.Core.Services.InMemory
 
             var user = query.SingleOrDefault();
 
-            if (user == null)
+            if (user != null)
             {
-                return Task.FromResult(false);
+                context.IsActive = user.Enabled;
             }
 
-            return Task.FromResult(user.Enabled);
+            return Task.FromResult(0);
         }
 
         /// <summary>

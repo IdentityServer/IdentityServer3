@@ -262,7 +262,10 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             // make sure user is enabled
             /////////////////////////////////////////////
-            if (await _users.IsActiveAsync(new IsActiveContext { Subject = _validatedRequest.AuthorizationCode.Subject }) == false)
+            var isActiveCtx = new IsActiveContext { Subject = _validatedRequest.AuthorizationCode.Subject };
+            await _users.IsActiveAsync(isActiveCtx);
+
+            if (isActiveCtx.IsActive == false)
             {
                 var error = "User has been disabled: " + _validatedRequest.AuthorizationCode.Subject;
                 LogError(error);
@@ -424,7 +427,9 @@ namespace IdentityServer3.Core.Validation
                 SignInMessage = signInMessage
             };
 
-            var authnResult = await _users.AuthenticateLocalAsync(authenticationContext);
+            await _users.AuthenticateLocalAsync(authenticationContext);
+            var authnResult = authenticationContext.AuthenticateResult;
+
             if (authnResult == null || authnResult.IsError || authnResult.IsPartialSignIn)
             {
                 var error = Resources.Messages.InvalidUsernameOrPassword;
@@ -530,7 +535,10 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             var principal = IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId, refreshToken.AccessToken.Claims);
 
-            if (await _users.IsActiveAsync(new IsActiveContext { Subject = principal }) == false)
+            var isActiveCtx = new IsActiveContext { Subject = principal };
+            await _users.IsActiveAsync(isActiveCtx);
+
+            if (isActiveCtx.IsActive == false)
             {
                 var error = "User has been disabled: " + _validatedRequest.RefreshToken.SubjectId;
                 LogError(error);

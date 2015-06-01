@@ -26,40 +26,45 @@ namespace IdentityServer3.Tests.Validation
 {
     class TestUserService : IUserService
     {
-        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        public Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             if (context.UserName == context.Password)
             {
                 var p = IdentityServerPrincipal.Create(context.UserName, context.UserName, "password", "idsvr");
-                return Task.FromResult(new AuthenticateResult(p));
+                context.AuthenticateResult = new AuthenticateResult(p);
+            }
+            else
+            {
+                context.AuthenticateResult = new AuthenticateResult("Username and/or password incorrect");
             }
 
-            return Task.FromResult<AuthenticateResult>(new AuthenticateResult("Username and/or password incorrect"));
+            return Task.FromResult(0);
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        public Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
-        public Task<bool> IsActiveAsync(IsActiveContext context)
+        public Task IsActiveAsync(IsActiveContext context)
         {
-            return Task.FromResult(true);
+            context.IsActive = true;
+            return Task.FromResult(0);
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
+        public Task PreAuthenticateAsync(PreAuthenticationContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
         
         public Task SignOutAsync(SignOutContext context)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         public Task PostPartialLoginAsync(PostPartialLoginContext context)

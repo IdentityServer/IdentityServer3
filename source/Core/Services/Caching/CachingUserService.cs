@@ -56,10 +56,8 @@ namespace IdentityServer3.Core.Services.Caching
         /// user somehow based on data coming from the host (e.g. client certificates or trusted headers)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result or null to continue the flow.
-        /// </returns>
-        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
+        /// <returns></returns>
+        public Task PreAuthenticateAsync(PreAuthenticationContext context)
         {
             return inner.PreAuthenticateAsync(context);
         }
@@ -68,10 +66,8 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        /// <returns></returns>
+        public Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             return inner.AuthenticateLocalAsync(context);
         }
@@ -80,10 +76,8 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        /// <returns></returns>
+        public Task AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             return inner.AuthenticateExternalAsync(context);
         }
@@ -102,13 +96,15 @@ namespace IdentityServer3.Core.Services.Caching
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        /// Claims for the subject
-        /// </returns>
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        /// <returns></returns>
+        public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var key = GetKey(context.Subject, context.RequestedClaimTypes);
-            return cache.GetAsync(key, ()=>inner.GetProfileDataAsync(context));
+            context.IssuedClaims = await cache.GetAsync(key, async () =>
+            {
+                await inner.GetProfileDataAsync(context);
+                return context.IssuedClaims;
+            });
         }
 
         /// <summary>
@@ -116,10 +112,8 @@ namespace IdentityServer3.Core.Services.Caching
         /// (e.g. during token issuance or validation).
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns>
-        ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
-        /// </returns>
-        public Task<bool> IsActiveAsync(IsActiveContext context)
+        /// <returns></returns>
+        public Task IsActiveAsync(IsActiveContext context)
         {
             return inner.IsActiveAsync(context);
         }
