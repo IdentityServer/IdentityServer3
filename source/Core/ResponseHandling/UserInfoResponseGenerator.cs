@@ -38,7 +38,7 @@ namespace IdentityServer3.Core.ResponseHandling
             _scopes = scopes;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
+        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes, Client client)
         {
             Logger.Info("Creating userinfo response");
             var profileData = new Dictionary<string, object>();
@@ -50,12 +50,25 @@ namespace IdentityServer3.Core.ResponseHandling
             if (requestedClaimTypes.IncludeAllClaims)
             {
                 Logger.InfoFormat("Requested claim types: all");
-                profileClaims = await _users.GetProfileDataAsync(principal);
+
+                var context = new ProfileDataRequestContext(
+                    principal, 
+                    client, 
+                    Constants.ProfileDataCallers.UserInfoEndpoint);
+
+                profileClaims = await _users.GetProfileDataAsync(context);
             }
             else
             {
                 Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ClaimTypes.ToSpaceSeparatedString());
-                profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes.ClaimTypes);
+
+                var context = new ProfileDataRequestContext(
+                    principal,
+                    client,
+                    Constants.ProfileDataCallers.UserInfoEndpoint,
+                    requestedClaimTypes.ClaimTypes);
+
+                profileClaims = await _users.GetProfileDataAsync(context);
             }
             
             if (profileClaims != null)

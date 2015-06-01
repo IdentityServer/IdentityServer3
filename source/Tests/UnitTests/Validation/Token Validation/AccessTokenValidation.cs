@@ -222,7 +222,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
         public async Task Valid_AccessToken_but_User_not_active()
         {
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));                        
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult(false));                        
 
             var store = new InMemoryTokenHandleStore();
             var validator = Factory.CreateTokenValidator(tokenStore: store, users: mock.Object);

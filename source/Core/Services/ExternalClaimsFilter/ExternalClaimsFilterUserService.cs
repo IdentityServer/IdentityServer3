@@ -36,35 +36,35 @@ namespace IdentityServer3.Core.Services.Default
             this.inner = inner;
         }
 
-        public Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
-            return inner.PreAuthenticateAsync(message);
+            return inner.PreAuthenticateAsync(context);
         }
 
-        public Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message = null)
+        public Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            return inner.AuthenticateLocalAsync(username, password, message);
+            return inner.AuthenticateLocalAsync(context);
         }
 
-        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
-            externalUser.Claims = filter.Filter(externalUser.Provider, externalUser.Claims);
-            return inner.AuthenticateExternalAsync(externalUser, message);
+            context.ExternalIdentity.Claims = filter.Filter(context.ExternalIdentity.Provider, context.ExternalIdentity.Claims);
+            return inner.AuthenticateExternalAsync(context);
         }
 
-        public Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            return inner.GetProfileDataAsync(subject, requestedClaimTypes);
+            return inner.GetProfileDataAsync(context);
         }
 
-        public Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            return inner.IsActiveAsync(subject);
+            return inner.IsActiveAsync(context);
         }
 
-        public Task SignOutAsync(ClaimsPrincipal subject)
+        public Task SignOutAsync(SignOutContext context)
         {
-            return inner.SignOutAsync(subject);
+            return inner.SignOutAsync(context);
         }
     }
 }

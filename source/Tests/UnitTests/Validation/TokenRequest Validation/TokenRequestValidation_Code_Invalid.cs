@@ -332,7 +332,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var store = new InMemoryAuthorizationCodeStore();
 
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult(false));
 
             var code = new AuthorizationCode
             {

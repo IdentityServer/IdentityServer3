@@ -43,8 +43,8 @@ namespace IdentityServer3.Core.Configuration.Hosting
         {
             var path = request.Path.ToString();
             var origin = request.Headers["Origin"];
-            
-            if (IsPathAllowed(request) && origin != null)
+
+            if (origin != null && IsPathAllowed(request))
             {
                 Logger.InfoFormat("CORS request made for path: {0} from origin: {1}", path, origin);
 
