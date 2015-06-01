@@ -827,9 +827,9 @@ namespace IdentityServer3.Core.Endpoints
                 LogoutUrl = context.GetIdentityServerLogoutUrl(),
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
                 Username = username,
-                ClientName = client.ClientName,
-                ClientUrl = client.ClientUri,
-                ClientLogoUrl = client.LogoUri
+                ClientName = client != null ? client.ClientName : null,
+                ClientUrl = client != null ? client.ClientUri : null,
+                ClientLogoUrl = client != null ? client.LogoUri : null
             };
 
             return new LoginActionResult(viewService, loginModel, message);
