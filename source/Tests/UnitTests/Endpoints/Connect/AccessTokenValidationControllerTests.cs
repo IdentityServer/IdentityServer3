@@ -102,7 +102,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect
             assertClaim(claims.ElementAt(1), Constants.ClaimTypes.Name, "subject name");
         }
 
-        private HttpResponseMessage Get(String token = null)
+        private new HttpResponseMessage Get(String token = null)
         {
             var parameters = new NameValueCollection();
 
