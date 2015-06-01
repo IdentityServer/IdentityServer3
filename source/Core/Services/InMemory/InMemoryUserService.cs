@@ -44,11 +44,11 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This methods gets called before the login page is shown. This allows you to authenticate the user somehow based on data coming from the host (e.g. client certificates or trusted headers)
         /// </summary>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result or null to continue the flow
         /// </returns>
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message)
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
         {
             return Task.FromResult<AuthenticateResult>(null);
         }
@@ -56,17 +56,15 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This methods gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message)
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             var query =
                 from u in _users
-                where u.Username == username && u.Password == password
+                where u.Username == context.UserName && u.Password == context.Password
                 select u;
 
             var user = query.SingleOrDefault();
@@ -83,18 +81,17 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
         /// </summary>
-        /// <param name="externalUser">The external user.</param>
-        /// <param name="message">The signin message.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message)
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             var query =
                 from u in _users
                 where
-                    u.Provider == externalUser.Provider &&
-                    u.ProviderId == externalUser.ProviderId
+                    u.Provider == context.ExternalIdentity.Provider &&
+                    u.ProviderId == context.ExternalIdentity.ProviderId
                 select u;
 
             var user = query.SingleOrDefault();
@@ -102,10 +99,10 @@ namespace IdentityServer3.Core.Services.InMemory
             {
                 string displayName;
 
-                var name = externalUser.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
+                var name = context.ExternalIdentity.Claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Name);
                 if (name == null)
                 {
-                    displayName = externalUser.ProviderId;
+                    displayName = context.ExternalIdentity.ProviderId;
                 }
                 else
                 {
@@ -115,10 +112,10 @@ namespace IdentityServer3.Core.Services.InMemory
                 user = new InMemoryUser
                 {
                     Subject = CryptoRandom.CreateUniqueId(),
-                    Provider = externalUser.Provider,
-                    ProviderId = externalUser.ProviderId,
+                    Provider = context.ExternalIdentity.Provider,
+                    ProviderId = context.ExternalIdentity.ProviderId,
                     Username = displayName,
-                    Claims = externalUser.Claims
+                    Claims = context.ExternalIdentity.Claims
                 };
                 _users.Add(user);
             }
@@ -131,16 +128,15 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// Claims
         /// </returns>
-        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null)
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var query =
                 from u in _users
-                where u.Subject == subject.GetSubjectId()
+                where u.Subject == context.Subject.GetSubjectId()
                 select u;
             var user = query.Single();
 
@@ -149,9 +145,9 @@ namespace IdentityServer3.Core.Services.InMemory
             };
 
             claims.AddRange(user.Claims);
-            if (requestedClaimTypes != null)
+            if (!context.AllClaimsRequested)
             {
-                claims = claims.Where(x => requestedClaimTypes.Contains(x.Type)).ToList();
+                claims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
             }
 
             return Task.FromResult<IEnumerable<Claim>>(claims);
@@ -160,19 +156,19 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. during token issuance or validation)
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns>
         /// true or false
         /// </returns>
         /// <exception cref="System.ArgumentNullException">subject</exception>
-        public virtual Task<bool> IsActiveAsync(ClaimsPrincipal subject)
+        public virtual Task<bool> IsActiveAsync(IsActiveContext context)
         {
-            if (subject == null) throw new ArgumentNullException("subject");
+            if (context.Subject == null) throw new ArgumentNullException("subject");
 
             var query =
                 from u in _users
                 where
-                    u.Subject == subject.GetSubjectId()
+                    u.Subject == context.Subject.GetSubjectId()
                 select u;
 
             var user = query.SingleOrDefault();
@@ -188,9 +184,9 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <summary>
         /// This method gets called when the user signs out (allows to cleanup resources)
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        public virtual Task SignOutAsync(ClaimsPrincipal subject)
+        public virtual Task SignOutAsync(SignOutContext context)
         {
             return Task.FromResult(0);
         }

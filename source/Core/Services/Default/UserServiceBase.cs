@@ -1,4 +1,5 @@
-﻿/*
+﻿using IdentityServer3.Core.Models;
+/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using IdentityServer3.Core.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
-    /// This interface allows IdentityServer to connect to your user and profile store.
+    /// Base class implementation of IUserService with empty method implementations.
     /// </summary>
-    public interface IUserService
+    public class UserServiceBase : IUserService
     {
         /// <summary>
         /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
@@ -33,7 +35,10 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// The authentication result or null to continue the flow.
         /// </returns>
-        Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context);
+        public virtual Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
+        {
+            return Task.FromResult<AuthenticateResult>(null);
+        }
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
@@ -42,7 +47,10 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// The authentication result.
         /// </returns>
-        Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context);
+        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        {
+            return Task.FromResult<AuthenticateResult>(null);
+        }
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
@@ -53,14 +61,20 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// The authentication result.
         /// </returns>
-        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context);
+        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        {
+            return Task.FromResult<AuthenticateResult>(null);
+        }
 
         /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        Task SignOutAsync(SignOutContext context);
+        public virtual Task SignOutAsync(SignOutContext context)
+        {
+            return Task.FromResult(0);
+        }
 
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
@@ -69,7 +83,10 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// Claims for the subject
         /// </returns>
-        Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context);
+        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        {
+            return Task.FromResult<IEnumerable<Claim>>(Enumerable.Empty<Claim>());
+        }
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
@@ -79,6 +96,9 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         ///   <c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.
         /// </returns>
-        Task<bool> IsActiveAsync(IsActiveContext context);
+        public virtual Task<bool> IsActiveAsync(Models.IsActiveContext context)
+        {
+            return Task.FromResult(false);
+        }
     }
 }

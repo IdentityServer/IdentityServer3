@@ -123,7 +123,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             if (isAuthenticated)
             {
-                isActive = await _users.IsActiveAsync(user);
+                isActive = await _users.IsActiveAsync(new IsActiveContext { Subject = user });
                 if (!isActive) Logger.Info("User is not active. Redirecting to login.");
             }
 
