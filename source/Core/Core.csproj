@@ -193,6 +193,7 @@
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ExternalAuthenticationContext.cs" />
+    <Compile Include="Models\PostPartialLoginContext.cs" />
     <Compile Include="Models\ProfileDataRequestContext.cs" />
     <Compile Include="Models\IsActiveContext.cs" />
     <Compile Include="Models\LocalAuthenticationContext.cs" />
@@ -220,7 +221,7 @@
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultClientValidator.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
-    <Compile Include="Services\Default\DefaultUserService.cs" />
+    <Compile Include="Services\Default\UserServiceBase.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
     <Compile Include="Services\Default\HashedClientSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />

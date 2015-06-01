@@ -61,5 +61,10 @@ namespace IdentityServer3.Tests.Validation
         {
             throw new NotImplementedException();
         }
+
+        public Task PostPartialLoginAsync(PostPartialLoginContext context)
+        {
+            return Task.FromResult(0);
+        }
     }
 }

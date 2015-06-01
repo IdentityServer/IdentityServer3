@@ -66,5 +66,10 @@ namespace IdentityServer3.Core.Services.Default
         {
             return inner.SignOutAsync(context);
         }
+
+        public Task PostPartialLoginAsync(PostPartialLoginContext context)
+        {
+            return inner.PostPartialLoginAsync(context);
+        }
     }
 }

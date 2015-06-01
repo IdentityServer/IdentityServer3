@@ -17,6 +17,7 @@
 using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace IdentityServer3.Core.Services.InMemory
     /// <summary>
     /// In-memory user service
     /// </summary>
-    public class InMemoryUserService : IUserService
+    public class InMemoryUserService : UserServiceBase
     {
         readonly List<InMemoryUser> _users;
 
@@ -42,25 +43,13 @@ namespace IdentityServer3.Core.Services.InMemory
         }
 
         /// <summary>
-        /// This methods gets called before the login page is shown. This allows you to authenticate the user somehow based on data coming from the host (e.g. client certificates or trusted headers)
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns>
-        /// The authentication result or null to continue the flow
-        /// </returns>
-        public virtual Task<AuthenticateResult> PreAuthenticateAsync(PreAuthenticationContext context)
-        {
-            return Task.FromResult<AuthenticateResult>(null);
-        }
-
-        /// <summary>
         /// This methods gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>
         /// The authentication result
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
+        public override Task<AuthenticateResult> AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
             var query =
                 from u in _users
@@ -85,7 +74,7 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <returns>
         /// The authentication result.
         /// </returns>
-        public virtual Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
+        public override Task<AuthenticateResult> AuthenticateExternalAsync(ExternalAuthenticationContext context)
         {
             var query =
                 from u in _users
@@ -132,7 +121,7 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <returns>
         /// Claims
         /// </returns>
-        public virtual Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
+        public override Task<IEnumerable<Claim>> GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var query =
                 from u in _users
@@ -161,7 +150,7 @@ namespace IdentityServer3.Core.Services.InMemory
         /// true or false
         /// </returns>
         /// <exception cref="System.ArgumentNullException">subject</exception>
-        public virtual Task<bool> IsActiveAsync(IsActiveContext context)
+        public override Task<bool> IsActiveAsync(IsActiveContext context)
         {
             if (context.Subject == null) throw new ArgumentNullException("subject");
 
@@ -179,16 +168,6 @@ namespace IdentityServer3.Core.Services.InMemory
             }
 
             return Task.FromResult(user.Enabled);
-        }
-
-        /// <summary>
-        /// This method gets called when the user signs out (allows to cleanup resources)
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        public virtual Task SignOutAsync(SignOutContext context)
-        {
-            return Task.FromResult(0);
         }
 
         /// <summary>
