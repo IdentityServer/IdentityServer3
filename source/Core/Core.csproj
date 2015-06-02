@@ -577,12 +577,12 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.js">
+    <Content Include="Services\DefaultViewService\HttpAssets\scripts.js">
       <DependentUpon>scripts.js.bundle</DependentUpon>
-    </EmbeddedResource>
-    <Content Include="Services\DefaultViewService\HttpAssets\scripts.min.js">
-      <DependentUpon>scripts.js</DependentUpon>
     </Content>
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.min.js">
+      <DependentUpon>scripts.js</DependentUpon>
+    </EmbeddedResource>
     <Content Include="Services\DefaultViewService\HttpAssets\styles.css">
       <DependentUpon>styles.css.bundle</DependentUpon>
     </Content>
