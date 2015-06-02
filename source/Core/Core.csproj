@@ -220,7 +220,7 @@
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultClientValidator.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
-    <Compile Include="Services\Default\DefaultUserService.cs" />
+    <Compile Include="Services\Default\UserServiceBase.cs" />
     <Compile Include="Services\Default\PlainClientSecretValidator.cs" />
     <Compile Include="Services\Default\HashedClientSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />
