@@ -11,9 +11,11 @@
     (function () {
         var app = angular.module("app", []);
 
-        app.controller("LayoutCtrl", function ($scope, Model) {
-            $scope.model = Model;
-        });
+        app.controller("LayoutCtrl",
+            ['$scope', 'Model',
+                function ($scope, Model) {
+                    $scope.model = Model;
+                }]);
 
         app.directive("antiForgeryToken", function () {
             return {
@@ -30,7 +32,7 @@
     (function () {
         var modelJson = document.getElementById("modelJson");
         var encodedJson = '';
-        if (typeof(modelJson.textContent) !== undefined) {
+        if (typeof (modelJson.textContent) !== undefined) {
             encodedJson = modelJson.textContent;
         } else {
             encodedJson = modelJson.innerHTML;
