@@ -238,8 +238,7 @@ namespace IdentityServer3.Core.Configuration
         {
             factory.Register(new Registration<IEnumerable<Client>>(clients));
             factory.ClientStore = new Registration<IClientStore>(typeof(InMemoryClientStore));
-
-            // todo: add in-mem CORS service
+            factory.CorsPolicyService = new Registration<ICorsPolicyService>(new InMemoryCorsPolicyService(clients));
 
             return factory;
         }
