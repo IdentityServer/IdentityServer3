@@ -12,7 +12,7 @@
   </settings>
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
-    <file>libs/bootstrap/custom.css</file>
-    <file>app/app.css</file>
+    <file>Services/DefaultViewService/HttpAssets/libs/bootstrap/custom.css</file>
+    <file>Services/DefaultViewService/HttpAssets/app/app.css</file>
   </files>
 </bundle>
