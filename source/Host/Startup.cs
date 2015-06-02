@@ -49,10 +49,10 @@ namespace IdentityServer3.Host
 
             app.Map("/core", coreApp =>
                 {
-                    var factory = InMemoryFactory.Create(
-                        users:   Users.Get(),
-                        clients: Clients.Get(),
-                        scopes:  Scopes.Get());
+                    var factory = new IdentityServerServiceFactory()
+                        .UseInMemoryUsers(Users.Get())
+                        .UseInMemoryClients(Clients.Get())
+                        .UseInMemoryScopes(Scopes.Get());
 
                     factory.CustomGrantValidator = 
                         new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
