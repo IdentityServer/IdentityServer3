@@ -61,8 +61,6 @@ namespace IdentityServer3.Host
                     factory.ConfigureScopeStoreCache();
                     factory.ConfigureUserServiceCache();
 
-                    factory.CorsPolicyService = new Registration<ICorsPolicyService>(new DefaultCorsPolicyService { AllowAll = true });
-
                     var idsrvOptions = new IdentityServerOptions
                     {
                         Factory = factory,
