@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Threading.Tasks;
 namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
@@ -26,9 +27,9 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public string Load(string name)
+        public Task<string> LoadAsync(string name)
         {
-            return AssetManager.LoadLayoutWithPage(name);
+            return Task.FromResult(AssetManager.LoadLayoutWithPage(name));
         }
     }
 }
