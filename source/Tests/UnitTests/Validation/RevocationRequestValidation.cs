@@ -27,7 +27,7 @@ namespace IdentityServer3.Tests.Validation
 {
     public class RevocationRequestValidation
     {
-        const string Category = "Revocation Request Validationn Tests";
+        const string Category = "Revocation Request Validation Tests";
 
         TokenRevocationRequestValidator _validator;
         IRefreshTokenStore _refreshTokens;

@@ -160,7 +160,7 @@ namespace IdentityServer3.Core.Endpoints
             {
                 if (token.ClientId == client.ClientId)
                 {
-                    await _refreshTokens.RemoveAsync(handle);
+                    await _refreshTokens.RevokeAsync(token.SubjectId, token.ClientId);
                 }
                 else
                 {
