@@ -68,10 +68,11 @@ namespace IdentityServer3.Core.Services.Default
         /// Loads the HTML for the logout prompt page.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Logout(LogoutViewModel model)
+        public virtual Task<Stream> Logout(LogoutViewModel model, SignOutMessage message)
         {
             return Render(model, "logout");
         }
@@ -80,10 +81,11 @@ namespace IdentityServer3.Core.Services.Default
         /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model)
+        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message)
         {
             return Render(model, "loggedOut");
         }
