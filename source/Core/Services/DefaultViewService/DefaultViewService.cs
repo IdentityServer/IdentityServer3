@@ -132,15 +132,28 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns></returns>
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
-            string html = this.viewLoader.Load(page);
+            return Render(model, page, config.Stylesheets, config.Scripts);
+        }
 
-            var data = BuildModel(model, page, config.Stylesheets, config.Scripts);
+        /// <summary>
+        /// Renders the specified page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="stylesheets">The stylesheets.</param>
+        /// <param name="scripts">The scripts.</param>
+        /// <returns></returns>
+        protected virtual Task<Stream> Render(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
+        {
+            var data = BuildModel(model, page, stylesheets, scripts);
+
+            string html = this.viewLoader.Load(page);
             html = AssetManager.Format(html, data);
-            
+
             return Task.FromResult(html.ToStream());
         }
 
-        object BuildModel(CommonViewModel model, string page, ICollection<string> stylesheets, ICollection<string> scripts)
+        object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (stylesheets == null) throw new ArgumentNullException("stylesheets");
