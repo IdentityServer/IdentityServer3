@@ -52,5 +52,13 @@ namespace IdentityServer3.Core.ViewModels
         /// The logout URL.
         /// </value>
         public string LogoutUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom data for the model.
+        /// </summary>
+        /// <value>
+        /// The custom data.
+        /// </value>
+        public object Custom { get; set; }
     }
 }
