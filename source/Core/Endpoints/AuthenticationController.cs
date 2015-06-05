@@ -589,7 +589,7 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
-            return RenderLogoutPromptPage();
+            return RenderLogoutPromptPage(id);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.Logout)]
@@ -670,7 +670,14 @@ namespace IdentityServer3.Core.Endpoints
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
 
-            Logger.InfoFormat("issuing cookie{0}", authResult.IsPartialSignIn ? " (partial login)" : "");
+            if (authResult.IsPartialSignIn)
+            {
+                Logger.Info("issuing partial signin cookie");
+            }
+            else
+            {
+                Logger.Info("issuing primary signin cookie");
+            }
 
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
@@ -889,7 +896,7 @@ namespace IdentityServer3.Core.Endpoints
             return username;
         }
 
-        private IHttpActionResult RenderLogoutPromptPage()
+        private IHttpActionResult RenderLogoutPromptPage(string id)
         {
             var logoutModel = new LogoutViewModel
             {
@@ -900,7 +907,8 @@ namespace IdentityServer3.Core.Endpoints
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
             };
 
-            return new LogoutActionResult(viewService, logoutModel);
+            var message = signOutMessageCookie.Read(id);
+            return new LogoutActionResult(viewService, logoutModel, message);
         }
 
         private async Task<IHttpActionResult> RenderLoggedOutPage(string id)
@@ -924,7 +932,7 @@ namespace IdentityServer3.Core.Endpoints
                 AutoRedirect = options.AuthenticationOptions.EnablePostSignOutAutoRedirect,
                 AutoRedirectDelay = options.AuthenticationOptions.PostSignOutAutoRedirectDelay
             };
-            return new LoggedOutActionResult(viewService, loggedOutModel);
+            return new LoggedOutActionResult(viewService, loggedOutModel, message);
         }
 
         private IHttpActionResult RenderErrorPage(string message = null)

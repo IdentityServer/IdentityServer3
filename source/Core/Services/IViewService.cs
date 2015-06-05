@@ -38,15 +38,21 @@ namespace IdentityServer3.Core.Services
         /// Loads the HTML for the logout prompt page.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> Logout(LogoutViewModel model);
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> Logout(LogoutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> LoggedOut(LoggedOutViewModel model);
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the user consent page.

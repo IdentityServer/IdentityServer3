@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -59,12 +60,12 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public string Load(string name)
+        public async Task<string> LoadAsync(string name)
         {
-            var value = file.Load(name);
+            var value = await file.LoadAsync(name);
             if (value == null)
             {
-                value = embedded.Load(name);
+                value = await embedded.LoadAsync(name);
             }
             return value;
         }
