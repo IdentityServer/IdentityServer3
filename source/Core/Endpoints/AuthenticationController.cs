@@ -640,7 +640,14 @@ namespace IdentityServer3.Core.Endpoints
         {
             if (authResult == null) throw new ArgumentNullException("authResult");
 
-            Logger.InfoFormat("issuing cookie{0}", authResult.IsPartialSignIn ? " (partial login)" : "");
+            if (authResult.IsPartialSignIn)
+            {
+                Logger.Info("issuing partial signin cookie");
+            }
+            else
+            {
+                Logger.Info("issuing primary signin cookie");
+            }
 
             var props = new Microsoft.Owin.Security.AuthenticationProperties();
 
