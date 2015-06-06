@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Threading.Tasks;
 namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
@@ -40,12 +41,12 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public string Load(string name)
+        public async Task<string> LoadAsync(string name)
         {
             var value = cache.Read(name);
             if (value == null)
             {
-                value = inner.Load(name);
+                value = await inner.LoadAsync(name);
                 cache.Write(name, value);
             }
             return value;

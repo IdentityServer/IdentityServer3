@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -48,7 +49,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="page">The page.</param>
         /// <returns></returns>
-        public string Load(string page)
+        public Task<string> LoadAsync(string page)
         {
             if (Directory.Exists(directory))
             {
@@ -58,7 +59,7 @@ namespace IdentityServer3.Core.Services.Default
                 // look for full file with name login.html
                 if (File.Exists(path))
                 {
-                    return File.ReadAllText(path);
+                    return Task.FromResult(File.ReadAllText(path));
                 }
 
                 var layoutName = Path.Combine(directory, "_layout.html");
@@ -77,10 +78,10 @@ namespace IdentityServer3.Core.Services.Default
 
                     if (layout != null)
                     {
-                        return AssetManager.ApplyContentToLayout(layout, partial);
+                        return Task.FromResult(AssetManager.ApplyContentToLayout(layout, partial));
                     }
 
-                    return AssetManager.LoadLayoutWithContent(partial);
+                    return Task.FromResult(AssetManager.LoadLayoutWithContent(partial));
                 }
 
                 // no partial, but layout might exist
@@ -88,11 +89,11 @@ namespace IdentityServer3.Core.Services.Default
                 {
                     // so load embedded asset page, but use custom layout
                     var content = AssetManager.LoadPage(page);
-                    return AssetManager.ApplyContentToLayout(layout, content);
+                    return Task.FromResult(AssetManager.ApplyContentToLayout(layout, content));
                 }
             }
 
-            return null;
+            return Task.FromResult<string>(null);
         }
     }
 }
