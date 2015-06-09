@@ -54,8 +54,15 @@ namespace IdentityServer3.Core.Services.InMemory
                 select url.GetOrigin();
 
             var result = query.Contains(origin, StringComparer.OrdinalIgnoreCase);
-            
-            Logger.InfoFormat("Client list checked and origin: {0} is {1}allowed", origin, result ? "" : "not ");
+
+            if (result)
+            {
+                Logger.InfoFormat("Client list checked and origin: {0} is allowed", origin);
+            }
+            else
+            {
+                Logger.InfoFormat("Client list checked and origin: {0} is not allowed", origin);
+            }
             
             return Task.FromResult(result);
         }
