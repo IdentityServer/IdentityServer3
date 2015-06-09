@@ -51,7 +51,7 @@ namespace IdentityServer3.Core.Services.Default
         static string GetDefaultDirectory()
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
-            path = Path.Combine(path, "views");
+            path = Path.Combine(path, "templates");
             return path;
         }
 
