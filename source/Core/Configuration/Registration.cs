@@ -192,7 +192,17 @@ namespace IdentityServer3.Core.Configuration
             this.Mode = RegistrationMode.Singleton;
         }
 
-        internal Registration(Registration<T> registration, string name)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Registration{T}"/> class from an existing registration.
+        /// </summary>
+        /// <param name="registration">The registration.</param>
+        /// <param name="name">The name.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// registration
+        /// or
+        /// name
+        /// </exception>
+        public Registration(Registration<T> registration, string name)
         {
             if (registration == null) throw new ArgumentNullException("registration");
             if (name == null) throw new ArgumentNullException("name");
