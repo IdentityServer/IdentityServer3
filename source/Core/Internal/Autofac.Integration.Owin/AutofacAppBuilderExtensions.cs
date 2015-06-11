@@ -42,7 +42,8 @@ namespace Owin
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class OwinExtensions
     {
-        const string MiddlewareRegisteredKey = "idsvr:AutofacMiddelwareRegistered";
+        // idsvr : unnecessary because we remove these guards so that multiple copies of middleware can be registered
+        //const string MiddlewareRegisteredKey = "idsvr:AutofacMiddelwareRegistered";
 
         /// <summary>
         /// Adds a component to the OWIN pipeline for using Autofac dependency injection with middleware.
@@ -55,8 +56,9 @@ namespace Owin
         {
             if (app == null) throw new ArgumentNullException("app");
 
-            if (app.Properties.ContainsKey(MiddlewareRegisteredKey)) return app;
-
+            // idsvr : remove these guards so that multiple copies of middleware can be registered
+            //if (app.Properties.ContainsKey(MiddlewareRegisteredKey)) return app;
+            
             app.Use(async (context, next) =>
             {
                 using (var lifetimeScope = container.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag,
@@ -69,7 +71,8 @@ namespace Owin
 
             UseMiddlewareFromContainer(app, container);
 
-            app.Properties.Add(MiddlewareRegisteredKey, true);
+            // idsvr : remove these guards so that multiple copies of middleware can be registered
+            //app.Properties.Add(MiddlewareRegisteredKey, true);
 
             return app;
         }
