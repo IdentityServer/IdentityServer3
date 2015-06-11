@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="col-sm-8" ng-hide="model.clients">
+    <div class="col-sm-8" ng-hide="model.clients.length">
         <div class="alert alert-info">
             You have not given permission to any applications
         </div>
@@ -28,13 +28,13 @@
         </div>
         <div class="col-sm-8">
             <div class="permission-clientname">{{client.clientName}}</div>
-            <div ng-show="client.identityPermissions">
+            <div ng-show="client.identityPermissions.length">
                 <div class="permission-type">Identity Permissions</div>
                 <ul>
                     <li ng-repeat="permission in client.identityPermissions" ng-bind="permission.displayName"></li>
                 </ul>
             </div>
-            <div ng-show="client.resourcePermissions">
+            <div ng-show="client.resourcePermissions.length">
                 <div class="permission-type">Resource Permissions</div>
                 <ul>
                     <li ng-repeat="permission in client.resourcePermissions" ng-bind="permission.displayName"></li>
