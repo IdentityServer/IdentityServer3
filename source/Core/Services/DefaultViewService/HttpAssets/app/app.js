@@ -3,7 +3,7 @@
  * see license
  */
 
-/// <reference path="../libs/angular/angular.1.2.13.js" />
+/// <reference path="../libs/angular/angular.1.3.15.js" />
 
 window.identityServer = (function () {
     "use strict";
