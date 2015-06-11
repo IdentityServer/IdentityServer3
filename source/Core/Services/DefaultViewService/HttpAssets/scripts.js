@@ -228,6 +228,27 @@ Encoder={EncodeType:"entity",isEmpty:function(n){return n?n===null||n.length==0|
 
 /// <reference path="../libs/angular/angular.1.2.13.js" />
 
+window.identityServer = (function () {
+    "use strict";
+
+    var identityServer = {
+        getModel: function () {
+            var modelJson = document.getElementById("modelJson");
+            var encodedJson = '';
+            if (typeof (modelJson.textContent) !== undefined) {
+                encodedJson = modelJson.textContent;
+            } else {
+                encodedJson = modelJson.innerHTML;
+            }
+            var json = Encoder.htmlDecode(encodedJson);
+            var model = JSON.parse(json);
+            return model;
+        }
+    };
+
+    return identityServer;
+})();
+
 (function () {
     "use strict";
 
@@ -251,15 +272,7 @@ Encoder={EncodeType:"entity",isEmpty:function(n){return n?n===null||n.length==0|
     })();
 
     (function () {
-        var modelJson = document.getElementById("modelJson");
-        var encodedJson = '';
-        if (typeof(modelJson.textContent) !== undefined) {
-            encodedJson = modelJson.textContent;
-        } else {
-            encodedJson = modelJson.innerHTML;
-        }
-        var json = Encoder.htmlDecode(encodedJson);
-        var model = JSON.parse(json);
+        var model = identityServer.getModel();
         angular.module("app").constant("Model", model);
         if (model.autoRedirect && model.redirectUrl) {
             if (model.autoRedirectDelay < 0) {
