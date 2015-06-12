@@ -103,9 +103,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.2.28, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20511.1437, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.202250711\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.205111437\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

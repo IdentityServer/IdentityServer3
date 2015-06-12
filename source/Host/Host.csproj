@@ -87,17 +87,19 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog">
-      <HintPath>..\packages\Serilog.1.4.204\lib\net45\Serilog.dll</HintPath>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Serilog.1.5.7\lib\net45\Serilog.dll</HintPath>
     </Reference>
-    <Reference Include="Serilog.FullNetFx">
-      <HintPath>..\packages\Serilog.1.4.204\lib\net45\Serilog.FullNetFx.dll</HintPath>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Serilog.1.5.7\lib\net45\Serilog.FullNetFx.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.2.28, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20511.1437, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.202250711\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.205111437\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
