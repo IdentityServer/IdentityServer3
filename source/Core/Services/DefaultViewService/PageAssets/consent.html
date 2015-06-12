@@ -19,7 +19,7 @@
 
             <div>Uncheck the permissions you do not wish to grant.</div>
 
-            <div class="panel panel-default consent-buttons" ng-show="model.identityScopes">
+            <div class="panel panel-default consent-buttons" ng-show="model.identityScopes.length">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-user"></span>
                     Personal Information
@@ -39,7 +39,7 @@
                 </ul>
             </div>
 
-            <div class="panel panel-default" ng-show="model.resourceScopes">
+            <div class="panel panel-default" ng-show="model.resourceScopes.length">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-tasks"></span>
                     Application Access
