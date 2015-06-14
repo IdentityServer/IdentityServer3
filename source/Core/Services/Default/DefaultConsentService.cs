@@ -73,6 +73,13 @@ namespace IdentityServer3.Core.Services.Default
             {
                 return false;
             }
+
+            // we always require consent for offline access if
+            // the client has not disabled RequireConsent 
+            if (scopes.Contains(Constants.StandardScopes.OfflineAccess))
+            {
+                return true;
+            }
             
             var consent = await _store.LoadAsync(subject.GetSubjectId(), client.ClientId);
             if (consent != null && consent.Scopes != null)
