@@ -200,6 +200,36 @@ namespace IdentityServer3.Core.Models
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult" /> class. This
+        /// version of the constructor indicates a partial login (with a redirect) without
+        /// knowledge of the subject claim.
+        /// </summary>
+        /// <param name="redirectPath">The redirect path. This should be relative to the
+        /// current web server. The <c>"~/"</c> prefix is supported to allow application-relative
+        /// paths to be used (e.g. "~/path").</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
+        /// <exception cref="System.ArgumentNullException">redirectPath</exception>
+        /// <exception cref="System.ArgumentException">redirectPath must start with / or ~/</exception>
+        public AuthenticateResult(string redirectPath, IEnumerable<Claim> claims)
+        {
+            if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
+            {
+                throw new ArgumentException("redirectPath must start with / or ~/");
+            }
+
+            if (claims == null || !claims.Any())
+            {
+                throw new ArgumentException("claims are required");
+            }
+
+            var id = new ClaimsIdentity(claims, Constants.PartialSignInAuthenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
+            this.User = new ClaimsPrincipal(id); 
+            
+            this.PartialSignInRedirectPath = redirectPath;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the authentication resulted in an error.
         /// </summary>
         /// <value>

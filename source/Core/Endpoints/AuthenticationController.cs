@@ -449,25 +449,84 @@ namespace IdentityServer3.Core.Endpoints
                 return RenderErrorPage();
             }
 
-            // check to see if the partial login has all the claim types needed to login
             AuthenticateResult result = null;
-            if (Constants.AuthenticateResultClaimTypes.All(claimType => user.HasClaim(c => c.Type == claimType)))
+
+            // determine which return path the user is taking -- are they coming from
+            // a ExternalProvider partial logon, or not
+            var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
+
+            // cleanup the claims from the partial login
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
             {
-                // the user/subject was known, so pass thru (without the redirect claims)
-                if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
+                user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
+            }
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.ExternalProviderUserId))
+            {
+                user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId));
+            }
+            if (user.HasClaim(c => c.Type == GetClaimTypeForResumeId(resume)))
+            {
+                user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
+            }
+
+            if (externalProviderClaim != null)
+            {
+                Logger.Info("using ExternalProviderUserId to call AuthenticateExternalAsync");
+
+                var provider = externalProviderClaim.Issuer;
+                var providerId = externalProviderClaim.Value;
+                var externalIdentity = new ExternalIdentity
                 {
-                    user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
-                }
-                if (user.HasClaim(c => c.Type == Constants.ClaimTypes.ExternalProviderUserId))
+                    Provider = provider,
+                    ProviderId = providerId,
+                    Claims = user.Claims
+                };
+
+                Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
+
+                var externalContext = new ExternalAuthenticationContext
                 {
-                    user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId));
-                }
-                if (user.HasClaim(c => c.Type == GetClaimTypeForResumeId(resume)))
+                    ExternalIdentity = externalIdentity,
+                    SignInMessage = signInMessage
+                };
+
+                await userService.AuthenticateExternalAsync(externalContext);
+
+                result = externalContext.AuthenticateResult;
+                if (result == null)
                 {
-                    user.RemoveClaim(user.FindFirst(GetClaimTypeForResumeId(resume)));
+                    Logger.Warn("user service failed to authenticate external identity");
+
+                    var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, msg);
+
+                    return await RenderLoginPage(signInMessage, signInId, msg);
                 }
 
-                Logger.Info("Authentication claims found -- calling user service's PostPartialLoginAsync");
+                if (result.IsError)
+                {
+                    Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
+
+                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, result.ErrorMessage);
+
+                    return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
+                }
+
+                Logger.Info("External identity successfully validated by user service");
+
+                await eventService.RaiseExternalLoginSuccessEventAsync(externalIdentity, signInId, signInMessage, result);
+            }
+            else
+            {
+                // check to see if the resultant user has all the claim types needed to login
+                if (!Constants.AuthenticateResultClaimTypes.All(claimType => user.HasClaim(c => c.Type == claimType)))
+                {
+                    Logger.Error("Missing AuthenticateResultClaimTypes -- rendering error page");
+                    return RenderErrorPage();
+                }
+
+                // this is a normal partial login continuation
+                Logger.Info("Calling user service's PostPartialLoginAsync");
 
                 var postPartialContext = new PostPartialLoginContext
                 {
@@ -492,64 +551,16 @@ namespace IdentityServer3.Core.Endpoints
                     return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage, user.Name);
                 }
 
-                Logger.InfoFormat("PostLogin success -- logging user in as {0}, {1}", user.GetSubjectId(), user.Name);
-                await eventService.RaisePartialLoginCompleteEventAsync(user, signInId, signInMessage);
-            }
-            else
-            {
-                Logger.Info("Authentication claims not found -- looking for ExternalProviderUserId to call AuthenticateExternalAsync");
-                
-                // the user was not known, we need to re-execute AuthenticateExternalAsync
-                // to obtain a subject to proceed
-                var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
-                if (externalProviderClaim == null)
+                if (result.HasSubject)
                 {
-                    Logger.Error("No ExternalProviderUserId claim found -- rendering error page");
-                    return RenderErrorPage();
+                    Logger.InfoFormat("PostLogin success. User is {0}, {1}", result.User.GetSubjectId(), result.User.Identity.Name);
+                }
+                else
+                {
+                    Logger.Info("PostLogin success (No subject returned from PostPartialLoginAsync)");
                 }
 
-                var provider = externalProviderClaim.Issuer;
-                var providerId = externalProviderClaim.Value;
-                var externalIdentity = new ExternalIdentity
-                {
-                    Provider = provider,
-                    ProviderId = providerId,
-                    Claims = user.Claims
-                };
-
-                Logger.InfoFormat("external user provider: {0}, provider ID: {1}", externalIdentity.Provider, externalIdentity.ProviderId);
-
-                var externalContext = new ExternalAuthenticationContext
-                {
-                    ExternalIdentity = externalIdentity,
-                    SignInMessage = signInMessage
-                };
-
-                await userService.AuthenticateExternalAsync(externalContext);
-                
-                result = externalContext.AuthenticateResult;
-                if (result == null)
-                {
-                    Logger.Warn("user service failed to authenticate external identity");
-                    
-                    var msg = localizationService.GetMessage(MessageIds.NoMatchingExternalAccount);
-                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, msg);
-                    
-                    return await RenderLoginPage(signInMessage, signInId, msg);
-                }
-
-                if (result.IsError)
-                {
-                    Logger.WarnFormat("user service returned error message: {0}", result.ErrorMessage);
-
-                    await eventService.RaiseExternalLoginFailureEventAsync(externalIdentity, signInId, signInMessage, result.ErrorMessage);
-                    
-                    return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage);
-                }
-
-                Logger.Info("External identity successfully validated by user service");
-
-                await eventService.RaiseExternalLoginSuccessEventAsync(externalIdentity, signInId, signInMessage, result);
+                await eventService.RaisePartialLoginCompleteEventAsync(result.User.Identities.First(), signInId, signInMessage);
             }
 
             return SignInAndRedirect(signInMessage, signInId, result);
