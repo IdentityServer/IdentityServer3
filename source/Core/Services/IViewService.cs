@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
 using IdentityServer3.Core.ViewModels;
 using System.IO;
 using System.Threading.Tasks;
@@ -58,8 +59,11 @@ namespace IdentityServer3.Core.Services
         /// Loads the HTML for the user consent page.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> Consent(ConsentViewModel model);
+        /// <param name="authorizeRequest">The validated authorize request.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest);
 
         /// <summary>
         /// Loads the HTML for the client permissions page.

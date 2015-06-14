@@ -247,7 +247,7 @@ namespace IdentityServer3.Core.Endpoints
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()
             };
 
-            return new ConsentActionResult(_viewService, consentModel);
+            return new ConsentActionResult(_viewService, consentModel, validatedRequest);
         }
 
         IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters)

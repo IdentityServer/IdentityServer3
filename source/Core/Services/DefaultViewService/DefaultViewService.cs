@@ -16,6 +16,7 @@
 
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
 using IdentityServer3.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -126,10 +127,11 @@ namespace IdentityServer3.Core.Services.Default
         /// Loads the HTML for the user consent page.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="authorizeRequest">The validated authorize request.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Consent(ConsentViewModel model)
+        public virtual Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest)
         {
             return Render(model, ConsentView);
         }
