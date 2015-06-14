@@ -57,9 +57,32 @@ namespace IdentityServer3.Tests.Connect.Endpoints
 
         [Fact]
         [Trait("Category", Category)]
+        public void PostIdTokenValidation_MissingToken_ReturnsBadRequest()
+        {
+            var form = new { };
+
+            var resp = PostForm(TestUrl, form);
+            resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public void GetIdTokenValidation_MissingClientIdInQueryString_ReturnsBadRequest()
         {
             var resp = Get(token: "token");
+            resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void PostIdTokenValidation_MissingClientId_ReturnsBadRequest()
+        {
+            var form = new
+            {
+                token = "token"
+            };
+
+            var resp = PostForm(TestUrl, form);
             resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
@@ -93,6 +116,40 @@ namespace IdentityServer3.Tests.Connect.Endpoints
 
         [Fact]
         [Trait("Category", Category)]
+        public void PostIdTokenValidation_ValidIdToken_ReturnsClaims()
+        {
+            ConfigureIdentityServerOptions = x =>
+            {
+                x.Factory.Register(new Registration<TokenValidator, AlwaysValidIdentityTokenValidator>());
+            };
+            Init();
+
+            var form = new
+            {
+                token = "token",
+                client_id = "client_id"
+            };
+
+            var resp = PostForm(TestUrl, form);
+            resp.StatusCode.Should().Be(HttpStatusCode.OK);
+            var claims = resp.GetJson<IDictionary<String, String>>();
+
+            claims.Should().NotBeNull();
+            claims.Count.Should().Be(2);
+
+            Action<KeyValuePair<String, String>, String, String> assertClaim = (claim, claimType, claimValue) =>
+            {
+                claim.Should().NotBeNull();
+                claim.Key.Should().Be(claimType);
+                claim.Value.Should().Be(claimValue);
+            };
+
+            assertClaim(claims.ElementAt(0), Constants.ClaimTypes.Subject, "unique_subject");
+            assertClaim(claims.ElementAt(1), Constants.ClaimTypes.Name, "subject name");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public void GetIdTokenValidation_InvalidIdToken_ReturnsBadRequest()
         {
             ConfigureIdentityServerOptions = x =>
@@ -102,6 +159,32 @@ namespace IdentityServer3.Tests.Connect.Endpoints
             Init();
 
             var resp = Get("token", "client_id");
+            var error = resp.GetJson<IDictionary<String, String>>(successExpected: false);
+
+            error.Should().NotBeNull();
+            error.Count.Should().Be(1);
+            error.First().Key.Should().Be("Message");
+            error.First().Value.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void PostIdTokenValidation_InvalidIdToken_ReturnsBadRequest()
+        {
+            ConfigureIdentityServerOptions = x =>
+            {
+                x.Factory.Register(new Registration<TokenValidator, AlwaysInvalidIdentityTokenValidator>());
+            };
+            Init();
+
+            var form = new
+            {
+                token = "token",
+                client_id = "client_id"
+            };
+
+            var resp = PostForm(TestUrl, form);
+
             var error = resp.GetJson<IDictionary<String, String>>(successExpected: false);
 
             error.Should().NotBeNull();

@@ -22,6 +22,8 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Resources;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.Extensions;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -68,7 +70,33 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             var parameters = Request.RequestUri.ParseQueryString();
+            return await ProcessRequest(parameters);
+        }
 
+        /// <summary>
+        /// POST
+        /// </summary>
+        /// <returns>Claims if token is valid</returns>
+        [Route]
+        public async Task<IHttpActionResult> Post()
+        {
+            Logger.Info("Start access token validation request");
+
+            if (!_options.Endpoints.EnableAccessTokenValidationEndpoint)
+            {
+                var error = "Endpoint is disabled. Aborting";
+                Logger.Warn(error);
+                await RaiseFailureEventAsync(error);
+
+                return NotFound();
+            }
+
+            var parameters = await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
+            return await ProcessRequest(parameters);
+        }
+
+        internal async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters)
+        {
             var token = parameters.Get("token");
             if (token.IsMissing())
             {

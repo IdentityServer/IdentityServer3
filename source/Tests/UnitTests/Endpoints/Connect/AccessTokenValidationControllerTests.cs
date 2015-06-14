@@ -56,6 +56,16 @@ namespace IdentityServer3.Tests.Endpoints.Connect
 
         [Fact]
         [Trait("Category", Category)]
+        public void PostAccessTokenValidation_MissingToken_ReturnsBadRequest()
+        {
+            var col = new NameValueCollection();
+            var resp = PostForm(TestUrl, col);
+
+            resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public void GetAccessTokenValidation_InvalidToken_ReturnsBadRequest()
         {
             ConfigureIdentityServerOptions = x =>
@@ -76,6 +86,31 @@ namespace IdentityServer3.Tests.Endpoints.Connect
 
         [Fact]
         [Trait("Category", Category)]
+        public void PostAccessTokenValidation_InvalidToken_ReturnsBadRequest()
+        {
+            ConfigureIdentityServerOptions = x =>
+            {
+                x.Factory.Register(new Registration<TokenValidator, AlwaysInvalidAccessTokenValidator>());
+            };
+            Init();
+
+            var form = new
+            {
+                token = "Dummy Token"
+            };
+
+            var resp = PostForm(TestUrl, form);
+            resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            var error = resp.GetJson<IDictionary<String, String>>(successExpected: false);
+
+            error.Should().NotBeNull();
+            error.Count.Should().Be(1);
+            error.First().Key.Should().Be("Message");
+            error.First().Value.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public void GetAccessTokenValidation_ValidToken_ReturnsClaims()
         {
             ConfigureIdentityServerOptions = x =>
@@ -85,6 +120,39 @@ namespace IdentityServer3.Tests.Endpoints.Connect
             Init();
 
             var resp = Get("Dummy Token");
+            resp.StatusCode.Should().Be(HttpStatusCode.OK);
+            var claims = resp.GetJson<IDictionary<String, String>>();
+
+            claims.Should().NotBeNull();
+            claims.Count.Should().Be(2);
+
+            Action<KeyValuePair<String, String>, String, String> assertClaim = (claim, claimType, claimValue) =>
+            {
+                claim.Should().NotBeNull();
+                claim.Key.Should().Be(claimType);
+                claim.Value.Should().Be(claimValue);
+            };
+
+            assertClaim(claims.ElementAt(0), Constants.ClaimTypes.Subject, "unique_subject");
+            assertClaim(claims.ElementAt(1), Constants.ClaimTypes.Name, "subject name");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void PostAccessTokenValidation_ValidToken_ReturnsClaims()
+        {
+            ConfigureIdentityServerOptions = x =>
+            {
+                x.Factory.Register(new Registration<TokenValidator, AlwaysValidAccessTokenValidator>());
+            };
+            Init();
+
+            var form = new
+            {
+                token = "Dummy Token"
+            };
+
+            var resp = PostForm(TestUrl, form);
             resp.StatusCode.Should().Be(HttpStatusCode.OK);
             var claims = resp.GetJson<IDictionary<String, String>>();
 
