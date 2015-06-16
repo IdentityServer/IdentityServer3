@@ -56,6 +56,11 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 diag.TraceSource = liblog;                
             }
 
+            if (options.EnableWelcomePage)
+            {
+                config.Routes.MapHttpRoute(Constants.RouteNames.Welcome, Constants.RoutePaths.Welcome, new { controller = "Welcome", action = "Get" });
+            }
+
             if (options.LoggingOptions.EnableHttpLogging)
             {
                 config.MessageHandlers.Add(new RequestResponseLogger());
