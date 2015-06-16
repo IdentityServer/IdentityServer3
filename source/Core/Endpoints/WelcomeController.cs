@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
 using Thinktecture.IdentityServer.Core.Logging;
 using Thinktecture.IdentityServer.Core.Results;
 
@@ -31,27 +29,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IdentityServerOptions options;
-
-        public WelcomeController(IdentityServerOptions options)
+        public WelcomeController()
         {
-            if (options == null) throw new ArgumentNullException("options");
-
-            this.options = options;
         }
 
-        [Route(Constants.RoutePaths.Welcome, Name=Constants.RouteNames.Welcome)]
         public IHttpActionResult Get()
         {
-            Logger.Info("Welcome page requested");
-
-            if (!options.EnableWelcomePage)
-            {
-                Logger.Error("welcome page disabled, returning 404");
-                return NotFound();
-            }
-
-            Logger.Info("Rendering welcome page");
+            Logger.Info("Welcome page requested - rendering");
             return new WelcomeActionResult(Request.GetOwinContext());
         }
     }
