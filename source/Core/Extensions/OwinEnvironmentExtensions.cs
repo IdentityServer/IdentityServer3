@@ -30,7 +30,7 @@ namespace IdentityServer3.Core.Extensions
     /// <summary>
     /// Extension methods for the OWIN environment.
     /// </summary>
-    public static class PublicOwinExtensions
+    public static class OwinEnvironmentExtensions
     {
         /// <summary>
         /// Gets the public host name for IdentityServer.

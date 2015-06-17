@@ -158,7 +158,7 @@
     <Compile Include="Extensions\IContainerExtensions.cs" />
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
-    <Compile Include="Extensions\PublicOwinExtensions.cs" />
+    <Compile Include="Extensions\OwinEnvironmentExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\CodeChartHelper.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\Lower.cs" />
