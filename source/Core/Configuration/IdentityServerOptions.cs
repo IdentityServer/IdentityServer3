@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Web.Http;
 using IdentityServer3.Core.Logging;
 using Owin;
 using System;
@@ -44,6 +45,7 @@ namespace IdentityServer3.Core.Configuration
             this.LoggingOptions = new LoggingOptions();
             this.EventsOptions = new EventsOptions();
             this.EnableWelcomePage = true;
+            this.CustomApis = new List<Type>();
         }
 
         internal void Validate()
@@ -154,6 +156,12 @@ namespace IdentityServer3.Core.Configuration
         /// The plugin configuration.
         /// </value>
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }
+
+        /// <summary>
+        /// Gets the additionals <see cref="ApiController"/> that should be added as part of the idsrv controllers
+        /// </summary>
+        /// <value>The additionals apis.</value>
+        public List<Type> CustomApis { get; private set; }
 
         /// <summary>
         /// Gets or sets the protocol logout urls.
