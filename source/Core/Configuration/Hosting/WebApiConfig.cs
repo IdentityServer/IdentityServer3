@@ -40,7 +40,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
             config.Services.Add(typeof(IExceptionLogger), new LogProviderExceptionLogger());
-            config.Services.Replace(typeof(IHttpControllerTypeResolver), new HttpControllerTypeResolver());
+            config.Services.Replace(typeof(IHttpControllerTypeResolver), new HttpControllerTypeResolver(options.CustomApis));
             config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.LocalOnly;
@@ -66,14 +66,30 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         private class HttpControllerTypeResolver : IHttpControllerTypeResolver
         {
+            private readonly List<Type> customApis;
+
+            public HttpControllerTypeResolver(IEnumerable<Type> newApis)
+            {
+                customApis = newApis.Where(IsApiController).ToList();
+            }
+
             public ICollection<Type> GetControllerTypes(IAssembliesResolver _)
             {
-                var httpControllerType = typeof (IHttpController);
-                return typeof (WebApiConfig)
+                // Get all api controllers provided by idsrv
+                var apiControllers = typeof (WebApiConfig)
                     .Assembly
                     .GetTypes()
-                    .Where(t => t.IsClass && !t.IsAbstract && httpControllerType.IsAssignableFrom(t))
+                    .Where(IsApiController)
                     .ToList();
+
+                // Add custom apis
+                apiControllers.AddRange(customApis);
+                return apiControllers;
+            }
+
+            private static bool IsApiController(Type t)
+            {
+                return t.IsClass && !t.IsAbstract && typeof(IHttpController).IsAssignableFrom(t);
             }
         }
     }
