@@ -17,7 +17,6 @@
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Events;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Resources;
 using IdentityServer3.Core.Services;
