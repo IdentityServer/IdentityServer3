@@ -528,9 +528,9 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js.map">
       <DependentUpon>crypto.min.js</DependentUpon>
     </None>
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.js.bundle" />
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.min.js.map">
-      <DependentUpon>scripts.min.js</DependentUpon>
+    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js.bundle" />
+    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js.map">
+      <DependentUpon>scripts.2.0.0.min.js</DependentUpon>
     </None>
     <None Include="Services\DefaultViewService\HttpAssets\styles.css.bundle" />
     <None Include="packages.config" />
@@ -579,11 +579,11 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.js">
-      <DependentUpon>scripts.js.bundle</DependentUpon>
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js">
+      <DependentUpon>scripts.2.0.0.js.bundle</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Services\DefaultViewService\HttpAssets\scripts.min.js">
-      <DependentUpon>scripts.js</DependentUpon>
+    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js">
+      <DependentUpon>scripts.2.0.0.js</DependentUpon>
     </Content>
     <Content Include="Services\DefaultViewService\HttpAssets\styles.css">
       <DependentUpon>styles.css.bundle</DependentUpon>
