@@ -178,6 +178,7 @@
     <Compile Include="Internal\Autofac.Integration.Owin\OwinContextExtensions.cs" />
     <Compile Include="Internal\Autofac.Integration.WebApi.Owin\AutofacWebApiAppBuilderExtensions.cs" />
     <Compile Include="Internal\Autofac.Integration.WebApi.Owin\DependencyScopeHandler.cs" />
+    <Compile Include="Logging\LibLogKatanaLoggerFactory.cs" />
     <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />

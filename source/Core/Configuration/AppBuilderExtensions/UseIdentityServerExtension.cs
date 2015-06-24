@@ -22,6 +22,7 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin.Infrastructure;
+using Microsoft.Owin.Logging;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
@@ -61,6 +62,11 @@ namespace Owin
             if (options.RequireSsl)
             {
                 app.Use<RequireSslMiddleware>();
+            }
+
+            if (options.LoggingOptions.EnableKatanaLogging)
+            {
+                app.SetLoggerFactory(new LibLogKatanaLoggerFactory());
             }
 
             app.ConfigureRequestId();

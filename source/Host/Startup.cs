@@ -74,9 +74,7 @@ namespace IdentityServer3.Host
 
                         LoggingOptions = new LoggingOptions
                         {
-                            //EnableHttpLogging = true, 
-                            //EnableWebApiDiagnostics = true,
-                            //IncludeSensitiveDataInLogs = true
+                            EnableKatanaLogging = true
                         },
 
                         EventsOptions = new EventsOptions
