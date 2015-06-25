@@ -446,8 +446,10 @@ namespace IdentityServer3.Core
             // internal claim types
             // claim type to identify external user from external provider
             public const string ExternalProviderUserId = "external_provider_user_id";
-            public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
+            public const string PartialLoginResumeId = PartialLoginResumeClaimPrefix + "{0}";
         }
+
+        public const string PartialLoginResumeClaimPrefix = "partial_login_resume_id:";
 
         public static readonly string[] ClaimsProviderFilerClaimTypes = new string[]
         {

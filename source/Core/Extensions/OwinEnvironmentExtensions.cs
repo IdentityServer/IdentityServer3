@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
@@ -173,6 +174,82 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Updates the partial login with the claims provided.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <param name="claims">The claims.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// claims
+        /// </exception>
+        /// <exception cref="System.Exception">No partial login</exception>
+        public static async Task UpdatePartialLoginClaimsAsync(this IDictionary<string, object> env, IEnumerable<Claim> claims)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (claims == null) throw new ArgumentNullException("claims");
+
+            var context = new OwinContext(env);
+            var result = await context.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
+            if (result == null || result.Identity == null || result.Identity.IsAuthenticated == false)
+            {
+                throw new Exception("No partial login");
+            }
+
+            var user = result.Identity;
+
+            var claims_to_keep = new List<Claim>();
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
+            {
+                claims_to_keep.Add(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
+            }
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.ExternalProviderUserId))
+            {
+                claims_to_keep.Add(user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId));
+            }
+            if (user.HasClaim(c => c.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix)))
+            {
+                claims_to_keep.Add(user.FindFirst(c => c.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix)));
+            }
+
+            claims = claims.Where(x => x.Type != Constants.ClaimTypes.PartialLoginReturnUrl && 
+                x.Type != Constants.ClaimTypes.ExternalProviderUserId &&
+                x.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix));
+            
+            claims_to_keep.AddRange(claims);
+
+            var new_user = new ClaimsIdentity(user.AuthenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
+            new_user.AddClaims(claims_to_keep);
+
+            context.Authentication.SignIn(result.Properties, new_user);
+        }
+
+        /// <summary>
+        /// Updates the partial login with the authentication values provided.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="claims">The claims.</param>
+        /// <param name="identityProvider">The identity provider.</param>
+        /// <param name="authenticationMethod">The authentication method.</param>
+        /// <returns></returns>
+        public static async Task UpdatePartialLoginClaimsAsync(
+            this IDictionary<string, object> env,
+            string subject, string name,
+            IEnumerable<Claim> claims = null,
+            string identityProvider = Constants.BuiltInIdentityProvider,
+            string authenticationMethod = null
+        )
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var authResult = new IdentityServer3.Core.Models.AuthenticateResult(subject, name, claims, identityProvider, authenticationMethod);
+            await env.UpdatePartialLoginClaimsAsync(authResult.User.Claims);
+        }
+
+        /// <summary>
         /// Gets the sign in message.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
@@ -193,7 +270,29 @@ namespace IdentityServer3.Core.Extensions
 
             return cookie.Read(id);
         }
-        
+
+        /// <summary>
+        /// Gets the sign in message.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// id
+        /// </exception>
+        public static SignInMessage GetSignInMessage(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var ctx = new OwinContext(env);
+            var id = ctx.Request.Query.Get(Constants.Authentication.SigninId);
+
+            if (String.IsNullOrWhiteSpace(id)) return null;
+
+            return env.GetSignInMessage(id);
+        }
+
         /// <summary>
         /// Gets the current fully logged in IdentityServer user. Returns null if the user is not logged in.
         /// </summary>
