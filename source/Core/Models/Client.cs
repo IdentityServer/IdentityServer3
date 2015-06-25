@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// </summary>
         public int SlidingRefreshTokenLifetime { get; set; }
         
-        /// /// <summary>
+        /// <summary>
         /// ReUse: the refresh token handle will stay the same when refreshing tokens
         /// OneTime: the refresh token handle will be updated when refreshing tokens
         /// </summary>
@@ -184,7 +184,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         /// Gets or sets a value indicating whether all client claims should be prefixed.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if client claims should be prefixed; otherwise, <c>false</c>.
+        /// <c>true</c> if client claims should be prefixed; otherwise, <c>false</c>.
         /// </value>
         public bool PrefixClientClaims { get; set; }
 
