@@ -250,6 +250,29 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Gets the partial login resume URL.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        /// <exception cref="System.Exception">No partial login</exception>
+        public static async Task<string> GetPartialLoginResumeUrlAsync(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            
+            var context = new OwinContext(env);
+            var result = await context.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
+            if (result == null || result.Identity == null || result.Identity.IsAuthenticated == false)
+            {
+                throw new Exception("No partial login");
+            }
+
+            return result.Identity.Claims.Where(x => x.Type == Constants.ClaimTypes.PartialLoginReturnUrl)
+                .Select(x => x.Value)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
         /// Gets the sign in message.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
