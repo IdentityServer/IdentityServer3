@@ -56,10 +56,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 diag.TraceSource = liblog;                
             }
 
-            if (options.EnableWelcomePage)
-            {
-                config.Routes.MapHttpRoute(Constants.RouteNames.Welcome, Constants.RoutePaths.Welcome, new { controller = "Welcome", action = "Get" });
-            }
+            ConfigureRoutes(options, config);
 
             if (options.LoggingOptions.EnableHttpLogging)
             {
@@ -67,6 +64,14 @@ namespace IdentityServer3.Core.Configuration.Hosting
             }
 
             return config;
+        }
+
+        private static void ConfigureRoutes(IdentityServerOptions options, HttpConfiguration config)
+        {
+            if (options.EnableWelcomePage)
+            {
+                config.Routes.MapHttpRoute(Constants.RouteNames.Welcome, Constants.RoutePaths.Welcome, new { controller = "Welcome", action = "Get" });
+            }
         }
 
         private class HttpControllerTypeResolver : IHttpControllerTypeResolver
@@ -81,5 +86,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     .ToList();
             }
         }
+
     }
 }
