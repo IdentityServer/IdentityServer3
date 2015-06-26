@@ -215,7 +215,7 @@ namespace IdentityServer3.Core.Extensions
 
             claims = claims.Where(x => x.Type != Constants.ClaimTypes.PartialLoginReturnUrl && 
                 x.Type != Constants.ClaimTypes.ExternalProviderUserId &&
-                x.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix));
+                !x.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix));
             
             claims_to_keep.AddRange(claims);
 
