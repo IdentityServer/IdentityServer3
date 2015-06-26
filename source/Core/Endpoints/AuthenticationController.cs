@@ -547,7 +547,6 @@ namespace IdentityServer3.Core.Endpoints
                 if (result.IsError)
                 {
                     Logger.WarnFormat("user service returned an error message: {0}", result.ErrorMessage);
-                    //await eventService.RaiseLocalLoginFailureEventAsync(user.Name, signInId, signInMessage, result.ErrorMessage);
                     return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage, user.Name);
                 }
 
