@@ -322,7 +322,7 @@ namespace IdentityServer3.Core.Extensions
         /// <param name="env">The OWIN environment.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">env</exception>
-        public static async Task<ClaimsIdentity> GetIdentityServerFullLogin(this IDictionary<string, object> env)
+        public static async Task<ClaimsIdentity> GetIdentityServerFullLoginAsync(this IDictionary<string, object> env)
         {
             if (env == null) throw new ArgumentNullException("env");
 
@@ -336,7 +336,7 @@ namespace IdentityServer3.Core.Extensions
         /// <param name="env">The OWIN environment.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">env</exception>
-        public static async Task<ClaimsIdentity> GetIdentityServerPartialLogin(this IDictionary<string, object> env)
+        public static async Task<ClaimsIdentity> GetIdentityServerPartialLoginAsync(this IDictionary<string, object> env)
         {
             if (env == null) throw new ArgumentNullException("env");
 
