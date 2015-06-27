@@ -13,7 +13,7 @@ IdentityServer is a .NET/Katana-based framework and hostable component that allo
 
 Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
 
-Go to the documenation [site](https://identityserver.github.io/Documentation/).
+Go to the documentation [site](https://identityserver.github.io/Documentation/).
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
