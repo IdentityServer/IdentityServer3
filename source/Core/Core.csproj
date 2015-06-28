@@ -294,7 +294,6 @@
     <Compile Include="Configuration\Hosting\AntiForgeryToken.cs" />
     <Compile Include="Configuration\Hosting\RequireSslMiddleware.cs" />
     <Compile Include="Configuration\Hosting\ValidateAntiForgeryTokenAttribute.cs" />
-    <Compile Include="Logging\TraceSourceLogProvider.cs" />
     <Compile Include="Models\StandardScopes.cs" />
     <Compile Include="Models\ClientPermission.cs" />
     <Compile Include="Models\TokenCreationRequest.cs" />
@@ -398,7 +397,6 @@
     <Compile Include="Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\ScopeExtensions.cs" />
-    <Compile Include="Logging\DiagnosticsTraceLogProvider.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\ExternalIdentity.cs" />
