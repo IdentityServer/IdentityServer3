@@ -19,7 +19,7 @@
 // Define LIBLOG_PORTABLE conditional compilation symbol for PCL compatibility
 //
 // Define LIBLOG_PUBLIC to enable ability to GET a logger (LogProvider.For<>() etc) from outside this library. NOTE:
-// this can have unintendend consequences of consumers of your library using your library to resolve a logger. If the
+// this can have unintended consequences of consumers of your library using your library to resolve a logger. If the
 // reason is because you want to open this functionality to other projects within your solution,
 // consider [InternalVisibleTo] instead.
 // 
@@ -45,7 +45,9 @@ namespace IdentityServer3.Core.Logging
     using System;
 #if !LIBLOG_PROVIDERS_ONLY
     using System.Diagnostics;
+#if !LIBLOG_PORTABLE
     using System.Runtime.CompilerServices;
+#endif
 #endif
 
 #if LIBLOG_PROVIDERS_ONLY
@@ -186,6 +188,7 @@ namespace IdentityServer3.Core.Logging
 
         public static void Error(this ILog logger, Func<string> messageFunc)
         {
+            GuardAgainstNullLogger(logger);
             logger.Log(LogLevel.Error, messageFunc);
         }
 
@@ -410,8 +413,8 @@ namespace IdentityServer3.Core.Logging
         public const string DisableLoggingEnvironmentVariable = "IdentityServer3.Core_LIBLOG_DISABLE";
         private const string NullLogProvider = "Current Log Provider is not set. Call SetCurrentLogProvider " +
                                                "with a non-null value first.";
-        private static dynamic _currentLogProvider;
-        private static Action<ILogProvider> _onCurrentLogProviderSet;
+        private static dynamic s_currentLogProvider;
+        private static Action<ILogProvider> s_onCurrentLogProviderSet;
 
         static LogProvider()
         {
@@ -424,7 +427,7 @@ namespace IdentityServer3.Core.Logging
         /// <param name="logProvider">The log provider.</param>
         public static void SetCurrentLogProvider(ILogProvider logProvider)
         {
-            _currentLogProvider = logProvider;
+            s_currentLogProvider = logProvider;
 
             RaiseOnCurrentLogProviderSet();
         }
@@ -447,7 +450,7 @@ namespace IdentityServer3.Core.Logging
         {
             set
             {
-                _onCurrentLogProviderSet = value;
+                s_onCurrentLogProviderSet = value;
                 RaiseOnCurrentLogProviderSet();
             }
         }
@@ -456,7 +459,7 @@ namespace IdentityServer3.Core.Logging
         {
             get
             {
-                return _currentLogProvider;
+                return s_currentLogProvider;
             }
         }
 
@@ -598,9 +601,9 @@ namespace IdentityServer3.Core.Logging
 #if !LIBLOG_PROVIDERS_ONLY
         private static void RaiseOnCurrentLogProviderSet()
         {
-            if (_onCurrentLogProviderSet != null)
+            if (s_onCurrentLogProviderSet != null)
             {
-                _onCurrentLogProviderSet(_currentLogProvider);
+                s_onCurrentLogProviderSet(s_currentLogProvider);
             }
         }
 #endif
@@ -624,7 +627,7 @@ namespace IdentityServer3.Core.Logging
 #else
                 Console.WriteLine(
 #endif
-                    "Exception occured resolving a log provider. Logging for this assembly {0} is disabled. {1}",
+                    "Exception occurred resolving a log provider. Logging for this assembly {0} is disabled. {1}",
                     typeof(LogProvider).GetAssemblyPortable().FullName,
                     ex);
             }
@@ -664,15 +667,14 @@ namespace IdentityServer3.Core.Logging
 
         public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
         {
-#if LIBLOG_PORTABLE
             if (_getIsDisabled())
             {
                 return false;
             }
-#else
+#if !LIBLOG_PORTABLE
             var envVar = Environment.GetEnvironmentVariable(LogProvider.DisableLoggingEnvironmentVariable);
 
-            if (_getIsDisabled() || (envVar != null && envVar.Equals("true", StringComparison.OrdinalIgnoreCase)))
+            if (envVar != null && envVar.Equals("true", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -709,11 +711,16 @@ namespace IdentityServer3.Core.Logging.LogProviders
 {
     using System;
     using System.Collections.Generic;
+#if !LIBLOG_PORTABLE
     using System.Diagnostics;
+#endif
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+#if !LIBLOG_PORTABLE
+    using System.Text;
+#endif
     using System.Text.RegularExpressions;
 
     internal abstract class LogProviderBase : ILogProvider
@@ -759,7 +766,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
     internal class NLogLogProvider : LogProviderBase
     {
         private readonly Func<string, object> _getLoggerByNameDelegate;
-        private static bool _providerIsAvailableOverride = true;
+        private static bool s_providerIsAvailableOverride = true;
 
         public NLogLogProvider()
         {
@@ -772,8 +779,8 @@ namespace IdentityServer3.Core.Logging.LogProviders
 
         public static bool ProviderIsAvailableOverride
         {
-            get { return _providerIsAvailableOverride; }
-            set { _providerIsAvailableOverride = value; }
+            get { return s_providerIsAvailableOverride; }
+            set { s_providerIsAvailableOverride = value; }
         }
 
         public override Logger GetLogger(string name)
@@ -978,7 +985,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
     internal class Log4NetLogProvider : LogProviderBase
     {
         private readonly Func<string, object> _getLoggerByNameDelegate;
-        private static bool _providerIsAvailableOverride = true;
+        private static bool s_providerIsAvailableOverride = true;
 
         public Log4NetLogProvider()
         {
@@ -991,8 +998,8 @@ namespace IdentityServer3.Core.Logging.LogProviders
 
         public static bool ProviderIsAvailableOverride
         {
-            get { return _providerIsAvailableOverride; }
-            set { _providerIsAvailableOverride = value; }
+            get { return s_providerIsAvailableOverride; }
+            set { s_providerIsAvailableOverride = value; }
         }
 
         public override Logger GetLogger(string name)
@@ -1057,15 +1064,16 @@ namespace IdentityServer3.Core.Logging.LogProviders
         internal class Log4NetLogger
         {
             private readonly dynamic _logger;
-            private static Type _callerStackBoundaryType;
+            private static Type s_callerStackBoundaryType;
+            private static readonly object CallerStackBoundaryTypeSync = new object();
 
             private readonly object _levelDebug;
             private readonly object _levelInfo;
             private readonly object _levelWarn;
             private readonly object _levelError;
             private readonly object _levelFatal;
-            private readonly Func<object, object, bool> isEnabledForDelegate;
-            private Action<object, Type, object, string, Exception> logDelegate;
+            private readonly Func<object, object, bool> _isEnabledForDelegate;
+            private readonly Action<object, Type, object, string, Exception> _logDelegate;
 
             internal Log4NetLogger(dynamic logger)
             {
@@ -1098,7 +1106,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
                 ParameterExpression messageParam = Expression.Parameter(typeof(string));
                 UnaryExpression levelCast = Expression.Convert(levelParam, logEventLevelType);
                 MethodCallExpression isEnabledMethodCall = Expression.Call(instanceCast, isEnabledMethodInfo, levelCast);
-                isEnabledForDelegate = Expression.Lambda<Func<object, object, bool>>(isEnabledMethodCall, instanceParam, levelParam).Compile();
+                _isEnabledForDelegate = Expression.Lambda<Func<object, object, bool>>(isEnabledMethodCall, instanceParam, levelParam).Compile();
 
                 // Action<object, object, string, Exception> Log =
                 // (logger, callerStackBoundaryDeclaringType, level, message, exception) => { ((ILogger)logger).Write(callerStackBoundaryDeclaringType, level, message, exception); }
@@ -1115,7 +1123,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
                     levelCast,
                     messageParam,
                     exceptionParam);
-                logDelegate = Expression.Lambda<Action<object, Type, object, string, Exception>>(
+                _logDelegate = Expression.Lambda<Action<object, Type, object, string, Exception>>(
                     writeMethodExp,
                     instanceParam,
                     callerStackBoundaryDeclaringTypeParam,
@@ -1131,38 +1139,38 @@ namespace IdentityServer3.Core.Logging.LogProviders
                     return IsLogLevelEnable(logLevel);
                 }
 
-                messageFunc = LogMessageFormatter.SimulateStructuredLogging(messageFunc, formatParameters);
-
                 if (!IsLogLevelEnable(logLevel))
                 {
                     return false;
                 }
 
+                messageFunc = LogMessageFormatter.SimulateStructuredLogging(messageFunc, formatParameters);
+
                 // determine correct caller - this might change due to jit optimizations with method inlining
-                if (_callerStackBoundaryType == null)
+                if (s_callerStackBoundaryType == null)
                 {
-                    lock (GetType())
+                    lock (CallerStackBoundaryTypeSync)
                     {
 #if !LIBLOG_PORTABLE
                         StackTrace stack = new StackTrace();
                         Type thisType = GetType();
-                        _callerStackBoundaryType = Type.GetType("LoggerExecutionWrapper");
-                        for (int i = 1; i < stack.FrameCount; i++)
+                        s_callerStackBoundaryType = Type.GetType("LoggerExecutionWrapper");
+                        for (var i = 1; i < stack.FrameCount; i++)
                         {
                             if (!IsInTypeHierarchy(thisType, stack.GetFrame(i).GetMethod().DeclaringType))
                             {
-                                _callerStackBoundaryType = stack.GetFrame(i - 1).GetMethod().DeclaringType;
+                                s_callerStackBoundaryType = stack.GetFrame(i - 1).GetMethod().DeclaringType;
                                 break;
                             }
                         }
 #else
-                        _callerStackBoundaryType = typeof (LoggerExecutionWrapper);
+                        s_callerStackBoundaryType = typeof (LoggerExecutionWrapper);
 #endif
                     }
                 }
 
                 var translatedLevel = TranslateLevel(logLevel);
-                logDelegate(_logger, _callerStackBoundaryType, translatedLevel, messageFunc(), exception);
+                _logDelegate(_logger, s_callerStackBoundaryType, translatedLevel, messageFunc(), exception);
                 return true;
             }
 
@@ -1182,7 +1190,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
             private bool IsLogLevelEnable(LogLevel logLevel)
             {
                 var level = TranslateLevel(logLevel);
-                return isEnabledForDelegate(_logger, level);
+                return _isEnabledForDelegate(_logger, level);
             }
 
             private object TranslateLevel(LogLevel logLevel)
@@ -1210,7 +1218,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
     internal class EntLibLogProvider : LogProviderBase
     {
         private const string TypeTemplate = "Microsoft.Practices.EnterpriseLibrary.Logging.{0}, Microsoft.Practices.EnterpriseLibrary.Logging";
-        private static bool _providerIsAvailableOverride = true;
+        private static bool s_providerIsAvailableOverride = true;
         private static readonly Type LogEntryType;
         private static readonly Type LoggerType;
         private static readonly Type TraceEventTypeType;
@@ -1242,8 +1250,8 @@ namespace IdentityServer3.Core.Logging.LogProviders
 
         public static bool ProviderIsAvailableOverride
         {
-            get { return _providerIsAvailableOverride; }
-            set { _providerIsAvailableOverride = value; }
+            get { return s_providerIsAvailableOverride; }
+            set { s_providerIsAvailableOverride = value; }
         }
 
         public override Logger GetLogger(string name)
@@ -1382,7 +1390,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
     internal class SerilogLogProvider : LogProviderBase
     {
         private readonly Func<string, object> _getLoggerByNameDelegate;
-        private static bool _providerIsAvailableOverride = true;
+        private static bool s_providerIsAvailableOverride = true;
 
         public SerilogLogProvider()
         {
@@ -1395,8 +1403,8 @@ namespace IdentityServer3.Core.Logging.LogProviders
 
         public static bool ProviderIsAvailableOverride
         {
-            get { return _providerIsAvailableOverride; }
-            set { _providerIsAvailableOverride = value; }
+            get { return s_providerIsAvailableOverride; }
+            set { s_providerIsAvailableOverride = value; }
         }
 
         public override Logger GetLogger(string name)
@@ -1689,7 +1697,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
             params object[] args
             );
 
-        private static bool _providerIsAvailableOverride = true;
+        private static bool s_providerIsAvailableOverride = true;
         private readonly WriteDelegate _logWriteDelegate;
 
         public LoupeLogProvider()
@@ -1710,8 +1718,8 @@ namespace IdentityServer3.Core.Logging.LogProviders
         /// </value>
         public static bool ProviderIsAvailableOverride
         {
-            get { return _providerIsAvailableOverride; }
-            set { _providerIsAvailableOverride = value; }
+            get { return s_providerIsAvailableOverride; }
+            set { s_providerIsAvailableOverride = value; }
         }
 
         public override Logger GetLogger(string name)
@@ -1835,7 +1843,7 @@ namespace IdentityServer3.Core.Logging.LogProviders
         /// <summary>
         /// Some logging frameworks support structured logging, such as serilog. This will allow you to add names to structured data in a format string:
         /// For example: Log("Log message to {user}", user). This only works with serilog, but as the user of LibLog, you don't know if serilog is actually 
-        /// used. So, this class simulates that. it will replace any text in {curlybraces} with an index number. 
+        /// used. So, this class simulates that. it will replace any text in {curly braces} with an index number. 
         /// 
         /// "Log {message} to {user}" would turn into => "Log {0} to {1}". Then the format parameters are handled using regular .net string.Format.
         /// </summary>
