@@ -346,7 +346,6 @@
     <Compile Include="Configuration\Hosting\AutofacConfig.cs" />
     <Compile Include="Configuration\CookieOptions.cs" />
     <Compile Include="Configuration\Hosting\CorsPolicyProvider.cs" />
-    <Compile Include="Configuration\InMemoryFactory.cs" />
     <Compile Include="Models\RefreshToken.cs" />
     <Compile Include="Configuration\Registration.cs" />
     <Compile Include="Extensions\InternalOwinExtensions.cs" />
