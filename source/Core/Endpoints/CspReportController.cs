@@ -62,7 +62,7 @@ namespace IdentityServer3.Core.Endpoints
                 return BadRequest();
             }
 
-            var json = await Request.Content.ReadAsStringAsync();
+            var json = await Request.GetOwinContext().Request.ReadBodyAsStringAsync();
             if (json.Length > Constants.MaxCspReportLength)
             {
                 var msg = "Request content exceeds max length";

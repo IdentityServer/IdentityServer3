@@ -26,6 +26,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Extensions
@@ -263,6 +264,31 @@ namespace IdentityServer3.Core.Extensions
             context.Environment.Remove("Microsoft.Owin.Form#collection");
 
             return form;
+        }
+
+        public async static Task<string> ReadBodyAsStringAsync(this IOwinRequest request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+
+            if (!request.Body.CanSeek)
+            {
+                var copy = new MemoryStream();
+                await request.Body.CopyToAsync(copy);
+                copy.Seek(0L, SeekOrigin.Begin);
+                request.Body = copy;
+            }
+
+            request.Body.Seek(0L, SeekOrigin.Begin);
+            
+            string body = null;
+            using (var reader = new StreamReader(request.Body, Encoding.UTF8, true, 4096, true))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            request.Body.Seek(0L, SeekOrigin.Begin);
+            
+            return body;
         }
 
         public async static Task<NameValueCollection> ReadRequestFormAsNameValueCollectionAsync(this IOwinContext context)
