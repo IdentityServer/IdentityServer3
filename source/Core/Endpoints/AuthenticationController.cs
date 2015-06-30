@@ -668,7 +668,7 @@ namespace IdentityServer3.Core.Endpoints
         
         private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
-            ClearAuthenticationCookies();
+            ClearAuthenticationCookiesForNewSignIn(authResult);
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
 
             var redirectUrl = GetRedirectUrl(signInMessage, authResult);
@@ -758,6 +758,18 @@ namespace IdentityServer3.Core.Endpoints
             {
                 return new Uri(signInMessage.ReturnUrl);
             }
+        }
+
+        private void ClearAuthenticationCookiesForNewSignIn(AuthenticateResult authResult)
+        {
+            // on a partial sign-in, preserve the existing primary sign-in
+            if (!authResult.IsPartialSignIn)
+            {
+                context.Authentication.SignOut(Constants.PrimaryAuthenticationType);
+            }
+            context.Authentication.SignOut(
+                Constants.ExternalAuthenticationType,
+                Constants.PartialSignInAuthenticationType);
         }
 
         private void ClearAuthenticationCookies()
