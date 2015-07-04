@@ -1,4 +1,5 @@
-﻿/*
+﻿using IdentityServer3.Core.Models;
+/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-using IdentityModel;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Extensions;
+using IdentityModel;
+using IdentityServer3.Core.Validation;
 
 namespace IdentityServer3.Core.Services.Default
 {
-    public class HashedSharedSecretValidator : ISecretValidator
+    class PlainTextSharedSecretValidator : ISecretValidator
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
         {
             var fail = Task.FromResult(new SecretValidationResult { Success = false });
@@ -40,11 +38,8 @@ namespace IdentityServer3.Core.Services.Default
 
                 if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
                 {
-                    throw new ArgumentNullException("Id or cedential");
+                    throw new ArgumentException("id or credential is missing.");
                 }
-
-                var secretSha256 = sharedSecret.Sha256();
-                var secretSha512 = sharedSecret.Sha512();
 
                 foreach (var secret in secrets)
                 {
@@ -54,35 +49,11 @@ namespace IdentityServer3.Core.Services.Default
                         continue;
                     }
 
-                    bool isValid = false;
-                    byte[] secretBytes;
-
                     // check if client secret is still valid
                     if (secret.Expiration.HasExpired()) continue;
 
-                    try
-                    {
-                        secretBytes = Convert.FromBase64String(secret.Value);
-                    }
-                    catch (FormatException)
-                    {
-                        Logger.Error("Secret uses invalid hashing algorithm");
-                        return fail;
-                    }
-
-                    if (secretBytes.Length == 32)
-                    {
-                        isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha256);
-                    }
-                    else if (secretBytes.Length == 64)
-                    {
-                        isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha512);
-                    }
-                    else
-                    {
-                        Logger.Error("Secret uses invalid hashing algorithm");
-                        return fail;
-                    }
+                    // use time constant string comparison
+                    var isValid = TimeConstantComparer.IsEqual(sharedSecret, secret.Value);
 
                     if (isValid)
                     {
