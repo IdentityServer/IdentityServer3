@@ -35,7 +35,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns></returns>
         public virtual Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
         {
-            if (credential.CredentialType == Constants.ClientCredentialTypes.SharedSecret)
+            if (credential.CredentialType == Constants.ParsedSecretTypes.SharedSecret)
             {
                 if (credential.ClientId.IsMissing() || credential.Credential == null || credential.Credential.ToString().IsMissing())
                 {

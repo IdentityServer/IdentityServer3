@@ -22,6 +22,7 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System.Collections.Specialized;
 using System.Net.Http;
@@ -42,7 +43,7 @@ namespace IdentityServer3.Core.Endpoints
 
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
-        private readonly IClientValidator _clientValidator;
+        private readonly ClientValidator _clientValidator;
         private readonly IdentityServerOptions _options;
         private readonly IEventService _events;
 
@@ -54,7 +55,7 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="clientValidator">The client validator.</param>
         /// <param name="generator">The generator.</param>
         /// <param name="events">The events service.</param>
-        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, IClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
+        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
         {
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;
@@ -105,7 +106,7 @@ namespace IdentityServer3.Core.Endpoints
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             // validate client credentials and client
-            var clientResult = await _clientValidator.ValidateAsync(Request.GetOwinEnvironment());
+            var clientResult = await _clientValidator.ValidateAsync();
             if (clientResult.IsError)
             {
                 return this.TokenErrorResponse(Constants.TokenErrors.InvalidClient);

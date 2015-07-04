@@ -23,15 +23,15 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Security;
 using Autofac;
 using Autofac.Core;
 using Autofac.Core.Lifetime;
 using Autofac.Integration.Owin;
 using Microsoft.Owin;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Security;
 
 namespace Owin
 {

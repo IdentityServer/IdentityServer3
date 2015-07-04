@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Models;
-
-namespace IdentityServer3.Core.Validation
+namespace IdentityServer3.Core.Models
 {
-    /// <summary>
-    /// Validation result for client validation
-    /// </summary>
-    public class ClientSecretValidationResult : ValidationResult
+    public class ParsedSecret
     {
-        /// <summary>
-        /// Gets or sets the client.
-        /// </summary>
-        /// <value>
-        /// The client.
-        /// </value>
-        public Client Client { get; set; }
+        public string Id { get; set; }
+        public object Credential { get; set; }
+        public string Type { get; set; }
     }
 }

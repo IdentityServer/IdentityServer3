@@ -75,7 +75,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
-            builder.RegisterDefaultType<IClientValidator, DefaultClientValidator>(fact.ClientValidator);
 
             // register custom grant validators
             builder.RegisterType<AggregateCustomGrantValidator>();
@@ -91,6 +90,19 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
+            // register secret validation plumbing
+            builder.RegisterType<ClientValidator>();
+
+            foreach (var parser in fact.SecretParsers)
+            {
+                builder.Register(parser);
+            }
+            foreach (var validator in fact.SecretValidators)
+            {
+                builder.Register(validator);
+            }
+
+            // register view service plumbing
             if (fact.ViewService == null)
             {
                 fact.ViewService = new DefaultViewServiceRegistration();

@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services
 {
-    /// <summary>
-    /// The client validator turn some credential on an incoming HTTP request into a Client
-    /// </summary>
-    public interface IClientValidator
+    public interface ISecretParser
     {
-        /// <summary>
-        /// Parses the incoming HTTP request and turns some client credential into a client model
-        /// </summary>
-        /// <param name="environment">The environment.</param>
-        /// <returns>A validation result</returns>
-        Task<ClientSecretValidationResult> ValidateAsync(IDictionary<string, object> environment);
+        Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment);
     }
 }
