@@ -15,20 +15,31 @@
  */
 
 using IdentityServer3.Core.Validation;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace IdentityServer3.Core.Services.Default
 {
-    internal class NopCustomGrantValidator : ICustomGrantValidator
+    internal class AggregateCustomGrantValidator
     {
-        public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
+        private readonly IEnumerable<ICustomGrantValidator> _validators;
+        
+        public AggregateCustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
         {
-            return Task.FromResult<CustomGrantValidationResult>(null);
+            _validators = validators;
         }
 
-        public string GrantType
+        public IEnumerable<string> GetAvailableGrantTypes()
         {
-            get { return ""; }
+            return _validators.Select(v => v.GrantType);
+        }
+
+        public async Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
+        {
+            var validator = _validators.First(v => v.GrantType.Equals(request.GrantType));
+            return await validator.ValidateAsync(request);
         }
     }
 }

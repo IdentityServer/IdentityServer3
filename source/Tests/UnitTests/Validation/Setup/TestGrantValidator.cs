@@ -24,12 +24,12 @@ namespace IdentityServer3.Tests.Validation
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            if (request.GrantType == "custom_grant")
-            {
-                return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));    
-            };
+            return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));
+        }
 
-            return Task.FromResult<CustomGrantValidationResult>(null);
+        public string GrantType
+        {
+            get { return "custom_grant"; }
         }
     }
 }

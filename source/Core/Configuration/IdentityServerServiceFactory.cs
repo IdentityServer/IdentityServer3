@@ -58,6 +58,8 @@ namespace IdentityServer3.Core.Configuration
         public IdentityServerServiceFactory()
         {
             this.ExternalClaimsFilter = DefaultClaimsFilter;
+
+            CustomGrantValidators = new List<Registration<ICustomGrantValidator>>();
         }
 
         /// <summary>
@@ -183,7 +185,7 @@ namespace IdentityServer3.Core.Configuration
         /// <value>
         /// The custom grant validator.
         /// </value>
-        public Registration<ICustomGrantValidator> CustomGrantValidator { get; set; }
+        public List<Registration<ICustomGrantValidator>> CustomGrantValidators { get; set; }
 
         /// <summary>
         /// Gets or sets the custom request validator - Implements custom additional validation of authorize and token requests.

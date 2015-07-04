@@ -26,6 +26,7 @@ using IdentityServer3.Core.Services.InMemory;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System;
+using System.Linq;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {
@@ -65,17 +66,30 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);
             builder.RegisterDefaultType<ITokenSigningService, DefaultTokenSigningService>(fact.TokenSigningService);
             builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
-            builder.RegisterDefaultType<ICustomGrantValidator, DefaultCustomGrantValidator>(fact.CustomGrantValidator);
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
-            
+
             builder.RegisterDecoratorDefaultType<IEventService, EventServiceDecorator, DefaultEventService>(fact.EventService);
 
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
             builder.RegisterDefaultType<ILocalizationService, DefaultLocalizationService>(fact.LocalizationService);
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
             builder.RegisterDefaultType<IClientValidator, DefaultClientValidator>(fact.ClientValidator);
+
+            // register custom grant validators
+            builder.RegisterType<AggregateCustomGrantValidator>();
+            if (fact.CustomGrantValidators.Any())
+            {
+                foreach (var val in fact.CustomGrantValidators)
+                {
+                    builder.Register(val);
+                }
+            }
+            else
+            {
+                builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
+            }
 
             if (fact.ViewService == null)
             {
@@ -132,7 +146,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.Register(c => new AntiForgeryToken(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
 
             // add any additional dependencies from hosting application
-            foreach(var registration in fact.Registrations)
+            foreach (var registration in fact.Registrations)
             {
                 builder.Register(registration, registration.Name);
             }
@@ -160,7 +174,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 }
             }
         }
-        
+
         private static void RegisterDefaultInstance<T, TDefault>(this ContainerBuilder builder, Registration<T> registration, string name = null)
             where T : class
             where TDefault : class, T, new()
@@ -193,7 +207,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 return ctx.Resolve<TDecorator>(inner);
             });
         }
-        
+
         private static void RegisterDecoratorDefaultInstance<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
             where T : class
             where TDecorator : T
@@ -202,7 +216,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultInstance<T, TDefault>(registration, DecoratorRegistrationName);
             builder.RegisterDecorator<T, TDecorator>(DecoratorRegistrationName);
         }
-        
+
         private static void RegisterDecoratorDefaultType<T, TDecorator, TDefault>(this ContainerBuilder builder, Registration<T> registration)
             where T : class
             where TDecorator : T
@@ -224,12 +238,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 return ctx.Resolve<TDecorator>(inner);
             });
         }
-        
+
         private static void Register(this ContainerBuilder builder, Registration registration, string name = null)
         {
             if (registration.Instance != null)
             {
-                var reg = builder.Register(ctx=>registration.Instance).SingleInstance();
+                var reg = builder.Register(ctx => registration.Instance).SingleInstance();
                 if (name != null)
                 {
                     reg.Named(name, registration.DependencyType);
@@ -261,7 +275,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     reg.As(registration.DependencyType);
                 }
 
-                switch(registration.Mode)
+                switch (registration.Mode)
                 {
                     case RegistrationMode.InstancePerHttpRequest:
                         reg.InstancePerRequest(); break;
@@ -297,12 +311,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
             }
             else
             {
-                var message = "No type or factory found on registration " + registration.GetType().FullName; 
+                var message = "No type or factory found on registration " + registration.GetType().FullName;
                 Logger.Error(message);
                 throw new InvalidOperationException(message);
             }
 
-            foreach(var item in registration.AdditionalRegistrations)
+            foreach (var item in registration.AdditionalRegistrations)
             {
                 builder.Register(item, item.Name);
             }
