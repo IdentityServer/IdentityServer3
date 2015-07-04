@@ -19,6 +19,7 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace IdentityServer3.Core.Validation
         private readonly IdentityServerOptions _options;
         private readonly IAuthorizationCodeStore _authorizationCodes;
         private readonly IUserService _users;
-        private readonly ICustomGrantValidator _customGrantValidator;
+        private readonly AggregateCustomGrantValidator _customGrantValidator;
         private readonly ICustomRequestValidator _customRequestValidator;
         private readonly IRefreshTokenStore _refreshTokens;
         private readonly ScopeValidator _scopeValidator;
@@ -49,7 +50,7 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, ICustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator, IEventService events)
+        public TokenRequestValidator(IdentityServerOptions options, IAuthorizationCodeStore authorizationCodes, IRefreshTokenStore refreshTokens, IUserService users, AggregateCustomGrantValidator customGrantValidator, ICustomRequestValidator customRequestValidator, ScopeValidator scopeValidator, IEventService events)
         {
             _options = options;
             _authorizationCodes = authorizationCodes;
@@ -332,7 +333,7 @@ namespace IdentityServer3.Core.Validation
                 LogError("EnableLocalLogin is disabled, failing with UnsupportedGrantType");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
-            
+
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
@@ -574,6 +575,15 @@ namespace IdentityServer3.Core.Validation
                     LogError("Client does not have the custom grant type in the allowed list, therefore requested grant is not allowed.");
                     return Invalid(Constants.TokenErrors.UnsupportedGrantType);
                 }
+            }
+
+            /////////////////////////////////////////////
+            // check if a validator is registered for the grant type
+            /////////////////////////////////////////////
+            if (!_customGrantValidator.GetAvailableGrantTypes().Contains(_validatedRequest.GrantType))
+            {
+                LogError("No validator is registered for the grant type.");
+                return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
             /////////////////////////////////////////////

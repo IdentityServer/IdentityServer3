@@ -30,5 +30,13 @@ namespace IdentityServer3.Core.Services
         /// <param name="request">The validated token request.</param>
         /// <returns>A principal</returns>
         Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request);
+
+        /// <summary>
+        /// Returns the grant type this validator can deal with
+        /// </summary>
+        /// <value>
+        /// The type of the grant.
+        /// </value>
+        string GrantType { get; }
     }
 }

@@ -23,6 +23,7 @@ using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IdentityServer3.Tests.Validation
 {
@@ -58,7 +59,7 @@ namespace IdentityServer3.Tests.Validation
             IAuthorizationCodeStore authorizationCodeStore = null,
             IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
-            ICustomGrantValidator customGrantValidator = null,
+            IEnumerable<ICustomGrantValidator> customGrantValidators = null,
             ICustomRequestValidator customRequestValidator = null,
             ScopeValidator scopeValidator = null)
         {
@@ -82,11 +83,16 @@ namespace IdentityServer3.Tests.Validation
                 customRequestValidator = new DefaultCustomRequestValidator();
             }
 
-            if (customGrantValidator == null)
+            AggregateCustomGrantValidator aggregateCustomValidator;
+            if (customGrantValidators == null)
             {
-                customGrantValidator = new TestGrantValidator();
+                aggregateCustomValidator = new AggregateCustomGrantValidator(new [] { new TestGrantValidator() });
             }
-
+            else
+            {
+                aggregateCustomValidator = new AggregateCustomGrantValidator(customGrantValidators);
+            }
+                
             if (refreshTokens == null)
             {
                 refreshTokens = new InMemoryRefreshTokenStore();
@@ -102,7 +108,7 @@ namespace IdentityServer3.Tests.Validation
                 authorizationCodeStore, 
                 refreshTokens, 
                 userService, 
-                customGrantValidator, 
+                aggregateCustomValidator, 
                 customRequestValidator, 
                 scopeValidator, 
                 new DefaultEventService());

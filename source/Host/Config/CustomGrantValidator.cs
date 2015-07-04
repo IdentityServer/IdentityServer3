@@ -24,24 +24,23 @@ namespace IdentityServer3.Host.Config
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            if (request.GrantType == "custom")
+            var credential = request.Raw.Get("custom_credential");
+
+            if (credential != null)
             {
-                var credential = request.Raw.Get("custom_credential");
-
-                if (credential != null)
-                {
-                    // valid credential
-                    return Task.FromResult(new CustomGrantValidationResult("818727", "custom"));
-                }
-                else
-                {
-                    // custom error message
-                    return Task.FromResult(new CustomGrantValidationResult("invalid custom credential"));
-                }
+                // valid credential
+                return Task.FromResult(new CustomGrantValidationResult("818727", "custom"));
             }
+            else
+            {
+                // custom error message
+                return Task.FromResult(new CustomGrantValidationResult("invalid custom credential"));
+            }
+        }
 
-            // standard error message - invalid_grant
-            return Task.FromResult<CustomGrantValidationResult>(null);
+        public string GrantType
+        {
+            get { return "custom"; }
         }
     }
 }

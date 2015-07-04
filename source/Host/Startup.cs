@@ -54,8 +54,10 @@ namespace IdentityServer3.Host
                         .UseInMemoryClients(Clients.Get())
                         .UseInMemoryScopes(Scopes.Get());
 
-                    factory.CustomGrantValidator = 
-                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
+                    factory.CustomGrantValidators.Add(
+                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator)));
+                    factory.CustomGrantValidators.Add(
+                        new Registration<ICustomGrantValidator>(typeof(AnotherCustomGrantValidator)));
 
                     factory.ConfigureClientStoreCache();
                     factory.ConfigureScopeStoreCache();

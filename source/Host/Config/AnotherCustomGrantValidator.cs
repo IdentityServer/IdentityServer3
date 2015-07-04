@@ -14,21 +14,34 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Host.Config
 {
-    internal class NopCustomGrantValidator : ICustomGrantValidator
+    public class AnotherCustomGrantValidator : ICustomGrantValidator
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            return Task.FromResult<CustomGrantValidationResult>(null);
+            var credential = request.Raw.Get("custom_credential");
+
+            if (credential != null)
+            {
+                // valid credential
+                return Task.FromResult(new CustomGrantValidationResult("818727", "custom"));
+            }
+            else
+            {
+                // custom error message
+                return Task.FromResult(new CustomGrantValidationResult("invalid custom credential"));
+            }
         }
+
 
         public string GrantType
         {
-            get { return ""; }
+            get { return "custom2"; }
         }
     }
 }
