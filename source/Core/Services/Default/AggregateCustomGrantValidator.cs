@@ -38,7 +38,7 @@ namespace IdentityServer3.Core.Services.Default
 
         public async Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            var validator = _validators.First(v => v.GrantType.Equals(request.GrantType));
+            var validator = _validators.First(v => v.GrantType.Equals(request.GrantType, System.StringComparison.Ordinal));
             return await validator.ValidateAsync(request);
         }
     }

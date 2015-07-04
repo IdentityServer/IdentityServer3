@@ -580,7 +580,7 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             // check if a validator is registered for the grant type
             /////////////////////////////////////////////
-            if (!_customGrantValidator.GetAvailableGrantTypes().Contains(_validatedRequest.GrantType))
+            if (!_customGrantValidator.GetAvailableGrantTypes().Contains(_validatedRequest.GrantType, StringComparer.Ordinal))
             {
                 LogError("No validator is registered for the grant type.");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
