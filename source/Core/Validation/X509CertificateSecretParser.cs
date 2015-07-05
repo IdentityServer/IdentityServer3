@@ -16,15 +16,26 @@
 
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services
+namespace IdentityServer3.Core.Validation
 {
-    class X509CertificateSecretParser : ISecretParser
+    /// <summary>
+    /// Parses the environment for an X509 client certificate
+    /// </summary>
+    public class X509CertificateSecretParser : ISecretParser
     {
+        /// <summary>
+        /// Tries to find a secret on the environment that can be used for authentication
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A parsed secret
+        /// </returns>
         public async Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
             var context = new OwinContext(environment);

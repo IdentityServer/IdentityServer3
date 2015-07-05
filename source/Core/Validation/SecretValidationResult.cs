@@ -16,8 +16,17 @@
 
 namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Validation result for secrets
+    /// </summary>
     public class SecretValidationResult : ValidationResult
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether the secret validation was successful.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if success; otherwise, <c>false</c>.
+        /// </value>
         public bool Success { get; set; }
     }
 }

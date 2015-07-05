@@ -18,17 +18,30 @@ using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Validates a shared secret stored in SHA256 or SHA512
+    /// </summary>
     public class HashedSharedSecretValidator : ISecretValidator
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Validates a secret
+        /// </summary>
+        /// <param name="secrets">The stored secrets.</param>
+        /// <param name="parsedSecret">The received secret.</param>
+        /// <returns>
+        /// A validation result
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">Id or cedential</exception>
         public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
         {
             var fail = Task.FromResult(new SecretValidationResult { Success = false });

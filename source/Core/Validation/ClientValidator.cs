@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
     internal class ClientValidator
     {
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IClientStore _clients;
         private readonly OwinEnvironmentService _environment;
         private readonly IEnumerable<ISecretParser> _parsers;
@@ -38,6 +41,8 @@ namespace IdentityServer3.Core.Services.Default
 
         public async Task<ClientSecretValidationResult> ValidateAsync()
         {
+            Logger.Debug("Start client validation");
+
             var result = new ClientSecretValidationResult
             {
                 IsError = true
@@ -50,12 +55,16 @@ namespace IdentityServer3.Core.Services.Default
                 parsedSecret = await parser.ParseAsync(_environment.Environment);
                 if (parsedSecret != null)
                 {
+                    Logger.DebugFormat("Parser found client secret: {0}", parser.GetType().Name);
+                    Logger.InfoFormat("Client secret id found: ", parsedSecret.Id);
+
                     break;
                 }
             }
 
             if (parsedSecret == null)
             {
+                Logger.Info("No client secret found");
                 return result;
             }
 
@@ -63,6 +72,7 @@ namespace IdentityServer3.Core.Services.Default
             var client = await _clients.FindClientByIdAsync(parsedSecret.Id);
             if (client == null)
             {
+                Logger.Info("No client with that id found. aborting");
                 return result;
             }
 
@@ -71,8 +81,12 @@ namespace IdentityServer3.Core.Services.Default
             foreach (var validator in _validators)
             {
                 secretValidationResult = await validator.ValidateAsync(client.ClientSecrets, parsedSecret);
+                
                 if (secretValidationResult.Success)
                 {
+                    Logger.DebugFormat("Secret validator success: {0}", validator.GetType().Name);
+                    Logger.Info("Client validation success");
+
                     result.Client = client;
                     result.IsError = false;
 
@@ -80,6 +94,7 @@ namespace IdentityServer3.Core.Services.Default
                 }
             }
 
+            Logger.Info("Client validation failed.");
             return result;
         }
     }

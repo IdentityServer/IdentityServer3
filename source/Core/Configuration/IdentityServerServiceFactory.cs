@@ -17,6 +17,7 @@
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 

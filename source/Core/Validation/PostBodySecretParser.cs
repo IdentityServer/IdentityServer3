@@ -16,14 +16,25 @@
 
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Parses a POST body for secrets
+    /// </summary>
     public class PostBodySecretParser : ISecretParser
     {
+        /// <summary>
+        /// Tries to find a secret on the environment that can be used for authentication
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A parsed secret
+        /// </returns>
         public async Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
             var context = new OwinContext(environment);

@@ -1,5 +1,4 @@
-﻿using IdentityServer3.Core.Models;
-/*
+﻿/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using IdentityServer3.Core.Extensions;
-using IdentityModel;
-using IdentityServer3.Core.Validation;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
-    class PlainTextSharedSecretValidator : ISecretValidator
+    /// <summary>
+    /// Validates a secret stored in plain text
+    /// </summary>
+    public class PlainTextSharedSecretValidator : ISecretValidator
     {
+        /// <summary>
+        /// Validates a secret
+        /// </summary>
+        /// <param name="secrets">The stored secrets.</param>
+        /// <param name="parsedSecret">The received secret.</param>
+        /// <returns>
+        /// A validation result
+        /// </returns>
+        /// <exception cref="System.ArgumentException">id or credential is missing.</exception>
         public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
         {
             var fail = Task.FromResult(new SecretValidationResult { Success = false });

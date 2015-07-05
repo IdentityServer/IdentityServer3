@@ -20,8 +20,16 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services
 {
+    /// <summary>
+    /// A service for parsing secrets found on the environment
+    /// </summary>
     public interface ISecretParser
     {
+        /// <summary>
+        /// Tries to find a secret on the environment that can be used for authentication
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>A parsed secret</returns>
         Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment);
     }
 }

@@ -17,16 +17,28 @@
 using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
+    /// <summary>
+    /// Validates a secret based on the thumbprint of an X509 Certificate
+    /// </summary>
     public class X509CertificateThumbprintSecretValidator : ISecretValidator
     {
+        /// <summary>
+        /// Validates a secret
+        /// </summary>
+        /// <param name="secrets">The stored secrets.</param>
+        /// <param name="parsedSecret">The received secret.</param>
+        /// <returns>
+        /// A validation result
+        /// </returns>
+        /// <exception cref="System.ArgumentException">ParsedSecret.Credential is not an X509 Certificate</exception>
         public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
         {
             var fail = Task.FromResult(new SecretValidationResult { Success = false });
