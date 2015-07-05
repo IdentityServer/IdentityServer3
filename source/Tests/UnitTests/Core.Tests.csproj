@@ -169,6 +169,7 @@
     <Compile Include="Validation\Secret Validation\PlainTextClientSecretValidation.cs" />
     <Compile Include="Validation\RevocationRequestValidation.cs" />
     <Compile Include="Validation\Secret Validation\X509CertificateSecretParsing.cs" />
+    <Compile Include="Validation\Secret Validation\X509CertificateSecretValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />

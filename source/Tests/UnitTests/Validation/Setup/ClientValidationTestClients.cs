@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core;
 using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,38 @@ namespace IdentityServer3.Tests.Validation
                     ClientSecrets = new List<Secret>
                     {
                         new Secret("secret")
+                    }
+                },
+
+                new Client
+                {
+                    ClientName = "Client with X509 Certificate",
+                    ClientId = "certificate_valid",
+                    Enabled = true,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret
+                        {
+                            Type = Constants.SecretTypes.X509CertificateThumbprint,
+                            Value = TestCert.Load().Thumbprint
+                        }
+                    }
+                },
+
+                new Client
+                {
+                    ClientName = "Client with X509 Certificate",
+                    ClientId = "certificate_invalid",
+                    Enabled = true,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret
+                        {
+                            Type = Constants.SecretTypes.X509CertificateThumbprint,
+                            Value = "invalid"
+                        }
                     }
                 },
 
