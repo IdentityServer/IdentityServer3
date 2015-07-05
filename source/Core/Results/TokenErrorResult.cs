@@ -15,13 +15,13 @@
  */
 
 using IdentityServer3.Core.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Newtonsoft.Json;
 
 namespace IdentityServer3.Core.Results
 {

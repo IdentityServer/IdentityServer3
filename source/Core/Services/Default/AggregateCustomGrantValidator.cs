@@ -15,10 +15,9 @@
  */
 
 using IdentityServer3.Core.Validation;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default
 {

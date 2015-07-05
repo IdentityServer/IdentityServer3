@@ -1,4 +1,6 @@
-﻿/*
+﻿using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +16,6 @@
  * limitations under the License.
  */
 using System.Collections.Generic;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Host.Config
 {

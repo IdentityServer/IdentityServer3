@@ -23,6 +23,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using Autofac.Integration.Owin;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -30,7 +31,6 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Hosting;
-using Autofac.Integration.Owin;
 
 namespace Autofac.Integration.WebApi.Owin
 {

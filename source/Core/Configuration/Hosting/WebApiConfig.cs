@@ -16,6 +16,7 @@
 
 using Autofac;
 using Autofac.Integration.WebApi;
+using IdentityServer3.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
-using IdentityServer3.Core.Logging;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {

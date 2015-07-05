@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Host;
+using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
@@ -21,12 +25,6 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
-using IdentityServer3.Host;
-using IdentityServer3.Host.Config;
 using Serilog;
 
 [assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]

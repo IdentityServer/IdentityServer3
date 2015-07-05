@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
+using IdentityServer3.Core;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Xunit;
 using System.IO;
 using System.Text;
-using IdentityServer3.Core;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace IdentityServer3.Tests.Validation.Secret_Validation
 {

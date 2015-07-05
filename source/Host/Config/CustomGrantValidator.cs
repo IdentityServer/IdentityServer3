@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using System.Threading.Tasks;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Host.Config
 {

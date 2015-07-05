@@ -15,8 +15,6 @@
  */
 
 using IdentityServer3.Core.Configuration;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 
 namespace IdentityServer3.Tests.Validation
 {

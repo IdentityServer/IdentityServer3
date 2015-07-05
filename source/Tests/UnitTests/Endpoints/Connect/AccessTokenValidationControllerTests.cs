@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -22,12 +28,6 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using FluentAssertions;
-using IdentityServer3.Core;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Validation;
 using Xunit;
 
 namespace IdentityServer3.Tests.Endpoints.Connect

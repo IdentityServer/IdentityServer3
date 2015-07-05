@@ -16,8 +16,6 @@
 
 using IdentityServer3.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default

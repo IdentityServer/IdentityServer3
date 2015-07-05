@@ -22,7 +22,6 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System.Collections.Specialized;
 using System.Net.Http;

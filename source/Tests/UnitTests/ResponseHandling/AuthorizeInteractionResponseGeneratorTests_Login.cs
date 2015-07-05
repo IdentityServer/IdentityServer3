@@ -25,7 +25,6 @@ using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using Moq;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 

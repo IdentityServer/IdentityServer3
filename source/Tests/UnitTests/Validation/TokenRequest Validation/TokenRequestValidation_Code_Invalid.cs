@@ -24,7 +24,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
