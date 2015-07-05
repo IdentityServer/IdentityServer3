@@ -373,7 +373,6 @@
     <Compile Include="Endpoints\Connect\EndSessionController.cs" />
     <Compile Include="Endpoints\Connect\UserInfoEndpointController.cs" />
     <Compile Include="Models\AuthorizationCode.cs" />
-    <Compile Include="Models\ClientCredential.cs" />
     <Compile Include="ViewModels\UserConsent.cs" />
     <Compile Include="ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Results\ProtectedResourceErrorResult.cs" />

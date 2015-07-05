@@ -165,7 +165,7 @@
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\Secret Validation\BasicAuthenticationCredentialParsing.cs" />
     <Compile Include="Validation\Secret Validation\FormPostCredentialParsing.cs" />
-    <Compile Include="Validation\Secret Validation\HashedClientSecretValidation.cs" />
+    <Compile Include="Validation\Secret Validation\HashedSharedSecretValidation.cs" />
     <Compile Include="Validation\Secret Validation\PlainTextClientSecretValidation.cs" />
     <Compile Include="Validation\RevocationRequestValidation.cs" />
     <Compile Include="Validation\Secret Validation\X509CertificateSecretParsing.cs" />
