@@ -36,7 +36,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Fact]
         public async Task Valid_Certificate_Thumbprint()
         {
-            var clientId = "certificate";
+            var clientId = "certificate_valid";
             var client = await _clients.FindClientByIdAsync(clientId);
 
             var secret = new ParsedSecret
