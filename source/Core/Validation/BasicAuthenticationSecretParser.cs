@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin;
@@ -30,6 +31,8 @@ namespace IdentityServer3.Core.Validation
     /// </summary>
     public class BasicAuthenticationSecretParser : ISecretParser
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Tries to find a secret on the environment that can be used for authentication
         /// </summary>
@@ -39,6 +42,8 @@ namespace IdentityServer3.Core.Validation
         /// </returns>
         public Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
+            Logger.Debug("Start parsing Basic Authentication secret");
+
             var notfound = Task.FromResult<ParsedSecret>(null);
             var context = new OwinContext(environment);
             var authorizationHeader = context.Request.Headers.Get("Authorization");
@@ -63,16 +68,19 @@ namespace IdentityServer3.Core.Validation
             }
             catch (FormatException)
             {
+                Logger.Debug("Malformed Basic Authentication credential.");
                 return notfound;
             }
             catch (ArgumentException)
             {
+                Logger.Debug("Malformed Basic Authentication credential.");
                 return notfound;
             }
 
             var ix = pair.IndexOf(':');
             if (ix == -1)
             {
+                Logger.Debug("Malformed Basic Authentication credential.");
                 return notfound;
             }
 
@@ -91,6 +99,7 @@ namespace IdentityServer3.Core.Validation
                 return Task.FromResult(parsedSecret);
             }
 
+            Logger.Debug("No Basic Authentication secret found");
             return notfound;
         }
     }

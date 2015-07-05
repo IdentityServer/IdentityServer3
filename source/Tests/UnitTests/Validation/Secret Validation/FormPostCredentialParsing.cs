@@ -22,89 +22,84 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace IdentityServer3.Tests.Validation.Client_Validation
+namespace IdentityServer3.Tests.Validation.Secret_Validation
 {
     public class FormPostCredentialExtraction
     {
-        const string Category = "Client Credentials - Form Post Credential Extraction";
+        const string Category = "Secrets - Form Post Secret Parsing";
 
         [Fact]
         public async void EmptyOwinEnvironment()
         {
-            var validator = new PostBodyClientValidator(null, null);
+            var parser = new PostBodySecretParser();
             var context = new OwinContext();
             context.Request.Body = new MemoryStream();
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(false);
+            secret.Should().BeNull();
         }
 
         [Fact]
         public async void Valid_PostBody()
         {
-            var validator = new PostBodyClientValidator(null, null);
+            var parser = new PostBodySecretParser();
             var context = new OwinContext();
 
             var body = "client_id=client&client_secret=secret";
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(true);
-            credential.ClientId.Should().Be("client");
-            credential.Credential.Should().Be("secret");
+            secret.Type.Should().Be(Constants.ParsedSecretTypes.SharedSecret);
+            secret.Id.Should().Be("client");
+            secret.Credential.Should().Be("secret");
         }
 
         [Fact]
         public async void Missing_ClientId()
         {
-            var validator = new PostBodyClientValidator(null, null);
+            var parser = new PostBodySecretParser();
             var context = new OwinContext();
 
             var body = "client_secret=secret";
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(false);
+            secret.Should().BeNull();
         }
 
         [Fact]
         public async void Missing_ClientSecret()
         {
-            var validator = new PostBodyClientValidator(null, null);
+            var parser = new PostBodySecretParser();
             var context = new OwinContext();
 
             var body = "client_id=client";
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(false);
+            secret.Should().BeNull();
         }
 
         [Fact]
         public async void Malformed_PostBody()
         {
-            var validator = new PostBodyClientValidator(null, null);
+            var parser = new PostBodySecretParser();
             var context = new OwinContext();
 
             var body = "malformed";
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(false);
+            secret.Should().BeNull();
         }
     }
 }

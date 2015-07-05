@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin;
@@ -28,6 +29,8 @@ namespace IdentityServer3.Core.Validation
     /// </summary>
     public class PostBodySecretParser : ISecretParser
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Tries to find a secret on the environment that can be used for authentication
         /// </summary>
@@ -37,8 +40,9 @@ namespace IdentityServer3.Core.Validation
         /// </returns>
         public async Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
-            var context = new OwinContext(environment);
+            Logger.Debug("Start parsing for secret in post body");
 
+            var context = new OwinContext(environment);
             var body = await context.ReadRequestFormAsync();
 
             if (body != null)
@@ -59,6 +63,7 @@ namespace IdentityServer3.Core.Validation
                 }
             }
 
+            Logger.Debug("No secet in post body found");
             return null;
         }
     }

@@ -23,29 +23,28 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace IdentityServer3.Tests.Validation.Client_Validation
+namespace IdentityServer3.Tests.Validation.Secret_Validation
 {
-    public class BasicAuthenticationCredentialExtraction
+    public class BasicAuthenticationSecretParsing
     {
-        const string Category = "Client Credentials - Basic Authentication Credential Extraction";
+        const string Category = "Secrets - Basic Authentication Secret Parsing";
 
         [Fact]
         public async void EmptyOwinEnvironment()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(false);
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void Valid_BasicAuthentication_Request()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
@@ -53,79 +52,78 @@ namespace IdentityServer3.Tests.Validation.Client_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.CredentialType.Should().Be(Constants.ClientCredentialTypes.SharedSecret);
-            credential.IsPresent.Should().Be(true);
-            credential.ClientId.Should().Be("client");
-            credential.Credential.Should().Be("secret");
+            secret.Type.Should().Be(Constants.ParsedSecretTypes.SharedSecret);
+            secret.Id.Should().Be("client");
+            secret.Credential.Should().Be("secret");
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Empty_Basic_Header()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic" }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Empty_Basic_Header_Variation()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic " }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Unknown_Scheme()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Unknown" }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic somerandomdata" }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
@@ -133,16 +131,16 @@ namespace IdentityServer3.Tests.Validation.Client_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
 
         [Fact]
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only_With_Colon()
         {
-            var validator = new BasicAuthenticationClientValidator(null, null);
+            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
@@ -150,9 +148,9 @@ namespace IdentityServer3.Tests.Validation.Client_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var credential = await validator.ExtractCredentialAsync(context.Environment);
+            var secret = await parser.ParseAsync(context.Environment);
 
-            credential.IsPresent.Should().BeFalse();
+            secret.Should().BeNull();
         }
     }
 }
