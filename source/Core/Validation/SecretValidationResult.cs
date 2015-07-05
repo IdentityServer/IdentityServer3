@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Models;
-using System.Threading.Tasks;
-
-namespace IdentityServer3.Core.Services
+namespace IdentityServer3.Core.Validation
 {
     /// <summary>
-    /// Abstraction for client secret validation
+    /// Validation result for secrets
     /// </summary>
-    public interface IClientSecretValidator
+    public class SecretValidationResult : ValidationResult
     {
         /// <summary>
-        /// Validates the client secret.
+        /// Gets or sets a value indicating whether the secret validation was successful.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="credential">The client credential.</param>
-        /// <returns><c>true</c> if the secret is valid; <c>false</c> otherwise.</returns>
-        Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential);
+        /// <value>
+        ///   <c>true</c> if success; otherwise, <c>false</c>.
+        /// </value>
+        public bool Success { get; set; }
     }
 }

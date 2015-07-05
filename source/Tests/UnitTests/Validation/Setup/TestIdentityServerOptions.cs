@@ -31,27 +31,9 @@ namespace IdentityServer3.Tests.Validation
                 DataProtector = new NoDataProtector(),
             };
 
-            var assembly = typeof(TestIdentityServerOptions).Assembly;
-            using (var stream = assembly.GetManifestResourceStream("IdentityServer3.Tests.idsrv3test.pfx"))
-            {
-                options.SigningCertificate = new X509Certificate2(ReadStream(stream), "idsrv3test");
-            }
-
+            options.SigningCertificate = TestCert.Load();
+            
             return options;
-        }
-
-        private static byte[] ReadStream(Stream input)
-        {
-            var buffer = new byte[16 * 1024];
-            using (var ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
-            }
         }
     }
 }

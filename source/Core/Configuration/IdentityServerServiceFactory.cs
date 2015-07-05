@@ -17,6 +17,7 @@
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 
@@ -60,6 +61,21 @@ namespace IdentityServer3.Core.Configuration
             this.ExternalClaimsFilter = DefaultClaimsFilter;
 
             CustomGrantValidators = new List<Registration<ICustomGrantValidator>>();
+
+            // register default secret parsers
+            SecretParsers = new List<Registration<ISecretParser>>
+            {
+                new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
+                new Registration<ISecretParser, PostBodySecretParser>(),
+                new Registration<ISecretParser, X509CertificateSecretParser>(),
+            };
+
+            // register default secret validators
+            SecretValidators = new List<Registration<ISecretValidator>>
+            {
+                new Registration<ISecretValidator, HashedSharedSecretValidator>(),
+                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>()
+            };
         }
 
         /// <summary>
@@ -267,13 +283,8 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<ILocalizationService> LocalizationService { get; set; }
 
-        /// <summary>
-        /// Gets or sets the client secret validator.
-        /// </summary>
-        /// <value>
-        /// The client secret validator.
-        /// </value>
-        public Registration<IClientValidator> ClientValidator { get; set; }
+        public IEnumerable<Registration<ISecretParser>> SecretParsers { get; set; }
+        public IEnumerable<Registration<ISecretValidator>> SecretValidators { get; set; }
 
         /// <summary>
         /// Gets or sets the CORS policy service.

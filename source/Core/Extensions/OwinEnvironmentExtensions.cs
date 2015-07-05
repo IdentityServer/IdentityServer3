@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;

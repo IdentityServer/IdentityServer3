@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin;
@@ -24,34 +25,24 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Validation
 {
     /// <summary>
-    /// Client validator for client secrets posted in the body
+    /// Parses a POST body for secrets
     /// </summary>
-    public class PostBodyClientValidator : ClientValidatorBase
+    public class PostBodySecretParser : ISecretParser
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PostBodyClientValidator"/> class.
-        /// </summary>
-        /// <param name="secretValidator">The secret validator.</param>
-        /// <param name="clients">The client store.</param>
-        public PostBodyClientValidator(IClientSecretValidator secretValidator, IClientStore clients)
-            : base(secretValidator, clients)
-        { }
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
-        /// Extracts the credential from the HTTP request.
+        /// Tries to find a secret on the environment that can be used for authentication
         /// </summary>
-        /// <param name="environment">The OWIN environment.</param>
-        /// <returns></returns>
-        public override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A parsed secret
+        /// </returns>
+        public async Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
+            Logger.Debug("Start parsing for secret in post body");
+
             var context = new OwinContext(environment);
-
-            var credential = new ClientCredential
-            {
-                CredentialType = Constants.ClientCredentialTypes.SharedSecret,
-                IsPresent = false
-            };
-
             var body = await context.ReadRequestFormAsync();
 
             if (body != null)
@@ -61,15 +52,19 @@ namespace IdentityServer3.Core.Validation
 
                 if (id.IsPresent() && secret.IsPresent())
                 {
-                    credential.IsPresent = true;
-                    credential.ClientId = id;
-                    credential.Credential = secret;
+                    var parsedSecret = new ParsedSecret
+                    {
+                        Id = id,
+                        Credential = secret,
+                        Type = Constants.ParsedSecretTypes.SharedSecret
+                    };
 
-                    return credential;
+                    return parsedSecret;
                 }
             }
 
-            return credential;
+            Logger.Debug("No secet in post body found");
+            return null;
         }
     }
 }

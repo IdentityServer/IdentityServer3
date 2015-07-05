@@ -23,9 +23,9 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
+using Microsoft.Owin;
 using System.Security;
 using System.Threading.Tasks;
-using Microsoft.Owin;
 
 namespace Autofac.Integration.Owin
 {

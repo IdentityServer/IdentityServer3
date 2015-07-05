@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin;
@@ -25,58 +26,52 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Validation
 {
     /// <summary>
-    /// Client secret validator for X.509 client certificates
+    /// Parses the environment for an X509 client certificate
     /// </summary>
-    public class X509CertificateClientValidator : ClientValidatorBase
+    public class X509CertificateSecretParser : ISecretParser
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="X509CertificateClientValidator"/> class.
-        /// </summary>
-        /// <param name="secretValidator">The secret validator.</param>
-        /// <param name="clients">The client store.</param>
-        public X509CertificateClientValidator(IClientSecretValidator secretValidator, IClientStore clients)
-            : base(secretValidator, clients)
-        { }
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger(); 
 
         /// <summary>
-        /// Extracts the credential from the HTTP request.
+        /// Tries to find a secret on the environment that can be used for authentication
         /// </summary>
-        /// <param name="environment">The OWIN environment.</param>
-        /// <returns></returns>
-        public override async Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A parsed secret
+        /// </returns>
+        public async Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
-            var credential = new ClientCredential
-            {
-                IsPresent = false,
-                CredentialType = Constants.ClientCredentialTypes.X509Certificate
-            };
+            Logger.Debug("Start parsing for X.509 certificate");
 
             var context = new OwinContext(environment);
             var body = await context.ReadRequestFormAsync();
 
             if (body == null)
             {
-                return credential;
+                return null;
             }
 
             var id = body.Get("client_id");
             if (id.IsMissing())
             {
-                return credential;
+                Logger.Debug("client_id is not found in post body");
+                return null;
             }
 
             var cert = context.Get<X509Certificate2>("ssl.ClientCertificate");
 
             if (cert != null)
             {
-                credential.IsPresent = true;
-                credential.Credential = cert;
-                credential.ClientId = id;
-
-                return credential;
+                return new ParsedSecret
+                {
+                    Id = id,
+                    Credential = cert,
+                    Type = Constants.ParsedSecretTypes.X509Certificate
+                };
             }
 
-            return credential;
+            Logger.Debug("X.509 certificate not found.");
+            return null;
         }
     }
 }

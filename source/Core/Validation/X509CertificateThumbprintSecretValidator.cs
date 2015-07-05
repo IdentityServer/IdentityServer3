@@ -17,42 +17,48 @@
 using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
     /// <summary>
-    /// Client secret validator based on X.509 certificate thumbprints
+    /// Validates a secret based on the thumbprint of an X509 Certificate
     /// </summary>
-    public class X509CertificateThumbprintClientSecretValidator : IClientSecretValidator
+    public class X509CertificateThumbprintSecretValidator : ISecretValidator
     {
         /// <summary>
-        /// Validates the client secret.
+        /// Validates a secret
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="credential">The client credential.</param>
+        /// <param name="secrets">The stored secrets.</param>
+        /// <param name="parsedSecret">The received secret.</param>
         /// <returns>
-        ///   <c>true</c> if the secret is valid; <c>false</c> otherwise.
+        /// A validation result
         /// </returns>
-        public Task<bool> ValidateClientSecretAsync(Client client, ClientCredential credential)
+        /// <exception cref="System.ArgumentException">ParsedSecret.Credential is not an X509 Certificate</exception>
+        public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
         {
-            if (credential.CredentialType != Constants.ClientCredentialTypes.X509Certificate)
+            var fail = Task.FromResult(new SecretValidationResult { Success = false });
+            var success = Task.FromResult(new SecretValidationResult { Success = true });
+
+            if (parsedSecret.Type != Constants.ParsedSecretTypes.X509Certificate)
             {
-                return Task.FromResult(false);
+                return fail;
             }
 
-            var cert = credential.Credential as X509Certificate2;
+            var cert = parsedSecret.Credential as X509Certificate2;
 
             if (cert == null)
             {
-                throw new ArgumentNullException("ClientCredential.Credential");
+                throw new ArgumentException("ParsedSecret.Credential is not an X509 Certificate");
             }
 
             var thumbprint = cert.Thumbprint;
 
-            foreach (var secret in client.ClientSecrets)
+            foreach (var secret in secrets)
             {
                 // check if client secret is still valid
                 if (secret.Expiration.HasExpired()) continue;
@@ -61,12 +67,12 @@ namespace IdentityServer3.Core.Services.Default
                 {
                     if (TimeConstantComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
                     {
-                        return Task.FromResult(true);
+                        return success;
                     }
                 }
             }
 
-            return Task.FromResult(false);
+            return fail;
         }
     }
 }

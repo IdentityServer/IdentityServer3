@@ -1,4 +1,6 @@
-﻿/*
+﻿using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
+/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +16,22 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services
 {
     /// <summary>
-    /// The client validator turn some credential on an incoming HTTP request into a Client
+    /// Service for validating a received secret against a stored secret
     /// </summary>
-    public interface IClientValidator
+    public interface ISecretValidator
     {
         /// <summary>
-        /// Parses the incoming HTTP request and turns some client credential into a client model
+        /// Validates a secret
         /// </summary>
-        /// <param name="environment">The environment.</param>
+        /// <param name="secrets">The stored secrets.</param>
+        /// <param name="parsedSecret">The received secret.</param>
         /// <returns>A validation result</returns>
-        Task<ClientSecretValidationResult> ValidateAsync(IDictionary<string, object> environment);
+        Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret);
     }
 }

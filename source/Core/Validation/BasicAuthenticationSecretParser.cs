@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using Microsoft.Owin;
@@ -26,43 +27,35 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Validation
 {
     /// <summary>
-    /// Client validator for client secrets using HTTP Basic Authentication
+    /// Parses a Basic Authentication header
     /// </summary>
-    public class BasicAuthenticationClientValidator : ClientValidatorBase
+    public class BasicAuthenticationSecretParser : ISecretParser
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BasicAuthenticationClientValidator"/> class.
-        /// </summary>
-        /// <param name="secretValidator">The secret validator.</param>
-        /// <param name="clients">The client store.</param>
-        public BasicAuthenticationClientValidator(IClientSecretValidator secretValidator, IClientStore clients)
-            : base(secretValidator, clients)
-        { }
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
-        /// Extracts the credential from the HTTP request.
+        /// Tries to find a secret on the environment that can be used for authentication
         /// </summary>
-        /// <param name="environment">The OWIN environment.</param>
-        /// <returns></returns>
-        public override Task<ClientCredential> ExtractCredentialAsync(IDictionary<string, object> environment)
+        /// <param name="environment">The environment.</param>
+        /// <returns>
+        /// A parsed secret
+        /// </returns>
+        public Task<ParsedSecret> ParseAsync(IDictionary<string, object> environment)
         {
-            var credential = new ClientCredential
-            {
-                CredentialType = Constants.ClientCredentialTypes.SharedSecret,
-                IsPresent = false
-            };
+            Logger.Debug("Start parsing Basic Authentication secret");
 
+            var notfound = Task.FromResult<ParsedSecret>(null);
             var context = new OwinContext(environment);
             var authorizationHeader = context.Request.Headers.Get("Authorization");
 
             if (authorizationHeader == null)
             {
-                return Task.FromResult(credential);
+                return notfound;
             }
 
             if (!authorizationHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(credential);
+                return notfound;
             }
 
             var parameter = authorizationHeader.Substring("Basic ".Length);
@@ -75,17 +68,20 @@ namespace IdentityServer3.Core.Validation
             }
             catch (FormatException)
             {
-                return Task.FromResult(credential);
+                Logger.Debug("Malformed Basic Authentication credential.");
+                return notfound;
             }
             catch (ArgumentException)
             {
-                return Task.FromResult(credential);
+                Logger.Debug("Malformed Basic Authentication credential.");
+                return notfound;
             }
 
             var ix = pair.IndexOf(':');
             if (ix == -1)
             {
-                return Task.FromResult(credential);
+                Logger.Debug("Malformed Basic Authentication credential.");
+                return notfound;
             }
 
             var clientId = pair.Substring(0, ix);
@@ -93,14 +89,18 @@ namespace IdentityServer3.Core.Validation
 
             if (clientId.IsPresent() && secret.IsPresent())
             {
-                credential.IsPresent = true;
-                credential.ClientId = clientId;
-                credential.Credential = secret;
+                var parsedSecret = new ParsedSecret
+                {
+                    Id = clientId,
+                    Credential = secret,
+                    Type = Constants.ParsedSecretTypes.SharedSecret
+                };
 
-                return Task.FromResult(credential);
+                return Task.FromResult(parsedSecret);
             }
 
-            return Task.FromResult(credential);
+            Logger.Debug("No Basic Authentication secret found");
+            return notfound;
         }
     }
 }
