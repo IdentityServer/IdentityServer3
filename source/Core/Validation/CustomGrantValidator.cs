@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Validation
 {
-    internal class AggregateCustomGrantValidator
+    internal class CustomGrantValidator
     {
         private readonly IEnumerable<ICustomGrantValidator> _validators;
         
-        public AggregateCustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
+        public CustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
         {
             _validators = validators;
         }

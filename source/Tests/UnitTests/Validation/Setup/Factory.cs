@@ -82,14 +82,14 @@ namespace IdentityServer3.Tests.Validation
                 customRequestValidator = new DefaultCustomRequestValidator();
             }
 
-            AggregateCustomGrantValidator aggregateCustomValidator;
+            CustomGrantValidator aggregateCustomValidator;
             if (customGrantValidators == null)
             {
-                aggregateCustomValidator = new AggregateCustomGrantValidator(new [] { new TestGrantValidator() });
+                aggregateCustomValidator = new CustomGrantValidator(new [] { new TestGrantValidator() });
             }
             else
             {
-                aggregateCustomValidator = new AggregateCustomGrantValidator(customGrantValidators);
+                aggregateCustomValidator = new CustomGrantValidator(customGrantValidators);
             }
                 
             if (refreshTokens == null)

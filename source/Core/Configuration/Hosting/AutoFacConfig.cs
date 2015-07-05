@@ -77,7 +77,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultType<IClientPermissionsService, DefaultClientPermissionsService>(fact.ClientPermissionsService);
 
             // register custom grant validators
-            builder.RegisterType<AggregateCustomGrantValidator>();
+            builder.RegisterType<CustomGrantValidator>();
             if (fact.CustomGrantValidators.Any())
             {
                 foreach (var val in fact.CustomGrantValidators)

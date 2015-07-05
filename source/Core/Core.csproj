@@ -377,7 +377,7 @@
     <Compile Include="ResponseHandling\UserInfoResponseGenerator.cs" />
     <Compile Include="Results\ProtectedResourceErrorResult.cs" />
     <Compile Include="Results\UserInfoResult.cs" />
-    <Compile Include="Services\Default\AggregateCustomGrantValidator.cs" />
+    <Compile Include="Validation\CustomGrantValidator.cs" />
     <Compile Include="Services\Default\DefaultCustomRequestValidator.cs" />
     <Compile Include="Services\Default\DefaultCustomTokenValidator.cs" />
     <Compile Include="Services\Default\DefaultTokenService.cs" />
