@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.Validation
                 if (parsedSecret != null)
                 {
                     Logger.DebugFormat("Parser found client secret: {0}", parser.GetType().Name);
-                    Logger.InfoFormat("Client secret id found: ", parsedSecret.Id);
+                    Logger.InfoFormat("Client secret id found: {0}", parsedSecret.Id);
 
                     break;
                 }
