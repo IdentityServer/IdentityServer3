@@ -16,6 +16,7 @@
 
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,8 @@ namespace IdentityServer3.Core.Validation
         
         public CustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
         {
+            if (validators == null) throw new ArgumentNullException("validators");
+
             _validators = validators;
         }
 
@@ -38,8 +41,20 @@ namespace IdentityServer3.Core.Validation
 
         public async Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            var validator = _validators.First(v => v.GrantType.Equals(request.GrantType, System.StringComparison.Ordinal));
-            return await validator.ValidateAsync(request);
+            var validator = _validators.FirstOrDefault(v => v.GrantType.Equals(request.GrantType, System.StringComparison.Ordinal));
+
+            if (validator != null)
+            {
+                return await validator.ValidateAsync(request);
+            }
+            else
+            {
+                return new CustomGrantValidationResult 
+                { 
+                    IsError = true, 
+                    ErrorDescription = "No validator found for grant type" 
+                };
+            }
         }
     }
 }

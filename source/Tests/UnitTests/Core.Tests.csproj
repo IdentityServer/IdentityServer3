@@ -163,6 +163,7 @@
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
+    <Compile Include="Validation\CustomGrantValidation.cs" />
     <Compile Include="Validation\Secret Validation\BasicAuthenticationCredentialParsing.cs" />
     <Compile Include="Validation\Secret Validation\FormPostCredentialParsing.cs" />
     <Compile Include="Validation\Secret Validation\HashedSharedSecretValidation.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
     <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
     <Compile Include="Validation\Setup\NoDataProtector.cs" />
+    <Compile Include="Validation\Setup\TestGrantValidator2.cs" />
     <Compile Include="Validation\Setup\TestIdentityServerOptions.cs" />
     <Compile Include="Validation\Token Validation\IdentityTokenValidation.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
