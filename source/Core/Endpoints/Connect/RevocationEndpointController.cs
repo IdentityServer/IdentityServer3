@@ -40,13 +40,13 @@ namespace IdentityServer3.Core.Endpoints
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         
         private readonly IEventService _events;
-        private readonly IClientValidator _clientValidator;
+        private readonly ClientSecretValidator _clientValidator;
         private readonly IdentityServerOptions _options;
         private readonly TokenRevocationRequestValidator _requestValidator;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly IRefreshTokenStore _refreshTokens;
 
-        public RevocationEndpointController(IdentityServerOptions options, IClientValidator clientValidator, TokenRevocationRequestValidator requestValidator, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens, IEventService events)
+        public RevocationEndpointController(IdentityServerOptions options, ClientSecretValidator clientValidator, TokenRevocationRequestValidator requestValidator, ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens, IEventService events)
         {
             _options = options;
             _clientValidator = clientValidator;
@@ -90,7 +90,7 @@ namespace IdentityServer3.Core.Endpoints
         public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             // validate client credentials and client
-            var clientResult = await _clientValidator.ValidateAsync(Request.GetOwinEnvironment());
+            var clientResult = await _clientValidator.ValidateAsync();
             if (clientResult.Client == null)
             {
                 return new RevocationErrorResult(Constants.TokenErrors.InvalidClient);
@@ -161,6 +161,7 @@ namespace IdentityServer3.Core.Endpoints
                 if (token.ClientId == client.ClientId)
                 {
                     await _refreshTokens.RevokeAsync(token.SubjectId, token.ClientId);
+                    await _tokenHandles.RevokeAsync(token.SubjectId, token.ClientId);
                 }
                 else
                 {
