@@ -283,7 +283,20 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<ILocalizationService> LocalizationService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the secret parsers.
+        /// </summary>
+        /// <value>
+        /// The secret parsers.
+        /// </value>
         public IEnumerable<Registration<ISecretParser>> SecretParsers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the secret validators.
+        /// </summary>
+        /// <value>
+        /// The secret validators.
+        /// </value>
         public IEnumerable<Registration<ISecretValidator>> SecretValidators { get; set; }
 
         /// <summary>

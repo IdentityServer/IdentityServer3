@@ -234,7 +234,6 @@
     <Compile Include="Services\Default\UserServiceBase.cs" />
     <Compile Include="Validation\X509CertificateThumbprintSecretValidator.cs" />
     <Compile Include="Services\ICache.cs" />
-    <Compile Include="Services\IClientValidator.cs" />
     <Compile Include="Services\ICorsPolicyService.cs" />
     <Compile Include="Services\IDependencyResolver.cs" />
     <Compile Include="Services\ILocalizationService.cs" />
