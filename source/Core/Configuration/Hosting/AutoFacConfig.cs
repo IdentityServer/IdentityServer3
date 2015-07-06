@@ -91,7 +91,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             }
 
             // register secret validation plumbing
-            builder.RegisterType<ClientValidator>();
+            builder.RegisterType<ClientSecretValidator>();
 
             foreach (var parser in fact.SecretParsers)
             {

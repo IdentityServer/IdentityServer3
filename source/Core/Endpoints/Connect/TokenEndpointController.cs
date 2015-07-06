@@ -42,7 +42,7 @@ namespace IdentityServer3.Core.Endpoints
 
         private readonly TokenResponseGenerator _generator;
         private readonly TokenRequestValidator _requestValidator;
-        private readonly ClientValidator _clientValidator;
+        private readonly ClientSecretValidator _clientValidator;
         private readonly IdentityServerOptions _options;
         private readonly IEventService _events;
 
@@ -54,7 +54,7 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="clientValidator">The client validator.</param>
         /// <param name="generator">The generator.</param>
         /// <param name="events">The events service.</param>
-        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientValidator clientValidator, TokenResponseGenerator generator, IEventService events)
+        public TokenEndpointController(IdentityServerOptions options, TokenRequestValidator requestValidator, ClientSecretValidator clientValidator, TokenResponseGenerator generator, IEventService events)
         {
             _requestValidator = requestValidator;
             _clientValidator = clientValidator;

@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
-    internal class ClientValidator
+    internal class ClientSecretValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -31,7 +31,7 @@ namespace IdentityServer3.Core.Validation
         private readonly IEnumerable<ISecretParser> _parsers;
         private readonly IEnumerable<ISecretValidator> _validators;
 
-        public ClientValidator(IClientStore clients, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment)
+        public ClientSecretValidator(IClientStore clients, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment)
         {
             _clients = clients;
             _parsers = parsers;
@@ -43,7 +43,7 @@ namespace IdentityServer3.Core.Validation
         {
             Logger.Debug("Start client validation");
 
-            var result = new ClientSecretValidationResult
+            var fail = new ClientSecretValidationResult
             {
                 IsError = true
             };
@@ -65,7 +65,7 @@ namespace IdentityServer3.Core.Validation
             if (parsedSecret == null)
             {
                 Logger.Info("No client secret found");
-                return result;
+                return fail;
             }
 
             // load client
@@ -73,7 +73,7 @@ namespace IdentityServer3.Core.Validation
             if (client == null)
             {
                 Logger.Info("No client with that id found. aborting");
-                return result;
+                return fail;
             }
 
             // see if a registered validator can validate the secret
@@ -87,15 +87,18 @@ namespace IdentityServer3.Core.Validation
                     Logger.DebugFormat("Secret validator success: {0}", validator.GetType().Name);
                     Logger.Info("Client validation success");
 
-                    result.Client = client;
-                    result.IsError = false;
+                    var success = new ClientSecretValidationResult
+                    {
+                        IsError = false,
+                        Client = client
+                    };
 
-                    return result;
+                    return success;
                 }
             }
 
             Logger.Info("Client validation failed.");
-            return result;
+            return fail;
         }
     }
 }
