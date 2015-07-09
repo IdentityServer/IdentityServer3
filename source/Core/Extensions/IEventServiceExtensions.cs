@@ -508,7 +508,7 @@ namespace IdentityServer3.Core.Extensions
                 EventConstants.Categories.InternalError,
                 "Signing certificate has no private key, or key is not accessible",
                 EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventConstants.Ids.SigningCertificatePrivateKeyNotAccessible,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
@@ -525,7 +525,7 @@ namespace IdentityServer3.Core.Extensions
                 EventConstants.Categories.InternalError,
                 "Signing certificate key length is less than 2048 bits.",
                 EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventConstants.Ids.SigningCertificatePrivateKeyNotAccessible,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,

@@ -115,7 +115,7 @@ namespace IdentityServer3.Core.Events
             private const int InternalErrorEventsStart = 5000;
 
             public const int UnhandledExceptionError = InternalErrorEventsStart + 0;
-            public const int SigningCertificatePrivatKeyNotAccessible = InternalErrorEventsStart + 1;
+            public const int SigningCertificatePrivateKeyNotAccessible = InternalErrorEventsStart + 1;
         }
     }
 }
