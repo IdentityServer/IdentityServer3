@@ -22,9 +22,9 @@ namespace Owin
 {
     internal static class ConfigureIdentityServerBaseUrlExtension
     {
-    private const string X_FORWARDED_HOST_HEADER_KEY = "X-Forwarded-Host";
-    private const string X_FORWARDED_PROTO_HEADER_KEY = "X-Forwarded-Proto";
-    public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicOrigin)
+        private const string X_FORWARDED_HOST_HEADER_KEY = "X-Forwarded-Host";
+        private const string X_FORWARDED_PROTO_HEADER_KEY = "X-Forwarded-Proto";
+        public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicOrigin)
         {
             if (publicOrigin.IsPresent())
             {
@@ -39,12 +39,10 @@ namespace Owin
                   var xForwardedHosts = ctx.Request.Headers.FirstOrDefault(h => h.Key.ToUpper() == X_FORWARDED_HOST_HEADER_KEY.ToUpper()).Value;
                   var xForwardedHost = (xForwardedHosts == null) ? null : xForwardedHosts.SingleOrDefault();
                   var host = xForwardedHost ?? request.Host.Value;
-                  Console.WriteLine("Host: " + host);
                 
                   var xForwardedProtos = ctx.Request.Headers.FirstOrDefault(h => h.Key.ToUpper() == X_FORWARDED_PROTO_HEADER_KEY.ToUpper()).Value;
                   var xForwardedProto = (xForwardedProtos == null) ? null : xForwardedProtos.SingleOrDefault();
                   var proto = xForwardedProto ?? request.Uri.Scheme;
-                  Console.WriteLine("Proto: " + proto);
                   
                   publicOrigin = proto + "://" + host;
                 }
