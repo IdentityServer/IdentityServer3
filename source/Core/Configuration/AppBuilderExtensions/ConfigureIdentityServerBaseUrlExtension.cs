@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
+using System;
+using System.Linq;
 using Thinktecture.IdentityServer.Core.Extensions;
 
 namespace Owin
 {
     internal static class ConfigureIdentityServerBaseUrlExtension
     {
-        public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicOrigin)
+    private const string X_FORWARDED_HOST_HEADER_KEY = "X-Forwarded-Host";
+    private const string X_FORWARDED_PROTO_HEADER_KEY = "X-Forwarded-Proto";
+    public static IAppBuilder ConfigureIdentityServerBaseUrl(this IAppBuilder app, string publicOrigin)
         {
             if (publicOrigin.IsPresent())
             {
@@ -30,15 +34,23 @@ namespace Owin
             app.Use(async (ctx, next) =>
             {
                 var request = ctx.Request;
-
-                var origin = publicOrigin;
-                if (origin.IsMissing())
+                if (publicOrigin.IsMissing())
                 {
-                    origin = request.Uri.Scheme + "://" + request.Host.Value;
+                  var xForwardedHosts = ctx.Request.Headers.FirstOrDefault(h => h.Key.ToUpper() == X_FORWARDED_HOST_HEADER_KEY.ToUpper()).Value;
+                  var xForwardedHost = (xForwardedHosts == null) ? null : xForwardedHosts.SingleOrDefault();
+                  var host = xForwardedHost ?? request.Host.Value;
+                  Console.WriteLine("Host: " + host);
+                
+                  var xForwardedProtos = ctx.Request.Headers.FirstOrDefault(h => h.Key.ToUpper() == X_FORWARDED_PROTO_HEADER_KEY.ToUpper()).Value;
+                  var xForwardedProto = (xForwardedProtos == null) ? null : xForwardedProtos.SingleOrDefault();
+                  var proto = xForwardedProto ?? request.Uri.Scheme;
+                  Console.WriteLine("Proto: " + proto);
+                  
+                  publicOrigin = proto + "://" + host;
                 }
-
-                ctx.Environment.SetIdentityServerHost(origin);
-                ctx.Environment.SetIdentityServerBasePath(request.PathBase.Value.EnsureTrailingSlash());
+                
+                ctx.Environment.SetIdentityServerHost(publicOrigin);
+                ctx.Environment.SetIdentityServerBasePath(ctx.Request.PathBase.Value.EnsureTrailingSlash());
 
                 await next();
             });
