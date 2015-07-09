@@ -46,7 +46,7 @@ namespace Owin
                   
                   publicOrigin = proto + "://" + host;
                 }
-                
+
                 ctx.Environment.SetIdentityServerHost(publicOrigin);
                 ctx.Environment.SetIdentityServerBasePath(ctx.Request.PathBase.Value.EnsureTrailingSlash());
 
