@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using IdentityModel.Extensions;
+using IdentityModel;
 using System;
 using System.Diagnostics;
 using System.Security.Claims;

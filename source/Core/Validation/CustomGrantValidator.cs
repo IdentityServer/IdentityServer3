@@ -15,7 +15,6 @@
  */
 
 using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

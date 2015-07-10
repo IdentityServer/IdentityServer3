@@ -15,7 +15,6 @@
  */
 
 using IdentityModel;
-using IdentityModel.Extensions;
 using IdentityServer3.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;

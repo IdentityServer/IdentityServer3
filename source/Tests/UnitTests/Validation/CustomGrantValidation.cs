@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace IdentityServer3.Tests.Validation
 {

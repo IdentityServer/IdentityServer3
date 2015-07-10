@@ -19,7 +19,6 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
