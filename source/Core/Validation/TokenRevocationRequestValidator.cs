@@ -25,15 +25,6 @@ namespace IdentityServer3.Core.Validation
 {
     internal class TokenRevocationRequestValidator
     {
-        private readonly ITokenHandleStore _tokenHandles;
-        private readonly IRefreshTokenStore _refreshTokens;
-
-        public TokenRevocationRequestValidator(ITokenHandleStore tokenHandles, IRefreshTokenStore refreshTokens)
-        {
-            _tokenHandles = tokenHandles;
-            _refreshTokens = refreshTokens;
-        }
-
         public Task<TokenRevocationRequestValidationResult> ValidateRequestAsync(NameValueCollection parameters, Client client)
         {
             if (parameters == null) throw new ArgumentNullException("parameters");

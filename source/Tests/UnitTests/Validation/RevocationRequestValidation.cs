@@ -40,7 +40,7 @@ namespace IdentityServer3.Tests.Validation
             _tokenHandles = new InMemoryTokenHandleStore();
             _clients = new InMemoryClientStore(TestClients.Get());
 
-            _validator = new TokenRevocationRequestValidator(_tokenHandles, _refreshTokens);
+            _validator = new TokenRevocationRequestValidator();
         }
 
         [Fact]

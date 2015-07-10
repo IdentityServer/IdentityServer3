@@ -77,11 +77,10 @@ namespace IdentityServer3.Core.Validation
             }
 
             // see if a registered validator can validate the secret
-            SecretValidationResult secretValidationResult = null;
             foreach (var validator in _validators)
             {
-                secretValidationResult = await validator.ValidateAsync(client.ClientSecrets, parsedSecret);
-                
+                var secretValidationResult = await validator.ValidateAsync(client.ClientSecrets, parsedSecret);
+
                 if (secretValidationResult.Success)
                 {
                     Logger.DebugFormat("Secret validator success: {0}", validator.GetType().Name);

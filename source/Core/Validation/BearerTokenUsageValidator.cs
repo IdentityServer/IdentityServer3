@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Logging;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Extensions;
 
 namespace IdentityServer3.Core.Validation
 {
     internal class BearerTokenUsageValidator
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         public async Task<BearerTokenUsageValidationResult> ValidateAsync(HttpRequestMessage request)
         {
             var result = ValidateAuthorizationHeader(request);
