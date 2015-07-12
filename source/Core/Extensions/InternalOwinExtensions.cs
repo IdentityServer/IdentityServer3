@@ -182,6 +182,15 @@ namespace IdentityServer3.Core.Extensions
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CspReport;
         }
 
+        public static string GetPartialLoginRestartUrl(this IOwinContext context, string signinId)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            if (String.IsNullOrWhiteSpace(signinId)) throw new ArgumentNullException("signinId");
+            
+            return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login + "?signin=" + signinId;
+        }
+        
         public static string GetPartialLoginResumeUrl(this IOwinContext context, string resumeId)
         {
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;

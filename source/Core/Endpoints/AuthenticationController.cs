@@ -704,6 +704,10 @@ namespace IdentityServer3.Core.Endpoints
                 var resumeLoginClaim = new Claim(Constants.ClaimTypes.PartialLoginReturnUrl, resumeLoginUrl);
                 id.AddClaim(resumeLoginClaim);
                 id.AddClaim(new Claim(GetClaimTypeForResumeId(resumeId), signInMessageId));
+
+                // add url to start login process over again (which re-triggers preauthenticate)
+                var restartUrl = context.GetPartialLoginRestartUrl(signInMessageId);
+                id.AddClaim(new Claim(Constants.ClaimTypes.PartialLoginRestartUrl, restartUrl));
             }
             else
             {
