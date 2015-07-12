@@ -441,6 +441,7 @@ namespace IdentityServer3.Core
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
+            public const string PartialLoginRestartUrl = "partial_login_restart_url";
             public const string PartialLoginReturnUrl = "partial_login_return_url";
 
             // internal claim types
