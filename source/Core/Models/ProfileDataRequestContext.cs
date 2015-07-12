@@ -102,6 +102,8 @@ namespace IdentityServer3.Core.Models
             {
                 RequestedClaimTypes = requestedClaimTypes;
             }
+
+            IssuedClaims = Enumerable.Empty<Claim>();
         }
     }
 }
