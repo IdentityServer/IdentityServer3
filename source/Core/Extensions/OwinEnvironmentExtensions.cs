@@ -83,6 +83,23 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Creates a sign in request.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// message
+        /// </exception>
+        public static string CreateSignInRequest(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            return env.CreateSignInRequest(new SignInMessage());
+        }
+        
+        /// <summary>
         /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
@@ -97,6 +114,21 @@ namespace IdentityServer3.Core.Extensions
         {
             if (env == null) throw new ArgumentNullException("env");
             if (message == null) throw new ArgumentNullException("message");
+
+            // if there's no return url, then use current request's URL
+            if (message.ReturnUrl.IsMissing())
+            {
+                var ctx = new OwinContext(env);
+                message.ReturnUrl = ctx.Request.Uri.AbsoluteUri;
+            }
+            if (message.ReturnUrl.StartsWith("~/"))
+            {
+                message.ReturnUrl = message.ReturnUrl.Substring(1);
+            }
+            if (message.ReturnUrl.StartsWith("/"))
+            {
+                message.ReturnUrl = env.GetIdentityServerBaseUrl().RemoveTrailingSlash() + message.ReturnUrl;
+            }
 
             var options = env.ResolveDependency<IdentityServerOptions>();
             var cookie = new MessageCookie<SignInMessage>(env, options);
@@ -170,6 +202,55 @@ namespace IdentityServer3.Core.Extensions
 
             context.Authentication.SignIn(props, identity);
             sessionCookie.IssueSessionId(login.PersistentLogin, login.PersistentLoginExpiration);
+        }
+
+        /// <summary>
+        /// Creates the sign out request.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        public static string CreateSignOutRequest(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            return env.CreateSignOutRequest(new SignOutMessage());
+        }
+
+        /// <summary>
+        /// Creates the sign out request.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">message</exception>
+        public static string CreateSignOutRequest(this IDictionary<string, object> env, SignOutMessage message)
+        {
+            if (message == null) throw new ArgumentNullException("message");
+
+            // if there's no return url, then use current request's URL
+            if (message.ReturnUrl.IsMissing())
+            {
+                var ctx = new OwinContext(env);
+                message.ReturnUrl = ctx.Request.Uri.AbsoluteUri;
+            }
+            if (message.ReturnUrl.StartsWith("~/"))
+            {
+                message.ReturnUrl = message.ReturnUrl.Substring(1);
+            }
+            if (message.ReturnUrl.StartsWith("/"))
+            {
+                message.ReturnUrl = env.GetIdentityServerBaseUrl().RemoveTrailingSlash() + message.ReturnUrl;
+            }
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var cookie = new MessageCookie<SignOutMessage>(env, options);
+            var id = cookie.Write(message);
+
+            var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
+            var uri = new Uri(url.AddQueryString("id=" + id));
+            
+            return uri.AbsoluteUri;
         }
 
         /// <summary>
