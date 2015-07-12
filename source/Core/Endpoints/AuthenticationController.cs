@@ -924,12 +924,18 @@ namespace IdentityServer3.Core.Endpoints
 
         private IHttpActionResult RenderLogoutPromptPage(string id)
         {
+            var logout_url = context.GetIdentityServerLogoutUrl();
+            if (id.IsPresent())
+            {
+                logout_url += "?id=" + id;
+            }
+
             var logoutModel = new LogoutViewModel
             {
                 SiteName = options.SiteName,
                 SiteUrl = context.GetIdentityServerBaseUrl(),
                 CurrentUser = context.GetCurrentUserDisplayName(),
-                LogoutUrl = context.GetIdentityServerLogoutUrl(),
+                LogoutUrl = logout_url,
                 AntiForgery = antiForgeryToken.GetAntiForgeryToken(),
             };
 
