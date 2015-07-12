@@ -218,9 +218,9 @@ namespace IdentityServer3.Core.Models
                 throw new ArgumentException("redirectPath must start with / or ~/");
             }
 
-            if (claims == null || !claims.Any())
+            if (claims == null)
             {
-                throw new ArgumentException("claims are required");
+                claims = Enumerable.Empty<Claim>();
             }
 
             var id = new ClaimsIdentity(claims, Constants.PartialSignInAuthenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
