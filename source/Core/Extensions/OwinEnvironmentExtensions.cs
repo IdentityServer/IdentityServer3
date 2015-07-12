@@ -454,6 +454,19 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Removes the partial login cookie.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        public static void RemovePartialLoginCookie(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            context.Authentication.SignOut(Constants.PartialSignInAuthenticationType);
+        }
+
+        /// <summary>
         /// Gets the current request identifier.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
