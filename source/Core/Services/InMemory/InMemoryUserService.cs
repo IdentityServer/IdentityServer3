@@ -155,11 +155,8 @@ namespace IdentityServer3.Core.Services.InMemory
                 select u;
 
             var user = query.SingleOrDefault();
-
-            if (user != null)
-            {
-                context.IsActive = user.Enabled;
-            }
+            
+            context.IsActive = (user != null) && user.Enabled;
 
             return Task.FromResult(0);
         }

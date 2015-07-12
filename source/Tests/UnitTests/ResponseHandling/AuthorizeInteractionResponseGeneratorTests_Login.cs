@@ -59,12 +59,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>()))
-                .Callback<IsActiveContext>(ctx=>{
-                    ctx.IsActive = true;
-                })
-                .Returns(Task.FromResult(0));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -82,8 +76,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -108,8 +100,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_restricted_current_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -134,13 +124,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_allowed_requested_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>()))
-                .Callback<IsActiveContext>(ctx =>
-                {
-                    ctx.IsActive = true;
-                })
-                .Returns(Task.FromResult(0));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -161,8 +144,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         public async Task Authenticated_User_with_different_requested_Idp_must_SignIn()
         {
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -185,8 +166,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             options.AuthenticationOptions.EnableLocalLogin = false;
 
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
@@ -212,8 +191,6 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             options.AuthenticationOptions.EnableLocalLogin = true;
 
             var users = new Mock<IUserService>();
-            users.Setup(x => x.IsActiveAsync(It.IsAny<IsActiveContext>())).Returns(Task.FromResult<bool>(true));
-
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
             var request = new ValidatedAuthorizeRequest
