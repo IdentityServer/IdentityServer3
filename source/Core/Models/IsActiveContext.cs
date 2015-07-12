@@ -28,7 +28,7 @@ namespace IdentityServer3.Core.Models
         /// </summary>
         public IsActiveContext()
         {
-            IsActive = false;
+            IsActive = true;
         }
 
         /// <summary>
