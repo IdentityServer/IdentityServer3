@@ -317,6 +317,22 @@ window.identityServer = (function () {
                 template: "<input type='hidden' name='{{token.name}}' value='{{token.value}}'>"
             };
         });
+
+        app.directive("focusIf", function ($timeout) {
+            return {
+                restrict: 'A',
+                scope: {
+                    focusIf:'='
+                },
+                link: function (scope, elem, attrs) {
+                    if (scope.focusIf) {
+                        $timeout(function () {
+                            elem.focus();
+                        }, 100);
+                    }
+                }
+            };
+        });
     })();
 
     (function () {
