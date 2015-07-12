@@ -33,33 +33,45 @@ namespace IdentityServer3.Core.Extensions
 {
     internal static class InternalOwinExtensions
     {
-        public static string GetRequestId(this IOwinContext ctx)
+        public static string GetRequestId(this IOwinContext context)
         {
-            return ctx.Environment.GetRequestId();
+            if (context == null) throw new ArgumentNullException("context");
+
+            return context.Environment.GetRequestId();
         }
 
         public static void SetRequestId(this IDictionary<string, object> env, string id)
         {
+            if (env == null) throw new ArgumentNullException("env");
+
             env[Constants.OwinEnvironment.RequestId] = id;
         }
 
         public static void SetIdentityServerHost(this IDictionary<string, object> env, string value)
         {
+            if (env == null) throw new ArgumentNullException("env");
+
             env[Constants.OwinEnvironment.IdentityServerHost] = value;
         }
 
         public static void SetIdentityServerBasePath(this IDictionary<string, object> env, string value)
         {
+            if (env == null) throw new ArgumentNullException("env");
+
             env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
         }
 
         public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
         {
+            if (env == null) throw new ArgumentNullException("env");
+
             return new OwinContext(env).GetAutofacLifetimeScope();
         }
 
         public static T ResolveDependency<T>(this IDictionary<string, object> env)
         {
+            if (env == null) throw new ArgumentNullException("env");
+
             var scope = env.GetLifetimeScope();
             var instance = (T)scope.ResolveOptional(typeof(T));
             return instance;
@@ -67,6 +79,8 @@ namespace IdentityServer3.Core.Extensions
 
         public static T ResolveDependency<T>(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            
             return context.Environment.ResolveDependency<T>();
         }
 
@@ -110,6 +124,7 @@ namespace IdentityServer3.Core.Extensions
         public static IEnumerable<LoginPageLink> FilterHiddenLinks(this IEnumerable<LoginPageLink> links)
         {
             if (links == null) throw new ArgumentNullException("links");
+
             return links.Where(x => x.Text.IsPresent());
         }
 
@@ -123,6 +138,8 @@ namespace IdentityServer3.Core.Extensions
 
         public static async Task<ClaimsIdentity> GetIdentityFrom(this IOwinContext context, string authenticationType)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            
             var result = await context.GetAuthenticationFrom(authenticationType);
             if (result != null &&
                 result.Identity != null &&
@@ -135,16 +152,22 @@ namespace IdentityServer3.Core.Extensions
 
         public static async Task<ClaimsIdentity> GetIdentityFromPartialSignIn(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
         }
 
         public static async Task<ClaimsIdentity> GetIdentityFromExternalSignIn(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             return await context.GetIdentityFrom(Constants.ExternalAuthenticationType);
         }
 
         public static async Task<string> GetSignInIdFromExternalProvider(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            
             var result = await context.GetAuthenticationFrom(Constants.ExternalAuthenticationType);
             if (result != null)
             {
@@ -159,6 +182,8 @@ namespace IdentityServer3.Core.Extensions
 
         public static async Task<ClaimsIdentity> GetIdentityFromExternalProvider(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             var id = await context.GetIdentityFromExternalSignIn();
             if (id != null)
             {
@@ -179,6 +204,8 @@ namespace IdentityServer3.Core.Extensions
 
         public static string GetCspReportUrl(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.CspReport;
         }
 
@@ -193,41 +220,53 @@ namespace IdentityServer3.Core.Extensions
         
         public static string GetPartialLoginResumeUrl(this IOwinContext context, string resumeId)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            if (String.IsNullOrWhiteSpace(resumeId)) throw new ArgumentNullException("resumeId");
+            
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ResumeLoginFromRedirect + "?resume=" + resumeId;
         }
 
         public static string GetPermissionsPageUrl(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.ClientPermissions;
         }
 
         public static string GetExternalProviderLoginUrl(this IOwinContext context, string provider, string signinId)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            if (String.IsNullOrWhiteSpace(provider)) throw new ArgumentNullException("provider");
+            if (String.IsNullOrWhiteSpace(signinId)) throw new ArgumentNullException("signinId");
+
             return context.Environment.GetIdentityServerBaseUrl() + Constants.RoutePaths.LoginExternal + "?provider=" + provider + "&signin=" + signinId;
         }
-
 
         public static string GetIdentityServerHost(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerHost();
         }
 
         public static string GetIdentityServerBasePath(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerBasePath();
         }
 
         public static string GetIdentityServerBaseUrl(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerBaseUrl();
         }
 
         public static string GetIdentityServerLogoutUrl(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.GetIdentityServerLogoutUrl();
         }
 
@@ -247,6 +286,7 @@ namespace IdentityServer3.Core.Extensions
         public static string CreateSignInRequest(this IOwinContext context, SignInMessage message)
         {
             if (context == null) throw new ArgumentNullException("context");
+
             return context.Environment.CreateSignInRequest(message);
         }
 
@@ -302,6 +342,8 @@ namespace IdentityServer3.Core.Extensions
 
         public async static Task<NameValueCollection> ReadRequestFormAsNameValueCollectionAsync(this IOwinContext context)
         {
+            if (context == null) throw new ArgumentNullException("context");
+            
             var form = await context.ReadRequestFormAsync();
 
             NameValueCollection nv = new NameValueCollection();
