@@ -199,6 +199,10 @@ namespace IdentityServer3.Core.Extensions
             var user = result.Identity;
 
             var claims_to_keep = new List<Claim>();
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginRestartUrl))
+            {
+                claims_to_keep.Add(user.FindFirst(Constants.ClaimTypes.PartialLoginRestartUrl));
+            }
             if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
             {
                 claims_to_keep.Add(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
@@ -212,7 +216,9 @@ namespace IdentityServer3.Core.Extensions
                 claims_to_keep.Add(user.FindFirst(c => c.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix)));
             }
 
-            claims = claims.Where(x => x.Type != Constants.ClaimTypes.PartialLoginReturnUrl && 
+            claims = claims.Where(x =>
+                x.Type != Constants.ClaimTypes.PartialLoginRestartUrl &&
+                x.Type != Constants.ClaimTypes.PartialLoginReturnUrl &&
                 x.Type != Constants.ClaimTypes.ExternalProviderUserId &&
                 !x.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix));
             
@@ -246,6 +252,29 @@ namespace IdentityServer3.Core.Extensions
 
             var authResult = new IdentityServer3.Core.Models.AuthenticateResult(subject, name, claims, identityProvider, authenticationMethod);
             await env.UpdatePartialLoginClaimsAsync(authResult.User.Claims);
+        }
+
+        /// <summary>
+        /// Gets the URL to restart the login process from the partial login.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        /// <exception cref="System.Exception">No partial login</exception>
+        public static async Task<string> GetPartialLoginRestartUrlAsync(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            var result = await context.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
+            if (result == null || result.Identity == null || result.Identity.IsAuthenticated == false)
+            {
+                throw new Exception("No partial login");
+            }
+
+            return result.Identity.Claims.Where(x => x.Type == Constants.ClaimTypes.PartialLoginRestartUrl)
+                .Select(x => x.Value)
+                .FirstOrDefault();
         }
 
         /// <summary>
