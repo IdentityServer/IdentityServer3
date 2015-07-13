@@ -141,7 +141,7 @@ namespace IdentityServer3.Core.Endpoints
             if (signInMessage.IdP.IsPresent())
             {
                 Logger.InfoFormat("identity provider requested, redirecting to: {0}", signInMessage.IdP);
-                return Redirect(context.GetExternalProviderLoginUrl(signInMessage.IdP, signin));
+                return await LoginExternal(signin, signInMessage.IdP);
             }
 
             return await RenderLoginPage(signInMessage, signin);
