@@ -125,16 +125,5 @@ namespace IdentityServer3.Core.Services.Caching
 
             return sub + ":" + requestedClaimTypes.OrderBy(x => x).Aggregate((x, y) => x + "," + y);
         }
-
-        /// <summary>
-        /// This method is called after a partial login. It allows the user service
-        /// to replace the AuthenticateResult.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        public Task PostPartialLoginAsync(PostPartialLoginContext context)
-        {
-            return inner.PostPartialLoginAsync(context);
-        }
     }
 }

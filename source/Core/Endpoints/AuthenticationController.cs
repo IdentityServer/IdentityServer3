@@ -456,6 +456,10 @@ namespace IdentityServer3.Core.Endpoints
             var externalProviderClaim = user.FindFirst(Constants.ClaimTypes.ExternalProviderUserId);
 
             // cleanup the claims from the partial login
+            if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginRestartUrl))
+            {
+                user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginRestartUrl));
+            }
             if (user.HasClaim(c => c.Type == Constants.ClaimTypes.PartialLoginReturnUrl))
             {
                 user.RemoveClaim(user.FindFirst(Constants.ClaimTypes.PartialLoginReturnUrl));
@@ -526,38 +530,9 @@ namespace IdentityServer3.Core.Endpoints
                 }
 
                 // this is a normal partial login continuation
-                Logger.Info("Calling user service's PostPartialLoginAsync");
+                Logger.Info("Partial login resume success -- logging user in");
 
-                var postPartialContext = new PostPartialLoginContext
-                {
-                    Subject = new ClaimsPrincipal(user),
-                    SignInMessage = signInMessage,
-                    AuthenticateResult = new AuthenticateResult(new ClaimsPrincipal(user))
-                };
-                await userService.PostPartialLoginAsync(postPartialContext);
-
-                result = postPartialContext.AuthenticateResult;
-
-                if (result == null)
-                {
-                    Logger.Error("user service PostPartialLoginAsync indicated null for AuthenticationResult -- showing error");
-                    return RenderErrorPage();
-                }
-
-                if (result.IsError)
-                {
-                    Logger.WarnFormat("user service returned an error message: {0}", result.ErrorMessage);
-                    return await RenderLoginPage(signInMessage, signInId, result.ErrorMessage, user.Name);
-                }
-
-                if (result.HasSubject)
-                {
-                    Logger.InfoFormat("PostLogin success. User is {0}, {1}", result.User.GetSubjectId(), result.User.Identity.Name);
-                }
-                else
-                {
-                    Logger.Info("PostLogin success (No subject returned from PostPartialLoginAsync)");
-                }
+                result = new AuthenticateResult(new ClaimsPrincipal(user));
 
                 await eventService.RaisePartialLoginCompleteEventAsync(result.User.Identities.First(), signInId, signInMessage);
             }
