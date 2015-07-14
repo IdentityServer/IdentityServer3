@@ -48,14 +48,6 @@ namespace IdentityServer3.Core.Services
         Task AuthenticateExternalAsync(ExternalAuthenticationContext context);
 
         /// <summary>
-        /// This method is called after a partial login. It allows the user service
-        /// to replace the AuthenticateResult.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        Task PostPartialLoginAsync(PostPartialLoginContext context);
-
-        /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
         /// <param name="context">The context.</param>

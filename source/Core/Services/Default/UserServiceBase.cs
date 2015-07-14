@@ -86,16 +86,5 @@ namespace IdentityServer3.Core.Services.Default
         {
             return Task.FromResult(0);
         }
-
-        /// <summary>
-        /// This method is called after a partial login. It allows the user service
-        /// to replace the AuthenticateResult.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        public virtual Task PostPartialLoginAsync(PostPartialLoginContext context)
-        {
-            return Task.FromResult(0);
-        }
     }
 }

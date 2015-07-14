@@ -111,9 +111,7 @@ namespace IdentityServer3.Tests.Endpoints
             var resp = GetLoginPage(msg);
 
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
-            var expected = new Uri(Url(Constants.RoutePaths.LoginExternal));
-            resp.Headers.Location.AbsolutePath.Should().Be(expected.AbsolutePath);
-            resp.Headers.Location.Query.Should().Contain("provider=Google");
+            resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
 
         [Fact]
@@ -403,11 +401,9 @@ namespace IdentityServer3.Tests.Endpoints
         {
             var msg = new SignInMessage();
             msg.IdP = "Google";
-            var resp1 = GetLoginPage(msg);
-
-            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.StatusCode.Should().Be(HttpStatusCode.Found);
-            resp2.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
+            var resp = GetLoginPage(msg);
+            resp.StatusCode.Should().Be(HttpStatusCode.Found);
+            resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
 
         [Fact]
@@ -415,10 +411,8 @@ namespace IdentityServer3.Tests.Endpoints
         {
             var msg = new SignInMessage();
             msg.IdP = "Foo";
-            var resp1 = GetLoginPage(msg);
-
-            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.AssertPage("error");
+            var resp = GetLoginPage(msg);
+            resp.AssertPage("error");
         }
 
         [Fact]
@@ -430,9 +424,8 @@ namespace IdentityServer3.Tests.Endpoints
             msg.IdP = "Google";
             msg.ClientId = clientApp.ClientId;
 
-            var resp1 = GetLoginPage(msg);
-            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.AssertPage("error");
+            var resp = GetLoginPage(msg);
+            resp.AssertPage("error");
         }
 
         [Fact]
@@ -446,7 +439,6 @@ namespace IdentityServer3.Tests.Endpoints
             msg.ClientId = clientApp.ClientId;
 
             var resp = GetLoginPage(msg);
-            resp = client.GetAsync(resp.Headers.Location.AbsoluteUri).Result;
             resp.StatusCode.Should().Be(HttpStatusCode.Found);
             resp.Headers.Location.AbsoluteUri.StartsWith("https://accounts.google.com").Should().BeTrue();
         }
@@ -1167,10 +1159,8 @@ namespace IdentityServer3.Tests.Endpoints
         {
             var msg = new SignInMessage();
             msg.IdP = "Google" + GetLongString();
-            var resp1 = GetLoginPage(msg);
-
-            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
-            resp2.AssertPage("error");
+            var resp = GetLoginPage(msg);
+            resp.AssertPage("error");
         }
 
         [Fact]
