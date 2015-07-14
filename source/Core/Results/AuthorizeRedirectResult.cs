@@ -62,7 +62,7 @@ namespace IdentityServer3.Core.Results
 
             responseMessage.Headers.Location = new Uri(url);
 
-            if (_response.IsError || _options.LoggingOptions.IncludeSensitiveDataInLogs)
+            if (_response.IsError)
             {
                 Logger.Info("Redirecting to: " + url);
             }
