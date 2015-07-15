@@ -83,6 +83,16 @@ namespace IdentityServer3.Core.Services.Caching
         }
 
         /// <summary>
+        /// This method is called prior to the user being issued a login cookie for IdentityServer.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public Task PostAuthenticateAsync(PostAuthenticationContext context)
+        {
+            return inner.PostAuthenticateAsync(context);
+        }
+        
+        /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
         /// <param name="context">The context.</param>

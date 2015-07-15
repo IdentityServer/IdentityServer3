@@ -48,6 +48,11 @@ namespace IdentityServer3.Tests.Validation
             return Task.FromResult(0);
         }
 
+        public Task PostAuthenticateAsync(PostAuthenticationContext context)
+        {
+            return Task.FromResult(0);
+        }
+
         public Task IsActiveAsync(IsActiveContext context)
         {
             context.IsActive = true;

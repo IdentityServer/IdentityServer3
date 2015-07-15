@@ -134,8 +134,8 @@ namespace IdentityServer3.Core.Endpoints
                 Logger.Info("user service returned a login result");
 
                 await eventService.RaisePreLoginSuccessEventAsync(signin, signInMessage, authResult);
-                
-                return SignInAndRedirect(signInMessage, signin, authResult);
+
+                return await SignInAndRedirectAsync(signInMessage, signin, authResult);
             }
 
             if (signInMessage.IdP.IsPresent())
@@ -250,7 +250,7 @@ namespace IdentityServer3.Core.Endpoints
 
             lastUserNameCookie.SetValue(model.Username);
 
-            return SignInAndRedirect(signInMessage, signin, authResult, model.RememberMe);
+            return await SignInAndRedirectAsync(signInMessage, signin, authResult, model.RememberMe);
         }
 
         [Route(Constants.RoutePaths.LoginExternal, Name = Constants.RouteNames.LoginExternal)]
@@ -399,7 +399,7 @@ namespace IdentityServer3.Core.Endpoints
 
             await eventService.RaiseExternalLoginSuccessEventAsync(externalIdentity, signInId, signInMessage, authResult);
 
-            return SignInAndRedirect(signInMessage, signInId, authResult);
+            return await SignInAndRedirectAsync(signInMessage, signInId, authResult);
         }
 
         [Route(Constants.RoutePaths.ResumeLoginFromRedirect, Name = Constants.RouteNames.ResumeLoginFromRedirect)]
@@ -537,7 +537,7 @@ namespace IdentityServer3.Core.Endpoints
                 await eventService.RaisePartialLoginCompleteEventAsync(result.User.Identities.First(), signInId, signInMessage);
             }
 
-            return SignInAndRedirect(signInMessage, signInId, result);
+            return await SignInAndRedirectAsync(signInMessage, signInId, result);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
@@ -641,8 +641,22 @@ namespace IdentityServer3.Core.Endpoints
             return Redirect(url);
         }
         
-        private IHttpActionResult SignInAndRedirect(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
+        private async Task<IHttpActionResult> SignInAndRedirectAsync(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
+            var postAuthenActionResult = await PostAuthenticateAsync(signInMessage, authResult);
+            if (postAuthenActionResult != null)
+            {
+                if (postAuthenActionResult.Item1 != null)
+                {
+                    return postAuthenActionResult.Item1;
+                }
+
+                if (postAuthenActionResult.Item2 != null)
+                {
+                    authResult = postAuthenActionResult.Item2;
+                }
+            }
+
             ClearAuthenticationCookiesForNewSignIn(authResult);
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
 
@@ -650,6 +664,43 @@ namespace IdentityServer3.Core.Endpoints
             Logger.InfoFormat("redirecting to: {0}", redirectUrl);
             return Redirect(redirectUrl);
         }
+
+        private async Task<Tuple<IHttpActionResult, AuthenticateResult>> PostAuthenticateAsync(SignInMessage signInMessage, AuthenticateResult result)
+        {
+            if (result.IsPartialSignIn == false)
+            {
+                Logger.Info("Calling PostAuthenticateAsync on the user service");
+
+                var ctx = new PostAuthenticationContext
+                {
+                    SignInMessage = signInMessage,
+                    AuthenticateResult = result
+                };
+                await userService.PostAuthenticateAsync(ctx);
+
+                var authResult = ctx.AuthenticateResult;
+                if (authResult == null)
+                {
+                    Logger.Error("user service PostAuthenticateAsync returned a null AuthenticateResult");
+                    return new Tuple<IHttpActionResult,AuthenticateResult>(RenderErrorPage(), null);
+                }
+
+                if (authResult.IsError)
+                {
+                    Logger.WarnFormat("user service PostAuthenticateAsync returned an error message: {0}", authResult.ErrorMessage);
+                    return new Tuple<IHttpActionResult, AuthenticateResult>(RenderErrorPage(authResult.ErrorMessage), null);
+                }
+
+                if (result != authResult)
+                {
+                    result = authResult;
+                    Logger.Info("user service PostAuthenticateAsync returned a different AuthenticateResult");
+                }
+            }
+            
+            return new Tuple<IHttpActionResult, AuthenticateResult>(null, result);
+        }
+
 
         private void IssueAuthenticationCookie(string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {

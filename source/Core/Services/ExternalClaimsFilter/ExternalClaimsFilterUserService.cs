@@ -50,6 +50,11 @@ namespace IdentityServer3.Core.Services.Default
             return inner.AuthenticateExternalAsync(context);
         }
 
+        public Task PostAuthenticateAsync(PostAuthenticationContext context)
+        {
+            return inner.PostAuthenticateAsync(context);
+        }
+        
         public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             return inner.GetProfileDataAsync(context);

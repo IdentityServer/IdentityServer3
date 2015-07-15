@@ -57,6 +57,16 @@ namespace IdentityServer3.Core.Services.Default
         }
 
         /// <summary>
+        /// This method is called prior to the user being issued a login cookie for IdentityServer.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public virtual Task PostAuthenticateAsync(PostAuthenticationContext context)
+        {
+            return Task.FromResult(0);
+        }
+
+        /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
         /// <param name="context">The context.</param>

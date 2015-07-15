@@ -651,6 +651,62 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void PostToLogin_PostAuthenticate_IsCalled()
+        {
+            GetLoginPage();
+            var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            mockUserService.Verify(x => x.PostAuthenticateAsync(It.IsAny<PostAuthenticationContext>()));
+        }
+        
+        [Fact]
+        public void PostToLogin_PostAuthenticate_is_not_called_for_partial_logins()
+        {
+            mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))
+                .Callback<LocalAuthenticationContext>(ctx =>
+                {
+                    ctx.AuthenticateResult = new AuthenticateResult("~/partial", "123", "foo", Enumerable.Empty<Claim>());
+                }).Returns(Task.FromResult(0));
+
+            GetLoginPage();
+            var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            mockUserService.Verify(x => x.PostAuthenticateAsync(It.IsAny<PostAuthenticationContext>()), Times.Never());
+        }
+
+        [Fact]
+        public void PostToLogin_PostAuthenticate_returns_error_and_error_page_is_rendered_and_user_is_not_logged_in()
+        {
+            mockUserService.Setup(x => x.PostAuthenticateAsync(It.IsAny<PostAuthenticationContext>()))
+                .Callback<PostAuthenticationContext>(ctx =>
+                {
+                    ctx.AuthenticateResult = new AuthenticateResult("some error");
+                }).Returns(Task.FromResult(0));
+
+            GetLoginPage();
+            var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            resp.AssertPage("error");
+
+            var cookies = resp.GetRawCookies();
+            cookies.Count(x => x.StartsWith(Constants.PrimaryAuthenticationType + "=")).Should().Be(0);
+        }
+
+        [Fact]
+        public void PostToLogin_PostAuthenticate_returns_partial_login_and_user_is_not_logged_in()
+        {
+            mockUserService.Setup(x => x.PostAuthenticateAsync(It.IsAny<PostAuthenticationContext>()))
+                .Callback<PostAuthenticationContext>(ctx =>
+                {
+                    ctx.AuthenticateResult = new AuthenticateResult("~/foo", "123", "bob");
+                }).Returns(Task.FromResult(0));
+
+            GetLoginPage();
+            var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
+            resp.Headers.Location.AbsoluteUri.Should().Be(Url("foo"));
+            var cookies = resp.GetRawCookies();
+            cookies.Count(x => x.StartsWith(Constants.PrimaryAuthenticationType + "=")).Should().Be(0);
+            cookies.Count(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "=")).Should().Be(1);
+        }
+
+        [Fact]
         public void ResumeLoginFromRedirect_WithPartialCookie_IssuesFullLoginCookie()
         {
             mockUserService.Setup(x => x.AuthenticateLocalAsync(It.IsAny<LocalAuthenticationContext>()))

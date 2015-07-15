@@ -196,6 +196,7 @@
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ExternalAuthenticationContext.cs" />
     <Compile Include="Models\ParsedSecret.cs" />
+    <Compile Include="Models\PostAuthenticationContext.cs" />
     <Compile Include="Models\ProfileDataRequestContext.cs" />
     <Compile Include="Models\IsActiveContext.cs" />
     <Compile Include="Models\LocalAuthenticationContext.cs" />
