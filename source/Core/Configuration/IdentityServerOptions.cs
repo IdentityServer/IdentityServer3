@@ -60,11 +60,6 @@ namespace IdentityServer3.Core.Configuration
             {
                 throw new ArgumentException("Endpoints is missing");
             }
-            
-            if (LoggingOptions.EnableHttpLogging || LoggingOptions.EnableWebApiDiagnostics || LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                Logger.Warn("Detailed logging is enabled, potentially sensitive data will be exposed in log files.");
-            }
         }
 
         /// <summary>

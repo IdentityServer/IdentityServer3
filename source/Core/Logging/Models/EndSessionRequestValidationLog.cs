@@ -33,10 +33,7 @@ namespace IdentityServer3.Core.Logging
 
         public EndSessionRequestValidationLog(ValidatedEndSessionRequest request)
         {
-            if (request.Options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                Raw = request.Raw.ToDictionary();
-            }
+            Raw = request.Raw.ToDictionary();
 
             SubjectId = "unknown";
             if (request.Subject != null)

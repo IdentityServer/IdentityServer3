@@ -29,7 +29,6 @@ namespace IdentityServer3.Core.Configuration
             EnableWebApiDiagnostics = false;
             WebApiDiagnosticsIsVerbose = false;
             EnableHttpLogging = false;
-            IncludeSensitiveDataInLogs = false;
             EnableKatanaLogging = false;
         }
 
@@ -64,13 +63,5 @@ namespace IdentityServer3.Core.Configuration
         ///   <c>true</c> if Katana log forwarding is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableKatanaLogging { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include (potentially) personally identifiable information or other sensitive data in logs.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if PII data should be included in logs; otherwise, <c>false</c>.
-        /// </value>
-        public bool IncludeSensitiveDataInLogs { get; set; }
     }
 }

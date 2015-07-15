@@ -81,10 +81,10 @@ namespace IdentityServer3.Core.Validation
             }
 
             _log.ClientName = client.ClientName;
-            
+
             var signingKey = new X509SecurityKey(_options.SigningCertificate);
             var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
-            
+
             result.Client = client;
 
             if (result.IsError)
@@ -93,10 +93,7 @@ namespace IdentityServer3.Core.Validation
                 return result;
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = result.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = result.Claims.ToClaimsDictionary();
 
             var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
 
@@ -106,10 +103,7 @@ namespace IdentityServer3.Core.Validation
                 return customResult;
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = customResult.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = customResult.Claims.ToClaimsDictionary();
 
             LogSuccess();
             return customResult;
@@ -121,7 +115,7 @@ namespace IdentityServer3.Core.Validation
 
             _log.ExpectedScope = expectedScope;
             _log.ValidateLifetime = true;
-        
+
             TokenValidationResult result;
 
             if (token.Contains("."))
@@ -138,10 +132,7 @@ namespace IdentityServer3.Core.Validation
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = result.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = result.Claims.ToClaimsDictionary();
 
             if (result.IsError)
             {
@@ -167,10 +158,7 @@ namespace IdentityServer3.Core.Validation
             }
 
             // add claims again after custom validation
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = customResult.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = customResult.Claims.ToClaimsDictionary();
 
             LogSuccess();
             return customResult;
