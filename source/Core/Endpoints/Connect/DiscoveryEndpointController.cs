@@ -125,6 +125,11 @@ namespace IdentityServer3.Core.Endpoints
                 dto.revocation_endpoint = baseUrl + Constants.RoutePaths.Oidc.Revocation;
             }
 
+            if (_options.Endpoints.EnableIntrospectionEndpoint)
+            {
+                dto.introspection_endpoint = baseUrl + Constants.RoutePaths.Oidc.Introspection;
+            }
+
             if (_options.SigningCertificate != null)
             {
                 dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
@@ -188,6 +193,7 @@ namespace IdentityServer3.Core.Endpoints
             public string end_session_endpoint { get; set; }
             public string check_session_iframe { get; set; }
             public string revocation_endpoint { get; set; }
+            public string introspection_endpoint { get; set; }
             public string[] scopes_supported { get; set; }
             public string[] claims_supported { get; set; }
             public string[] response_types_supported { get; set; }
