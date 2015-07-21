@@ -20,7 +20,6 @@ using IdentityServer3.Core.Events;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Resources;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System.Collections.Specialized;
@@ -40,22 +39,19 @@ namespace IdentityServer3.Core.Endpoints
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly IdentityServerOptions _options;
-        private readonly ILocalizationService _localizationService;
         private readonly IEventService _events;
-        private readonly ScopeSecretValidator _scopeValidator;
+        private readonly ScopeSecretValidator _scopeSecretValidator;
         private readonly IntrospectionRequestValidator _requestValidator;
 
         public IntrospectionEndpointController(
             IntrospectionRequestValidator requestValidator, 
             IdentityServerOptions options, 
-            ILocalizationService localizationService, 
             IEventService events,
-            ScopeSecretValidator scopeValidator)
+            ScopeSecretValidator scopeSecretValidator)
         {
             _requestValidator = requestValidator;
-            _scopeValidator = scopeValidator;
+            _scopeSecretValidator = scopeSecretValidator;
             _options = options;
-            _localizationService = localizationService;
             _events = events;
         }
 
@@ -77,8 +73,8 @@ namespace IdentityServer3.Core.Endpoints
                 return NotFound();
             }
 
-            var scope = await _scopeValidator.ValidateAsync();
-            if (scope == null)
+            var scope = await _scopeSecretValidator.ValidateAsync();
+            if (scope.Scope == null)
             {
                 // logging
                 return Unauthorized();
@@ -96,47 +92,21 @@ namespace IdentityServer3.Core.Endpoints
             {
                 var response = validationResult.Claims.ToClaimsDictionary();
                 response.Add("active", true);
+                response.Add("scope", scope.Name);
 
                 return Json(response);
             }
-            else if(validationResult.IsActive == false)
+            else if(validationResult.IsError == true)
             {
-                return Json(new { active = false });
+                Logger.Error(validationResult.ErrorDescription);
+
+                await RaiseFailureEventAsync(validationResult.ErrorDescription);
+                return BadRequest(validationResult.ErrorDescription);
             }
             else
             {
-                Logger.Error(validationResult.ErrorDescription);
-                
-                await RaiseFailureEventAsync(validationResult.ErrorDescription);
-                return BadRequest(_localizationService.GetMessage(validationResult.ErrorDescription));
+                return Json(new { active = false });
             }
-
-            //var token = parameters.Get("token");
-            //if (token.IsMissing())
-            //{
-            //    var error = "token is missing";
-
-            //    Logger.Error(error);
-            //    await RaiseFailureEventAsync(error);
-            //    return BadRequest(_localizationService.GetMessage(MessageIds.MissingToken));
-            //}
-
-            //var result = await _tokenValidator.ValidateAccessTokenAsync(token, parameters.Get("expectedScope"));
-
-            //if (result.IsError)
-            //{
-            //    Logger.Info("Returning error: " + result.Error);
-            //    await RaiseFailureEventAsync(result.Error);
-
-            //    return BadRequest(result.Error);
-            //}
-
-            //var response = result.Claims.ToClaimsDictionary();
-
-            //Logger.Info("End access token validation request");
-            //await RaiseSuccessEventAsync();
-
-            //return Json(response);
         }
 
         private async Task RaiseSuccessEventAsync()

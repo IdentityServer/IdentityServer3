@@ -39,7 +39,7 @@ namespace IdentityServer3.Core.Validation
             var token = parameters.Get("token");
             if (token == null)
             {
-                fail.ErrorDescription = MessageIds.MissingToken;
+                fail.ErrorDescription = "missing_token";
                 return fail;
             }
 
@@ -59,7 +59,7 @@ namespace IdentityServer3.Core.Validation
                 IsError = false,
                 Claims = tokenValidationResult.Claims.Where(c => c.Type != Constants.ClaimTypes.Scope)
             };
-    
+            
             return success;
         }
     }
