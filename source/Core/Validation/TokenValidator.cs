@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
@@ -162,7 +162,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
