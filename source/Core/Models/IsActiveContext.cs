@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Security.Claims;
 
 namespace IdentityServer3.Core.Models
@@ -26,8 +27,14 @@ namespace IdentityServer3.Core.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="IsActiveContext"/> class.
         /// </summary>
-        public IsActiveContext()
+        public IsActiveContext(ClaimsPrincipal subject, Client client)
         {
+            if (subject == null) throw new ArgumentNullException("subject");
+            if (client == null) throw new ArgumentNullException("client");
+
+            Subject = subject;
+            Client = client;
+            
             IsActive = true;
         }
 
@@ -38,6 +45,14 @@ namespace IdentityServer3.Core.Models
         /// The subject.
         /// </value>
         public ClaimsPrincipal Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client.
+        /// </summary>
+        /// <value>
+        /// The client.
+        /// </value>
+        public Client Client { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the subject is active and can recieve tokens.

@@ -81,7 +81,7 @@ namespace IdentityServer3.Core.Services.Default
                     principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
                 }
 
-                var isActiveCtx = new IsActiveContext { Subject = principal };
+                var isActiveCtx = new IsActiveContext(principal, result.Client);
                 await _users.IsActiveAsync(isActiveCtx);
                 
                 if (isActiveCtx.IsActive == false)
@@ -131,7 +131,7 @@ namespace IdentityServer3.Core.Services.Default
             {
                 var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                var isActiveCtx = new IsActiveContext { Subject = principal };
+                var isActiveCtx = new IsActiveContext(principal, result.Client);
                 await _users.IsActiveAsync(isActiveCtx);
                 
                 if (isActiveCtx.IsActive == false)

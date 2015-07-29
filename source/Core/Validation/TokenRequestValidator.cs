@@ -262,7 +262,7 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             // make sure user is enabled
             /////////////////////////////////////////////
-            var isActiveCtx = new IsActiveContext { Subject = _validatedRequest.AuthorizationCode.Subject };
+            var isActiveCtx = new IsActiveContext(_validatedRequest.AuthorizationCode.Subject, _validatedRequest.Client);
             await _users.IsActiveAsync(isActiveCtx);
 
             if (isActiveCtx.IsActive == false)
@@ -534,8 +534,8 @@ namespace IdentityServer3.Core.Validation
             // make sure user is enabled
             /////////////////////////////////////////////
             var principal = IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId, refreshToken.AccessToken.Claims);
-
-            var isActiveCtx = new IsActiveContext { Subject = principal };
+            
+            var isActiveCtx = new IsActiveContext(principal, _validatedRequest.Client);
             await _users.IsActiveAsync(isActiveCtx);
 
             if (isActiveCtx.IsActive == false)
