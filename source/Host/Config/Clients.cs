@@ -306,6 +306,8 @@ namespace IdentityServer3.Host.Config
                     
                     AllowedScopes = new List<string> 
                     {
+                        "openid",
+                        "email",
                         "read", 
                         "write",
                         "offline_access"
