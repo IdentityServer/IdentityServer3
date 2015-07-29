@@ -242,6 +242,7 @@ namespace IdentityServer3.Core.Validation
             {
                 IsError = false,
 
+                Client = token.Client,
                 Claims = ReferenceTokenToClaims(token),
                 ReferenceToken = token,
                 ReferenceTokenId = tokenHandle
