@@ -99,7 +99,7 @@ namespace IdentityServer3.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
@@ -153,7 +153,7 @@ namespace IdentityServer3.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
