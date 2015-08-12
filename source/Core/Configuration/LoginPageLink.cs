@@ -22,6 +22,14 @@ namespace IdentityServer3.Core.Configuration
     public class LoginPageLink
     {
         /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
+        public string Type { get; set; }
+
+        /// <summary>
         /// Gets or sets the text.
         /// </summary>
         /// <value>

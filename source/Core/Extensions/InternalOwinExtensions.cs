@@ -113,6 +113,7 @@ namespace IdentityServer3.Core.Extensions
             {
                 return types.Select(p => new LoginPageLink
                 {
+                    Type = p.AuthenticationType,
                     Text = p.Caption,
                     Href = context.GetExternalProviderLoginUrl(p.AuthenticationType, signInMessageId)
                 });

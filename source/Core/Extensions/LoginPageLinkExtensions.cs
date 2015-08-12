@@ -40,6 +40,7 @@ namespace IdentityServer3.Core.Extensions
 
                 result.Add(new LoginPageLink
                 {
+                    Type = link.Type,
                     Text = link.Text,
                     Href = url
                 });
