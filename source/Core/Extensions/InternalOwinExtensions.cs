@@ -341,6 +341,34 @@ namespace IdentityServer3.Core.Extensions
             return body;
         }
 
+        public async static Task<string> ReadBodyAsStringAsync(this IOwinResponse response)
+        {
+            if (response == null) throw new ArgumentNullException("response");
+
+            if (response.Body == null) return String.Empty;
+            if (response.Body.CanRead == false) return "can't read response body";
+
+            if (!response.Body.CanSeek)
+            {
+                var copy = new MemoryStream();
+                await response.Body.CopyToAsync(copy);
+                copy.Seek(0L, SeekOrigin.Begin);
+                response.Body = copy;
+            }
+
+            response.Body.Seek(0L, SeekOrigin.Begin);
+
+            string body = null;
+            using (var reader = new StreamReader(response.Body, Encoding.UTF8, true, 4096, true))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            response.Body.Seek(0L, SeekOrigin.Begin);
+
+            return body;
+        }
+
         public async static Task<NameValueCollection> ReadRequestFormAsNameValueCollectionAsync(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");

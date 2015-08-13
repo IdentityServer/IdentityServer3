@@ -58,11 +58,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
             ConfigureRoutes(options, config);
 
-            if (options.LoggingOptions.EnableHttpLogging)
-            {
-                config.MessageHandlers.Add(new RequestResponseLogger());
-            }
-
             return config;
         }
 

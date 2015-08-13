@@ -128,6 +128,7 @@
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
@@ -180,7 +181,6 @@
     <Compile Include="Internal\Autofac.Integration.WebApi.Owin\AutofacWebApiAppBuilderExtensions.cs" />
     <Compile Include="Internal\Autofac.Integration.WebApi.Owin\DependencyScopeHandler.cs" />
     <Compile Include="Logging\LibLogKatanaLoggerFactory.cs" />
-    <Compile Include="Logging\RequestResponseLogger.cs" />
     <Compile Include="Configuration\LoginPageLink.cs" />
     <Compile Include="Events\Base\EventContext.cs" />
     <Compile Include="Events\Base\EventConstants.cs" />

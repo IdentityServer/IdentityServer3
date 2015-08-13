@@ -95,6 +95,8 @@ namespace Owin
 
             app.UseEmbeddedFileServer();
 
+            app.ConfigureHttpLogging(options.LoggingOptions);
+
             SignatureConversions.AddConversions(app);
             
             var httpConfig = WebApiConfig.Configure(options, container);
