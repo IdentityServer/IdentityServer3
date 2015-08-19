@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -40,6 +41,26 @@ namespace IdentityServer3.Core.Results
         public virtual Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             return Task.FromResult(GetResponseMessage());
+        }
+    }
+
+    internal abstract class ResponseActionResult : IHttpActionResult
+    {
+        readonly Func<Task<HttpResponseMessage>> renderFunc;
+
+        public ResponseActionResult(Func<Task<HttpResponseMessage>> renderFunc)
+        {
+            this.renderFunc = renderFunc;
+        }
+
+        public async Task<HttpResponseMessage> GetResponseMessage()
+        {
+            return await renderFunc();
+        }
+
+        public async Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            return await GetResponseMessage();
         }
     }
 }

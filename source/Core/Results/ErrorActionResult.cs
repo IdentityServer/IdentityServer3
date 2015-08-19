@@ -20,7 +20,7 @@ using System;
 
 namespace IdentityServer3.Core.Results
 {
-    internal class ErrorActionResult : HtmlStreamActionResult
+    internal class ErrorActionResult : AsyncResponseActionResult
     {
         public ErrorActionResult(IViewService viewSvc, ErrorViewModel model)
             : base(async () => await viewSvc.Error(model))

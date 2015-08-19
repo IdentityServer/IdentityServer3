@@ -213,6 +213,7 @@
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
     <Compile Include="Results\CheckSessionResult.cs" />
+    <Compile Include="Results\AsyncResponseActionResult.cs" />
     <Compile Include="Results\RevocationErrorResult.cs" />
     <Compile Include="Results\WelcomeActionResult.cs" />
     <Compile Include="Services\Caching\CachingClientStore.cs" />
