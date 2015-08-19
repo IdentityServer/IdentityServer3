@@ -354,13 +354,12 @@ namespace IdentityServer3.Core.Validation
             }
             else
             {
-                if (request.Flow == Flows.Implicit ||
-                    request.Flow == Flows.Hybrid)
+                if (request.Flow == Flows.Implicit)
                 {
-                    // only openid requests require nonce
+                    // only an Implicit Flow openid requests require nonce (see http://openid.net/specs/openid-connect-core-1_0.html#ImplicitAuthRequest)
                     if (request.IsOpenIdRequest)
                     {
-                        LogError("Nonce required for implicit and hybrid flow with openid scope", request);
+                        LogError("Nonce required for implicit flow with openid scope", request);
                         return Invalid(request, ErrorTypes.Client);
                     }
                 }
