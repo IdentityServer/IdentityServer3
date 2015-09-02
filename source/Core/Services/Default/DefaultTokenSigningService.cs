@@ -71,6 +71,12 @@ namespace IdentityServer3.Core.Services.Default
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
+            if (jwt.Payload.ContainsKey(Constants.ClaimTypes.AuthenticationMethod))
+            {
+                var amrValue = jwt.Payload["amr"].ToString();
+                jwt.Payload["amr"] = new string[] { amrValue };
+            }
+
             var x509credential = credentials as X509SigningCredentials;
             if (x509credential != null)
             {
