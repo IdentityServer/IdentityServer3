@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -24,10 +25,8 @@ namespace IdentityServer3.Core.Extensions
         {
             try
             {
-                using (var pk = cert.PrivateKey)
-                {
-                    return true;
-                }
+                var pk = cert.PrivateKey;
+                return true;
             }
             catch (CryptographicException)
             {
