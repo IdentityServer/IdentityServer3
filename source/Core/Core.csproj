@@ -130,9 +130,11 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
+    <Compile Include="Configuration\AuthenticationSessionStoreWrapper.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\InputLengthRestrictions.cs" />
+    <Compile Include="Configuration\IAuthenticationSessionStoreProvider.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
