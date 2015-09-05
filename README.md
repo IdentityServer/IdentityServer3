@@ -74,3 +74,4 @@ IdentityServer is built using the following great open source projects:
 - [MyGet](http://myget.org)
 
 ...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
+
