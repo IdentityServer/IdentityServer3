@@ -71,12 +71,14 @@ namespace IdentityServer3.Core.Services.Default
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
-            // amr is an array - the current JWT handler does not support that directly
-            // todo: replace with proper API
+            // amr is an array - if there is only a single value turn it into an array
             if (jwt.Payload.ContainsKey("amr"))
             {
-                var amrValue = jwt.Payload["amr"].ToString();
-                jwt.Payload["amr"] = new string[] { amrValue };
+                var amrValue = jwt.Payload["amr"] as string;
+                if (amrValue != null)
+                {
+                    jwt.Payload["amr"] = new string[] { amrValue };
+                }
             }
 
             var x509credential = credentials as X509SigningCredentials;
