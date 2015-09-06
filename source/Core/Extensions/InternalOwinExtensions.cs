@@ -264,6 +264,22 @@ namespace IdentityServer3.Core.Extensions
             return context.Environment.GetIdentityServerBaseUrl();
         }
 
+        public static string GetIdentityServerIssuerUri(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            var options = context.ResolveDependency<IdentityServerOptions>();
+
+            var uri = options.IssuerUri;
+            if (String.IsNullOrWhiteSpace(uri))
+            {
+                uri = context.GetIdentityServerBaseUrl();
+                if (uri.EndsWith("/")) uri = uri.Substring(0, uri.Length - 1);
+            }
+
+            return uri;
+        }
+
         public static string GetIdentityServerLogoutUrl(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
