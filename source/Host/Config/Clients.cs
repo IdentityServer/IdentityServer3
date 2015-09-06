@@ -110,6 +110,7 @@ namespace IdentityServer3.Host.Config
                         "http://localhost:23453/callback.html",
                         "http://localhost:23453/frame.html",
                         "http://localhost:23453/modal.html",
+                        "http://localhost:23453/popup.html",
 
                         // WPF client
                         "oob://localhost/wpfclient",
@@ -136,7 +137,8 @@ namespace IdentityServer3.Host.Config
 
                     AllowedCorsOrigins = new List<string>{
                         "http://localhost:21575",
-                        "http://localhost:37047"
+                        "http://localhost:37047",
+                        "http://localhost:23453"
                     },
                     
                     IdentityTokenLifetime = 360,
