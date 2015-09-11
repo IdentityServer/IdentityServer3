@@ -98,12 +98,15 @@ namespace IdentityServer3.Host.Config
                     RedirectUris = new List<string>
                     {
                         // JS client with popup login dialog
+                        "http://localhost:37045/index.html",
+                        "http://localhost:37046/index.html",
+                        "http://localhost:37047/index.html",
                         "http://localhost:37047/callback.html",
                         "http://localhost:37047/modal.html",
+                        "http://localhost:37047/popup.html",
                         "http://localhost:37047/frame.html",
 
                         // "simple JS client"
-                        "http://localhost:37045/index.html",
                         "https://localhost:44331/Home/Callback",
 
                         // OAuthJS client
@@ -132,11 +135,16 @@ namespace IdentityServer3.Host.Config
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:23453/index.html",
-                        "http://localhost:21575/index.html"
+                        "http://localhost:21575/index.html",
+                        "http://localhost:37045/index.html",
+                        "http://localhost:37046/index.html",
+                        "http://localhost:37047/index.html"
                     },
 
                     AllowedCorsOrigins = new List<string>{
                         "http://localhost:21575",
+                        "http://localhost:37045",
+                        "http://localhost:37046",
                         "http://localhost:37047",
                         "http://localhost:23453"
                     },
