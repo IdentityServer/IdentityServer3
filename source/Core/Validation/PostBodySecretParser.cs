@@ -63,7 +63,7 @@ namespace IdentityServer3.Core.Validation
                 }
             }
 
-            Logger.Debug("No secet in post body found");
+            Logger.Debug("No secret in post body found");
             return null;
         }
     }
