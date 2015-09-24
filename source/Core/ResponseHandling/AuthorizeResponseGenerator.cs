@@ -139,7 +139,7 @@ namespace IdentityServer3.Core.ResponseHandling
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
-
+                    CreateAnonymousToken = request.ValidatedScopes.ContainsAnonymousScope && !request.Subject.Identity.IsAuthenticated,
                     ValidatedRequest = request
                 };
 
@@ -158,7 +158,7 @@ namespace IdentityServer3.Core.ResponseHandling
                     Subject = request.Subject,
                     Client = request.Client,
                     Scopes = request.ValidatedScopes.GrantedScopes,
-
+                    CreateAnonymousToken = request.ValidatedScopes.ContainsAnonymousScope && !request.Subject.Identity.IsAuthenticated,
                     Nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce),
                     IncludeAllIdentityClaims = !request.AccessTokenRequested,
                     AccessTokenToHash = accessTokenValue,

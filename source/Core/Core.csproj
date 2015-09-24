@@ -220,6 +220,7 @@
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
+    <Compile Include="Services\Default\DefaultAnonymousClaimsProvider.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\ClientSecretValidator.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
