@@ -15,12 +15,12 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
 using System;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Services;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Configuration
+namespace IdentityServer3.Tests.Configuration
 {
     
     public class RegistrationTests

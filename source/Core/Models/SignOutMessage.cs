@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models the request from a client to sign the user out.

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.Services.Default;
+using System.Collections.Generic;
 using System.Linq;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.Services.Default;
 using Xunit;
 using Xunit.Sdk;
 
-namespace Thinktecture.IdentityServer.Tests.Services.Default
+namespace IdentityServer3.Tests.Services.Default
 {
     public class DefaultLocalizationServiceTests
     {

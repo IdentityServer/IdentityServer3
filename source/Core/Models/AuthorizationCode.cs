@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Modles an authorization code.

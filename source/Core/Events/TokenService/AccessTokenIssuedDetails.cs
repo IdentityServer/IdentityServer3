@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Models;
+using IdentityServer3.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace IdentityServer3.Core.Events
 {
     /// <summary>
     /// Details class for access token issued events

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
+using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     static class Factory
     {
@@ -33,22 +33,24 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             return new InMemoryClientStore(TestClients.Get());
         }
 
-        public static ClientValidator CreateClientValidator(
-            IClientStore clients = null,
-            IClientSecretValidator secretValidator = null)
-        {
-            if (clients == null)
-            {
-                clients = new InMemoryClientStore(ClientValidationTestClients.Get());
-            }
+        //public static ClientValidator CreateClientValidator(
+        //    IClientStore clients = null,
+        //    IClientSecretValidator secretValidator = null)
+        //{
+        //    if (clients == null)
+        //    {
+        //        clients = new InMemoryClientStore(ClientValidationTestClients.Get());
+        //    }
 
-            if (secretValidator == null)
-            {
-                secretValidator = new HashedClientSecretValidator();
-            }
+        //    if (secretValidator == null)
+        //    {
+        //        secretValidator = new HashedClientSecretValidator();
+        //    }
 
-            return new ClientValidator(clients, secretValidator);
-        }
+        //    var owin = new OwinEnvironmentService(new OwinContext());
+
+        //    return new ClientValidator(clients, secretValidator, owin);
+        //}
 
         public static TokenRequestValidator CreateTokenRequestValidator(
             IdentityServerOptions options = null,
@@ -56,7 +58,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
             IAuthorizationCodeStore authorizationCodeStore = null,
             IRefreshTokenStore refreshTokens = null,
             IUserService userService = null,
-            ICustomGrantValidator customGrantValidator = null,
+            IEnumerable<ICustomGrantValidator> customGrantValidators = null,
             ICustomRequestValidator customRequestValidator = null,
             ScopeValidator scopeValidator = null)
         {
@@ -80,11 +82,16 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 customRequestValidator = new DefaultCustomRequestValidator();
             }
 
-            if (customGrantValidator == null)
+            CustomGrantValidator aggregateCustomValidator;
+            if (customGrantValidators == null)
             {
-                customGrantValidator = new TestGrantValidator();
+                aggregateCustomValidator = new CustomGrantValidator(new [] { new TestGrantValidator() });
             }
-
+            else
+            {
+                aggregateCustomValidator = new CustomGrantValidator(customGrantValidators);
+            }
+                
             if (refreshTokens == null)
             {
                 refreshTokens = new InMemoryRefreshTokenStore();
@@ -100,7 +107,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                 authorizationCodeStore, 
                 refreshTokens, 
                 userService, 
-                customGrantValidator, 
+                aggregateCustomValidator, 
                 customRequestValidator, 
                 scopeValidator, 
                 new DefaultEventService());

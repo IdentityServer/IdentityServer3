@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Convenience class that defines standard identity scopes.

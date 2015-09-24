@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Results;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Results;
 
-
-#pragma warning disable 1591
-
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace IdentityServer3.Core.Endpoints
 {
     /// <summary>
     /// Check session iframe endpoint

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     static class ClientValidationTestClients
     {
@@ -32,9 +33,9 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "disabled_client",
                     Enabled = false,
 
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
-                        new ClientSecret("secret")
+                        new Secret("secret")
                     }
                 },
 
@@ -51,9 +52,41 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "single_secret_no_protection_no_expiration",
                     Enabled = true,
 
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
-                        new ClientSecret("secret")
+                        new Secret("secret")
+                    }
+                },
+
+                new Client
+                {
+                    ClientName = "Client with X509 Certificate",
+                    ClientId = "certificate_valid",
+                    Enabled = true,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret
+                        {
+                            Type = Constants.SecretTypes.X509CertificateThumbprint,
+                            Value = TestCert.Load().Thumbprint
+                        }
+                    }
+                },
+
+                new Client
+                {
+                    ClientName = "Client with X509 Certificate",
+                    ClientId = "certificate_invalid",
+                    Enabled = true,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret
+                        {
+                            Type = Constants.SecretTypes.X509CertificateThumbprint,
+                            Value = "invalid"
+                        }
                     }
                 },
 
@@ -63,10 +96,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "single_secret_hashed_no_expiration",
                     Enabled = true,
 
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
                         // secret
-                        new ClientSecret("secret".Sha256())
+                        new Secret("secret".Sha256())
                     }
                 },
 
@@ -76,13 +109,13 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "multiple_secrets_no_protection",
                     Enabled = true,
 
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
-                        new ClientSecret("secret"),
-                        new ClientSecret("foobar", "some description"),
-                        new ClientSecret("quux"),
-                        new ClientSecret("notexpired", DateTimeOffset.UtcNow.AddDays(1)),
-                        new ClientSecret("expired", DateTimeOffset.UtcNow.AddDays(-1)),
+                        new Secret("secret"),
+                        new Secret("foobar", "some description"),
+                        new Secret("quux"),
+                        new Secret("notexpired", DateTimeOffset.UtcNow.AddDays(1)),
+                        new Secret("expired", DateTimeOffset.UtcNow.AddDays(-1)),
                     }
                 },
 
@@ -92,18 +125,18 @@ namespace Thinktecture.IdentityServer.Tests.Validation
                     ClientId = "multiple_secrets_hashed",
                     Enabled = true,
 
-                    ClientSecrets = new List<ClientSecret>
+                    ClientSecrets = new List<Secret>
                     {
                         // secret
-                        new ClientSecret("secret".Sha256()),
+                        new Secret("secret".Sha256()),
                         // foobar
-                        new ClientSecret("foobar".Sha256(), "some description"),
+                        new Secret("foobar".Sha256(), "some description"),
                         // quux
-                        new ClientSecret("quux".Sha512()),
+                        new Secret("quux".Sha512()),
                         // notexpired
-                        new ClientSecret("notexpired".Sha256(), DateTimeOffset.UtcNow.AddDays(1)),
+                        new Secret("notexpired".Sha256(), DateTimeOffset.UtcNow.AddDays(1)),
                         // expired
-                        new ClientSecret("expired".Sha512(), DateTimeOffset.UtcNow.AddDays(-1)),
+                        new Secret("expired".Sha512(), DateTimeOffset.UtcNow.AddDays(-1)),
                     }
                 },
             };

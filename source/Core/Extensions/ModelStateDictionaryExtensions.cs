@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.ModelBinding;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class ModelStateDictionaryExtensions
     {

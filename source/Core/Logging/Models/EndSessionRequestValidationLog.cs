@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace IdentityServer3.Core.Logging
 {
     internal class EndSessionRequestValidationLog
     {
@@ -33,10 +33,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public EndSessionRequestValidationLog(ValidatedEndSessionRequest request)
         {
-            if (request.Options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                Raw = request.Raw.ToDictionary();
-            }
+            Raw = request.Raw.ToDictionary();
 
             SubjectId = "unknown";
             if (request.Subject != null)

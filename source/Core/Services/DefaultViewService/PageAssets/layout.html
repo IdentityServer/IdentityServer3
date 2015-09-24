@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="app" ng-controller="LayoutCtrl">
+<html ng-app="app" ng-csp ng-controller="LayoutCtrl">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{siteName}</title>
@@ -8,7 +8,7 @@
 <body lang="en">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
-            <a href="{applicationPath}">
+            <a href="{applicationPath}/">
                 <span class="navbar-brand">{siteName}</span>
             </a>
         </div>
@@ -29,7 +29,7 @@
     </div>
 
     <script id='modelJson' type='application/json'>{model}</script>
-    <script src="{applicationPath}/assets/scripts.js"></script>
+    <script src="{applicationPath}/assets/scripts.2.0.0.js"></script>
     {scripts}
 </body>
 </html>

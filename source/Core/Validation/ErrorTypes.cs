@@ -15,7 +15,7 @@
  */
 
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
     /// <summary>
     /// Indicates if a <see cref="ValidationResult"/> is an error to be displayed to the user or returned to the client.

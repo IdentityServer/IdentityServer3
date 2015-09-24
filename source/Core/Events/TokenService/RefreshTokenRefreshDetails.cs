@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace IdentityServer3.Core.Events
 {
     /// <summary>
     /// Details class for refresh token refresh events

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.ResponseHandling
+namespace IdentityServer3.Core.ResponseHandling
 {
     internal class UserInfoResponseGenerator
     {
@@ -39,7 +38,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             _scopes = scopes;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes)
+        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes, Client client)
         {
             Logger.Info("Creating userinfo response");
             var profileData = new Dictionary<string, object>();
@@ -51,12 +50,27 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             if (requestedClaimTypes.IncludeAllClaims)
             {
                 Logger.InfoFormat("Requested claim types: all");
-                profileClaims = await _users.GetProfileDataAsync(principal);
+
+                var context = new ProfileDataRequestContext(
+                    principal, 
+                    client, 
+                    Constants.ProfileDataCallers.UserInfoEndpoint);
+
+                await _users.GetProfileDataAsync(context);
+                profileClaims = context.IssuedClaims;
             }
             else
             {
                 Logger.InfoFormat("Requested claim types: {0}", requestedClaimTypes.ClaimTypes.ToSpaceSeparatedString());
-                profileClaims = await _users.GetProfileDataAsync(principal, requestedClaimTypes.ClaimTypes);
+
+                var context = new ProfileDataRequestContext(
+                    principal,
+                    client,
+                    Constants.ProfileDataCallers.UserInfoEndpoint,
+                    requestedClaimTypes.ClaimTypes);
+
+                await _users.GetProfileDataAsync(context);
+                profileClaims = context.IssuedClaims;
             }
             
             if (profileClaims != null)

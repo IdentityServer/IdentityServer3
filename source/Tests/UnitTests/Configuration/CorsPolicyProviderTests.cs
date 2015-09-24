@@ -15,15 +15,15 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Configuration.Hosting;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
 using Xunit;
 using CorsPolicy = System.Web.Cors.CorsPolicy;
 
-namespace Thinktecture.IdentityServer.Tests.Configuration
+namespace IdentityServer3.Tests.Configuration
 {
     internal class TestCorsPolicyProvider : CorsPolicyProvider
     {
@@ -43,7 +43,13 @@ namespace Thinktecture.IdentityServer.Tests.Configuration
         IOwinRequest Request(string origin = null, string path = null)
         {
             var env = new Dictionary<string, object>();
-            env.Add("owin.RequestHeaders", new Dictionary<string, string[]>());
+            env.Add("owin.RequestScheme", "https");
+            env.Add("owin.RequestPathBase", "");
+            env.Add("owin.RequestPath", path);
+
+            var headers = new Dictionary<string, string[]>();
+            headers.Add("Host", new string[]{"identityserver.io"});
+            env.Add("owin.RequestHeaders", headers);
 
             var ctx = new OwinContext(env);
             ctx.Request.Path = new PathString(path);

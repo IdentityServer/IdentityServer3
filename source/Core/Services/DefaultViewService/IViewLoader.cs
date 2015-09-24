@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+using System.Threading.Tasks;
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Models loading the HTML for a view.
@@ -26,6 +27,6 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        string Load(string name);
+        Task<string> LoadAsync(string name);
     }
 }

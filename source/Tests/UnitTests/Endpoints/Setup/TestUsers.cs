@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core;
+using IdentityServer3.Core.Services.InMemory;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     public class TestUsers
     {

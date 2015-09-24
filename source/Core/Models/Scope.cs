@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models are resource (either identity resource or web api resource)

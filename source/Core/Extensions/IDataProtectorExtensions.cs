@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Configuration;
 using System.Text;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Configuration.IDataProtector"/>
+    /// Extension methods for <see cref="IdentityServer3.Core.Configuration.IDataProtector"/>
     /// </summary>
     public static class IDataProtectorExtensions
     {

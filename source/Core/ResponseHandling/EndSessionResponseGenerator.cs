@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
 using System.ComponentModel;
 using System.Linq;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.ResponseHandling
+namespace IdentityServer3.Core.ResponseHandling
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class EndSessionResponseGenerator

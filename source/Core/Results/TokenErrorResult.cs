@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class TokenErrorResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         
         public string Error { get; internal set; }
+        public string ErrorDescription { get; internal set; }
 
         public TokenErrorResult(string error)
         {
             Error = error;
+        }
+
+        public TokenErrorResult(string error, string errorDescription)
+        {
+            Error = error;
+            ErrorDescription = errorDescription;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -44,7 +52,8 @@ namespace Thinktecture.IdentityServer.Core.Results
         {
             var dto = new ErrorDto
             {
-                error = Error 
+                error = Error,
+                error_description = ErrorDescription
             };
 
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -59,6 +68,8 @@ namespace Thinktecture.IdentityServer.Core.Results
         internal class ErrorDto
         {
             public string error { get; set; }
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public string error_description { get; set; }
         }    
     }
 }

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using Microsoft.Owin;
 using System;
 using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class LastUserNameCookie

@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +26,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default token service
@@ -38,7 +37,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The logger
         /// </summary>
-        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// The identity server options
@@ -214,7 +213,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 throw new InvalidOperationException("Invalid token type.");
             }
 
-            _events.RaiseTokenIssuedEvent(token);
+            await _events.RaiseTokenIssuedEventAsync(token);
             return tokenResult;
         }
 

@@ -15,7 +15,7 @@
  */
 using System;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class DateTimeHelper
     {

@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace IdentityServer3.Core.Logging
 {
     internal class TokenValidationLog
     {

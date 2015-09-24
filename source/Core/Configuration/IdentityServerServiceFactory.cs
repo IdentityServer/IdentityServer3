@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Use this class to replace built-in services, or add additional dependencies to the container
@@ -58,6 +59,23 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public IdentityServerServiceFactory()
         {
             this.ExternalClaimsFilter = DefaultClaimsFilter;
+
+            CustomGrantValidators = new List<Registration<ICustomGrantValidator>>();
+
+            // register default secret parsers
+            SecretParsers = new List<Registration<ISecretParser>>
+            {
+                new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
+                new Registration<ISecretParser, PostBodySecretParser>(),
+                new Registration<ISecretParser, X509CertificateSecretParser>(),
+            };
+
+            // register default secret validators
+            SecretValidators = new List<Registration<ISecretValidator>>
+            {
+                new Registration<ISecretValidator, HashedSharedSecretValidator>(),
+                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>()
+            };
         }
 
         /// <summary>
@@ -183,7 +201,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// <value>
         /// The custom grant validator.
         /// </value>
-        public Registration<ICustomGrantValidator> CustomGrantValidator { get; set; }
+        public List<Registration<ICustomGrantValidator>> CustomGrantValidators { get; set; }
 
         /// <summary>
         /// Gets or sets the custom request validator - Implements custom additional validation of authorize and token requests.
@@ -266,12 +284,20 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public Registration<ILocalizationService> LocalizationService { get; set; }
 
         /// <summary>
-        /// Gets or sets the client secret validator.
+        /// Gets or sets the secret parsers.
         /// </summary>
         /// <value>
-        /// The client secret validator.
+        /// The secret parsers.
         /// </value>
-        public Registration<IClientSecretValidator> ClientSecretValidator { get; set; }
+        public IEnumerable<Registration<ISecretParser>> SecretParsers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the secret validators.
+        /// </summary>
+        /// <value>
+        /// The secret validators.
+        /// </value>
+        public IEnumerable<Registration<ISecretValidator>> SecretValidators { get; set; }
 
         /// <summary>
         /// Gets or sets the CORS policy service.

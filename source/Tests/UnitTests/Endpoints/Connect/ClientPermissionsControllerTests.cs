@@ -15,16 +15,16 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ViewModels;
+using IdentityServer3.Tests.Endpoints;
 using System.Linq;
 using System.Net;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.ViewModels;
-using Thinktecture.IdentityServer.Tests.Endpoints;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.Endpoints
+namespace IdentityServer3.Tests.Connect.Endpoints
 {
     
     public class ClientPermissionsControllerTests : IdSvrHostTestBase

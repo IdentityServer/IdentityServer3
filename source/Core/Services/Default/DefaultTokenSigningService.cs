@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default token signing service
@@ -70,6 +70,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 DateTimeHelper.UtcNow,
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
+
+            // amr is an array - if there is only a single value turn it into an array
+            if (jwt.Payload.ContainsKey("amr"))
+            {
+                var amrValue = jwt.Payload["amr"] as string;
+                if (amrValue != null)
+                {
+                    jwt.Payload["amr"] = new string[] { amrValue };
+                }
+            }
 
             var x509credential = credentials as X509SigningCredentials;
             if (x509credential != null)

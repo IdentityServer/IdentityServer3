@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class ProtectedResourceErrorResult : IHttpActionResult
     {

@@ -4,12 +4,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>IdentityServer v3</title>
     <link rel="stylesheet" href="{applicationPath}/assets/styles.min.css">
+    <link rel="icon" type="image/x-icon" href="{applicationPath}/assets/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="{applicationPath}/assets/favicon.ico" />
+    <style>
+        .icon-banner{
+            position:relative;
+            top:-2px;
+        }
+        .icon{
+            position:relative;
+            top:-10px;
+        }
+    </style>
 </head>
 <body lang="en">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-header">
             <a href="{applicationPath}">
                 <span class="navbar-brand">
+                    <img src="{applicationPath}/assets/icon.png" class="icon-banner">
                     IdentityServer3
                 </span>
             </a>
@@ -20,6 +33,7 @@
         <div class="row page-header">
             <div class="col-sm-10">
                 <h1>
+                    <img class="icon" src="{applicationPath}/assets/icon.jpg">
                     Welcome to IdentityServer3
                     <small>(build {version})</small>
                 </h1>
@@ -47,9 +61,9 @@
         <div class="row">
             <div class="col-sm-8">
                 <p>
-                    Here are links to the 
+                    Here are links to the
                     <a href="https://identityserver.github.io/Documentation">documentation</a>,
-                    and <a href="https://github.com/identityserver/Thinktecture.IdentityServer3.Samples">ready to use samples</a>.
+                    and <a href="https://github.com/identityserver/IdentityServer3.Samples">ready to use samples</a>.
                 </p>
             </div>
         </div>

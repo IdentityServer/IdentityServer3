@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Thinktecture.IdentityServer.Core.Resources
+namespace IdentityServer3.Core.Resources
 {
 
 
@@ -39,7 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Resources
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Thinktecture.IdentityServer.Core.Resources.Scopes", typeof(Scopes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("IdentityServer3.Core.Resources.Scopes", typeof(Scopes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

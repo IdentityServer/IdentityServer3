@@ -15,16 +15,18 @@
  */
 
 using Autofac;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin.Infrastructure;
+using Microsoft.Owin.Logging;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens;
-using Thinktecture.IdentityModel.Tokens;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
+using System.Threading.Tasks;
 
 namespace Owin
 {
@@ -39,7 +41,7 @@ namespace Owin
         /// Extension method to configure IdentityServer in the hosting application.
         /// </summary>
         /// <param name="app">The application.</param>
-        /// <param name="options">The <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerOptions"/>.</param>
+        /// <param name="options">The <see cref="IdentityServer3.Core.Configuration.IdentityServerOptions"/>.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">
         /// app
@@ -54,12 +56,17 @@ namespace Owin
             options.Validate();
 
             // turn off weird claim mappings for JWTs
-            JwtSecurityTokenHandler.InboundClaimTypeMap = ClaimMappings.None;
-            JwtSecurityTokenHandler.OutboundClaimTypeMap = ClaimMappings.None;
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.OutboundClaimTypeMap = new Dictionary<string, string>();
 
             if (options.RequireSsl)
             {
                 app.Use<RequireSslMiddleware>();
+            }
+
+            if (options.LoggingOptions.EnableKatanaLogging)
+            {
+                app.SetLoggerFactory(new LibLogKatanaLoggerFactory());
             }
 
             app.ConfigureRequestId();
@@ -71,7 +78,7 @@ namespace Owin
             app.ConfigureIdentityServerIssuer(options);
 
             var container = AutofacConfig.Configure(options);
-            app.Use<AutofacContainerMiddleware>(container);
+            app.UseAutofacMiddleware(container);
 
             app.UseCors();
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
@@ -88,40 +95,46 @@ namespace Owin
 
             app.UseEmbeddedFileServer();
 
+            app.ConfigureHttpLogging(options.LoggingOptions);
+
             SignatureConversions.AddConversions(app);
-            app.UseWebApi(WebApiConfig.Configure(options));
+            
+            var httpConfig = WebApiConfig.Configure(options, container);
+            app.UseAutofacWebApi(httpConfig);
+            app.UseWebApi(httpConfig);
 
             using (var child = container.CreateScopeWithEmptyOwinContext())
             {
                 var eventSvc = child.Resolve<IEventService>();
-                DoStartupDiagnostics(options, eventSvc);
+                // TODO -- perhaps use AsyncHelper instead?
+                DoStartupDiagnosticsAsync(options, eventSvc).Wait();
             }
             
             return app;
         }
 
-        private static void DoStartupDiagnostics(IdentityServerOptions options, IEventService eventSvc)
+        private static async Task DoStartupDiagnosticsAsync(IdentityServerOptions options, IEventService eventSvc)
         {
             var cert = options.SigningCertificate;
             
             if (cert == null)
             {
                 Logger.Warn("No signing certificate configured.");
-                eventSvc.RaiseNoCertificateConfiguredEvent();
+                await eventSvc.RaiseNoCertificateConfiguredEventAsync();
 
                 return;
             }
             if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
             {
                 Logger.Error("Signing certificate has not private key or private key is not accessible. Make sure the account running your application has access to the private key");
-                eventSvc.RaiseCertificatePrivateKeyNotAccessibleEvent(cert);
+                await eventSvc.RaiseCertificatePrivateKeyNotAccessibleEventAsync(cert);
 
                 return;
             }
             if (cert.PublicKey.Key.KeySize < 2048)
             {
                 Logger.Error("Signing certificate key length is less than 2048 bits.");
-                eventSvc.RaiseCertificateKeyLengthTooShortEvent(cert);
+                await eventSvc.RaiseCertificateKeyLengthTooShortEventAsync(cert);
 
                 return;
             }
@@ -130,12 +143,12 @@ namespace Owin
             if (timeSpanToExpire < TimeSpan.FromDays(30))
             {
                 Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());
-                eventSvc.RaiseCertificateExpiringSoonEvent(cert);
+                await eventSvc.RaiseCertificateExpiringSoonEventAsync(cert);
 
                 return;
             }
 
-            eventSvc.RaiseCertificateValidatedEvent(cert);
+            await eventSvc.RaiseCertificateValidatedEventAsync(cert);
         }
     }
 }

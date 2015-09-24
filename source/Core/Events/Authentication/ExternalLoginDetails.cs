@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Events
+namespace IdentityServer3.Core.Events
 {
     /// <summary>
     /// Event class for external login events

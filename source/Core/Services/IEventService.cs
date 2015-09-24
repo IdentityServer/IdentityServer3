@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Events;
+using IdentityServer3.Core.Events;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Models a recipient of notification of events
@@ -27,6 +28,6 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Raises the specified event.
         /// </summary>
         /// <param name="evt">The event.</param>
-        void Raise<T>(Event<T> evt);
+        Task RaiseAsync<T>(Event<T> evt);
     }
 }

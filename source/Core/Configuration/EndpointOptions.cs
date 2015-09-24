@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Configures which endpoints are enabled or disabled.

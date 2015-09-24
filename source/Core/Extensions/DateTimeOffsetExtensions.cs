@@ -17,7 +17,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class DateTimeOffsetExtensions
     {

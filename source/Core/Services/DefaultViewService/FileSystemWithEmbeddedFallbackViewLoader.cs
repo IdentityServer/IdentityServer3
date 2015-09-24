@@ -16,8 +16,9 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// View loader implementation that uses a combination of the file system view loader 
@@ -50,7 +51,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         static string GetDefaultDirectory()
         {
             var path = AppDomain.CurrentDomain.BaseDirectory;
-            path = Path.Combine(path, "assets");
+            path = Path.Combine(path, "templates");
             return path;
         }
 
@@ -59,12 +60,12 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public string Load(string name)
+        public async Task<string> LoadAsync(string name)
         {
-            var value = file.Load(name);
+            var value = await file.LoadAsync(name);
             if (value == null)
             {
-                value = embedded.Load(name);
+                value = await embedded.LoadAsync(name);
             }
             return value;
         }

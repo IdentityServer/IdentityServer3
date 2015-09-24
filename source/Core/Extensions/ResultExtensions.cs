@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Results;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Results;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class ResultExtensions
     {
@@ -30,6 +30,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error)
         {
             return new TokenErrorResult(error);
+        }
+
+        public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error, string errorDescription)
+        {
+            return new TokenErrorResult(error, errorDescription);
         }
     }
 }

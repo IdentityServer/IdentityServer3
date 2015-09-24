@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
@@ -21,14 +25,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class MessageCookie<TMessage>

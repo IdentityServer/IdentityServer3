@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// The IdentityServerOptions class is the top level container for all configuration settings of IdentityServer.
@@ -39,7 +39,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.ProtocolLogoutUrls = new List<string>();
             this.RequireSsl = true;
             this.Endpoints = new EndpointOptions();
-            this.CorsPolicy = new CorsPolicy();
             this.AuthenticationOptions = new AuthenticationOptions();
             this.CspOptions = new CspOptions();
             this.LoggingOptions = new LoggingOptions();
@@ -60,11 +59,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (Endpoints == null)
             {
                 throw new ArgumentException("Endpoints is missing");
-            }
-            
-            if (LoggingOptions.EnableHttpLogging || LoggingOptions.EnableWebApiDiagnostics || LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                Logger.Warn("Detailed logging is enabled, potentially sensitive data will be exposed in log files.");
             }
         }
 
@@ -155,14 +149,6 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// The plugin configuration.
         /// </value>
         public Action<IAppBuilder, IdentityServerOptions> PluginConfiguration { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CORS policy.
-        /// </summary>
-        /// <value>
-        /// The CORS policy.
-        /// </value>
-        public CorsPolicy CorsPolicy { get; set; }
 
         /// <summary>
         /// Gets or sets the protocol logout urls.

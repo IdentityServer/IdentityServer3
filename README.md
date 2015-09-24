@@ -3,13 +3,17 @@
 Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7c60xg7cb/branch/dev?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture/branch/dev)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/IdentityServer/IdentityServer3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+![openid_certified](https://cloud.githubusercontent.com/assets/1454075/7611268/4d19de32-f97b-11e4-895b-31b2455a7ca6.png)
+
+[Certified](http://openid.net/certification/) OpenID Connect implementation.
+
 ## Overview ##
 
 IdentityServer is a .NET/Katana-based framework and hostable component that allows implementing single sign-on and access control for modern web applications and APIs using protocols like OpenID Connect and OAuth2. It supports a wide range of clients like mobile, web, SPAs and desktop applications and is extensible to allow integration in new and existing architectures.
 
-Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
+Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/113604459).
 
-Go to the documenation [site](https://identityserver.github.io/Documentation/).
+Go to the documentation [site](https://identityserver.github.io/Documentation/).
 
 [OpenID Connect specification](http://openid.net/specs/openid-connect-core-1_0.html) / [OAuth2 specification](http://tools.ietf.org/html/rfc6749 "OAuth2 specification")
 
@@ -29,6 +33,8 @@ public void Configuration(IAppBuilder app)
 }
 ```
 
+*Note:* If you're hosting in IIS, make sure you [enable RAMMFAR in your web.config file](http://identityserver.github.io/Documentation/docs/configuration/overview.html).
+
 For more information, e.g.
 
 * support for MembershipReboot and ASP.NET Identity based user stores
@@ -37,7 +43,7 @@ For more information, e.g.
 * support for WS-Federation
 * extensibility
 
-check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/Thinktecture.IdentityServer3.Samples).
+check out the [documentation](https://identityserver.github.io/Documentation/) and the [samples](https://github.com/identityserver/IdentityServer3.Samples).
 
 ## Related repositories ##
 * [Access Token Validation](https://github.com/identityserver/IdentityServer3.AccessTokenValidation)
@@ -67,4 +73,5 @@ IdentityServer is built using the following great open source projects:
 - [AppVeyor](http://appveyor.com)
 - [MyGet](http://myget.org)
 
-...and last but not least thanks to all [contributors](https://github.com/thinktecture/Thinktecture.IdentityServer.v3/graphs/contributors)!
+...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
+

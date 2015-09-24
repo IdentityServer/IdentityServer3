@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Thinktecture.IdentityServer.Core.Models;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core
+namespace IdentityServer3.Core
 {
     public static class Constants
     {
@@ -441,13 +441,16 @@ namespace Thinktecture.IdentityServer.Core
 
             // claims for authentication controller partial logins
             public const string AuthorizationReturnUrl = "authorization_return_url";
+            public const string PartialLoginRestartUrl = "partial_login_restart_url";
             public const string PartialLoginReturnUrl = "partial_login_return_url";
 
             // internal claim types
             // claim type to identify external user from external provider
             public const string ExternalProviderUserId = "external_provider_user_id";
-            public const string PartialLoginResumeId = "partial_login_resume_id:{0}";
+            public const string PartialLoginResumeId = PartialLoginResumeClaimPrefix + "{0}";
         }
+
+        public const string PartialLoginResumeClaimPrefix = "partial_login_resume_id:";
 
         public static readonly string[] ClaimsProviderFilerClaimTypes = new string[]
         {
@@ -505,10 +508,23 @@ namespace Thinktecture.IdentityServer.Core
             public const string External                = "external";
         }
 
-        public static class ClientAuthenticationMethods
+        public static class ParsedSecretTypes
         {
-            public const string Basic    = "Basic";
-            public const string FormPost = "FormPost";
+            public const string SharedSecret = "SharedSecret";
+            public const string X509Certificate = "X509Certificate";
+        }
+
+        public static class SecretTypes
+        {
+            public const string SharedSecret              = "SharedSecret";
+            public const string X509CertificateThumbprint = "X509Thumbprint";
+            public const string X509CertificateName       = "X509Name";
+        }
+
+        public static class TokenEndpointAuthenticationMethods
+        {
+            public const string PostBody = "client_secret_post";
+            public const string BasicAuthentication = "client_secret_basic";
         }
 
         public static class RouteNames
@@ -577,7 +593,6 @@ namespace Thinktecture.IdentityServer.Core
             public const string IdentityServerBasePath = "idsrv:IdentityServerBasePath";
             public const string IdentityServerHost     = "idsrv:IdentityServerHost";
 
-            public const string AutofacScope = "idsrv:AutofacScope";
             public const string RequestId    = "idsrv:RequestId";
         }
         
@@ -609,6 +624,13 @@ namespace Thinktecture.IdentityServer.Core
         public static class RevocationErrors
         {
             public const string UnsupportedTokenType = "unsupported_token_type";
+        }
+
+        public static class ProfileDataCallers
+        {
+            public const string UserInfoEndpoint = "UserInfoEndpoint";
+            public const string ClaimsProviderIdentityToken = "ClaimsProviderIdentityToken";
+            public const string ClaimsProviderAccessToken = "ClaimsProviderAccessToken";
         }
     }
 }

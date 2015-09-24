@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -21,13 +26,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class LogoutResult : IHttpActionResult
     {

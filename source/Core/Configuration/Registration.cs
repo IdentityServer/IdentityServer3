@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Services;
 using System;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Indicates in mode in which the DI system instantiates the dependency.
@@ -102,7 +102,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         /// A factory function to obtain the dependency. The function will be invoked each time the dependency is 
         /// resolved. If the returned object impelments <see cref="System.IDisposable"/>
         /// then <c>Dispose</c> will be called after each request.
-        /// The <see cref="Thinktecture.IdentityServer.Core.Services.IDependencyResolver"/> parameter can be 
+        /// The <see cref="IdentityServer3.Core.Services.IDependencyResolver"/> parameter can be 
         /// used to resolve other dependencies.
         /// </summary>
         /// <value>
@@ -192,7 +192,17 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             this.Mode = RegistrationMode.Singleton;
         }
 
-        internal Registration(Registration<T> registration, string name)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Registration{T}"/> class from an existing registration.
+        /// </summary>
+        /// <param name="registration">The registration.</param>
+        /// <param name="name">The name.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// registration
+        /// or
+        /// name
+        /// </exception>
+        public Registration(Registration<T> registration, string name)
         {
             if (registration == null) throw new ArgumentNullException("registration");
             if (name == null) throw new ArgumentNullException("name");

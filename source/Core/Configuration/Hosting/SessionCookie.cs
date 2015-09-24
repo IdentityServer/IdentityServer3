@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
 using Microsoft.Owin;
 using System;
 using System.ComponentModel;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class SessionCookie

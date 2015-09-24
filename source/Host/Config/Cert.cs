@@ -16,14 +16,14 @@
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Thinktecture.IdentityServer.Host.Config
+namespace IdentityServer3.Host.Config
 {
     public class Cert
     {
         public static X509Certificate2 Load()
         {
             var assembly = typeof(Cert).Assembly;
-            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Host.Config.idsrv3test.pfx"))
+            using (var stream = assembly.GetManifestResourceStream("IdentityServer3.Host.Config.idsrv3test.pfx"))
             {
                 return new X509Certificate2(ReadStream(stream), "idsrv3test");
             }

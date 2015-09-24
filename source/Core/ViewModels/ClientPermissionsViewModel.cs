@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace IdentityServer3.Core.ViewModels
 {
     /// <summary>
     /// Models the data needed to render the client permissions page.

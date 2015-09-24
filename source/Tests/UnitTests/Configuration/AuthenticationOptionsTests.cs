@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Configuration
+namespace IdentityServer3.Tests.Configuration
 {
     public class AuthenticationOptionsTests
     {

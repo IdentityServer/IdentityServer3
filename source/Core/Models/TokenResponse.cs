@@ -18,7 +18,7 @@ using System.ComponentModel;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenResponse

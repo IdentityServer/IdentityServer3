@@ -15,25 +15,25 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ResponseHandling;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
+using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.ViewModels;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.ResponseHandling;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
-using Thinktecture.IdentityServer.Core.Validation;
-using Thinktecture.IdentityServer.Core.ViewModels;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
+namespace IdentityServer3.Tests.Connect.ResponseHandling
 {
     
     public class AuthorizeInteractionResponseGeneratorTests_Consent

@@ -15,17 +15,17 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.ViewModels;
 using Xunit;
 
 
-namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
+namespace IdentityServer3.Tests.Conformance.Basic
 {
     public class RedirectUriTests : IdentityServerHostTest
     {
@@ -43,11 +43,14 @@ namespace Thinktecture.IdentityServer.Tests.Conformance.Basic
             {
                 Enabled = true,
                 ClientId = client_id,
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 {
-                    new ClientSecret(client_secret)
+                    new Secret(client_secret)
                 },
+
                 Flow = Flows.AuthorizationCode,
+                AllowAccessToAllScopes = true,
+
                 RequireConsent = false,
                 RedirectUris = new List<string>
                 {

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System.Collections.Generic;
 using System.Linq;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     internal static class IdentityServerOptionsExtensions
     {

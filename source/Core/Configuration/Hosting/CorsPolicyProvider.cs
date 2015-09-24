@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class CorsPolicyProvider : ICorsPolicyProvider
     {
@@ -43,24 +43,30 @@ namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
         {
             var path = request.Path.ToString();
             var origin = request.Headers["Origin"];
-            
-            if (IsPathAllowed(request) && origin != null)
-            {
-                Logger.InfoFormat("CORS request made for path: {0} from origin: {1}", path, origin);
 
-                if (await IsOriginAllowed(origin, request.Environment))
+            // see if the Origin is different than this server's origin. if so
+            // that indicates a proper CORS request
+            var thisOrigin = request.Uri.Scheme + "://" + request.Uri.Authority;
+            if (origin != null && origin != thisOrigin)
+            {
+                if (IsPathAllowed(request))
                 {
-                    Logger.Info("CorsPolicyService allowed origin");
-                    return Allow(origin);
+                    Logger.InfoFormat("CORS request made for path: {0} from origin: {1}", path, origin);
+
+                    if (await IsOriginAllowed(origin, request.Environment))
+                    {
+                        Logger.Info("CorsPolicyService allowed origin");
+                        return Allow(origin);
+                    }
+                    else
+                    {
+                        Logger.Info("CorsPolicyService did not allow origin");
+                    }
                 }
                 else
                 {
-                    Logger.Info("CorsPolicyService did not allow origin");
+                    Logger.WarnFormat("CORS request made for path: {0} from origin: {1} but rejected because invalid CORS path", path, origin);
                 }
-            }
-            else
-            {
-                Logger.WarnFormat("CORS request made for path: {0} from origin: {1} but rejected because invalid CORS path", path, origin);
             }
 
             return null;

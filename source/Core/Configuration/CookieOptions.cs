@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Configured how cookies are managed by IdentityServer.

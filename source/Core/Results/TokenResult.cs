@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
@@ -21,10 +23,8 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class TokenResult : IHttpActionResult
     {

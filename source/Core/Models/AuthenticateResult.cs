@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// AuthenticateResult models the result from the various authentication methods 
-    /// on the <see cref="Thinktecture.IdentityServer.Core.Services.IUserService"/>
+    /// on the <see cref="IdentityServer3.Core.Services.IUserService"/>
     /// </summary>
     public class AuthenticateResult
     {
@@ -201,6 +200,36 @@ namespace Thinktecture.IdentityServer.Core.Models
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticateResult" /> class. This
+        /// version of the constructor indicates a partial login (with a redirect) without
+        /// knowledge of the subject claim.
+        /// </summary>
+        /// <param name="redirectPath">The redirect path. This should be relative to the
+        /// current web server. The <c>"~/"</c> prefix is supported to allow application-relative
+        /// paths to be used (e.g. "~/path").</param>
+        /// <param name="claims">Additional claims that will be maintained in the principal.</param>
+        /// <exception cref="System.ArgumentNullException">redirectPath</exception>
+        /// <exception cref="System.ArgumentException">redirectPath must start with / or ~/</exception>
+        public AuthenticateResult(string redirectPath, IEnumerable<Claim> claims)
+        {
+            if (redirectPath.IsMissing()) throw new ArgumentNullException("redirectPath");
+            if (!redirectPath.StartsWith("~/") && !redirectPath.StartsWith("/"))
+            {
+                throw new ArgumentException("redirectPath must start with / or ~/");
+            }
+
+            if (claims == null)
+            {
+                claims = Enumerable.Empty<Claim>();
+            }
+
+            var id = new ClaimsIdentity(claims, Constants.PartialSignInAuthenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
+            this.User = new ClaimsPrincipal(id); 
+            
+            this.PartialSignInRedirectPath = redirectPath;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the authentication resulted in an error.
         /// </summary>
         /// <value>
@@ -235,7 +264,7 @@ namespace Thinktecture.IdentityServer.Core.Models
         {
             get
             {
-                return User != null && User.HasClaim(Constants.ClaimTypes.Subject);
+                return User != null && User.HasClaim(c => c.Type == Constants.ClaimTypes.Subject);
             }
         }
     }

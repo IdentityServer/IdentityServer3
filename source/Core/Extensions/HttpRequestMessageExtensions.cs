@@ -16,7 +16,7 @@
 
 using System.Net.Http;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class HttpRequestMessageExtensions
     {

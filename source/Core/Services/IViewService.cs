@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.ViewModels;
 using System.IO;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Models loading the necessary HTML pages displayed by IdentityServer.
@@ -38,22 +39,31 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// Loads the HTML for the logout prompt page.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> Logout(LogoutViewModel model);
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> Logout(LogoutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> LoggedOut(LoggedOutViewModel model);
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the user consent page.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Stream for the HTML</returns>
-        Task<Stream> Consent(ConsentViewModel model);
+        /// <param name="authorizeRequest">The validated authorize request.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest);
 
         /// <summary>
         /// Loads the HTML for the client permissions page.

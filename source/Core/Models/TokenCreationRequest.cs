@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models the data to create a token from a validated request.

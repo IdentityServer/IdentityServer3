@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Security.Claims;
+using IdentityServer3.Core.Models;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// This interface allows IdentityServer to connect to your user and profile store.
@@ -29,53 +27,53 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// <summary>
         /// This method gets called before the login page is shown. This allows you to determine if the user should be authenticated by some out of band mechanism (e.g. client certificates or trusted headers).
         /// </summary>
-        /// <param name="message">The signin message.</param>
-        /// <returns>The authentication result or null to continue the flow.</returns>
-        Task<AuthenticateResult> PreAuthenticateAsync(SignInMessage message);
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task PreAuthenticateAsync(PreAuthenticationContext context);
 
         /// <summary>
         /// This method gets called for local authentication (whenever the user uses the username and password dialog).
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="message">The signin message.</param>
-        /// <returns>The authentication result. </returns>
-        Task<AuthenticateResult> AuthenticateLocalAsync(string username, string password, SignInMessage message);
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task AuthenticateLocalAsync(LocalAuthenticationContext context);
 
         /// <summary>
         /// This method gets called when the user uses an external identity provider to authenticate.
-        /// The user's identity from the external provider is passed via the `externalUser` parameter which contains the 
+        /// The user's identity from the external provider is passed via the `externalUser` parameter which contains the
         /// provider identifier, the provider's identifier for the user, and the claims from the provider for the external user.
         /// </summary>
-        /// <param name="externalUser">The external user.</param>
-        /// <param name="message">The signin message.</param>
-        /// <returns>
-        /// The authentication result.
-        /// </returns>
-        Task<AuthenticateResult> AuthenticateExternalAsync(ExternalIdentity externalUser, SignInMessage message);
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task AuthenticateExternalAsync(ExternalAuthenticationContext context);
 
+        /// <summary>
+        /// This method is called prior to the user being issued a login cookie for IdentityServer. 
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task PostAuthenticateAsync(PostAuthenticationContext context);
+        
         /// <summary>
         /// This method gets called when the user signs out.
         /// </summary>
-        /// <param name="subject">The subject.</param>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
-        Task SignOutAsync(ClaimsPrincipal subject);
+        Task SignOutAsync(SignOutContext context);
 
         /// <summary>
         /// This method is called whenever claims about the user are requested (e.g. during token creation or via the userinfo endpoint)
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <param name="requestedClaimTypes">The requested claim types. The user service is expected to filter based 
-        /// upon the requested claim types. <c>null</c> is passed if there is no filtering to be performed.</param>
-        /// <returns>Claims for the subject</returns>
-        Task<IEnumerable<Claim>> GetProfileDataAsync(ClaimsPrincipal subject, IEnumerable<string> requestedClaimTypes = null);
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task GetProfileDataAsync(ProfileDataRequestContext context);
 
         /// <summary>
         /// This method gets called whenever identity server needs to determine if the user is valid or active (e.g. if the user's account has been deactivated since they logged in).
         /// (e.g. during token issuance or validation).
         /// </summary>
-        /// <param name="subject">The subject.</param>
-        /// <returns><c>true</c> if the user is still allowed to receive tokens; <c>false</c> otherwise.</returns>
-        Task<bool> IsActiveAsync(ClaimsPrincipal subject);
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        Task IsActiveAsync(IsActiveContext context);
     }
 }

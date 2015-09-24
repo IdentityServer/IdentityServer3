@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace IdentityServer3.Core.ViewModels
 {
     /// <summary>
     /// Models the data needed to render the logged out page.

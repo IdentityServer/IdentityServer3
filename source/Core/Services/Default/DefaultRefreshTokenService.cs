@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default refresh token service
@@ -30,7 +31,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// The logger
         /// </summary>
-        protected readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
         /// <summary>
         /// The refresh token store
@@ -56,12 +57,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <summary>
         /// Creates the refresh token.
         /// </summary>
+        /// <param name="subject">The subject.</param>
         /// <param name="accessToken">The access token.</param>
         /// <param name="client">The client.</param>
         /// <returns>
         /// The refresh token handle
         /// </returns>
-        public virtual async Task<string> CreateRefreshTokenAsync(Token accessToken, Client client)
+        public virtual async Task<string> CreateRefreshTokenAsync(ClaimsPrincipal subject, Token accessToken, Client client)
         {
             Logger.Debug("Creating refresh token");
 
@@ -82,12 +84,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             {
                 CreationTime = DateTimeOffsetHelper.UtcNow,
                 LifeTime = lifetime,
-                AccessToken = accessToken
+                AccessToken = accessToken,
+                Subject = subject
             };
 
             await _store.StoreAsync(handle, refreshToken);
 
-            RaiseRefreshTokenIssuedEvent(handle, refreshToken);
+            await RaiseRefreshTokenIssuedEventAsync(handle, refreshToken);
             return handle;
         }
 
@@ -150,7 +153,8 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 Logger.Debug("No updates to refresh token done");
             }
 
-            RaiseRefreshTokenRefreshedEvent(handle, handle, refreshToken);
+            await RaiseRefreshTokenRefreshedEventAsync(handle, handle, refreshToken);
+            Logger.Debug("No updates to refresh token done");
 
             return handle;
         }
@@ -160,9 +164,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </summary>
         /// <param name="handle">The handle.</param>
         /// <param name="token">The token.</param>
-        protected void RaiseRefreshTokenIssuedEvent(string handle, RefreshToken token)
+        protected async Task RaiseRefreshTokenIssuedEventAsync(string handle, RefreshToken token)
         {
-            _events.RaiseRefreshTokenIssuedEvent(handle, token);
+            await _events.RaiseRefreshTokenIssuedEventAsync(handle, token);
         }
 
         /// <summary>
@@ -171,9 +175,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <param name="oldHandle">The old handle.</param>
         /// <param name="newHandle">The new handle.</param>
         /// <param name="token">The token.</param>
-        protected void RaiseRefreshTokenRefreshedEvent(string oldHandle, string newHandle, RefreshToken token)
+        protected async Task RaiseRefreshTokenRefreshedEventAsync(string oldHandle, string newHandle, RefreshToken token)
         {
-            _events.RaiseSuccessfulRefreshTokenRefreshEvent(oldHandle, newHandle, token);
+            await _events.RaiseSuccessfulRefreshTokenRefreshEventAsync(oldHandle, newHandle, token);
         }
     }
 }

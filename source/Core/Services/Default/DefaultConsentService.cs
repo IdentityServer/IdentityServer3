@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default consent service
@@ -72,6 +72,13 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             if (scopes == null || !scopes.Any())
             {
                 return false;
+            }
+
+            // we always require consent for offline access if
+            // the client has not disabled RequireConsent 
+            if (scopes.Contains(Constants.StandardScopes.OfflineAccess))
+            {
+                return true;
             }
             
             var consent = await _store.LoadAsync(subject.GetSubjectId(), client.ClientId);

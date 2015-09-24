@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class X509Certificate2Extensions
     {
@@ -24,10 +25,8 @@ namespace Thinktecture.IdentityServer.Core.Extensions
         {
             try
             {
-                using (var pk = cert.PrivateKey)
-                {
-                    return true;
-                }
+                var pk = cert.PrivateKey;
+                return true;
             }
             catch (CryptographicException)
             {

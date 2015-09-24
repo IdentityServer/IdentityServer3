@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core;
+using IdentityServer3.Core.Services.Default;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Services.Default;
 
 namespace Owin
 {

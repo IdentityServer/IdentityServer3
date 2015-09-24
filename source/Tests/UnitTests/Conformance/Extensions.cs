@@ -15,6 +15,11 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.ViewModels;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -31,13 +36,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Tests.Conformance
+namespace IdentityServer3.Tests.Conformance
 {
     public static class Extensions
     {

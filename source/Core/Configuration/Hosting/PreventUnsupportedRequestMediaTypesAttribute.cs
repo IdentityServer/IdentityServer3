@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Resources;
+using IdentityServer3.Core.Services;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Resources;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class PreventUnsupportedRequestMediaTypesAttribute : AuthorizationFilterAttribute
     {

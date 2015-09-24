@@ -15,20 +15,20 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
+namespace IdentityServer3.Tests.Connect.ResponseHandling
 {
     public class DefaultRefreshTokenServiceTests : IDisposable
     {
@@ -40,6 +40,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
         Client roclient_absolute_refresh_expiration_one_time_only;
         Client roclient_sliding_refresh_expiration_one_time_only;
         Client roclient_absolute_refresh_expiration_reuse;
+
+        ClaimsPrincipal user;
 
         DateTimeOffset now;
         public DateTimeOffset UtcNow
@@ -63,9 +65,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_one_time_only",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,
@@ -80,9 +82,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_sliding_refresh_expiration_one_time_only",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,
@@ -98,9 +100,9 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
                 ClientName = "Resource Owner Client",
                 Enabled = true,
                 ClientId = "roclient_absolute_refresh_expiration_reuse",
-                ClientSecrets = new List<ClientSecret>
+                ClientSecrets = new List<Secret>
                 { 
-                    new ClientSecret("secret".Sha256())
+                    new Secret("secret".Sha256())
                 },
 
                 Flow = Flows.ResourceOwner,
@@ -112,6 +114,8 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
 
             refreshTokenStore = new InMemoryRefreshTokenStore();
             service = new DefaultRefreshTokenService(refreshTokenStore, new DefaultEventService());
+
+            user = IdentityServerPrincipal.Create("bob", "Bob Loblaw");
         }
 
         public void Dispose()
@@ -152,7 +156,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
@@ -173,7 +177,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
 
             // make sure a handle is returned
             string.IsNullOrWhiteSpace(handle).Should().BeFalse();
@@ -196,7 +200,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
@@ -218,7 +222,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_sliding_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var refreshToken = await refreshTokenStore.GetAsync(handle);
             var lifetime = refreshToken.LifeTime;
 
@@ -238,7 +242,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_reuse;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().Be(handle);
@@ -251,7 +255,7 @@ namespace Thinktecture.IdentityServer.Tests.Connect.ResponseHandling
             var client = roclient_absolute_refresh_expiration_one_time_only;
             var token = CreateAccessToken(client, "valid", 60, "read", "write");
 
-            var handle = await service.CreateRefreshTokenAsync(token, client);
+            var handle = await service.CreateRefreshTokenAsync(user, token, client);
             var newHandle = await service.UpdateRefreshTokenAsync(handle, await refreshTokenStore.GetAsync(handle), client);
 
             newHandle.Should().NotBe(handle);

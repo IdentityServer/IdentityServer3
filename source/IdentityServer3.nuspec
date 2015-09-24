@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Thinktecture.IdentityServer3</id>
+    <id>IdentityServer3</id>
     <version>0.0.0</version>
-    <title>Thinktecture IdentityServer3</title>
+    <title>IdentityServer3</title>
     <authors>Brock Allen, Dominick Baier</authors>
     <owners>Brock Allen, Dominick Baier</owners>
     <projectUrl>https://github.com/IdentityServer/IdentityServer3</projectUrl>
@@ -16,7 +16,7 @@
     
     <copyright>Copyright 2015</copyright>
     
-    <tags>Thinktecture IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
+    <tags>IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
     <dependencies>
       <dependency id="Owin" version="1.0"/>
     </dependencies>

@@ -14,17 +14,35 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
-    class AuthorizeRequestValidationResult : ValidationResultBase
+    /// <summary>
+    /// Validation result for authorize requests
+    /// </summary>
+    public class AuthorizeRequestValidationResult : ValidationResult
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizeRequestValidationResult"/> class.
+        /// </summary>
         public AuthorizeRequestValidationResult()
         {
-            IsError = true;
             ErrorType = ErrorTypes.User;
         }
 
+        /// <summary>
+        /// Gets or sets the type of the error (user vs client).
+        /// </summary>
+        /// <value>
+        /// The type of the error.
+        /// </value>
         public ErrorTypes ErrorType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validated request.
+        /// </summary>
+        /// <value>
+        /// The validated request.
+        /// </value>
         public ValidatedAuthorizeRequest ValidatedRequest { get; set; }
     }
 }

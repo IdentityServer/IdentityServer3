@@ -15,20 +15,19 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace IdentityServer3.Tests.Validation.TokenRequest
 {
     
     public class TokenRequestValidation_Code_Invalid
@@ -285,6 +284,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
 
             var code = new AuthorizationCode
             {
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
                 Client = client,
                 IsOpenId = true,
                 RedirectUri = "https://server/cb",
@@ -332,11 +332,15 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
             var store = new InMemoryAuthorizationCodeStore();
 
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Callback<IsActiveContext>(ctx =>
+            {
+                ctx.IsActive = false;
+            }).Returns(Task.FromResult(0));
 
             var code = new AuthorizationCode
             {
                 Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
                 RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {

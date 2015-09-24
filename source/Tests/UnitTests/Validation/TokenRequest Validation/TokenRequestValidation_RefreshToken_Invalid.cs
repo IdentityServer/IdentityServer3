@@ -15,19 +15,19 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.InMemory;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
+namespace IdentityServer3.Tests.Validation.TokenRequest
 {
 
     public class TokenRequestValidation_RefreshToken_Invalid
@@ -163,7 +163,10 @@ namespace Thinktecture.IdentityServer.Tests.Validation.TokenRequest
         public async Task RefreshToken_Request_with_disabled_User()
         {
             var mock = new Mock<IUserService>();
-            mock.Setup(u => u.IsActiveAsync(It.IsAny<ClaimsPrincipal>())).Returns(Task.FromResult(false));
+            mock.Setup(u => u.IsActiveAsync(It.IsAny<IsActiveContext>())).Callback<IsActiveContext>(ctx =>
+            {
+                ctx.IsActive = false;
+            }).Returns(Task.FromResult(0));
 
             var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
 

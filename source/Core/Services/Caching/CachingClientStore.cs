@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
 using System;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
 
-namespace Thinktecture.IdentityServer.Core.Services.Caching
+namespace IdentityServer3.Core.Services.Caching
 {
     /// <summary>
     /// <see cref="IClientStore"/> decorator implementation that uses the provided <see cref="ICache{T}"/> for caching clients.

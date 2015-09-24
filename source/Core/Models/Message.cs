@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-using Thinktecture.IdentityServer.Core.Extensions;
+using IdentityServer3.Core.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Base class for data that needs to be written out as cookies.

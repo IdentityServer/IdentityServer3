@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Represents a link on the login page
     /// </summary>
     public class LoginPageLink
     {
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
+        public string Type { get; set; }
+
         /// <summary>
         /// Gets or sets the text.
         /// </summary>

@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class StringExtensions
     {

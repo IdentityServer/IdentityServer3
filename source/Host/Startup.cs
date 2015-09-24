@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Host;
+using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
@@ -21,22 +25,21 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
 using Owin;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Host;
-using Thinktecture.IdentityServer.Host.Config;
+using Serilog;
 
 [assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
 
-namespace Thinktecture.IdentityServer.Host
+namespace IdentityServer3.Host
 {
     public class Startup_LocalTest
     {
         public void Configuration(IAppBuilder app)
         {
-            LogProvider.SetCurrentLogProvider(new DiagnosticsTraceLogProvider());
-            //LogProvider.SetCurrentLogProvider(new TraceSourceLogProvider());
+            // setup serilog to use diagnostics trace
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Trace()
+                .CreateLogger();
 
             // uncomment to enable HSTS headers for the host
             // see: https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security
@@ -44,13 +47,15 @@ namespace Thinktecture.IdentityServer.Host
 
             app.Map("/core", coreApp =>
                 {
-                    var factory = InMemoryFactory.Create(
-                        users:   Users.Get(),
-                        clients: Clients.Get(),
-                        scopes:  Scopes.Get());
+                    var factory = new IdentityServerServiceFactory()
+                        .UseInMemoryUsers(Users.Get())
+                        .UseInMemoryClients(Clients.Get())
+                        .UseInMemoryScopes(Scopes.Get());
 
-                    factory.CustomGrantValidator = 
-                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator));
+                    factory.CustomGrantValidators.Add(
+                        new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator)));
+                    factory.CustomGrantValidators.Add(
+                        new Registration<ICustomGrantValidator>(typeof(AnotherCustomGrantValidator)));
 
                     factory.ConfigureClientStoreCache();
                     factory.ConfigureScopeStoreCache();
@@ -61,18 +66,15 @@ namespace Thinktecture.IdentityServer.Host
                         Factory = factory,
                         SigningCertificate = Cert.Load(),
 
-                        CorsPolicy = CorsPolicy.AllowAll,
-
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,
+                            //EnablePostSignOutAutoRedirect = true
                         },
 
                         LoggingOptions = new LoggingOptions
                         {
-                            //EnableHttpLogging = true, 
-                            //EnableWebApiDiagnostics = true,
-                            //IncludeSensitiveDataInLogs = true
+                            EnableKatanaLogging = true
                         },
 
                         EventsOptions = new EventsOptions

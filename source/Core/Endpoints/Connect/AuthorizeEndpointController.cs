@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.ResponseHandling;
+using IdentityServer3.Core.Results;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.ViewModels;
 using System;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Configuration.Hosting;
-using Thinktecture.IdentityServer.Core.Events;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.ResponseHandling;
-using Thinktecture.IdentityServer.Core.Results;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Validation;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-#pragma warning disable 1591
-
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace IdentityServer3.Core.Endpoints
 {
     /// <summary>
     /// OAuth2/OpenID Connect authorize endpoint
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     [ErrorPageFilter]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     [SecurityHeaders]
@@ -105,7 +101,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var error = "Endpoint is disabled. Aborting";
                 Logger.Warn(error);
-                RaiseFailureEvent(error);
+                await RaiseFailureEventAsync(error);
 
                 return NotFound();
             }
@@ -123,7 +119,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             
             if (result.IsError)
             {
-                return this.AuthorizeError(
+                return await this.AuthorizeErrorAsync(
                     result.ErrorType,
                     result.Error,
                     result.ValidatedRequest);
@@ -134,7 +130,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (loginInteraction.IsError)
             {
-                return this.AuthorizeError(
+                return await this.AuthorizeErrorAsync(
                     loginInteraction.Error.ErrorType,
                     loginInteraction.Error.Error,
                     request);
@@ -163,7 +159,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
 
             if (consentInteraction.IsError)
             {
-                return this.AuthorizeError(
+                return await this.AuthorizeErrorAsync(
                     consentInteraction.Error.ErrorType,
                     consentInteraction.Error.Error,
                     request);
@@ -203,13 +199,13 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (request.ResponseMode == Constants.ResponseModes.Query ||
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
-                RaiseSuccessEvent();
+                await RaiseSuccessEventAsync();
                 return new AuthorizeRedirectResult(response, _options);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
-                RaiseSuccessEvent();
+                await RaiseSuccessEventAsync();
                 return new AuthorizeFormPostResult(response, Request);
             }
 
@@ -251,7 +247,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
                 AntiForgery = _antiForgeryToken.GetAntiForgeryToken()
             };
 
-            return new ConsentActionResult(_viewService, consentModel);
+            return new ConsentActionResult(_viewService, consentModel, validatedRequest);
         }
 
         IHttpActionResult RedirectToLogin(SignInMessage message, NameValueCollection parameters)
@@ -266,9 +262,9 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             return new LoginResult(Request.GetOwinContext().Environment, message);
         }
 
-        IHttpActionResult AuthorizeError(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
+        async Task<IHttpActionResult> AuthorizeErrorAsync(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
         {
-            RaiseFailureEvent(error);
+            await RaiseFailureEventAsync(error);
 
             // show error message to user
             if (errorType == ErrorTypes.User)
@@ -309,14 +305,14 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             }
         }
 
-        private void RaiseSuccessEvent()
+        private async Task RaiseSuccessEventAsync()
         {
-            _events.RaiseSuccessfulEndpointEvent(EventConstants.EndpointNames.Authorize);
+            await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Authorize);
         }
 
-        private void RaiseFailureEvent(string error)
+        private async Task RaiseFailureEventAsync(string error)
         {
-            _events.RaiseFailureEndpointEvent(EventConstants.EndpointNames.Authorize, error);
+            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.Authorize, error);
         }
 
         private string LookupErrorMessage(string error)

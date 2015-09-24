@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
     /// Configures logging within IdentityServer.
@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             EnableWebApiDiagnostics = false;
             WebApiDiagnosticsIsVerbose = false;
             EnableHttpLogging = false;
-            IncludeSensitiveDataInLogs = false;
+            EnableKatanaLogging = false;
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace Thinktecture.IdentityServer.Core.Configuration
         public bool EnableHttpLogging { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to include (potentially) personally identifiable information or other sensitive data in logs.
+        /// Gets or sets a value indicating whether Katana logging should be forwarded to the standard logging output.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if PII data should be included in logs; otherwise, <c>false</c>.
+        ///   <c>true</c> if Katana log forwarding is enabled; otherwise, <c>false</c>.
         /// </value>
-        public bool IncludeSensitiveDataInLogs { get; set; }
+        public bool EnableKatanaLogging { get; set; }
     }
 }

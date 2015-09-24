@@ -15,14 +15,14 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Validation;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
+namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 {
     public class Authorize_ProtocolValidation_Invalid
     {
@@ -223,7 +223,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 
@@ -241,7 +241,7 @@ namespace Thinktecture.IdentityServer.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
         }
 

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Tests.Endpoints
+namespace IdentityServer3.Tests.Endpoints
 {
     class TestIdentityServerOptions
     {
@@ -27,12 +27,12 @@ namespace Thinktecture.IdentityServer.Tests.Endpoints
             var options = new IdentityServerOptions
             {
                 IssuerUri = "https://idsrv3.com",
-                SiteName = "Thinktecture IdentityServer3 - test",
+                SiteName = "IdentityServer3 - test",
                 DataProtector = new NoDataProtector(),
             };
 
             var assembly = typeof(TestIdentityServerOptions).Assembly;
-            using (var stream = assembly.GetManifestResourceStream("Thinktecture.IdentityServer.Tests.idsrv3test.pfx"))
+            using (var stream = assembly.GetManifestResourceStream("IdentityServer3.Tests.idsrv3test.pfx"))
             {
                 options.SigningCertificate = new X509Certificate2(ReadStream(stream), "idsrv3test");
             }

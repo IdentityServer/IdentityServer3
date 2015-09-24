@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="..\..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,8 +8,8 @@
     <ProjectGuid>{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Thinktecture.IdentityServer.Tests</RootNamespace>
-    <AssemblyName>Thinktecture.IdentityServer.Core.Tests</AssemblyName>
+    <RootNamespace>IdentityServer3.Tests</RootNamespace>
+    <AssemblyName>IdentityServer3.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -19,7 +19,7 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>6636f83e</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>b81b373f</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,13 +48,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+    <Reference Include="FluentAssertions, Version=3.4.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.dll</HintPath>
+      <HintPath>..\..\packages\FluentAssertions.3.4.1\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="FluentAssertions.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+    <Reference Include="FluentAssertions.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <HintPath>..\..\packages\FluentAssertions.3.4.1\lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IdentityModel.1.0.0\lib\net45\IdentityModel.Net45.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -86,9 +90,9 @@
       <HintPath>..\..\packages\Microsoft.Owin.Testing.3.0.1\lib\net45\Microsoft.Owin.Testing.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+      <HintPath>..\..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -100,9 +104,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.2.28, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.202250711\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.206221351\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -121,10 +125,6 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Thinktecture.IdentityModel.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Thinktecture.IdentityModel.Core.1.4.0\lib\net45\Thinktecture.IdentityModel.Core.dll</HintPath>
-    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
     </Reference>
@@ -158,10 +158,20 @@
     <Compile Include="Conformance\Extensions.cs" />
     <Compile Include="Conformance\IdentityServerHostTest.cs" />
     <Compile Include="Conformance\NoDataProtector.cs" />
+    <Compile Include="Endpoints\Connect\IdentityTokenValidationControllerTests.cs" />
+    <Compile Include="Endpoints\Connect\AccessTokenValidationControllerTests.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
+    <Compile Include="TestCert.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
+    <Compile Include="Validation\CustomGrantValidation.cs" />
+    <Compile Include="Validation\Secret Validation\BasicAuthenticationCredentialParsing.cs" />
+    <Compile Include="Validation\Secret Validation\FormPostCredentialParsing.cs" />
+    <Compile Include="Validation\Secret Validation\HashedSharedSecretValidation.cs" />
+    <Compile Include="Validation\Secret Validation\PlainTextClientSecretValidation.cs" />
     <Compile Include="Validation\RevocationRequestValidation.cs" />
+    <Compile Include="Validation\Secret Validation\X509CertificateSecretParsing.cs" />
+    <Compile Include="Validation\Secret Validation\X509CertificateSecretValidation.cs" />
     <Compile Include="Validation\Setup\ClientValidationTestClients.cs" />
     <Compile Include="Endpoints\AuthenticationControllerTests.cs" />
     <Compile Include="Configuration\CorsPolicyProviderTests.cs" />
@@ -172,6 +182,7 @@
     <Compile Include="ResponseHandling\DefaultRefreshTokenServiceTests.cs" />
     <Compile Include="ResponseHandling\AuthorizeInteractionResponseGeneratorTests_Login.cs" />
     <Compile Include="Validation\Setup\NoDataProtector.cs" />
+    <Compile Include="Validation\Setup\TestGrantValidator2.cs" />
     <Compile Include="Validation\Setup\TestIdentityServerOptions.cs" />
     <Compile Include="Validation\Token Validation\IdentityTokenValidation.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_RefreshToken_Invalid.cs" />
@@ -200,8 +211,6 @@
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Valid.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Code.cs" />
     <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_IdToken.cs" />
-    <Compile Include="Validation\Client Validation\Request_Validation.cs" />
-    <Compile Include="Validation\Client Validation\Client_Validation.cs" />
     <Compile Include="Validation\Token Validation\AccessTokenValidation.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_General_Invalid.cs" />
     <Compile Include="Validation\TokenRequest Validation\TokenRequestValidation_Code_Invalid.cs" />
@@ -253,7 +262,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

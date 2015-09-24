@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Handles validation of token requests using custom grant types
@@ -30,5 +30,13 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// <param name="request">The validated token request.</param>
         /// <returns>A principal</returns>
         Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request);
+
+        /// <summary>
+        /// Returns the grant type this validator can deal with
+        /// </summary>
+        /// <value>
+        /// The type of the grant.
+        /// </value>
+        string GrantType { get; }
     }
 }

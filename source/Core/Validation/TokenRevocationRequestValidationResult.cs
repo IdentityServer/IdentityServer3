@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
-    internal class TokenRevocationRequestValidationResult
+    internal class TokenRevocationRequestValidationResult : ValidationResult
     {
-        public bool IsError { get; set; }
-        public string Error { get; set; }
-
         public string TokenTypeHint { get; set; }
         public string Token { get; set; }
     }

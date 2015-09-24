@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Tests.Validation
+namespace IdentityServer3.Tests.Validation
 {
     class TestGrantValidator : ICustomGrantValidator
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
-            if (request.GrantType == "custom_grant")
-            {
-                return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));    
-            };
+            return Task.FromResult(new CustomGrantValidationResult("bob", "CustomGrant"));
+        }
 
-            return Task.FromResult<CustomGrantValidationResult>(null);
+        public string GrantType
+        {
+            get { return "custom_grant"; }
         }
     }
 }

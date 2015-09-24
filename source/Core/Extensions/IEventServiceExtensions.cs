@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using System;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using Thinktecture.IdentityServer.Core.Events;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class IEventServiceExtensions
     {
-        public static void RaisePreLoginSuccessEvent(this IEventService events, 
+        public static async Task RaisePreLoginSuccessEventAsync(this IEventService events, 
             string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LoginDetails>(
@@ -41,10 +42,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     PartialLogin = authResult.IsPartialSignIn
                 });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaisePreLoginFailureEvent(this IEventService events, 
+        public static async Task RaisePreLoginFailureEventAsync(this IEventService events, 
             string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LoginDetails>(
@@ -59,10 +60,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 }, 
                 error);
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseLocalLoginSuccessEvent(this IEventService events, 
+        public static async Task RaiseLocalLoginSuccessEventAsync(this IEventService events, 
             string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -78,12 +79,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SignInMessage = signInMessage,
                     PartialLogin = authResult.IsPartialSignIn,
                     LoginUserName = username
-                }); 
+                });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseLocalLoginFailureEvent(this IEventService events, 
+        public static async Task RaiseLocalLoginFailureEventAsync(this IEventService events, 
             string username, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -97,12 +98,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SignInMessage = signInMessage,
                     LoginUserName = username
                 }, 
-                error); 
+                error);
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseExternalLoginSuccessEvent(this IEventService events, 
+        public static async Task RaiseExternalLoginSuccessEventAsync(this IEventService events, 
             ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<ExternalLoginDetails>(
@@ -119,13 +120,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     PartialLogin = authResult.IsPartialSignIn,
                     Provider = externalIdentity.Provider,
                     ProviderId = externalIdentity.ProviderId,
-                }); 
+                });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseExternalLoginFailureEvent(this IEventService events, 
-            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string details)
+        public static async Task RaiseExternalLoginFailureEventAsync(this IEventService events, 
+            ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<ExternalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -138,12 +139,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SignInMessage = signInMessage,
                     Provider = externalIdentity.Provider,
                     ProviderId = externalIdentity.ProviderId,
-                }); 
+                }, 
+                error);
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseExternalLoginErrorEvent(this IEventService events, string error)
+        public static async Task RaiseExternalLoginErrorEventAsync(this IEventService events, string error)
         {
             var evt = new Event<object>(
                EventConstants.Categories.Authentication,
@@ -152,10 +154,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                EventConstants.Ids.ExternalLoginError,
                error);
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseSuccessfulResourceOwnerFlowAuthenticationEvent(this IEventService events, 
+        public static async Task RaiseSuccessfulResourceOwnerFlowAuthenticationEventAsync(this IEventService events, 
             string userName, string subjectId, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -168,13 +170,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SubjectId = subjectId,
                     SignInMessage = message,
                     LoginUserName = userName
-                }); 
-            
-            events.RaiseEvent(evt);
+                });
+
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseFailedResourceOwnerFlowAuthenticationEvent(this IEventService events, 
-            string userName, SignInMessage message)
+        public static async Task RaiseFailedResourceOwnerFlowAuthenticationEventAsync(this IEventService events, 
+            string userName, SignInMessage message, string error)
         {
             var evt = new Event<LocalLoginDetails>(
                 EventConstants.Categories.Authentication,
@@ -185,25 +187,13 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 {
                     SignInMessage = message,
                     LoginUserName = userName
-                }); 
+                },
+                error);
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        //public static void RaisePartialLoginEvent(this IEventService events)
-        //{
-        //    //var evt = new ExternalLoginEvent(EventType.Failure)
-        //    //{
-        //    //    Provider = externalIdentity.Provider,
-        //    //    ProviderId = externalIdentity.ProviderId,
-        //    //    SignInMessage = signInMessage,
-        //    //    Details = details
-        //    //};
-
-        //    //events.RaiseEvent(evt);
-        //}
-
-        public static void RaisePartialLoginCompleteEvent(this IEventService events, 
+        public static async Task RaisePartialLoginCompleteEventAsync(this IEventService events, 
             ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
         {
             var evt = new Event<LoginDetails>(
@@ -217,12 +207,12 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     Name = subject.Name,
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage
-                }); 
+                });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseLogoutEvent(this IEventService events, 
+        public static async Task RaiseLogoutEventAsync(this IEventService events, 
             ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
         {
             var evt = new Event<LogoutDetails>(
@@ -238,10 +228,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SignOutMessage = signOutMessage
                 });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseCspReportEvent(this IEventService events, string report, ClaimsPrincipal user)
+        public static async Task RaiseCspReportEventAsync(this IEventService events, string report, ClaimsPrincipal user)
         {
             var evt = new Event<CspReportDetails>(
                 EventConstants.Categories.Information,
@@ -276,10 +266,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 };
             };
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseClientPermissionsRevokedEvent(this IEventService events, ClaimsPrincipal user, string clientId)
+        public static async Task RaiseClientPermissionsRevokedEventAsync(this IEventService events, ClaimsPrincipal user, string clientId)
         {
             var evt = new Event<ClientPermissionsRevokedDetails>(
                 EventConstants.Categories.Information,
@@ -293,22 +283,22 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     ClientId = clientId
                 });
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseTokenIssuedEvent(this IEventService events, Token token)
+        public static async Task RaiseTokenIssuedEventAsync(this IEventService events, Token token)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
-                events.RaiseAccessTokenIssuedEvent(token);
+                await events.RaiseAccessTokenIssuedEventAsync(token);
             }
             else if (token.Type == Constants.TokenTypes.IdentityToken)
             {
-                events.RaiseIdentityTokenIssuedEvent(token);
+                await events.RaiseIdentityTokenIssuedEventAsync(token);
             }
         }
 
-        public static void RaiseAccessTokenIssuedEvent(this IEventService events, Token token)
+        public static async Task RaiseAccessTokenIssuedEventAsync(this IEventService events, Token token)
         {
             var evt = new Event<AccessTokenIssuedDetails>(
                 EventConstants.Categories.TokenService,
@@ -325,11 +315,11 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Scopes = token.Scopes,
                 Claims = token.Claims.ToClaimsDictionary()
             };
-            
-            events.Raise(evt);
+
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseIdentityTokenIssuedEvent(this IEventService events, Token token)
+        public static async Task RaiseIdentityTokenIssuedEventAsync(this IEventService events, Token token)
         {
             var evt = new Event<TokenIssuedDetailsBase>(
                 EventConstants.Categories.TokenService,
@@ -345,10 +335,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Claims = token.Claims.ToClaimsDictionary()
             };
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseAuthorizationCodeIssuedEvent(this IEventService events, string id, AuthorizationCode code)
+        public static async Task RaiseAuthorizationCodeIssuedEventAsync(this IEventService events, string id, AuthorizationCode code)
         {
             var evt = new Event<AuthorizationCodeDetails>(
                 EventConstants.Categories.TokenService,
@@ -366,10 +356,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Lifetime = code.Client.AuthorizationCodeLifetime
             };
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseRefreshTokenIssuedEvent(this IEventService events, string id, RefreshToken token)
+        public static async Task RaiseRefreshTokenIssuedEventAsync(this IEventService events, string id, RefreshToken token)
         {
             var evt = new Event<RefreshTokenDetails>(
                 EventConstants.Categories.TokenService,
@@ -387,10 +377,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Version = token.Version
             };
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseSuccessfulRefreshTokenRefreshEvent(this IEventService events, string oldHandle, string newHandle, RefreshToken token)
+        public static async Task RaiseSuccessfulRefreshTokenRefreshEventAsync(this IEventService events, string oldHandle, string newHandle, RefreshToken token)
         {
             var evt = new Event<RefreshTokenRefreshDetails>(
                 EventConstants.Categories.TokenService,
@@ -406,10 +396,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 Lifetime = token.LifeTime
             };
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseUnhandledExceptionEvent(this IEventService events, Exception exception)
+        public static async Task RaiseUnhandledExceptionEventAsync(this IEventService events, Exception exception)
         {
             var evt = new Event<object>(
                 EventConstants.Categories.InternalError,
@@ -418,10 +408,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 EventConstants.Ids.UnhandledExceptionError, 
                 exception.ToString());
 
-            events.RaiseEvent(evt);
+            await events.RaiseEventAsync(evt);
         }
 
-        public static void RaiseSuccessfulEndpointEvent(this IEventService events, string endpointName)
+        public static async Task RaiseSuccessfulEndpointEventAsync(this IEventService events, string endpointName)
         {
             var evt = new Event<EndpointDetail>(
                 EventConstants.Categories.Endpoints,
@@ -430,10 +420,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 EventConstants.Ids.EndpointSuccess,
                 new EndpointDetail { EndpointName = endpointName });
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseFailureEndpointEvent(this IEventService events, string endpointName, string error)
+        public static async Task RaiseFailureEndpointEventAsync(this IEventService events, string endpointName, string error)
         {
             var evt = new Event<EndpointDetail>(
                  EventConstants.Categories.Endpoints,
@@ -443,10 +433,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                  new EndpointDetail { EndpointName = endpointName },
                  error);
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseFailedAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle, string error)
+        public static async Task RaiseFailedAuthorizationCodeRedeemedEventAsync(this IEventService events, Client client, string handle, string error)
         {
             var evt = new Event<AuthorizationCodeDetails>(
                 EventConstants.Categories.TokenService,
@@ -460,10 +450,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 },
                 error);
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseSuccessAuthorizationCodeRedeemedEvent(this IEventService events, Client client, string handle)
+        public static async Task RaiseSuccessAuthorizationCodeRedeemedEventAsync(this IEventService events, Client client, string handle)
         {
             var evt = new Event<AuthorizationCodeDetails>(
                 EventConstants.Categories.TokenService,
@@ -476,10 +466,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     ClientId = client.ClientId
                 });
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseFailedRefreshTokenRefreshEvent(this IEventService events, Client client, string handle, string error)
+        public static async Task RaiseFailedRefreshTokenRefreshEventAsync(this IEventService events, Client client, string handle, string error)
         {
             var evt = new Event<RefreshTokenDetails>(
                 EventConstants.Categories.TokenService,
@@ -493,15 +483,15 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 },
                 error);
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseSuccessRefreshTokenRefreshEvent(this IEventService events, Client client, string handle)
+        public static Task RaiseSuccessRefreshTokenRefreshEventAsync(this IEventService events, Client client, string handle)
         {
-            
+            return Task.FromResult(0);
         }
 
-        public static void RaiseNoCertificateConfiguredEvent(this IEventService events)
+        public static async Task RaiseNoCertificateConfiguredEventAsync(this IEventService events)
         {
             var evt = new Event<object>(
                 EventConstants.Categories.Information,
@@ -509,16 +499,16 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 EventTypes.Information,
                 EventConstants.Ids.NoSigningCertificateConfigured);
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseCertificatePrivateKeyNotAccessibleEvent(this IEventService events, X509Certificate2 cert)
+        public static async Task RaiseCertificatePrivateKeyNotAccessibleEventAsync(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.InternalError,
                 "Signing certificate has no private key, or key is not accessible",
                 EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventConstants.Ids.SigningCertificatePrivateKeyNotAccessible,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
@@ -526,26 +516,26 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                 },
                 "Make sure the account running your application has access to the private key");
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseCertificateKeyLengthTooShortEvent(this IEventService events, X509Certificate2 cert)
+        public static async Task RaiseCertificateKeyLengthTooShortEventAsync(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.InternalError,
                 "Signing certificate key length is less than 2048 bits.",
                 EventTypes.Error,
-                EventConstants.Ids.SigningCertificatePrivatKeyNotAccessible,
+                EventConstants.Ids.SigningCertificatePrivateKeyNotAccessible,
                 new SigningCertificateDetail
                 {
                     SigningCertificateName = cert.SubjectName.Name,
                     SigningCertificateExpiration = cert.NotAfter
                 });
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseCertificateExpiringSoonEvent(this IEventService events, X509Certificate2 cert)
+        public static async Task RaiseCertificateExpiringSoonEventAsync(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.Information,
@@ -558,10 +548,10 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SigningCertificateExpiration = cert.NotAfter
                 });
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        public static void RaiseCertificateValidatedEvent(this IEventService events, X509Certificate2 cert)
+        public static async Task RaiseCertificateValidatedEventAsync(this IEventService events, X509Certificate2 cert)
         {
             var evt = new Event<SigningCertificateDetail>(
                 EventConstants.Categories.Information,
@@ -574,14 +564,14 @@ namespace Thinktecture.IdentityServer.Core.Extensions
                     SigningCertificateExpiration = cert.NotAfter
                 });
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
 
-        private static void RaiseEvent<T>(this IEventService events, Event<T> evt)
+        private static async Task RaiseEventAsync<T>(this IEventService events, Event<T> evt)
         {
             if (events == null) throw new ArgumentNullException("events");
 
-            events.Raise(evt);
+            await events.RaiseAsync(evt);
         }
     }
 }

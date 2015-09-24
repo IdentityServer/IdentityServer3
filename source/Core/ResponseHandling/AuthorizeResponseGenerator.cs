@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Validation;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.ResponseHandling
+namespace IdentityServer3.Core.ResponseHandling
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class AuthorizeResponseGenerator
@@ -118,7 +118,7 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             var id = CryptoRandom.CreateUniqueId();
             await _authorizationCodes.StoreAsync(id, code);
 
-            RaiseCodeIssuedEvent(id, code);
+            await RaiseCodeIssuedEventAsync(id, code);
 
             return id;
         }
@@ -214,9 +214,9 @@ namespace Thinktecture.IdentityServer.Core.ResponseHandling
             return Base64Url.Encode(hash) + "." + salt;
         }
 
-        private void RaiseCodeIssuedEvent(string id, AuthorizationCode code)
+        private async Task RaiseCodeIssuedEventAsync(string id, AuthorizationCode code)
         {
-            _events.RaiseAuthorizationCodeIssuedEvent(id, code);
+            await _events.RaiseAuthorizationCodeIssuedEventAsync(id, code);
         }
     }
 }

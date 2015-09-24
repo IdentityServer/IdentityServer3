@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Results;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.ViewModels;
 using Microsoft.Owin;
 using System;
 using System.IO;
@@ -21,13 +26,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Results;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
     internal class ValidateAntiForgeryTokenAttribute : PreventUnsupportedRequestMediaTypesAttribute

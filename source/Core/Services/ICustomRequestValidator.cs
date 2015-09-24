@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Services
+namespace IdentityServer3.Core.Services
 {
     /// <summary>
     /// Allows inserting custom validation logic into authorize and token requests
@@ -29,13 +29,13 @@ namespace Thinktecture.IdentityServer.Core.Services
         /// </summary>
         /// <param name="request">The validated request.</param>
         /// <returns>The validation result</returns>
-        Task<ValidationResult> ValidateAuthorizeRequestAsync(ValidatedAuthorizeRequest request);
+        Task<AuthorizeRequestValidationResult> ValidateAuthorizeRequestAsync(ValidatedAuthorizeRequest request);
 
         /// <summary>
         /// Custom validation logic for the token request.
         /// </summary>
         /// <param name="request">The validated request.</param>
         /// <returns>The validation result</returns>
-        Task<ValidationResult> ValidateTokenRequestAsync(ValidatedTokenRequest request);
+        Task<TokenRequestValidationResult> ValidateTokenRequestAsync(ValidatedTokenRequest request);
     }
 }

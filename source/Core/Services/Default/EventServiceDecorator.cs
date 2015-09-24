@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using Microsoft.Owin;
 using System;
 using System.Diagnostics;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Events;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
+using System.Threading.Tasks;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     internal class EventServiceDecorator : IEventService
     {
@@ -39,14 +40,16 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
             this.inner = inner;
         }
 
-        public void Raise<T>(Event<T> evt)
+        public Task RaiseAsync<T>(Event<T> evt)
         {
             if (CanRaiseEvent(evt))
             {
                 evt = PrepareEvent(evt);
                 evt.Prepare();
-                inner.Raise(evt);
+                inner.RaiseAsync(evt);
             }
+
+            return Task.FromResult(0);
         }
 
         bool CanRaiseEvent<T>(Event<T> evt)

@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,16 +29,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Extensions;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
 
 #pragma warning disable 1591
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class TokenValidator
@@ -81,10 +81,10 @@ namespace Thinktecture.IdentityServer.Core.Validation
             }
 
             _log.ClientName = client.ClientName;
-            
+
             var signingKey = new X509SecurityKey(_options.SigningCertificate);
             var result = await ValidateJwtAsync(token, clientId, signingKey, validateLifetime);
-            
+
             result.Client = client;
 
             if (result.IsError)
@@ -93,23 +93,17 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 return result;
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = result.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = result.Claims.ToClaimsDictionary();
 
             var customResult = await _customValidator.ValidateIdentityTokenAsync(result);
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = customResult.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = customResult.Claims.ToClaimsDictionary();
 
             LogSuccess();
             return customResult;
@@ -121,7 +115,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             _log.ExpectedScope = expectedScope;
             _log.ValidateLifetime = true;
-        
+
             TokenValidationResult result;
 
             if (token.Contains("."))
@@ -138,10 +132,7 @@ namespace Thinktecture.IdentityServer.Core.Validation
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
 
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = result.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = result.Claims.ToClaimsDictionary();
 
             if (result.IsError)
             {
@@ -162,21 +153,18 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
             // add claims again after custom validation
-            if (_options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                _log.Claims = customResult.Claims.ToClaimsDictionary();
-            }
+            _log.Claims = customResult.Claims.ToClaimsDictionary();
 
             LogSuccess();
             return customResult;
         }
 
-        public virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
+        public virtual async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler
             {
@@ -208,16 +196,31 @@ namespace Thinktecture.IdentityServer.Core.Validation
                     _log.JwtId = jwtId.Value;
                 }
 
-                return Task.FromResult(new TokenValidationResult
+                // load the client that belongs to the client_id claim
+                Client client = null;
+                var clientId = id.FindFirst(Constants.ClaimTypes.ClientId);
+                if (clientId != null)
                 {
+                    client = await _clients.FindClientByIdAsync(clientId.Value);
+                    if (client == null)
+                    {
+                        throw new InvalidOperationException("Client does not exist anymore.");
+                    }
+                }
+
+                return new TokenValidationResult
+                {
+                    IsError = false,
+
                     Claims = id.Claims,
+                    Client = client,
                     Jwt = jwt
-                });
+                };
             }
             catch (Exception ex)
             {
                 Logger.ErrorException("JWT token validation error", ex);
-                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
         }
 
@@ -250,6 +253,9 @@ namespace Thinktecture.IdentityServer.Core.Validation
 
             return new TokenValidationResult
             {
+                IsError = false,
+
+                Client = token.Client,
                 Claims = ReferenceTokenToClaims(token),
                 ReferenceToken = token,
                 ReferenceTokenId = tokenHandle

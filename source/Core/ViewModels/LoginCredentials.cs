@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Thinktecture.IdentityServer.Core.ViewModels
+namespace IdentityServer3.Core.ViewModels
 {
     /// <summary>
     /// Models the inputs to be submitted to the local login endpoint.

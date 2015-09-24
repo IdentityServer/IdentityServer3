@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Validation;
 
-namespace Thinktecture.IdentityServer.Core.Logging
+namespace IdentityServer3.Core.Logging
 {
     internal class TokenRequestValidationLog
     {
@@ -29,7 +29,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public string AuthorizationCode { get; set; }
         public string RefreshToken { get; set; }
-        
+
         public string UserName { get; set; }
         public IEnumerable<string> AuthenticationContextReferenceClasses { get; set; }
         public string Tenant { get; set; }
@@ -39,10 +39,7 @@ namespace Thinktecture.IdentityServer.Core.Logging
 
         public TokenRequestValidationLog(ValidatedTokenRequest request)
         {
-            if (request.Options.LoggingOptions.IncludeSensitiveDataInLogs)
-            {
-                Raw = request.Raw.ToDictionary();
-            }
+            Raw = request.Raw.ToDictionary();
 
             if (request.Client != null)
             {

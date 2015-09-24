@@ -21,7 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class HtmlStreamActionResult : IHttpActionResult
     {

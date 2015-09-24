@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Caching;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.Services.Caching;
-using Thinktecture.IdentityServer.Core.Services.Default;
 
-namespace Thinktecture.IdentityServer.Core.Configuration
+namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
-    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Configuration.IdentityServerServiceFactory"/>
+    /// Extension methods for <see cref="IdentityServer3.Core.Configuration.IdentityServerServiceFactory"/>
     /// </summary>
     public static class IdentityServerServiceFactoryExtensions
     {
@@ -211,6 +212,49 @@ namespace Thinktecture.IdentityServer.Core.Configuration
             if (factory.ViewService != null) throw new InvalidOperationException("A ViewService is already configured");
 
             factory.ViewService = new DefaultViewServiceRegistration(options);
+        }
+
+        /// <summary>
+        /// Configures the factory to use in-memory users.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="users">The users.</param>
+        /// <returns></returns>
+        public static IdentityServerServiceFactory UseInMemoryUsers(this IdentityServerServiceFactory factory, List<InMemoryUser> users)
+        {
+            factory.Register(new Registration<List<InMemoryUser>>(users));
+            factory.UserService = new Registration<IUserService, InMemoryUserService>();
+
+            return factory;
+        }
+
+        /// <summary>
+        /// Configures the factory to use in-memory clients.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="clients">The clients.</param>
+        /// <returns></returns>
+        public static IdentityServerServiceFactory UseInMemoryClients(this IdentityServerServiceFactory factory, IEnumerable<Client> clients)
+        {
+            factory.Register(new Registration<IEnumerable<Client>>(clients));
+            factory.ClientStore = new Registration<IClientStore>(typeof(InMemoryClientStore));
+            factory.CorsPolicyService = new Registration<ICorsPolicyService>(new InMemoryCorsPolicyService(clients));
+
+            return factory;
+        }
+
+        /// <summary>
+        /// Configures the factory to use in-memory scopes.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="scopes">The scopes.</param>
+        /// <returns></returns>
+        public static IdentityServerServiceFactory UseInMemoryScopes(this IdentityServerServiceFactory factory, IEnumerable<Scope> scopes)
+        {
+            factory.Register(new Registration<IEnumerable<Scope>>(scopes));
+            factory.ScopeStore = new Registration<IScopeStore>(typeof(InMemoryScopeStore));
+
+            return factory;
         }
     }
 }

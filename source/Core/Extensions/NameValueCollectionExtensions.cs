@@ -21,7 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class NameValueCollectionExtensions
     {

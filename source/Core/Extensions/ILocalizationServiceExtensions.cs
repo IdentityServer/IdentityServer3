@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Services;
 using System;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Thinktecture.IdentityServer.Core.Services.ILocalizationService"/>
+    /// Extension methods for <see cref="IdentityServer3.Core.Services.ILocalizationService"/>
     /// </summary>
     public static class ILocalizationServiceExtensions
     {

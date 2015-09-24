@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+using IdentityModel;
+using IdentityServer3.Core.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityModel;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     internal static class ClaimListExtensions
     {

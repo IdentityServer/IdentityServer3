@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Represents the permissions (in terms of scopes) granted to a client by a subject

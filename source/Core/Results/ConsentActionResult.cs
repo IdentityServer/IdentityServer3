@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.ViewModels;
 using System;
-using Thinktecture.IdentityServer.Core.Services;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Results
+namespace IdentityServer3.Core.Results
 {
     internal class ConsentActionResult : HtmlStreamActionResult
     {
-        public ConsentActionResult(IViewService viewSvc, ConsentViewModel model)
-            : base(async () => await viewSvc.Consent(model))
+        public ConsentActionResult(IViewService viewSvc, ConsentViewModel model, ValidatedAuthorizeRequest validatedRequest)
+            : base(async () => await viewSvc.Consent(model, validatedRequest))
         {
             if (viewSvc == null) throw new ArgumentNullException("viewSvc");
             if (model == null) throw new ArgumentNullException("model");
+            if (validatedRequest == null) throw new ArgumentNullException("validatedRequest");
         }
     }
 }

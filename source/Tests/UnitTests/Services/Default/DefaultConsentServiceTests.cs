@@ -15,15 +15,16 @@
  */
 
 using FluentAssertions;
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Services.InMemory;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.Services.Default;
-using Thinktecture.IdentityServer.Core.Services.InMemory;
 using Xunit;
 
-namespace Thinktecture.IdentityServer.Tests.Services.Default
+namespace IdentityServer3.Tests.Services.Default
 {
     public class DefaultConsentServiceTests
     {
@@ -153,6 +154,34 @@ namespace Thinktecture.IdentityServer.Tests.Services.Default
             subject.UpdateConsentAsync(client, user, newConsent).Wait();
             var result = subject.RequiresConsentAsync(client, user, scopes).Result;
             result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Offline_access_scope_always_requires_consent_if_client_consent_is_enabled()
+        {
+            var requested_scopes = scopes.ToList();
+            requested_scopes.Add(Constants.StandardScopes.OfflineAccess);
+
+            // update DB as if we've previosuly consented
+            subject.UpdateConsentAsync(client, user, requested_scopes).Wait();
+
+            var result = subject.RequiresConsentAsync(client, user, requested_scopes).Result;
+            result.Should().BeTrue();
+        }
+        
+        [Fact]
+        public void Offline_access_scope_does_not_always_require_consent_if_client_consent_is_disabled()
+        {
+            client.RequireConsent = false;
+
+            var requested_scopes = scopes.ToList();
+            requested_scopes.Add(Constants.StandardScopes.OfflineAccess);
+
+            // update DB as if we've previosuly consented
+            subject.UpdateConsentAsync(client, user, requested_scopes).Wait();
+
+            var result = subject.RequiresConsentAsync(client, user, requested_scopes).Result;
+            result.Should().BeFalse();
         }
     }
 }

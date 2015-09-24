@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     internal class RequestedClaimTypes
     {

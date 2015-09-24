@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Base external claims filter implementation. Will only execute for the configured provider and 

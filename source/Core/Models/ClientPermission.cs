@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Thinktecture.IdentityServer.Core.Models
+namespace IdentityServer3.Core.Models
 {
     /// <summary>
     /// Models permissions granted to a client.

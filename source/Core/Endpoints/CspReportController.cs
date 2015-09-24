@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-using System.ComponentModel;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Events;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 
-#pragma warning disable 1591
-
-namespace Thinktecture.IdentityServer.Core.Endpoints
+namespace IdentityServer3.Core.Endpoints
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     internal class CspReportController : ApiController
     {
@@ -53,7 +49,7 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             if (!options.Endpoints.EnableCspReportEndpoint)
             {
                 Logger.Error("endpoint disabled, returning 404");
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, "endpoint disabled");
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, "endpoint disabled");
                 return NotFound();
             }
 
@@ -62,23 +58,23 @@ namespace Thinktecture.IdentityServer.Core.Endpoints
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, msg);
                 return BadRequest();
             }
 
-            var json = await Request.Content.ReadAsStringAsync();
+            var json = await Request.GetOwinContext().Request.ReadBodyAsStringAsync();
             if (json.Length > Constants.MaxCspReportLength)
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
-                eventService.RaiseFailureEndpointEvent(EventConstants.EndpointNames.CspReport, msg);
+                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, msg);
                 return BadRequest();
             }
 
             if (json.IsPresent())
             {
                 Logger.InfoFormat("CSP Report data: {0}", json);
-                eventService.RaiseCspReportEvent(json, User as ClaimsPrincipal);
+                await eventService.RaiseCspReportEventAsync(json, User as ClaimsPrincipal);
             }
 
             Logger.Info("Rendering 204");

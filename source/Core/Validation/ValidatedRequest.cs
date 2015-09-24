@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using System.Collections.Specialized;
 using System.Security.Claims;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Validation
+namespace IdentityServer3.Core.Validation
 {
     /// <summary>
     /// Base class for a validate authorize or token request

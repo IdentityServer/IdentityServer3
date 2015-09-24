@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using System.Collections.Generic;
-using Thinktecture.IdentityServer.Core.Configuration;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Configures the assets for the default view service.

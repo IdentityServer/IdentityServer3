@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.ExceptionHandling;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Logging;
-using Thinktecture.IdentityServer.Core.Services;
 
-namespace Thinktecture.IdentityServer.Core.Configuration.Hosting
+namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class LogProviderExceptionLogger : IExceptionLogger
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
+        public async Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
         {
             Logger.ErrorException("Unhandled exception", context.Exception);
 
             var env = context.Request.GetOwinEnvironment();
             var events = env.ResolveDependency<IEventService>();
-            events.RaiseUnhandledExceptionEvent(context.Exception);
-
-            return Task.FromResult<object>(null);
+            await events.RaiseUnhandledExceptionEventAsync(context.Exception);
         }
     }
 }

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using System;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
-using Thinktecture.IdentityModel.Extensions;
 
-namespace Thinktecture.IdentityServer.Core.Extensions
+namespace IdentityServer3.Core.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="System.Security.Principal.IPrincipal"/> and <see cref="System.Security.Principal.IIdentity"/> .

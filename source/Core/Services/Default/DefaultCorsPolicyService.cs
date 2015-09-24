@@ -1,4 +1,5 @@
-﻿/*
+﻿using IdentityServer3.Core.Logging;
+/*
  * Copyright 2014, 2015 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Configuration;
-using Thinktecture.IdentityServer.Core.Logging;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default CORS policy service.
@@ -53,27 +52,17 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </value>
         public bool AllowAll { get; set; }
 
-        readonly Func<string, Task<bool>> policyCallback;
-        
-        internal DefaultCorsPolicyService(CorsPolicy policy)
-        {
-            if (policy == null) throw new ArgumentNullException("policy");
-            
-            AllowedOrigins = policy.AllowedOrigins;
-            policyCallback = policy.PolicyCallback;
-        }
-
         /// <summary>
         /// Determines whether the origin allowed.
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        public async Task<bool> IsOriginAllowedAsync(string origin)
+        public Task<bool> IsOriginAllowedAsync(string origin)
         {
             if (AllowAll)
             {
                 Logger.InfoFormat("AllowAll true, so origin: {0} is allowed", origin);
-                return true;
+                return Task.FromResult(true);
             }
 
             if (AllowedOrigins != null)
@@ -81,7 +70,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 if (AllowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase))
                 {
                     Logger.InfoFormat("AllowedOrigins configured and origin {0} is allowed", origin);
-                    return true;
+                    return Task.FromResult(true);
                 }
                 else
                 {
@@ -89,22 +78,9 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
                 }
             }
 
-            if (policyCallback != null)
-            {
-                if (await policyCallback(origin))
-                {
-                    Logger.InfoFormat("policyCallback callback invoked and origin {0} is allowed", origin);
-                    return true;
-                }
-                else
-                {
-                    Logger.InfoFormat("policyCallback callback invoked and origin {0} is not allowed", origin);
-                }
-            }
-
             Logger.InfoFormat("Exiting; origin {0} is not allowed", origin);
 
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

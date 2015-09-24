@@ -14,30 +14,63 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
+using IdentityServer3.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Thinktecture.IdentityServer.Core.Extensions;
-using Thinktecture.IdentityServer.Core.Models;
-using Thinktecture.IdentityServer.Core.ViewModels;
 
-namespace Thinktecture.IdentityServer.Core.Services.Default
+namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
     /// Default view service.
     /// </summary>
     public class DefaultViewService : IViewService
     {
+        /// <summary>
+        /// The login view
+        /// </summary>
+        public const string LoginView = "login";
+        /// <summary>
+        /// The logout view
+        /// </summary>
+        public const string LogoutView = "logout";
+        /// <summary>
+        /// The logged out view
+        /// </summary>
+        public const string LoggedOutView = "loggedOut";
+        /// <summary>
+        /// The consent view
+        /// </summary>
+        public const string ConsentView = "consent";
+        /// <summary>
+        /// The client permissions view
+        /// </summary>
+        public const string ClientPermissionsView = "permissions";
+        /// <summary>
+        /// The error view
+        /// </summary>
+        public const string ErrorView = "error";
+
         static readonly Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings()
         {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
         };
 
-        private readonly DefaultViewServiceOptions config;
-        private readonly IViewLoader viewLoader;
+        /// <summary>
+        /// The configuration
+        /// </summary>
+        protected readonly DefaultViewServiceOptions config;
+        
+        /// <summary>
+        /// The view loader
+        /// </summary>
+        protected readonly IViewLoader viewLoader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewService"/> class.
@@ -61,43 +94,46 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual Task<Stream> Login(LoginViewModel model, SignInMessage message)
         {
-            return Render(model, "login");
+            return Render(model, LoginView);
         }
 
         /// <summary>
         /// Loads the HTML for the logout prompt page.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Logout(LogoutViewModel model)
+        public virtual Task<Stream> Logout(LogoutViewModel model, SignOutMessage message)
         {
-            return Render(model, "logout");
+            return Render(model, LogoutView);
         }
 
         /// <summary>
         /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="message">The message.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model)
+        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message)
         {
-            return Render(model, "loggedOut");
+            return Render(model, LoggedOutView);
         }
 
         /// <summary>
         /// Loads the HTML for the user consent page.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <param name="authorizeRequest">The validated authorize request.</param>
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Consent(ConsentViewModel model)
+        public virtual Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest)
         {
-            return Render(model, "consent");
+            return Render(model, ConsentView);
         }
 
         /// <summary>
@@ -109,7 +145,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
         {
-            return Render(model, "permissions");
+            return Render(model, ClientPermissionsView);
         }
 
         /// <summary>
@@ -121,7 +157,7 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// </returns>
         public virtual Task<Stream> Error(ErrorViewModel model)
         {
-            return Render(model, "error");
+            return Render(model, ErrorView);
         }
 
         /// <summary>
@@ -132,15 +168,64 @@ namespace Thinktecture.IdentityServer.Core.Services.Default
         /// <returns></returns>
         protected virtual Task<Stream> Render(CommonViewModel model, string page)
         {
-            string html = this.viewLoader.Load(page);
-
-            var data = BuildModel(model, page, config.Stylesheets, config.Scripts);
-            html = AssetManager.Format(html, data);
-            
-            return Task.FromResult(html.ToStream());
+            return Render(model, page, config.Stylesheets, config.Scripts);
         }
 
-        object BuildModel(CommonViewModel model, string page, ICollection<string> stylesheets, ICollection<string> scripts)
+        /// <summary>
+        /// Renders the specified page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="stylesheets">The stylesheets.</param>
+        /// <param name="scripts">The scripts.</param>
+        /// <returns></returns>
+        protected virtual async Task<Stream> Render(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
+        {
+            var data = BuildModel(model, page, stylesheets, scripts);
+
+            string html = await LoadHtmlTemplate(page);
+            html = FormatHtmlTemplate(html, data);
+
+            return html.ToStream();
+        }
+
+        /// <summary>
+        /// Loads the HTML template.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <returns></returns>
+        protected virtual Task<string> LoadHtmlTemplate(string page)
+        {
+            return this.viewLoader.LoadAsync(page);
+        }
+
+        /// <summary>
+        /// Formats the specified HTML template.
+        /// </summary>
+        /// <param name="htmlTemplate">The HTML template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        protected string FormatHtmlTemplate(string htmlTemplate, object model)
+        {
+            return AssetManager.Format(htmlTemplate, model);
+        }
+
+        /// <summary>
+        /// Builds the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="page">The page.</param>
+        /// <param name="stylesheets">The stylesheets.</param>
+        /// <param name="scripts">The scripts.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// model
+        /// or
+        /// stylesheets
+        /// or
+        /// scripts
+        /// </exception>
+        protected object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
             if (model == null) throw new ArgumentNullException("model");
             if (stylesheets == null) throw new ArgumentNullException("stylesheets");
