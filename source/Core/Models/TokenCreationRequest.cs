@@ -86,6 +86,11 @@ namespace IdentityServer3.Core.Models
         public string AuthorizationCodeToHash { get; set; }
 
         /// <summary>
+        /// Gets or sets whether the token request should generate the standard anonymous token format
+        /// </summary>
+        public bool CreateAnonymousToken { get; set; }
+
+        /// <summary>
         /// Gets or sets the nonce.
         /// </summary>
         /// <value>

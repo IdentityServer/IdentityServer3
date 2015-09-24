@@ -39,6 +39,8 @@ namespace IdentityServer3.Core.Validation
         public bool ContainsResourceScopes { get; private set; }
         public bool ContainsOfflineAccessScope { get; set; }
 
+        public bool ContainsAnonymousScope { get; set; }
+
         public List<Scope> RequestedScopes { get; private set; }
         public List<Scope> GrantedScopes { get; private set; }
 
@@ -109,11 +111,10 @@ namespace IdentityServer3.Core.Validation
                 GrantedScopes.Add(scopeDetail);
             }
 
-            if (requestedScopes.Contains(Constants.StandardScopes.OfflineAccess))
-            {
-                ContainsOfflineAccessScope = true;
-            }
 
+            ContainsOfflineAccessScope = requestedScopes.Contains(Constants.StandardScopes.OfflineAccess);           
+            ContainsAnonymousScope = requestedScopes.Contains(Constants.StandardScopes.Anonymous);
+            
             RequestedScopes.AddRange(GrantedScopes);
 
             return true;
