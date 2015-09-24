@@ -117,21 +117,12 @@ namespace IdentityServer3.Core.Services.Default
                 claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalData(request.AuthorizationCodeToHash)));
             }
 
-            if (request.CreateAnonymousToken)
-            {
-                claims.AddRange(AnonymousClaimsProvider.GetAnonymousClaims());
-            }
-            else
-            {
-                claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
-                    request.Subject,
-                    request.Client,
-                    request.Scopes,
-                    request.IncludeAllIdentityClaims,
-                    request.ValidatedRequest));                
-            }
-
-
+            claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(
+                request.Subject,
+                request.Client,
+                request.Scopes,
+                request.IncludeAllIdentityClaims,
+                request.ValidatedRequest));
 
             var token = new Token(Constants.TokenTypes.IdentityToken)
             {
@@ -158,19 +149,11 @@ namespace IdentityServer3.Core.Services.Default
             request.Validate();
 
             var claims = new List<Claim>();
-
-            if (request.CreateAnonymousToken)
-            {
-                claims.AddRange(AnonymousClaimsProvider.GetAnonymousClaims());
-            }
-            else
-            {
-                claims.AddRange(await _claimsProvider.GetAccessTokenClaimsAsync(
-                    request.Subject,
-                    request.Client,
-                    request.Scopes,
-                    request.ValidatedRequest));              
-            }
+            claims.AddRange(await _claimsProvider.GetAccessTokenClaimsAsync(
+                request.Subject,
+                request.Client,
+                request.Scopes,
+                request.ValidatedRequest));
 
             if (request.Client.IncludeJwtId)
             {

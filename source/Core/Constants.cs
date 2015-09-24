@@ -385,7 +385,6 @@ namespace IdentityServer3.Core
             public const string Address       = "address";
             public const string Phone         = "phone";
             public const string OfflineAccess = "offline_access";
-            public const string Anonymous = "anon";
 
             // not part of spec
             public const string AllClaims     = "all_claims";

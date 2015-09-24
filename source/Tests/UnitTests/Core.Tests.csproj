@@ -160,7 +160,6 @@
     <Compile Include="Conformance\NoDataProtector.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationControllerTests.cs" />
     <Compile Include="Endpoints\Connect\AccessTokenValidationControllerTests.cs" />
-    <Compile Include="ResponseHandling\AuthorizeResponseGenerator_AnonymousTokens.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
