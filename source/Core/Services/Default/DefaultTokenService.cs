@@ -64,6 +64,12 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         protected readonly IEventService _events;
 
+
+        /// <summary>
+        /// The anonymous claims provider
+        /// </summary>
+        protected readonly IAnonymousClaimsProvider _anonymousClaimsProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenService" /> class.
         /// </summary>
@@ -72,13 +78,14 @@ namespace IdentityServer3.Core.Services.Default
         /// <param name="tokenHandles">The token handles.</param>
         /// <param name="signingService">The signing service.</param>
         /// <param name="events">The events service.</param>
-        public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService, IEventService events)
+        public DefaultTokenService(IdentityServerOptions options, IClaimsProvider claimsProvider, ITokenHandleStore tokenHandles, ITokenSigningService signingService, IEventService events, IAnonymousClaimsProvider anonymousClaimsProvider)
         {
             _options = options;
             _claimsProvider = claimsProvider;
             _tokenHandles = tokenHandles;
             _signingService = signingService;
             _events = events;
+            _anonymousClaimsProvider = anonymousClaimsProvider;
         }
 
         /// <summary>
@@ -119,7 +126,7 @@ namespace IdentityServer3.Core.Services.Default
 
             if (request.CreateAnonymousToken)
             {
-                claims.AddRange(AnonymousClaimsProvider.GetAnonymousClaims());
+                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims());
             }
             else
             {
@@ -161,7 +168,7 @@ namespace IdentityServer3.Core.Services.Default
 
             if (request.CreateAnonymousToken)
             {
-                claims.AddRange(AnonymousClaimsProvider.GetAnonymousClaims());
+                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims());
             }
             else
             {

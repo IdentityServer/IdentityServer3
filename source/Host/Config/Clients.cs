@@ -85,6 +85,7 @@ namespace IdentityServer3.Host.Config
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.Roles,
                         Constants.StandardScopes.OfflineAccess,
+                        Constants.StandardScopes.Anonymous,
                         "read",
                         "write"
                     },
@@ -126,7 +127,7 @@ namespace IdentityServer3.Host.Config
                         "http://localhost:11716/account/signInCallback",
 
                         // OWIN middleware client
-                        "http://localhost:2671/",
+                        "http://localhost:2671" + "/",
                     },
 
                     PostLogoutRedirectUris = new List<string>

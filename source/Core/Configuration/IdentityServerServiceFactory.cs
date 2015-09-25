@@ -219,6 +219,16 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<IClaimsProvider> ClaimsProvider { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the anonympous claims provider - Implements retrieval of claims for identity and access tokens when
+        /// an anonymous scope request is processed
+        /// </summary>
+        /// <value>
+        /// The anonymous claims provider.
+        /// </value>
+        public Registration<IAnonymousClaimsProvider> AnonymousClaimsProvider { get; set; }
+
         /// <summary>
         /// Gets or sets the token service - Implements creation of security tokens definitions.
         /// </summary>

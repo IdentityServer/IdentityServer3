@@ -150,6 +150,18 @@ namespace IdentityServer3.Core.Models
             }
         }
 
+        public static Scope Anonymous
+        {
+            get
+            {
+                return new Scope
+                {
+                    Name = Constants.StandardScopes.Anonymous,
+                    Type = ScopeType.Identity
+                };
+            }
+        }
+
         /// <summary>
         /// Gets the "email" scope (always include claims in token).
         /// </summary>
