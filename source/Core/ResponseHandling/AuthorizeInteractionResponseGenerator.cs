@@ -116,7 +116,13 @@ namespace IdentityServer3.Core.ResponseHandling
 
             // unauthenticated user
             var isAuthenticated = user.Identity.IsAuthenticated;
-            if (!isAuthenticated) Logger.Info("User is not authenticated. Redirecting to login.");
+            if (!isAuthenticated)
+            {
+                if (!request.ValidatedScopes.ContainsAnonymousScope)
+                {
+                    Logger.Info("User is not authenticated. Redirecting to login.");
+                }                
+            }
             
             // user de-activated
             bool isActive = false;
@@ -130,34 +136,42 @@ namespace IdentityServer3.Core.ResponseHandling
                 if (!isActive) Logger.Info("User is not active. Redirecting to login.");
             }
 
-            if (!isAuthenticated || !isActive)
+            if (!request.ValidatedScopes.ContainsAnonymousScope)
             {
-                // prompt=none means user must be signed in already
-                if (request.PromptMode == Constants.PromptModes.None)
+                if (!isAuthenticated || !isActive)
                 {
-                    Logger.Info("prompt=none was requested. But user is not authenticated.");
+                    // prompt=none means user must be signed in already
+                    if (request.PromptMode == Constants.PromptModes.None)
+                    {
+                        Logger.Info("prompt=none was requested. But user is not authenticated.");
+
+                        return new LoginInteractionResponse
+                        {
+                            Error = new AuthorizeError
+                            {
+                                ErrorType = ErrorTypes.Client,
+                                Error = Constants.AuthorizeErrors.LoginRequired,
+                                ResponseMode = request.ResponseMode,
+                                ErrorUri = request.RedirectUri,
+                                State = request.State
+                            }
+                        };
+                    }
 
                     return new LoginInteractionResponse
                     {
-                        Error = new AuthorizeError
-                        {
-                            ErrorType = ErrorTypes.Client,
-                            Error = Constants.AuthorizeErrors.LoginRequired,
-                            ResponseMode = request.ResponseMode,
-                            ErrorUri = request.RedirectUri,
-                            State = request.State
-                        }
+                        SignInMessage = _signIn
                     };
                 }
-
-                return new LoginInteractionResponse
-                {
-                    SignInMessage = _signIn
-                };
             }
 
+
             // check current idp
-            var currentIdp = user.GetIdentityProvider();
+            string currentIdp = string.Empty;
+            if (user.Identity.IsAuthenticated)
+            {
+                currentIdp = user.GetIdentityProvider();
+            }
 
             // check if idp login hint matches current provider
             if (_signIn.IdP.IsPresent())

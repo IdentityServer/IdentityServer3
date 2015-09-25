@@ -34,6 +34,10 @@ using System.Web.Http;
 
 namespace IdentityServer3.Core.Endpoints
 {
+    using System.Linq;
+
+    using IdentityModel;
+
     /// <summary>
     /// OAuth2/OpenID Connect authorize endpoint
     /// </summary>
@@ -141,18 +145,25 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             // user must be authenticated at this point
-            if (!User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
-                throw new InvalidOperationException("User is not authenticated");
+                request.Subject = User as ClaimsPrincipal;
+            }
+            else
+            {
+                request.Subject = Principal.Anonymous;
             }
 
-            request.Subject = User as ClaimsPrincipal;
-
+           
             // now that client configuration is loaded, we can do further validation
-            loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
-            if (loginInteraction.IsLogin)
+            if (request.Subject.Identity.IsAuthenticated)
             {
-                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
+                loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
+                if (loginInteraction.IsLogin)
+                {
+                    return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
+                }
+
             }
 
             var consentInteraction = await _interactionGenerator.ProcessConsentAsync(request, consent);
