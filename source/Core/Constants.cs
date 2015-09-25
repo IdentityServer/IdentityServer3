@@ -601,6 +601,7 @@ namespace IdentityServer3.Core
         {
             public const string SigninId                 = "signinid";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
+            public const string AnonymousAuthenticationType = "anon";
         }
 
         public static class LocalizationCategories

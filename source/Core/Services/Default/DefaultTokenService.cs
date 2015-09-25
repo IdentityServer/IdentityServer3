@@ -126,7 +126,7 @@ namespace IdentityServer3.Core.Services.Default
 
             if (request.CreateAnonymousToken)
             {
-                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims());
+                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims(request.Client, request.Scopes));
             }
             else
             {
@@ -168,7 +168,7 @@ namespace IdentityServer3.Core.Services.Default
 
             if (request.CreateAnonymousToken)
             {
-                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims());
+                claims.AddRange(_anonymousClaimsProvider.GetAnonymousClaims(request.Client, request.Scopes));
             }
             else
             {

@@ -74,25 +74,30 @@ namespace IdentityServer3.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
-
-                if (result.ReferenceTokenId.IsPresent())
+                // see if this is an anonymous token from the authentication type
+                var amrClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
+                if (amrClaim != null && amrClaim.Value != Constants.Authentication.AnonymousAuthenticationType)
                 {
-                    principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
-                }
+                    var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 
-                var isActiveCtx = new IsActiveContext(principal, result.Client);
-                await _users.IsActiveAsync(isActiveCtx);
-                
-                if (isActiveCtx.IsActive == false)
-                {
-                    Logger.Warn("User marked as not active: " + subClaim.Value);
+                    if (result.ReferenceTokenId.IsPresent())
+                    {
+                        principal.Identities.First().AddClaim(new Claim(Constants.ClaimTypes.ReferenceTokenId, result.ReferenceTokenId));
+                    }
 
-                    result.IsError = true;
-                    result.Error = Constants.ProtectedResourceErrors.InvalidToken;
-                    result.Claims = null;
+                    var isActiveCtx = new IsActiveContext(principal, result.Client);
+                    await _users.IsActiveAsync(isActiveCtx);
 
-                    return result;
+                    if (isActiveCtx.IsActive == false)
+                    {
+                        Logger.Warn("User marked as not active: " + subClaim.Value);
+
+                        result.IsError = true;
+                        result.Error = Constants.ProtectedResourceErrors.InvalidToken;
+                        result.Claims = null;
+
+                        return result;
+                    }
                 }
             }
 

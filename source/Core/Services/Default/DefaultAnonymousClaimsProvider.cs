@@ -17,25 +17,29 @@ namespace IdentityServer3.Core.Services.Default
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
+
+    using IdentityServer3.Core.Models;
 
     /// <summary>
     /// Default anonymous claims provider
     /// </summary>
     public class DefaultAnonymousClaimsProvider : IAnonymousClaimsProvider
     {
-        private const string Anonymous = "anon";
-
-        public IEnumerable<Claim> GetAnonymousClaims()
+        public IEnumerable<Claim> GetAnonymousClaims(Client client, IEnumerable<Scope> scopes)
         {
             var deviceAndSubjectId = Guid.NewGuid().ToString();
 
             var claims = new List<Claim>
                              {
-                                 new Claim(Constants.ClaimTypes.AuthenticationMethod, Anonymous),
+                                 new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.Authentication.AnonymousAuthenticationType),
                                  new Claim("did", deviceAndSubjectId),
-                                 new Claim(Constants.ClaimTypes.Subject, deviceAndSubjectId)
+                                 new Claim(Constants.ClaimTypes.Subject, deviceAndSubjectId),
+                                 new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
                              };
+
+            claims.AddRange(scopes.Select(scope => new Claim(Constants.ClaimTypes.Scope, scope.Name)));
 
             return claims;
         }

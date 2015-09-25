@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default
 {
+    using System.Linq;
+
     internal class ExternalClaimsFilterUserService : IUserService
     {
         readonly IExternalClaimsFilter filter;
@@ -57,7 +59,13 @@ namespace IdentityServer3.Core.Services.Default
         
         public Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            return inner.GetProfileDataAsync(context);
+            var amrClaim = context.Subject.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
+            if (amrClaim != null && amrClaim.Value != Constants.Authentication.AnonymousAuthenticationType)
+            {
+                return inner.GetProfileDataAsync(context);
+            }
+
+            return Task.FromResult(context);
         }
 
         public Task IsActiveAsync(IsActiveContext context)
