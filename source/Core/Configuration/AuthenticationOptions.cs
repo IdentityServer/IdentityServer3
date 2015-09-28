@@ -118,6 +118,15 @@ namespace IdentityServer3.Core.Configuration
         public bool RememberLastUsername { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether IdentityServer will remember the last anonymous identifier issued with the allow_anonymous scope. If so,
+        /// subsequent anonymous token requests will issue the same identifier
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the last identifier should be reused, otherwise, <c>false</c>.
+        /// </value>
+        public bool RememberLastIssuedAnonymousIdentifier { get; set; }
+
+        /// <summary>
         /// Allows configuring additional identity providers
         /// </summary>
         /// <value>

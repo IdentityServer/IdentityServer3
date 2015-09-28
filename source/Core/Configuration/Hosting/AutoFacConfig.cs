@@ -156,6 +156,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.Register(c => new MessageCookie<SignInMessage>(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
             builder.Register(c => new MessageCookie<SignOutMessage>(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
             builder.Register(c => new LastUserNameCookie(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
+            builder.Register(c => new LastAnonymousIdentifierCookie(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
             builder.Register(c => new AntiForgeryToken(c.Resolve<IOwinContext>(), c.Resolve<IdentityServerOptions>()));
 
             // add any additional dependencies from hosting application

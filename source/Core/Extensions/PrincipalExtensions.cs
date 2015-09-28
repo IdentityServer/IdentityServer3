@@ -131,15 +131,13 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
-        /// Returns true if the current amr claim is an anon authentication method
+        /// Returns true if the current princiapl has an amr claim and the value is an 'anon' 
         /// </summary>
         /// <param name="principal">The principal.</param>
         /// <returns>True if amr claim is anon, otherwise false</returns>
         public static bool IsAnonymousAuthenticationMethod(this IPrincipal principal)
         {
-            var authenticationMethod = principal.Identity.GetAuthenticationMethod();
-
-            return authenticationMethod == Constants.Authentication.AnonymousAuthenticationType;
+            return (principal.Identity as ClaimsIdentity).Claims.HasAnonymousAuthenticationMethod();
         }
 
         /// <summary>

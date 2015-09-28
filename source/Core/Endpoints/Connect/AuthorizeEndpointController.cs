@@ -31,13 +31,11 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using IdentityModel;
 
 namespace IdentityServer3.Core.Endpoints
 {
-    using System.Linq;
-
-    using IdentityModel;
-
+   
     /// <summary>
     /// OAuth2/OpenID Connect authorize endpoint
     /// </summary>
@@ -58,6 +56,7 @@ namespace IdentityServer3.Core.Endpoints
         private readonly ILocalizationService _localizationService;
         private readonly IEventService _events;
         private readonly AntiForgeryToken _antiForgeryToken;
+        private readonly LastAnonymousIdentifierCookie _lastAnonymousIdentifierCookie;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.

@@ -15,11 +15,11 @@
  */
 namespace IdentityServer3.Core.Services.Default
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
 
+    using IdentityServer3.Core.Configuration.Hosting;
     using IdentityServer3.Core.Models;
 
     /// <summary>
@@ -27,15 +27,26 @@ namespace IdentityServer3.Core.Services.Default
     /// </summary>
     public class DefaultAnonymousClaimsProvider : IAnonymousClaimsProvider
     {
+        private readonly LastAnonymousIdentifierCookie _anonymousIdentifierCookie;
+
+        public DefaultAnonymousClaimsProvider(LastAnonymousIdentifierCookie anonymousIdentifierCookie)
+        {
+            _anonymousIdentifierCookie = anonymousIdentifierCookie;
+        }
+
         public IEnumerable<Claim> GetAnonymousClaims(Client client, IEnumerable<Scope> scopes)
         {
-            var deviceAndSubjectId = Guid.NewGuid().ToString();
-
+            var lastIdentifier = _anonymousIdentifierCookie.GetValue();
+            if (string.IsNullOrEmpty(lastIdentifier))
+            {
+                lastIdentifier = _anonymousIdentifierCookie.CreateNew();
+            }
+           
             var claims = new List<Claim>
                              {
                                  new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.Authentication.AnonymousAuthenticationType),
-                                 new Claim("did", deviceAndSubjectId),
-                                 new Claim(Constants.ClaimTypes.Subject, deviceAndSubjectId),
+                                 new Claim("did", lastIdentifier),
+                                 new Claim(Constants.ClaimTypes.Subject, lastIdentifier),
                                  new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
                              };
 

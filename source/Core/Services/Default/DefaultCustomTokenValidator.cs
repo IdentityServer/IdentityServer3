@@ -74,9 +74,8 @@ namespace IdentityServer3.Core.Services.Default
             var subClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject);
             if (subClaim != null)
             {
-                // see if this is an anonymous token from the authentication type
-                var amrClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
-                if (amrClaim != null && amrClaim.Value != Constants.Authentication.AnonymousAuthenticationType)
+                // see if this is an anonymous token from the authentication type                
+                if (!result.Claims.HasAnonymousAuthenticationMethod())
                 {
                     var principal = Principal.Create("tokenvalidator", result.Claims.ToArray());
 

@@ -30,6 +30,8 @@ using System.Web.Http;
 
 namespace IdentityServer3.Core.Endpoints
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// OpenID Connect userinfo endpoint
     /// </summary>
@@ -109,7 +111,11 @@ namespace IdentityServer3.Core.Endpoints
             var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
             var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
-            var payload = await _generator.ProcessAsync(subject, scopes, tokenResult.Client);
+            var payload = new Dictionary<string, object>();
+            if (!tokenResult.Claims.HasAnonymousAuthenticationMethod())
+            {
+                payload = await _generator.ProcessAsync(subject, scopes, tokenResult.Client);
+            }
 
             Logger.Info("End userinfo request");
             await RaiseSuccessEventAsync();

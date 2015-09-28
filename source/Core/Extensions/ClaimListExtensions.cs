@@ -65,6 +65,18 @@ namespace IdentityServer3.Core.Extensions
             return d;
         }
 
+        public static bool HasAnonymousAuthenticationMethod(this IEnumerable<Claim> claims)
+        {
+            var claim = claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.AuthenticationMethod);
+
+            if (claim != null)
+            {
+                return claim.Value == Constants.Authentication.AnonymousAuthenticationType;
+            }
+
+            return false;
+        }
+
         private static object GetValue(Claim claim)
         {
             if (claim.Type == Constants.ClaimTypes.Address)

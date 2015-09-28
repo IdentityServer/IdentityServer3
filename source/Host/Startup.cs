@@ -69,6 +69,7 @@ namespace IdentityServer3.Host
                         AuthenticationOptions = new AuthenticationOptions 
                         {
                             IdentityProviders = ConfigureIdentityProviders,
+                            RememberLastIssuedAnonymousIdentifier = true
                             //EnablePostSignOutAutoRedirect = true
                         },
 
@@ -83,7 +84,7 @@ namespace IdentityServer3.Host
                             RaiseInformationEvents = true,
                             RaiseSuccessEvents = true,
                             RaiseErrorEvents = true
-                        }
+                        },
                     };
 
                     coreApp.UseIdentityServer(idsrvOptions);
