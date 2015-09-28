@@ -208,7 +208,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
         private bool RequestContainsAnonymousScope(ValidatedAuthorizeRequest request)
         {
-            return (request.ValidatedScopes != null && !request.ValidatedScopes.ContainsAnonymousScope);
+            return (request.ValidatedScopes != null && request.ValidatedScopes.ContainsAnonymousScope);
         }
 
         public Task<LoginInteractionResponse> ProcessClientLoginAsync(ValidatedAuthorizeRequest request)
