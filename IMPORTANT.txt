@@ -1,0 +1,10 @@
+You just added an old version of IdentityServer3 to your project.
+Newer versions have a different package name.
+
+You can get the current version using:
+
+install-package IdentityServer3
+
+see also here:
+
+https://github.com/IdentityServer/IdentityServer3/releases/tag/2.0.0
