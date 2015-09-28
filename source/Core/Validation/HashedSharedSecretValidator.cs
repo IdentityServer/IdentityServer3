@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.Validation
 
             if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
             {
-                throw new ArgumentNullException("Id or Credential is missing.");
+                throw new ArgumentException("Id or Credential is missing.");
             }
 
             var secretSha256 = sharedSecret.Sha256();
