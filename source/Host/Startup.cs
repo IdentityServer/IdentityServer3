@@ -27,7 +27,7 @@ using Microsoft.Owin.Security.WsFederation;
 using Owin;
 using Serilog;
 
-[assembly: OwinStartup("LocalTest", typeof(Startup_LocalTest))]
+[assembly: OwinStartup(typeof(Startup_LocalTest))]
 
 namespace IdentityServer3.Host
 {
