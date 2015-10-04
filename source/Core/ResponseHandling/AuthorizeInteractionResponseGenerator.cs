@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             // let the login page know the client requesting authorization
             _signIn.ClientId = request.ClientId;
-
+            
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
             {
@@ -123,7 +123,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             if (isAuthenticated)
             {
-                var isActiveCtx = new IsActiveContext { Subject = user };
+                var isActiveCtx = new IsActiveContext(user, request.Client);
                 await _users.IsActiveAsync(isActiveCtx);
                 
                 isActive = isActiveCtx.IsActive; 

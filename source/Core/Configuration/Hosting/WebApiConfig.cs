@@ -16,6 +16,7 @@
 
 using Autofac;
 using Autofac.Integration.WebApi;
+using Autofac.Util;
 using IdentityServer3.Core.Logging;
 using System;
 using System.Collections.Generic;
@@ -53,15 +54,10 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
                 var diag = config.EnableSystemDiagnosticsTracing();
                 diag.IsVerbose = options.LoggingOptions.WebApiDiagnosticsIsVerbose;
-                diag.TraceSource = liblog;                
+                diag.TraceSource = liblog;
             }
 
             ConfigureRoutes(options, config);
-
-            if (options.LoggingOptions.EnableHttpLogging)
-            {
-                config.MessageHandlers.Add(new RequestResponseLogger());
-            }
 
             return config;
         }
@@ -81,7 +77,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 var httpControllerType = typeof (IHttpController);
                 return typeof (WebApiConfig)
                     .Assembly
-                    .GetTypes()
+                    .GetLoadableTypes()
                     .Where(t => t.IsClass && !t.IsAbstract && httpControllerType.IsAssignableFrom(t))
                     .ToList();
             }

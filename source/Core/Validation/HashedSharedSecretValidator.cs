@@ -46,63 +46,74 @@ namespace IdentityServer3.Core.Validation
             var fail = Task.FromResult(new SecretValidationResult { Success = false });
             var success = Task.FromResult(new SecretValidationResult { Success = true });
 
-            if (parsedSecret.Type == Constants.ParsedSecretTypes.SharedSecret)
+            if (parsedSecret.Type != Constants.ParsedSecretTypes.SharedSecret)
             {
-                var sharedSecret = parsedSecret.Credential as string;
+                Logger.Debug(string.Format("Parsed secret should not be of type {0}", parsedSecret.Type ?? "null"));
+                return fail;
+            }
 
-                if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
+            var sharedSecret = parsedSecret.Credential as string;
+
+            if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
+            {
+                throw new ArgumentException("Id or Credential is missing.");
+            }
+
+            var secretSha256 = sharedSecret.Sha256();
+            var secretSha512 = sharedSecret.Sha512();
+
+            foreach (var secret in secrets)
+            {
+                var secretDescription = string.IsNullOrEmpty(secret.Description) ? "no description" : secret.Description;
+
+                // this validator is only applicable to shared secrets
+                if (secret.Type != Constants.SecretTypes.SharedSecret)
                 {
-                    throw new ArgumentNullException("Id or cedential");
+                    Logger.Debug(string.Format("Skipping secret: {0}, secret is not of type {1}.", secretDescription, Constants.SecretTypes.SharedSecret));
+                    continue;
                 }
 
-                var secretSha256 = sharedSecret.Sha256();
-                var secretSha512 = sharedSecret.Sha512();
-
-                foreach (var secret in secrets)
+                // check if client secret is still valid
+                if (secret.Expiration.HasExpired())
                 {
-                    // this validator is only applicable to shared secrets
-                    if (secret.Type != Constants.SecretTypes.SharedSecret)
-                    {
-                        continue;
-                    }
+                    Logger.Debug(string.Format("Skipping secret: {0}, secret is expired.", secretDescription));
+                    continue;
+                }
 
-                    bool isValid = false;
-                    byte[] secretBytes;
+                bool isValid = false;
+                byte[] secretBytes;
 
-                    // check if client secret is still valid
-                    if (secret.Expiration.HasExpired()) continue;
+                try
+                {
+                    secretBytes = Convert.FromBase64String(secret.Value);
+                }
+                catch (FormatException)
+                {
+                    Logger.Error(string.Format("Secret: {0} uses invalid hashing algorithm.", secretDescription));
+                    return fail;
+                }
 
-                    try
-                    {
-                        secretBytes = Convert.FromBase64String(secret.Value);
-                    }
-                    catch (FormatException)
-                    {
-                        Logger.Error("Secret uses invalid hashing algorithm");
-                        return fail;
-                    }
+                if (secretBytes.Length == 32)
+                {
+                    isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha256);
+                }
+                else if (secretBytes.Length == 64)
+                {
+                    isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha512);
+                }
+                else
+                {
+                    Logger.Error(string.Format("Secret: {0} uses invalid hashing algorithm.", secretDescription));
+                    return fail;
+                }
 
-                    if (secretBytes.Length == 32)
-                    {
-                        isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha256);
-                    }
-                    else if (secretBytes.Length == 64)
-                    {
-                        isValid = TimeConstantComparer.IsEqual(secret.Value, secretSha512);
-                    }
-                    else
-                    {
-                        Logger.Error("Secret uses invalid hashing algorithm");
-                        return fail;
-                    }
-
-                    if (isValid)
-                    {
-                        return success;
-                    }
+                if (isValid)
+                {
+                    return success;
                 }
             }
 
+            Logger.Debug("No matching hashed secret found.");
             return fail;
         }
     }

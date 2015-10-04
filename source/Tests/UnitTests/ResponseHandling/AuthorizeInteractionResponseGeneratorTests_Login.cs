@@ -64,6 +64,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
+                Client = new Client()
             };
 
             var principal = IdentityServerPrincipal.Create("123", "dom");
@@ -129,6 +130,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
+                Client = new Client(),
                  AuthenticationContextReferenceClasses = new List<string>{
                     "idp:" + Constants.BuiltInIdentityProvider
                 }
@@ -149,6 +151,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
+                Client = new Client(),
                 AuthenticationContextReferenceClasses = new List<string>{
                     "idp:some_idp"
                 },

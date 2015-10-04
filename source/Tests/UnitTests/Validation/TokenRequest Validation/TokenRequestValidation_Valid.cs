@@ -45,6 +45,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
 
             var code = new AuthorizationCode
             {
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
                 Client = client,
                 RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
@@ -81,6 +82,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var code = new AuthorizationCode
             {
                 Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
                 RedirectUri = "https://server/cb",
                 RequestedScopes = new List<Scope>
                 {

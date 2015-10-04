@@ -99,7 +99,7 @@ namespace IdentityServer3.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
@@ -153,7 +153,7 @@ namespace IdentityServer3.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Custom validator failed: " + customResult.Error ?? "unknown");
+                LogError("Custom validator failed: " + (customResult.Error ?? "unknown"));
                 return customResult;
             }
 
@@ -164,7 +164,7 @@ namespace IdentityServer3.Core.Validation
             return customResult;
         }
 
-        public virtual Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
+        public virtual async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler
             {
@@ -196,18 +196,31 @@ namespace IdentityServer3.Core.Validation
                     _log.JwtId = jwtId.Value;
                 }
 
-                return Task.FromResult(new TokenValidationResult
+                // load the client that belongs to the client_id claim
+                Client client = null;
+                var clientId = id.FindFirst(Constants.ClaimTypes.ClientId);
+                if (clientId != null)
+                {
+                    client = await _clients.FindClientByIdAsync(clientId.Value);
+                    if (client == null)
+                    {
+                        throw new InvalidOperationException("Client does not exist anymore.");
+                    }
+                }
+
+                return new TokenValidationResult
                 {
                     IsError = false,
 
                     Claims = id.Claims,
+                    Client = client,
                     Jwt = jwt
-                });
+                };
             }
             catch (Exception ex)
             {
                 Logger.ErrorException("JWT token validation error", ex);
-                return Task.FromResult(Invalid(Constants.ProtectedResourceErrors.InvalidToken));
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
         }
 
@@ -242,6 +255,7 @@ namespace IdentityServer3.Core.Validation
             {
                 IsError = false,
 
+                Client = token.Client,
                 Claims = ReferenceTokenToClaims(token),
                 ReferenceToken = token,
                 ReferenceTokenId = tokenHandle

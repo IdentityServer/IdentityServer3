@@ -1,1 +1,0 @@
-GitReleaseNotes.exe /outputFile RELEASES.md

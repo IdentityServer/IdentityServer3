@@ -11,7 +11,7 @@ Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7
 
 IdentityServer is a .NET/Katana-based framework and hostable component that allows implementing single sign-on and access control for modern web applications and APIs using protocols like OpenID Connect and OAuth2. It supports a wide range of clients like mobile, web, SPAs and desktop applications and is extensible to allow integration in new and existing architectures.
 
-Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](http://www.ndcvideos.com/#/app/video/2651).
+Watch this for the big picture: [Introduction to OpenID Connect, OAuth2 and IdentityServer](https://vimeo.com/113604459).
 
 Go to the documentation [site](https://identityserver.github.io/Documentation/).
 
@@ -74,3 +74,4 @@ IdentityServer is built using the following great open source projects:
 - [MyGet](http://myget.org)
 
 ...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
+

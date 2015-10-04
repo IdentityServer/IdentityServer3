@@ -71,6 +71,16 @@ namespace IdentityServer3.Core.Services.Default
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime),
                 credentials);
 
+            // amr is an array - if there is only a single value turn it into an array
+            if (jwt.Payload.ContainsKey("amr"))
+            {
+                var amrValue = jwt.Payload["amr"] as string;
+                if (amrValue != null)
+                {
+                    jwt.Payload["amr"] = new string[] { amrValue };
+                }
+            }
+
             var x509credential = credentials as X509SigningCredentials;
             if (x509credential != null)
             {
