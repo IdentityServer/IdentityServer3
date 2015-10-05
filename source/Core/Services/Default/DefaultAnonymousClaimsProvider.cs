@@ -37,7 +37,7 @@ namespace IdentityServer3.Core.Services.Default
         public IEnumerable<Claim> GetAnonymousClaims(Client client, IEnumerable<Scope> scopes)
         {
             var lastIdentifier = _anonymousIdentifierCookie.GetValue();
-            if (string.IsNullOrEmpty(lastIdentifier))
+            if (string.IsNullOrWhiteSpace(lastIdentifier))
             {
                 lastIdentifier = _anonymousIdentifierCookie.CreateNew();
             }
@@ -45,7 +45,6 @@ namespace IdentityServer3.Core.Services.Default
             var claims = new List<Claim>
                              {
                                  new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.Authentication.AnonymousAuthenticationType),
-                                 new Claim("did", lastIdentifier),
                                  new Claim(Constants.ClaimTypes.Subject, lastIdentifier),
                                  new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
                              };
