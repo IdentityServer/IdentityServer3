@@ -63,7 +63,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     if (options.CspOptions.Enabled)
                     {
                         // img-src as * due to client logos
-                        var value = "default-src 'self'; script-src 'self' {0}; style-src 'self' 'unsafe-inline' {1}; img-src *;";
+                        var value = "default-src 'self'; script-src 'self' {0}; style-src 'self' 'unsafe-inline' {1}; img-src {2};";
 
                         if (!String.IsNullOrWhiteSpace(options.CspOptions.FontSrc))
                         {
@@ -74,7 +74,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                             value += String.Format("connect-src {0};", options.CspOptions.ConnectSrc);
                         }
 
-                        value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc);
+                        value = String.Format(value, options.CspOptions.ScriptSrc, options.CspOptions.StyleSrc, options.CspOptions.ImgSrc ?? "*");
                         if (options.Endpoints.EnableCspReportEndpoint)
                         {
                             value += " report-uri " + ctx.GetCspReportUrl();
