@@ -33,7 +33,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// OAuth2/OpenID Conect token endpoint
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.Token)]
     [NoCache]
     [PreventUnsupportedRequestMediaTypes(allowFormUrlEncoded: true)]
     internal class TokenEndpointController : ApiController
@@ -67,7 +66,7 @@ namespace IdentityServer3.Core.Endpoints
         /// POST
         /// </summary>
         /// <returns>Token response</returns>
-        [Route]
+        [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start token request");

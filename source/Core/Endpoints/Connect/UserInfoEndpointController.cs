@@ -33,7 +33,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// OpenID Connect userinfo endpoint
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
     internal class UserInfoEndpointController : ApiController
     {
@@ -67,7 +66,6 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>userinfo response</returns>
-        [Route]
         [HttpGet, HttpPost]
         public async Task<IHttpActionResult> GetUserInfo(HttpRequestMessage request)
         {

@@ -54,7 +54,7 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Discovery document</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
+        [HttpGet]
         public async Task<IHttpActionResult> GetConfiguration()
         {
             Logger.Info("Start discovery request");
@@ -137,7 +137,7 @@ namespace IdentityServer3.Core.Endpoints
         /// GET for JWKs
         /// </summary>
         /// <returns>JSON Web Key set</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
+        [HttpGet]
         public IHttpActionResult GetKeyData()
         {
             Logger.Info("Start key discovery request");

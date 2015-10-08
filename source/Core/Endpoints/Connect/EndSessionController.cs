@@ -61,7 +61,6 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
         [HttpGet]
         public async Task<IHttpActionResult> Logout()
         {
@@ -90,7 +89,6 @@ namespace IdentityServer3.Core.Endpoints
         /// Logout callback
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
         [HttpGet]
         public IHttpActionResult LogoutCallback()
         {

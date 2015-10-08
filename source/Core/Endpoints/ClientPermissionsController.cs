@@ -65,7 +65,6 @@ namespace IdentityServer3.Core.Endpoints
             this.antiForgeryToken = antiForgeryToken;
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions)]
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
@@ -89,7 +88,6 @@ namespace IdentityServer3.Core.Endpoints
             return await RenderPermissionsPage();
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)

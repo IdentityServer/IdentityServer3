@@ -38,7 +38,7 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Check session iframe page</returns>
-        [Route(Constants.RoutePaths.Oidc.CheckSession, Name=Constants.RouteNames.Oidc.CheckSession)]
+        [HttpGet]
         public IHttpActionResult Get()
         {
             Logger.Info("Check session iframe request");

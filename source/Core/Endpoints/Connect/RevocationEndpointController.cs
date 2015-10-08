@@ -33,7 +33,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// Implementation of RFC 7009 (http://tools.ietf.org/html/rfc7009)
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.Revocation)]
     [NoCache]
     internal class RevocationEndpointController : ApiController
     {
@@ -56,7 +55,6 @@ namespace IdentityServer3.Core.Endpoints
             _events = events;
         }
 
-        [Route]
         [HttpPost]
         public async Task<IHttpActionResult> Post()
         {

@@ -41,7 +41,7 @@ namespace IdentityServer3.Core.Endpoints
             this.eventService = eventService;
         }
 
-        [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
+        [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("CSP Report endpoint requested");

@@ -32,7 +32,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// Endpoint for validating access tokens
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.AccessTokenValidation)]
     [NoCache]
     internal class AccessTokenValidationController : ApiController
     {
@@ -54,7 +53,7 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Claims if token is valid</returns>
-        [Route]
+        [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
             Logger.Info("Start access token validation request");
@@ -76,7 +75,7 @@ namespace IdentityServer3.Core.Endpoints
         /// POST
         /// </summary>
         /// <returns>Claims if token is valid</returns>
-        [Route]
+        [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start access token validation request");
