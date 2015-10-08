@@ -329,6 +329,11 @@ namespace IdentityServer3.Host.Config
                         "write",
                         "offline_access"
                     },
+
+                    AllowedCorsOrigins = new List<string>
+                    {
+                        "http://localhost:13048"
+                    },
                     
                     AccessTokenType = AccessTokenType.Jwt,
                     AccessTokenLifetime = 3600,

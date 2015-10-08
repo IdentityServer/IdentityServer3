@@ -584,7 +584,9 @@ namespace IdentityServer3.Core
                 Oidc.DiscoveryWebKeys,
                 Oidc.Token,
                 Oidc.UserInfo,
-                Oidc.IdentityTokenValidation
+                Oidc.IdentityTokenValidation,
+                Oidc.Token,
+                Oidc.Revocation
             };
         }
 
