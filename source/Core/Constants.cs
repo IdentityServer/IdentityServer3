@@ -585,7 +585,6 @@ namespace IdentityServer3.Core
                 Oidc.Token,
                 Oidc.UserInfo,
                 Oidc.IdentityTokenValidation,
-                Oidc.Token,
                 Oidc.Revocation
             };
         }
