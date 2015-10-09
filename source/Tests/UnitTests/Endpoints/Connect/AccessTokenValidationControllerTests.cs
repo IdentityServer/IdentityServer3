@@ -41,7 +41,11 @@ namespace IdentityServer3.Tests.Endpoints.Connect
         [Trait("Category", Category)]
         public void GetAccessTokenValidation_AccessTokenValidationEndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableAccessTokenValidationEndpoint = false;
+            ConfigureIdentityServerOptions = options =>
+            {
+                options.Endpoints.EnableAccessTokenValidationEndpoint = false;
+            };
+            base.Init();
             var resp = Get();
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

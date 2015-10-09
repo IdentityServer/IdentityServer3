@@ -63,7 +63,11 @@ namespace IdentityServer3.Tests.Connect.Endpoints
         [Fact]
         public void ShowPermissions_EndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableClientPermissionsEndpoint = false;
+            ConfigureIdentityServerOptions = options =>
+            {
+                options.Endpoints.EnableClientPermissionsEndpoint = false;
+            };
+            base.Init();
             Login();
             var resp = Get(Constants.RoutePaths.ClientPermissions);
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -72,7 +76,11 @@ namespace IdentityServer3.Tests.Connect.Endpoints
         [Fact]
         public void RevokePermission_EndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableClientPermissionsEndpoint = false;
+            ConfigureIdentityServerOptions = options =>
+            {
+                options.Endpoints.EnableClientPermissionsEndpoint = false;
+            };
+            base.Init();
             Login();
             var resp = PostForm(Constants.RoutePaths.ClientPermissions, new { ClientId = clientId });
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
