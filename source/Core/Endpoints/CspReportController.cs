@@ -46,13 +46,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("CSP Report endpoint requested");
 
-            if (!options.Endpoints.EnableCspReportEndpoint)
-            {
-                Logger.Error("endpoint disabled, returning 404");
-                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, "endpoint disabled");
-                return NotFound();
-            }
-
             if (Request.Content.Headers.ContentLength.HasValue && 
                 Request.Content.Headers.ContentLength.Value > Constants.MaxCspReportLength)
             {

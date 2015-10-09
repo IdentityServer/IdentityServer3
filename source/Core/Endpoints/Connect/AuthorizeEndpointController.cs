@@ -97,15 +97,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Start authorize request");
 
-            if (!_options.Endpoints.EnableAuthorizeEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
-
             var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
 
             Logger.Info("End authorize request");

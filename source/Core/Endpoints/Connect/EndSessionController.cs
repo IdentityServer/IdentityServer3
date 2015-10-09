@@ -66,12 +66,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Start end session request");
 
-            if (!_options.Endpoints.EnableEndSessionEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
-
             var result = await _validator.ValidateAsync(Request.RequestUri.ParseQueryString(), User as ClaimsPrincipal);
             if (result.IsError)
             {

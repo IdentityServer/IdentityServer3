@@ -58,15 +58,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Start identity token validation request");
 
-            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
-
             var parameters = Request.RequestUri.ParseQueryString();
             return await ProcessAsync(parameters);
         }
@@ -79,15 +70,6 @@ namespace IdentityServer3.Core.Endpoints
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start identity token validation request");
-
-            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
 
             var parameters = await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
             return await ProcessAsync(parameters);

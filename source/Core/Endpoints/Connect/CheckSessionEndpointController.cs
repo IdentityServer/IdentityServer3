@@ -43,12 +43,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Check session iframe request");
 
-            if (!_options.Endpoints.EnableCheckSessionEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
-
             return new CheckSessionResult(this._options, Request);
         }
    }

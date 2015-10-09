@@ -71,15 +71,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Start userinfo request");
 
-            if (!_options.Endpoints.EnableUserInfoEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
-
             var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request.GetOwinContext());
             if (tokenUsageResult.TokenFound == false)
             {

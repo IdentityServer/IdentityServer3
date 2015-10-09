@@ -71,15 +71,6 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Start token request");
 
-            if (!_options.Endpoints.EnableTokenEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
-
             var response = await ProcessAsync(await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync());
             
             if (response is TokenErrorResult)
