@@ -63,7 +63,7 @@ namespace IdentityServer3.Core.Validation
 
         public async Task<BearerTokenUsageValidationResult> ValidatePostBodyAsync(HttpRequestMessage request)
         {
-            var form = await request.Content.ReadAsFormDataAsync();
+            var form = await request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
 
             var token = form.Get("access_token");
             if (token.IsPresent())
