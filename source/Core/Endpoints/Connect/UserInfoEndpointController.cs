@@ -80,7 +80,7 @@ namespace IdentityServer3.Core.Endpoints
                 return NotFound();
             }
 
-            var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request);
+            var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request.GetOwinContext());
             if (tokenUsageResult.TokenFound == false)
             {
                 var error = "No token found.";
