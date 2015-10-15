@@ -598,22 +598,25 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             Logger.Info("Clearing cookies");
-
             sessionCookie.ClearSessionId();
-
-            var signOutMessage = signOutMessageCookie.Read(id);
-            var clientId = signOutMessage.ClientId;
             signOutMessageCookie.Clear(id);
-            
             ClearAuthenticationCookies();
             SignOutOfExternalIdP();
             
             if (user != null && user.Identity.IsAuthenticated)
             {
-                await this.userService.SignOutAsync(new 
-                    SignOutContext { Subject = user, ClientId = clientId });
-
                 var message = signOutMessageCookie.Read(id);
+                var signOutContext = new SignOutContext
+                {
+                    Subject = user
+                };
+
+                if (message != null)
+                {
+                    signOutContext.ClientId = message.ClientId;
+                }
+
+                await this.userService.SignOutAsync(signOutContext);
                 await eventService.RaiseLogoutEventAsync(user, id, message);
             }
 
