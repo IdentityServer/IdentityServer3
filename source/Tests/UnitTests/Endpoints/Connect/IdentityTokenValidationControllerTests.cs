@@ -42,7 +42,11 @@ namespace IdentityServer3.Tests.Connect.Endpoints
         [Trait("Category", Category)]
         public void GetIdTokenValidation_IdTokenValidationEndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableIdentityTokenValidationEndpoint = false;
+            ConfigureIdentityServerOptions = options =>
+            {
+                options.Endpoints.EnableIdentityTokenValidationEndpoint = false;
+            };
+            base.Init();
             var resp = Get();
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

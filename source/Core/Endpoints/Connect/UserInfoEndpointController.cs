@@ -33,7 +33,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// OpenID Connect userinfo endpoint
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.UserInfo)]
     [NoCache]
     internal class UserInfoEndpointController : ApiController
     {
@@ -67,22 +66,12 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>userinfo response</returns>
-        [Route]
         [HttpGet, HttpPost]
         public async Task<IHttpActionResult> GetUserInfo(HttpRequestMessage request)
         {
             Logger.Info("Start userinfo request");
 
-            if (!_options.Endpoints.EnableUserInfoEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
-
-            var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request);
+            var tokenUsageResult = await _tokenUsageValidator.ValidateAsync(request.GetOwinContext());
             if (tokenUsageResult.TokenFound == false)
             {
                 var error = "No token found.";

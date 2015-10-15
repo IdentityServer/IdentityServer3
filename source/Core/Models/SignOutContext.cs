@@ -30,5 +30,13 @@ namespace IdentityServer3.Core.Models
         /// The subject.
         /// </value>
         public ClaimsPrincipal Subject { get; set; }
+
+        /// <summary>
+        /// Gets or sets the client id.
+        /// </summary>
+        /// <value>
+        /// The client id.
+        /// </value>
+        public string ClientId { get; set; }
     }
 }

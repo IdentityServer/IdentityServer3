@@ -541,12 +541,19 @@ namespace IdentityServer3.Core
             
             public static class Oidc
             {
+                public const string AccessTokenValidation = "idsrv.oidc.accesstokenvalidation";
                 public const string Authorize = "idsrv.oidc.authorize";
                 public const string Consent = "idsrv.oidc.consent";
                 public const string SwitchUser = "idsrv.oidc.switch";
+                public const string CheckSession = "idsrv.oidc.checksession";
+                public const string DiscoveryConfiguration = "idsrv.oidc.discoveryconfiguration";
+                public const string DiscoveryWebKeys = "idsrv.oidc.discoverywebkeys";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
-                public const string CheckSession = "idsrv.oidc.checksession";
+                public const string IdentityTokenValidation = "idsrv.oidc.identitytokenvalidation";
+                public const string Token = "idsrv.oidc.token";
+                public const string Revocation = "idsrv.oidc.revocation";
+                public const string UserInfo = "idsrv.oidc.userinfo";
             }
         }
 
@@ -584,7 +591,8 @@ namespace IdentityServer3.Core
                 Oidc.DiscoveryWebKeys,
                 Oidc.Token,
                 Oidc.UserInfo,
-                Oidc.IdentityTokenValidation
+                Oidc.IdentityTokenValidation,
+                Oidc.Revocation
             };
         }
 

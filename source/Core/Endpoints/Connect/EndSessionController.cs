@@ -61,17 +61,10 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSession, Name = Constants.RouteNames.Oidc.EndSession)]
         [HttpGet]
         public async Task<IHttpActionResult> Logout()
         {
             Logger.Info("Start end session request");
-
-            if (!_options.Endpoints.EnableEndSessionEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
 
             var result = await _validator.ValidateAsync(Request.RequestUri.ParseQueryString(), User as ClaimsPrincipal);
             if (result.IsError)
@@ -90,7 +83,6 @@ namespace IdentityServer3.Core.Endpoints
         /// Logout callback
         /// </summary>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.EndSessionCallback, Name = Constants.RouteNames.Oidc.EndSessionCallback)]
         [HttpGet]
         public IHttpActionResult LogoutCallback()
         {
