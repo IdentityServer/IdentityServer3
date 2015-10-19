@@ -44,6 +44,8 @@ namespace IdentityServer3.Core.Configuration
             ExternalError = Default;
             AuthorizationCode = Default;
             RefreshToken = Default;
+            TokenHandle = Default;
+            Jwt = 51200;
         }
 
         /// <summary>
@@ -125,5 +127,15 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for refresh tokens
         /// </summary>
         public int RefreshToken { get; private set; }
+
+        /// <summary>
+        /// Max length for token handles
+        /// </summary>
+        public int TokenHandle { get; private set; }
+
+        /// <summary>
+        /// Max length for JWTs
+        /// </summary>
+        public int Jwt { get; private set; }
     }
 }

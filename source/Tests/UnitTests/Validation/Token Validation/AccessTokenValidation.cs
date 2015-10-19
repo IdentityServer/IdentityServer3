@@ -16,6 +16,7 @@
 
 using FluentAssertions;
 using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
@@ -138,6 +139,21 @@ namespace IdentityServer3.Tests.Validation.Tokens
 
         [Fact]
         [Trait("Category", Category)]
+        public async Task Reference_Token_Too_Long()
+        {
+            var store = new InMemoryTokenHandleStore();
+            var validator = Factory.CreateTokenValidator(store);
+            var options = new IdentityServerOptions();
+
+            var longToken = "x".Repeat(options.InputLengthRestrictions.TokenHandle + 1);
+            var result = await validator.ValidateAccessTokenAsync(longToken);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public async Task Expired_Reference_Token()
         {
             now = DateTimeOffset.UtcNow;
@@ -193,6 +209,20 @@ namespace IdentityServer3.Tests.Validation.Tokens
             token.Issuer = "invalid";
             var jwt = await signer.SignTokenAsync(token);
 
+            var validator = Factory.CreateTokenValidator(null);
+            var result = await validator.ValidateAccessTokenAsync(jwt);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task JWT_Token_Too_Long()
+        {
+            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessTokenLong(new Client { ClientId = "roclient" }, "valid", 600, 1000, "read", "write"));
+            
             var validator = Factory.CreateTokenValidator(null);
             var result = await validator.ValidateAccessTokenAsync(jwt);
 
