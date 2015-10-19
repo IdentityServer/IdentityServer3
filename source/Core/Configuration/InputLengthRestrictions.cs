@@ -39,6 +39,8 @@ namespace IdentityServer3.Core.Configuration
             UserName = Default;
             Password = Default;
             CspReport = 2000;
+            IdentityProvider = Default;
+            ExternalError = Default;
         }
 
         /// <summary>
@@ -95,5 +97,15 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for CSP reports
         /// </summary>
         public int CspReport { get; set; }
+
+        /// <summary>
+        /// Max length for external identity provider name
+        /// </summary>
+        public int IdentityProvider { get; set; }
+
+        /// <summary>
+        /// Max length for external identity provider errors
+        /// </summary>
+        public int ExternalError { get; private set; }
     }
 }
