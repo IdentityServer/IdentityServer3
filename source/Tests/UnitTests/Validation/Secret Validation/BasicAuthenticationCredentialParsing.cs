@@ -16,25 +16,33 @@
 
 using FluentAssertions;
 using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using System.Linq;
 
 namespace IdentityServer3.Tests.Validation.Secret_Validation
 {
     public class BasicAuthenticationSecretParsing
     {
         const string Category = "Secrets - Basic Authentication Secret Parsing";
+        IdentityServerOptions _options;
+        BasicAuthenticationSecretParser parser;
+
+        public BasicAuthenticationSecretParsing()
+        {
+            _options = new IdentityServerOptions();
+            parser = new BasicAuthenticationSecretParser(_options);
+        }
 
         [Fact]
         public async void EmptyOwinEnvironment()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
-
             var secret = await parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
@@ -44,7 +52,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void Valid_BasicAuthentication_Request()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
@@ -63,7 +70,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Empty_Basic_Header()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
@@ -76,9 +82,50 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
 
         [Fact]
         [Trait("Category", Category)]
+        public async void Valid_BasicAuthentication_Request_ClientId_Too_Long()
+        {
+            var context = new OwinContext();
+
+            string value = "x";
+            var parts = new string[_options.InputLengthRestrictions.ClientId + 1];
+            var longClientId = parts.Aggregate((x, y) => (x ?? value) + value);
+
+            var credential = string.Format("{0}:secret", longClientId);
+
+            var headerValue = string.Format("Basic {0}",
+                Convert.ToBase64String(Encoding.UTF8.GetBytes(credential)));
+            context.Request.Headers.Add(
+                new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
+
+            var secret = await parser.ParseAsync(context.Environment);
+            secret.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async void Valid_BasicAuthentication_Request_ClientSecret_Too_Long()
+        {
+            var context = new OwinContext();
+
+            string value = "x";
+            var parts = new string[_options.InputLengthRestrictions.ClientId + 1];
+            var longClientSecret = parts.Aggregate((x, y) => (x ?? value) + value);
+
+            var credential = string.Format("client:{0}", longClientSecret);
+
+            var headerValue = string.Format("Basic {0}",
+                Convert.ToBase64String(Encoding.UTF8.GetBytes(credential)));
+            context.Request.Headers.Add(
+                new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
+
+            var secret = await parser.ParseAsync(context.Environment);
+            secret.Should().BeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Empty_Basic_Header_Variation()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
@@ -93,7 +140,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Unknown_Scheme()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
@@ -108,7 +154,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_NoBase64_Encoding()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             context.Request.Headers.Add(
@@ -123,7 +168,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
@@ -140,7 +184,6 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         [Trait("Category", Category)]
         public async void BasicAuthentication_Request_With_Malformed_Credentials_Base64_Encoding_UserName_Only_With_Colon()
         {
-            var parser = new BasicAuthenticationSecretParser();
             var context = new OwinContext();
 
             var headerValue = string.Format("Basic {0}",
