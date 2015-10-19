@@ -22,13 +22,14 @@ namespace IdentityServer3.Core.Configuration
     public class InputLengthRestrictions
     {
         private const int Default = 100;
-        
+
         /// <summary>
         /// Creates InputLengthRestrictions with default values
         /// </summary>
         public InputLengthRestrictions()
         {
             ClientId = Default;
+            ClientSecret = Default;
             Scope = 300;
             RedirectUri = 400;
             Nonce = 300;
@@ -47,6 +48,11 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for client_id
         /// </summary>
         public int ClientId { get; set; }
+
+        /// <summary>
+        /// Max length for external client secrets
+        /// </summary>
+        public int ClientSecret { get; private set; }
 
         /// <summary>
         /// Max length for scope
