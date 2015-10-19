@@ -56,24 +56,6 @@ namespace IdentityServer3.Core
         public const string ScopeDisplayNameSuffix = "_DisplayName";
         public const string ScopeDescriptionSuffix = "_Description";
 
-        //public const int DefaultMaxAuthorizeInputLength = 100;
-        //public const int DefaultMaxTokenInputLength = 100;
-
-        //public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
-        //public const int MaxScopeLength = 300;
-        //public const int MaxRedirectUriLength = 400;
-        //public const int MaxNonceLength = 300;
-        //public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
-        //public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
-        //public const int MaxAcrValuesLength = 300;
-        
-        //public const int MaxGrantTypeLength = DefaultMaxTokenInputLength;
-        //public const int MaxUserNameLength = DefaultMaxTokenInputLength;
-        //public const int MaxPasswordLength = DefaultMaxTokenInputLength;
-
-        //public const int MaxCspReportLength = 2000;
-
-
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
