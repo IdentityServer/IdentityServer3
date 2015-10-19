@@ -131,6 +131,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
+    <Compile Include="Configuration\InputLengthRestrictions.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />

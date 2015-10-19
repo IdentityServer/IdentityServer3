@@ -115,7 +115,7 @@ namespace IdentityServer3.Core.Validation
             // client_id must be present
             /////////////////////////////////////////////////////////
             var clientId = request.Raw.Get(Constants.AuthorizeRequest.ClientId);
-            if (clientId.IsMissingOrTooLong(Constants.MaxClientIdLength))
+            if (clientId.IsMissingOrTooLong(_options.InputLengthRestrictions.ClientId))
             {
                 LogError("client_id is missing or too long", request);
                 return Invalid(request);
@@ -129,7 +129,7 @@ namespace IdentityServer3.Core.Validation
             //////////////////////////////////////////////////////////
             var redirectUri = request.Raw.Get(Constants.AuthorizeRequest.RedirectUri);
 
-            if (redirectUri.IsMissingOrTooLong(Constants.MaxRedirectUriLength))
+            if (redirectUri.IsMissingOrTooLong(_options.InputLengthRestrictions.RedirectUri))
             {
                 LogError("redirect_uri is missing or too long", request);
                 return Invalid(request);
@@ -269,7 +269,7 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(request, ErrorTypes.Client);
             }
 
-            if (scope.Length > Constants.MaxScopeLength)
+            if (scope.Length > _options.InputLengthRestrictions.Scope)
             {
                 LogError("scopes too long.", request);
                 return Invalid(request, ErrorTypes.Client);
@@ -344,7 +344,7 @@ namespace IdentityServer3.Core.Validation
             var nonce = request.Raw.Get(Constants.AuthorizeRequest.Nonce);
             if (nonce.IsPresent())
             {
-                if (nonce.Length > Constants.MaxNonceLength)
+                if (nonce.Length > _options.InputLengthRestrictions.Nonce)
                 {
                     LogError("Nonce too long", request);
                     return Invalid(request, ErrorTypes.Client);
@@ -389,7 +389,7 @@ namespace IdentityServer3.Core.Validation
             var uilocales = request.Raw.Get(Constants.AuthorizeRequest.UiLocales);
             if (uilocales.IsPresent())
             {
-                if (uilocales.Length > Constants.MaxUiLocaleLength)
+                if (uilocales.Length > _options.InputLengthRestrictions.UiLocale)
                 {
                     LogError("UI locale too long", request);
                     return Invalid(request, ErrorTypes.Client);
@@ -444,7 +444,7 @@ namespace IdentityServer3.Core.Validation
             var loginHint = request.Raw.Get(Constants.AuthorizeRequest.LoginHint);
             if (loginHint.IsPresent())
             {
-                if (loginHint.Length > Constants.MaxLoginHintLength)
+                if (loginHint.Length > _options.InputLengthRestrictions.LoginHint)
                 {
                     LogError("Login hint too long", request);
                     return Invalid(request, ErrorTypes.Client);
@@ -459,7 +459,7 @@ namespace IdentityServer3.Core.Validation
             var acrValues = request.Raw.Get(Constants.AuthorizeRequest.AcrValues);
             if (acrValues.IsPresent())
             {
-                if (acrValues.Length > Constants.MaxAcrValuesLength)
+                if (acrValues.Length > _options.InputLengthRestrictions.AcrValues)
                 {
                     LogError("Acr values too long", request);
                     return Invalid(request, ErrorTypes.Client);

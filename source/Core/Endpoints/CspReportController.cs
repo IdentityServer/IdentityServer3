@@ -47,7 +47,7 @@ namespace IdentityServer3.Core.Endpoints
             Logger.Info("CSP Report endpoint requested");
 
             if (Request.Content.Headers.ContentLength.HasValue && 
-                Request.Content.Headers.ContentLength.Value > Constants.MaxCspReportLength)
+                Request.Content.Headers.ContentLength.Value > options.InputLengthRestrictions.CspReport)
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             var json = await Request.GetOwinContext().Request.ReadBodyAsStringAsync();
-            if (json.Length > Constants.MaxCspReportLength)
+            if (json.Length > options.InputLengthRestrictions.CspReport)
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);

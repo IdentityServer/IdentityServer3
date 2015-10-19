@@ -44,6 +44,7 @@ namespace IdentityServer3.Core.Configuration
             this.LoggingOptions = new LoggingOptions();
             this.EventsOptions = new EventsOptions();
             this.EnableWelcomePage = true;
+            this.InputLengthRestrictions = new InputLengthRestrictions();
         }
 
         internal void Validate()
@@ -181,6 +182,14 @@ namespace IdentityServer3.Core.Configuration
         /// The events options.
         /// </value>
         public EventsOptions EventsOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the max input length restrictions.
+        /// </summary>
+        /// <value>
+        /// The length restrictions.
+        /// </value>
+        public InputLengthRestrictions InputLengthRestrictions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the welcome page is enabled.
