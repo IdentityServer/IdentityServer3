@@ -92,7 +92,7 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns>Token response</returns>
-        public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
+        private async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
         {
             // validate client credentials and client
             var clientResult = await _clientValidator.ValidateAsync();
