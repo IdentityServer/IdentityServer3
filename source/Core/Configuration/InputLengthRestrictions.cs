@@ -42,6 +42,7 @@ namespace IdentityServer3.Core.Configuration
             CspReport = 2000;
             IdentityProvider = Default;
             ExternalError = Default;
+            AuthorizationCode = Default;
         }
 
         /// <summary>
@@ -113,5 +114,10 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for external identity provider errors
         /// </summary>
         public int ExternalError { get; private set; }
+
+        /// <summary>
+        /// Max length for authorization codes
+        /// </summary>
+        public int AuthorizationCode { get; private set; }
     }
 }
