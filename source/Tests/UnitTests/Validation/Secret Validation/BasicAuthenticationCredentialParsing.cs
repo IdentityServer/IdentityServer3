@@ -31,19 +31,19 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
     {
         const string Category = "Secrets - Basic Authentication Secret Parsing";
         IdentityServerOptions _options;
-        BasicAuthenticationSecretParser parser;
+        BasicAuthenticationSecretParser _parser;
 
         public BasicAuthenticationSecretParsing()
         {
             _options = new IdentityServerOptions();
-            parser = new BasicAuthenticationSecretParser(_options);
+            _parser = new BasicAuthenticationSecretParser(_options);
         }
 
         [Fact]
         public async void EmptyOwinEnvironment()
         {
             var context = new OwinContext();
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -59,7 +59,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Type.Should().Be(Constants.ParsedSecretTypes.SharedSecret);
             secret.Id.Should().Be("client");
@@ -75,7 +75,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic" }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -97,7 +97,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
             secret.Should().BeNull();
         }
 
@@ -118,7 +118,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
             secret.Should().BeNull();
         }
 
@@ -131,7 +131,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic " }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -145,7 +145,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Unknown" }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -159,7 +159,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { "Basic somerandomdata" }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -175,7 +175,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
@@ -191,7 +191,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             context.Request.Headers.Add(
                 new KeyValuePair<string, string[]>("Authorization", new[] { headerValue }));
 
-            var secret = await parser.ParseAsync(context.Environment);
+            var secret = await _parser.ParseAsync(context.Environment);
 
             secret.Should().BeNull();
         }
