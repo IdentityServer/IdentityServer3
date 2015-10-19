@@ -91,7 +91,7 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
             }
 
-            if (grantType.Length > Constants.MaxGrantTypeLength)
+            if (grantType.Length > _options.InputLengthRestrictions.GrantType)
             {
                 LogError("Grant type is too long.");
                 return Invalid(Constants.TokenErrors.UnsupportedGrantType);
@@ -363,8 +363,8 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            if (userName.Length > Constants.MaxUserNameLength ||
-                password.Length > Constants.MaxPasswordLength)
+            if (userName.Length > _options.InputLengthRestrictions.UserName ||
+                password.Length > _options.InputLengthRestrictions.Password)
             {
                 LogError("Username or password too long.");
                 return Invalid(Constants.TokenErrors.InvalidGrant);
@@ -384,7 +384,7 @@ namespace IdentityServer3.Core.Validation
             var acr = parameters.Get(Constants.AuthorizeRequest.AcrValues);
             if (acr.IsPresent())
             {
-                if (acr.Length > Constants.MaxAcrValuesLength)
+                if (acr.Length > _options.InputLengthRestrictions.AcrValues)
                 {
                     LogError("Acr values too long.");
                     return Invalid(Constants.TokenErrors.InvalidRequest);
@@ -623,7 +623,7 @@ namespace IdentityServer3.Core.Validation
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
         {
             var scopes = parameters.Get(Constants.TokenRequest.Scope);
-            if (scopes.IsMissingOrTooLong(Constants.MaxScopeLength))
+            if (scopes.IsMissingOrTooLong(_options.InputLengthRestrictions.Scope))
             {
                 Logger.Warn("Scopes missing or too long");
                 return false;

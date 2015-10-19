@@ -56,24 +56,6 @@ namespace IdentityServer3.Core
         public const string ScopeDisplayNameSuffix = "_DisplayName";
         public const string ScopeDescriptionSuffix = "_Description";
 
-        public const int DefaultMaxAuthorizeInputLength = 100;
-        public const int DefaultMaxTokenInputLength = 100;
-
-        public const int MaxClientIdLength = DefaultMaxAuthorizeInputLength;
-        public const int MaxScopeLength = 300;
-        public const int MaxRedirectUriLength = 400;
-        public const int MaxNonceLength = 300;
-        public const int MaxUiLocaleLength = DefaultMaxAuthorizeInputLength;
-        public const int MaxLoginHintLength = DefaultMaxAuthorizeInputLength;
-        public const int MaxAcrValuesLength = 300;
-        
-        public const int MaxGrantTypeLength = DefaultMaxTokenInputLength;
-        public const int MaxUserNameLength = DefaultMaxTokenInputLength;
-        public const int MaxPasswordLength = DefaultMaxTokenInputLength;
-
-        public const int MaxCspReportLength = 2000;
-
-
         public static class AuthorizeRequest
         {
             public const string Scope        = "scope";
@@ -541,12 +523,19 @@ namespace IdentityServer3.Core
             
             public static class Oidc
             {
+                public const string AccessTokenValidation = "idsrv.oidc.accesstokenvalidation";
                 public const string Authorize = "idsrv.oidc.authorize";
                 public const string Consent = "idsrv.oidc.consent";
                 public const string SwitchUser = "idsrv.oidc.switch";
+                public const string CheckSession = "idsrv.oidc.checksession";
+                public const string DiscoveryConfiguration = "idsrv.oidc.discoveryconfiguration";
+                public const string DiscoveryWebKeys = "idsrv.oidc.discoverywebkeys";
                 public const string EndSession = "idsrv.oidc.endsession";
                 public const string EndSessionCallback = "idsrv.oidc.endsessioncallback";
-                public const string CheckSession = "idsrv.oidc.checksession";
+                public const string IdentityTokenValidation = "idsrv.oidc.identitytokenvalidation";
+                public const string Token = "idsrv.oidc.token";
+                public const string Revocation = "idsrv.oidc.revocation";
+                public const string UserInfo = "idsrv.oidc.userinfo";
             }
         }
 
@@ -585,7 +574,8 @@ namespace IdentityServer3.Core
                 Oidc.DiscoveryWebKeys,
                 Oidc.Token,
                 Oidc.UserInfo,
-                Oidc.IdentityTokenValidation
+                Oidc.IdentityTokenValidation,
+                Oidc.Revocation
             };
         }
 

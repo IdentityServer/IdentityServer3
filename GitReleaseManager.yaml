@@ -11,8 +11,8 @@ export:
   regex-text:
   multiline-regex: false
 issue-labels-include:
-- bug
-- feature
+- bug fix
+- new feature
 - enhancement
 - breaking change
 issue-labels-exclude:

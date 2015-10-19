@@ -1092,7 +1092,7 @@ namespace IdentityServer3.Tests.Endpoints
         string GetLongString()
         {
             string value = "x";
-            var parts = new string[IdentityServer3.Core.Endpoints.AuthenticationController.MaxInputParamLength+1];
+            var parts = new string[IdentityServer3.Core.Endpoints.AuthenticationController.MaxSignInMessageLength+1];
             return parts.Aggregate((x, y) => (x??value) + value);
         }
 

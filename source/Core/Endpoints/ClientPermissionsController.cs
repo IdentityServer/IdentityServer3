@@ -65,18 +65,10 @@ namespace IdentityServer3.Core.Endpoints
             this.antiForgeryToken = antiForgeryToken;
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions)]
         [HttpGet]
         public async Task<IHttpActionResult> ShowPermissions()
         {
             Logger.Info("Permissions page requested");
-
-            if (!options.Endpoints.EnableClientPermissionsEndpoint)
-            {
-                Logger.Error("Permissions page disabled, returning 404");
-                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
-                return NotFound();
-            }
 
             if (User == null || User.Identity == null || User.Identity.IsAuthenticated == false)
             {
@@ -89,19 +81,11 @@ namespace IdentityServer3.Core.Endpoints
             return await RenderPermissionsPage();
         }
 
-        [Route(Constants.RoutePaths.ClientPermissions, Name = Constants.RouteNames.ClientPermissions)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> RevokePermission(RevokeClientPermission model)
         {
             Logger.Info("Revoke permissions requested");
-            
-            if (!options.Endpoints.EnableClientPermissionsEndpoint)
-            {
-                Logger.Error("Permissions page disabled, returning 404");
-                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.ClientPermissions, "endpoint disabled");
-                return NotFound();
-            }
             
             if (User == null || User.Identity == null || User.Identity.IsAuthenticated == false)
             {

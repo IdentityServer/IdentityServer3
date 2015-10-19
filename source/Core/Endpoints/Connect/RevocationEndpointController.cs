@@ -33,7 +33,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// Implementation of RFC 7009 (http://tools.ietf.org/html/rfc7009)
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.Revocation)]
     [NoCache]
     internal class RevocationEndpointController : ApiController
     {
@@ -56,22 +55,20 @@ namespace IdentityServer3.Core.Endpoints
             _events = events;
         }
 
-        [Route]
         [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start token revocation request");
 
-            if (!_options.Endpoints.EnableTokenRevocationEndpoint)
+            // validate client credentials and client
+            var clientResult = await _clientValidator.ValidateAsync();
+            if (clientResult.Client == null)
             {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
+                return new RevocationErrorResult(Constants.TokenErrors.InvalidClient);
             }
 
-            var response = await ProcessAsync(await Request.Content.ReadAsFormDataAsync());
+            var form = await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
+            var response = await ProcessAsync(clientResult.Client, form);
 
             if (response is RevocationErrorResult)
             {
@@ -87,17 +84,10 @@ namespace IdentityServer3.Core.Endpoints
             return response;
         }
 
-        public async Task<IHttpActionResult> ProcessAsync(NameValueCollection parameters)
+        public async Task<IHttpActionResult> ProcessAsync(Client client, NameValueCollection parameters)
         {
-            // validate client credentials and client
-            var clientResult = await _clientValidator.ValidateAsync();
-            if (clientResult.Client == null)
-            {
-                return new RevocationErrorResult(Constants.TokenErrors.InvalidClient);
-            }
-
             // validate the token request
-            var requestResult = await _requestValidator.ValidateRequestAsync(parameters, clientResult.Client);
+            var requestResult = await _requestValidator.ValidateRequestAsync(parameters, client);
 
             if (requestResult.IsError)
             {
@@ -107,19 +97,19 @@ namespace IdentityServer3.Core.Endpoints
             // revoke tokens
             if (requestResult.TokenTypeHint == Constants.TokenTypeHints.AccessToken)
             {
-                await RevokeAccessTokenAsync(requestResult.Token, clientResult.Client);
+                await RevokeAccessTokenAsync(requestResult.Token, client);
             }
             else if (requestResult.TokenTypeHint == Constants.TokenTypeHints.RefreshToken)
             {
-                await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
+                await RevokeRefreshTokenAsync(requestResult.Token, client);
             }
             else
             {
-                var found = await RevokeAccessTokenAsync(requestResult.Token, clientResult.Client);
+                var found = await RevokeAccessTokenAsync(requestResult.Token, client);
 
                 if (!found)
                 {
-                    await RevokeRefreshTokenAsync(requestResult.Token, clientResult.Client);
+                    await RevokeRefreshTokenAsync(requestResult.Token, client);
                 }
             }
 

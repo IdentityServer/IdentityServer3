@@ -41,20 +41,13 @@ namespace IdentityServer3.Core.Endpoints
             this.eventService = eventService;
         }
 
-        [Route(Constants.RoutePaths.CspReport, Name=Constants.RouteNames.CspReport)]
+        [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("CSP Report endpoint requested");
 
-            if (!options.Endpoints.EnableCspReportEndpoint)
-            {
-                Logger.Error("endpoint disabled, returning 404");
-                await eventService.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.CspReport, "endpoint disabled");
-                return NotFound();
-            }
-
             if (Request.Content.Headers.ContentLength.HasValue && 
-                Request.Content.Headers.ContentLength.Value > Constants.MaxCspReportLength)
+                Request.Content.Headers.ContentLength.Value > options.InputLengthRestrictions.CspReport)
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);
@@ -63,7 +56,7 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             var json = await Request.GetOwinContext().Request.ReadBodyAsStringAsync();
-            if (json.Length > Constants.MaxCspReportLength)
+            if (json.Length > options.InputLengthRestrictions.CspReport)
             {
                 var msg = "Request content exceeds max length";
                 Logger.Warn(msg);

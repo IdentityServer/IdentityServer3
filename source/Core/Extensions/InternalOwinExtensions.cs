@@ -307,6 +307,14 @@ namespace IdentityServer3.Core.Extensions
             return context.Environment.CreateSignInRequest(message);
         }
 
+        public static bool IsFormData(this IOwinRequest request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+
+            return request.Method == "POST" && 
+                String.Equals(request.ContentType, "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase);
+        }
+
         public async static Task<IFormCollection> ReadRequestFormAsync(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
