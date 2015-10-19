@@ -167,6 +167,7 @@
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
+    <Compile Include="TestExtensions.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\CustomGrantValidation.cs" />
     <Compile Include="Validation\Secret Validation\BasicAuthenticationCredentialParsing.cs" />
