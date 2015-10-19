@@ -43,6 +43,7 @@ namespace IdentityServer3.Core.Configuration
             IdentityProvider = Default;
             ExternalError = Default;
             AuthorizationCode = Default;
+            RefreshToken = Default;
         }
 
         /// <summary>
@@ -119,5 +120,10 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for authorization codes
         /// </summary>
         public int AuthorizationCode { get; private set; }
+
+        /// <summary>
+        /// Max length for refresh tokens
+        /// </summary>
+        public int RefreshToken { get; private set; }
     }
 }
