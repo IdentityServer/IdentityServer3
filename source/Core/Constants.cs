@@ -536,6 +536,7 @@ namespace IdentityServer3.Core
                 public const string Token = "idsrv.oidc.token";
                 public const string Revocation = "idsrv.oidc.revocation";
                 public const string UserInfo = "idsrv.oidc.userinfo";
+                public const string Introspection = "idsrv.oidc.introspection";
             }
         }
 

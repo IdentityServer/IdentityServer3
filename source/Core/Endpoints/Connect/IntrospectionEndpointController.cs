@@ -32,7 +32,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// Endpoint for token introspection - see https://tools.ietf.org/html/draft-ietf-oauth-introspection-11
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.Introspection)]
     [NoCache]
     internal class IntrospectionEndpointController : ApiController
     {
@@ -59,19 +58,9 @@ namespace IdentityServer3.Core.Endpoints
         /// POST
         /// </summary>
         /// <returns>Introspection response</returns>
-        [Route]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start introspection request");
-
-            if (!_options.Endpoints.EnableIntrospectionEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
 
             var scope = await _scopeSecretValidator.ValidateAsync();
             if (scope.Scope == null)

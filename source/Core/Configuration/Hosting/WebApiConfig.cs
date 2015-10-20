@@ -80,6 +80,14 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     new { controller = "AccessTokenValidation" });
             }
 
+            if (options.Endpoints.EnableIntrospectionEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Introspection,
+                    Constants.RoutePaths.Oidc.Introspection,
+                    new { controller = "IntrospectionEndpoint" });
+            }
+
             if (options.Endpoints.EnableAuthorizeEndpoint)
             {
                 config.Routes.MapHttpRoute(
