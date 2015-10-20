@@ -37,9 +37,16 @@ namespace IdentityServer3.Core.Logging
 
         public Dictionary<string, string> Raw { get; set; }
 
-        public TokenRequestValidationLog(ValidatedTokenRequest request)
+        public TokenRequestValidationLog(ValidatedTokenRequest request, bool scrubSensitiveData)
         {
+            const string scrubValue = "**********";
+
             Raw = request.Raw.ToDictionary();
+
+            if (scrubSensitiveData && Raw.ContainsKey(Constants.TokenRequest.Password))
+            {
+                Raw[Constants.TokenRequest.Password] = scrubValue;
+            }
 
             if (request.Client != null)
             {
