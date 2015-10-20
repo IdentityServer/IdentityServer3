@@ -77,7 +77,4 @@ IdentityServer is built using the following great open source projects:
 
 IdentityServer is a [.NET Foundation](http://www.dotnetfoundation.org/) project
 
-![dotnet_logo](https://cloud.githubusercontent.com/assets/1454075/10598539/1c44ba0a-76fa-11e5-9d7e-af1b363c524a.png)
-
-
-
+<img src="https://cloud.githubusercontent.com/assets/1454075/10598539/1c44ba0a-76fa-11e5-9d7e-af1b363c524a.png" width="144">
