@@ -86,10 +86,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         {
             var context = new OwinContext();
 
-            string value = "x";
-            var parts = new string[_options.InputLengthRestrictions.ClientId + 1];
-            var longClientId = parts.Aggregate((x, y) => (x ?? value) + value);
-
+            var longClientId = "x".Repeat(_options.InputLengthRestrictions.ClientId + 1);
             var credential = string.Format("{0}:secret", longClientId);
 
             var headerValue = string.Format("Basic {0}",
@@ -106,11 +103,8 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         public async void Valid_BasicAuthentication_Request_ClientSecret_Too_Long()
         {
             var context = new OwinContext();
-
-            string value = "x";
-            var parts = new string[_options.InputLengthRestrictions.ClientId + 1];
-            var longClientSecret = parts.Aggregate((x, y) => (x ?? value) + value);
-
+            
+            var longClientSecret = "x".Repeat(_options.InputLengthRestrictions.ClientSecret + 1);
             var credential = string.Format("client:{0}", longClientSecret);
 
             var headerValue = string.Format("Basic {0}",

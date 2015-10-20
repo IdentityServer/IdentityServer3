@@ -185,6 +185,15 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
+            if (code.Length > _options.InputLengthRestrictions.AuthorizationCode)
+            {
+                var error = "Authorization code is too long.";
+                LogError(error);
+                await RaiseFailedAuthorizationCodeRedeemedEventAsync(null, error);
+
+                return Invalid(Constants.TokenErrors.InvalidGrant);
+            }
+
             _validatedRequest.AuthorizationCodeHandle = code;
 
             var authZcode = await _authorizationCodes.GetAsync(code);
@@ -472,6 +481,15 @@ namespace IdentityServer3.Core.Validation
                 await RaiseRefreshTokenRefreshFailureEventAsync(null, error);
 
                 return Invalid(Constants.TokenErrors.InvalidRequest);
+            }
+
+            if (refreshTokenHandle.Length > _options.InputLengthRestrictions.RefreshToken)
+            {
+                var error = "Refresh token too long";
+                LogError(error);
+                await RaiseRefreshTokenRefreshFailureEventAsync(null, error);
+
+                return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
             _validatedRequest.RefreshTokenHandle = refreshTokenHandle;

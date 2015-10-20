@@ -42,6 +42,10 @@ namespace IdentityServer3.Core.Configuration
             CspReport = 2000;
             IdentityProvider = Default;
             ExternalError = Default;
+            AuthorizationCode = Default;
+            RefreshToken = Default;
+            TokenHandle = Default;
+            Jwt = 51200;
         }
 
         /// <summary>
@@ -113,5 +117,25 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for external identity provider errors
         /// </summary>
         public int ExternalError { get; private set; }
+
+        /// <summary>
+        /// Max length for authorization codes
+        /// </summary>
+        public int AuthorizationCode { get; private set; }
+
+        /// <summary>
+        /// Max length for refresh tokens
+        /// </summary>
+        public int RefreshToken { get; private set; }
+
+        /// <summary>
+        /// Max length for token handles
+        /// </summary>
+        public int TokenHandle { get; private set; }
+
+        /// <summary>
+        /// Max length for JWTs
+        /// </summary>
+        public int Jwt { get; private set; }
     }
 }
