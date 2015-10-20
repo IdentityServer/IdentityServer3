@@ -73,5 +73,9 @@ IdentityServer is built using the following great open source projects:
 - [AppVeyor](http://appveyor.com)
 - [MyGet](http://myget.org)
 
+IdentityServer is a DotNetFoundation project
+
+![dotnet_logo](https://cloud.githubusercontent.com/assets/1454075/10598539/1c44ba0a-76fa-11e5-9d7e-af1b363c524a.png)
+
 ...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
 
