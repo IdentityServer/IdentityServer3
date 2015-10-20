@@ -135,13 +135,5 @@ namespace IdentityServer3.Core.Configuration
         /// <c>true</c> if the introspection endpoint is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableIntrospectionEndpoint { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the introspection endpoint requires authentication.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the introspection endpoint requires authentication; otherwise, <c>false</c>.
-        /// </value>
-        public bool IntrospectionRequireAuthentication { get; set; }
     }
 }
