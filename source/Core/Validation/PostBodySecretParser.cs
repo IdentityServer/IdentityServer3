@@ -35,7 +35,7 @@ namespace IdentityServer3.Core.Validation
 
         /// <summary>
         /// Creates the parser with options
-        /// </summary
+        /// </summary>
         /// <param name="options">IdentityServer options</param>
         public PostBodySecretParser(IdentityServerOptions options)
         {
