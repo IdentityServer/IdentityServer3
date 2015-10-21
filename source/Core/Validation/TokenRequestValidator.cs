@@ -698,26 +698,28 @@ namespace IdentityServer3.Core.Validation
 
         private void LogError(string message)
         {
-            var validationLog = new TokenRequestValidationLog(_validatedRequest);
-            var json = LogSerializer.Serialize(validationLog);
-
-            Logger.ErrorFormat("{0}\n {1}", message, json);
+            Logger.Error(LogEvent(message));
         }
 
         private void LogWarn(string message)
         {
-            var validationLog = new TokenRequestValidationLog(_validatedRequest);
-            var json = LogSerializer.Serialize(validationLog);
-
-            Logger.WarnFormat("{0}\n {1}", message, json);
+            Logger.Warn(LogEvent(message));
         }
 
         private void LogSuccess()
         {
-            var validationLog = new TokenRequestValidationLog(_validatedRequest);
-            var json = LogSerializer.Serialize(validationLog);
+            Logger.Info(LogEvent("Token request validation success"));
+        }
 
-            Logger.InfoFormat("{0}\n {1}", "Token request validation success", json);
+        private Func<string> LogEvent(string message)
+        {
+            return () =>
+            {
+                var validationLog = new TokenRequestValidationLog(_validatedRequest);
+                var json = LogSerializer.Serialize(validationLog);
+
+                return string.Format("{0}\n {1}", message, json);
+            };
         }
 
         private async Task RaiseSuccessfulResourceOwnerAuthenticationEventAsync(string userName, string subjectId, SignInMessage signInMessage)
