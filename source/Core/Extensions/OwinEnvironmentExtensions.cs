@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Configuration;
+using Autofac;
+ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
@@ -480,6 +481,33 @@ namespace IdentityServer3.Core.Extensions
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Resolves dependency T from the IdentityServer DI system.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static T ResolveDependency<T>(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return context.ResolveDependency<T>();
+        }
+
+        /// <summary>
+        /// Resolves dependency type from the IdentityServer DI system.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="type">The Type to resolve.</param>
+        /// <returns></returns>
+        public static object ResolveDependency(this IDictionary<string, object> env, Type type)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return context.ResolveDependency(type);
         }
     }
 }

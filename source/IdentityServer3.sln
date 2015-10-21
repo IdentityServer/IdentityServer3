@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{FB9E026E-BAB3-498A-A954-B93B05C146A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{C41ECC23-BB27-4BDD-990E-4908B872F12C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.Web", "Host.Web\Host.Web.csproj", "{C41ECC23-BB27-4BDD-990E-4908B872F12C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2D32A6C0-8EEC-45E7-9CD2-BD122FA9E7F6}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2D32A6
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Tests\UnitTests\Core.Tests.csproj", "{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.Configuration", "Host.Configuration\Host.Configuration.csproj", "{9FE87DA1-73E0-4929-BC04-9249901D007A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.Console", "Host.Console\Host.Console.csproj", "{2A37BE5E-9D29-4264-81AA-6624746169BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +36,14 @@ Global
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EAD2E17-3ADA-4E9C-A2B9-5A7B9CC4C0EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FE87DA1-73E0-4929-BC04-9249901D007A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FE87DA1-73E0-4929-BC04-9249901D007A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FE87DA1-73E0-4929-BC04-9249901D007A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FE87DA1-73E0-4929-BC04-9249901D007A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A37BE5E-9D29-4264-81AA-6624746169BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A37BE5E-9D29-4264-81AA-6624746169BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A37BE5E-9D29-4264-81AA-6624746169BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A37BE5E-9D29-4264-81AA-6624746169BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
