@@ -196,19 +196,19 @@
     <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
-    <Compile Include="Models\ExternalAuthenticationContext.cs" />
+    <Compile Include="Models\Contexts\ExternalAuthenticationContext.cs" />
     <Compile Include="Models\ParsedSecret.cs" />
-    <Compile Include="Models\PostAuthenticationContext.cs" />
-    <Compile Include="Models\ProfileDataRequestContext.cs" />
+    <Compile Include="Models\Contexts\PostAuthenticationContext.cs" />
+    <Compile Include="Models\Contexts\ProfileDataRequestContext.cs" />
     <Compile Include="Models\IsActiveContext.cs" />
-    <Compile Include="Models\LocalAuthenticationContext.cs" />
-    <Compile Include="Models\PreAuthenticationContext.cs" />
+    <Compile Include="Models\Contexts\LocalAuthenticationContext.cs" />
+    <Compile Include="Models\Contexts\PreAuthenticationContext.cs" />
     <Compile Include="Models\Secret.cs" />
     <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\RequestedClaimTypes.cs" />
-    <Compile Include="Models\SignOutContext.cs" />
+    <Compile Include="Models\Contexts\SignOutContext.cs" />
     <Compile Include="Resources\T4resx.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
