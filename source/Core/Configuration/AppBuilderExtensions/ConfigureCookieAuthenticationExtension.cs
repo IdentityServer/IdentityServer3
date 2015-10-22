@@ -44,7 +44,8 @@ namespace Owin
                 ExpireTimeSpan = options.ExpireTimeSpan,
                 SlidingExpiration = options.SlidingExpiration,
                 CookieSecure = GetCookieSecure(options.SecureMode),
-                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PrimaryAuthenticationType))
+                TicketDataFormat = new TicketDataFormat(new DataProtectorAdapter(dataProtector, options.Prefix + Constants.PrimaryAuthenticationType)),
+                SessionStore = GetSessionStore(options.SessionStoreProvider)
             };
             app.UseCookieAuthentication(primary);
 
@@ -115,6 +116,11 @@ namespace Owin
                 default:
                     throw new InvalidOperationException("Invalid CookieSecureMode");
             }
+        }
+
+        private static IAuthenticationSessionStore GetSessionStore(IAuthenticationSessionStoreProvider provider)
+        {
+            return provider != null ? new AuthenticationSessionStoreWrapper(provider) : null;
         }
     }
 }
