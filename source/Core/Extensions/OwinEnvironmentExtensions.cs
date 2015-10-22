@@ -484,6 +484,42 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Sets the origin for the current request.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="origin">The origin.</param>
+        /// <returns></returns>
+        public static void SetIdentityServerOrigin(this IDictionary<string, object> env, string origin)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            env[Constants.OwinEnvironment.IdentityServerOrigin] = origin;
+        }
+
+        /// <summary>
+        /// Gets the origin for the current request.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerOrigin(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            object value;
+            if (env.TryGetValue(Constants.OwinEnvironment.IdentityServerOrigin, out value))
+            {
+                var origin = value as string;
+                if (origin != null)
+                {
+                    return origin.RemoveTrailingSlash();
+                }
+            }
+
+            var request = new OwinRequest(env);
+            return request.Uri.Scheme + "://" + request.Host.Value;
+        }
+
+        /// <summary>
         /// Resolves dependency T from the IdentityServer DI system.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
