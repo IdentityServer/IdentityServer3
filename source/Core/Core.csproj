@@ -131,6 +131,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
     <Compile Include="Configuration\AuthenticationSessionStoreWrapper.cs" />
+    <Compile Include="Configuration\AuthenticationTicketModel.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\InputLengthRestrictions.cs" />

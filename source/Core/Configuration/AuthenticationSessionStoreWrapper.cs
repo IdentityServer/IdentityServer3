@@ -16,17 +16,18 @@
 
         public Task<string> StoreAsync(AuthenticationTicket ticket)
         {
-            return this.provider.StoreAsync(ticket);
+            return this.provider.StoreAsync(new AuthenticationTicketModel(ticket));
         }
 
         public Task RenewAsync(string key, AuthenticationTicket ticket)
         {
-            return this.provider.RenewAsync(key, ticket);
+            return this.provider.RenewAsync(key, new AuthenticationTicketModel(ticket));
         }
 
-        public Task<AuthenticationTicket> RetrieveAsync(string key)
+        public async Task<AuthenticationTicket> RetrieveAsync(string key)
         {
-            return this.provider.RetrieveAsync(key);
+            var ticket = await this.provider.RetrieveAsync(key);
+            return ticket == null ? null : ticket.ToAuthenticationTicket();
         }
 
         public Task RemoveAsync(string key)
