@@ -1,6 +1,8 @@
 # How to contribute
 
-One of the easiest ways to contribute is to participate in discussions and discuss issues. You can also contribute by submitting pull requests with code changes.
+The easiest ways to contribute is to open an issue and start a discussion. 
+Then we can decided if and how a feature or a change could be implemented and if you should submit a pull requests with code changes.
+
 
 
 ## General feedback and discussions?

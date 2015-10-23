@@ -32,7 +32,6 @@ namespace IdentityServer3.Core.Endpoints
     /// <summary>
     /// Endpoint for validating identity tokens
     /// </summary>
-    [RoutePrefix(Constants.RoutePaths.Oidc.IdentityTokenValidation)]
     [NoCache]
     internal class IdentityTokenValidationController : ApiController
     {
@@ -54,19 +53,10 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Claims if token is valid</returns>
-        [Route]
+        [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
             Logger.Info("Start identity token validation request");
-
-            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
 
             var parameters = Request.RequestUri.ParseQueryString();
             return await ProcessAsync(parameters);
@@ -76,19 +66,10 @@ namespace IdentityServer3.Core.Endpoints
         /// POST
         /// </summary>
         /// <returns>Claims if token is valid</returns>
-        [Route]
+        [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
             Logger.Info("Start identity token validation request");
-
-            if (!_options.Endpoints.EnableIdentityTokenValidationEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
 
             var parameters = await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
             return await ProcessAsync(parameters);

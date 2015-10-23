@@ -36,7 +36,11 @@ namespace IdentityServer3.Tests.Connect.Endpoints
         [Fact]
         public void GetAuthorize_AuthorizeEndpointDisabled_ReturnsNotFound()
         {
-            base.options.Endpoints.EnableAuthorizeEndpoint = false;
+            ConfigureIdentityServerOptions = opts =>
+            {
+                opts.Endpoints.EnableAuthorizeEndpoint = false;
+            };
+            base.Init();
             var resp = Get(Constants.RoutePaths.Oidc.Authorize);
             resp.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }

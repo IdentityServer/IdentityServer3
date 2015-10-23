@@ -54,16 +54,10 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Discovery document</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryConfiguration)]
+        [HttpGet]
         public async Task<IHttpActionResult> GetConfiguration()
         {
             Logger.Info("Start discovery request");
-
-            if (!_options.Endpoints.EnableDiscoveryEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
 
             var baseUrl = Request.GetIdentityServerBaseUrl();
             var scopes = await _scopes.GetScopesAsync(publicOnly: true);
@@ -137,16 +131,10 @@ namespace IdentityServer3.Core.Endpoints
         /// GET for JWKs
         /// </summary>
         /// <returns>JSON Web Key set</returns>
-        [Route(Constants.RoutePaths.Oidc.DiscoveryWebKeys)]
+        [HttpGet]
         public IHttpActionResult GetKeyData()
         {
             Logger.Info("Start key discovery request");
-
-            if (!_options.Endpoints.EnableDiscoveryEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
 
             var webKeys = new List<JsonWebKeyDto>();
             foreach (var pubKey in _options.PublicKeysForMetadata)

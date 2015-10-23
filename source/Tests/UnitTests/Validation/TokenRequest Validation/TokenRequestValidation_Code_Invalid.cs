@@ -16,6 +16,7 @@
 
 using FluentAssertions;
 using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
@@ -86,6 +87,38 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
             parameters.Add(Constants.TokenRequest.Code, "invalid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        public async Task AuthorizationCodeTooLong()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                IsOpenId = true,
+                RedirectUri = "https://server/cb",
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+            var longCode = "x".Repeat(options.InputLengthRestrictions.AuthorizationCode + 1);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, longCode);
             parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
 
             var result = await validator.ValidateRequestAsync(parameters, client);

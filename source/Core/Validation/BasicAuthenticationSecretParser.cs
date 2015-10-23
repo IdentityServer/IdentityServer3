@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
@@ -32,6 +33,16 @@ namespace IdentityServer3.Core.Validation
     public class BasicAuthenticationSecretParser : ISecretParser
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly IdentityServerOptions _options;
+
+        /// <summary>
+        /// Creates the parser with a reference to identity server options
+        /// </summary>
+        /// <param name="options">IdentityServer options</param>
+        public BasicAuthenticationSecretParser(IdentityServerOptions options)
+        {
+            _options = options;
+        }
 
         /// <summary>
         /// Tries to find a secret on the environment that can be used for authentication
@@ -89,6 +100,13 @@ namespace IdentityServer3.Core.Validation
 
             if (clientId.IsPresent() && secret.IsPresent())
             {
+                if (clientId.Length > _options.InputLengthRestrictions.ClientId ||
+                    secret.Length > _options.InputLengthRestrictions.ClientSecret)
+                {
+                    Logger.Error("Client ID or secret exceeds allowed length.");
+                    return notfound;
+                }
+
                 var parsedSecret = new ParsedSecret
                 {
                     Id = clientId,

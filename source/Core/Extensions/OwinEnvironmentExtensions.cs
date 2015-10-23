@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Configuration;
+using Autofac;
+ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
@@ -480,6 +481,69 @@ namespace IdentityServer3.Core.Extensions
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Sets the origin for the current request.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="origin">The origin.</param>
+        /// <returns></returns>
+        public static void SetIdentityServerOrigin(this IDictionary<string, object> env, string origin)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            env[Constants.OwinEnvironment.IdentityServerOrigin] = origin;
+        }
+
+        /// <summary>
+        /// Gets the origin for the current request.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerOrigin(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            object value;
+            if (env.TryGetValue(Constants.OwinEnvironment.IdentityServerOrigin, out value))
+            {
+                var origin = value as string;
+                if (origin != null)
+                {
+                    return origin.RemoveTrailingSlash();
+                }
+            }
+
+            var request = new OwinRequest(env);
+            return request.Uri.Scheme + "://" + request.Host.Value;
+        }
+
+        /// <summary>
+        /// Resolves dependency T from the IdentityServer DI system.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static T ResolveDependency<T>(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return context.ResolveDependency<T>();
+        }
+
+        /// <summary>
+        /// Resolves dependency type from the IdentityServer DI system.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="type">The Type to resolve.</param>
+        /// <returns></returns>
+        public static object ResolveDependency(this IDictionary<string, object> env, Type type)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return context.ResolveDependency(type);
         }
     }
 }

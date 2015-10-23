@@ -194,7 +194,7 @@ namespace IdentityServer3.Core.Services.Default
                 }
 
 
-                // fetch all resource claims that need to go into the id token
+                // fetch all resource claims that need to go into the access token
                 var additionalClaims = new List<string>();
                 foreach (var scope in scopes)
                 {

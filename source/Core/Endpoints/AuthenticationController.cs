@@ -44,7 +44,7 @@ namespace IdentityServer3.Core.Endpoints
     [HostAuthentication(Constants.PrimaryAuthenticationType)]
     internal class AuthenticationController : ApiController
     {
-        public const int MaxInputParamLength = 100;
+        public const int MaxSignInMessageLength = 100;
 
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
@@ -101,7 +101,7 @@ namespace IdentityServer3.Core.Endpoints
                 return HandleNoSignin();
             }
 
-            if (signin.Length > MaxInputParamLength)
+            if (signin.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
                 return RenderErrorPage();
@@ -166,7 +166,7 @@ namespace IdentityServer3.Core.Endpoints
                 return HandleNoSignin();
             }
 
-            if (signin.Length > MaxInputParamLength)
+            if (signin.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
                 return RenderErrorPage();
@@ -209,7 +209,7 @@ namespace IdentityServer3.Core.Endpoints
                 return await RenderLoginPage(signInMessage, signin, ModelState.GetError(), model.Username, model.RememberMe == true);
             }
 
-            if (model.Username.Length > MaxInputParamLength || model.Password.Length > MaxInputParamLength)
+            if (model.Username.Length > options.InputLengthRestrictions.UserName || model.Password.Length > options.InputLengthRestrictions.Password)
             {
                 Logger.Error("username or password submitted beyond allowed length");
                 return await RenderLoginPage(signInMessage, signin);
@@ -265,7 +265,7 @@ namespace IdentityServer3.Core.Endpoints
                 return RenderErrorPage(localizationService.GetMessage(MessageIds.NoExternalProvider));
             }
 
-            if (provider.Length > MaxInputParamLength)
+            if (provider.Length > options.InputLengthRestrictions.IdentityProvider)
             {
                 Logger.Error("Provider parameter passed was larger than max length");
                 return RenderErrorPage();
@@ -277,7 +277,7 @@ namespace IdentityServer3.Core.Endpoints
                 return HandleNoSignin();
             }
 
-            if (signin.Length > MaxInputParamLength)
+            if (signin.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Signin parameter passed was larger than max length");
                 return RenderErrorPage();
@@ -329,7 +329,7 @@ namespace IdentityServer3.Core.Endpoints
             
             if (error.IsPresent())
             {
-                if (error.Length > MaxInputParamLength) error = error.Substring(0, MaxInputParamLength);
+                if (error.Length > options.InputLengthRestrictions.ExternalError) error = error.Substring(0, options.InputLengthRestrictions.ExternalError);
 
                 Logger.ErrorFormat("External identity provider returned error: {0}", error);
                 await eventService.RaiseExternalLoginErrorEventAsync(error);
@@ -414,7 +414,7 @@ namespace IdentityServer3.Core.Endpoints
                 return RenderErrorPage();
             }
 
-            if (resume.Length > MaxInputParamLength)
+            if (resume.Length > MaxSignInMessageLength)
             {
                 Logger.Error("resumeId length longer than allowed length");
                 return RenderErrorPage();
@@ -544,7 +544,7 @@ namespace IdentityServer3.Core.Endpoints
         [HttpGet]
         public async Task<IHttpActionResult> LogoutPrompt(string id = null)
         {
-            if (id != null && id.Length > MaxInputParamLength)
+            if (id != null && id.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Logout prompt requested, but id param is longer than allowed length");
                 return RenderErrorPage();
@@ -584,7 +584,7 @@ namespace IdentityServer3.Core.Endpoints
         {
             Logger.Info("Logout endpoint submitted");
 
-            if (id != null && id.Length > MaxInputParamLength)
+            if (id != null && id.Length > MaxSignInMessageLength)
             {
                 Logger.Error("id param is longer than allowed length");
                 return RenderErrorPage();
@@ -598,18 +598,25 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             Logger.Info("Clearing cookies");
-
             sessionCookie.ClearSessionId();
             signOutMessageCookie.Clear(id);
-            
             ClearAuthenticationCookies();
             SignOutOfExternalIdP();
-
+            
             if (user != null && user.Identity.IsAuthenticated)
             {
-                await this.userService.SignOutAsync(new SignOutContext { Subject = user });
-
                 var message = signOutMessageCookie.Read(id);
+                var signOutContext = new SignOutContext
+                {
+                    Subject = user
+                };
+
+                if (message != null)
+                {
+                    signOutContext.ClientId = message.ClientId;
+                }
+
+                await this.userService.SignOutAsync(signOutContext);
                 await eventService.RaiseLogoutEventAsync(user, id, message);
             }
 

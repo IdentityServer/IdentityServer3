@@ -97,14 +97,23 @@ namespace IdentityServer3.Host.Config
 
                     RedirectUris = new List<string>
                     {
-                        // "simple JS client"
+                        // JS client with popup login dialog
                         "http://localhost:37045/index.html",
+                        "http://localhost:37046/index.html",
+                        "http://localhost:37047/index.html",
+                        "http://localhost:37047/callback.html",
+                        "http://localhost:37047/modal.html",
+                        "http://localhost:37047/popup.html",
+                        "http://localhost:37047/frame.html",
+
+                        // "simple JS client"
                         "https://localhost:44331/Home/Callback",
 
                         // OAuthJS client
                         "http://localhost:23453/callback.html",
                         "http://localhost:23453/frame.html",
                         "http://localhost:23453/modal.html",
+                        "http://localhost:23453/popup.html",
 
                         // WPF client
                         "oob://localhost/wpfclient",
@@ -126,15 +135,23 @@ namespace IdentityServer3.Host.Config
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:23453/index.html",
-                        "http://localhost:21575/index.html"
+                        "http://localhost:21575/index.html",
+                        "http://localhost:37045/index.html",
+                        "http://localhost:37046/index.html",
+                        "http://localhost:37047/index.html"
                     },
 
                     AllowedCorsOrigins = new List<string>{
-                        "http://localhost:21575"
+                        "http://localhost:21575",
+                        "http://localhost:37045",
+                        "http://localhost:37046",
+                        "http://localhost:37047",
+                        "http://localhost:23453"
                     },
                     
                     IdentityTokenLifetime = 360,
-                    AccessTokenLifetime = 3600
+                    AccessTokenLifetime = 3600,
+                    AccessTokenType = AccessTokenType.Reference
                 },
 
                 new Client
@@ -311,6 +328,11 @@ namespace IdentityServer3.Host.Config
                         "read", 
                         "write",
                         "offline_access"
+                    },
+
+                    AllowedCorsOrigins = new List<string>
+                    {
+                        "http://localhost:13048"
                     },
                     
                     AccessTokenType = AccessTokenType.Jwt,

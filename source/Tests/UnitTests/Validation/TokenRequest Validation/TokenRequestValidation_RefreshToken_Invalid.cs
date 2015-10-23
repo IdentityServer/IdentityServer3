@@ -16,6 +16,7 @@
 
 using FluentAssertions;
 using IdentityServer3.Core;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.InMemory;
@@ -49,6 +50,28 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var parameters = new NameValueCollection();
             parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
             parameters.Add(Constants.TokenRequest.RefreshToken, "nonexistent");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task RefreshTokenTooLong()
+        {
+            var store = new InMemoryRefreshTokenStore();
+            var client = await _clients.FindClientByIdAsync("roclient");
+            var options = new IdentityServerOptions();
+
+            var validator = Factory.CreateTokenRequestValidator(
+                refreshTokens: store);
+            var longRefreshToken = "x".Repeat(options.InputLengthRestrictions.RefreshToken + 1);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
+            parameters.Add(Constants.TokenRequest.RefreshToken, longRefreshToken);
 
             var result = await validator.ValidateRequestAsync(parameters, client);
 
