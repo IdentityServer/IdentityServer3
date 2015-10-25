@@ -43,18 +43,18 @@ namespace Owin
                         //EnablePostSignOutAutoRedirect = true
                     },
 
-                    LoggingOptions = new LoggingOptions
-                    {
-                        //EnableKatanaLogging = true
-                    },
+                    //LoggingOptions = new LoggingOptions
+                    //{
+                    //    EnableKatanaLogging = true
+                    //},
 
-                    EventsOptions = new EventsOptions
-                    {
-                        RaiseFailureEvents = true,
-                        RaiseInformationEvents = true,
-                        RaiseSuccessEvents = true,
-                        RaiseErrorEvents = true
-                    }
+                    //EventsOptions = new EventsOptions
+                    //{
+                    //    RaiseFailureEvents = true,
+                    //    RaiseInformationEvents = true,
+                    //    RaiseSuccessEvents = true,
+                    //    RaiseErrorEvents = true
+                    //}
                 };
 
                 coreApp.UseIdentityServer(idsrvOptions);
