@@ -1,10 +1,12 @@
 ﻿using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Host.Config;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
+using Microsoft.Owin.Security.WsFederation;
 
 namespace Owin
 {
@@ -98,17 +100,6 @@ namespace Owin
             };
             app.UseTwitterAuthentication(twitter);
 
-            //var adfs = new WsFederationAuthenticationOptions
-            //{
-            //    AuthenticationType = "adfs",
-            //    Caption = "ADFS",
-            //    SignInAsAuthenticationType = signInAsType,
-
-            //    MetadataAddress = "https://adfs.leastprivilege.vm/federationmetadata/2007-06/federationmetadata.xml",
-            //    Wtrealm = "urn:idsrv3"
-            //};
-            //app.UseWsFederationAuthentication(adfs);
-
             var aad = new OpenIdConnectAuthenticationOptions
             {
                 AuthenticationType = "aad",
@@ -121,6 +112,30 @@ namespace Owin
             };
 
             app.UseOpenIdConnectAuthentication(aad);
+
+            var adfs = new WsFederationAuthenticationOptions
+            {
+                AuthenticationType = "adfs",
+                Caption = "ADFS",
+                SignInAsAuthenticationType = signInAsType,
+                CallbackPath = new PathString("/core/adfs"),
+
+                MetadataAddress = "https://adfs.leastprivilege.vm/federationmetadata/2007-06/federationmetadata.xml",
+                Wtrealm = "urn:idsrv3"
+            };
+            app.UseWsFederationAuthentication(adfs);
+
+            var was = new WsFederationAuthenticationOptions
+            {
+                AuthenticationType = "was",
+                Caption = "Windows",
+                SignInAsAuthenticationType = signInAsType,
+                CallbackPath = new PathString("/core/was"),
+
+                MetadataAddress = "https://localhost:44350",
+                Wtrealm = "urn:idsrv3"
+            };
+            app.UseWsFederationAuthentication(was);
         }
     }
 }

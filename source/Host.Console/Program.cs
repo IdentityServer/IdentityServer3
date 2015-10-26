@@ -9,6 +9,8 @@ namespace Host.Console
     {
         static void Main(string[] args)
         {
+            System.Console.Title = "IdentityServer3";
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.LiterateConsole()
