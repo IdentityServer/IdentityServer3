@@ -706,5 +706,11 @@ namespace IdentityServer3.Core
             public const string ClaimsProviderIdentityToken = "ClaimsProviderIdentityToken";
             public const string ClaimsProviderAccessToken = "ClaimsProviderAccessToken";
         }
+
+        public static class ClaimValueTypes
+        {
+            public const string JsonArray = "JsonArray";
+            public const string JsonObject = "JsonObject";
+        }
     }
 }
