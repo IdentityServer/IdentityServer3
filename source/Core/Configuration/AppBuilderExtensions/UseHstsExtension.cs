@@ -43,7 +43,7 @@ namespace Owin
                 {
                     if (ctx.Request.IsSecure)
                     {
-                        ctx.Response.Headers.Append("Strict-Transport-Security", "max-age:" + seconds);
+                        ctx.Response.Headers.Append("Strict-Transport-Security", "max-age=" + seconds);
                     }
                     await next();
                 });
