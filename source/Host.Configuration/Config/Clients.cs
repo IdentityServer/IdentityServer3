@@ -1,6 +1,4 @@
-﻿using IdentityServer3.Core;
-using IdentityServer3.Core.Models;
-/*
+﻿/*
  * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +13,9 @@ using IdentityServer3.Core.Models;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using IdentityServer3.Core;
+using IdentityServer3.Core.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 
