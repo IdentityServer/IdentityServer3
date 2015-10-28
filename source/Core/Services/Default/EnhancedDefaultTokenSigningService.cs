@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -36,6 +37,11 @@ namespace IdentityServer3.Core.Services.Default
         /// The identity server options
         /// </summary>
         protected readonly IdentityServerOptions _options;
+
+        static EnhancedDefaultTokenSigningService()
+        {
+            JsonExtensions.Serializer = JsonConvert.SerializeObject;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
@@ -59,6 +65,10 @@ namespace IdentityServer3.Core.Services.Default
             return await CreateJsonWebToken(token, credentials);
         }
 
+        /// <summary>
+        /// Retrieves the signing credential (override to load key from alternative locations)
+        /// </summary>
+        /// <returns>The signing credential</returns>
         protected virtual Task<SigningCredentials> GetSigningCredentialsAsync()
         {
             return Task.FromResult<SigningCredentials>(new X509SigningCredentials(_options.SigningCertificate));
@@ -69,7 +79,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="token">The token.</param>
         /// <param name="credentials">The credentials.</param>
-        /// <returns></returns>
+        /// <returns>The signed JWT</returns>
         protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
         {
             var header = CreateHeader(token, credentials);
@@ -78,6 +88,12 @@ namespace IdentityServer3.Core.Services.Default
             return await SignAsync(new JwtSecurityToken(header, payload));
         }
 
+        /// <summary>
+        /// Creates the JWT header
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="credential">The credentials.</param>
+        /// <returns>The JWT header</returns>
         protected virtual JwtHeader CreateHeader(Token token, SigningCredentials credential)
         {
             var header = new JwtHeader(credential);
@@ -91,6 +107,11 @@ namespace IdentityServer3.Core.Services.Default
             return header;
         }
 
+        /// <summary>
+        /// Creates the JWT payload
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>The JWT payload</returns>
         protected virtual JwtPayload CreatePayload(Token token)
         {
             var payload = new JwtPayload(
@@ -168,6 +189,11 @@ namespace IdentityServer3.Core.Services.Default
             return payload;
         }
 
+        /// <summary>
+        /// Applies the signature to the JWT
+        /// </summary>
+        /// <param name="jwt">The JWT object.</param>
+        /// <returns>The signed JWT</returns>
         protected virtual Task<string> SignAsync(JwtSecurityToken jwt)
         {
             var handler = new JwtSecurityTokenHandler();
