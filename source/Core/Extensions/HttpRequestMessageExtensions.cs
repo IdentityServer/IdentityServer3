@@ -24,5 +24,17 @@ namespace IdentityServer3.Core.Extensions
         {
             return request.GetOwinContext().Environment.GetIdentityServerBaseUrl();
         }
+
+        const string SuppressXfo = "idsvr:SuppressXfo";
+
+        public static void SetSuppressXfo(this HttpRequestMessage request)
+        {
+            request.Properties[SuppressXfo] = true;
+        }
+
+        public static bool GetSuppressXfo(this HttpRequestMessage request)
+        {
+            return request.Properties.ContainsKey(SuppressXfo) && true.Equals(request.Properties[SuppressXfo]);
+        }
     }
 }

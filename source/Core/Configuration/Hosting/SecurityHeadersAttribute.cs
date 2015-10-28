@@ -38,6 +38,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             base.OnActionExecuted(actionExecutedContext);
+
             if (actionExecutedContext != null &&
                 actionExecutedContext.Response != null &&
                 actionExecutedContext.Response.IsSuccessStatusCode &&
@@ -50,7 +51,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     actionExecutedContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                 }
 
-                if (EnableXfo)
+                if (EnableXfo && actionExecutedContext.Request.GetSuppressXfo() == false)
                 {
                     actionExecutedContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
                 }

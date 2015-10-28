@@ -48,7 +48,10 @@ namespace IdentityServer3.Core.Results
 
         public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
+            _request.SetSuppressXfo();
+
             Logger.Info("Posting to " + _response.RedirectUri);
+
             return base.ExecuteAsync(cancellationToken);
         }
     }
