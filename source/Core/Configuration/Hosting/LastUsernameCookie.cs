@@ -83,7 +83,9 @@ namespace IdentityServer3.Core.Configuration.Hosting
             if (options.AuthenticationOptions.RememberLastUsername)
             {
                 var cookieName = options.AuthenticationOptions.CookieOptions.Prefix + LastUsernameCookieName;
-                var secure = ctx.Request.Scheme == Uri.UriSchemeHttps;
+                var secure =
+                    options.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always ||
+                    ctx.Request.Scheme == Uri.UriSchemeHttps;
                 var path = ctx.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
 
                 var cookieOptions = new Microsoft.Owin.CookieOptions

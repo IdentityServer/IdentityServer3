@@ -129,7 +129,9 @@ namespace IdentityServer3.Core.Configuration.Hosting
         {
             get
             {
-                return ctx.Request.Scheme == Uri.UriSchemeHttps;
+                return
+                    options.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always || 
+                    ctx.Request.Scheme == Uri.UriSchemeHttps;
             }
         }
 

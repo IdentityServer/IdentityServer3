@@ -46,11 +46,14 @@ namespace IdentityServer3.Core.Configuration.Hosting
         private Microsoft.Owin.CookieOptions CreateCookieOptions(bool? persistent, DateTimeOffset? expires = null)
         {
             var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
+            var secure =
+                identityServerOptions.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always ||
+                context.Request.Scheme == Uri.UriSchemeHttps;
 
             var options = new Microsoft.Owin.CookieOptions
             {
                 HttpOnly = false,
-                Secure = context.Request.IsSecure,
+                Secure = secure,
                 Path = path
             };
 

@@ -112,7 +112,10 @@ namespace IdentityServer3.Core.Configuration.Hosting
             var protectedTokenBytes = options.DataProtector.Protect(bytes, CookieEntropy);
             var token = Base64Url.Encode(protectedTokenBytes);
             
-            var secure = context.Request.Scheme == Uri.UriSchemeHttps;
+            var secure = 
+                options.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always || 
+                context.Request.Scheme == Uri.UriSchemeHttps;
+
             var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
             context.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
             {
