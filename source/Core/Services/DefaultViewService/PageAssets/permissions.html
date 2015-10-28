@@ -24,7 +24,7 @@
 <div class="permissions">
     <div ng-repeat="client in model.clients" class="row permission">
         <div class="col-sm-2">
-            <img ng-src="{{client.clientLogoUrl}}">
+            <img ng-src="{{client.clientLogoUrl}}" ng-show="{{client.clientLogoUrl}}">
         </div>
         <div class="col-sm-8">
             <div class="permission-clientname">{{client.clientName}}</div>
