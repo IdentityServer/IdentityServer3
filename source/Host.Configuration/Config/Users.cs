@@ -37,7 +37,7 @@ namespace IdentityServer3.Host.Config
                         new Claim(Constants.ClaimTypes.Role, "Admin"),
                         new Claim(Constants.ClaimTypes.Role, "Geek"),
                         new Claim(Constants.ClaimTypes.WebSite, "http://alice.com"),
-                        new Claim(Constants.ClaimTypes.Address, "{ \"street_address\": \"One Hacker Way\", \"locality\": \"Heidelberg\", \"postal_code\": 69118, \"country\": \"Germany\" }")
+                        new Claim(Constants.ClaimTypes.Address, @"{ ""street_address"": ""One Hacker Way"", ""locality"": ""Heidelberg"", ""postal_code"": 69118, ""country"": ""Germany"" }", Constants.ClaimValueTypes.JsonObject)
                     }
                 },
                 new InMemoryUser{Subject = "88421113", Username = "bob", Password = "bob", 
@@ -51,7 +51,7 @@ namespace IdentityServer3.Host.Config
                         new Claim(Constants.ClaimTypes.Role, "Developer"),
                         new Claim(Constants.ClaimTypes.Role, "Geek"),
                         new Claim(Constants.ClaimTypes.WebSite, "http://bob.com"),
-                        new Claim(Constants.ClaimTypes.Address, "{ \"street_address\": \"One Hacker Way\", \"locality\": \"Heidelberg\", \"postal_code\": 69118, \"country\": \"Germany\" }")
+                        new Claim(Constants.ClaimTypes.Address, @"{ ""street_address"": ""One Hacker Way"", ""locality"": ""Heidelberg"", ""postal_code"": 69118, ""country"": ""Germany"" }", Constants.ClaimValueTypes.JsonObject)
                     }
                 },
             };
