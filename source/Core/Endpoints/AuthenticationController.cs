@@ -160,6 +160,12 @@ namespace IdentityServer3.Core.Endpoints
                 return StatusCode(HttpStatusCode.MethodNotAllowed);
             }
 
+            if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                Logger.Error("User is already logged in");
+                return RenderErrorPage();
+            }
+
             if (signin.IsMissing())
             {
                 Logger.Info("No signin id passed");
