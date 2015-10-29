@@ -150,6 +150,24 @@ namespace IdentityServer3.Core.Extensions
             return await context.GetIdentityFrom(Constants.PartialSignInAuthenticationType);
         }
 
+        public static async Task<bool?> GetPartialLoginRememberMeAsync(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            var result = await context.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
+            if (result == null || result.Identity == null || result.Identity.IsAuthenticated == false)
+            {
+                throw new Exception("No partial login");
+            }
+
+            if (result.Properties.Dictionary.ContainsKey(Constants.Authentication.PartialLoginRememberMe))
+            {
+                return "true".Equals(result.Properties.Dictionary[Constants.Authentication.PartialLoginRememberMe]);
+            }
+
+            return null;
+        }
+
         public static async Task<ClaimsIdentity> GetIdentityFromExternalSignIn(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");

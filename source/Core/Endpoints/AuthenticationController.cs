@@ -537,7 +537,10 @@ namespace IdentityServer3.Core.Endpoints
                 await eventService.RaisePartialLoginCompleteEventAsync(result.User.Identities.First(), signInId, signInMessage);
             }
 
-            return await SignInAndRedirectAsync(signInMessage, signInId, result);
+            // check to see if user clicked "remember me" on login page
+            bool? rememberMe = await context.GetPartialLoginRememberMeAsync();
+
+            return await SignInAndRedirectAsync(signInMessage, signInId, result, rememberMe);
         }
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
@@ -764,6 +767,14 @@ namespace IdentityServer3.Core.Endpoints
                         var expires = DateTimeHelper.UtcNow.Add(options.AuthenticationOptions.CookieOptions.RememberMeDuration);
                         props.ExpiresUtc = new DateTimeOffset(expires);
                     }
+                }
+            }
+            else
+            {
+                if (rememberMe != null)
+                {
+                    // if rememberme set, then store for later use once we need to issue login cookie
+                    props.Dictionary.Add(Constants.Authentication.PartialLoginRememberMe, rememberMe.Value ? "true" : "false");
                 }
             }
 

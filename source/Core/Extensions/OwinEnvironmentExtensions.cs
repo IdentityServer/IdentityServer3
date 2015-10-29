@@ -383,6 +383,21 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Returns true if the user checked the "remember me" flag on the login page prior to the partial login.
+        /// </summary>
+        /// <param name="env">The env.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">env</exception>
+        /// <exception cref="System.Exception">No partial login</exception>
+        public static async Task<bool?> GetPartialLoginRememberMeAsync(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            return await context.GetPartialLoginRememberMeAsync();
+        }
+
+        /// <summary>
         /// Gets the sign in message.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
