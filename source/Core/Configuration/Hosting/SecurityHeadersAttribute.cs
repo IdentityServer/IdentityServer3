@@ -58,8 +58,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 if (EnableCsp)
                 {
                     var ctx = actionExecutedContext.Request.GetOwinContext();
-                    var scope = ctx.Environment.GetLifetimeScope();
-                    var options = (IdentityServerOptions)scope.ResolveOptional(typeof(IdentityServerOptions));
+                    var options = ctx.ResolveDependency<IdentityServerOptions>();
                     if (options.CspOptions.Enabled)
                     {
                         // img-src as * due to client logos

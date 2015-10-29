@@ -59,6 +59,12 @@ namespace IdentityServer3.Core.Validation
         {
             Logger.Info("Start identity token validation");
 
+            if (token.Length > _options.InputLengthRestrictions.Jwt)
+            {
+                Logger.Error("JWT too long");
+                return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
+            }
+
             if (clientId.IsMissing())
             {
                 clientId = GetClientIdFromJwt(token);
@@ -120,6 +126,18 @@ namespace IdentityServer3.Core.Validation
 
             if (token.Contains("."))
             {
+                if (token.Length > _options.InputLengthRestrictions.Jwt)
+                {
+                    Logger.Error("JWT too long");
+
+                    return new TokenValidationResult
+                    {
+                        IsError = true,
+                        Error = Constants.ProtectedResourceErrors.InvalidToken,
+                        ErrorDescription = "Token too long"
+                    };
+                }
+
                 _log.AccessTokenType = AccessTokenType.Jwt.ToString();
                 result = await ValidateJwtAsync(
                     token,
@@ -128,6 +146,18 @@ namespace IdentityServer3.Core.Validation
             }
             else
             {
+                if (token.Length > _options.InputLengthRestrictions.TokenHandle)
+                {
+                    Logger.Error("token handle too long");
+
+                    return new TokenValidationResult
+                    {
+                        IsError = true,
+                        Error = Constants.ProtectedResourceErrors.InvalidToken,
+                        ErrorDescription = "Token too long"
+                    };
+                }
+
                 _log.AccessTokenType = AccessTokenType.Reference.ToString();
                 result = await ValidateReferenceAccessTokenAsync(token);
             }
@@ -279,10 +309,18 @@ namespace IdentityServer3.Core.Validation
 
         protected virtual string GetClientIdFromJwt(string token)
         {
-            var jwt = new JwtSecurityToken(token);
-            var clientId = jwt.Audiences.FirstOrDefault();
+            try
+            {
+                var jwt = new JwtSecurityToken(token);
+                var clientId = jwt.Audiences.FirstOrDefault();
 
-            return clientId;
+                return clientId;
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorException("Malformed JWT token", ex);
+                return null;
+            }
         }
 
         protected virtual TokenValidationResult Invalid(string error)
