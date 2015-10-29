@@ -54,6 +54,7 @@ namespace IdentityServer3.Core.Endpoints
         private readonly ILocalizationService _localizationService;
         private readonly IEventService _events;
         private readonly AntiForgeryToken _antiForgeryToken;
+        private readonly ClientListCookie _clientListCookie;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.
@@ -66,6 +67,7 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="localizationService">The localization service.</param>
         /// <param name="events">The event service.</param>
         /// <param name="antiForgeryToken">The anti forgery token.</param>
+        /// <param name="clientListCookie">The client list cookie.</param>
         public AuthorizeEndpointController(
             IViewService viewService,
             AuthorizeRequestValidator validator,
@@ -74,7 +76,8 @@ namespace IdentityServer3.Core.Endpoints
             IdentityServerOptions options,
             ILocalizationService localizationService,
             IEventService events,
-            AntiForgeryToken antiForgeryToken)
+            AntiForgeryToken antiForgeryToken,
+            ClientListCookie clientListCookie)
         {
             _viewService = viewService;
             _options = options;
@@ -85,6 +88,7 @@ namespace IdentityServer3.Core.Endpoints
             _localizationService = localizationService;
             _events = events;
             _antiForgeryToken = antiForgeryToken;
+            _clientListCookie = clientListCookie;
         }
 
         /// <summary>
@@ -188,12 +192,14 @@ namespace IdentityServer3.Core.Endpoints
             if (request.ResponseMode == Constants.ResponseModes.Query ||
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
+                _clientListCookie.AddClient(request.ClientId);
                 await RaiseSuccessEventAsync();
                 return new AuthorizeRedirectResult(response, _options);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
+                _clientListCookie.AddClient(request.ClientId);
                 await RaiseSuccessEventAsync();
                 return new AuthorizeFormPostResult(response, Request);
             }

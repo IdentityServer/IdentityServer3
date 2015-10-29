@@ -43,6 +43,7 @@ namespace IdentityServer3.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly EndSessionRequestValidator _validator;
         private readonly EndSessionResponseGenerator _generator;
+        private readonly ClientListCookie _clientListCookie;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EndSessionController"/> class.
@@ -50,11 +51,13 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="options">The options.</param>
         /// <param name="validator">The validator.</param>
         /// <param name="generator">The generator.</param>
-        public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator)
+        /// <param name="clientListCookie">The client list.</param>
+        public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator, ClientListCookie clientListCookie)
         {
             _options = options;
             _validator = validator;
             _generator = generator;
+            _clientListCookie = clientListCookie;
         }
 
         /// <summary>
@@ -87,6 +90,11 @@ namespace IdentityServer3.Core.Endpoints
         public IHttpActionResult LogoutCallback()
         {
             Logger.Info("End session callback requested");
+
+            // TODO read client list and render iframes
+            // var clients = _clientListCookie.GetClients();
+
+            _clientListCookie.Clear();
             
             return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
             {

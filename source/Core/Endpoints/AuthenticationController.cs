@@ -60,6 +60,7 @@ namespace IdentityServer3.Core.Endpoints
         private readonly MessageCookie<SignOutMessage> signOutMessageCookie;
         private readonly LastUserNameCookie lastUserNameCookie;
         private readonly AntiForgeryToken antiForgeryToken;
+        private readonly ClientListCookie clientListCookie;
 
         public AuthenticationController(
             OwinEnvironmentService owin,
