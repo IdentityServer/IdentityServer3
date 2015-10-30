@@ -22,16 +22,21 @@ namespace IdentityServer3.Core.Configuration
 {
     internal static class IdentityServerOptionsExtensions
     {
-        internal static IEnumerable<string> RenderProtocolUrls(this IdentityServerOptions options, string baseUrl)
+        internal static IEnumerable<string> RenderProtocolUrls(this IdentityServerOptions options, string baseUrl, string sid)
         {
             baseUrl = baseUrl.EnsureTrailingSlash();
-            
-            if (options.ProtocolLogoutUrls != null)
+
+            var urls = new List<string>()
             {
-                return options.ProtocolLogoutUrls.Select(url => baseUrl + url.RemoveLeadingSlash());
+                baseUrl + Constants.RoutePaths.Oidc.EndSessionCallback + "?sid=" + sid
+            };
+
+            if (options.ProtocolLogoutUrls != null && options.ProtocolLogoutUrls.Any())
+            {
+                urls.AddRange(options.ProtocolLogoutUrls.Select(url => baseUrl + url.RemoveLeadingSlash()));
             }
 
-            return Enumerable.Empty<string>();
+            return urls;
         }
     }
 }

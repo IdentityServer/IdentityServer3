@@ -70,10 +70,7 @@ namespace Owin
             }
 
             app.ConfigureRequestId();
-
-            options.ProtocolLogoutUrls.Add(Constants.RoutePaths.Oidc.EndSessionCallback);
             app.ConfigureDataProtectionProvider(options);
-
             app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
             app.ConfigureIdentityServerIssuer(options);
 

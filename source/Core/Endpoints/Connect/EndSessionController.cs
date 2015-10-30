@@ -98,9 +98,15 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> LogoutCallback()
+        public async Task<IHttpActionResult> LogoutCallback(string sid)
         {
             Logger.Info("End session callback requested");
+
+            if (ValidateSid(sid) == false)
+            {
+                Logger.Error("Invalid sid passed to end session callback");
+                return StatusCode(HttpStatusCode.BadRequest);
+            }
 
             // get URLs for iframes
             var urls = await GetClientEndSessionUrlsAsync();
@@ -126,6 +132,11 @@ namespace IdentityServer3.Core.Endpoints
             {
                 Content = new StringContent(html, Encoding.UTF8, "text/html")
             });
+        }
+
+        private bool ValidateSid(string sid)
+        {
+            return IdentityModel.TimeConstantComparer.IsEqual(_sessionCookie.GetSessionId(), sid);
         }
 
         private void ConfigureCspResponseHeader(IEnumerable<string> urls)
