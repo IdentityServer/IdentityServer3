@@ -50,12 +50,15 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         public void AddClient(string clientId)
         {
-            var clients = GetClients();
-            if (!clients.Contains(clientId))
+            if (options.Endpoints.EnableEndSessionEndpoint)
             {
-                var update = clients.ToList();
-                update.Add(clientId);
-                SetClients(update);
+                var clients = GetClients();
+                if (!clients.Contains(clientId))
+                {
+                    var update = clients.ToList();
+                    update.Add(clientId);
+                    SetClients(update);
+                }
             }
         }
 
@@ -112,6 +115,13 @@ namespace IdentityServer3.Core.Configuration.Hosting
             DateTime? expires = null;
             if (String.IsNullOrWhiteSpace(value))
             {
+                var existingValue = GetCookie();
+                if (existingValue == null)
+                {
+                    // no need to write cookie to clear if we don't already have one
+                    return;
+                }
+
                 value = ".";
                 expires = DateTime.Now.AddYears(-1);
             }
