@@ -534,7 +534,8 @@ namespace IdentityServer3.Core
             ClaimTypes.AccessTokenHash,
             ClaimTypes.AuthorizationCodeHash,
             ClaimTypes.Nonce,
-            ClaimTypes.IdentityProvider
+            ClaimTypes.IdentityProvider,
+            ClaimTypes.SessionId
         };
 
         public static readonly string[] OidcProtocolClaimTypes = new string[]
@@ -557,6 +558,7 @@ namespace IdentityServer3.Core
             ClaimTypes.Nonce,
             ClaimTypes.JwtId,
             ClaimTypes.Scope,
+            ClaimTypes.SessionId
         };
 
         public static readonly string[] AuthenticateResultClaimTypes = new string[]
