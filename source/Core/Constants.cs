@@ -709,8 +709,7 @@ namespace IdentityServer3.Core
 
         public static class ClaimValueTypes
         {
-            public const string JsonArray = "JsonArray";
-            public const string JsonObject = "JsonObject";
+            public const string Json = "json";
         }
     }
 }

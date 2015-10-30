@@ -121,69 +121,70 @@ namespace IdentityServer3.Core.Services.Default
                 DateTimeHelper.UtcNow,
                 DateTimeHelper.UtcNow.AddSeconds(token.Lifetime));
 
-            var amr = new HashSet<string>();
-            var jsonObjects = new Dictionary<string, List<JObject>>();
-            var jsonArrays = new Dictionary<string, JArray>();
+            var amrClaims = token.Claims.Where(x => x.Type == Constants.ClaimTypes.AuthenticationMethod);
+            var jsonClaims = token.Claims.Where(x => x.ValueType == Constants.ClaimValueTypes.Json);
+            var normalClaims = token.Claims.Except(amrClaims).Except(jsonClaims);
 
-            foreach (var claim in token.Claims)
+            payload.AddClaims(normalClaims);
+
+            // deal with amr
+            var amrValues = amrClaims.Select(x => x.Value).Distinct().ToArray();
+            if (amrValues.Any())
             {
-                if (claim.Type == "amr")
-                {
-                    amr.Add(claim.Value);
-                    continue;
-                }
-                if (claim.ValueType == "JsonArray")
-                {
-                    var array = JArray.Parse(claim.Value);
-                    if (payload.ContainsKey(claim.Type))
-                    {
-                        throw new Exception("Can't add two JSON array claims of the same type");
-                    }
-                    else
-                    {
-                        payload.Add(claim.Type, array);
-                    }
-
-                    continue;
-                }
-                if (claim.ValueType == "JsonObject")
-                {
-                    var obj = JObject.Parse(claim.Value);
-
-                    if (jsonObjects.ContainsKey(claim.Type))
-                    {
-                        jsonObjects[claim.Type].Add(obj);
-                    }
-                    else
-                    {
-                        jsonObjects.Add(claim.Type, new List<JObject> { obj });
-                    }
-
-                    continue;
-                }
-
-                payload.AddClaim(claim);
+                payload.Add(Constants.ClaimTypes.AuthenticationMethod, amrValues);
             }
 
-            if (amr.Any())
+            // deal with json types
+            // calling ToArray() to trigger JSON parsing once and so later 
+            // collection identity comparisons work for the anonymous type
+            var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
+
+            var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
+            var jsonObjectGroups = jsonObjects.GroupBy(x=>x.Type).ToArray();
+            foreach(var group in jsonObjectGroups)
             {
-                payload.Add("amr", amr.ToArray());
+                if (payload.ContainsKey(group.Key))
+                {
+                    throw new Exception(String.Format("Can't add two claims where one is a JSON object and the other is not a JSON object ({0})", group.Key));
+                }
+
+                if (group.Skip(1).Any())
+                {
+                    // add as array
+                    payload.Add(group.Key, group.Select(x=>x.JsonValue).ToArray());
+                }
+                else
+                {
+                    // add just one
+                    payload.Add(group.Key, group.First().JsonValue);
+                }
             }
 
-            if (jsonObjects.Any())
+            var jsonArrays = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Array).ToArray();
+            var jsonArrayGroups = jsonArrays.GroupBy(x=>x.Type).ToArray();
+            foreach (var group in jsonArrayGroups)
             {
-                foreach (var key in jsonObjects.Keys)
+                if (payload.ContainsKey(group.Key))
                 {
-                    var item = jsonObjects[key];
-                    if (item.Count() == 1)
-                    {
-                        payload.Add(key, item.First());
-                    }
-                    else
-                    {
-                        payload.Add(key, item.ToArray());
-                    }
+                    throw new Exception(String.Format("Can't add two claims where one is a JSON array and the other is not a JSON array ({0})", group.Key));
                 }
+
+                List<JToken> newArr = new List<JToken>();
+                foreach(var arrays in group)
+                {
+                    var arr = (JArray)arrays.JsonValue;
+                    newArr.AddRange(arr);
+                }
+
+                // add just one array for the group/key/claim type
+                payload.Add(group.Key, newArr.ToArray());
+            }
+
+            var unsupportedJsonTokens = jsonTokens.Except(jsonObjects).Except(jsonArrays);
+            var unsupportedJsonClaimTypes = unsupportedJsonTokens.Select(x => x.Type).Distinct();
+            if (unsupportedJsonClaimTypes.Any())
+            {
+                throw new Exception(String.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
             }
 
             return payload;
