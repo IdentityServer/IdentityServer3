@@ -42,6 +42,14 @@ namespace IdentityServer3.Core.Validation
         public ClaimsPrincipal Subject { get; set; }
 
         /// <summary>
+        /// Gets or sets the session identifier.
+        /// </summary>
+        /// <value>
+        /// The session identifier.
+        /// </value>
+        public string SessionId { get; set; }
+        
+        /// <summary>
         /// Gets or sets the identity server options.
         /// </summary>
         /// <value>

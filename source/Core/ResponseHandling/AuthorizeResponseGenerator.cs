@@ -105,6 +105,7 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 Client = request.Client,
                 Subject = request.Subject,
+                SessionId = request.SessionId,
 
                 IsOpenId = request.IsOpenIdRequest,
                 RequestedScopes = request.ValidatedScopes.GrantedScopes,

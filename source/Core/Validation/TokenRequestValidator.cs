@@ -208,6 +208,14 @@ namespace IdentityServer3.Core.Validation
             await _authorizationCodes.RemoveAsync(code);
 
             /////////////////////////////////////////////
+            // populate session id
+            /////////////////////////////////////////////
+            if (authZcode.SessionId.IsPresent())
+            {
+                _validatedRequest.SessionId = authZcode.SessionId;
+            }
+
+            /////////////////////////////////////////////
             // validate client binding
             /////////////////////////////////////////////
             if (authZcode.Client.ClientId != _validatedRequest.Client.ClientId)
