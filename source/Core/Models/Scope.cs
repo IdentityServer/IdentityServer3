@@ -79,12 +79,21 @@ namespace IdentityServer3.Core.Models
         public bool ShowInDiscoveryDocument { get; set; }
 
         /// <summary>
+        /// Gets or sets the scope secrets.
+        /// </summary>
+        /// <value>
+        /// The scope secrets.
+        /// </value>
+        public List<Secret> ScopeSecrets { get; set; }
+
+        /// <summary>
         /// Creates a Scope with default values
         /// </summary>
         public Scope()
         {
             Type = ScopeType.Resource;
             Claims = new List<ScopeClaim>();
+            ScopeSecrets = new List<Secret>();
             IncludeAllClaimsForUser = false;
             Enabled = true;
             ShowInDiscoveryDocument = true;
