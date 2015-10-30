@@ -222,12 +222,17 @@ namespace IdentityServer3.Host.Config
                     RedirectUris = new List<string>
                     {
                         "http://localhost:2672/",
+                        "https://localhost:44300/"
                     },
 
                     PostLogoutRedirectUris = new List<string>
                     {
-                        "http://localhost:2672/"
-                    }
+                        "http://localhost:2672/",
+                        "https://localhost:44300/"
+                    },
+
+                    LogoutUri = "https://localhost:44300/Home/OidcSignOut",
+                    LogoutSessionRequired = true
                 },
 
                 new Client

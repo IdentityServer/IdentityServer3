@@ -16,17 +16,22 @@
 
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
+using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using IdentityServer3.Core.Services.Default;
 
 namespace IdentityServer3.Core.Endpoints
 {
@@ -43,6 +48,9 @@ namespace IdentityServer3.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly EndSessionRequestValidator _validator;
         private readonly EndSessionResponseGenerator _generator;
+        private readonly ClientListCookie _clientListCookie;
+        private readonly IClientStore _clientStore;
+        private readonly SessionCookie _sessionCookie;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EndSessionController"/> class.
@@ -50,11 +58,17 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="options">The options.</param>
         /// <param name="validator">The validator.</param>
         /// <param name="generator">The generator.</param>
-        public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator)
+        /// <param name="clientListCookie">The client list.</param>
+        /// <param name="clientStore">The client store.</param>
+        /// <param name="sessionCookie">The session cookie.</param>
+        public EndSessionController(IdentityServerOptions options, EndSessionRequestValidator validator, EndSessionResponseGenerator generator, ClientListCookie clientListCookie, IClientStore clientStore, SessionCookie sessionCookie)
         {
             _options = options;
             _validator = validator;
             _generator = generator;
+            _clientListCookie = clientListCookie;
+            _clientStore = clientStore;
+            _sessionCookie = sessionCookie;
         }
 
         /// <summary>
@@ -84,14 +98,105 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult LogoutCallback()
+        public async Task<IHttpActionResult> LogoutCallback(string sid)
         {
             Logger.Info("End session callback requested");
-            
+
+            if (ValidateSid(sid) == false)
+            {
+                Logger.Error("Invalid sid passed to end session callback");
+                return StatusCode(HttpStatusCode.BadRequest);
+            }
+
+            // get URLs for iframes
+            var urls = await GetClientEndSessionUrlsAsync();
+            if (urls.Any())
+            {
+                var msg = urls.Aggregate((x, y) => x + ", " + y);
+                Logger.DebugFormat("Client end session iframe URLs: {0}", msg);
+            }
+            else
+            {
+                Logger.Debug("No client end session iframe URLs");
+            }
+
+            // relax CSP to allow those iframe origins
+            ConfigureCspResponseHeader(urls);
+
+            // clear cookies
+            ClearCookies();
+
+            // get html (with iframes)
+            string html = GetEndSessionHtml(urls);
             return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(String.Empty, Encoding.UTF8, "text/html")
+                Content = new StringContent(html, Encoding.UTF8, "text/html")
             });
+        }
+
+        private bool ValidateSid(string sid)
+        {
+            return IdentityModel.TimeConstantComparer.IsEqual(_sessionCookie.GetSessionId(), sid);
+        }
+
+        private void ConfigureCspResponseHeader(IEnumerable<string> urls)
+        {
+            // relax CSP for these origins so iframes can make requests
+            var origins = urls.Select(x => x.GetOrigin());
+            Request.SetAllowedCspFrameOrigins(origins);
+        }
+
+        private string GetEndSessionHtml(IEnumerable<string> urls)
+        {
+            // get html with iframes for SLO
+            return AssetManager.LoadSignoutFrame(urls);
+        }
+
+        private async Task<IEnumerable<string>> GetClientEndSessionUrlsAsync()
+        {
+            // read client list to get URLs for client logout endpoints
+            var clientIds = _clientListCookie.GetClients();
+
+            // fetch the clients in parallel
+            var tasks =
+                from clientId in clientIds
+                select _clientStore.FindClientByIdAsync(clientId);
+            await Task.WhenAll(tasks);
+
+            // get clients located and build the iframe urls
+            var clients = tasks.Select(x => x.Result);
+
+            // get user's session id. session id will possibly 
+            // be needed below to pass to client's endpoint
+            var sid = _sessionCookie.GetSessionId();
+
+            var urls = new List<string>();
+            foreach (var client in clients)
+            {
+                if (client.LogoutUri.IsPresent())
+                {
+                    var url = client.LogoutUri;
+
+                    // add session id if required
+                    if (client.LogoutSessionRequired)
+                    {
+                        url = url.AddQueryString(Constants.ClaimTypes.SessionId + "=" + sid);
+                    }
+
+                    urls.Add(url);
+                }
+            }
+
+            return urls;
+        }
+
+        private void ClearCookies()
+        {
+            // session id cookie
+            _sessionCookie.ClearSessionId();
+
+            // client list cookie
+            _clientListCookie.Clear();
         }
     }
 }

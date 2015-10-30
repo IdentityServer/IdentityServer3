@@ -19,6 +19,7 @@ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,6 +116,12 @@ namespace IdentityServer3.Core.Services.Default
             if (request.AuthorizationCodeToHash.IsPresent())
             {
                 claims.Add(new Claim(Constants.ClaimTypes.AuthorizationCodeHash, HashAdditionalData(request.AuthorizationCodeToHash)));
+            }
+
+            // add sid if present
+            if (request.ValidatedRequest.SessionId.IsPresent())
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.SessionId, request.ValidatedRequest.SessionId));
             }
 
             claims.AddRange(await _claimsProvider.GetIdentityTokenClaimsAsync(

@@ -463,6 +463,9 @@ namespace IdentityServer3.Core
             /// <summary>Authentication Methods References. JSON array of strings that are identifiers for authentication methods used in the authentication.</summary>
             public const string AuthenticationMethod                = "amr";
 
+            /// <summary>Session identifier. This represents a Session of an OP at an RP to a User Agent or device for a logged-in End-User. Its contents are unique to the OP and opaque to the RP.</summary>
+            public const string SessionId                           = "sid";
+
             /// <summary>
             /// Authentication Context Class Reference. String specifying an Authentication Context Class Reference value that identifies the Authentication Context Class that the authentication performed satisfied. 
             /// The value "0" indicates the End-User authentication did not meet the requirements of ISO/IEC 29115 level 1. 

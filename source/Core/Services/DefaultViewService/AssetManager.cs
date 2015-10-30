@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -32,6 +33,7 @@ namespace IdentityServer3.Core.Services.Default
         const string Layout = PagesPrefix + "layout.html";
         const string FormPostResponse = PagesPrefix + "FormPostResponse.html";
         const string CheckSession = PagesPrefix + "checksession.html";
+        const string SignoutFrame = PagesPrefix + "SignoutFrame.html";
         const string Welcome = PagesPrefix + "welcome.html";
 
         static readonly ResourceCache cache = new ResourceCache();
@@ -78,6 +80,21 @@ namespace IdentityServer3.Core.Services.Default
             {
                 rootUrl,
                 cookieName
+            });
+        }
+
+        public static string LoadSignoutFrame(IEnumerable<string> frameUrls)
+        {
+            string frames = null;
+            if (frameUrls != null && frameUrls.Any())
+            {
+                frameUrls = frameUrls.Select(x => String.Format("<iframe src='{0}'>", x));
+                frames = frameUrls.Aggregate((x, y) => x + Environment.NewLine + y);
+            }
+
+            return LoadResourceString(SignoutFrame, new
+            {
+                frames
             });
         }
 

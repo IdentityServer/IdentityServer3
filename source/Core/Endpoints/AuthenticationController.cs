@@ -601,7 +601,6 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             Logger.Info("Clearing cookies");
-            sessionCookie.ClearSessionId();
             signOutMessageCookie.Clear(id);
             ClearAuthenticationCookies();
             SignOutOfExternalIdP();
@@ -992,7 +991,7 @@ namespace IdentityServer3.Core.Endpoints
             Logger.Info("rendering logged out page");
 
             var baseUrl = context.GetIdentityServerBaseUrl();
-            var iframeUrls = options.RenderProtocolUrls(baseUrl);
+            var iframeUrls = options.RenderProtocolUrls(baseUrl, sessionCookie.GetSessionId());
 
             var message = signOutMessageCookie.Read(id);
             var redirectUrl = message != null ? message.ReturnUrl : null;

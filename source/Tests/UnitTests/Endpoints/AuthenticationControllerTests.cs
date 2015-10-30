@@ -817,12 +817,12 @@ namespace IdentityServer3.Tests.Endpoints
 
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
-            // cookies: primary, partial, external, session, signout
-            cookies.Count().Should().Be(5);
+            // cookies: primary, partial, external, signout
+            cookies.Count().Should().Be(4);
             // GetCookies will not return values for cookies that are expired/revoked
             resp.GetCookies().Count().Should().Be(0);
         }
-        
+
         [Fact]
         public void PostToLogout_EmitsLogoutUrlsForProtocolIframes()
         {
@@ -833,7 +833,7 @@ namespace IdentityServer3.Tests.Endpoints
             var model = resp.GetModel<LoggedOutViewModel>();
             var signOutUrls = model.IFrameUrls.ToArray();
             signOutUrls.Length.Should().Be(2);
-            signOutUrls.Should().Contain(Url(Constants.RoutePaths.Oidc.EndSessionCallback));
+            signOutUrls.Should().Contain(x => x.StartsWith(Url(Constants.RoutePaths.Oidc.EndSessionCallback)));
             signOutUrls.Should().Contain(Url("/foo/signout"));
         }
 
