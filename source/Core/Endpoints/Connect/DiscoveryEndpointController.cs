@@ -86,8 +86,13 @@ namespace IdentityServer3.Core.Endpoints
                 grant_types_supported = supportedGrantTypes.ToArray(),
                 subject_types_supported = new[] { "public" },
                 id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 },
-                token_endpoint_auth_methods_supported = new[] { Constants.TokenEndpointAuthenticationMethods.PostBody, Constants.TokenEndpointAuthenticationMethods.BasicAuthentication }
+                token_endpoint_auth_methods_supported = new[] { Constants.TokenEndpointAuthenticationMethods.PostBody, Constants.TokenEndpointAuthenticationMethods.BasicAuthentication },
             };
+
+            if (_options.Endpoints.EnableEndSessionEndpoint)
+            {
+                dto.http_logout_supported = true;
+            }
 
             if (_options.Endpoints.EnableAuthorizeEndpoint)
             {
@@ -176,6 +181,7 @@ namespace IdentityServer3.Core.Endpoints
             public string end_session_endpoint { get; set; }
             public string check_session_iframe { get; set; }
             public string revocation_endpoint { get; set; }
+            public bool? http_logout_supported { get; set; }
             public string[] scopes_supported { get; set; }
             public string[] claims_supported { get; set; }
             public string[] response_types_supported { get; set; }
