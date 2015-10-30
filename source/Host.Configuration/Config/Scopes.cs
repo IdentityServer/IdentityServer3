@@ -55,6 +55,11 @@ namespace IdentityServer3.Host.Config
                         DisplayName = "Write data",
                         Type = ScopeType.Resource,
                         Emphasize = true,
+
+                        ScopeSecrets = new List<Secret>
+                        {
+                            new Secret("secret".Sha256())
+                        }
                     },
                     new Scope
                     {

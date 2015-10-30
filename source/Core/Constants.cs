@@ -622,6 +622,7 @@ namespace IdentityServer3.Core
                 public const string Token = "idsrv.oidc.token";
                 public const string Revocation = "idsrv.oidc.revocation";
                 public const string UserInfo = "idsrv.oidc.userinfo";
+                public const string Introspection = "idsrv.oidc.introspection";
             }
         }
 
@@ -647,6 +648,7 @@ namespace IdentityServer3.Core
                 public const string Revocation = "connect/revocation";
                 public const string UserInfo = "connect/userinfo";
                 public const string AccessTokenValidation = "connect/accessTokenValidation";
+                public const string Introspection = "connect/introspect";
                 public const string IdentityTokenValidation = "connect/identityTokenValidation";
                 public const string EndSession = "connect/endsession";
                 public const string EndSessionCallback = "connect/endsessioncallback";

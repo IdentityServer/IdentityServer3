@@ -138,6 +138,7 @@
     <Compile Include="Configuration\InputLengthRestrictions.cs" />
     <Compile Include="Configuration\IAuthenticationSessionStoreProvider.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
+    <Compile Include="Endpoints\Connect\IntrospectionEndpointController.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
@@ -227,6 +228,10 @@
     <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
+    <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
+    <Compile Include="Validation\IntrospectionRequestValidator.cs" />
+    <Compile Include="Validation\ScopeSecretValidationResult.cs" />
+    <Compile Include="Validation\ScopeSecretValidator.cs" />
     <Compile Include="Validation\ClientSecretValidator.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
@@ -275,7 +280,7 @@
     <Compile Include="Services\ExternalClaimsFilter\ExternalClaimsFilterUserService.cs" />
     <Compile Include="Services\ExternalClaimsFilter\FacebookClaimsFilter.cs" />
     <Compile Include="Services\IEventService.cs" />
-    <Compile Include="Validation\ClientValidationResult.cs" />
+    <Compile Include="Validation\ClientSecretValidationResult.cs" />
     <Compile Include="Validation\CustomGrantValidationResult.cs" />
     <Compile Include="Logging\Models\AuthorizeRequestValidationLog.cs" />
     <Compile Include="Logging\Models\ClientValidationLog.cs" />

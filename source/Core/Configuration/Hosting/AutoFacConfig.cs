@@ -134,6 +134,8 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterType<BearerTokenUsageValidator>();
             builder.RegisterType<ScopeValidator>();
             builder.RegisterType<TokenRevocationRequestValidator>();
+            builder.RegisterType<IntrospectionRequestValidator>();
+            builder.RegisterType<ScopeSecretValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();

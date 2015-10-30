@@ -37,6 +37,7 @@ namespace IdentityServer3.Core.Configuration
             this.EnableCspReportEndpoint = true;
             this.EnableCheckSessionEndpoint = true;
             this.EnableTokenRevocationEndpoint = true;
+            this.EnableIntrospectionEndpoint = true;
         }
 
         /// <summary>
@@ -126,5 +127,13 @@ namespace IdentityServer3.Core.Configuration
         /// <c>true</c> if the token revocation endpoint is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool EnableTokenRevocationEndpoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the introspection endpoint is enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the introspection endpoint is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableIntrospectionEndpoint { get; set; }
     }
 }
