@@ -87,6 +87,16 @@ namespace IdentityServer3.Core.Models
         /// Specifies allowed URIs to redirect to after logout
         /// </summary>
         public List<string> PostLogoutRedirectUris { get; set; }
+        
+        /// <summary>
+        /// Specifies logout URI at client for HTTP based logout.
+        /// </summary>
+        public string LogoutUri { get; set; }
+
+        /// <summary>
+        /// Specifies is the user's session id should be sent to the LogoutUri.
+        /// </summary>
+        public bool LogoutSessionRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the client has access to all scopes. Defaults to false.
