@@ -541,6 +541,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Services\DefaultViewService\PageAssets\SignoutFrame.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\welcome.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\checksession.html" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\app\FormPostResponse.js" />
