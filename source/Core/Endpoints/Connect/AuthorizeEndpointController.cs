@@ -192,14 +192,18 @@ namespace IdentityServer3.Core.Endpoints
             if (request.ResponseMode == Constants.ResponseModes.Query ||
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
+                Logger.DebugFormat("Adding client {0} to client list cookie for subject {1}", request.ClientId, request.Subject.GetSubjectId());
                 _clientListCookie.AddClient(request.ClientId);
+
                 await RaiseSuccessEventAsync();
                 return new AuthorizeRedirectResult(response, _options);
             }
 
             if (request.ResponseMode == Constants.ResponseModes.FormPost)
             {
+                Logger.DebugFormat("Adding client {0} to client list cookie for subject {1}", request.ClientId, request.Subject.GetSubjectId());
                 _clientListCookie.AddClient(request.ClientId);
+
                 await RaiseSuccessEventAsync();
                 return new AuthorizeFormPostResult(response, Request);
             }
