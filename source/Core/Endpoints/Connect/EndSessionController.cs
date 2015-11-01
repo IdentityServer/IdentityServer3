@@ -108,6 +108,9 @@ namespace IdentityServer3.Core.Endpoints
                 return StatusCode(HttpStatusCode.BadRequest);
             }
 
+            // since we verified via sid param, we can allow rendering in iframes
+            Request.SetSuppressXfo();
+
             // get URLs for iframes
             var urls = await GetClientEndSessionUrlsAsync();
             if (urls.Any())
