@@ -241,10 +241,11 @@ namespace IdentityServer3.Core.Services.Default
             var claims = new List<Claim>
             {
                 new Claim(Constants.ClaimTypes.Subject, subject.GetSubjectId()),
-                new Claim(Constants.ClaimTypes.AuthenticationMethod, subject.GetAuthenticationMethod()),
                 new Claim(Constants.ClaimTypes.AuthenticationTime, subject.GetAuthenticationTimeEpoch().ToString(), ClaimValueTypes.Integer),
                 new Claim(Constants.ClaimTypes.IdentityProvider, subject.GetIdentityProvider()),
             };
+
+            claims.AddRange(subject.GetAuthenticationMethods());
 
             return claims;
         }
