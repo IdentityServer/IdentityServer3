@@ -32,6 +32,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using IdentityServer3.Core.Services.Default;
+using System.Collections.Specialized;
 
 namespace IdentityServer3.Core.Endpoints
 {
@@ -75,12 +76,27 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, HttpPost]
         public async Task<IHttpActionResult> Logout()
         {
             Logger.Info("Start end session request");
 
-            var result = await _validator.ValidateAsync(Request.RequestUri.ParseQueryString(), User as ClaimsPrincipal);
+            NameValueCollection parameters;
+
+            if (Request.Method == HttpMethod.Get)
+            {
+                parameters = Request.RequestUri.ParseQueryString();
+            }
+            else if (Request.Method == HttpMethod.Post)
+            {
+                parameters = await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("invalid HTTP method");
+            }
+
+            var result = await _validator.ValidateAsync(parameters, User as ClaimsPrincipal);
             if (result.IsError)
             {
                 // if anything went wrong, ignore the params the RP sent
