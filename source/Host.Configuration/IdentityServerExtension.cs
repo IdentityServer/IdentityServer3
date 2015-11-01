@@ -16,6 +16,7 @@
 
  using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
@@ -49,6 +50,8 @@ namespace Owin
                 factory.ConfigureClientStoreCache();
                 factory.ConfigureScopeStoreCache();
                 factory.ConfigureUserServiceCache();
+
+                factory.TokenSigningService = new Registration<ITokenSigningService, EnhancedDefaultTokenSigningService>();
 
                 var idsrvOptions = new IdentityServerOptions
                 {
