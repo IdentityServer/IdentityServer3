@@ -80,6 +80,11 @@ namespace Owin
             app.UseCors();
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
 
+            // this needs to be before external middleware
+            app.ConfigureSignOutMessageCookie();
+
+            app.ConfigureRenderLoggedOutPage();
+
             if (options.PluginConfiguration != null)
             {
                 options.PluginConfiguration(app, options);
