@@ -20,6 +20,7 @@ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -189,8 +190,8 @@ namespace IdentityServer3.Tests.Endpoints.Connect
 
         private class AlwaysValidAccessTokenValidator : TokenValidator
         {
-            public AlwaysValidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
-                : base(options, clients, tokenHandles, customValidator)
+            public AlwaysValidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService context)
+                : base(options, clients, tokenHandles, customValidator, context)
             {
             }
 
@@ -212,8 +213,8 @@ namespace IdentityServer3.Tests.Endpoints.Connect
 
         private class AlwaysInvalidAccessTokenValidator : TokenValidator
         {
-            public AlwaysInvalidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
-                : base(options, clients, tokenHandles, customValidator)
+            public AlwaysInvalidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService context)
+                : base(options, clients, tokenHandles, customValidator, context)
             {
             }
 

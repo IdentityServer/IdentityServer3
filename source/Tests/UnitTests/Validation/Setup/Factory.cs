@@ -16,6 +16,7 @@
 
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
+using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
@@ -23,6 +24,7 @@ using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
+using System;
 
 namespace IdentityServer3.Tests.Validation
 {
@@ -169,16 +171,54 @@ namespace IdentityServer3.Tests.Validation
             }
 
             var clients = CreateClientStore();
+            var options = TestIdentityServerOptions.Create();
+            options.Factory = new IdentityServerServiceFactory();
+            var context = CreateOwinContext(options, clients, users);
 
             var validator = new TokenValidator(
-                options: TestIdentityServerOptions.Create(),
+                options: options,
                 clients: clients,
                 tokenHandles: tokenStore,
                 customValidator: new DefaultCustomTokenValidator(
                     users: users,
-                    clients: clients));
+                    clients: clients),
+                owinEnvironment: new OwinEnvironmentService(context));
 
             return validator;
+        }
+
+        public static IOwinContext CreateOwinContext(IdentityServerOptions options, IClientStore clients, IUserService users)
+        {
+            options.Factory = options.Factory ?? new IdentityServerServiceFactory();
+            if (users != null)
+            {
+                options.Factory.UserService = new Registration<IUserService>(users);
+            }
+            if (options.Factory.UserService == null)
+            {
+                options.Factory.UseInMemoryUsers(new List<InMemoryUser>());
+            }
+
+            if (clients != null)
+            {
+                options.Factory.ClientStore = new Registration<IClientStore>(clients);
+            }
+            if (options.Factory.ClientStore == null)
+            {
+                options.Factory.UseInMemoryClients(new List<Client>());
+            }
+
+            if (options.Factory.ScopeStore == null)
+            {
+                options.Factory.UseInMemoryScopes(new List<Scope>());
+            }
+
+            var container = AutofacConfig.Configure(options);
+
+            var context = new OwinContext();
+            context.Set(Autofac.Integration.Owin.Constants.OwinLifetimeScopeKey, container);
+
+            return context;
         }
     }
 }
