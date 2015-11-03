@@ -57,8 +57,7 @@ namespace IdentityServer3.Core.Services.InMemory
             var user = query.SingleOrDefault();
             if (user != null)
             {
-                var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.Password, Constants.BuiltInIdentityProvider);
-                context.AuthenticateResult = new AuthenticateResult(p);
+                context.AuthenticateResult = new AuthenticateResult(user.Subject, GetDisplayName(user));
             }
 
             return Task.FromResult(0);
@@ -104,8 +103,7 @@ namespace IdentityServer3.Core.Services.InMemory
                 _users.Add(user);
             }
 
-            var p = IdentityServerPrincipal.Create(user.Subject, GetDisplayName(user), Constants.AuthenticationMethods.External, user.Provider);
-            context.AuthenticateResult = new AuthenticateResult(p);
+            context.AuthenticateResult = new AuthenticateResult(user.Subject, GetDisplayName(user), identityProvider:context.ExternalIdentity.Provider);
             
             return Task.FromResult(0);
         }
