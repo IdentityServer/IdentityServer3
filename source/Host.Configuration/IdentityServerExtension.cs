@@ -58,6 +58,12 @@ namespace Owin
                     Factory = factory,
                     SigningCertificate = Cert.Load(),
 
+                    Endpoints = new EndpointOptions
+                    {
+                        // replaced by the introspection endpoint in v2.2
+                        EnableAccessTokenValidationEndpoint = false
+                    },
+
                     AuthenticationOptions = new AuthenticationOptions
                     {
                         IdentityProviders = ConfigureIdentityProviders,

@@ -86,7 +86,10 @@ namespace IdentityServer3.Core.Configuration.Hosting
                         {
                             value += " report-uri " + ctx.GetCspReportUrl();
                         }
+                        // once for standards compliant browsers
                         actionExecutedContext.Response.Headers.Add("Content-Security-Policy", value);
+                        // and once again for IE
+                        actionExecutedContext.Response.Headers.Add("X-Content-Security-Policy", value);
                     }
                 }
             }

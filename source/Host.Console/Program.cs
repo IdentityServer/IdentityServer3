@@ -17,6 +17,7 @@
 using Microsoft.Owin.Hosting;
 using Owin;
 using Serilog;
+using System;
 using System.Diagnostics;
 
 namespace Host.Console
@@ -38,9 +39,20 @@ namespace Host.Console
             });
             
             System.Console.WriteLine("identityserver up and running....");
-            Process.Start("https://localhost:44333/core");
-
-            System.Console.ReadLine();
+            
+            while(true)
+            {
+                var key = System.Console.ReadKey(true);
+                if (key.Key == ConsoleKey.B)
+                {
+                    Process.Start("https://localhost:44333/core");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
             webApp.Dispose();
         }
     }
