@@ -189,10 +189,12 @@
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\CustomGrantValidation.cs" />
     <Compile Include="Validation\Secrets\BasicAuthenticationCredentialParsing.cs" />
+    <Compile Include="Validation\Secrets\ClientAssertionSecretParsing.cs" />
     <Compile Include="Validation\Secrets\FormPostCredentialParsing.cs" />
     <Compile Include="Validation\Secrets\SecretValidation.cs" />
     <Compile Include="Validation\Secrets\HashedSharedSecretValidation.cs" />
     <Compile Include="Validation\Secrets\PlainTextClientSecretValidation.cs" />
+    <Compile Include="Validation\Secrets\PrivateKeyJwtSecretValidation.cs" />
     <Compile Include="Validation\RevocationRequestValidation.cs" />
     <Compile Include="Validation\Secrets\X509CertificateSecretParsing.cs" />
     <Compile Include="Validation\Secrets\X509CertificateSecretValidation.cs" />
