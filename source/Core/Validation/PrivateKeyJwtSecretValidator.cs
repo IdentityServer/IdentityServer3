@@ -82,6 +82,14 @@ namespace IdentityServer3.Core.Validation
                 ? GetTrustedCertificateKeys(enumeratedSecrets)
                 : null;
 
+            if (embeddedKey == null
+                && !savedKeys.Any()
+                && enumeratedSecrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
+            {
+                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint secret");
+                return fail;
+            }
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 IssuerSigningKey = embeddedKey,
