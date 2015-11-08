@@ -98,7 +98,7 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         }
 
         [Fact]
-        public async Task Valid_Certificate_Thumbprint_WithoutX5t()
+        public async Task Valid_Certificate_X5c_Only()
         {
             var clientId = "certificate_valid";
             var client = await _clients.FindClientByIdAsync(clientId);
@@ -115,6 +115,46 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
             result.Success.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Valid_Certificate_X5t_Only()
+        {
+            var clientId = "certificate_base64_valid";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var token = CreateToken(clientId);
+            token.Header.Remove(JwtHeaderParameterNames.X5c);
+            var secret = new ParsedSecret
+            {
+                Id = clientId,
+                Credential = new JwtSecurityTokenHandler().WriteToken(token),
+                Type = Constants.ParsedSecretTypes.JwtBearer
+            };
+
+            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
+
+            result.Success.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Invalid_Certificate_X5t_Only_Requires_Full_Certificate()
+        {
+            var clientId = "certificate_valid";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var token = CreateToken(clientId);
+            token.Header.Remove(JwtHeaderParameterNames.X5c);
+            var secret = new ParsedSecret
+            {
+                Id = clientId,
+                Credential = new JwtSecurityTokenHandler().WriteToken(token),
+                Type = Constants.ParsedSecretTypes.JwtBearer
+            };
+
+            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
+
+            result.Success.Should().BeFalse();
         }
 
         [Fact]
