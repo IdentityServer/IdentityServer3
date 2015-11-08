@@ -98,6 +98,26 @@ namespace IdentityServer3.Tests.Validation.Secret_Validation
         }
 
         [Fact]
+        public async Task Valid_Certificate_Thumbprint_WithoutX5t()
+        {
+            var clientId = "certificate_valid";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var token = CreateToken(clientId);
+            token.Header.Remove(JwtHeaderParameterNames.X5t);
+            var secret = new ParsedSecret
+            {
+                Id = clientId,
+                Credential = new JwtSecurityTokenHandler().WriteToken(token),
+                Type = Constants.ParsedSecretTypes.JwtBearer
+            };
+
+            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
+
+            result.Success.Should().BeTrue();
+        }
+
+        [Fact]
         public async Task Invalid_Certificate_Thumbprint()
         {
             var clientId = "certificate_invalid";
