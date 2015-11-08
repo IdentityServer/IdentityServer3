@@ -101,9 +101,17 @@ namespace IdentityServer3.Core.Validation
             };
             try
             {
-                SecurityToken jwtToken;
+                SecurityToken token;
                 var handler = new EmbeddedCertificateJwtSecurityTokenHandler();
-                handler.ValidateToken(jwtTokenString, tokenValidationParameters, out jwtToken);
+                handler.ValidateToken(jwtTokenString, tokenValidationParameters, out token);
+
+                var jwtToken = (JwtSecurityToken) token;
+
+                if (jwtToken.Subject != jwtToken.Issuer)
+                {
+                    return fail;
+                }
+
                 return success;
             }
             catch (Exception e)

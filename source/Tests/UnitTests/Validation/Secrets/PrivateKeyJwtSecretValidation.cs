@@ -173,6 +173,27 @@ namespace IdentityServer3.Tests.Validation.Secrets
         }
 
         [Fact]
+        public async Task Invalid_Subject()
+        {
+            var clientId = "certificate_valid";
+            var client = await _clients.FindClientByIdAsync(clientId);
+
+            var token = CreateToken(clientId);
+            token.Payload.Remove(JwtClaimTypes.Subject);
+            token.Payload.Add(JwtClaimTypes.Subject, "invalid");
+            var secret = new ParsedSecret
+            {
+                Id = clientId,
+                Credential = new JwtSecurityTokenHandler().WriteToken(token),
+                Type = Constants.ParsedSecretTypes.JwtBearer
+            };
+
+            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
+
+            result.Success.Should().BeFalse();
+        }
+
+        [Fact]
         public async Task Invalid_Expired_Token()
         {
             var clientId = "certificate_valid";
