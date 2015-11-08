@@ -20,6 +20,7 @@ using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 
 namespace IdentityServer3.Core.Configuration
 {
@@ -68,13 +69,15 @@ namespace IdentityServer3.Core.Configuration
                 new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
                 new Registration<ISecretParser, PostBodySecretParser>(),
                 new Registration<ISecretParser, X509CertificateSecretParser>(),
+                new Registration<ISecretParser, ClientAssertionSecretParser>()
             };
 
             // register default secret validators
             SecretValidators = new List<Registration<ISecretValidator>>
             {
                 new Registration<ISecretValidator, HashedSharedSecretValidator>(),
-                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>()
+                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>(),
+                new Registration<ISecretValidator, PrivateKeyJwtSecretValidator>()
             };
         }
 
@@ -306,6 +309,14 @@ namespace IdentityServer3.Core.Configuration
         /// The CORS policy service.
         /// </value>
         public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the token replay cache
+        /// </summary>
+        /// <value>
+        /// The token replay cache
+        /// </value>
+        public Registration<IClientAssertionTokenReplayCache> ClientAssertionTokenReplayCache { get; set; }
 
         internal void Validate()
         {
