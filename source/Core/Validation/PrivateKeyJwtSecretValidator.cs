@@ -20,6 +20,7 @@ using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
@@ -133,7 +134,10 @@ namespace IdentityServer3.Core.Validation
         {
             SecurityKey securityKey = null;
             var certificate = new JwtSecurityToken(jwtTokenString).GetCertificateFromToken();
-            if (certificate != null && secrets.Any(s => !s.Expiration.HasValue && s.Value == certificate.Thumbprint))
+            if (certificate != null
+                && certificate.Thumbprint != null
+                && secrets.Any(s => !s.Expiration.HasValue
+                                    && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
             {
                 securityKey = new X509SecurityKey(certificate);
             }
