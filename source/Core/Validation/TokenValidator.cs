@@ -30,14 +30,17 @@ using System.Security.Claims;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
 
-#pragma warning disable 1591
-
 namespace IdentityServer3.Core.Validation
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <summary>
+    /// Validates a token issued by identityserver.
+    /// This class is intended to be used only by identityserver internally and by extensions.
+    /// Don't new up this class manually - only create instances via injection.
+    /// </summary>
     public class TokenValidator
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IdentityServerOptions _options;
         private readonly ITokenHandleStore _tokenHandles;
         private readonly ICustomTokenValidator _customValidator;
@@ -45,6 +48,13 @@ namespace IdentityServer3.Core.Validation
 
         private readonly TokenValidationLog _log;
 
+        /// <summary>
+        /// Creates an instance of TokenValidator. Never new up this class manually. Use DI.
+        /// </summary>
+        /// <param name="options">The IdentityServer options</param>
+        /// <param name="clients">The client store</param>
+        /// <param name="tokenHandles">The token handles store</param>
+        /// <param name="customValidator">The custom validator</param>
         public TokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
         {
             _options = options;
@@ -55,6 +65,13 @@ namespace IdentityServer3.Core.Validation
             _log = new TokenValidationLog();
         }
 
+        /// <summary>
+        /// Validates an identity token issued by identityserver.
+        /// </summary>
+        /// <param name="token">The token</param>
+        /// <param name="clientId">The expected client id (optional)</param>
+        /// <param name="validateLifetime">Indicates whether token expiration should be checked (defaults to true)</param>
+        /// <returns></returns>
         public virtual async Task<TokenValidationResult> ValidateIdentityTokenAsync(string token, string clientId = null, bool validateLifetime = true)
         {
             Logger.Info("Start identity token validation");
@@ -115,6 +132,12 @@ namespace IdentityServer3.Core.Validation
             return customResult;
         }
 
+        /// <summary>
+        /// Validates an access token issued by identityserver
+        /// </summary>
+        /// <param name="token">The token</param>
+        /// <param name="expectedScope">The expected scope</param>
+        /// <returns></returns>
         public virtual async Task<TokenValidationResult> ValidateAccessTokenAsync(string token, string expectedScope = null)
         {
             Logger.Info("Start access token validation");
@@ -194,7 +217,8 @@ namespace IdentityServer3.Core.Validation
             return customResult;
         }
 
-        public virtual async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
+
+        private async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, SecurityKey signingKey, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler
             {
@@ -254,7 +278,7 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
+        private async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
         {
             _log.TokenHandle = tokenHandle;
             var token = await _tokenHandles.GetAsync(tokenHandle);
@@ -292,7 +316,7 @@ namespace IdentityServer3.Core.Validation
             };
         }
 
-        protected virtual IEnumerable<Claim> ReferenceTokenToClaims(Token token)
+        private IEnumerable<Claim> ReferenceTokenToClaims(Token token)
         {
             var claims = new List<Claim>
             {
@@ -307,7 +331,7 @@ namespace IdentityServer3.Core.Validation
             return claims;
         }
 
-        protected virtual string GetClientIdFromJwt(string token)
+        private string GetClientIdFromJwt(string token)
         {
             try
             {
@@ -323,7 +347,7 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        protected virtual TokenValidationResult Invalid(string error)
+        private TokenValidationResult Invalid(string error)
         {
             return new TokenValidationResult
             {
