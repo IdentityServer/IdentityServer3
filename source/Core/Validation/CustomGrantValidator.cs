@@ -19,13 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Logging;
 
 namespace IdentityServer3.Core.Validation
 {
     internal class CustomGrantValidator
     {
         private readonly IEnumerable<ICustomGrantValidator> _validators;
-        
+        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
+
         public CustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
         {
             if (validators == null) throw new ArgumentNullException("validators");
@@ -42,16 +44,24 @@ namespace IdentityServer3.Core.Validation
         {
             var validator = _validators.FirstOrDefault(v => v.GrantType.Equals(request.GrantType, StringComparison.Ordinal));
 
-            if (validator != null)
+            if (validator == null)
+                return new CustomGrantValidationResult
+                {
+                    IsError = true,
+                    ErrorDescription = "No validator found for grant type"
+                };
+
+            try
             {
                 return await validator.ValidateAsync(request);
             }
-            else
+            catch (Exception e)
             {
-                return new CustomGrantValidationResult 
-                { 
-                    IsError = true, 
-                    ErrorDescription = "No validator found for grant type" 
+                Logger.Error("Grant validation error:" + e.Message);
+                return new CustomGrantValidationResult
+                {
+                    IsError = true,
+                    ErrorDescription = "Grant validation error"
                 };
             }
         }
