@@ -436,6 +436,40 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseAsync(evt);
         }
 
+        public static async Task RaiseSuccessfulIntrospectionEndpointEventAsync(this IEventService events, string token, string tokenStatus, string scopeName)
+        {
+            var evt = new Event<IntrospectionEndpointDetail>(
+                EventConstants.Categories.Endpoints,
+                "Introspection endpoint success",
+                EventTypes.Success,
+                EventConstants.Ids.IntrospectionEndpointSuccess,
+                new IntrospectionEndpointDetail
+                {
+                    Token = token,
+                    TokenStatus = tokenStatus,
+                    ScopeName = scopeName
+                });
+
+            await events.RaiseAsync(evt);
+        }
+
+        public static async Task RaiseFailureIntrospectionEndpointEventAsync(this IEventService events, string error, string token, string scopeName)
+        {
+            var evt = new Event<IntrospectionEndpointDetail>(
+                 EventConstants.Categories.Endpoints,
+                 "Introspection endpoint failure",
+                 EventTypes.Failure,
+                 EventConstants.Ids.IntrospectionEndpointFailure,
+                 new IntrospectionEndpointDetail
+                 {
+                     Token = token,
+                     ScopeName = scopeName
+                 },
+                 error);
+
+            await events.RaiseAsync(evt);
+        }
+
         public static async Task RaiseFailedAuthorizationCodeRedeemedEventAsync(this IEventService events, Client client, string handle, string error)
         {
             var evt = new Event<AuthorizationCodeDetails>(

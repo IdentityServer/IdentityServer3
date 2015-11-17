@@ -69,7 +69,7 @@ namespace IdentityServer3.Core.Validation
                 return fail;
             }
 
-            // load client
+            // load scope
             var scope = (await _scopes.FindScopesAsync(new[] { parsedSecret.Id })).FirstOrDefault();
             if (scope == null)
             {

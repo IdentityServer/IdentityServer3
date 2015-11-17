@@ -94,7 +94,10 @@ namespace IdentityServer3.Core.Events
 
             public const int EndpointSuccess = EndpointsEventsStart + 0;
             public const int EndpointFailure = EndpointsEventsStart + 1;
-            
+
+            public const int IntrospectionEndpointSuccess = EndpointsEventsStart + 5;
+            public const int IntrospectionEndpointFailure = EndpointsEventsStart + 6;
+
             ///////////////////////////
             /// Information events
             ///////////////////////////
