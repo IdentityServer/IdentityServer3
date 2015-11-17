@@ -6,6 +6,9 @@
 
     public class JwtTokenResponse
     {
+        [JsonProperty(PropertyName = "id_token")]
+        public string IdToken { get; set; }
+
         [JsonProperty(PropertyName = "access_token")]
         public string AccessToken { get; set; }
 

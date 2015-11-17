@@ -25,6 +25,7 @@
         {
             var responsePayload = new JwtTokenResponse()
                                       {
+                                          IdToken = Model.IdentityToken,
                                           AccessToken = Model.AccessToken,
                                           ExpiresIn = Model.AccessTokenLifetime,
                                           Expires = DateTime.UtcNow.AddSeconds(Model.AccessTokenLifetime),

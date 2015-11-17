@@ -19,6 +19,10 @@ namespace IdentityServer3.Core.Services.Default
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+
+    using IdentityModel;
+
+    using IdentityServer3.Core.Extensions;
     using IdentityServer3.Core.Models;
 
     /// <summary>
@@ -34,6 +38,8 @@ namespace IdentityServer3.Core.Services.Default
                                  new Claim(Constants.ClaimTypes.AuthenticationMethod, Constants.Authentication.AnonymousAuthenticationType),
                                  new Claim(Constants.ClaimTypes.Subject, Guid.NewGuid().ToString()),
                                  new Claim(Constants.ClaimTypes.ClientId, client.ClientId),
+                                 new Claim(Constants.ClaimTypes.IdentityProvider, "anon"),
+                                 new Claim(Constants.ClaimTypes.AuthenticationTime, DateTimeOffsetHelper.UtcNow.ToEpochTime().ToString()), 
                              };
 
             claims.AddRange(scopes.Select(scope => new Claim(Constants.ClaimTypes.Scope, scope.Name)));

@@ -35,7 +35,10 @@ using IdentityModel;
 
 namespace IdentityServer3.Core.Endpoints
 {
-   
+    using System.Linq;
+
+    using IdentityServer3.Core.Services.Default;
+
     /// <summary>
     /// OAuth2/OpenID Connect authorize endpoint
     /// </summary>
@@ -140,7 +143,7 @@ namespace IdentityServer3.Core.Endpoints
             }
             else
             {
-                request.Subject = Principal.Anonymous;
+                request.Subject = Principal.Create("anon", new DefaultAnonymousClaimsProvider().GetAnonymousClaims(request.Client, request.ValidatedScopes.RequestedScopes).ToArray());
             } 
           
             // now that client configuration is loaded, we can do further validation
@@ -152,6 +155,11 @@ namespace IdentityServer3.Core.Endpoints
                     return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
                 }
 
+            }
+
+            if (request.AnonymousTokenRequested)
+            {
+                return await CreateAuthorizeResponseAsync(request);
             }
 
             var consentInteraction = await _interactionGenerator.ProcessConsentAsync(request, consent);

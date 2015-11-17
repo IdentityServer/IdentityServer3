@@ -151,7 +151,7 @@ namespace IdentityServer3.Host.Config
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 3600,
-                    AccessTokenType = AccessTokenType.Reference
+                    AccessTokenType = AccessTokenType.Jwt
                 },
 
                 new Client
