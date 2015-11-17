@@ -30,5 +30,13 @@ namespace IdentityServer3.Core.Events
         /// The type of the token.
         /// </value>
         public AccessTokenType TokenType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the reference token handle.
+        /// </summary>
+        /// <value>
+        /// The type of the token.
+        /// </value>
+        public string ReferenceTokenHandle { get; set; }
     }
 }

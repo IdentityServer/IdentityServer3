@@ -286,11 +286,11 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseTokenIssuedEventAsync(this IEventService events, Token token)
+        public static async Task RaiseTokenIssuedEventAsync(this IEventService events, Token token, string rawToken)
         {
             if (token.Type == Constants.TokenTypes.AccessToken)
             {
-                await events.RaiseAccessTokenIssuedEventAsync(token);
+                await events.RaiseAccessTokenIssuedEventAsync(token, rawToken);
             }
             else if (token.Type == Constants.TokenTypes.IdentityToken)
             {
@@ -298,13 +298,19 @@ namespace IdentityServer3.Core.Extensions
             }
         }
 
-        public static async Task RaiseAccessTokenIssuedEventAsync(this IEventService events, Token token)
+        public static async Task RaiseAccessTokenIssuedEventAsync(this IEventService events, Token token, string rawToken)
         {
             var evt = new Event<AccessTokenIssuedDetails>(
                 EventConstants.Categories.TokenService,
                 "Access token issued",
                 EventTypes.Information,
                 EventConstants.Ids.AccessTokenIssued);
+
+            string referenceTokenHandle = null;
+            if (token.Client.AccessTokenType == AccessTokenType.Reference)
+            {
+                referenceTokenHandle = rawToken;
+            }
 
             evt.DetailsFunc = () => new AccessTokenIssuedDetails
             {
@@ -313,7 +319,8 @@ namespace IdentityServer3.Core.Extensions
                 TokenType = token.Client.AccessTokenType,
                 Lifetime = token.Lifetime,
                 Scopes = token.Scopes,
-                Claims = token.Claims.ToClaimsDictionary()
+                Claims = token.Claims.ToClaimsDictionary(),
+                ReferenceTokenHandle = referenceTokenHandle
             };
 
             await events.RaiseAsync(evt);
