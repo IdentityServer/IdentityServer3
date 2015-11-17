@@ -38,6 +38,7 @@ namespace IdentityServer3.Core.Events
             public const string UserInfo = "userinfo";
             public const string EndSession = "endsession";
             public const string AccessTokenValidation = "accesstokenvalidation";
+            public const string Introspection = "introspection";
             public const string IdentityTokenValidation = "identitytokenvalidaton";
             public const string CspReport = "cspreport";
             public const string ClientPermissions = "clientpermissions";

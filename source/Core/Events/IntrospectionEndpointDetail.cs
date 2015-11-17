@@ -25,7 +25,7 @@ namespace IdentityServer3.Core.Events
 
         public IntrospectionEndpointDetail()
         {
-            EndpointName = "Introspection";
+            EndpointName = EventConstants.EndpointNames.Introspection;
         }
     }
 }
