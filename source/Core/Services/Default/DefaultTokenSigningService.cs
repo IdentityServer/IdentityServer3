@@ -72,14 +72,10 @@ namespace IdentityServer3.Core.Services.Default
                 credentials);
 
             // amr is an array - if there is only a single value turn it into an array
-            if (jwt.Payload.ContainsKey("amr"))
-            {
-                var amrValue = jwt.Payload["amr"] as string;
-                if (amrValue != null)
-                {
-                    jwt.Payload["amr"] = new string[] { amrValue };
-                }
-            }
+            TransformClaimToArray(jwt, "amr");
+
+            // same deal for scope 
+            TransformClaimToArray(jwt, "scope");
 
             var x509credential = credentials as X509SigningCredentials;
             if (x509credential != null)
@@ -89,6 +85,20 @@ namespace IdentityServer3.Core.Services.Default
 
             var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(jwt);
+        }
+
+        private static void TransformClaimToArray(JwtSecurityToken jwt, string key)
+        {
+            if (!jwt.Payload.ContainsKey(key))
+            {
+                return;
+            }
+
+            var amrValue = jwt.Payload[key] as string;
+            if (amrValue != null)
+            {
+                jwt.Payload[key] = new[] { amrValue };
+            }
         }
     }
 }

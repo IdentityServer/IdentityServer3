@@ -221,9 +221,9 @@ namespace IdentityServer3.Core
 
         public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
                             {
-                                { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
-                                { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
-                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
+                                { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost, ResponseModes.Ajax  } },
+                                { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost, ResponseModes.Ajax  }},
+                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost, ResponseModes.Ajax  }}
                             };
 
         public static class ResponseModes
@@ -231,6 +231,7 @@ namespace IdentityServer3.Core
             public const string FormPost = "form_post";
             public const string Query    = "query";
             public const string Fragment = "fragment";
+            public const string Ajax = "ajax";
         }
 
         public static readonly List<string> SupportedResponseModes = new List<string>
@@ -238,6 +239,7 @@ namespace IdentityServer3.Core
                                 ResponseModes.FormPost,
                                 ResponseModes.Query,
                                 ResponseModes.Fragment,
+                                ResponseModes.Ajax
                             };
 
         public static string[] SupportedSubjectTypes =
@@ -385,7 +387,6 @@ namespace IdentityServer3.Core
             public const string Address       = "address";
             public const string Phone         = "phone";
             public const string OfflineAccess = "offline_access";
-            public const string Anonymous     = "allow_anonymous";
 
             // not part of spec
             public const string AllClaims     = "all_claims";

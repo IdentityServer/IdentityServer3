@@ -56,7 +56,6 @@ namespace IdentityServer3.Core.Endpoints
         private readonly ILocalizationService _localizationService;
         private readonly IEventService _events;
         private readonly AntiForgeryToken _antiForgeryToken;
-        private readonly LastAnonymousIdentifierCookie _lastAnonymousIdentifierCookie;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizeEndpointController" /> class.
@@ -151,9 +150,8 @@ namespace IdentityServer3.Core.Endpoints
             else
             {
                 request.Subject = Principal.Anonymous;
-            }
-
-           
+            } 
+          
             // now that client configuration is loaded, we can do further validation
             if (request.Subject.Identity.IsAuthenticated)
             {
@@ -217,6 +215,12 @@ namespace IdentityServer3.Core.Endpoints
             {
                 await RaiseSuccessEventAsync();
                 return new AuthorizeFormPostResult(response, Request);
+            }
+
+            if (request.AnonymousTokenRequested && request.ResponseMode == Constants.ResponseModes.Ajax)
+            {
+                await RaiseSuccessEventAsync();
+                return new AuthorizeAnonymousResult(Request, response);                
             }
 
             Logger.Error("Unsupported response mode. Aborting.");

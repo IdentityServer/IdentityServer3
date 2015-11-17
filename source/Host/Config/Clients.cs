@@ -85,7 +85,6 @@ namespace IdentityServer3.Host.Config
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.Roles,
                         Constants.StandardScopes.OfflineAccess,
-                        Constants.StandardScopes.Anonymous,
                         "read",
                         "write"
                     },

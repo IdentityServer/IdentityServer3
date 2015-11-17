@@ -118,7 +118,7 @@ namespace IdentityServer3.Core.ResponseHandling
             var isAuthenticated = user.Identity.IsAuthenticated;
             if (!isAuthenticated)
             {
-                if (!RequestContainsAnonymousScope(request))
+                if (!request.AnonymousTokenRequested)
                 {
                     Logger.Info("User is not authenticated. Redirecting to login.");
                 }                
@@ -136,7 +136,7 @@ namespace IdentityServer3.Core.ResponseHandling
                 if (!isActive) Logger.Info("User is not active. Redirecting to login.");
             }
 
-            if (!RequestContainsAnonymousScope(request))
+            if (!request.AnonymousTokenRequested)
             {
                 if (!isAuthenticated || !isActive)
                 {
@@ -204,11 +204,6 @@ namespace IdentityServer3.Core.ResponseHandling
             }
 
             return new LoginInteractionResponse();
-        }
-
-        private bool RequestContainsAnonymousScope(ValidatedAuthorizeRequest request)
-        {
-            return (request.ValidatedScopes != null && request.ValidatedScopes.ContainsAnonymousScope);
         }
 
         public Task<LoginInteractionResponse> ProcessClientLoginAsync(ValidatedAuthorizeRequest request)

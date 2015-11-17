@@ -131,7 +131,6 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
-    <Compile Include="Configuration\Hosting\LastAnonymousIdentifierCookie.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Logging\LibLogTraceListener.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\ExternalAuthenticationContext.cs" />
+    <Compile Include="Models\JwtTokenResponse.cs" />
     <Compile Include="Models\ParsedSecret.cs" />
     <Compile Include="Models\PostAuthenticationContext.cs" />
     <Compile Include="Models\ProfileDataRequestContext.cs" />
@@ -213,6 +213,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
+    <Compile Include="Results\AuthorizeAnonymousResult.cs" />
     <Compile Include="Results\CheckSessionResult.cs" />
     <Compile Include="Results\RevocationErrorResult.cs" />
     <Compile Include="Results\WelcomeActionResult.cs" />

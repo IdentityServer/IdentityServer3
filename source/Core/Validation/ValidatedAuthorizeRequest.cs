@@ -193,6 +193,14 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
+        public bool AnonymousTokenRequested
+        {
+            get
+            {
+                return (AuthenticationContextReferenceClasses.Contains("0"));                
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidatedAuthorizeRequest"/> class.
         /// </summary>

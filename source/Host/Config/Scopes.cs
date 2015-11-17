@@ -36,7 +36,6 @@ namespace IdentityServer3.Host.Config
                     StandardScopes.OfflineAccess,
                     StandardScopes.RolesAlwaysInclude,
                     StandardScopes.AllClaims,
-                    StandardScopes.Anonymous,
 
                     ////////////////////////
                     // resource scopes
