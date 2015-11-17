@@ -141,6 +141,7 @@
     <Compile Include="Endpoints\Connect\IntrospectionEndpointController.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
+    <Compile Include="Events\Authentication\ClientAuthenticationDetails.cs" />
     <Compile Include="Events\EndpointDetail.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />

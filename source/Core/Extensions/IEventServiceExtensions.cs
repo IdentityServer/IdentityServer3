@@ -411,6 +411,39 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
+        public static async Task RaiseSuccessfulClientAuthenticationEventAsync(this IEventService events, string clientId, string clientType)
+        {
+            var evt = new Event<ClientAuthenticationDetails>(
+                EventConstants.Categories.ClientAuthentication,
+                "Client authentication success",
+                EventTypes.Success,
+                EventConstants.Ids.ClientAuthenticationSuccess,
+                new ClientAuthenticationDetails
+                {
+                    ClientId = clientId,
+                    ClientType = clientType
+                });
+
+            await events.RaiseAsync(evt);
+        }
+
+        public static async Task RaiseFailureClientAuthenticationEventAsync(this IEventService events, string message, string clientId, string clientType)
+        {
+            var evt = new Event<ClientAuthenticationDetails>(
+                EventConstants.Categories.ClientAuthentication,
+                "Client authentication failure",
+                EventTypes.Failure,
+                EventConstants.Ids.ClientAuthenticationFailure,
+                new ClientAuthenticationDetails
+                {
+                    ClientId = clientId,
+                    ClientType = clientType
+                },
+                message);
+
+            await events.RaiseAsync(evt);
+        }
+
         public static async Task RaiseSuccessfulEndpointEventAsync(this IEventService events, string endpointName)
         {
             var evt = new Event<EndpointDetail>(

@@ -23,6 +23,7 @@ namespace IdentityServer3.Core.Events
         public static class Categories
         {
             public const string Authentication = "Authentication";
+            public const string ClientAuthentication = "ClientAuthentication";
             public const string TokenService = "TokenService";
             public const string Endpoints = "Endpoints";
             public const string Information = "Information";
@@ -42,6 +43,12 @@ namespace IdentityServer3.Core.Events
             public const string IdentityTokenValidation = "identitytokenvalidaton";
             public const string CspReport = "cspreport";
             public const string ClientPermissions = "clientpermissions";
+        }
+
+        public static class ClientTypes
+        {
+            public const string Client = "Client";
+            public const string Scope = "Scope";
         }
         
         public static class Ids
@@ -68,6 +75,9 @@ namespace IdentityServer3.Core.Events
 
             public const int ResourceOwnerFlowLoginSuccess = AuthenticationEventsStart + 50;
             public const int ResourceOwnerFlowLoginFailure = AuthenticationEventsStart + 51;
+
+            public const int ClientAuthenticationSuccess = AuthenticationEventsStart + 60;
+            public const int ClientAuthenticationFailure = AuthenticationEventsStart + 51;
 
             ///////////////////////////
             /// Token service related events
