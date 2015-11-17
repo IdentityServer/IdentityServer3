@@ -61,27 +61,19 @@ namespace IdentityServer3.Core.Extensions
             env[Constants.OwinEnvironment.IdentityServerBasePath] = value;
         }
 
-        public static ILifetimeScope GetLifetimeScope(this IDictionary<string, object> env)
-        {
-            if (env == null) throw new ArgumentNullException("env");
-
-            return new OwinContext(env).GetAutofacLifetimeScope();
-        }
-
-        public static T ResolveDependency<T>(this IDictionary<string, object> env)
-        {
-            if (env == null) throw new ArgumentNullException("env");
-
-            var scope = env.GetLifetimeScope();
-            var instance = (T)scope.ResolveOptional(typeof(T));
-            return instance;
-        }
-
         public static T ResolveDependency<T>(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");
-            
-            return context.Environment.ResolveDependency<T>();
+
+            return (T)context.ResolveDependency(typeof(T));
+        }
+
+        public static object ResolveDependency(this IOwinContext context, Type type)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            var scope = context.GetAutofacLifetimeScope();
+            return scope.ResolveOptional(type);
         }
 
         public static IEnumerable<AuthenticationDescription> GetExternalAuthenticationProviders(this IOwinContext context, IEnumerable<string> filter = null)
@@ -305,6 +297,14 @@ namespace IdentityServer3.Core.Extensions
             if (context == null) throw new ArgumentNullException("context");
 
             return context.Environment.CreateSignInRequest(message);
+        }
+
+        public static bool IsFormData(this IOwinRequest request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+
+            return request.Method == "POST" && 
+                String.Equals(request.ContentType, "application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase);
         }
 
         public async static Task<IFormCollection> ReadRequestFormAsync(this IOwinContext context)

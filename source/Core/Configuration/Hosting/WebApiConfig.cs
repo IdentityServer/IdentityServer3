@@ -66,7 +66,116 @@ namespace IdentityServer3.Core.Configuration.Hosting
         {
             if (options.EnableWelcomePage)
             {
-                config.Routes.MapHttpRoute(Constants.RouteNames.Welcome, Constants.RoutePaths.Welcome, new { controller = "Welcome", action = "Get" });
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Welcome, 
+                    Constants.RoutePaths.Welcome, 
+                    new { controller = "Welcome", action = "Get" });
+            }
+
+            if (options.Endpoints.EnableAccessTokenValidationEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.AccessTokenValidation,
+                    Constants.RoutePaths.Oidc.AccessTokenValidation,
+                    new { controller = "AccessTokenValidation" });
+            }
+
+            if (options.Endpoints.EnableAuthorizeEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Authorize,
+                    Constants.RoutePaths.Oidc.Authorize,
+                    new { controller = "AuthorizeEndpoint", action = "Get" });
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Consent,
+                    Constants.RoutePaths.Oidc.Consent,
+                    new { controller = "AuthorizeEndpoint", action = "PostConsent" });
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.SwitchUser,
+                    Constants.RoutePaths.Oidc.SwitchUser,
+                    new { controller = "AuthorizeEndpoint", action = "LoginAsDifferentUser" });
+            }
+
+            if (options.Endpoints.EnableCheckSessionEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.CheckSession,
+                    Constants.RoutePaths.Oidc.CheckSession,
+                    new { controller = "CheckSessionEndpoint" });
+            }
+
+            if (options.Endpoints.EnableClientPermissionsEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.ClientPermissions,
+                    Constants.RoutePaths.ClientPermissions,
+                    new { controller = "ClientPermissions" });
+            }
+
+            if (options.Endpoints.EnableCspReportEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.CspReport,
+                    Constants.RoutePaths.CspReport,
+                    new { controller = "CspReport" });
+            }
+
+            if (options.Endpoints.EnableDiscoveryEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.DiscoveryConfiguration,
+                    Constants.RoutePaths.Oidc.DiscoveryConfiguration,
+                    new { controller = "DiscoveryEndpoint", action = "GetConfiguration" });
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.DiscoveryWebKeys,
+                    Constants.RoutePaths.Oidc.DiscoveryWebKeys,
+                    new { controller = "DiscoveryEndpoint", action= "GetKeyData" });
+            }
+
+            if (options.Endpoints.EnableEndSessionEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.EndSession,
+                    Constants.RoutePaths.Oidc.EndSession,
+                    new { controller = "EndSession", action = "Logout" });
+            }
+            
+            // this one is always enabled/allowed (for use by our logout page)
+            config.Routes.MapHttpRoute(
+                Constants.RouteNames.Oidc.EndSessionCallback,
+                Constants.RoutePaths.Oidc.EndSessionCallback,
+                new { controller = "EndSession", action = "LogoutCallback" });
+
+            if (options.Endpoints.EnableIdentityTokenValidationEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.IdentityTokenValidation,
+                    Constants.RoutePaths.Oidc.IdentityTokenValidation,
+                    new { controller = "IdentityTokenValidation" });
+            }
+
+            if (options.Endpoints.EnableTokenEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Token,
+                    Constants.RoutePaths.Oidc.Token,
+                    new { controller = "TokenEndpoint", action= "Post" });
+            }
+
+            if (options.Endpoints.EnableTokenRevocationEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Revocation,
+                    Constants.RoutePaths.Oidc.Revocation,
+                    new { controller = "RevocationEndpoint", action = "Post" });
+            }
+
+            if (options.Endpoints.EnableUserInfoEndpoint)
+            {
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.UserInfo,
+                    Constants.RoutePaths.Oidc.UserInfo,
+                    new { controller = "UserInfoEndpoint" });
             }
         }
 

@@ -38,16 +38,10 @@ namespace IdentityServer3.Core.Endpoints
         /// GET
         /// </summary>
         /// <returns>Check session iframe page</returns>
-        [Route(Constants.RoutePaths.Oidc.CheckSession, Name=Constants.RouteNames.Oidc.CheckSession)]
+        [HttpGet]
         public IHttpActionResult Get()
         {
             Logger.Info("Check session iframe request");
-
-            if (!_options.Endpoints.EnableCheckSessionEndpoint)
-            {
-                Logger.Warn("Endpoint is disabled. Aborting");
-                return NotFound();
-            }
 
             return new CheckSessionResult(this._options, Request);
         }

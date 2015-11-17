@@ -82,5 +82,18 @@ namespace IdentityServer3.Tests.Validation.Tokens
             result.IsError.Should().BeTrue();
             result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
         }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task IdentityToken_Too_Long()
+        {
+            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var jwt = await signer.SignTokenAsync(TokenFactory.CreateIdentityTokenLong("roclient", "valid", 1000));
+            var validator = Factory.CreateTokenValidator();
+
+            var result = await validator.ValidateIdentityTokenAsync(jwt, "roclient");
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.ProtectedResourceErrors.InvalidToken);
+        }
     }
 }

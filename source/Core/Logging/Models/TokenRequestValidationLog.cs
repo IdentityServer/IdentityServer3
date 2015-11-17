@@ -39,7 +39,13 @@ namespace IdentityServer3.Core.Logging
 
         public TokenRequestValidationLog(ValidatedTokenRequest request)
         {
+            const string scrubValue = "******";
             Raw = request.Raw.ToDictionary();
+
+            if (Raw.ContainsKey(Constants.TokenRequest.Password))
+            {
+                Raw[Constants.TokenRequest.Password] = scrubValue;
+            }
 
             if (request.Client != null)
             {

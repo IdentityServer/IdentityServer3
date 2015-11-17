@@ -16,6 +16,7 @@
 
 using IdentityModel;
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;
@@ -29,6 +30,8 @@ namespace IdentityServer3.Core.Validation
     /// </summary>
     public class PlainTextSharedSecretValidator : ISecretValidator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         /// <summary>
         /// Validates a secret
         /// </summary>
@@ -43,36 +46,47 @@ namespace IdentityServer3.Core.Validation
             var fail = Task.FromResult(new SecretValidationResult { Success = false });
             var success = Task.FromResult(new SecretValidationResult { Success = true });
 
-            if (parsedSecret.Type == Constants.ParsedSecretTypes.SharedSecret)
+            if (parsedSecret.Type != Constants.ParsedSecretTypes.SharedSecret)
             {
-                var sharedSecret = parsedSecret.Credential as string;
+                Logger.Debug(string.Format("Parsed secret should not be of type: {0}", parsedSecret.Type ?? "null"));
+                return fail;
+            }
 
-                if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
+            var sharedSecret = parsedSecret.Credential as string;
+
+            if (parsedSecret.Id.IsMissing() || sharedSecret.IsMissing())
+            {
+                throw new ArgumentException("Id or Credential is missing.");
+            }
+
+            foreach (var secret in secrets)
+            {
+                var secretDescription = string.IsNullOrEmpty(secret.Description) ? "no description" : secret.Description;
+
+                // this validator is only applicable to shared secrets
+                if (secret.Type != Constants.SecretTypes.SharedSecret)
                 {
-                    throw new ArgumentException("id or credential is missing.");
+                    Logger.Debug(string.Format("Skipping secret: {0}, secret is not of type {1}.", secretDescription, Constants.SecretTypes.SharedSecret));
+                    continue;
                 }
 
-                foreach (var secret in secrets)
+                // check if client secret is still valid
+                if (secret.Expiration.HasExpired())
                 {
-                    // this validator is only applicable to shared secrets
-                    if (secret.Type != Constants.SecretTypes.SharedSecret)
-                    {
-                        continue;
-                    }
+                    Logger.Debug(string.Format("Skipping secret: {0}, secret is expired.", secretDescription));
+                    continue;
+                }
 
-                    // check if client secret is still valid
-                    if (secret.Expiration.HasExpired()) continue;
+                // use time constant string comparison
+                var isValid = TimeConstantComparer.IsEqual(sharedSecret, secret.Value);
 
-                    // use time constant string comparison
-                    var isValid = TimeConstantComparer.IsEqual(sharedSecret, secret.Value);
-
-                    if (isValid)
-                    {
-                        return success;
-                    }
+                if (isValid)
+                {
+                    return success;
                 }
             }
 
+            Logger.Debug("No matching plain text secret found.");
             return fail;
         }
     }

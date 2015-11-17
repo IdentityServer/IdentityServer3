@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Extensions;
+using Microsoft.Owin;
 
 namespace IdentityServer3.Core.Validation
 {
     internal class BearerTokenUsageValidator
     {
-        public async Task<BearerTokenUsageValidationResult> ValidateAsync(HttpRequestMessage request)
+        public async Task<BearerTokenUsageValidationResult> ValidateAsync(IOwinContext context)
         {
-            var result = ValidateAuthorizationHeader(request);
+            var result = ValidateAuthorizationHeader(context);
             if (result.TokenFound)
             {
                 return result;
             }
 
-            if (request.Method == HttpMethod.Post && request.Content.IsFormData())
+            if (context.Request.IsFormData())
             {
-                result = await ValidatePostBodyAsync(request);
+                result = await ValidatePostBodyAsync(context);
                 if (result.TokenFound)
                 {
                     return result;
@@ -42,28 +44,33 @@ namespace IdentityServer3.Core.Validation
             return new BearerTokenUsageValidationResult();
         }
 
-        public BearerTokenUsageValidationResult ValidateAuthorizationHeader(HttpRequestMessage request)
+        public BearerTokenUsageValidationResult ValidateAuthorizationHeader(IOwinContext context)
         {
-            var authorizationHeader = request.Headers.Authorization;
-
-            if (authorizationHeader != null &&
-                authorizationHeader.Scheme.Equals(Constants.TokenTypes.Bearer) &&
-                authorizationHeader.Parameter.IsPresent())
+            var authorizationHeaders = context.Request.Headers.GetValues("Authorization");
+            if (authorizationHeaders != null)
             {
-                return new BearerTokenUsageValidationResult
+                var header = authorizationHeaders.First().Trim();
+                if (header.StartsWith(Constants.TokenTypes.Bearer))
                 {
-                    TokenFound = true,
-                    Token = authorizationHeader.Parameter,
-                    UsageType = BearerTokenUsageType.AuthorizationHeader
-                };
+                    var value = header.Substring(Constants.TokenTypes.Bearer.Length).Trim();
+                    if (value != null && value.Length > 0)
+                    {
+                        return new BearerTokenUsageValidationResult
+                        {
+                            TokenFound = true,
+                            Token = value,
+                            UsageType = BearerTokenUsageType.AuthorizationHeader
+                        };
+                    }
+                }
             }
 
             return new BearerTokenUsageValidationResult();
         }
 
-        public async Task<BearerTokenUsageValidationResult> ValidatePostBodyAsync(HttpRequestMessage request)
+        public async Task<BearerTokenUsageValidationResult> ValidatePostBodyAsync(IOwinContext context)
         {
-            var form = await request.Content.ReadAsFormDataAsync();
+            var form = await context.ReadRequestFormAsNameValueCollectionAsync();
 
             var token = form.Get("access_token");
             if (token.IsPresent())

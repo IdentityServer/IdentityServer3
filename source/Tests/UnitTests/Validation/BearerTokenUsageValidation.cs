@@ -16,8 +16,11 @@
 
 using FluentAssertions;
 using IdentityServer3.Core.Validation;
+using Microsoft.Owin;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -31,11 +34,11 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task No_Header_no_Body_Get()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Get;
+            var ctx = new OwinContext();
+            ctx.Request.Method = "GET";
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -44,12 +47,11 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task No_Header_no_Body_Post()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Post;
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>());
+            var ctx = new OwinContext();
+            ctx.Request.Method = "POST";
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -58,12 +60,12 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Non_Bearer_Scheme_Header()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Authorization", "Foo Bar");
+            var ctx = new OwinContext();
+            ctx.Request.Method = "GET";
+            ctx.Request.Headers.Add("Authorization", new string[] { "Foo Bar" });
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -72,12 +74,12 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Empty_Bearer_Scheme_Header()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Authorization", "Bearer");
+            var ctx = new OwinContext();
+            ctx.Request.Method = "GET";
+            ctx.Request.Headers.Add("Authorization", new string[] { "Bearer" });
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -86,12 +88,12 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Whitespaces_Bearer_Scheme_Header()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Authorization", "Bearer           ");
+            var ctx = new OwinContext();
+            ctx.Request.Method = "GET";
+            ctx.Request.Headers.Add("Authorization", new string[] { "Bearer           " });
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -100,12 +102,12 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Valid_Bearer_Scheme_Header()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Get;
-            request.Headers.Add("Authorization", "Bearer token");
+            var ctx = new OwinContext();
+            ctx.Request.Method = "GET";
+            ctx.Request.Headers.Add("Authorization", new string[] { "Bearer token" });
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeTrue();
             result.Token.Should().Be("token");
@@ -116,15 +118,14 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Valid_Body_Post()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Post;
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "access_token", "token" }
-                });
+            var ctx = new OwinContext();
+            ctx.Request.Method = "POST";
+            ctx.Request.ContentType = "application/x-www-form-urlencoded";
+            var body = "access_token=token";
+            ctx.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeTrue();
             result.Token.Should().Be("token");
@@ -135,15 +136,14 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Body_Post_empty_Token()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Post;
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "access_token", "" }
-                });
+            var ctx = new OwinContext();
+            ctx.Request.Method = "POST";
+            ctx.Request.ContentType = "application/x-www-form-urlencoded";
+            var body = "access_token=";
+            ctx.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -152,15 +152,14 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Body_Post_Whitespace_Token()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Post;
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "access_token", "    " }
-                });
+            var ctx = new OwinContext();
+            ctx.Request.Method = "POST";
+            ctx.Request.ContentType = "application/x-www-form-urlencoded";
+            var body = "access_token=                ";
+            ctx.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }
@@ -169,15 +168,14 @@ namespace IdentityServer3.Tests.Validation
         [Trait("Category", Category)]
         public async Task Body_Post_no_Token()
         {
-            var request = new HttpRequestMessage();
-            request.Method = HttpMethod.Post;
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-                {
-                    { "foo", "bar" }
-                });
+            var ctx = new OwinContext();
+            ctx.Request.Method = "POST";
+            ctx.Request.ContentType = "application/x-www-form-urlencoded";
+            var body = "foo=bar";
+            ctx.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
             var validator = new BearerTokenUsageValidator();
-            var result = await validator.ValidateAsync(request);
+            var result = await validator.ValidateAsync(ctx);
 
             result.TokenFound.Should().BeFalse();
         }

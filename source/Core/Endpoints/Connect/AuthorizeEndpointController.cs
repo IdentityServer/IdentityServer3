@@ -94,19 +94,10 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        [Route(Constants.RoutePaths.Oidc.Authorize, Name = Constants.RouteNames.Oidc.Authorize)]
+        [HttpGet]
         public async Task<IHttpActionResult> Get(HttpRequestMessage request)
         {
             Logger.Info("Start authorize request");
-
-            if (!_options.Endpoints.EnableAuthorizeEndpoint)
-            {
-                var error = "Endpoint is disabled. Aborting";
-                Logger.Warn(error);
-                await RaiseFailureEventAsync(error);
-
-                return NotFound();
-            }
 
             var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
 
@@ -182,7 +173,6 @@ namespace IdentityServer3.Core.Endpoints
             return await CreateAuthorizeResponseAsync(request);
         }
 
-        [Route(Constants.RoutePaths.Oidc.Consent, Name = Constants.RouteNames.Oidc.Consent)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public Task<IHttpActionResult> PostConsent(UserConsent model)
@@ -191,7 +181,6 @@ namespace IdentityServer3.Core.Endpoints
             return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());
         }
 
-        [Route(Constants.RoutePaths.Oidc.SwitchUser, Name = Constants.RouteNames.Oidc.SwitchUser)]
         [HttpGet]
         public async Task<IHttpActionResult> LoginAsDifferentUser()
         {

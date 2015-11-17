@@ -25,10 +25,7 @@ namespace IdentityServer3.Core.Endpoints
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        public WelcomeController()
-        {
-        }
-
+        [HttpGet]
         public IHttpActionResult Get()
         {
             Logger.Info("Welcome page requested - rendering");
