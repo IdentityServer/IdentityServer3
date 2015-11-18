@@ -20,6 +20,8 @@ using IdentityServer3.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
 
 namespace IdentityServer3.Core.Validation
 {
@@ -31,13 +33,15 @@ namespace IdentityServer3.Core.Validation
         private readonly OwinEnvironmentService _environment;
         private readonly IEnumerable<ISecretParser> _parsers;
         private readonly IEnumerable<ISecretValidator> _validators;
+        private readonly IEventService _events;
 
-        public ScopeSecretValidator(IScopeStore scopes, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment)
+        public ScopeSecretValidator(IScopeStore scopes, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment, IEventService events)
         {
             _scopes = scopes;
             _parsers = parsers;
             _validators = validators;
             _environment = environment;
+            _events = events;
         }
 
         public async Task<ScopeSecretValidationResult> ValidateAsync()
@@ -65,14 +69,18 @@ namespace IdentityServer3.Core.Validation
 
             if (parsedSecret == null)
             {
+                await RaiseFailureEvent("unknown", "No client id or secret found");
+
                 Logger.Info("No scope secret found");
                 return fail;
             }
 
-            // load client
+            // load scope
             var scope = (await _scopes.FindScopesAsync(new[] { parsedSecret.Id })).FirstOrDefault();
             if (scope == null)
             {
+                await RaiseFailureEvent(parsedSecret.Id, "Unknown client");
+
                 Logger.Info("No scope with that name found. aborting");
                 return fail;
             }
@@ -93,12 +101,25 @@ namespace IdentityServer3.Core.Validation
                         Scope = scope
                     };
 
+                    await RaiseSuccessEvent(scope.Name);
                     return success;
                 }
             }
 
+            await RaiseFailureEvent(scope.Name, "Invalid client secret");
             Logger.Info("Scope validation failed.");
+
             return fail;
+        }
+
+        private async Task RaiseSuccessEvent(string clientId)
+        {
+            await _events.RaiseSuccessfulClientAuthenticationEventAsync(clientId, EventConstants.ClientTypes.Scope);
+        }
+
+        private async Task RaiseFailureEvent(string clientId, string message)
+        {
+            await _events.RaiseFailureClientAuthenticationEventAsync(message, clientId, EventConstants.ClientTypes.Scope);
         }
     }
 }

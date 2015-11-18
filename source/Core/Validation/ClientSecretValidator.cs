@@ -19,6 +19,8 @@ using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Events;
 
 namespace IdentityServer3.Core.Validation
 {
@@ -28,15 +30,17 @@ namespace IdentityServer3.Core.Validation
 
         private readonly IClientStore _clients;
         private readonly OwinEnvironmentService _environment;
+        private readonly IEventService _events;
         private readonly IEnumerable<ISecretParser> _parsers;
         private readonly IEnumerable<ISecretValidator> _validators;
 
-        public ClientSecretValidator(IClientStore clients, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment)
+        public ClientSecretValidator(IClientStore clients, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment, IEventService events)
         {
             _clients = clients;
             _parsers = parsers;
             _validators = validators;
             _environment = environment;
+            _events = events;
         }
 
         public async Task<ClientSecretValidationResult> ValidateAsync()
@@ -64,6 +68,8 @@ namespace IdentityServer3.Core.Validation
 
             if (parsedSecret == null)
             {
+                await RaiseFailureEvent("unknown", "No client id or secret found");
+
                 Logger.Info("No client secret found");
                 return fail;
             }
@@ -72,6 +78,8 @@ namespace IdentityServer3.Core.Validation
             var client = await _clients.FindClientByIdAsync(parsedSecret.Id);
             if (client == null)
             {
+                await RaiseFailureEvent(parsedSecret.Id, "Unknown client");
+
                 Logger.Info("No client with that id found. aborting");
                 return fail;
             }
@@ -92,12 +100,25 @@ namespace IdentityServer3.Core.Validation
                         Client = client
                     };
 
+                    await RaiseSuccessEvent(client.ClientId);
                     return success;
                 }
             }
 
+            await RaiseFailureEvent(client.ClientId, "Invalid client secret");
             Logger.Info("Client validation failed.");
+            
             return fail;
+        }
+
+        private async Task RaiseSuccessEvent(string clientId)
+        {
+            await _events.RaiseSuccessfulClientAuthenticationEventAsync(clientId, EventConstants.ClientTypes.Client);
+        }
+
+        private async Task RaiseFailureEvent(string clientId, string message)
+        {
+            await _events.RaiseFailureClientAuthenticationEventAsync(message, clientId, EventConstants.ClientTypes.Client);
         }
     }
 }

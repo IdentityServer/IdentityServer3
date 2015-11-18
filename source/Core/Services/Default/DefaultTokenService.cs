@@ -259,7 +259,7 @@ namespace IdentityServer3.Core.Services.Default
                 throw new InvalidOperationException("Invalid token type.");
             }
 
-            await _events.RaiseTokenIssuedEventAsync(token);
+            await _events.RaiseTokenIssuedEventAsync(token, tokenResult);
             return tokenResult;
         }
 

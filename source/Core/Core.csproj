@@ -141,6 +141,8 @@
     <Compile Include="Endpoints\Connect\IntrospectionEndpointController.cs" />
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
+    <Compile Include="Events\Authentication\ClientAuthenticationDetails.cs" />
+    <Compile Include="Events\EndpointDetail.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />
     <Compile Include="Configuration\Hosting\LastUserNameCookie.cs" />
@@ -155,7 +157,7 @@
     <Compile Include="Events\TokenService\AccessTokenIssuedDetails.cs" />
     <Compile Include="Events\Authentication\LogoutDetails.cs" />
     <Compile Include="Events\Base\Event.cs" />
-    <Compile Include="Events\EndpointDetail.cs" />
+    <Compile Include="Events\IntrospectionEndpointDetail.cs" />
     <Compile Include="Events\TokenService\AuthorizationCodeIssuedDetails.cs" />
     <Compile Include="Events\TokenService\RefreshTokenDetails.cs" />
     <Compile Include="Events\TokenService\RefreshTokenRefreshDetails.cs" />
