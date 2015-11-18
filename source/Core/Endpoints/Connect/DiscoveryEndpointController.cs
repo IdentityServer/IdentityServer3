@@ -20,6 +20,7 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
+using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -38,16 +39,18 @@ namespace IdentityServer3.Core.Endpoints
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly IdentityServerOptions _options;
         private readonly IScopeStore _scopes;
+        private readonly IOwinContext _context;
 
         static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes)
+        public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes, IOwinContext context)
         {
             _options = options;
             _scopes = scopes;
+            _context = context;
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace IdentityServer3.Core.Endpoints
 
             var dto = new DiscoveryDto
             {
-                issuer = _options.IssuerUri,
+                issuer = _context.GetIdentityServerIssuerUri(),
                 scopes_supported = scopes.Where(s => s.ShowInDiscoveryDocument).Select(s => s.Name).ToArray(),
                 claims_supported = claims.Distinct().ToArray(),
                 response_types_supported = Constants.SupportedResponseTypes.ToArray(),
