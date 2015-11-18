@@ -94,7 +94,7 @@ namespace IdentityServer3.Core.Models
         public string LogoutUri { get; set; }
 
         /// <summary>
-        /// Specifies is the user's session id should be sent to the LogoutUri.
+        /// Specifies is the user's session id should be sent to the LogoutUri. Defaults to true.
         /// </summary>
         public bool LogoutSessionRequired { get; set; }
 
@@ -246,6 +246,8 @@ namespace IdentityServer3.Core.Models
             IdentityProviderRestrictions = new List<string>();
             AllowedCustomGrantTypes = new List<string>();
             AllowedCorsOrigins = new List<string>();
+
+            LogoutSessionRequired = true;
 
             Enabled = true;
             EnableLocalLogin = true;
