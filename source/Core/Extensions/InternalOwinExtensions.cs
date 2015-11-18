@@ -423,5 +423,32 @@ namespace IdentityServer3.Core.Extensions
 
             return nv;
         }
+
+        public static void ClearAuthenticationCookies(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            context.Authentication.SignOut(
+                Constants.PrimaryAuthenticationType,
+                Constants.ExternalAuthenticationType,
+                Constants.PartialSignInAuthenticationType);
+        }
+
+        public static void SignOutOfExternalIdP(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            // look for idp claim other than IdSvr
+            // if present, then signout of it
+            var user = context.Authentication.User;
+            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            {
+                var idp = user.GetIdentityProvider();
+                if (idp != Constants.BuiltInIdentityProvider)
+                {
+                    context.Authentication.SignOut(idp);
+                }
+            }
+        }
     }
 }

@@ -15,9 +15,10 @@
  */
 
 using Autofac;
- using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services.Default;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
@@ -559,6 +560,32 @@ namespace IdentityServer3.Core.Extensions
 
             var context = new OwinContext(env);
             return context.ResolveDependency(type);
+        }
+
+        /// <summary>
+        /// Revokes authentication cookies and renders HTML to trigger single signout of all clients. This is intended to be used within an iframe when an external, upstream IdP is providing a signout callback to IdentityServer for single signout.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static async Task ProcessFederatedSignoutAsync(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            context.ClearAuthenticationCookies();
+
+            var sessionCookie = context.ResolveDependency<SessionCookie>();
+            var sid = sessionCookie.GetSessionId();
+            if (sid != null)
+            {
+                var options = context.ResolveDependency<IdentityServerOptions>();
+                var baseUrl = context.GetIdentityServerBaseUrl();
+                var iframeUrls = options.RenderProtocolUrls(baseUrl, sid);
+
+                context.Response.ContentType = "text/html";
+                var html = AssetManager.LoadSignoutFrame(iframeUrls);
+                await context.Response.WriteAsync(html);
+            }
         }
     }
 }
