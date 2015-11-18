@@ -132,6 +132,7 @@ namespace IdentityServer3.Host.Config
 
                         // OWIN middleware client
                         "http://localhost:2671/",
+                        "https://localhost:44301/"
                     },
 
                     PostLogoutRedirectUris = new List<string>
@@ -150,6 +151,9 @@ namespace IdentityServer3.Host.Config
                         "http://localhost:37047",
                         "http://localhost:23453"
                     },
+
+                    LogoutUri = "https://localhost:44301/Home/SignoutCleanup",
+                    LogoutSessionRequired = true,
                     
                     IdentityTokenLifetime = 360,
                     AccessTokenLifetime = 3600,
