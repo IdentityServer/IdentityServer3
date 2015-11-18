@@ -601,7 +601,7 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             Logger.Info("Clearing cookies");
-            signOutMessageCookie.Clear(id);
+            context.QueueRemovalOfSignOutMessageCookie(id);
             context.ClearAuthenticationCookies();
             context.SignOutOfExternalIdP();
             

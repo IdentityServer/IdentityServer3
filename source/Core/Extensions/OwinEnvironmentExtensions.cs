@@ -443,6 +443,62 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
+        /// Gets the sign out message id.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// id
+        /// </exception>
+        public static string GetSignOutMessageId(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var ctx = new OwinContext(env);
+            return ctx.Request.Query.Get(Constants.Authentication.SignoutId);
+        }
+
+        /// <summary>
+        /// Gets the sign out message.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="id">The sign out message id.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// id
+        /// </exception>
+        public static SignOutMessage GetSignOutMessage(this IDictionary<string, object> env, string id)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            if (string.IsNullOrEmpty(id)) throw new ArgumentNullException("id");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+            var cookie = new MessageCookie<SignOutMessage>(env, options);
+
+            return cookie.Read(id);
+        }
+
+        /// <summary>
+        /// Gets the sign out message.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// env
+        /// or
+        /// id
+        /// </exception>
+        public static SignOutMessage GetSignOutMessage(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+            return env.GetSignOutMessage(env.GetSignOutMessageId());
+        }
+
+        /// <summary>
         /// Gets the current fully logged in IdentityServer user. Returns null if the user is not logged in.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
@@ -560,6 +616,21 @@ namespace IdentityServer3.Core.Extensions
 
             var context = new OwinContext(env);
             return context.ResolveDependency(type);
+        }
+
+        /// <summary>
+        /// Requests that the logged out view be rendered and the signout message cookie be removed.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="signOutMessageId">The sign out message id.</param>
+        /// <returns></returns>
+        public static Task RenderLoggedOutViewAsync(this IDictionary<string, object> env, string signOutMessageId)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var context = new OwinContext(env);
+            context.QueueRenderLoggedOutPage(signOutMessageId);
+            return Task.FromResult(0);
         }
 
         /// <summary>

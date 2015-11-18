@@ -817,8 +817,8 @@ namespace IdentityServer3.Tests.Endpoints
 
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
             var cookies = resp.Headers.GetValues("Set-Cookie");
-            // cookies: primary, partial, external, signout
-            cookies.Count().Should().Be(4);
+            // cookies: primary, partial, external
+            cookies.Count().Should().Be(3);
             // GetCookies will not return values for cookies that are expired/revoked
             resp.GetCookies().Count().Should().Be(0);
         }

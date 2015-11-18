@@ -17,6 +17,7 @@
 using Autofac;
 using Autofac.Integration.Owin;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -422,6 +423,60 @@ namespace IdentityServer3.Core.Extensions
             }
 
             return nv;
+        }
+
+        const string SignOutMessageCookieIdtoRemove = "ids:SignOutMessageCookieIdtoRemove";
+        public static void QueueRemovalOfSignOutMessageCookie(this IOwinContext context, string id)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            if (id != null)
+            {
+                context.Environment[SignOutMessageCookieIdtoRemove] = id;
+            }
+        }
+        public static void ProcessRemovalOfSignOutMessageCookie(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            if (context.Response.StatusCode == 200 && context.Environment.ContainsKey(SignOutMessageCookieIdtoRemove))
+            {
+                var signOutMessageCookie = context.ResolveDependency<MessageCookie<SignOutMessage>>();
+                signOutMessageCookie.Clear((string)context.Environment[SignOutMessageCookieIdtoRemove]);
+            }
+        }
+
+        const string QueueRenderLoggedOutPageFlag = "ids:QueueRenderLoggedOutPage";
+        public static void QueueRenderLoggedOutPage(this IOwinContext context, string signOutMessageId)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            context.Environment[QueueRenderLoggedOutPageFlag] = signOutMessageId;
+        }
+        public static bool ShouldRenderLoggedOutPage(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.ContainsKey(QueueRenderLoggedOutPageFlag);
+        }
+        public static void PrepareContextForLoggedOutPage(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            context.Request.Method = "POST";
+            context.Request.ContentType = "application/x-www-form-urlencoded";
+            context.Request.Path = new PathString("/" + Constants.RoutePaths.Logout);
+            context.Request.QueryString = new QueryString("id", (string)context.Environment[QueueRenderLoggedOutPageFlag]);
+
+            context.SetSuppressAntiForgeryCheck();
+        }
+
+        const string SuppressAntiForgeryCheck = "ids:SuppressAntiForgeryCheck";
+        public static void SetSuppressAntiForgeryCheck(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            context.Environment[SuppressAntiForgeryCheck] = true;
+        }
+        public static bool GetSuppressAntiForgeryCheck(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+            return context.Environment.ContainsKey(SuppressAntiForgeryCheck) && true.Equals(context.Environment[SuppressAntiForgeryCheck]);
         }
 
         public static void ClearAuthenticationCookies(this IOwinContext context)

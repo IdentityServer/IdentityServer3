@@ -61,6 +61,11 @@ namespace IdentityServer3.Core.Configuration.Hosting
         
         internal async Task<bool> IsTokenValid()
         {
+            if (context.GetSuppressAntiForgeryCheck())
+            {
+                return true;
+            }
+
             try
             {
                 var cookieToken = GetCookieToken();

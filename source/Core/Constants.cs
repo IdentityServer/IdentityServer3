@@ -680,6 +680,7 @@ namespace IdentityServer3.Core
         public static class Authentication
         {
             public const string SigninId                 = "signinid";
+            public const string SignoutId                = "id";
             public const string KatanaAuthenticationType = "katanaAuthenticationType";
             public const string PartialLoginRememberMe = "idsvr:rememberme";
         }
