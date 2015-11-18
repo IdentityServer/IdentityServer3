@@ -434,12 +434,13 @@ namespace IdentityServer3.Core.Extensions
                 context.Environment[SignOutMessageCookieIdtoRemove] = id;
             }
         }
-        public static void ProcessRemovalOfSignOutMessageCookie(this IOwinContext context)
+        public static void ProcessRemovalOfSignOutMessageCookie(this IOwinContext context, MessageCookie<SignOutMessage> signOutMessageCookie)
         {
             if (context == null) throw new ArgumentNullException("context");
+            if (signOutMessageCookie == null) throw new ArgumentNullException("signOutMessageCookie");
+
             if (context.Response.StatusCode == 200 && context.Environment.ContainsKey(SignOutMessageCookieIdtoRemove))
             {
-                var signOutMessageCookie = context.ResolveDependency<MessageCookie<SignOutMessage>>();
                 signOutMessageCookie.Clear((string)context.Environment[SignOutMessageCookieIdtoRemove]);
             }
         }
