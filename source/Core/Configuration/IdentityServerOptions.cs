@@ -79,6 +79,12 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public string IssuerUri { get; set; }
 
+        // todo: remove in 3.0.0
+        // added as a temporary measure since we need someplace to hold the calculated 
+        // IssuerUri from the first request for the scenarios where the newer GetIdentityServerIssuerUri
+        // extension method is not being used
+        internal string DynamicallyCalculatedIssuerUri { get; set; }
+
         /// <summary>
         /// Gets or sets the X.509 certificate (and corresponding private key) for signing security tokens.
         /// </summary>

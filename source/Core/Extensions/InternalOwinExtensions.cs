@@ -281,8 +281,10 @@ namespace IdentityServer3.Core.Extensions
 
             var options = context.ResolveDependency<IdentityServerOptions>();
 
+            // if they've explicitly configured a URI then use it,
+            // otherwise dynamically calculate it
             var uri = options.IssuerUri;
-            if (String.IsNullOrWhiteSpace(uri))
+            if (uri.IsMissing())
             {
                 uri = context.GetIdentityServerBaseUrl();
                 if (uri.EndsWith("/")) uri = uri.Substring(0, uri.Length - 1);
@@ -475,6 +477,33 @@ namespace IdentityServer3.Core.Extensions
         {
             if (context == null) throw new ArgumentNullException("context");
             return context.Environment.ContainsKey(SuppressAntiForgeryCheck) && true.Equals(context.Environment[SuppressAntiForgeryCheck]);
+        }
+
+        public static void ClearAuthenticationCookies(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            context.Authentication.SignOut(
+                Constants.PrimaryAuthenticationType,
+                Constants.ExternalAuthenticationType,
+                Constants.PartialSignInAuthenticationType);
+        }
+
+        public static void SignOutOfExternalIdP(this IOwinContext context)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            // look for idp claim other than IdSvr
+            // if present, then signout of it
+            var user = context.Authentication.User;
+            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            {
+                var idp = user.GetIdentityProvider();
+                if (idp != Constants.BuiltInIdentityProvider)
+                {
+                    context.Authentication.SignOut(idp);
+                }
+            }
         }
     }
 }
