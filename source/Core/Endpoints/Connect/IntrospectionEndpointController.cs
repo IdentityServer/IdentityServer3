@@ -22,6 +22,7 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using System;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -83,29 +84,49 @@ namespace IdentityServer3.Core.Endpoints
                 response.Add("active", true);
                 response.Add("scope", scope.Name);
 
+                await RaiseSuccessEventAsync(validationResult.Token, "active", scope.Name);
+
                 return Json(response);
             }
-            else if(validationResult.IsError == true)
-            {
-                Logger.Error(validationResult.ErrorDescription);
 
-                await RaiseFailureEventAsync(validationResult.ErrorDescription);
-                return BadRequest(validationResult.ErrorDescription);
-            }
-            else
+            if (validationResult.IsError)
             {
-                return Json(new { active = false });
+                if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.MissingToken)
+                {
+                    Logger.Error("Missing token");
+
+                    await RaiseFailureEventAsync(validationResult.ErrorDescription, validationResult.Token, scope.Name);
+                    return BadRequest("missing_token");
+                }
+
+                if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidToken)
+                {
+                    await RaiseSuccessEventAsync(validationResult.Token, "inactive", scope.Name);
+                    return Json(new { active = false });
+                }
+
+                if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidScope)
+                {
+                    await RaiseFailureEventAsync("Scope not authorized to introspect token", validationResult.Token, scope.Name);
+                    return Json(new { active = false });
+                }
             }
+
+            throw new InvalidOperationException("Invalid token introspection outcome");
         }
 
-        private async Task RaiseSuccessEventAsync()
+        private async Task RaiseSuccessEventAsync(string token, string tokenStatus, string scopeName)
         {
-            await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.AccessTokenValidation);
+            await _events.RaiseSuccessfulIntrospectionEndpointEventAsync(
+                token, 
+                tokenStatus, 
+                scopeName);
         }
 
-        private async Task RaiseFailureEventAsync(string error)
+        private async Task RaiseFailureEventAsync(string error, string token, string scopeName)
         {
-            await _events.RaiseFailureEndpointEventAsync(EventConstants.EndpointNames.AccessTokenValidation, error);
+            await _events.RaiseFailureIntrospectionEndpointEventAsync(
+                error, token, scopeName);
         }
     }
 }

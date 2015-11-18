@@ -39,27 +39,46 @@ namespace IdentityServer3.Core.Validation
             var token = parameters.Get("token");
             if (token == null)
             {
-                fail.ErrorDescription = "missing_token";
+                fail.IsActive = false;
+                fail.FailureReason = IntrospectionRequestValidationFailureReason.MissingToken;
                 return fail;
             }
 
             // validate token
-            var tokenValidationResult = await _tokenValidator.ValidateAccessTokenAsync(token, scope.Name);
+            var tokenValidationResult = await _tokenValidator.ValidateAccessTokenAsync(token);
 
+            // invalid or unknown token
             if (tokenValidationResult.IsError)
             {
                 fail.IsActive = false;
-                fail.IsError = false;
+                fail.FailureReason = IntrospectionRequestValidationFailureReason.InvalidToken;
+                fail.Token = token;
                 return fail;
             }
 
+            // check expected scope
+            var expectedScope = tokenValidationResult.Claims.FirstOrDefault(
+                c => c.Type == Constants.ClaimTypes.Scope && c.Value == scope.Name);
+
+            // expected scope not present
+            if (expectedScope == null)
+            {
+                fail.IsActive = false;
+                fail.IsError = true;
+                fail.FailureReason = IntrospectionRequestValidationFailureReason.InvalidScope;
+                fail.Token = token;
+                return fail;
+            }
+
+            // all is good
             var success = new IntrospectionRequestValidationResult
             {
                 IsActive = true,
                 IsError = false,
+                Token = token,
                 Claims = tokenValidationResult.Claims.Where(c => c.Type != Constants.ClaimTypes.Scope)
             };
-            
+
             return success;
         }
     }

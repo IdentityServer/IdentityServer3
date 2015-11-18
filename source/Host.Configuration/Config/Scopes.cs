@@ -48,6 +48,11 @@ namespace IdentityServer3.Host.Config
                         DisplayName = "Read data",
                         Type = ScopeType.Resource,
                         Emphasize = false,
+
+                        ScopeSecrets = new List<Secret>
+                        {
+                            new Secret("secret".Sha256())
+                        }
                     },
                     new Scope
                     {

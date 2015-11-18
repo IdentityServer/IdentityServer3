@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Security.Claims;
-
-namespace IdentityServer3.Core.Validation
+namespace IdentityServer3.Core.Events
 {
-    internal class IntrospectionRequestValidationResult : ValidationResult
+    class ClientAuthenticationDetails
     {
-        public bool IsActive { get; set; }
-        public IntrospectionRequestValidationFailureReason FailureReason { get; set; }
-        public IEnumerable<Claim> Claims { get; set; }
-        public string Token { get; set; }
-    }
-
-    enum IntrospectionRequestValidationFailureReason
-    {
-        MissingToken,
-        InvalidToken,
-        InvalidScope
+        public string ClientId { get; set; }
+        public string ClientType { get; set; }
     }
 }
