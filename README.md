@@ -58,7 +58,7 @@ IdentityServer is built using the following great open source projects:
 
 - [ASP.NET Web API](https://aspnetwebstack.codeplex.com/)
 - [Autofac](http://autofac.org/)
-- [Json.Net](http://james.newtonking.com/json)
+- [Json.Net](http://www.newtonsoft.com/json)
 - [LibLog](https://github.com/damianh/LibLog)
 - [Katana](https://katanaproject.codeplex.com/)
 - [Web Protection Library](https://wpl.codeplex.com/)
@@ -68,9 +68,9 @@ IdentityServer is built using the following great open source projects:
 ..and is supported by the following open source friendly companies:
 
 - [JetBrains](http://www.jetbrains.com)
-- [Gitter](http://gitter.im)
-- [Huboard](http://huboard.com)
-- [AppVeyor](http://appveyor.com)
+- [Gitter](https://gitter.im/)
+- [Huboard](https://huboard.com/)
+- [AppVeyor](http://www.appveyor.com)
 - [MyGet](http://myget.org)
 
 ...and last but not least thanks to all [contributors](https://github.com/IdentityServer/IdentityServer3/graphs/contributors)!
