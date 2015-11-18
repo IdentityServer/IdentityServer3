@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
 using System;
 
 namespace Owin
@@ -25,9 +27,13 @@ namespace Owin
         {
             if (app == null) throw new ArgumentNullException("app");
 
-            return app.Use(async (ctx, next) =>
+            return app.Use(async (context, next) =>
             {
-                ctx.Response.OnSendingHeaders(state =>
+                // need to do the ResolveDependency here before OnSendingHeaders
+                // since OnSendingHeaders might run after DI and autofac have cleaned up
+                var signOutMessageCookie = context.ResolveDependency<MessageCookie<SignOutMessage>>();
+
+                context.Response.OnSendingHeaders(state =>
                 {
                     // this is needed to remove sign out message cookie if we're not redirecting to upstream IdP
                     // we don't know until we're on the way out of the pipeline after the external IdP middleware
@@ -35,7 +41,7 @@ namespace Owin
                     // if we don't see 200, then we leave it and expect a post logout callback from the upstream
                     // IdP at which point we can show our logged out page and finish processing the signout message
                     // which might contain client info, post logout redirects, etc.
-                    ctx.ProcessRemovalOfSignOutMessageCookie();
+                    context.ProcessRemovalOfSignOutMessageCookie(signOutMessageCookie);
                 }, null);
 
                 await next();
