@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Security.Claims;
-
-namespace IdentityServer3.Core.Validation
+namespace IdentityServer3.Core.Events
 {
-    internal class IntrospectionRequestValidationResult : ValidationResult
+    class IntrospectionEndpointDetail
     {
-        public bool IsActive { get; set; }
-        public IntrospectionRequestValidationFailureReason FailureReason { get; set; }
-        public IEnumerable<Claim> Claims { get; set; }
+        public string EndpointName { get; set; }
         public string Token { get; set; }
-    }
+        public string ScopeName { get; set; }
+        public string TokenStatus { get; set; }
 
-    enum IntrospectionRequestValidationFailureReason
-    {
-        MissingToken,
-        InvalidToken,
-        InvalidScope
+        public IntrospectionEndpointDetail()
+        {
+            EndpointName = EventConstants.EndpointNames.Introspection;
+        }
     }
 }
