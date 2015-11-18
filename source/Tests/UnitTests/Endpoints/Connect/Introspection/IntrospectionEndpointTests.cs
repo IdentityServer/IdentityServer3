@@ -91,6 +91,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
             });
 
             response.IsActive.Should().Be(false);
+            response.IsError.Should().Be(false);
         }
 
         [Fact]
@@ -117,6 +118,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
             });
 
             response.IsActive.Should().Be(true);
+            response.IsError.Should().Be(false);
         }
 
         [Fact]
@@ -143,6 +145,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
             });
 
             response.IsActive.Should().Be(true);
+            response.IsError.Should().Be(false);
         }
 
         [Fact]
@@ -169,6 +172,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
             });
 
             response.IsActive.Should().Be(false);
+            response.IsError.Should().Be(false);
         }
     }
 }
