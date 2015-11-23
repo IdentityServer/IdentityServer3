@@ -19,6 +19,7 @@ using Autofac.Integration.Owin;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System;
@@ -503,6 +504,28 @@ namespace IdentityServer3.Core.Extensions
                 if (idp != Constants.BuiltInIdentityProvider)
                 {
                     context.Authentication.SignOut(idp);
+                }
+            }
+        }
+
+        public static async Task CallUserServiceSignOutAsync(this IOwinContext context, string clientId = null)
+        {
+            if (context == null) throw new ArgumentNullException("context");
+
+            var result = await context.Authentication.AuthenticateAsync(Constants.PrimaryAuthenticationType);
+            if (result != null)
+            {
+                var user = result.Identity;
+                if (user != null && user.IsAuthenticated)
+                {
+                    var signOutContext = new SignOutContext
+                    {
+                        Subject = new ClaimsPrincipal(user),
+                        ClientId = clientId
+                    };
+
+                    var userService = context.ResolveDependency<IUserService>();
+                    await userService.SignOutAsync(signOutContext);
                 }
             }
         }

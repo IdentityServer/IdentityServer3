@@ -644,6 +644,7 @@ namespace IdentityServer3.Core.Extensions
 
             var context = new OwinContext(env);
             context.ClearAuthenticationCookies();
+            await context.CallUserServiceSignOutAsync();
 
             var sessionCookie = context.ResolveDependency<SessionCookie>();
             var sid = sessionCookie.GetSessionId();
