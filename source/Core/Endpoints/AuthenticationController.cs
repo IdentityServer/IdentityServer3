@@ -623,11 +623,6 @@ namespace IdentityServer3.Core.Endpoints
             return await RenderLoggedOutPage(id);
         }
 
-        internal void DoAnonymousAuthentication()
-        {
-            
-        }
-
         private IHttpActionResult HandleNoSignin()
         {
             if (options.AuthenticationOptions.InvalidSignInRedirectUrl.IsMissing())

@@ -147,14 +147,10 @@ namespace IdentityServer3.Core.Endpoints
             } 
           
             // now that client configuration is loaded, we can do further validation
-            if (request.Subject.Identity.IsAuthenticated)
+            loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
+            if (loginInteraction.IsLogin)
             {
-                loginInteraction = await _interactionGenerator.ProcessClientLoginAsync(request);
-                if (loginInteraction.IsLogin)
-                {
-                    return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
-                }
-
+                return this.RedirectToLogin(loginInteraction.SignInMessage, request.Raw);
             }
 
             if (request.AnonymousTokenRequested)
@@ -201,6 +197,12 @@ namespace IdentityServer3.Core.Endpoints
         {
             var response = await _responseGenerator.CreateResponseAsync(request);
 
+            if (request.AnonymousTokenRequested)
+            {
+                await RaiseSuccessEventAsync();
+                return new AuthorizeAnonymousResult(Request, response, request.Subject);
+            }
+
             if (request.ResponseMode == Constants.ResponseModes.Query ||
                 request.ResponseMode == Constants.ResponseModes.Fragment)
             {
@@ -212,12 +214,6 @@ namespace IdentityServer3.Core.Endpoints
             {
                 await RaiseSuccessEventAsync();
                 return new AuthorizeFormPostResult(response, Request);
-            }
-
-            if (request.AnonymousTokenRequested && request.ResponseMode == Constants.ResponseModes.Ajax)
-            {
-                await RaiseSuccessEventAsync();
-                return new AuthorizeAnonymousResult(Request, response);                
             }
 
             Logger.Error("Unsupported response mode. Aborting.");
