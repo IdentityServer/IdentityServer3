@@ -17,6 +17,7 @@
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IdentityServer3.Core.Logging
 {
@@ -37,14 +38,23 @@ namespace IdentityServer3.Core.Logging
 
         public Dictionary<string, string> Raw { get; set; }
 
+        private static IReadOnlyCollection<string> SensitiveData = new List<string>()
+            {
+                Constants.TokenRequest.Password,
+                Constants.TokenRequest.Assertion,
+                Constants.TokenRequest.ClientSecret,
+                Constants.TokenRequest.ClientAssertion
+            };
+
         public TokenRequestValidationLog(ValidatedTokenRequest request)
         {
             const string scrubValue = "******";
+            
             Raw = request.Raw.ToDictionary();
-
-            if (Raw.ContainsKey(Constants.TokenRequest.Password))
+            
+            foreach (var field in SensitiveData.Where(field => Raw.ContainsKey(field)))
             {
-                Raw[Constants.TokenRequest.Password] = scrubValue;
+                Raw[field] = scrubValue;
             }
 
             if (request.Client != null)
