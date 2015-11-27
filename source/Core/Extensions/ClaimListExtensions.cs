@@ -67,18 +67,6 @@ namespace IdentityServer3.Core.Extensions
 
         private static object GetValue(Claim claim)
         {
-            if (claim.Type == Constants.ClaimTypes.Address)
-            {
-                try
-                {
-                    return JsonConvert.DeserializeObject(claim.Value);
-                }
-                catch (Exception ex)
-                {
-                    Logger.ErrorException("Exception while deserializing address claim", ex);
-                }
-            }
-
             if (claim.ValueType == ClaimValueTypes.Integer ||
                 claim.ValueType == ClaimValueTypes.Integer32)
             {

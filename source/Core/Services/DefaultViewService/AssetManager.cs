@@ -88,7 +88,7 @@ namespace IdentityServer3.Core.Services.Default
             string frames = null;
             if (frameUrls != null && frameUrls.Any())
             {
-                frameUrls = frameUrls.Select(x => String.Format("<iframe src='{0}'>", x));
+                frameUrls = frameUrls.Select(x => String.Format("<iframe src='{0}'></iframe>", x));
                 frames = frameUrls.Aggregate((x, y) => x + Environment.NewLine + y);
             }
 

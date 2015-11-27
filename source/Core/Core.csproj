@@ -231,7 +231,7 @@
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
-    <Compile Include="Services\Default\EnhancedDefaultTokenSigningService.cs" />
+    <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
@@ -376,7 +376,6 @@
     <Compile Include="Services\DefaultViewService\DefaultViewService.cs" />
     <Compile Include="Services\IRefreshTokenService.cs" />
     <Compile Include="Services\IRefreshTokenStore.cs" />
-    <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
     <Compile Include="Services\ITokenSigningService.cs" />
     <Compile Include="Configuration\Hosting\AutofacScope.cs" />
     <Compile Include="Configuration\Hosting\HostDataProtector.cs" />
