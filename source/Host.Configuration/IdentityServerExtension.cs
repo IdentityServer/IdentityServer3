@@ -51,8 +51,6 @@ namespace Owin
                 factory.ConfigureScopeStoreCache();
                 factory.ConfigureUserServiceCache();
 
-                factory.TokenSigningService = new Registration<ITokenSigningService, EnhancedDefaultTokenSigningService>();
-
                 var idsrvOptions = new IdentityServerOptions
                 {
                     Factory = factory,
