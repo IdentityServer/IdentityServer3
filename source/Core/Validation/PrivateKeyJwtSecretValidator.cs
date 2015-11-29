@@ -136,7 +136,7 @@ namespace IdentityServer3.Core.Validation
             var certificate = new JwtSecurityToken(jwtTokenString).GetCertificateFromToken();
             if (certificate != null
                 && certificate.Thumbprint != null
-                && secrets.Any(s => !s.Expiration.HasValue
+                && secrets.Any(s => !s.Expiration.HasExpired()
                                     && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
             {
                 securityKey = new X509SecurityKey(certificate);
