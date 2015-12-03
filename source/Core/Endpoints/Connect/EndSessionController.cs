@@ -36,6 +36,8 @@ using System.Collections.Specialized;
 
 namespace IdentityServer3.Core.Endpoints
 {
+    using IdentityServer3.Core.Models;
+
     /// <summary>
     /// OpenID Connect end session endpoint
     /// </summary>
@@ -176,14 +178,12 @@ namespace IdentityServer3.Core.Endpoints
             // read client list to get URLs for client logout endpoints
             var clientIds = _clientListCookie.GetClients();
 
-            // fetch the clients in parallel
-            var tasks =
-                from clientId in clientIds
-                select _clientStore.FindClientByIdAsync(clientId);
-            await Task.WhenAll(tasks);
-
-            // get clients located and build the iframe urls
-            var clients = tasks.Select(x => x.Result);
+            // Fetch the Clients for each clientid
+            var clients = new List<Client>();
+            foreach (var clientId in clientIds)
+            {
+                clients.Add(await _clientStore.FindClientByIdAsync(clientId));
+            }
 
             // get user's session id. session id will possibly 
             // be needed below to pass to client's endpoint
