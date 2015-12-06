@@ -41,6 +41,7 @@ namespace IdentityServer3.Core.Services.Default
         static DefaultTokenSigningService()
         {
             JsonExtensions.Serializer = JsonConvert.SerializeObject;
+            JsonExtensions.Deserializer = JsonConvert.DeserializeObject;
         }
 
         /// <summary>
@@ -82,29 +83,8 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>The signed JWT</returns>
         protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
         {
-            var header = CreateHeader(token, credentials);
             var payload = CreatePayload(token);
-
-            return await SignAsync(new JwtSecurityToken(header, payload));
-        }
-
-        /// <summary>
-        /// Creates the JWT header
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <param name="credential">The credentials.</param>
-        /// <returns>The JWT header</returns>
-        protected virtual JwtHeader CreateHeader(Token token, SigningCredentials credential)
-        {
-            var header = new JwtHeader(credential);
-
-            var x509credential = credential as X509SigningCredentials;
-            if (x509credential != null)
-            {
-                header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
-            }
-
-            return header;
+            return await SignAsync(payload, credentials);
         }
 
         /// <summary>
@@ -112,7 +92,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns>The JWT payload</returns>
-        protected virtual JwtPayload CreatePayload(Token token)
+        protected virtual string CreatePayload(Token token)
         {
             var payload = new JwtPayload(
                 token.Issuer,
@@ -187,18 +167,36 @@ namespace IdentityServer3.Core.Services.Default
                 throw new Exception(String.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
             }
 
-            return payload;
+            return payload.SerializeToJson();
         }
 
         /// <summary>
-        /// Applies the signature to the JWT
+        /// Creates the JWT header
         /// </summary>
-        /// <param name="jwt">The JWT object.</param>
-        /// <returns>The signed JWT</returns>
-        protected virtual Task<string> SignAsync(JwtSecurityToken jwt)
+        /// <param name="credential">The credentials.</param>
+        /// <returns>The JWT header</returns>
+        private JwtHeader CreateHeader(SigningCredentials credential)
         {
+            var header = new JwtHeader(credential);
+
+            var x509credential = credential as X509SigningCredentials;
+            if (x509credential != null)
+            {
+                header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+            }
+
+            return header;
+        }
+
+        private Task<string> SignAsync(string payload, SigningCredentials credentials)
+        {
+            var header = CreateHeader(credentials);
+            var jwtPayload = JwtPayload.Deserialize(payload);
+
+            var token = new JwtSecurityToken(header, jwtPayload);
+
             var handler = new JwtSecurityTokenHandler();
-            return Task.FromResult(handler.WriteToken(jwt));
+            return Task.FromResult(handler.WriteToken(token));
         }
     }
 }
