@@ -41,7 +41,7 @@ namespace IdentityServer3.Core.Services.Default
         static DefaultTokenSigningService()
         {
             JsonExtensions.Serializer = JsonConvert.SerializeObject;
-            JsonExtensions.Deserializer = JsonConvert.DeserializeObject;
+            //JsonExtensions.Deserializer = JsonConvert.DeserializeObject;
         }
 
         /// <summary>
