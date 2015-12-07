@@ -334,6 +334,7 @@ namespace IdentityServer3.Host.Config
                         "email",
                         "read", 
                         "write",
+                        "address",
                         "offline_access"
                     },
 
