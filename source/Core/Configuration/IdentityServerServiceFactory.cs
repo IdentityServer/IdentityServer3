@@ -307,6 +307,14 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the signing key service.
+        /// </summary>
+        /// <value>
+        /// The signing key service.
+        /// </value>
+        public Registration<ISigningKeyService> SigningKeyService { get; set; }
+
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");

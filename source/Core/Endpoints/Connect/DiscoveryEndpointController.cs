@@ -40,17 +40,20 @@ namespace IdentityServer3.Core.Endpoints
         private readonly IdentityServerOptions _options;
         private readonly IScopeStore _scopes;
         private readonly IOwinContext _context;
+        private readonly ISigningKeyService _keyService;
 
         static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
+        
 
-        public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes, IOwinContext context)
+        public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes, IOwinContext context, ISigningKeyService keyService)
         {
             _options = options;
             _scopes = scopes;
             _context = context;
+            _keyService = keyService;
         }
 
         /// <summary>
@@ -145,12 +148,12 @@ namespace IdentityServer3.Core.Endpoints
         /// </summary>
         /// <returns>JSON Web Key set</returns>
         [HttpGet]
-        public IHttpActionResult GetKeyData()
+        public async Task<IHttpActionResult> GetKeyData()
         {
             Logger.Info("Start key discovery request");
 
             var webKeys = new List<JsonWebKeyDto>();
-            foreach (var pubKey in _options.PublicKeysForMetadata)
+            foreach (var pubKey in await _keyService.GetPublicKeysAsync())
             {
                 if (pubKey != null)
                 {
@@ -165,7 +168,7 @@ namespace IdentityServer3.Core.Endpoints
                     {
                         kty = "RSA",
                         use = "sig",
-                        kid = thumbprint,
+                        kid = await _keyService.GetKidAsync(pubKey),
                         x5t = thumbprint,
                         e = exponent,
                         n = modulus,

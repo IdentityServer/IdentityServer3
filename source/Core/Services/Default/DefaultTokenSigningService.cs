@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
@@ -36,7 +35,8 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// The identity server options
         /// </summary>
-        protected readonly IdentityServerOptions _options;
+        //protected readonly IdentityServerOptions _options;
+        private readonly ISigningKeyService _keyService;
 
         static DefaultTokenSigningService()
         {
@@ -47,10 +47,10 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
         /// </summary>
-        /// <param name="options">The options.</param>
-        public DefaultTokenSigningService(IdentityServerOptions options)
+        /// <param name="keyService">The signing key service.</param>
+        public DefaultTokenSigningService(ISigningKeyService keyService)
         {
-            _options = options;
+            _keyService = keyService;
         }
 
         /// <summary>
@@ -62,28 +62,9 @@ namespace IdentityServer3.Core.Services.Default
         /// </returns>
         public virtual async Task<string> SignTokenAsync(Token token)
         {
-            var credentials = await GetSigningCredentialsAsync();
-            return await CreateJsonWebToken(token, credentials);
-        }
+            var payload = await CreatePayloadAsync(token);
+            var credentials = new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
 
-        /// <summary>
-        /// Retrieves the signing credential (override to load key from alternative locations)
-        /// </summary>
-        /// <returns>The signing credential</returns>
-        protected virtual Task<SigningCredentials> GetSigningCredentialsAsync()
-        {
-            return Task.FromResult<SigningCredentials>(new X509SigningCredentials(_options.SigningCertificate));
-        }
-
-        /// <summary>
-        /// Creates the json web token.
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <param name="credentials">The credentials.</param>
-        /// <returns>The signed JWT</returns>
-        protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
-        {
-            var payload = CreatePayload(token);
             return await SignAsync(payload, credentials);
         }
 
@@ -92,7 +73,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns>The JWT payload</returns>
-        protected virtual string CreatePayload(Token token)
+        protected virtual Task<string> CreatePayloadAsync(Token token)
         {
             var payload = new JwtPayload(
                 token.Issuer,
@@ -167,7 +148,7 @@ namespace IdentityServer3.Core.Services.Default
                 throw new Exception(String.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
             }
 
-            return payload.SerializeToJson();
+            return Task.FromResult(payload.SerializeToJson());
         }
 
         /// <summary>
@@ -175,28 +156,28 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="credential">The credentials.</param>
         /// <returns>The JWT header</returns>
-        private JwtHeader CreateHeader(SigningCredentials credential)
+        private async Task<JwtHeader> CreateHeaderAsync(SigningCredentials credential)
         {
             var header = new JwtHeader(credential);
 
             var x509credential = credential as X509SigningCredentials;
             if (x509credential != null)
             {
-                header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+                header.Add("kid", await _keyService.GetKidAsync(x509credential.Certificate));
             }
 
             return header;
         }
 
-        private Task<string> SignAsync(string payload, SigningCredentials credentials)
+        private async Task<string> SignAsync(string payload, SigningCredentials credentials)
         {
-            var header = CreateHeader(credentials);
+            var header = await CreateHeaderAsync(credentials);
             var jwtPayload = JwtPayload.Deserialize(payload);
 
             var token = new JwtSecurityToken(header, jwtPayload);
-
             var handler = new JwtSecurityTokenHandler();
-            return Task.FromResult(handler.WriteToken(token));
+
+            return handler.WriteToken(token);
         }
     }
 }
