@@ -20,6 +20,7 @@ using IdentityServer3.Core.Events;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System;
@@ -66,7 +67,7 @@ namespace IdentityServer3.Core.Endpoints
             var scope = await _scopeSecretValidator.ValidateAsync();
             if (scope.Scope == null)
             {
-                // logging
+                Logger.Warn("Scope unauthorized to call introspection endpoint. aborting.");
                 return Unauthorized();
             }
 
@@ -80,13 +81,8 @@ namespace IdentityServer3.Core.Endpoints
 
             if (validationResult.IsActive)
             {
-                var response = validationResult.Claims.ToClaimsDictionary();
-                response.Add("active", true);
-                response.Add("scope", scope.Name);
-
                 await RaiseSuccessEventAsync(validationResult.Token, "active", scope.Name);
-
-                return Json(response);
+                return new IntrospectionResult(validationResult, scope);
             }
 
             if (validationResult.IsError)
@@ -102,13 +98,13 @@ namespace IdentityServer3.Core.Endpoints
                 if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidToken)
                 {
                     await RaiseSuccessEventAsync(validationResult.Token, "inactive", scope.Name);
-                    return Json(new { active = false });
+                    return new IntrospectionResult();
                 }
 
                 if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidScope)
                 {
                     await RaiseFailureEventAsync("Scope not authorized to introspect token", validationResult.Token, scope.Name);
-                    return Json(new { active = false });
+                    return new IntrospectionResult();
                 }
             }
 
