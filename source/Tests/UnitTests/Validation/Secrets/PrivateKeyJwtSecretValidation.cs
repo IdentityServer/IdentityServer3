@@ -43,8 +43,7 @@ namespace IdentityServer3.Tests.Validation.Secrets
                     new IdentityServerOptions()
                     {
                         DynamicallyCalculatedIssuerUri = "https://idsrv3.com"
-                    },
-                    new DefaultTokenReplayCache()
+                    }
                 );
             _clients = new InMemoryClientStore(ClientValidationTestClients.Get());
         }
@@ -289,29 +288,6 @@ namespace IdentityServer3.Tests.Validation.Secrets
             };
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-
-            result.Success.Should().BeFalse();
-        }
-
-        [Fact]
-        public async Task Invalid_Replayed_Token()
-        {
-            var clientId = "certificate_valid";
-            var client = await _clients.FindClientByIdAsync(clientId);
-
-            var token = CreateToken(clientId);
-            var secret = new ParsedSecret
-            {
-                Id = clientId,
-                Credential = new JwtSecurityTokenHandler().WriteToken(token),
-                Type = Constants.ParsedSecretTypes.JwtBearer
-            };
-
-            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
-
-            result.Success.Should().BeTrue();
-
-            result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
             result.Success.Should().BeFalse();
         }

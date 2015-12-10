@@ -61,8 +61,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             
             builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
             builder.RegisterDefaultInstance<ICorsPolicyService, DefaultCorsPolicyService>(fact.CorsPolicyService);
-            builder.RegisterDefaultInstance<IClientAssertionTokenReplayCache, DefaultTokenReplayCache>(fact.ClientAssertionTokenReplayCache);
-
+            
             builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
             builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
             builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);            

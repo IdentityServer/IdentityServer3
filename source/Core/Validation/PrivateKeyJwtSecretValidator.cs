@@ -35,18 +35,15 @@ namespace IdentityServer3.Core.Validation
     public class PrivateKeyJwtSecretValidator : ISecretValidator
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly IClientAssertionTokenReplayCache tokenReplayCache;
         private readonly string audienceUri;
 
         /// <summary>
         /// Instantiates an instance of private_key_jwt secret validator
         /// </summary>
         /// <param name="options">IdentityServer options</param>
-        /// <param name="tokenReplayCache">Token replay cache</param>
-        public PrivateKeyJwtSecretValidator(IdentityServerOptions options, IClientAssertionTokenReplayCache tokenReplayCache)
+        public PrivateKeyJwtSecretValidator(IdentityServerOptions options)
         {
             audienceUri = string.Concat(options.DynamicallyCalculatedIssuerUri.EnsureTrailingSlash(), Constants.RoutePaths.Oidc.Token);
-            this.tokenReplayCache = tokenReplayCache;
         }
 
         /// <summary>
@@ -104,9 +101,7 @@ namespace IdentityServer3.Core.Validation
                 ValidateAudience = true,
 
                 RequireSignedTokens = true,
-                RequireExpirationTime = true,
-
-                TokenReplayCache = new TokenReplayCacheWrapper(tokenReplayCache)
+                RequireExpirationTime = true
             };
             try
             {
@@ -114,7 +109,7 @@ namespace IdentityServer3.Core.Validation
                 var handler = new EmbeddedCertificateJwtSecurityTokenHandler();
                 handler.ValidateToken(jwtTokenString, tokenValidationParameters, out token);
 
-                var jwtToken = (JwtSecurityToken) token;
+                var jwtToken = (JwtSecurityToken)token;
 
                 if (jwtToken.Subject != jwtToken.Issuer)
                 {

@@ -239,8 +239,6 @@
     <Compile Include="Services\Default\DefaultSigningKeyService.cs" />
     <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
     <Compile Include="Services\ISigningKeyService.cs" />
-    <Compile Include="Services\IClientAssertionTokenReplayCache.cs" />
-    <Compile Include="Services\TokenReplayCacheWrapper.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
@@ -252,7 +250,6 @@
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
     <Compile Include="Services\Default\DefaultCustomGrantValidator.cs" />
-    <Compile Include="Validation\DefaultTokenReplayCache.cs" />
     <Compile Include="Validation\EmbeddedCertificateJwtSecurityTokenHandler.cs" />
     <Compile Include="Validation\HashedSharedSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />

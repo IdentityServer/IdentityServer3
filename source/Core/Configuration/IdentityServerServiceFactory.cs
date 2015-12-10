@@ -318,14 +318,6 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<ISigningKeyService> SigningKeyService { get; set; }
 
-        /// <summary>
-        /// Gets or sets the token replay cache
-        /// </summary>
-        /// <value>
-        /// The token replay cache
-        /// </value>
-        public Registration<IClientAssertionTokenReplayCache> ClientAssertionTokenReplayCache { get; set; }
-
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");
