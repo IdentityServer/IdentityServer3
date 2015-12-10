@@ -45,9 +45,9 @@ namespace IdentityServer3.Core.Validation
         private readonly ICustomTokenValidator _customValidator;
         private readonly IClientStore _clients;
         private readonly IOwinContext _context;
+        private readonly ISigningKeyService _keyService;
 
         private readonly TokenValidationLog _log;
-        private readonly ISigningKeyService _keyService;
 
         // todo: remove in 3.0.0
         public TokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator)
@@ -225,7 +225,7 @@ namespace IdentityServer3.Core.Validation
             return customResult;
         }
 
-        public virtual async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, IEnumerable<X509Certificate2> signingCertificates, bool validateLifetime = true)
+        private async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, IEnumerable<X509Certificate2> signingCertificates, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler
             {
@@ -287,7 +287,7 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        protected virtual async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
+        private async Task<TokenValidationResult> ValidateReferenceAccessTokenAsync(string tokenHandle)
         {
             _log.TokenHandle = tokenHandle;
             var token = await _tokenHandles.GetAsync(tokenHandle);
@@ -325,7 +325,7 @@ namespace IdentityServer3.Core.Validation
             };
         }
 
-        protected virtual IEnumerable<Claim> ReferenceTokenToClaims(Token token)
+        private IEnumerable<Claim> ReferenceTokenToClaims(Token token)
         {
             var claims = new List<Claim>
             {
@@ -340,7 +340,7 @@ namespace IdentityServer3.Core.Validation
             return claims;
         }
 
-        protected virtual string GetClientIdFromJwt(string token)
+        private string GetClientIdFromJwt(string token)
         {
             try
             {
@@ -356,7 +356,7 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        protected virtual TokenValidationResult Invalid(string error)
+        private TokenValidationResult Invalid(string error)
         {
             return new TokenValidationResult
             {
