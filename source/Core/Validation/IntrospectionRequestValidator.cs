@@ -15,7 +15,6 @@
  */
 
 using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Resources;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;

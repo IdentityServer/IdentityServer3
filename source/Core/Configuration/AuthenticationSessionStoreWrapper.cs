@@ -1,9 +1,8 @@
 ﻿namespace IdentityServer3.Core.Configuration
 {
-    using System.Threading.Tasks;
-
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
+    using System.Threading.Tasks;
 
     internal class AuthenticationSessionStoreWrapper : IAuthenticationSessionStore
     {

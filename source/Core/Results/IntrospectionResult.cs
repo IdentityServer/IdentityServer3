@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Validation;
@@ -24,7 +25,6 @@ using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using IdentityServer3.Core.Extensions;
 
 namespace IdentityServer3.Core.Results
 {

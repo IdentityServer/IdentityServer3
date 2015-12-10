@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
+using Microsoft.Owin;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityServer3.Core.Extensions;
-using Microsoft.Owin;
 
 namespace IdentityServer3.Core.Validation
 {

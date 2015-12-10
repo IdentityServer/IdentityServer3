@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using IdentityServer3.Core.Events;
-using IdentityServer3.Core.Extensions;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
