@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using System;
@@ -37,7 +38,7 @@ namespace IdentityServer3.Core.Validation
 
         public IEnumerable<string> GetAvailableGrantTypes()
         {
-            return _validators.Select(v => v.GrantType);
+            return _validators.Where(v => v.GrantType.IsPresent()).Select(v => v.GrantType);
         }
 
         public async Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)

@@ -45,6 +45,7 @@ namespace IdentityServer3.Core.Configuration
             this.EventsOptions = new EventsOptions();
             this.EnableWelcomePage = true;
             this.InputLengthRestrictions = new InputLengthRestrictions();
+            this.DiscoveryOptions = new DiscoveryOptions();
         }
 
         internal void Validate()
@@ -140,6 +141,14 @@ namespace IdentityServer3.Core.Configuration
         /// The endpoints configuration.
         /// </value>
         public EndpointOptions Endpoints { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discovery endpoint configuration.
+        /// </summary>
+        /// <value>
+        /// The discovery endpoint configuration.
+        /// </value>
+        public DiscoveryOptions DiscoveryOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the authentication options.
