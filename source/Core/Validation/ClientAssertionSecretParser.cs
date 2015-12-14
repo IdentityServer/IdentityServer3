@@ -46,7 +46,7 @@ namespace IdentityServer3.Core.Validation
             Logger.Debug("Start parsing for JWT client assertion in post body");
 
             var context = new OwinContext(environment);
-            var body = await context.Request.ReadFormAsync();
+            var body = await context.ReadRequestFormAsync();
 
             if (body != null)
             {
