@@ -35,13 +35,27 @@ namespace IdentityServer3.Core.Services.Default
         /// <summary>
         /// The identity server options
         /// </summary>
-        //protected readonly IdentityServerOptions _options;
+        protected readonly IdentityServerOptions _options;
+
+        /// <summary>
+        /// The signing key service
+        /// </summary>
         private readonly ISigningKeyService _keyService;
 
         static DefaultTokenSigningService()
         {
             JsonExtensions.Serializer = JsonConvert.SerializeObject;
-            //JsonExtensions.Deserializer = JsonConvert.DeserializeObject;
+        }
+
+        // todo: remove in next major version
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        public DefaultTokenSigningService(IdentityServerOptions options)
+        {
+            _options = options;
+            _keyService = new DefaultSigningKeyService(options);
         }
 
         /// <summary>
@@ -62,9 +76,28 @@ namespace IdentityServer3.Core.Services.Default
         /// </returns>
         public virtual async Task<string> SignTokenAsync(Token token)
         {
-            var payload = await CreatePayloadAsync(token);
-            var credentials = new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
+            var credentials = await GetSigningCredentialsAsync();
+            return await CreateJsonWebToken(token, credentials);
+        }
 
+        /// <summary>
+        /// Retrieves the signing credential (override to load key from alternative locations)
+        /// </summary>
+        /// <returns>The signing credential</returns>
+        protected virtual async Task<SigningCredentials> GetSigningCredentialsAsync()
+        {
+            return new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
+        }
+
+        /// <summary>
+        /// Creates the json web token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>The signed JWT</returns>
+        protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
+        {
+            var payload = CreatePayload(token);
             return await SignAsync(payload, credentials);
         }
 
@@ -73,7 +106,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns>The JWT payload</returns>
-        protected virtual Task<string> CreatePayloadAsync(Token token)
+        protected virtual string CreatePayload(Token token)
         {
             var payload = new JwtPayload(
                 token.Issuer,
@@ -101,8 +134,8 @@ namespace IdentityServer3.Core.Services.Default
             var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
 
             var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
-            var jsonObjectGroups = jsonObjects.GroupBy(x=>x.Type).ToArray();
-            foreach(var group in jsonObjectGroups)
+            var jsonObjectGroups = jsonObjects.GroupBy(x => x.Type).ToArray();
+            foreach (var group in jsonObjectGroups)
             {
                 if (payload.ContainsKey(group.Key))
                 {
@@ -112,7 +145,7 @@ namespace IdentityServer3.Core.Services.Default
                 if (group.Skip(1).Any())
                 {
                     // add as array
-                    payload.Add(group.Key, group.Select(x=>x.JsonValue).ToArray());
+                    payload.Add(group.Key, group.Select(x => x.JsonValue).ToArray());
                 }
                 else
                 {
@@ -122,7 +155,7 @@ namespace IdentityServer3.Core.Services.Default
             }
 
             var jsonArrays = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Array).ToArray();
-            var jsonArrayGroups = jsonArrays.GroupBy(x=>x.Type).ToArray();
+            var jsonArrayGroups = jsonArrays.GroupBy(x => x.Type).ToArray();
             foreach (var group in jsonArrayGroups)
             {
                 if (payload.ContainsKey(group.Key))
@@ -131,7 +164,7 @@ namespace IdentityServer3.Core.Services.Default
                 }
 
                 List<JToken> newArr = new List<JToken>();
-                foreach(var arrays in group)
+                foreach (var arrays in group)
                 {
                     var arr = (JArray)arrays.JsonValue;
                     newArr.AddRange(arr);
@@ -148,7 +181,7 @@ namespace IdentityServer3.Core.Services.Default
                 throw new Exception(String.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
             }
 
-            return Task.FromResult(payload.SerializeToJson());
+            return payload.SerializeToJson();
         }
 
         /// <summary>
@@ -175,8 +208,8 @@ namespace IdentityServer3.Core.Services.Default
             var jwtPayload = JwtPayload.Deserialize(payload);
 
             var token = new JwtSecurityToken(header, jwtPayload);
-            var handler = new JwtSecurityTokenHandler();
 
+            var handler = new JwtSecurityTokenHandler();
             return handler.WriteToken(token);
         }
     }
