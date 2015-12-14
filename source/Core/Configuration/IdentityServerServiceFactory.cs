@@ -68,16 +68,14 @@ namespace IdentityServer3.Core.Configuration
             {
                 new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
                 new Registration<ISecretParser, PostBodySecretParser>(),
-                new Registration<ISecretParser, X509CertificateSecretParser>(),
-                new Registration<ISecretParser, ClientAssertionSecretParser>()
+                new Registration<ISecretParser, X509CertificateSecretParser>()
             };
 
             // register default secret validators
             SecretValidators = new List<Registration<ISecretValidator>>
             {
                 new Registration<ISecretValidator, HashedSharedSecretValidator>(),
-                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>(),
-                new Registration<ISecretValidator, PrivateKeyJwtSecretValidator>()
+                new Registration<ISecretValidator, X509CertificateThumbprintSecretValidator>()
             };
         }
 
