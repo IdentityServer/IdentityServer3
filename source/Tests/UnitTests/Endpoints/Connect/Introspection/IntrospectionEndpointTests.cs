@@ -130,7 +130,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Valid_Token_Valid_Unrestricred_Scope()
+        public async Task Valid_Token_Valid_Unrestricted_Scope()
         {
             var tokenClient = new TokenClient(
                 TokenEndpoint,
