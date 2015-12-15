@@ -153,6 +153,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
             builder.RegisterType<EndSessionResponseGenerator>();
+            builder.RegisterType<IntrospectionResponseGenerator>();
 
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();

@@ -30,23 +30,13 @@ namespace IdentityServer3.Core.Results
 {
     internal class IntrospectionResult : IHttpActionResult
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly static JsonMediaTypeFormatter Formatter = new JsonMediaTypeFormatter();
 
-        public IntrospectionRequestValidationResult IntrospectionValidationResult { get; set; }
-        public Scope Scope { get; set; }
+        public Dictionary<string, object> Result { get; private set; }
 
-        private readonly bool _sendInactive;
-
-        public IntrospectionResult()
+        public IntrospectionResult(Dictionary<string, object> result)
         {
-            _sendInactive = true;
-        }
-
-        public IntrospectionResult(IntrospectionRequestValidationResult introspectionValidationResult, Scope scope)
-        {
-            IntrospectionValidationResult = introspectionValidationResult;
-            Scope = scope;
+            Result = result;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -56,29 +46,12 @@ namespace IdentityServer3.Core.Results
 
         private HttpResponseMessage Execute()
         {
-            if (_sendInactive == true)
-            {
-                var inactiveContent = new ObjectContent<object>(new { active = false }, Formatter);
-                var inactiveMessage = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = inactiveContent
-                };
-
-                Logger.Info("Returning inactive introspection response.");
-                return inactiveMessage;
-            }
-
-            var response = IntrospectionValidationResult.Claims.ToClaimsDictionary();
-            response.Add("active", true);
-            response.Add("scope", Scope.Name);
-
-            var content = new ObjectContent<Dictionary<string, object>>(response, Formatter);
+            var content = new ObjectContent<Dictionary<string, object>>(Result, Formatter);
             var message = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = content
             };
 
-            Logger.Info("Returning active introspection response.");
             return message;
         }
     }

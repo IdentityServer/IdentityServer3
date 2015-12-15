@@ -75,7 +75,7 @@ namespace IdentityServer3.Core.Validation
                 IsActive = true,
                 IsError = false,
                 Token = token,
-                Claims = tokenValidationResult.Claims.Where(c => c.Type != Constants.ClaimTypes.Scope)
+                Claims = tokenValidationResult.Claims
             };
 
             return success;
