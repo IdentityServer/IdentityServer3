@@ -23,9 +23,11 @@ using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -196,12 +198,24 @@ namespace IdentityServer3.Core.Endpoints
                 }
             }
 
+            var jobject = JObject.FromObject(dto);
+
+            // custom entries
             if (_options.DiscoveryOptions.CustomEntries != null && _options.DiscoveryOptions.CustomEntries.Any())
             {
-                dto.custom = _options.DiscoveryOptions.CustomEntries;
+                foreach (var item in _options.DiscoveryOptions.CustomEntries)
+                {
+                    JToken token;
+                    if (jobject.TryGetValue(item.Key, out token))
+                    {
+                        throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
+                    }
+
+                    jobject.Add(new JProperty(item.Key, item.Value));
+                }
             }
 
-            return Json(dto, Settings);
+            return Content(HttpStatusCode.OK, jobject);
         }
 
         /// <summary>
@@ -269,7 +283,6 @@ namespace IdentityServer3.Core.Endpoints
             public string[] subject_types_supported { get; set; }
             public string[] id_token_signing_alg_values_supported { get; set; }
             public string[] token_endpoint_auth_methods_supported { get; set; }
-            public Dictionary<string, string> custom { get; set; }
         };
 
         private class JsonWebKeyDto

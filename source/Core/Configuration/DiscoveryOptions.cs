@@ -60,7 +60,7 @@ namespace IdentityServer3.Core.Configuration
         /// <summary>
         /// Adds custom entries to the discovery document
         /// </summary>
-        public Dictionary<string, string> CustomEntries { get; set; }
+        public Dictionary<string, object> CustomEntries { get; set; }
 
         /// <summary>
         /// Initializes with default values
@@ -77,7 +77,7 @@ namespace IdentityServer3.Core.Configuration
             ShowGrantTypes = true;
             ShowCustomGrantTypes = true;
             ShowTokenEndpointAuthenticationMethods = true;
-            CustomEntries = new Dictionary<string, string>();
+            CustomEntries = new Dictionary<string, object>();
         }
     }
 }
