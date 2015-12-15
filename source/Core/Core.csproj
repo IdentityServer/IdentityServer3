@@ -24,6 +24,7 @@
     <DocumentationFile>..\..\build\IdentityServer3.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
