@@ -28,7 +28,8 @@ namespace IdentityServer3.Core.Extensions
             object values;
             if (securityToken.Header.TryGetValue(JwtHeaderParameterNames.X5c, out values))
             {
-                var rawCertificate = (values as object[])?.Cast<string>().FirstOrDefault();
+                var objects = values as object[];
+                var rawCertificate = objects != null ? objects.Cast<string>().FirstOrDefault() : null;
                 if (rawCertificate != null)
                 {
                     return new X509Certificate2(Convert.FromBase64String(rawCertificate));
