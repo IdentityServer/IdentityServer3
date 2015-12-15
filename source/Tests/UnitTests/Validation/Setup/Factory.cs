@@ -35,6 +35,11 @@ namespace IdentityServer3.Tests.Validation
             return new InMemoryClientStore(TestClients.Get());
         }
 
+        public static DefaultTokenSigningService CreateDefaultTokenSigningService()
+        {
+            return new DefaultTokenSigningService(new DefaultSigningKeyService(TestIdentityServerOptions.Create()));
+        }
+
         //public static ClientValidator CreateClientValidator(
         //    IClientStore clients = null,
         //    IClientSecretValidator secretValidator = null)
@@ -182,7 +187,8 @@ namespace IdentityServer3.Tests.Validation
                 customValidator: new DefaultCustomTokenValidator(
                     users: users,
                     clients: clients),
-                owinEnvironment: new OwinEnvironmentService(context));
+                owinEnvironment: new OwinEnvironmentService(context),
+                keyService: new DefaultSigningKeyService(options));
 
             return validator;
         }
