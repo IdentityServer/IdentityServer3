@@ -72,26 +72,18 @@ namespace IdentityServer3.Core.Validation
                 throw new ArgumentException("ParsedSecret.Credential is not a string.");
             }
 
-            var enumeratedSecrets = secrets as IList<Secret> ?? secrets.ToList();
+            var enumeratedSecrets = secrets.ToList().AsReadOnly();
 
-            var embeddedKey = GetTrustedEmbeddedCertificateKey(enumeratedSecrets, jwtTokenString);
+            var trustedKeys = GetTrustedKeys(enumeratedSecrets, jwtTokenString);
 
-            var savedKeys = (embeddedKey == null)
-                ? GetTrustedCertificateKeys(enumeratedSecrets)
-                : null;
-
-            if (embeddedKey == null
-                && !savedKeys.Any()
-                && enumeratedSecrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
+            if (!trustedKeys.Any())
             {
-                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint secret");
                 return fail;
             }
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                IssuerSigningKey = embeddedKey,
-                IssuerSigningKeys = savedKeys,
+                IssuerSigningKeys = trustedKeys,
                 ValidateIssuerSigningKey = true,
 
                 ValidIssuer = parsedSecret.Id,
@@ -125,31 +117,63 @@ namespace IdentityServer3.Core.Validation
             }
         }
 
-        private static SecurityKey GetTrustedEmbeddedCertificateKey(IEnumerable<Secret> secrets, string jwtTokenString)
+        private static List<SecurityKey> GetTrustedKeys(IReadOnlyCollection<Secret> secrets, string jwtTokenString)
         {
-            SecurityKey securityKey = null;
-            var certificate = new JwtSecurityToken(jwtTokenString).GetCertificateFromToken();
-            if (certificate != null
-                && certificate.Thumbprint != null
-                && secrets.Any(s => !s.Expiration.HasExpired()
-                                    && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
+            var token = new JwtSecurityToken(jwtTokenString);
+            var certificate = token.GetCertificateFromToken();
+            if (EmbeddedCertificateIsTrusted(certificate, secrets))
             {
-                securityKey = new X509SecurityKey(certificate);
+                return new List<SecurityKey>
+                {
+                    new X509SecurityKey(certificate)
+                };
             }
-            return securityKey;
+
+            var trustedKeys = GetAllTrustedCertificates(secrets)
+                                .Select(c => (SecurityKey)new X509SecurityKey(c))
+                                .ToList();
+
+            if (!trustedKeys.Any()
+                && secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
+            {
+                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint secret");
+            }
+
+            return trustedKeys;
         }
 
-        private List<SecurityKey> GetTrustedCertificateKeys(IEnumerable<Secret> secrets)
+        private static bool EmbeddedCertificateIsTrusted(X509Certificate2 certificate, IReadOnlyCollection<Secret> secrets)
         {
-            var securityKeys = secrets
+            if (certificate == null || certificate.Thumbprint == null)
+            {
+                return false;
+            }
+
+            if (secrets.Any(s => !s.Expiration.HasExpired()
+                                 && s.Type == Constants.SecretTypes.X509CertificateThumbprint
+                                 && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
+            {
+                return true;
+            }
+
+            if (secrets.Any(s => !s.Expiration.HasExpired()
+                                 && s.Type == Constants.SecretTypes.X509CertificateBase64
+                                 && Equals(certificate, GetCertificateFromString(s.Value))))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static List<X509Certificate2> GetAllTrustedCertificates(IEnumerable<Secret> secrets)
+        {
+            return secrets
                 .Where(s => !s.Expiration.HasExpired()
                             && s.Type == Constants.SecretTypes.X509CertificateBase64)
                 .Select(s => GetCertificateFromString(s.Value))
                 .Where(c => c != null)
-                .Select(c => new X509SecurityKey(c))
-                .Cast<SecurityKey>()
                 .ToList();
-            return securityKeys;
         }
 
         private static X509Certificate2 GetCertificateFromString(string value)
