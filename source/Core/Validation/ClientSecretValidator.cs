@@ -51,7 +51,6 @@ namespace IdentityServer3.Core.Validation
             };
 
             var parsedSecret = await _parser.ParseAsync(_environment.Environment);
-            
             if (parsedSecret == null)
             {
                 await RaiseFailureEvent("unknown", "No client id or secret found");
