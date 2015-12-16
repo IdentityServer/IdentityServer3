@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace IdentityServer3.Tests.Validation.Secret_Validation
+namespace IdentityServer3.Tests.Validation.Secrets
 {
     public class FormPostCredentialExtraction
     {

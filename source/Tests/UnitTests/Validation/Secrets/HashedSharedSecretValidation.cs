@@ -24,7 +24,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IdentityServer3.Tests.Validation.Client_Validation
+namespace IdentityServer3.Tests.Validation.Secrets
 {
     public class HashedSharedSecretValidation
     {
@@ -117,24 +117,6 @@ namespace IdentityServer3.Tests.Validation.Client_Validation
 
             var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
 
-            result.Success.Should().BeFalse();
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Expired_Secret()
-        {
-            var clientId = "multiple_secrets_hashed";
-            var client = await _clients.FindClientByIdAsync(clientId);
-
-            var secret = new ParsedSecret
-            {
-                Id = clientId,
-                Credential = "expired",
-                Type = Constants.ParsedSecretTypes.SharedSecret
-            };
-
-            var result = await _validator.ValidateAsync(client.ClientSecrets, secret);
             result.Success.Should().BeFalse();
         }
 

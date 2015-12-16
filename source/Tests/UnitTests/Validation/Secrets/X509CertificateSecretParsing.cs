@@ -23,7 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IdentityServer3.Tests.Validation.Secret_Validation
+namespace IdentityServer3.Tests.Validation.Secrets
 {
     public class X509CertificateSecretParsing
     {
