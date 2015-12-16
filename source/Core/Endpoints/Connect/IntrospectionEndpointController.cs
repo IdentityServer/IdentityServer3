@@ -19,6 +19,7 @@ using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
@@ -42,17 +43,20 @@ namespace IdentityServer3.Core.Endpoints
         private readonly IEventService _events;
         private readonly ScopeSecretValidator _scopeSecretValidator;
         private readonly IntrospectionRequestValidator _requestValidator;
+        private readonly IntrospectionResponseGenerator _generator;
 
         public IntrospectionEndpointController(
             IntrospectionRequestValidator requestValidator, 
             IdentityServerOptions options, 
             IEventService events,
-            ScopeSecretValidator scopeSecretValidator)
+            ScopeSecretValidator scopeSecretValidator,
+            IntrospectionResponseGenerator generator)
         {
             _requestValidator = requestValidator;
             _scopeSecretValidator = scopeSecretValidator;
             _options = options;
             _events = events;
+            _generator = generator;
         }
 
         /// <summary>
@@ -77,11 +81,12 @@ namespace IdentityServer3.Core.Endpoints
         internal async Task<IHttpActionResult> ProcessRequest(NameValueCollection parameters, Scope scope)
         {
             var validationResult = await _requestValidator.ValidateAsync(parameters, scope);
+            var response = await _generator.ProcessAsync(validationResult, scope);
 
             if (validationResult.IsActive)
             {
-                await RaiseSuccessEventAsync(validationResult.Token, "active", scope.Name);
-                return new IntrospectionResult(validationResult, scope);
+                await RaiseSuccessEventAsync(validationResult.Token, "active", scope.Name);    
+                return new IntrospectionResult(response);
             }
 
             if (validationResult.IsError)
@@ -97,13 +102,13 @@ namespace IdentityServer3.Core.Endpoints
                 if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidToken)
                 {
                     await RaiseSuccessEventAsync(validationResult.Token, "inactive", scope.Name);
-                    return new IntrospectionResult();
+                    return new IntrospectionResult(response);
                 }
 
                 if (validationResult.FailureReason == IntrospectionRequestValidationFailureReason.InvalidScope)
                 {
                     await RaiseFailureEventAsync("Scope not authorized to introspect token", validationResult.Token, scope.Name);
-                    return new IntrospectionResult();
+                    return new IntrospectionResult(response);
                 }
             }
 

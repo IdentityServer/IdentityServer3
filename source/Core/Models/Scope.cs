@@ -87,6 +87,11 @@ namespace IdentityServer3.Core.Models
         public List<Secret> ScopeSecrets { get; set; }
 
         /// <summary>
+        /// Specifies whether this scope is allowed to see other scopes when using the introspection endpoint
+        /// </summary>
+        public bool AllowUnrestrictedIntrospection { get; set; }
+
+        /// <summary>
         /// Creates a Scope with default values
         /// </summary>
         public Scope()
@@ -97,6 +102,7 @@ namespace IdentityServer3.Core.Models
             IncludeAllClaimsForUser = false;
             Enabled = true;
             ShowInDiscoveryDocument = true;
+            AllowUnrestrictedIntrospection = false;
         }
     }
 }

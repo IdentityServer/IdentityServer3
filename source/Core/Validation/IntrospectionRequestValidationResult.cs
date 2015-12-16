@@ -29,6 +29,7 @@ namespace IdentityServer3.Core.Validation
 
     enum IntrospectionRequestValidationFailureReason
     {
+        None,
         MissingToken,
         InvalidToken,
         InvalidScope
