@@ -49,7 +49,7 @@ namespace IdentityServer3.Core.Validation
                 return new CustomGrantValidationResult
                 {
                     IsError = true,
-                    ErrorDescription = "No validator found for grant type"
+                    Error = "No validator found for grant type"
                 };
 
             try
@@ -62,7 +62,7 @@ namespace IdentityServer3.Core.Validation
                 return new CustomGrantValidationResult
                 {
                     IsError = true,
-                    ErrorDescription = "Grant validation error"
+                    Error = "Grant validation error",
                 };
             }
         }

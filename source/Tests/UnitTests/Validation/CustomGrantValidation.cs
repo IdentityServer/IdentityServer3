@@ -48,7 +48,7 @@ namespace IdentityServer3.Tests.Validation
             var result = await validator.ValidateAsync(request);
 
             result.IsError.Should().BeTrue();
-            result.ErrorDescription.Should().Be("Grant validation error");
+            result.Error.Should().Be("Grant validation error");
             result.Principal.Should().BeNull();
             
         }
