@@ -70,13 +70,6 @@ namespace IdentityServer3.Core.Validation
                     continue;
                 }
 
-                // check if client secret is still valid
-                if (secret.Expiration.HasExpired())
-                {
-                    Logger.Debug(string.Format("Skipping secret: {0}, secret is expired.", secretDescription));
-                    continue;
-                }
-
                 // use time constant string comparison
                 var isValid = TimeConstantComparer.IsEqual(sharedSecret, secret.Value);
 
