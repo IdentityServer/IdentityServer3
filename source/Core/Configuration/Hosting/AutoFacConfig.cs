@@ -100,8 +100,9 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
-            // register secret validation plumbing
-            builder.RegisterType<ClientSecretValidator>();
+            // register secret parsing/validation plumbing
+            builder.RegisterType<SecretValidator>();
+            builder.RegisterType<SecretParser>();
 
             foreach (var parser in fact.SecretParsers)
             {
@@ -146,6 +147,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterType<TokenRevocationRequestValidator>();
             builder.RegisterType<IntrospectionRequestValidator>();
             builder.RegisterType<ScopeSecretValidator>();
+            builder.RegisterType<ClientSecretValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
