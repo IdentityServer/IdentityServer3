@@ -1,4 +1,5 @@
-﻿using IdentityServer3.Core.Logging;
+﻿using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;
@@ -22,10 +23,19 @@ namespace IdentityServer3.Core.Validation
 
         public async Task<SecretValidationResult> ValidateAsync(ParsedSecret parsedSecret, IEnumerable<Secret> secrets)
         {
+            var expiredSecrets = secrets.Where(s => s.Expiration.HasExpired());
+            if (expiredSecrets.Any())
+            {
+                expiredSecrets.ToList().ForEach(
+                    ex => Logger.InfoFormat("Secret [{0}] is expired", ex.Description ?? "no description"));
+            }
+
+            var currentSecrets = secrets.Where(s => !s.Expiration.HasExpired());
+
             // see if a registered validator can validate the secret
             foreach (var validator in _validators)
             {
-                var secretValidationResult = await validator.ValidateAsync(secrets, parsedSecret);
+                var secretValidationResult = await validator.ValidateAsync(currentSecrets, parsedSecret);
 
                 if (secretValidationResult.Success)
                 {
