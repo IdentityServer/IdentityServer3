@@ -20,6 +20,7 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -423,6 +424,31 @@ namespace IdentityServer3.Core.Validation
                 {
                     signInMessage.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
                     acrValues.Remove(tenant);
+                }
+              
+                // look for well-known acr value -- SignInQueryString
+                var signInQueryStrings = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.SignInQueryString)).ToList();
+                if (signInQueryStrings.Any())
+                {
+                    var queryStrings = new List<SignInQueryString>();
+                    foreach (var signInQueryString in signInQueryStrings)
+                    {
+                        if (signInQueryString.IsPresent())
+                        {
+                            var queryString = signInQueryString.Substring(Constants.KnownAcrValues.SignInQueryString.Length);
+                            var keyValuePair = queryString.Split(':');
+                            if (keyValuePair.Length == 2)
+                            {
+                                queryStrings.Add(new SignInQueryString { Key = keyValuePair[0], Value = keyValuePair[1] });
+                                acrValues.Remove(tenant);
+                            }
+                            else
+                            {
+                                Logger.WarnFormat("Could not parse query string parameter because it's provided in an invalid format. The format must be 'signInQueryString:ParameterValue:ParameterValue'");
+                            }
+                        }
+                    }
+                    signInMessage.QueryString = queryStrings;
                 }
 
                 // pass through any remaining acr values

@@ -18,6 +18,8 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Validation;
 using System.Collections.Generic;
 using System.Linq;
+using IdentityServer3.Core.Models;
+using Microsoft.Owin;
 
 namespace IdentityServer3.Core.Logging
 {
@@ -35,6 +37,7 @@ namespace IdentityServer3.Core.Logging
         public IEnumerable<string> AuthenticationContextReferenceClasses { get; set; }
         public string Tenant { get; set; }
         public string IdP { get; set; }
+        public IEnumerable<SignInQueryString> QueryString { get; set; }
 
         public Dictionary<string, string> Raw { get; set; }
 
@@ -72,6 +75,7 @@ namespace IdentityServer3.Core.Logging
             {
                 IdP = request.SignInMessage.IdP;
                 Tenant = request.SignInMessage.Tenant;
+                QueryString = request.SignInMessage.QueryString;
                 AuthenticationContextReferenceClasses = request.SignInMessage.AcrValues;
             }
 

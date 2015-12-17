@@ -23,6 +23,7 @@ using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using IdentityServer3.Core.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
@@ -56,7 +57,7 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             // let the login page know the client requesting authorization
             _signIn.ClientId = request.ClientId;
-            
+
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
             {
@@ -77,7 +78,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             // process acr values
             var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
-            
+
             // look for well-known acr value -- idp
             var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
             if (idp.IsPresent())
@@ -93,6 +94,32 @@ namespace IdentityServer3.Core.ResponseHandling
                 _signIn.Tenant = tenant.Substring(Constants.KnownAcrValues.Tenant.Length);
                 acrValues.Remove(tenant);
             }
+
+            // look for well-known acr value -- SignInQueryString
+            var signInQueryStrings = acrValues.Where(x => x.StartsWith(Constants.KnownAcrValues.SignInQueryString)).ToList();
+            if (signInQueryStrings.Any())
+            {
+                var queryStrings = new List<SignInQueryString>();
+                foreach (var signInQueryString in signInQueryStrings)
+                {
+                    if (signInQueryString.IsPresent())
+                    {
+                        var queryString = signInQueryString.Substring(Constants.KnownAcrValues.SignInQueryString.Length);
+                        var keyValuePair = queryString.Split(':');
+                        if (keyValuePair.Length == 2)
+                        {
+                            queryStrings.Add(new SignInQueryString {Key = keyValuePair[0], Value = keyValuePair[1]});
+                            acrValues.Remove(tenant);
+                        }
+                        else
+                        {
+                            Logger.WarnFormat("Could not parse query string parameter because it's provided in an invalid format. The format must be 'signInQueryString:ParameterValue:ParameterValue'");
+                        }
+                    }
+                }
+                _signIn.QueryString = queryStrings;
+            }
+
 
             // pass through any remaining acr values
             if (acrValues.Any())
@@ -117,7 +144,7 @@ namespace IdentityServer3.Core.ResponseHandling
             // unauthenticated user
             var isAuthenticated = user.Identity.IsAuthenticated;
             if (!isAuthenticated) Logger.Info("User is not authenticated. Redirecting to login.");
-            
+
             // user de-activated
             bool isActive = false;
 
@@ -125,8 +152,8 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 var isActiveCtx = new IsActiveContext(user, request.Client);
                 await _users.IsActiveAsync(isActiveCtx);
-                
-                isActive = isActiveCtx.IsActive; 
+
+                isActive = isActiveCtx.IsActive;
                 if (!isActive) Logger.Info("User is not active. Redirecting to login.");
             }
 
@@ -205,8 +232,8 @@ namespace IdentityServer3.Core.ResponseHandling
                         SignInMessage = _signIn
                     };
 
-                    Logger.WarnFormat("User is logged in with idp: {0}, but idp not in client restriction list.", currentIdp); 
-                    
+                    Logger.WarnFormat("User is logged in with idp: {0}, but idp not in client restriction list.", currentIdp);
+
                     return Task.FromResult(response);
                 }
             }
@@ -214,7 +241,7 @@ namespace IdentityServer3.Core.ResponseHandling
             // check if idp is local and local logins are not allowed
             if (currentIdp == Constants.BuiltInIdentityProvider)
             {
-                if (_options.AuthenticationOptions.EnableLocalLogin == false || 
+                if (_options.AuthenticationOptions.EnableLocalLogin == false ||
                     request.Client.EnableLocalLogin == false)
                 {
                     var response = new LoginInteractionResponse
@@ -223,7 +250,7 @@ namespace IdentityServer3.Core.ResponseHandling
                     };
 
                     Logger.Warn("User is logged in with local idp, but local logins not enabled.");
-                    
+
                     return Task.FromResult(response);
                 }
             }
@@ -235,7 +262,7 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             if (request == null) throw new ArgumentNullException("request");
 
-            if (request.PromptMode != null && 
+            if (request.PromptMode != null &&
                 request.PromptMode != Constants.PromptModes.None &&
                 request.PromptMode != Constants.PromptModes.Consent)
             {
@@ -280,11 +307,12 @@ namespace IdentityServer3.Core.ResponseHandling
                     {
                         // no need to show consent screen again
                         // build access denied error to return to client
-                        response.Error = new AuthorizeError { 
+                        response.Error = new AuthorizeError
+                        {
                             ErrorType = ErrorTypes.Client,
                             Error = Constants.AuthorizeErrors.AccessDenied,
                             ResponseMode = request.ResponseMode,
-                            ErrorUri = request.RedirectUri, 
+                            ErrorUri = request.RedirectUri,
                             State = request.State
                         };
                     }
@@ -309,12 +337,12 @@ namespace IdentityServer3.Core.ResponseHandling
                                 // remember what user actually selected
                                 scopes = request.ValidatedScopes.GrantedScopes.Select(x => x.Name);
                             }
-                            
+
                             await _consent.UpdateConsentAsync(request.Client, request.Subject, scopes);
                         }
                     }
                 }
-                
+
                 return response;
             }
 
