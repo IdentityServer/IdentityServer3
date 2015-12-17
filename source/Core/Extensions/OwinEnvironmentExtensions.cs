@@ -35,6 +35,8 @@ namespace IdentityServer3.Core.Extensions
     /// </summary>
     public static class OwinEnvironmentExtensions
     {
+        private const string QueryStringFormat = "{0}={1}";
+
         /// <summary>
         /// Gets the public host name for IdentityServer.
         /// </summary>
@@ -138,15 +140,13 @@ namespace IdentityServer3.Core.Extensions
             var id = cookie.Write(message);
 
             var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString.Add("signin", id);
+            url = url.AddQueryString(string.Format(QueryStringFormat, "signin", id));
             foreach (var queryStringParams in message.QueryString)
             {
-                queryString.Add(queryStringParams.Key, queryStringParams.Value);
+                url = url.AddQueryString(string.Format(QueryStringFormat, Uri.EscapeDataString(queryStringParams.Key),Uri.EscapeDataString(queryStringParams.Value)));
             }
-            var uri = new Uri(url.AddQueryString(queryString.ToString()));
-            return uri.AbsoluteUri;
+
+            return new Uri(url).AbsoluteUri;
         }
 
         /// <summary>
