@@ -149,15 +149,13 @@ namespace IdentityServer3.Core.Validation
                 return false;
             }
 
-            if (secrets.Any(s => !s.Expiration.HasExpired()
-                                 && s.Type == Constants.SecretTypes.X509CertificateThumbprint
+            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint
                                  && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
             {
                 return true;
             }
 
-            if (secrets.Any(s => !s.Expiration.HasExpired()
-                                 && s.Type == Constants.SecretTypes.X509CertificateBase64
+            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateBase64
                                  && Equals(certificate, GetCertificateFromString(s.Value))))
             {
                 return true;
@@ -169,8 +167,7 @@ namespace IdentityServer3.Core.Validation
         private static List<X509Certificate2> GetAllTrustedCertificates(IEnumerable<Secret> secrets)
         {
             return secrets
-                .Where(s => !s.Expiration.HasExpired()
-                            && s.Type == Constants.SecretTypes.X509CertificateBase64)
+                .Where(s => s.Type == Constants.SecretTypes.X509CertificateBase64)
                 .Select(s => GetCertificateFromString(s.Value))
                 .Where(c => c != null)
                 .ToList();
