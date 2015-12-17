@@ -78,6 +78,7 @@ namespace IdentityServer3.Core.Validation
 
             if (!trustedKeys.Any())
             {
+                Logger.Warn("There are no certificates available to validate client assertion.");
                 return fail;
             }
 
@@ -105,6 +106,7 @@ namespace IdentityServer3.Core.Validation
 
                 if (jwtToken.Subject != jwtToken.Issuer)
                 {
+                    Logger.Warn("Both 'sub' and 'iss' in the client assertion token must have a value of client_id.");
                     return fail;
                 }
 
@@ -136,7 +138,7 @@ namespace IdentityServer3.Core.Validation
             if (!trustedKeys.Any()
                 && secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
             {
-                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint secret");
+                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint.");
             }
 
             return trustedKeys;
