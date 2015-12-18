@@ -105,15 +105,15 @@ namespace IdentityServer3.Core.ResponseHandling
                     if (signInQueryString.IsPresent())
                     {
                         var queryString = signInQueryString.Substring(Constants.KnownAcrValues.SignInQueryString.Length);
-                        var keyValuePair = queryString.Split(':');
-                        if (keyValuePair.Length == 2)
+                        var queryStringParameter = queryString.Split(':');
+                        if (queryStringParameter.Length == 2)
                         {
-                            queryStrings.Add(new SignInQueryString {Key = keyValuePair[0], Value = keyValuePair[1]});
-                            acrValues.Remove(tenant);
+                            queryStrings.Add(new SignInQueryString { Key = queryStringParameter[0], Value = queryStringParameter[1] });
+                            acrValues.Remove(signInQueryString);
                         }
                         else
                         {
-                            Logger.WarnFormat("Could not parse query string parameter because it's provided in an invalid format. The format must be 'signInQueryString:ParameterValue:ParameterValue'");
+                            Logger.WarnFormat("Could not parse query string parameter because it's provided in an invalid format. The format must be 'signInQueryString:ParameterKey:ParameterValue'");
                         }
                     }
                 }
