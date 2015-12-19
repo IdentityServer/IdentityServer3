@@ -20,6 +20,7 @@ using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 
 namespace IdentityServer3.Core.Configuration
 {
@@ -67,7 +68,7 @@ namespace IdentityServer3.Core.Configuration
             {
                 new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
                 new Registration<ISecretParser, PostBodySecretParser>(),
-                new Registration<ISecretParser, X509CertificateSecretParser>(),
+                new Registration<ISecretParser, X509CertificateSecretParser>()
             };
 
             // register default secret validators
