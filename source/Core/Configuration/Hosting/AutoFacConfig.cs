@@ -26,7 +26,6 @@ using IdentityServer3.Core.Services.InMemory;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System;
-using System.IdentityModel.Tokens;
 using System.Linq;
 
 namespace IdentityServer3.Core.Configuration.Hosting

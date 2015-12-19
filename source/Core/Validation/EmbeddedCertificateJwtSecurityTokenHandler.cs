@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-using System.IdentityModel.Tokens;
 using IdentityServer3.Core.Extensions;
+using System.IdentityModel.Tokens;
 
 namespace IdentityServer3.Core.Validation
 {

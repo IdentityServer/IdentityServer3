@@ -15,7 +15,6 @@
  */
 
 using IdentityModel;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;

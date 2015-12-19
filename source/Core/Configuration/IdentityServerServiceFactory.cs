@@ -20,7 +20,6 @@ using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
 
 namespace IdentityServer3.Core.Configuration
 {
