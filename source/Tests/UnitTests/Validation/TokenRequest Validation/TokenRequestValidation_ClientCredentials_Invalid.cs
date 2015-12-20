@@ -23,7 +23,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_ClientCredentials_Invalid
     {
         const string Category = "TokenRequest Validation - ClientCredentials - Invalid";

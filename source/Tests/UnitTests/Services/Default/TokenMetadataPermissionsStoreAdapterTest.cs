@@ -25,7 +25,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Services.Default
 {
-    
+
     public class TokenMetadataPermissionsStoreAdapterTest
     {
         List<ITokenMetadata> tokens;

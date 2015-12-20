@@ -21,7 +21,6 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
-using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;

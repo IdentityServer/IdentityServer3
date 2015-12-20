@@ -23,7 +23,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Connect.Endpoints
 {
-    
+
     public class AuthorizeEndpointControllerTests : IdSvrHostTestBase
     {
         HttpResponseMessage GetAuthorizePage()

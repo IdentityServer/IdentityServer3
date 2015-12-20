@@ -26,7 +26,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Connect.Endpoints
 {
-    
+
     public class ClientPermissionsControllerTests : IdSvrHostTestBase
     {
         string clientId;

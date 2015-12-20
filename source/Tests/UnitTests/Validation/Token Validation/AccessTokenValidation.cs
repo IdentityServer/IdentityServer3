@@ -20,7 +20,6 @@ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
 using Moq;
 using System;

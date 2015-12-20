@@ -16,7 +16,6 @@
 
 using FluentAssertions;
 using IdentityServer3.Core;
-using IdentityServer3.Core.Services.Default;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.Tokens
 {
-    
+
     public class IdentityTokenValidation
     {
         const string Category = "Identity token validation";

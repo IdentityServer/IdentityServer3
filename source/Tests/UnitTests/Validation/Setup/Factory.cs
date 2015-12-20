@@ -24,7 +24,6 @@ using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
-using System;
 
 namespace IdentityServer3.Tests.Validation
 {

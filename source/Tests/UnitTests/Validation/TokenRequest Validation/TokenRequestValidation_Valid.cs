@@ -29,7 +29,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_Valid
     {
         const string Category = "TokenRequest Validation - General - Valid";

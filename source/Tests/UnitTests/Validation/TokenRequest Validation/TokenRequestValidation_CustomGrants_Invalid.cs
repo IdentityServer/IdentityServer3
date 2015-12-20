@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-using System;
 using FluentAssertions;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Services;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
 using IdentityServer3.Core.Validation;
 using Moq;
+using System;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_CustomGrants_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";

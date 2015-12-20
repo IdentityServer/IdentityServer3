@@ -30,7 +30,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_Code_Invalid
     {
         IClientStore _clients = Factory.CreateClientStore();

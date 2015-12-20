@@ -20,7 +20,6 @@ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Xunit;
 

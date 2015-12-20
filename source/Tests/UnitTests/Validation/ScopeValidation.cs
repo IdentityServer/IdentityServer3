@@ -25,7 +25,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation
 {
-    
+
     public class ScopeValidation
     {
         const string Category = "Scope Validation";

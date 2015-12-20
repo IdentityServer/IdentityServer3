@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-using System;
-using System.IdentityModel.Tokens;
-using System.IO;
-using System.Text;
 using FluentAssertions;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
+using System.IdentityModel.Tokens;
+using System.IO;
+using System.Text;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.Secrets

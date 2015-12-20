@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FluentAssertions;
+using IdentityModel.Client;
+using Microsoft.Owin.Builder;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Owin.Builder;
-using FluentAssertions;
-using System.Net;
-using IdentityModel.Client;
 
 namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
 {
