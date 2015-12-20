@@ -46,11 +46,13 @@ namespace IdentityServer3.Core.Validation
             var validator = _validators.FirstOrDefault(v => v.GrantType.Equals(request.GrantType, StringComparison.Ordinal));
 
             if (validator == null)
+            {
                 return new CustomGrantValidationResult
                 {
                     IsError = true,
                     Error = "No validator found for grant type"
                 };
+            }
 
             try
             {
