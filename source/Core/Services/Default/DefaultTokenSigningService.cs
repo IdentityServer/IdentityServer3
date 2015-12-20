@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-using IdentityModel;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
-using System.Threading.Tasks;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -38,12 +37,17 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         protected readonly IdentityServerOptions _options;
 
+        /// <summary>
+        /// The signing key service
+        /// </summary>
+        private readonly ISigningKeyService _keyService;
+
         static DefaultTokenSigningService()
         {
             JsonExtensions.Serializer = JsonConvert.SerializeObject;
-            //JsonExtensions.Deserializer = JsonConvert.DeserializeObject;
         }
 
+        // todo: remove in next major version
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
         /// </summary>
@@ -51,6 +55,16 @@ namespace IdentityServer3.Core.Services.Default
         public DefaultTokenSigningService(IdentityServerOptions options)
         {
             _options = options;
+            _keyService = new DefaultSigningKeyService(options);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
+        /// </summary>
+        /// <param name="keyService">The signing key service.</param>
+        public DefaultTokenSigningService(ISigningKeyService keyService)
+        {
+            _keyService = keyService;
         }
 
         /// <summary>
@@ -70,9 +84,9 @@ namespace IdentityServer3.Core.Services.Default
         /// Retrieves the signing credential (override to load key from alternative locations)
         /// </summary>
         /// <returns>The signing credential</returns>
-        protected virtual Task<SigningCredentials> GetSigningCredentialsAsync()
+        protected virtual async Task<SigningCredentials> GetSigningCredentialsAsync()
         {
-            return Task.FromResult<SigningCredentials>(new X509SigningCredentials(_options.SigningCertificate));
+            return new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
         }
 
         /// <summary>
@@ -120,8 +134,8 @@ namespace IdentityServer3.Core.Services.Default
             var jsonTokens = jsonClaims.Select(x => new { x.Type, JsonValue = JRaw.Parse(x.Value) }).ToArray();
 
             var jsonObjects = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Object).ToArray();
-            var jsonObjectGroups = jsonObjects.GroupBy(x=>x.Type).ToArray();
-            foreach(var group in jsonObjectGroups)
+            var jsonObjectGroups = jsonObjects.GroupBy(x => x.Type).ToArray();
+            foreach (var group in jsonObjectGroups)
             {
                 if (payload.ContainsKey(group.Key))
                 {
@@ -131,7 +145,7 @@ namespace IdentityServer3.Core.Services.Default
                 if (group.Skip(1).Any())
                 {
                     // add as array
-                    payload.Add(group.Key, group.Select(x=>x.JsonValue).ToArray());
+                    payload.Add(group.Key, group.Select(x => x.JsonValue).ToArray());
                 }
                 else
                 {
@@ -141,7 +155,7 @@ namespace IdentityServer3.Core.Services.Default
             }
 
             var jsonArrays = jsonTokens.Where(x => x.JsonValue.Type == JTokenType.Array).ToArray();
-            var jsonArrayGroups = jsonArrays.GroupBy(x=>x.Type).ToArray();
+            var jsonArrayGroups = jsonArrays.GroupBy(x => x.Type).ToArray();
             foreach (var group in jsonArrayGroups)
             {
                 if (payload.ContainsKey(group.Key))
@@ -150,7 +164,7 @@ namespace IdentityServer3.Core.Services.Default
                 }
 
                 List<JToken> newArr = new List<JToken>();
-                foreach(var arrays in group)
+                foreach (var arrays in group)
                 {
                     var arr = (JArray)arrays.JsonValue;
                     newArr.AddRange(arr);
@@ -175,28 +189,28 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="credential">The credentials.</param>
         /// <returns>The JWT header</returns>
-        private JwtHeader CreateHeader(SigningCredentials credential)
+        private async Task<JwtHeader> CreateHeaderAsync(SigningCredentials credential)
         {
             var header = new JwtHeader(credential);
 
             var x509credential = credential as X509SigningCredentials;
             if (x509credential != null)
             {
-                header.Add("kid", Base64Url.Encode(x509credential.Certificate.GetCertHash()));
+                header.Add("kid", await _keyService.GetKidAsync(x509credential.Certificate));
             }
 
             return header;
         }
 
-        private Task<string> SignAsync(string payload, SigningCredentials credentials)
+        private async Task<string> SignAsync(string payload, SigningCredentials credentials)
         {
-            var header = CreateHeader(credentials);
+            var header = await CreateHeaderAsync(credentials);
             var jwtPayload = JwtPayload.Deserialize(payload);
 
             var token = new JwtSecurityToken(header, jwtPayload);
 
             var handler = new JwtSecurityTokenHandler();
-            return Task.FromResult(handler.WriteToken(token));
+            return handler.WriteToken(token);
         }
     }
 }

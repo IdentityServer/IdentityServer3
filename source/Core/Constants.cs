@@ -81,6 +81,7 @@ namespace IdentityServer3.Core
             public const string ClientId     = "client_id";
             public const string ClientSecret = "client_secret";
             public const string ClientAssertion = "client_assertion";
+            public const string ClientAssertionType = "client_assertion_type";
             public const string Assertion    = "assertion";
             public const string Code         = "code";
             public const string RefreshToken = "refresh_token";
@@ -583,6 +584,7 @@ namespace IdentityServer3.Core
         {
             public const string SharedSecret = "SharedSecret";
             public const string X509Certificate = "X509Certificate";
+            public const string JwtBearer = "urn:ietf:params:oauth:grant-type:jwt-bearer";
         }
 
         public static class SecretTypes
@@ -590,12 +592,14 @@ namespace IdentityServer3.Core
             public const string SharedSecret              = "SharedSecret";
             public const string X509CertificateThumbprint = "X509Thumbprint";
             public const string X509CertificateName       = "X509Name";
+            public const string X509CertificateBase64 = "X509CertificateBase64";
         }
 
         public static class TokenEndpointAuthenticationMethods
         {
             public const string PostBody = "client_secret_post";
             public const string BasicAuthentication = "client_secret_basic";
+            public const string PrivateKeyJwt = "private_key_jwt";
         }
 
         public static class RouteNames

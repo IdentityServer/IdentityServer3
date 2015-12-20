@@ -24,7 +24,6 @@ using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using Moq;
 using System.Collections.Generic;
-using System;
 
 namespace IdentityServer3.Tests.Validation
 {
@@ -33,6 +32,11 @@ namespace IdentityServer3.Tests.Validation
         public static IClientStore CreateClientStore()
         {
             return new InMemoryClientStore(TestClients.Get());
+        }
+
+        public static DefaultTokenSigningService CreateDefaultTokenSigningService()
+        {
+            return new DefaultTokenSigningService(new DefaultSigningKeyService(TestIdentityServerOptions.Create()));
         }
 
         //public static ClientValidator CreateClientValidator(
@@ -182,7 +186,8 @@ namespace IdentityServer3.Tests.Validation
                 customValidator: new DefaultCustomTokenValidator(
                     users: users,
                     clients: clients),
-                owinEnvironment: new OwinEnvironmentService(context));
+                owinEnvironment: new OwinEnvironmentService(context),
+                keyService: new DefaultSigningKeyService(options));
 
             return validator;
         }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using IdentityServer3.Core.Extensions;
 
 namespace Owin

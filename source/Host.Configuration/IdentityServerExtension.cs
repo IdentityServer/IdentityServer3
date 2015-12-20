@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
- using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
@@ -42,10 +40,7 @@ namespace Owin
                     .UseInMemoryClients(Clients.Get())
                     .UseInMemoryScopes(Scopes.Get());
 
-                factory.CustomGrantValidators.Add(
-                    new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator)));
-                factory.CustomGrantValidators.Add(
-                    new Registration<ICustomGrantValidator>(typeof(AnotherCustomGrantValidator)));
+                factory.AddCustomGrantValidators();
 
                 factory.ConfigureClientStoreCache();
                 factory.ConfigureScopeStoreCache();

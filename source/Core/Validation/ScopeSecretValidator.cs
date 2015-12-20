@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
 using IdentityServer3.Core.Events;
 using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
@@ -31,16 +29,16 @@ namespace IdentityServer3.Core.Validation
 
         private readonly IScopeStore _scopes;
         private readonly OwinEnvironmentService _environment;
-        private readonly IEnumerable<ISecretParser> _parsers;
-        private readonly IEnumerable<ISecretValidator> _validators;
         private readonly IEventService _events;
+        private readonly SecretParser _parser;
+        private readonly SecretValidator _validator;
 
-        public ScopeSecretValidator(IScopeStore scopes, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment, IEventService events)
+        public ScopeSecretValidator(IScopeStore scopes, SecretParser parsers, SecretValidator validator, OwinEnvironmentService environment, IEventService events)
         {
             _scopes = scopes;
-            _parsers = parsers;
-            _validators = validators;
             _environment = environment;
+            _parser = parsers;
+            _validator = validator;
             _events = events;
         }
 
@@ -53,23 +51,10 @@ namespace IdentityServer3.Core.Validation
                 IsError = true
             };
 
-            // see if a registered parser finds a secret on the request
-            ParsedSecret parsedSecret = null;
-            foreach (var parser in _parsers)
-            {
-                parsedSecret = await parser.ParseAsync(_environment.Environment);
-                if (parsedSecret != null)
-                {
-                    Logger.DebugFormat("Parser found scope secret: {0}", parser.GetType().Name);
-                    Logger.InfoFormat("Scope name found: {0}", parsedSecret.Id);
-
-                    break;
-                }
-            }
-
+            var parsedSecret = await _parser.ParseAsync(_environment.Environment);
             if (parsedSecret == null)
             {
-                await RaiseFailureEvent("unknown", "No client id or secret found");
+                await RaiseFailureEvent("unknown", "No scope id or secret found");
 
                 Logger.Info("No scope secret found");
                 return fail;
@@ -79,31 +64,25 @@ namespace IdentityServer3.Core.Validation
             var scope = (await _scopes.FindScopesAsync(new[] { parsedSecret.Id })).FirstOrDefault();
             if (scope == null)
             {
-                await RaiseFailureEvent(parsedSecret.Id, "Unknown client");
+                await RaiseFailureEvent(parsedSecret.Id, "Unknown scope");
 
                 Logger.Info("No scope with that name found. aborting");
                 return fail;
             }
 
-            // see if a registered validator can validate the secret
-            foreach (var validator in _validators)
+            var result = await _validator.ValidateAsync(parsedSecret, scope.ScopeSecrets);
+            if (result.Success)
             {
-                var secretValidationResult = await validator.ValidateAsync(scope.ScopeSecrets, parsedSecret);
+                Logger.Info("Scope validation success");
 
-                if (secretValidationResult.Success)
+                var success = new ScopeSecretValidationResult
                 {
-                    Logger.DebugFormat("Secret validator success: {0}", validator.GetType().Name);
-                    Logger.Info("Scope validation success");
+                    IsError = false,
+                    Scope = scope
+                };
 
-                    var success = new ScopeSecretValidationResult
-                    {
-                        IsError = false,
-                        Scope = scope
-                    };
-
-                    await RaiseSuccessEvent(scope.Name);
-                    return success;
-                }
+                await RaiseSuccessEvent(scope.Name);
+                return success;
             }
 
             await RaiseFailureEvent(scope.Name, "Invalid client secret");

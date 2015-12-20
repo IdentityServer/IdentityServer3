@@ -21,18 +21,18 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using IdentityServer3.Core.Services.Default;
-using System.Collections.Specialized;
 
 namespace IdentityServer3.Core.Endpoints
 {

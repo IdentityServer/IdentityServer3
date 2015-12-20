@@ -1,9 +1,8 @@
 namespace IdentityServer3.Core.Configuration
 {
+    using Microsoft.Owin.Security;
     using System.Collections.Generic;
     using System.Security.Claims;
-
-    using Microsoft.Owin.Security;
 
     /// <summary>
     /// A model class represending an authentication ticket

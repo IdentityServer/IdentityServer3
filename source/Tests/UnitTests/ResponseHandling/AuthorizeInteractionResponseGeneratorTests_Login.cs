@@ -30,7 +30,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Connect.ResponseHandling
 {
-    
+
     public class AuthorizeInteractionResponseGeneratorTests_Login
     {
         IdentityServerOptions options;

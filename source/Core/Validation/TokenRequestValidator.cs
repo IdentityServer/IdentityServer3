@@ -631,12 +631,20 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            if (result.Error.IsPresent())
+            if (result.IsError)
             {
-                LogError("Invalid custom grant: " + result.Error);
-                return Invalid(result.Error);
+                if (result.Error.IsPresent())
+                {
+                    LogError("Invalid custom grant: " + result.Error);
+                    return Invalid(result.Error);
+                }
+                else
+                {
+                    LogError("Invalid custom grant.");
+                    return Invalid(Constants.TokenErrors.InvalidGrant);
+                }
             }
-
+            
             if (result.Principal != null)
             {
                 _validatedRequest.Subject = result.Principal;

@@ -60,16 +60,26 @@ namespace IdentityServer3.Core.Configuration.Hosting
             
             builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
             builder.RegisterDefaultInstance<ICorsPolicyService, DefaultCorsPolicyService>(fact.CorsPolicyService);
-
+            
             builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
             builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
-            builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);
-            builder.RegisterDefaultType<ITokenSigningService, DefaultTokenSigningService>(fact.TokenSigningService);
+            builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);            
             builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
 
+            // todo remove in next major version
+            if (fact.TokenSigningService != null)
+            {
+                builder.Register(fact.TokenSigningService);
+            }
+            else
+            {
+                builder.Register(new Registration<ITokenSigningService>(r => new DefaultTokenSigningService(r.Resolve<ISigningKeyService>())));
+            }
+
+            builder.RegisterDefaultType<ISigningKeyService, DefaultSigningKeyService>(fact.SigningKeyService);
             builder.RegisterDecoratorDefaultType<IEventService, EventServiceDecorator, DefaultEventService>(fact.EventService);
 
             builder.RegisterDefaultType<IRedirectUriValidator, DefaultRedirectUriValidator>(fact.RedirectUriValidator);
@@ -90,8 +100,9 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
-            // register secret validation plumbing
-            builder.RegisterType<ClientSecretValidator>();
+            // register secret parsing/validation plumbing
+            builder.RegisterType<SecretValidator>();
+            builder.RegisterType<SecretParser>();
 
             foreach (var parser in fact.SecretParsers)
             {
@@ -136,6 +147,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterType<TokenRevocationRequestValidator>();
             builder.RegisterType<IntrospectionRequestValidator>();
             builder.RegisterType<ScopeSecretValidator>();
+            builder.RegisterType<ClientSecretValidator>();
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
@@ -143,6 +155,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
             builder.RegisterType<EndSessionResponseGenerator>();
+            builder.RegisterType<IntrospectionResponseGenerator>();
 
             // for authentication
             var authenticationOptions = options.AuthenticationOptions ?? new AuthenticationOptions();

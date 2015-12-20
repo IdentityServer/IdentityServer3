@@ -16,7 +16,7 @@
 
 namespace IdentityServer3.Tests.Configuration.Hosting
 {
-    
+
     public class AntiForgeryTokenValidatorTest
     {
     }

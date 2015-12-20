@@ -35,7 +35,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Connect.ResponseHandling
 {
-    
+
     public class AuthorizeInteractionResponseGeneratorTests_Consent
     {
         Mock<IConsentService> mockConsent;

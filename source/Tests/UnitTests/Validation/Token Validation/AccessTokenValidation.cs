@@ -20,7 +20,6 @@ using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
-using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Services.InMemory;
 using Moq;
 using System;
@@ -191,7 +190,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
         [Trait("Category", Category)]
         public async Task Valid_JWT_Token()
         {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var signer = Factory.CreateDefaultTokenSigningService();
             var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write"));
 
             var validator = Factory.CreateTokenValidator(null);
@@ -204,7 +203,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
         [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Issuer()
         {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var signer = Factory.CreateDefaultTokenSigningService();
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             token.Issuer = "invalid";
             var jwt = await signer.SignTokenAsync(token);
@@ -220,7 +219,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
         [Trait("Category", Category)]
         public async Task JWT_Token_Too_Long()
         {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var signer = Factory.CreateDefaultTokenSigningService();
             var jwt = await signer.SignTokenAsync(TokenFactory.CreateAccessTokenLong(new Client { ClientId = "roclient" }, "valid", 600, 1000, "read", "write"));
             
             var validator = Factory.CreateTokenValidator(null);
@@ -234,7 +233,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
         [Trait("Category", Category)]
         public async Task JWT_Token_invalid_Audience()
         {
-            var signer = new DefaultTokenSigningService(TestIdentityServerOptions.Create());
+            var signer = Factory.CreateDefaultTokenSigningService();
             var token = TokenFactory.CreateAccessToken(new Client { ClientId = "roclient" }, "valid", 600, "read", "write");
             token.Audience = "invalid";
             var jwt = await signer.SignTokenAsync(token);

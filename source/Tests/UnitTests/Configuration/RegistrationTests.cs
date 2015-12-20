@@ -22,7 +22,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Configuration
 {
-    
+
     public class RegistrationTests
     {
         [Fact]

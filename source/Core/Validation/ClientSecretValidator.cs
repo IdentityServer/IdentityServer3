@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Events;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Logging;
+using IdentityServer3.Core.Services;
+using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Validation
 {
@@ -31,14 +29,14 @@ namespace IdentityServer3.Core.Validation
         private readonly IClientStore _clients;
         private readonly OwinEnvironmentService _environment;
         private readonly IEventService _events;
-        private readonly IEnumerable<ISecretParser> _parsers;
-        private readonly IEnumerable<ISecretValidator> _validators;
+        private readonly SecretParser _parser;
+        private readonly SecretValidator _validator;
 
-        public ClientSecretValidator(IClientStore clients, IEnumerable<ISecretParser> parsers, IEnumerable<ISecretValidator> validators, OwinEnvironmentService environment, IEventService events)
+        public ClientSecretValidator(IClientStore clients, SecretParser parser, SecretValidator validator, OwinEnvironmentService environment, IEventService events)
         {
             _clients = clients;
-            _parsers = parsers;
-            _validators = validators;
+            _parser = parser;
+            _validator = validator;
             _environment = environment;
             _events = events;
         }
@@ -52,20 +50,7 @@ namespace IdentityServer3.Core.Validation
                 IsError = true
             };
 
-            // see if a registered parser finds a secret on the request
-            ParsedSecret parsedSecret = null;
-            foreach (var parser in _parsers)
-            {
-                parsedSecret = await parser.ParseAsync(_environment.Environment);
-                if (parsedSecret != null)
-                {
-                    Logger.DebugFormat("Parser found client secret: {0}", parser.GetType().Name);
-                    Logger.InfoFormat("Client secret id found: {0}", parsedSecret.Id);
-
-                    break;
-                }
-            }
-
+            var parsedSecret = await _parser.ParseAsync(_environment.Environment);
             if (parsedSecret == null)
             {
                 await RaiseFailureEvent("unknown", "No client id or secret found");
@@ -84,25 +69,20 @@ namespace IdentityServer3.Core.Validation
                 return fail;
             }
 
-            // see if a registered validator can validate the secret
-            foreach (var validator in _validators)
+            var result = await _validator.ValidateAsync(parsedSecret, client.ClientSecrets);
+
+            if (result.Success)
             {
-                var secretValidationResult = await validator.ValidateAsync(client.ClientSecrets, parsedSecret);
+                Logger.Info("Client validation success");
 
-                if (secretValidationResult.Success)
+                var success = new ClientSecretValidationResult
                 {
-                    Logger.DebugFormat("Secret validator success: {0}", validator.GetType().Name);
-                    Logger.Info("Client validation success");
+                    IsError = false,
+                    Client = client
+                };
 
-                    var success = new ClientSecretValidationResult
-                    {
-                        IsError = false,
-                        Client = client
-                    };
-
-                    await RaiseSuccessEvent(client.ClientId);
-                    return success;
-                }
+                await RaiseSuccessEvent(client.ClientId);
+                return success;
             }
 
             await RaiseFailureEvent(client.ClientId, "Invalid client secret");

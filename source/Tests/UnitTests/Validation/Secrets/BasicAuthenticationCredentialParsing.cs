@@ -23,9 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
-using System.Linq;
 
-namespace IdentityServer3.Tests.Validation.Secret_Validation
+namespace IdentityServer3.Tests.Validation.Secrets
 {
     public class BasicAuthenticationSecretParsing
     {

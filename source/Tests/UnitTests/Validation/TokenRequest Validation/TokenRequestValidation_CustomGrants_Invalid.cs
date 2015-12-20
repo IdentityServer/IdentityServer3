@@ -17,13 +17,16 @@
 using FluentAssertions;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Services;
+using IdentityServer3.Core.Validation;
+using Moq;
+using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation.TokenRequest
 {
-    
+
     public class TokenRequestValidation_CustomGrants_Invalid
     {
         const string Category = "TokenRequest Validation - AssertionFlow - Invalid";
@@ -64,5 +67,34 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.IsError.Should().BeTrue();
             result.Error.Should().Be(Constants.TokenErrors.UnsupportedGrantType);
         }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Failing_Custom_Grant_Validator()
+        {
+            var grantType = "custom_grant";
+            var client = await _clients.FindClientByIdAsync("customgrantclient");
+
+            var validator = Factory.CreateTokenRequestValidator(customGrantValidators: new[] { AlwaysFailingCustomGrantValidator(grantType).Object });
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, grantType);
+            parameters.Add(Constants.TokenRequest.Scope, "resource");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be("Grant validation error");
+        }
+
+        private static Mock<ICustomGrantValidator> AlwaysFailingCustomGrantValidator(string grantType)
+        {
+            var alwaysFailingCustomGrantValidator = new Mock<ICustomGrantValidator>();
+            alwaysFailingCustomGrantValidator.Setup(y => y.ValidateAsync(It.IsAny<ValidatedTokenRequest>()))
+                .Throws<NotSupportedException>();
+            alwaysFailingCustomGrantValidator.SetupGet(y => y.GrantType).Returns(grantType);
+            return alwaysFailingCustomGrantValidator;
+        }
+
     }
 }

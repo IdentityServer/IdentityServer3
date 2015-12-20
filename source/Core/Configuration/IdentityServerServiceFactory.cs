@@ -67,7 +67,7 @@ namespace IdentityServer3.Core.Configuration
             {
                 new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
                 new Registration<ISecretParser, PostBodySecretParser>(),
-                new Registration<ISecretParser, X509CertificateSecretParser>(),
+                new Registration<ISecretParser, X509CertificateSecretParser>()
             };
 
             // register default secret validators
@@ -306,6 +306,14 @@ namespace IdentityServer3.Core.Configuration
         /// The CORS policy service.
         /// </value>
         public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signing key service.
+        /// </summary>
+        /// <value>
+        /// The signing key service.
+        /// </value>
+        public Registration<ISigningKeyService> SigningKeyService { get; set; }
 
         internal void Validate()
         {

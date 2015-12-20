@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IdentityServer3.Core</RootNamespace>
     <AssemblyName>IdentityServer3</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -24,6 +24,7 @@
     <DocumentationFile>..\..\build\IdentityServer3.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,7 +56,7 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IdentityModel.1.2.1\lib\net45\IdentityModel.Net45.dll</HintPath>
+      <HintPath>..\packages\IdentityModel.1.3.0\lib\net45\IdentityModel.Net45.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -135,6 +136,7 @@
     <Compile Include="Configuration\AuthenticationSessionStoreWrapper.cs" />
     <Compile Include="Configuration\AuthenticationTicketModel.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
+    <Compile Include="Configuration\DiscoveryOptions.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\Hosting\ClientListCookie.cs" />
     <Compile Include="Configuration\InputLengthRestrictions.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="Extensions\IClientStoreExtensions.cs" />
     <Compile Include="Extensions\IContainerExtensions.cs" />
     <Compile Include="Extensions\IdentityServerOptionsExtensions.cs" />
+    <Compile Include="Extensions\JwtSecurityTokenExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Extensions\OwinEnvironmentExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
@@ -223,32 +226,41 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>T4resx.tt</DependentUpon>
     </Compile>
+    <Compile Include="ResponseHandling\IntrospectionResponseGenerator.cs" />
     <Compile Include="Results\CheckSessionResult.cs" />
     <Compile Include="Results\RevocationErrorResult.cs" />
+    <Compile Include="Results\IntrospectionResult.cs" />
     <Compile Include="Results\WelcomeActionResult.cs" />
     <Compile Include="Services\Caching\CachingClientStore.cs" />
     <Compile Include="Services\Caching\CachingUserService.cs" />
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
+    <Compile Include="Services\Default\DefaultSigningKeyService.cs" />
     <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
+    <Compile Include="Services\ISigningKeyService.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
     <Compile Include="Validation\ScopeSecretValidationResult.cs" />
     <Compile Include="Validation\ScopeSecretValidator.cs" />
+    <Compile Include="Validation\ClientAssertionSecretParser.cs" />
     <Compile Include="Validation\ClientSecretValidator.cs" />
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
     <Compile Include="Services\Default\DefaultCustomGrantValidator.cs" />
+    <Compile Include="Validation\EmbeddedCertificateJwtSecurityTokenHandler.cs" />
     <Compile Include="Validation\HashedSharedSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />
     <Compile Include="Services\Default\DefaultLocalizationService.cs" />
     <Compile Include="Services\Default\DefaultRedirectUriValidator.cs" />
+    <Compile Include="Validation\PrivateKeyJwtSecretValidator.cs" />
     <Compile Include="Validation\PlainTextSharedSecretValidator.cs" />
     <Compile Include="Validation\PostBodySecretParser.cs" />
     <Compile Include="Services\Default\UserServiceBase.cs" />
+    <Compile Include="Validation\SecretParser.cs" />
+    <Compile Include="Validation\SecretValidator.cs" />
     <Compile Include="Validation\X509CertificateThumbprintSecretValidator.cs" />
     <Compile Include="Services\ICache.cs" />
     <Compile Include="Services\ICorsPolicyService.cs" />

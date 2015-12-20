@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FluentAssertions;
+using IdentityModel.Client;
+using Microsoft.Owin.Builder;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Microsoft.Owin.Builder;
-using FluentAssertions;
-using System.Net;
-using IdentityModel.Client;
 
 namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
 {
@@ -119,6 +117,46 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
 
             response.IsActive.Should().Be(true);
             response.IsError.Should().Be(false);
+
+            var scopes = from c in response.Claims
+                         where c.Item1 == "scope"
+                         select c;
+
+            scopes.Count().Should().Be(1);
+            scopes.First().Item2.Should().Be("api1");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Valid_Token_Valid_Unrestricted_Scope()
+        {
+            var tokenClient = new TokenClient(
+                TokenEndpoint,
+                "client1",
+                "secret",
+                _handler);
+
+            var tokenResponse = await tokenClient.RequestClientCredentialsAsync("api1 api2 unrestricted.api");
+
+            var introspectionClient = new IntrospectionClient(
+                IntrospectionEndpoint,
+                "unrestricted.api",
+                "secret",
+                _handler);
+
+            var response = await introspectionClient.SendAsync(new IntrospectionRequest
+            {
+                Token = tokenResponse.AccessToken
+            });
+
+            response.IsActive.Should().Be(true);
+            response.IsError.Should().Be(false);
+
+            var scopes = from c in response.Claims
+                         where c.Item1 == "scope"
+                         select c;
+
+            scopes.Count().Should().Be(3);
         }
 
         [Fact]
@@ -146,6 +184,13 @@ namespace IdentityServer3.Tests.Endpoints.Connect.Introspection
 
             response.IsActive.Should().Be(true);
             response.IsError.Should().Be(false);
+
+            var scopes = from c in response.Claims
+                         where c.Item1 == "scope"
+                         select c;
+
+            scopes.Count().Should().Be(1);
+            scopes.First().Item2.Should().Be("api1");
         }
 
         [Fact]

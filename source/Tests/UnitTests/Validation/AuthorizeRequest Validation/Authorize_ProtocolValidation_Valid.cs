@@ -22,7 +22,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 {
-    
+
     public class Authorize_ProtocolValidation_Valid
     {
         [Fact]

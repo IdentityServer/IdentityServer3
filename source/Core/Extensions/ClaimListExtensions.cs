@@ -16,7 +16,6 @@
 
 using IdentityModel;
 using IdentityServer3.Core.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

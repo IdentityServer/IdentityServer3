@@ -24,7 +24,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 {
-    
+
     public class Authorize_ClientValidation_Token
     {
         IdentityServerOptions _options = TestIdentityServerOptions.Create();

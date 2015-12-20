@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-using System;
 using FluentAssertions;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer3.Core.Logging;
-using Moq;
 using Xunit;
 
 namespace IdentityServer3.Tests.Validation
@@ -48,7 +47,7 @@ namespace IdentityServer3.Tests.Validation
             var result = await validator.ValidateAsync(request);
 
             result.IsError.Should().BeTrue();
-            result.ErrorDescription.Should().Be("Grant validation error");
+            result.Error.Should().Be("Grant validation error");
             result.Principal.Should().BeNull();
             
         }

@@ -15,7 +15,6 @@
  */
 
 using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Resources;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,7 +75,7 @@ namespace IdentityServer3.Core.Validation
                 IsActive = true,
                 IsError = false,
                 Token = token,
-                Claims = tokenValidationResult.Claims.Where(c => c.Type != Constants.ClaimTypes.Scope)
+                Claims = tokenValidationResult.Claims
             };
 
             return success;

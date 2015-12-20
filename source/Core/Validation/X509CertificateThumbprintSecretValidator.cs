@@ -15,7 +15,6 @@
  */
 
 using IdentityModel;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;
@@ -60,9 +59,6 @@ namespace IdentityServer3.Core.Validation
 
             foreach (var secret in secrets)
             {
-                // check if client secret is still valid
-                if (secret.Expiration.HasExpired()) continue;
-
                 if (secret.Type == Constants.SecretTypes.X509CertificateThumbprint)
                 {
                     if (TimeConstantComparer.IsEqual(thumbprint.ToLowerInvariant(), secret.Value.ToLowerInvariant()))
