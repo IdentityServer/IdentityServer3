@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using System;
@@ -31,14 +30,19 @@ namespace IdentityServer3.Core.Validation
 
         public CustomGrantValidator(IEnumerable<ICustomGrantValidator> validators)
         {
-            if (validators == null) throw new ArgumentNullException("validators");
-
-            _validators = validators;
+            if (validators == null)
+            {
+                _validators = Enumerable.Empty<ICustomGrantValidator>();
+            }
+            else
+            {
+                _validators = validators;
+            }
         }
 
         public IEnumerable<string> GetAvailableGrantTypes()
         {
-            return _validators.Where(v => v.GrantType.IsPresent()).Select(v => v.GrantType);
+            return _validators.Select(v => v.GrantType);
         }
 
         public async Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)

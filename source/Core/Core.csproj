@@ -249,7 +249,6 @@
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
-    <Compile Include="Services\Default\DefaultCustomGrantValidator.cs" />
     <Compile Include="Validation\EmbeddedCertificateJwtSecurityTokenHandler.cs" />
     <Compile Include="Validation\HashedSharedSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />

@@ -95,10 +95,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     builder.Register(val);
                 }
             }
-            else
-            {
-                builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
-            }
 
             // register secret parsing/validation plumbing
             builder.RegisterType<SecretValidator>();
