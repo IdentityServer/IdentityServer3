@@ -67,6 +67,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
+            builder.RegisterDefaultType<ICustomTokenResponseGenerator, DefaultCustomTokenResponseGenerator>(fact.CustomTokenResponseGenerator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
 
             // todo remove in next major version

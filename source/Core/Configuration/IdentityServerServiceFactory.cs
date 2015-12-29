@@ -308,6 +308,14 @@ namespace IdentityServer3.Core.Configuration
         public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom token response generator
+        /// </summary>
+        /// <value>
+        /// The custom token response generator
+        /// </value>
+        public Registration<ICustomTokenResponseGenerator> CustomTokenResponseGenerator { get; set; }
+
+        /// <summary>
         /// Gets or sets the signing key service.
         /// </summary>
         /// <value>

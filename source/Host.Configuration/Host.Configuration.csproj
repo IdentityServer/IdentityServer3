@@ -88,12 +88,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\AnotherCustomGrantValidator.cs" />
+    <Compile Include="Extensions\AnotherCustomGrantValidator.cs" />
     <Compile Include="Config\Cert.cs" />
     <Compile Include="Config\Clients.cs" />
-    <Compile Include="Config\CustomGrantValidator.cs" />
+    <Compile Include="Extensions\CustomGrantValidator.cs" />
     <Compile Include="Config\Scopes.cs" />
     <Compile Include="Config\Users.cs" />
+    <Compile Include="Extensions\CustomTokenResponseGenerator.cs" />
     <Compile Include="FactoryExtensions.cs" />
     <Compile Include="IdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

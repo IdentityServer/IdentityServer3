@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.ComponentModel;
 
 #pragma warning disable 1591
@@ -27,5 +28,12 @@ namespace IdentityServer3.Core.Models
         public string AccessToken { get; set; }
         public int AccessTokenLifetime { get; set; }
         public string RefreshToken { get; set; }
+
+        public Dictionary<string, object> Custom { get; set; }
+
+        public TokenResponse()
+        {
+            Custom = new Dictionary<string, object>();
+        }
     }
 }
