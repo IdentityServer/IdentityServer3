@@ -71,7 +71,7 @@ namespace IdentityServer3.Tests.TokenClients
             var userInfo = await userInfoclient.GetAsync();
 
             userInfo.IsError.Should().BeFalse();
-            userInfo.Raw.Should().Be("{\"sub\":\"88421113\",\"address\":\"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }\"}");
+            userInfo.Raw.Should().Be("{\"sub\":\"88421113\",\"address\":{\"street_address\":\"One Hacker Way\",\"locality\":\"Heidelberg\",\"postal_code\":69118,\"country\":\"Germany\"}}");
         }
 
         [Fact]
