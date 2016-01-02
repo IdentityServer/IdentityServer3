@@ -186,6 +186,16 @@
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
     <Compile Include="TestExtensions.cs" />
+    <Compile Include="TokenClients\ClientCredentialsClient.cs" />
+    <Compile Include="TokenClients\CustomGrantClient.cs" />
+    <Compile Include="TokenClients\ResourceOwnerClient.cs" />
+    <Compile Include="TokenClients\Setup\Clients.cs" />
+    <Compile Include="TokenClients\Setup\CustomGrantValidator.cs" />
+    <Compile Include="TokenClients\Setup\CustomGrantValidator2.cs" />
+    <Compile Include="TokenClients\Setup\Scopes.cs" />
+    <Compile Include="TokenClients\Setup\Startup.cs" />
+    <Compile Include="TokenClients\Setup\Users.cs" />
+    <Compile Include="TokenClients\UserInfoClient.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\CustomGrantValidation.cs" />
     <Compile Include="Validation\Secrets\BasicAuthenticationCredentialParsing.cs" />
