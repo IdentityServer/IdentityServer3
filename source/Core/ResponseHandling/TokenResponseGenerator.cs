@@ -56,13 +56,14 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 response = await ProcessAuthorizationCodeRequestAsync(request);
             }
-
-            if (request.GrantType == Constants.GrantTypes.RefreshToken)
+            else if (request.GrantType == Constants.GrantTypes.RefreshToken)
             {
                 response = await ProcessRefreshTokenRequestAsync(request);
             }
-
-            response = await ProcessTokenRequestAsync(request);
+            else
+            {
+                response = await ProcessTokenRequestAsync(request);
+            }
 
             return await _customResponseGenerator.GenerateAsync(request, response);
         }
