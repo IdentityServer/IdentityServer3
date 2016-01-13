@@ -199,10 +199,30 @@ namespace IdentityServer3.Core.Validation
             request.ResponseType = responseType;
 
 
-            //////////////////////////////////////////////////////////
-            // match response_type to flow
-            //////////////////////////////////////////////////////////
-            request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+            if (request.ResponseType == Constants.ResponseTypes.Code && request.Client.Flow == Flows.AuthorizationCodeWithProofKey)
+            {
+                /////////////////////////////////////////////////////////////////////////////
+                // if client uses authorization code with proof key flow, we need to validate
+                // code_challenge and code_challenge_method
+                /////////////////////////////////////////////////////////////////////////////
+                request.CodeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
+                request.CodeChallengeMethod = request.Raw.Get(Constants.AuthorizeRequest.CodeChallengeMethod);
+
+                var proofKeyResult = ValidateProofKeyParameters(request);
+                if (proofKeyResult.IsError)
+                {
+                    return proofKeyResult;
+                }
+
+                request.Flow = Flows.AuthorizationCodeWithProofKey;
+            }
+            else
+            {
+                //////////////////////////////////////////////////////////
+                // match response_type to flow
+                //////////////////////////////////////////////////////////
+                request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+            }
 
 
             //////////////////////////////////////////////////////////
@@ -483,6 +503,42 @@ namespace IdentityServer3.Core.Validation
                 {
                     LogError("Check session endpoint enabled, but SessionId is missing", request);
                 }
+            }
+
+            return Valid(request);
+        }
+
+        private AuthorizeRequestValidationResult ValidateProofKeyParameters(ValidatedAuthorizeRequest request)
+        {
+            if (request.CodeChallenge.IsMissing())
+            {
+                LogError("code_challenge is missing", request);
+                return Invalid(request);
+            }
+
+            if (request.CodeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
+                request.CodeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
+            {
+                LogError("code_challenge is either too short or too long", request);
+                return Invalid(request);
+            }
+
+            if (Constants.NegativeCodeChallengeAndVerifierRegex.IsMatch(request.CodeChallenge) == true)
+            {
+                LogError("Invalid characters in code_challenge", request);
+                return Invalid(request);
+            }
+
+            if (request.CodeChallengeMethod.IsMissing())
+            {
+                Logger.Info("Missing code_challenge_method, defaulting to plain");
+                request.CodeChallengeMethod = Constants.CodeChallengeMethods.Plain;
+            }
+
+            if (Constants.SupportedCodeChallengeMethods.Contains(request.CodeChallengeMethod) == false)
+            {
+                LogError("Unsupported code_challenge_method: " + request.CodeChallengeMethod, request);
+                return Invalid(request);
             }
 
             return Valid(request);

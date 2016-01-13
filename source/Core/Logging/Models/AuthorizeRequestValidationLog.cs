@@ -44,6 +44,8 @@ namespace IdentityServer3.Core.Logging
         public int? MaxAge { get; set; }
         public string LoginHint { get; set; }
         public string SessionId { get; set; }
+        public string CodeChallenge { get; set; }
+        public string CodeChallengeMethod { get; set; }
 
         public Dictionary<string, string> Raw { get; set; }
 
@@ -91,6 +93,8 @@ namespace IdentityServer3.Core.Logging
             LoginHint = request.LoginHint;
             MaxAge = request.MaxAge;
             SessionId = request.SessionId;
+            CodeChallenge = request.CodeChallenge;
+            CodeChallengeMethod = request.CodeChallengeMethod;
         }
     }
 }
