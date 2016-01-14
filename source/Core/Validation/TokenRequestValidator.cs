@@ -240,6 +240,8 @@ namespace IdentityServer3.Core.Validation
                 {
                     return proofKeyResult;
                 }
+
+                _validatedRequest.CodeVerifier = codeVerifier;
             }
             else
             {

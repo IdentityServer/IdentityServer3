@@ -205,9 +205,6 @@ namespace IdentityServer3.Core.Validation
                 // if client uses authorization code with proof key flow, we need to validate
                 // code_challenge and code_challenge_method
                 /////////////////////////////////////////////////////////////////////////////
-                request.CodeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
-                request.CodeChallengeMethod = request.Raw.Get(Constants.AuthorizeRequest.CodeChallengeMethod);
-
                 var proofKeyResult = ValidateProofKeyParameters(request);
                 if (proofKeyResult.IsError)
                 {
@@ -510,36 +507,42 @@ namespace IdentityServer3.Core.Validation
 
         private AuthorizeRequestValidationResult ValidateProofKeyParameters(ValidatedAuthorizeRequest request)
         {
-            if (request.CodeChallenge.IsMissing())
+            var codeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
+            if (codeChallenge.IsMissing())
             {
                 LogError("code_challenge is missing", request);
                 return Invalid(request);
             }
 
-            if (request.CodeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
-                request.CodeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
+            if (codeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
+                codeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
             {
                 LogError("code_challenge is either too short or too long", request);
                 return Invalid(request);
             }
 
-            if (Constants.NegativeCodeChallengeAndVerifierRegex.IsMatch(request.CodeChallenge) == true)
+            if (Constants.NegativeCodeChallengeAndVerifierRegex.IsMatch(codeChallenge))
             {
                 LogError("Invalid characters in code_challenge", request);
                 return Invalid(request);
             }
 
-            if (request.CodeChallengeMethod.IsMissing())
+            request.CodeChallenge = codeChallenge;
+
+            var codeChallengeMethod = request.Raw.Get(Constants.AuthorizeRequest.CodeChallengeMethod);
+            if (codeChallengeMethod.IsMissing())
             {
                 Logger.Info("Missing code_challenge_method, defaulting to plain");
-                request.CodeChallengeMethod = Constants.CodeChallengeMethods.Plain;
+                codeChallengeMethod = Constants.CodeChallengeMethods.Plain;
             }
 
-            if (Constants.SupportedCodeChallengeMethods.Contains(request.CodeChallengeMethod) == false)
+            if (!Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
             {
-                LogError("Unsupported code_challenge_method: " + request.CodeChallengeMethod, request);
+                LogError("Unsupported code_challenge_method: " + codeChallengeMethod, request);
                 return Invalid(request);
             }
+
+            request.CodeChallengeMethod = codeChallengeMethod;
 
             return Valid(request);
         }

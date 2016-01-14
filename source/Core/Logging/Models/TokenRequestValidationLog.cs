@@ -80,6 +80,7 @@ namespace IdentityServer3.Core.Logging
             AuthorizationCode = request.AuthorizationCodeHandle;
             RefreshToken = request.RefreshTokenHandle;
             UserName = request.UserName;
+            CodeVerifier = request.CodeVerifier;
         }
     }
 }
