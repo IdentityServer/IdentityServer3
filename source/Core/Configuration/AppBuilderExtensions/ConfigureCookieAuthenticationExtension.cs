@@ -54,7 +54,7 @@ namespace Owin
                     OnValidateIdentity = async cookieCtx =>
                     {
                         var validator = cookieCtx.OwinContext.Environment.ResolveDependency<IAuthenticationSessionValidator>();
-                        var isValid = await validator.IsAuthenticationSessionValid(new ClaimsPrincipal(cookieCtx.Identity));
+                        var isValid = await validator.IsAuthenticationSessionValidAsync(new ClaimsPrincipal(cookieCtx.Identity));
                         if (isValid == false)
                         {
                             cookieCtx.RejectIdentity();

@@ -35,7 +35,7 @@ namespace IdentityServer3.Tests.Connect.Endpoints
         public class StubValidator : IAuthenticationSessionValidator
         {
             public bool Response { get; set; }
-            public Task<bool> IsAuthenticationSessionValid(ClaimsPrincipal subject)
+            public Task<bool> IsAuthenticationSessionValidAsync(ClaimsPrincipal subject)
             {
                 return Task.FromResult(Response);
             }

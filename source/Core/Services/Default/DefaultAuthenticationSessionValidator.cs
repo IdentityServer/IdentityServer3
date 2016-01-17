@@ -30,7 +30,7 @@ namespace IdentityServer3.Core.Services.Default
         /// </summary>
         /// <param name="subject">The user.</param>
         /// <returns>true if authentication session is valid, false otherwise.</returns>
-        public Task<bool> IsAuthenticationSessionValid(ClaimsPrincipal subject)
+        public Task<bool> IsAuthenticationSessionValidAsync(ClaimsPrincipal subject)
         {
             return Task.FromResult(true);
         }

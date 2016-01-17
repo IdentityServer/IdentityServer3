@@ -18,6 +18,6 @@ namespace IdentityServer3.Core.Services
         /// </summary>
         /// <param name="subject">The user.</param>
         /// <returns>true if authentication session is valid, false otherwise.</returns>
-        Task<bool> IsAuthenticationSessionValid(ClaimsPrincipal subject);
+        Task<bool> IsAuthenticationSessionValidAsync(ClaimsPrincipal subject);
     }
 }
