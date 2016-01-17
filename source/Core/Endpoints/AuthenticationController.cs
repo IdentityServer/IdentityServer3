@@ -563,20 +563,28 @@ namespace IdentityServer3.Core.Endpoints
             var sub = user.GetSubjectId();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            var message = signOutMessageCookie.Read(id);
-            if (message != null && message.ClientId.IsPresent())
+            if (options.AuthenticationOptions.RequireSignOutPrompt == false)
             {
-                Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
-                return await Logout(id);
+                var message = signOutMessageCookie.Read(id);
+                if (message != null && message.ClientId.IsPresent())
+                {
+                    Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
+                    return await Logout(id);
+                }
+
+                if (!this.options.AuthenticationOptions.EnableSignOutPrompt)
+                {
+                    Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
+                    return await Logout(id);
+                }
+
+                Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
+            }
+            else
+            {
+                Logger.InfoFormat("RequireSignOutPrompt set to true, rendering logout prompt");
             }
 
-            if (!this.options.AuthenticationOptions.EnableSignOutPrompt)
-            {
-                Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
-                return await Logout(id);
-            }
-
-            Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
             return RenderLogoutPromptPage(id);
         }
 

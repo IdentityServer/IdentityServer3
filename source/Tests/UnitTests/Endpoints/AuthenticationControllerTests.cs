@@ -795,6 +795,37 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void Logout_SignOutMessagePassed_RequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "foo", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
+        public void PostToLogout_SignOutMessagePassed_RequireSignOutPromptSet_LogoutPageHasReturnUrlInfo()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+
+            var logoutModel = resp.GetModel<LogoutViewModel>();
+            resp = PostForm(logoutModel.LogoutUrl, new { });
+
+            var loggedOutModel = resp.GetModel<LoggedOutViewModel>();
+
+            loggedOutModel.ClientName.Should().Be("Implicit Clients");
+            loggedOutModel.RedirectUrl.Should().Be("http://foo");
+        }
+
+        [Fact]
         public void PostToLogout_AnonymousUser_DoesNotInvokeUserServiceSignOut()
         {
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
