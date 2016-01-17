@@ -127,8 +127,17 @@ namespace IdentityServer3.Core.Endpoints
                     Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
 
                     await eventService.RaisePreLoginFailureEventAsync(signin, signInMessage, authResult.ErrorMessage);
-                    
-                    return RenderErrorPage(authResult.ErrorMessage);
+
+                    if (preAuthContext.ShowLoginPageOnErrorResult)
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to true, showing login page with error");
+                        return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage);
+                    }
+                    else
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to false, showing error page with error");
+                        return RenderErrorPage(authResult.ErrorMessage);
+                    }
                 }
 
                 Logger.Info("user service returned a login result");

@@ -213,6 +213,23 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_PreAuthenticateReturnsErrorAndShowLoginPageOnErrorResultIsSet_ShowsLoginPageWithError()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
+                .Callback<PreAuthenticationContext>(ctx => {
+                    ctx.AuthenticateResult = new AuthenticateResult("SomeError");
+                    ctx.ShowLoginPageOnErrorResult = true;
+                })
+                .Returns(Task.FromResult(0));
+
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
+            model.ErrorMessage.Should().Be("SomeError");
+        }
+
+        [Fact]
         public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
         {
             mockUserService
