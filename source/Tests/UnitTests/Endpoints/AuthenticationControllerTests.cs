@@ -807,6 +807,18 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void Logout_SignOutMessagePassed_ClientRequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.clients.Single(x => x.ClientId == "implicitclient").RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
         public void PostToLogout_SignOutMessagePassed_RequireSignOutPromptSet_LogoutPageHasReturnUrlInfo()
         {
             this.options.AuthenticationOptions.RequireSignOutPrompt = true;

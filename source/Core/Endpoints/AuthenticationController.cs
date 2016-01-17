@@ -568,7 +568,14 @@ namespace IdentityServer3.Core.Endpoints
                 var message = signOutMessageCookie.Read(id);
                 if (message != null && message.ClientId.IsPresent())
                 {
-                    Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
+                    var client = await clientStore.FindClientByIdAsync(message.ClientId);
+                    if (client != null && client.RequireSignOutPrompt == true)
+                    {
+                        Logger.InfoFormat("SignOutMessage present (from client {0}) but RequireSignOutPrompt is true, rendering logout prompt", message.ClientId);
+                        return RenderLogoutPromptPage(id);
+                    }
+
+                    Logger.InfoFormat("SignOutMessage present (from client {0}) and RequireSignOutPrompt is false, performing logout", message.ClientId);
                     return await Logout(id);
                 }
 
