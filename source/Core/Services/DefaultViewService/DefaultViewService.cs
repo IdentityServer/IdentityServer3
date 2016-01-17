@@ -56,6 +56,10 @@ namespace IdentityServer3.Core.Services.Default
         /// The error view
         /// </summary>
         public const string ErrorView = "error";
+        /// <summary>
+        /// The authorize response view
+        /// </summary>
+        public const string AuthorizeResponseView = "authorizeresponse";
 
         static readonly Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings()
         {
@@ -160,6 +164,34 @@ namespace IdentityServer3.Core.Services.Default
             return Render(model, ErrorView);
         }
 
+         /// <summary>
+        /// Loads the HTML for the authorize response page.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// Stream for the HTML
+        /// </returns>
+        public virtual async Task<Stream> AuthorizeResponse(AuthorizeResponseViewModel model)
+        {
+            var newModel = new CommonViewModel
+            {
+                SiteName = model.SiteName, SiteUrl = model.SiteUrl
+            };
+
+            var scripts = new List<string>();
+            scripts.AddRange(config.Scripts ?? Enumerable.Empty<string>());
+            scripts.Add("~/assets/app.FormPostResponse.js");
+
+            var data = BuildModelDictionary(newModel, AuthorizeResponseView, config.Stylesheets, scripts);
+            data.Add("responseUri", model.ResponseFormUri);
+            data.Add("responseFields", model.ResponseFormFields);
+
+            string html = await LoadHtmlTemplate(AuthorizeResponseView);
+            html = FormatHtmlTemplate(html, data);
+
+            return html.ToStream();
+        }
+
         /// <summary>
         /// Renders the specified page.
         /// </summary>
@@ -181,7 +213,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns></returns>
         protected virtual async Task<Stream> Render(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
-            var data = BuildModel(model, page, stylesheets, scripts);
+            var data = BuildModelDictionary(model, page, stylesheets, scripts);
 
             string html = await LoadHtmlTemplate(page);
             html = FormatHtmlTemplate(html, data);
@@ -227,10 +259,15 @@ namespace IdentityServer3.Core.Services.Default
         /// </exception>
         protected object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
+            return BuildModelDictionary(model, page, stylesheets, scripts);
+        }
+
+        Dictionary<string, object> BuildModelDictionary(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
+        {
             if (model == null) throw new ArgumentNullException("model");
             if (stylesheets == null) throw new ArgumentNullException("stylesheets");
             if (scripts == null) throw new ArgumentNullException("scripts");
-            
+
             var applicationPath = new Uri(model.SiteUrl).AbsolutePath;
             if (applicationPath.EndsWith("/")) applicationPath = applicationPath.Substring(0, applicationPath.Length - 1);
 
@@ -239,13 +276,14 @@ namespace IdentityServer3.Core.Services.Default
             var additionalStylesheets = BuildTags("<link href='{0}' rel='stylesheet'>", applicationPath, stylesheets);
             var additionalScripts = BuildTags("<script src='{0}'></script>", applicationPath, scripts);
 
-            return new {
-                siteName = Microsoft.Security.Application.Encoder.HtmlEncode(model.SiteName),
-                applicationPath,
-                model = Microsoft.Security.Application.Encoder.HtmlEncode(json),
-                page,
-                stylesheets = additionalStylesheets,
-                scripts = additionalScripts
+            return new Dictionary<string, object>
+            {
+                { "siteName" , Microsoft.Security.Application.Encoder.HtmlEncode(model.SiteName) },
+                { "applicationPath", applicationPath },
+                { "model", Microsoft.Security.Application.Encoder.HtmlEncode(json) },
+                { "page", page },
+                { "stylesheets", additionalStylesheets },
+                { "scripts", additionalScripts }
             };
         }
 

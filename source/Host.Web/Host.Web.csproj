@@ -98,6 +98,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="templates\authorizeresponse.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
