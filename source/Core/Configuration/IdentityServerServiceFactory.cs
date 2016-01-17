@@ -308,6 +308,14 @@ namespace IdentityServer3.Core.Configuration
         public Registration<ICorsPolicyService> CorsPolicyService { get; set; }
 
         /// <summary>
+        /// Gets or sets the authentication session validator.
+        /// </summary>
+        /// <value>
+        /// The authentication session validator.
+        /// </value>
+        public Registration<IAuthenticationSessionValidator> AuthenticationSessionValidator { get; set; }
+
+        /// <summary>
         /// Gets or sets the signing key service.
         /// </summary>
         /// <value>
