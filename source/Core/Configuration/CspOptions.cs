@@ -76,5 +76,13 @@ namespace IdentityServer3.Core.Configuration
         /// The connect source.
         /// </value>
         public string ImgSrc { get; set; }
+        
+        /// <summary>
+        /// Allows additional iframe sources to be indicated.
+        /// </summary>
+        /// <value>
+        /// The connect source.
+        /// </value>
+        public string FrameSrc { get; set; }
     }
 }
