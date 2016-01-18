@@ -662,7 +662,7 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
-        /// Returns the calculated IssuerUri from either the IdentityServerOptions or the incoming request URL.
+        /// Returns the IssuerUri from either the IdentityServerOptions or calculated from the incoming request URL.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
         /// <returns></returns>
