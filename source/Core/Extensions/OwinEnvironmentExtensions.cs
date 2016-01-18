@@ -569,7 +569,8 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
-        /// Gets the origin for the current request.
+        /// Gets the explicitly configured per-request origin, or the current requests's origin.
+        /// Note: This API ignores any configured IdentityServerOptions' PublicOrigin property.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
         /// <returns></returns>
