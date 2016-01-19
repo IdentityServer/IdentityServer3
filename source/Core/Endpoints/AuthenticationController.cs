@@ -717,6 +717,7 @@ namespace IdentityServer3.Core.Endpoints
                 if (authResult.IsError)
                 {
                     Logger.WarnFormat("user service PostAuthenticateAsync returned an error message: {0}", authResult.ErrorMessage);
+                    ClearAuthenticationCookiesForNewSignIn(authResult);
                     return new Tuple<IHttpActionResult, AuthenticateResult>(RenderErrorPage(authResult.ErrorMessage), null);
                 }
 

@@ -703,7 +703,9 @@ namespace IdentityServer3.Tests.Endpoints
             resp.AssertPage("error");
 
             var cookies = resp.GetRawCookies();
-            cookies.Count(x => x.StartsWith(Constants.PrimaryAuthenticationType + "=")).Should().Be(0);
+            cookies.Count(x => x.StartsWith(Constants.PrimaryAuthenticationType + "=")).Should().Be(1);
+            cookies.Count(x => x.StartsWith(Constants.PartialSignInAuthenticationType + "=")).Should().Be(1);
+            cookies.Count(x => x.StartsWith(Constants.ExternalAuthenticationType + "=")).Should().Be(1);
         }
 
         [Fact]
