@@ -68,4 +68,5 @@ Summary of the changes (Less than 80 chars)
   - "Too hard" is determined by the team as a whole.
 
 **Contribution Packages**
+
 If you are planning to add functionality via contribution packages, we would like you to use `IdentityServer3.Contrib.*` as a naming convention.
