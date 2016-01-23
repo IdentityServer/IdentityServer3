@@ -60,7 +60,7 @@ namespace Owin
                     AuthenticationOptions = new AuthenticationOptions
                     {
                         IdentityProviders = ConfigureIdentityProviders,
-                        //EnablePostSignOutAutoRedirect = true
+                        EnablePostSignOutAutoRedirect = true
                     },
 
                     //LoggingOptions = new LoggingOptions
