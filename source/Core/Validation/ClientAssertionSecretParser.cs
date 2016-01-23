@@ -55,7 +55,7 @@ namespace IdentityServer3.Core.Validation
                 var clientAssertion = body.Get(Constants.TokenRequest.ClientAssertion);
 
                 if (clientAssertion.IsPresent()
-                    && clientAssertionType == Constants.GrantTypes.JwtBearer)
+                    && clientAssertionType == Constants.ClientAssertionTypes.JwtBearer)
                 {
                     if (!clientId.IsPresent())
                     {

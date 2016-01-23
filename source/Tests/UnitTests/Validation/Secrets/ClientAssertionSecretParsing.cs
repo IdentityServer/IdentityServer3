@@ -53,7 +53,7 @@ namespace IdentityServer3.Tests.Validation.Secrets
         {
             var context = new OwinContext();
 
-            var body = "client_id=client&client_assertion_type=urn:ietf:params:oauth:grant-type:jwt-bearer&client_assertion=token";
+            var body = "client_id=client&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=token";
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 
@@ -73,7 +73,7 @@ namespace IdentityServer3.Tests.Validation.Secrets
             var token = new JwtSecurityToken(issuer: "client");
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            var body = "client_assertion_type=urn:ietf:params:oauth:grant-type:jwt-bearer&client_assertion=" + tokenString;
+            var body = "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=" + tokenString;
 
             context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(body));
 

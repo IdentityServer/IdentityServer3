@@ -130,6 +130,11 @@ namespace IdentityServer3.Core
             public const string JwtBearer   = "urn:ietf:params:oauth:grant-type:jwt-bearer";
         }
 
+        public static class ClientAssertionTypes
+        {
+            public const string JwtBearer   = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+        }
+
         public static class ResponseTypes
         {
             // authorization code flow
@@ -584,7 +589,7 @@ namespace IdentityServer3.Core
         {
             public const string SharedSecret = "SharedSecret";
             public const string X509Certificate = "X509Certificate";
-            public const string JwtBearer = "urn:ietf:params:oauth:grant-type:jwt-bearer";
+            public const string JwtBearer = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
         }
 
         public static class SecretTypes
