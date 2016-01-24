@@ -554,6 +554,25 @@ namespace IdentityServer3.Core.Validation
                 }
             }
 
+            /////////////////////////////////////////////
+            // check if client still has access to 
+            // all scopes from the original token request
+            /////////////////////////////////////////////
+            if (!_validatedRequest.Client.AllowAccessToAllScopes)
+            {
+                foreach (var scope in _validatedRequest.RefreshToken.Scopes)
+                {
+                    if (!_validatedRequest.Client.AllowedScopes.Contains(scope))
+                    {
+                        var error = "Client does not have access to a requested scope anymore: " + scope;
+                        LogError(error);
+                        await RaiseRefreshTokenRefreshFailureEventAsync(refreshTokenHandle, error);
+
+                        return Invalid(Constants.TokenErrors.InvalidGrant);
+                    }
+                }
+            }
+
             _validatedRequest.RefreshToken = refreshToken;
 
             /////////////////////////////////////////////
