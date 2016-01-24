@@ -285,6 +285,23 @@ namespace IdentityServer3.Tests.Validation
                     },
                     new Client
                     {
+                        ClientName = "Resource Owner Client (offline only)",
+                        Enabled = true,
+                        ClientId = "roclient_offline_only",
+                        ClientSecrets = new List<Secret>
+                        {
+                            new Secret("secret".Sha256())
+                        },
+
+                        Flow = Flows.ResourceOwner,
+
+                        AllowedScopes = new List<string>
+                        {
+                            "offline_access"
+                        },
+                    },
+                    new Client
+                    {
                         ClientName = "Custom Grant Client",
                         Enabled = true,
                         ClientId = "customgrantclient",

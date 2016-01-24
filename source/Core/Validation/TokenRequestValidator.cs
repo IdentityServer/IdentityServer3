@@ -560,7 +560,7 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             if (!_validatedRequest.Client.AllowAccessToAllScopes)
             {
-                foreach (var scope in _validatedRequest.RefreshToken.Scopes)
+                foreach (var scope in refreshToken.Scopes)
                 {
                     if (!_validatedRequest.Client.AllowedScopes.Contains(scope))
                     {
