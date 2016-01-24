@@ -81,10 +81,10 @@ namespace Owin
             app.ConfigureRenderLoggedOutPage();
 
             var container = AutofacConfig.Configure(options);
-            app.UseAutofacMiddleware(container);
 
             app.UseCors();
             app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
+            app.UseAutofacMiddleware(container);
 
             // this needs to be before external middleware
             app.ConfigureSignOutMessageCookie();
