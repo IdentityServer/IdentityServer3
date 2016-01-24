@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2014, 2015 Dominick Baier, Brock Allen
+ * Copyright 2014 Dominick Baier, Brock Allen
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Host.Config
+namespace Host.Configuration.Extensions
 {
-    public class AnotherCustomGrantValidator : ICustomGrantValidator
+    public class CustomGrantValidator : ICustomGrantValidator
     {
         public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
         {
@@ -38,10 +38,9 @@ namespace IdentityServer3.Host.Config
             }
         }
 
-
         public string GrantType
         {
-            get { return "custom2"; }
+            get { return "custom"; }
         }
     }
 }
