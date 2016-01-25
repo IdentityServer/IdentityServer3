@@ -199,6 +199,7 @@
     <Compile Include="TokenClients\UserInfoClient.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\CustomGrantValidation.cs" />
+    <Compile Include="Validation\ResourceTypeEqualityComparison.cs" />
     <Compile Include="Validation\Secrets\BasicAuthenticationCredentialParsing.cs" />
     <Compile Include="Validation\Secrets\ClientAssertionSecretParsing.cs" />
     <Compile Include="Validation\Secrets\FormPostCredentialParsing.cs" />
