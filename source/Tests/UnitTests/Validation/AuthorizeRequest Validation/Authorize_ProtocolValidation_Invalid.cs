@@ -304,6 +304,25 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 
         [Fact]
         [Trait("Category", "AuthorizeRequest Protocol Validation")]
+        public async Task Invalid_ResponseMode_For_TokenIdToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "implicitclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "oob://implicit/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, "token id_token"); // Unconventional order
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
         public async Task Invalid_ResponseMode_For_CodeToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -349,6 +368,25 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
             parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdTokenToken);
+            parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.Error.Should().Be(Constants.AuthorizeErrors.UnsupportedResponseType);
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Protocol Validation")]
+        public async Task Invalid_ResponseMode_For_IdTokenCodeToken_ResponseType()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "hybridclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, "id_token code token"); // Unconventional ordering
             parameters.Add(Constants.AuthorizeRequest.ResponseMode, Constants.ResponseModes.Query);
 
             var validator = Factory.CreateAuthorizeRequestValidator();

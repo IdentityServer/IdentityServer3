@@ -246,6 +246,7 @@
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
+    <Compile Include="Validation\ResponseTypeEqualityComparer.cs" />
     <Compile Include="Validation\ScopeSecretValidationResult.cs" />
     <Compile Include="Validation\ScopeSecretValidator.cs" />
     <Compile Include="Validation\ClientAssertionSecretParser.cs" />
