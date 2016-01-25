@@ -732,12 +732,6 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidGrant);
             }
 
-            if (Constants.NegativeCodeChallengeAndVerifierRegex.IsMatch(codeVerifier))
-            {
-                LogError("Invalid characters in code_verifier");
-                return Invalid(Constants.TokenErrors.InvalidGrant);
-            }
-
             if (Constants.SupportedCodeChallengeMethods.Contains(authZcode.CodeChallengeMethod) == false)
             {
                 LogError("Unsupported code challenge method: " + authZcode.CodeChallengeMethod);
@@ -757,14 +751,14 @@ namespace IdentityServer3.Core.Validation
         {
             if (codeChallengeMethod == Constants.CodeChallengeMethods.Plain)
             {
-                return codeVerifier == codeChallenge;
+                return TimeConstantComparer.IsEqual(codeVerifier.Sha256(), codeChallenge);
             }
 
             var codeVerifierBytes = Encoding.ASCII.GetBytes(codeVerifier);
             var hashedBytes = codeVerifierBytes.Sha256();
             var transformedCodeVerifier = Base64Url.Encode(hashedBytes);
 
-            return transformedCodeVerifier == codeChallenge;
+            return TimeConstantComparer.IsEqual(transformedCodeVerifier.Sha256(), codeChallenge);
         }
 
         private TokenRequestValidationResult Valid()

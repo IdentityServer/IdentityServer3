@@ -106,7 +106,7 @@ namespace IdentityServer3.Core.ResponseHandling
                 Client = request.Client,
                 Subject = request.Subject,
                 SessionId = request.SessionId,
-                CodeChallenge = request.CodeChallenge,
+                CodeChallenge = request.CodeChallenge.Sha256(),
                 CodeChallengeMethod = request.CodeChallengeMethod,
 
                 IsOpenId = request.IsOpenIdRequest,

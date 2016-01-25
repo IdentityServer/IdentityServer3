@@ -153,8 +153,9 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.ErrorType.Should().Be(ErrorTypes.Client);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.ErrorDescription.Should().Be("code challenge required");
         }
 
         [Fact]
@@ -172,7 +173,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.ErrorType.Should().Be(ErrorTypes.Client);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
@@ -191,26 +192,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
-            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
-        }
-
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
-        public async Task CodeWithProofKey_Request_Invalid_CodeChallenge()
-        {
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
-            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
-            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
-            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMinLength) + "!");
-
-            var validator = Factory.CreateAuthorizeRequestValidator();
-            var result = await validator.ValidateAsync(parameters);
-
-            result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.ErrorType.Should().Be(ErrorTypes.Client);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
@@ -230,8 +212,9 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             var result = await validator.ValidateAsync(parameters);
 
             result.IsError.Should().BeTrue();
-            result.ErrorType.Should().Be(ErrorTypes.User);
+            result.ErrorType.Should().Be(ErrorTypes.Client);
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.ErrorDescription.Should().Be("transform algorithm not supported");
         }
     }
 }

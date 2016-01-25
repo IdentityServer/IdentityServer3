@@ -295,8 +295,6 @@ namespace IdentityServer3.Core
                                 CodeChallengeMethods.SHA_256
                             };
 
-        public static readonly Regex NegativeCodeChallengeAndVerifierRegex = new Regex(@"[^a-zA-Z0-9-\._~]");
-
         public static class AuthorizeErrors
         {
             // OAuth2 errors

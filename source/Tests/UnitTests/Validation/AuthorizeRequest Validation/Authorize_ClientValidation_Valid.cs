@@ -191,6 +191,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
 
+            result.ValidatedRequest.CodeChallengeMethod.Should().Be(Constants.CodeChallengeMethods.Plain);
             result.IsError.Should().BeFalse();
         }
     }

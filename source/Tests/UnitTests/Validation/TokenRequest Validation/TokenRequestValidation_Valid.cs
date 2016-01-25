@@ -317,7 +317,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Vald_Code_Request_With_CodeVerifier_Plain()
+        public async Task Valid_Code_Request_With_CodeVerifier_Plain()
         {
             var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
             var store = new InMemoryAuthorizationCodeStore();
@@ -330,7 +330,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
                 Client = client,
                 Subject = IdentityServerPrincipal.Create("123", "bob"),
                 RedirectUri = "https://server/cb",
-                CodeChallenge = codeVerifier,
+                CodeChallenge = codeVerifier.Sha256(),
                 CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
                 RequestedScopes = new List<Scope>
                 {
@@ -359,7 +359,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
-        public async Task Vald_Code_Request_With_CodeVerifier_Sha256()
+        public async Task Valid_Code_Request_With_CodeVerifier_Sha256()
         {
             var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
             var store = new InMemoryAuthorizationCodeStore();
@@ -375,7 +375,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
                 Client = client,
                 Subject = IdentityServerPrincipal.Create("123", "bob"),
                 RedirectUri = "https://server/cb",
-                CodeChallenge = codeChallenge,
+                CodeChallenge = codeChallenge.Sha256(),
                 CodeChallengeMethod = Constants.CodeChallengeMethods.SHA_256,
                 RequestedScopes = new List<Scope>
                 {

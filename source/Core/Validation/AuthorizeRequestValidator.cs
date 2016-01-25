@@ -507,24 +507,21 @@ namespace IdentityServer3.Core.Validation
 
         private AuthorizeRequestValidationResult ValidateProofKeyParameters(ValidatedAuthorizeRequest request)
         {
+            var fail = Invalid(request, ErrorTypes.Client);
+
             var codeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
             if (codeChallenge.IsMissing())
             {
                 LogError("code_challenge is missing", request);
-                return Invalid(request);
+                fail.ErrorDescription = "code challenge required";
+                return fail;
             }
 
             if (codeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
                 codeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
             {
                 LogError("code_challenge is either too short or too long", request);
-                return Invalid(request);
-            }
-
-            if (Constants.NegativeCodeChallengeAndVerifierRegex.IsMatch(codeChallenge))
-            {
-                LogError("Invalid characters in code_challenge", request);
-                return Invalid(request);
+                return fail;
             }
 
             request.CodeChallenge = codeChallenge;
@@ -539,7 +536,8 @@ namespace IdentityServer3.Core.Validation
             if (!Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
             {
                 LogError("Unsupported code_challenge_method: " + codeChallengeMethod, request);
-                return Invalid(request);
+                fail.ErrorDescription = "transform algorithm not supported";
+                return fail;
             }
 
             request.CodeChallengeMethod = codeChallengeMethod;

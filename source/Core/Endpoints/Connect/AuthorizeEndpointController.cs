@@ -117,6 +117,7 @@ namespace IdentityServer3.Core.Endpoints
                 return await this.AuthorizeErrorAsync(
                     result.ErrorType,
                     result.Error,
+                    result.ErrorDescription,
                     result.ValidatedRequest);
             }
 
@@ -128,6 +129,7 @@ namespace IdentityServer3.Core.Endpoints
                 return await this.AuthorizeErrorAsync(
                     loginInteraction.Error.ErrorType,
                     loginInteraction.Error.Error,
+                    null,
                     request);
             }
             if (loginInteraction.IsLogin)
@@ -157,6 +159,7 @@ namespace IdentityServer3.Core.Endpoints
                 return await this.AuthorizeErrorAsync(
                     consentInteraction.Error.ErrorType,
                     consentInteraction.Error.Error,
+                    null,
                     request);
             }
 
@@ -261,7 +264,7 @@ namespace IdentityServer3.Core.Endpoints
             return new LoginResult(Request.GetOwinContext().Environment, message);
         }
 
-        async Task<IHttpActionResult> AuthorizeErrorAsync(ErrorTypes errorType, string error, ValidatedAuthorizeRequest request)
+        async Task<IHttpActionResult> AuthorizeErrorAsync(ErrorTypes errorType, string error, string errorDescription, ValidatedAuthorizeRequest request)
         {
             await RaiseFailureEventAsync(error);
 
@@ -290,6 +293,7 @@ namespace IdentityServer3.Core.Endpoints
 
                 IsError = true,
                 Error = error,
+                ErrorDescription = errorDescription,
                 State = request.State,
                 RedirectUri = request.RedirectUri
             };

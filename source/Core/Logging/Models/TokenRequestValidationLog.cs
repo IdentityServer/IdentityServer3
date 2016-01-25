@@ -35,7 +35,6 @@ namespace IdentityServer3.Core.Logging
         public IEnumerable<string> AuthenticationContextReferenceClasses { get; set; }
         public string Tenant { get; set; }
         public string IdP { get; set; }
-        public string CodeVerifier { get; set; }
 
         public Dictionary<string, string> Raw { get; set; }
 
@@ -80,7 +79,6 @@ namespace IdentityServer3.Core.Logging
             AuthorizationCode = request.AuthorizationCodeHandle;
             RefreshToken = request.RefreshTokenHandle;
             UserName = request.UserName;
-            CodeVerifier = request.CodeVerifier;
         }
     }
 }

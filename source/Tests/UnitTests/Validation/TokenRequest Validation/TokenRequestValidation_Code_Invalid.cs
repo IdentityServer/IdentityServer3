@@ -436,6 +436,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -475,6 +476,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -514,6 +516,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -554,6 +557,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -594,46 +598,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_InvalidCharacters_In_CodeVerifier()
-        {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
-            var store = new InMemoryAuthorizationCodeStore();
-            var options = new IdentityServerOptions();
-
-            var code = new AuthorizationCode
-            {
-                Client = client,
-                Subject = IdentityServerPrincipal.Create("123", "bob"),
-                RedirectUri = "https://server/cb",
-                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength),
-                CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
-                RequestedScopes = new List<Scope>
-                {
-                    new Scope
-                    {
-                        Name = "openid"
-                    }
-                }
-            };
-
-            await store.StoreAsync("valid", code);
-
-            var validator = Factory.CreateTokenRequestValidator(
-                authorizationCodeStore: store);
-
-            var parameters = new NameValueCollection();
-            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
-            parameters.Add(Constants.TokenRequest.Code, "valid");
-            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength) + "!");
-
-            var result = await validator.ValidateRequestAsync(parameters, client);
-
-            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -674,6 +639,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -714,6 +680,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -754,6 +721,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
         [Fact]
@@ -792,6 +760,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
     }
 }
