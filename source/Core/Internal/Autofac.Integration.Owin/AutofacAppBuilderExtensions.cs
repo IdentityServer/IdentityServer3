@@ -67,9 +67,7 @@ namespace Owin
                     context.Set(Constants.OwinLifetimeScopeKey, lifetimeScope);
                     await next();
                 }
-            });
-
-            UseMiddlewareFromContainer(app, container);
+            });            
 
             // idsvr : remove these guards so that multiple copies of middleware can be registered
             //app.Properties.Add(MiddlewareRegisteredKey, true);
@@ -78,7 +76,7 @@ namespace Owin
         }
 
         [SecuritySafeCritical]
-        static void UseMiddlewareFromContainer(this IAppBuilder app, IComponentContext container)
+        internal static void UseMiddlewareFromContainer(this IAppBuilder app, IComponentContext container)
         {
             var services = container.ComponentRegistry.Registrations.SelectMany(r => r.Services)
                 .OfType<TypedService>()
