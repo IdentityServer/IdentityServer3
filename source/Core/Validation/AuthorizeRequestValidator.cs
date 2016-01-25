@@ -40,8 +40,8 @@ namespace IdentityServer3.Core.Validation
         private readonly ScopeValidator _scopeValidator;
         private readonly SessionCookie _sessionCookie;
 
-        private readonly ResourceTypeEqualityComparer
-            _resourceTypeEqualityComparer = new ResourceTypeEqualityComparer();
+        private readonly ResponseTypeEqualityComparer
+            _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
 
         public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
@@ -202,7 +202,7 @@ namespace IdentityServer3.Core.Validation
             // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology - 
             // 'If a response type contains one of more space characters (%20), it is compared 
             // as a space-delimited list of values in which the order of values does not matter.'
-            if (!Constants.SupportedResponseTypes.Contains(responseType, _resourceTypeEqualityComparer))
+            if (!Constants.SupportedResponseTypes.Contains(responseType, _responseTypeEqualityComparer))
             {
                 LogError("Response type not supported: " + responseType, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
@@ -212,7 +212,7 @@ namespace IdentityServer3.Core.Validation
             // we still need the request's ResponseType property to be set to the
             // conventional, supported response type.
             request.ResponseType = Constants.SupportedResponseTypes.First(
-                supportedResponseType => _resourceTypeEqualityComparer.Equals(supportedResponseType, responseType));
+                supportedResponseType => _responseTypeEqualityComparer.Equals(supportedResponseType, responseType));
 
             //////////////////////////////////////////////////////////
             // match response_type to flow

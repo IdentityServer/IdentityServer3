@@ -15,7 +15,7 @@ namespace IdentityServer3.Core.Validation
     /// 2.0 Multiple Response Type Encoding Practices draft </see>).
     /// </para>
     /// </remarks>
-    public class ResourceTypeEqualityComparer : IEqualityComparer<string>
+    public class ResponseTypeEqualityComparer : IEqualityComparer<string>
     {
         /// <summary>
         /// Determines whether the specified values are equal.
