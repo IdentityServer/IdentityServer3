@@ -65,9 +65,9 @@ namespace IdentityServer3.Core.Configuration
             // register default secret parsers
             SecretParsers = new List<Registration<ISecretParser>>
             {
-                new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
+                new Registration<ISecretParser, X509CertificateSecretParser>(),
                 new Registration<ISecretParser, PostBodySecretParser>(),
-                new Registration<ISecretParser, X509CertificateSecretParser>()
+                new Registration<ISecretParser, BasicAuthenticationSecretParser>(),
             };
 
             // register default secret validators
@@ -289,7 +289,7 @@ namespace IdentityServer3.Core.Configuration
         /// <value>
         /// The secret parsers.
         /// </value>
-        public IEnumerable<Registration<ISecretParser>> SecretParsers { get; set; }
+        public IList<Registration<ISecretParser>> SecretParsers { get; set; }
 
         /// <summary>
         /// Gets or sets the secret validators.
@@ -297,7 +297,7 @@ namespace IdentityServer3.Core.Configuration
         /// <value>
         /// The secret validators.
         /// </value>
-        public IEnumerable<Registration<ISecretValidator>> SecretValidators { get; set; }
+        public IList<Registration<ISecretValidator>> SecretValidators { get; set; }
 
         /// <summary>
         /// Gets or sets the CORS policy service.
