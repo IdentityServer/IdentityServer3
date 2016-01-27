@@ -283,12 +283,14 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         {
             var mock = new Mock<IUserService>();
             var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+            var resourceScope = new Claim("scope", "resource");
+            var offlineAccessScope = new Claim("scope", "offline_access");
 
             var refreshToken = new RefreshToken
             {
                 AccessToken = new Token("access_token")
                 {
-                    Claims = new List<Claim> { subjectClaim },
+                    Claims = new List<Claim> { subjectClaim, resourceScope, offlineAccessScope },
                     Client = new Client { ClientId = "roclient_restricted_refresh"}
                 },
                 

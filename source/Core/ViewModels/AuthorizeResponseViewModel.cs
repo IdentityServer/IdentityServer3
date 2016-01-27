@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-namespace IdentityServer3.Core.Models
+namespace IdentityServer3.Core.ViewModels
 {
     /// <summary>
-    /// Class describing the context of the pre-authentication stage
+    /// Models the data needed to render the authorize response page.
     /// </summary>
-    public class PreAuthenticationContext
+    public class AuthorizeResponseViewModel : CommonViewModel
     {
         /// <summary>
-        /// Gets or sets the sign in message.
+        /// The action URI for the response form.
         /// </summary>
         /// <value>
-        /// The sign in message.
+        /// The URI.
         /// </value>
-        public SignInMessage SignInMessage { get; set; }
+        public string ResponseFormUri { get; set; }
 
         /// <summary>
-        /// Gets or sets the authenticate result.
+        /// The input elements for the response form.
         /// </summary>
         /// <value>
-        /// The authenticate result.
+        /// The HTML.
         /// </value>
-        public AuthenticateResult AuthenticateResult { get; set; }
-
-        /// <summary>
-        /// Gets or sets if the login page should be used to show the error from the authenticate result (as opposed to the general error page).
-        /// </summary>
-        public bool ShowLoginPageOnErrorResult { get; set; }
+        public string ResponseFormFields { get; set; }
     }
 }

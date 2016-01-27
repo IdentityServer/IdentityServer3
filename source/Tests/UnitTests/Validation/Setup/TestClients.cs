@@ -31,15 +31,15 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "codeclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
                     AllowAccessToAllScopes = true,
-                        
+
                     RequireConsent = false,
-                    
+
                     RedirectUris = new List<string>
                     {
                         "https://server/cb",
@@ -77,15 +77,15 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "hybridclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
                     Flow = Flows.AuthorizationCode,
                     AllowAccessToAllScopes = true,
-                        
+
                     RequireConsent = false,
-                    
+
                     RedirectUris = new List<string>
                     {
                         "https://server/cb",
@@ -99,7 +99,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "implicitclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -107,7 +107,7 @@ namespace IdentityServer3.Tests.Validation
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
-                    
+
                     RedirectUris = new List<string>
                     {
                         "oob://implicit/cb"
@@ -119,7 +119,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "implicit_and_client_creds_client",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -127,7 +127,7 @@ namespace IdentityServer3.Tests.Validation
                     AllowAccessToAllScopes = true,
                     AllowClientCredentialsOnly = true,
                     RequireConsent = false,
-                    
+
                     RedirectUris = new List<string>
                     {
                         "oob://implicit/cb"
@@ -139,7 +139,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "codeclient_restricted",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -150,7 +150,7 @@ namespace IdentityServer3.Tests.Validation
                     {
                         "openid"
                     },
-                    
+
                     RedirectUris = new List<string>
                     {
                         "https://server/cb",
@@ -162,7 +162,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "client",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -177,7 +177,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "client_restricted",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -186,7 +186,7 @@ namespace IdentityServer3.Tests.Validation
                     AllowedScopes = new List<string>
                     {
                         "resource"
-                    },       
+                    },
                 },
                 new Client
                 {
@@ -194,7 +194,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -207,7 +207,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_absolute_refresh_expiration_one_time_only",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -224,7 +224,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_absolute_refresh_expiration_reuse",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -241,7 +241,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_sliding_refresh_expiration_one_time_only",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -259,7 +259,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_sliding_refresh_expiration_reuse",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -277,7 +277,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_restricted",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -286,7 +286,7 @@ namespace IdentityServer3.Tests.Validation
                     AllowedScopes = new List<string>
                     {
                         "resource"
-                    },       
+                    },
                 },
                 new Client
                 {
@@ -294,7 +294,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "roclient_restricted_refresh",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -304,7 +304,24 @@ namespace IdentityServer3.Tests.Validation
                     {
                         "resource",
                         "offline_access"
-                    },       
+                    },
+                },
+                new Client
+                {
+                    ClientName = "Resource Owner Client (offline only)",
+                    Enabled = true,
+                    ClientId = "roclient_offline_only",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.ResourceOwner,
+
+                    AllowedScopes = new List<string>
+                    {
+                        "offline_access"
+                    },
                 },
                 new Client
                 {
@@ -312,7 +329,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "customgrantclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 
@@ -331,7 +348,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = false,
                     ClientId = "disabled",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("invalid".Sha256())
                     },
 
@@ -345,7 +362,7 @@ namespace IdentityServer3.Tests.Validation
                     Enabled = true,
                     ClientId = "referencetokenclient",
                     ClientSecrets = new List<Secret>
-                    { 
+                    {
                         new Secret("secret".Sha256())
                     },
 

@@ -40,6 +40,9 @@ namespace IdentityServer3.Core.Validation
         private readonly ScopeValidator _scopeValidator;
         private readonly SessionCookie _sessionCookie;
 
+        private readonly ResponseTypeEqualityComparer
+            _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
+
         public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
             _options = options;
@@ -190,14 +193,26 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            if (!Constants.SupportedResponseTypes.Contains(responseType))
+            // The responseType may come in in an unconventional order.  
+            // Use an IEqualityComparer that doesn't care about the order of multiple values.
+            // Per https://tools.ietf.org/html/rfc6749#section-3.1.1 - 
+            // 'Extension response types MAY contain a space-delimited (%x20) list of
+            // values, where the order of values does not matter (e.g., response
+            // type "a b" is the same as "b a").'
+            // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology - 
+            // 'If a response type contains one of more space characters (%20), it is compared 
+            // as a space-delimited list of values in which the order of values does not matter.'
+            if (!Constants.SupportedResponseTypes.Contains(responseType, _responseTypeEqualityComparer))
             {
                 LogError("Response type not supported: " + responseType, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            request.ResponseType = responseType;
-
+            // Even though the responseType may have come in in an unconventional order,
+            // we still need the request's ResponseType property to be set to the
+            // conventional, supported response type.
+            request.ResponseType = Constants.SupportedResponseTypes.First(
+                supportedResponseType => _responseTypeEqualityComparer.Equals(supportedResponseType, responseType));
 
             if (request.ResponseType == Constants.ResponseTypes.Code && request.Client.Flow == Flows.AuthorizationCodeWithProofKey)
             {

@@ -127,8 +127,17 @@ namespace IdentityServer3.Core.Endpoints
                     Logger.WarnFormat("user service returned an error message: {0}", authResult.ErrorMessage);
 
                     await eventService.RaisePreLoginFailureEventAsync(signin, signInMessage, authResult.ErrorMessage);
-                    
-                    return RenderErrorPage(authResult.ErrorMessage);
+
+                    if (preAuthContext.ShowLoginPageOnErrorResult)
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to true, showing login page with error");
+                        return await RenderLoginPage(signInMessage, signin, authResult.ErrorMessage);
+                    }
+                    else
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to false, showing error page with error");
+                        return RenderErrorPage(authResult.ErrorMessage);
+                    }
                 }
 
                 Logger.Info("user service returned a login result");
@@ -563,20 +572,35 @@ namespace IdentityServer3.Core.Endpoints
             var sub = user.GetSubjectId();
             Logger.InfoFormat("Logout prompt for subject: {0}", sub);
 
-            var message = signOutMessageCookie.Read(id);
-            if (message != null && message.ClientId.IsPresent())
+            if (options.AuthenticationOptions.RequireSignOutPrompt == false)
             {
-                Logger.InfoFormat("SignOutMessage present (from client {0}), performing logout", message.ClientId);
-                return await Logout(id);
+                var message = signOutMessageCookie.Read(id);
+                if (message != null && message.ClientId.IsPresent())
+                {
+                    var client = await clientStore.FindClientByIdAsync(message.ClientId);
+                    if (client != null && client.RequireSignOutPrompt == true)
+                    {
+                        Logger.InfoFormat("SignOutMessage present (from client {0}) but RequireSignOutPrompt is true, rendering logout prompt", message.ClientId);
+                        return RenderLogoutPromptPage(id);
+                    }
+
+                    Logger.InfoFormat("SignOutMessage present (from client {0}) and RequireSignOutPrompt is false, performing logout", message.ClientId);
+                    return await Logout(id);
+                }
+
+                if (!this.options.AuthenticationOptions.EnableSignOutPrompt)
+                {
+                    Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
+                    return await Logout(id);
+                }
+
+                Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
+            }
+            else
+            {
+                Logger.InfoFormat("RequireSignOutPrompt set to true, rendering logout prompt");
             }
 
-            if (!this.options.AuthenticationOptions.EnableSignOutPrompt)
-            {
-                Logger.InfoFormat("EnableSignOutPrompt set to false, performing logout");
-                return await Logout(id);
-            }
-
-            Logger.InfoFormat("EnableSignOutPrompt set to true, rendering logout prompt");
             return RenderLogoutPromptPage(id);
         }
 
