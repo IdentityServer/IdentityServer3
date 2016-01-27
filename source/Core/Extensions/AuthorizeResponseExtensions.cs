@@ -31,6 +31,11 @@ namespace IdentityServer3.Core.Extensions
                 {
                     collection.Add("error", response.Error);
                 }
+
+                if (response.ErrorDescription.IsPresent())
+                {
+                    collection.Add("error_description", response.ErrorDescription);
+                }
             }
             else
             {

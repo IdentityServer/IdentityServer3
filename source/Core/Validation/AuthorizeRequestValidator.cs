@@ -214,10 +214,27 @@ namespace IdentityServer3.Core.Validation
             request.ResponseType = Constants.SupportedResponseTypes.First(
                 supportedResponseType => _responseTypeEqualityComparer.Equals(supportedResponseType, responseType));
 
-            //////////////////////////////////////////////////////////
-            // match response_type to flow
-            //////////////////////////////////////////////////////////
-            request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+            if (request.ResponseType == Constants.ResponseTypes.Code && request.Client.Flow == Flows.AuthorizationCodeWithProofKey)
+            {
+                /////////////////////////////////////////////////////////////////////////////
+                // if client uses authorization code with proof key flow, we need to validate
+                // code_challenge and code_challenge_method
+                /////////////////////////////////////////////////////////////////////////////
+                var proofKeyResult = ValidateProofKeyParameters(request);
+                if (proofKeyResult.IsError)
+                {
+                    return proofKeyResult;
+                }
+
+                request.Flow = Flows.AuthorizationCodeWithProofKey;
+            }
+            else
+            {
+                //////////////////////////////////////////////////////////
+                // match response_type to flow
+                //////////////////////////////////////////////////////////
+                request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+            }
 
 
             //////////////////////////////////////////////////////////
@@ -499,6 +516,46 @@ namespace IdentityServer3.Core.Validation
                     LogError("Check session endpoint enabled, but SessionId is missing", request);
                 }
             }
+
+            return Valid(request);
+        }
+
+        private AuthorizeRequestValidationResult ValidateProofKeyParameters(ValidatedAuthorizeRequest request)
+        {
+            var fail = Invalid(request, ErrorTypes.Client);
+
+            var codeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
+            if (codeChallenge.IsMissing())
+            {
+                LogError("code_challenge is missing", request);
+                fail.ErrorDescription = "code challenge required";
+                return fail;
+            }
+
+            if (codeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
+                codeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
+            {
+                LogError("code_challenge is either too short or too long", request);
+                return fail;
+            }
+
+            request.CodeChallenge = codeChallenge;
+
+            var codeChallengeMethod = request.Raw.Get(Constants.AuthorizeRequest.CodeChallengeMethod);
+            if (codeChallengeMethod.IsMissing())
+            {
+                Logger.Info("Missing code_challenge_method, defaulting to plain");
+                codeChallengeMethod = Constants.CodeChallengeMethods.Plain;
+            }
+
+            if (!Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
+            {
+                LogError("Unsupported code_challenge_method: " + codeChallengeMethod, request);
+                fail.ErrorDescription = "transform algorithm not supported";
+                return fail;
+            }
+
+            request.CodeChallengeMethod = codeChallengeMethod;
 
             return Valid(request);
         }

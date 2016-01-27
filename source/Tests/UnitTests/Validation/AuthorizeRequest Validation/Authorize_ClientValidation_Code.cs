@@ -138,5 +138,83 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        public async Task CodeWithProofKey_Request_No_CodeChallenge()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.ErrorDescription.Should().Be("code challenge required");
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        public async Task CodeWithProofKey_Request_CodeChallenge_Too_Short()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMinLength - 1));
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        public async Task CodeWithProofKey_Request_CodeChallenge_Too_Long()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMaxLength + 1));
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        public async Task CodeWithProofKey_Request_Unsupported_CodeChallengeMethod()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMinLength));
+            parameters.Add(Constants.AuthorizeRequest.CodeChallengeMethod, "unknown");
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeTrue();
+            result.ErrorType.Should().Be(ErrorTypes.Client);
+            result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
+            result.ErrorDescription.Should().Be("transform algorithm not supported");
+        }
     }
 }

@@ -18,6 +18,7 @@ using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.RegularExpressions;
 
 #pragma warning disable 1591
 
@@ -58,36 +59,39 @@ namespace IdentityServer3.Core
 
         public static class AuthorizeRequest
         {
-            public const string Scope        = "scope";
-            public const string ResponseType = "response_type";
-            public const string ClientId     = "client_id";
-            public const string RedirectUri  = "redirect_uri";
-            public const string State        = "state";
-            public const string ResponseMode = "response_mode";
-            public const string Nonce        = "nonce";
-            public const string Display      = "display";
-            public const string Prompt       = "prompt";
-            public const string MaxAge       = "max_age";
-            public const string UiLocales    = "ui_locales";
-            public const string IdTokenHint  = "id_token_hint";
-            public const string LoginHint    = "login_hint";
-            public const string AcrValues    = "acr_values";
+            public const string Scope               = "scope";
+            public const string ResponseType        = "response_type";
+            public const string ClientId            = "client_id";
+            public const string RedirectUri         = "redirect_uri";
+            public const string State               = "state";
+            public const string ResponseMode        = "response_mode";
+            public const string Nonce               = "nonce";
+            public const string Display             = "display";
+            public const string Prompt              = "prompt";
+            public const string MaxAge              = "max_age";
+            public const string UiLocales           = "ui_locales";
+            public const string IdTokenHint         = "id_token_hint";
+            public const string LoginHint           = "login_hint";
+            public const string AcrValues           = "acr_values";
+            public const string CodeChallenge       = "code_challenge";
+            public const string CodeChallengeMethod = "code_challenge_method";
         }
 
         public static class TokenRequest
         {
-            public const string GrantType    = "grant_type";
-            public const string RedirectUri  = "redirect_uri";
-            public const string ClientId     = "client_id";
-            public const string ClientSecret = "client_secret";
-            public const string ClientAssertion = "client_assertion";
+            public const string GrantType           = "grant_type";
+            public const string RedirectUri         = "redirect_uri";
+            public const string ClientId            = "client_id";
+            public const string ClientSecret        = "client_secret";
+            public const string ClientAssertion     = "client_assertion";
             public const string ClientAssertionType = "client_assertion_type";
-            public const string Assertion    = "assertion";
-            public const string Code         = "code";
-            public const string RefreshToken = "refresh_token";
-            public const string Scope        = "scope";
-            public const string UserName     = "username";
-            public const string Password     = "password";
+            public const string Assertion           = "assertion";
+            public const string Code                = "code";
+            public const string RefreshToken        = "refresh_token";
+            public const string Scope               = "scope";
+            public const string UserName            = "username";
+            public const string Password            = "password";
+            public const string CodeVerifier        = "code_verifier";
         }
 
         public static class EndSessionRequest
@@ -176,6 +180,7 @@ namespace IdentityServer3.Core
         public static readonly List<Flows> AllowedFlowsForAuthorizeEndpoint = new List<Flows>
                             {
                                 Flows.AuthorizationCode,
+                                Flows.AuthorizationCodeWithProofKey,
                                 Flows.Implicit,
                                 Flows.Hybrid
                             };
@@ -211,6 +216,7 @@ namespace IdentityServer3.Core
         public static readonly Dictionary<Flows, IEnumerable<string>> AllowedResponseModesForFlow = new Dictionary<Flows, IEnumerable<string>>
                             {
                                 { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
+                                { Flows.AuthorizationCodeWithProofKey, new[] { ResponseModes.Query, ResponseModes.FormPost } },
                                 { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
                                 { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
                             };
@@ -276,6 +282,18 @@ namespace IdentityServer3.Core
             public const string HomeRealm = "idp:";
             public const string Tenant = "tenant:";
         }
+
+        public static class CodeChallengeMethods
+        {
+            public const string Plain = "plain";
+            public const string SHA_256 = "S256";
+        }
+
+        public static readonly List<string> SupportedCodeChallengeMethods = new List<string>
+                            {
+                                CodeChallengeMethods.Plain,
+                                CodeChallengeMethods.SHA_256
+                            };
 
         public static class AuthorizeErrors
         {

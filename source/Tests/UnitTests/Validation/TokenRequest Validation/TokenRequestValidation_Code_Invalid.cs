@@ -37,7 +37,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         const string Category = "TokenRequest Validation - AuthorizationCode - Invalid";
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Missing_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -66,7 +66,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Invalid_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -96,7 +96,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task AuthorizationCodeTooLong()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -158,7 +158,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Client_Not_Authorized_For_AuthorizationCode_Flow()
         {
             var client = await _clients.FindClientByIdAsync("implicitclient");
@@ -188,7 +188,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Client_Trying_To_Request_Token_Using_Another_Clients_Code()
         {
             var client1 = await _clients.FindClientByIdAsync("codeclient");
@@ -219,7 +219,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Missing_RedirectUri()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -248,7 +248,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Different_RedirectUri_Between_Authorize_And_Token_Request()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -278,7 +278,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Expired_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -309,7 +309,7 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
         }
 
         [Fact]
-        [Trait("Category", "TokenRequest Validation - AuthorizationCode - Invalid")]
+        [Trait("Category", Category)]
         public async Task Reused_AuthorizationCode()
         {
             var client = await _clients.FindClientByIdAsync("codeclient");
@@ -398,6 +398,369 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             var result = await validator.ValidateRequestAsync(parameters, client);
 
             result.IsError.Should().BeTrue();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Missing_CodeChallenge_In_AuthZCode()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength + 1));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Missing_CodeChallengeMethod_In_AuthZCode()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength + 1),
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength + 1));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Missing_CodeVerifier()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength + 1),
+                CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_CodeVerifier_Too_Short()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength + 1),
+                CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength - 1));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_CodeVerifier_Too_Long()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength + 1),
+                CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMaxLength + 1));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Unsupported_CodeChallengeMethod_In_AuthZCode()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength),
+                CodeChallengeMethod = "Unknown",
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Plain()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength),
+                CodeChallengeMethod = Constants.CodeChallengeMethods.Plain,
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength) + "doesntmatch");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Sha256()
+        {
+            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                CodeChallenge = "x".Repeat(options.InputLengthRestrictions.CodeChallengeMinLength),
+                CodeChallengeMethod = Constants.CodeChallengeMethods.SHA_256,
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength) + "doesntmatch");
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task Code_Request_Contains_Code_Verifier_But_Client_Flow_Is_Not_PKCE()
+        {
+            var client = await _clients.FindClientByIdAsync("codeclient");
+            var store = new InMemoryAuthorizationCodeStore();
+            var options = new IdentityServerOptions();
+
+            var code = new AuthorizationCode
+            {
+                Client = client,
+                Subject = IdentityServerPrincipal.Create("123", "bob"),
+                RedirectUri = "https://server/cb",
+                RequestedScopes = new List<Scope>
+                {
+                    new Scope
+                    {
+                        Name = "openid"
+                    }
+                }
+            };
+
+            await store.StoreAsync("valid", code);
+
+            var validator = Factory.CreateTokenRequestValidator(
+                authorizationCodeStore: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, Constants.GrantTypes.AuthorizationCode);
+            parameters.Add(Constants.TokenRequest.Code, "valid");
+            parameters.Add(Constants.TokenRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.TokenRequest.CodeVerifier, "x".Repeat(options.InputLengthRestrictions.CodeVerifierMinLength));
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
     }
 }

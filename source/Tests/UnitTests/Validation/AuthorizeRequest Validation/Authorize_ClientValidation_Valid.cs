@@ -175,5 +175,41 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             
             result.IsError.Should().BeFalse();
         }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        public async Task Valid_CodeWithProofKey_Request()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, new string('a', 43));
+            parameters.Add(Constants.AuthorizeRequest.CodeChallengeMethod, "S256");
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().BeFalse();
+        }
+
+        [Fact]
+        [Trait("Category", "AuthorizeRequest Client Validation - Valid")]
+        public async Task Valid_CodeWithProofKey_NoCodeChallengeMethod_Request()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.CodeChallenge, new string('a', 43));
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.ValidatedRequest.CodeChallengeMethod.Should().Be(Constants.CodeChallengeMethods.Plain);
+            result.IsError.Should().BeFalse();
+        }
     }
 }
