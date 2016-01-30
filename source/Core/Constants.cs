@@ -185,6 +185,20 @@ namespace IdentityServer3.Core
                                 Flows.Hybrid
                             };
 
+        public static readonly List<Flows> AllowedFlowsForAuthorizationCodeGrantType = new List<Flows>
+                            {
+                                Flows.AuthorizationCode,
+                                Flows.AuthorizationCodeWithProofKey,
+                                Flows.Hybrid,
+                                Flows.HybridWithProofKey
+                            };
+
+        public static readonly Dictionary<Flows, IList<string>> ProofKeyFlowToResponseTypesMapping = new Dictionary<Flows, IList<string>>
+                            {
+                                { Flows.AuthorizationCodeWithProofKey, new List<string> { ResponseTypes.Code } },
+                                { Flows.HybridWithProofKey, new List<string> { ResponseTypes.CodeIdToken, ResponseTypes.CodeIdTokenToken, ResponseTypes.CodeToken } }
+                            };
+
         public enum ScopeRequirement
         {
             None, 
@@ -218,7 +232,8 @@ namespace IdentityServer3.Core
                                 { Flows.AuthorizationCode, new[] { ResponseModes.Query, ResponseModes.FormPost } },
                                 { Flows.AuthorizationCodeWithProofKey, new[] { ResponseModes.Query, ResponseModes.FormPost } },
                                 { Flows.Implicit, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
-                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
+                                { Flows.Hybrid, new[] { ResponseModes.Fragment, ResponseModes.FormPost }},
+                                { Flows.HybridWithProofKey, new[] { ResponseModes.Fragment, ResponseModes.FormPost }}
                             };
 
         public static class ResponseModes

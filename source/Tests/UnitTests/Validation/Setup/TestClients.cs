@@ -93,6 +93,30 @@ namespace IdentityServer3.Tests.Validation
 
                     AuthorizationCodeLifetime = 60
                 },
+
+                new Client
+                {
+                    ClientName = "Hybrid with Proof Key Client",
+                    Enabled = true,
+                    ClientId = "hybridwithproofkeyclient",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.HybridWithProofKey,
+                    AllowAccessToAllScopes = true,
+
+                    RequireConsent = false,
+
+                    RedirectUris = new List<string>
+                    {
+                        "https://server/cb",
+                    },
+
+                    AuthorizationCodeLifetime = 60
+                },
+
                 new Client
                 {
                     ClientName = "Implicit Client",

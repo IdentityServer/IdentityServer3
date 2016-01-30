@@ -400,11 +400,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.IsError.Should().BeTrue();
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Missing_CodeChallenge_In_AuthZCode()
+        public async Task Code_Request_PKCE_Missing_CodeChallenge_In_AuthZCode(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -439,11 +441,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Missing_CodeChallengeMethod_In_AuthZCode()
+        public async Task Code_Request_PKCE_Missing_CodeChallengeMethod_In_AuthZCode(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -479,11 +483,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Missing_CodeVerifier()
+        public async Task Code_Request_PKCE_Missing_CodeVerifier(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -519,11 +525,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_CodeVerifier_Too_Short()
+        public async Task Code_Request_PKCE_CodeVerifier_Too_Short(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -560,11 +568,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_CodeVerifier_Too_Long()
+        public async Task Code_Request_PKCE_CodeVerifier_Too_Long(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -601,11 +611,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Unsupported_CodeChallengeMethod_In_AuthZCode()
+        public async Task Code_Request_PKCE_Unsupported_CodeChallengeMethod_In_AuthZCode(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -642,11 +654,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Plain()
+        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Plain(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -683,11 +697,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codewithproofkeyclient")]
+        [InlineData("hybridwithproofkeyclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Sha256()
+        public async Task Code_Request_PKCE_Transformed_CodeVerifier_Doesnt_Match_CodeChallenge_Sha256(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codewithproofkeyclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
@@ -724,11 +740,13 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
             result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("codeclient")]
+        [InlineData("hybridclient")]
         [Trait("Category", Category)]
-        public async Task Code_Request_Contains_Code_Verifier_But_Client_Flow_Is_Not_PKCE()
+        public async Task Code_Request_Contains_Code_Verifier_But_Client_Flow_Is_Not_PKCE(string clientId)
         {
-            var client = await _clients.FindClientByIdAsync("codeclient");
+            var client = await _clients.FindClientByIdAsync(clientId);
             var store = new InMemoryAuthorizationCodeStore();
             var options = new IdentityServerOptions();
 
