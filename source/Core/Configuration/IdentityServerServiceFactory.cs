@@ -212,6 +212,14 @@ namespace IdentityServer3.Core.Configuration
         public Registration<ICustomRequestValidator> CustomRequestValidator { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom request validator - Implements custom additional validation of authorize and token requests.
+        /// </summary>
+        /// <value>
+        /// The custom request validator.
+        /// </value>
+        public Registration<ICustomClientValidator> CustomClientValidator { get; set; }
+
+        /// <summary>
         /// Gets or sets the claims provider - Implements retrieval of claims for identity and access tokens.
         /// </summary>
         /// <value>

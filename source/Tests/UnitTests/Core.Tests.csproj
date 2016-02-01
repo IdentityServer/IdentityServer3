@@ -186,6 +186,11 @@
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
     <Compile Include="TestExtensions.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientInstanceValidation_Code.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientInstanceValidation_IdToken.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientInstanceValidation_Token.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientInstanceValidation_Valid.cs" />
+    <Compile Include="Validation\AuthorizeRequest Validation\Authorize_ClientValidation_Instance.cs" />
     <Compile Include="Validation\BearerTokenUsageValidation.cs" />
     <Compile Include="Validation\CustomGrantValidation.cs" />
     <Compile Include="Validation\Secrets\BasicAuthenticationCredentialParsing.cs" />

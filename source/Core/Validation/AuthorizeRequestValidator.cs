@@ -37,14 +37,16 @@ namespace IdentityServer3.Core.Validation
         private readonly IClientStore _clients;
         private readonly ICustomRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;
+        private readonly ICustomClientValidator _clientValidator;
         private readonly ScopeValidator _scopeValidator;
         private readonly SessionCookie _sessionCookie;
 
-        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
+        public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, ICustomClientValidator clientValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
             _options = options;
             _clients = clients;
             _customValidator = customValidator;
+            _clientValidator = clientValidator;
             _uriValidator = uriValidator;
             _scopeValidator = scopeValidator;
             _sessionCookie = sessionCookie;
@@ -69,7 +71,7 @@ namespace IdentityServer3.Core.Validation
             request.Raw = parameters;
 
             // validate client_id and redirect_uri
-            var clientResult = await ValidateClientAsync(request);
+            var clientResult = await _clientValidator.ValidateAuthorizeRequestAsync(request);
             if (clientResult.IsError)
             {
                 return clientResult;
@@ -106,66 +108,6 @@ namespace IdentityServer3.Core.Validation
             }
 
             LogSuccess(request);
-            return Valid(request);
-        }
-
-        public async Task<AuthorizeRequestValidationResult> ValidateClientAsync(ValidatedAuthorizeRequest request)
-        {
-            //////////////////////////////////////////////////////////
-            // client_id must be present
-            /////////////////////////////////////////////////////////
-            var clientId = request.Raw.Get(Constants.AuthorizeRequest.ClientId);
-            if (clientId.IsMissingOrTooLong(_options.InputLengthRestrictions.ClientId))
-            {
-                LogError("client_id is missing or too long", request);
-                return Invalid(request);
-            }
-
-            request.ClientId = clientId;
-
-
-            //////////////////////////////////////////////////////////
-            // redirect_uri must be present, and a valid uri
-            //////////////////////////////////////////////////////////
-            var redirectUri = request.Raw.Get(Constants.AuthorizeRequest.RedirectUri);
-
-            if (redirectUri.IsMissingOrTooLong(_options.InputLengthRestrictions.RedirectUri))
-            {
-                LogError("redirect_uri is missing or too long", request);
-                return Invalid(request);
-            }
-
-            Uri uri;
-            if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out uri))
-            {
-                LogError("invalid redirect_uri: " + redirectUri, request);
-                return Invalid(request);
-            }
-
-            request.RedirectUri = redirectUri;
-
-
-            //////////////////////////////////////////////////////////
-            // check for valid client
-            //////////////////////////////////////////////////////////
-            var client = await _clients.FindClientByIdAsync(request.ClientId);
-            if (client == null || client.Enabled == false)
-            {
-                LogError("Unknown client or not enabled: " + request.ClientId, request);
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
-            request.Client = client;
-
-            //////////////////////////////////////////////////////////
-            // check if redirect_uri is valid
-            //////////////////////////////////////////////////////////
-            if (await _uriValidator.IsRedirectUriValidAsync(request.RedirectUri, request.Client) == false)
-            {
-                LogError("Invalid redirect_uri: " + request.RedirectUri, request);
-                return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
-            }
-
             return Valid(request);
         }
 
