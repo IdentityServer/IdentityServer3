@@ -125,6 +125,7 @@ namespace IdentityServer3.Tests.Validation
             IClientStore clients = null,
             IUserService users = null,
             ICustomRequestValidator customValidator = null,
+            ICustomClientValidator clientValidator = null,
             IRedirectUriValidator uriValidator = null,
             ScopeValidator scopeValidator = null,
             IDictionary<string, object> environment = null)
@@ -154,6 +155,11 @@ namespace IdentityServer3.Tests.Validation
                 uriValidator = new DefaultRedirectUriValidator();
             }
 
+            if (clientValidator == null)
+            {
+                clientValidator = new DefaultCustomClientValidator(options, clients, uriValidator);
+            }
+
             if (scopeValidator == null)
             {
                 scopeValidator = new ScopeValidator(scopes);
@@ -163,7 +169,7 @@ namespace IdentityServer3.Tests.Validation
             mockSessionCookie.CallBase = false;
             mockSessionCookie.Setup(x => x.GetSessionId()).Returns((string)null);
 
-            return new AuthorizeRequestValidator(options, clients, customValidator, uriValidator, scopeValidator, mockSessionCookie.Object);
+            return new AuthorizeRequestValidator(options, clients, customValidator, clientValidator, uriValidator, scopeValidator, mockSessionCookie.Object);
 
         }
 
