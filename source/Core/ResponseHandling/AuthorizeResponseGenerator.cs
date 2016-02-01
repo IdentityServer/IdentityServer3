@@ -57,7 +57,7 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 return await CreateImplicitFlowResponseAsync(request);
             }
-            if (request.Flow == Flows.Hybrid)
+            if (request.Flow == Flows.Hybrid || request.Flow == Flows.HybridWithProofKey)
             {
                 return await CreateHybridFlowResponseAsync(request);
             }

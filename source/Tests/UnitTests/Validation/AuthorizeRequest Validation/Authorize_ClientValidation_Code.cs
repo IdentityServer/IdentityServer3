@@ -27,10 +27,11 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 
     public class Authorize_ClientValidation_Code
     {
+        const string Category = "AuthorizeRequest Client Validation - Code";
         IdentityServerOptions _options = TestIdentityServerOptions.Create();
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task Code_Request_Unknown_Scope()
         {
             var parameters = new NameValueCollection();
@@ -48,7 +49,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
         }
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task OpenId_Code_Request_Invalid_RedirectUri()
         {
             var parameters = new NameValueCollection();
@@ -66,7 +67,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
         }
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task OpenId_Code_Request_Invalid_IdToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -85,7 +86,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
         }
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task OpenId_Code_Request_Invalid_IdTokenToken_ResponseType()
         {
             var parameters = new NameValueCollection();
@@ -104,7 +105,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
         }
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task OpenId_Code_Request_With_Unknown_Client()
         {
             var parameters = new NameValueCollection();
@@ -122,7 +123,7 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
         }
 
         [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
+        [Trait("Category", Category)]
         public async Task OpenId_Code_Request_With_Restricted_Scope()
         {
             var parameters = new NameValueCollection();
@@ -139,15 +140,19 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
 
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
-        public async Task CodeWithProofKey_Request_No_CodeChallenge()
+        [Theory]
+        [InlineData("codewithproofkeyclient", Constants.ResponseTypes.Code)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdTokenToken)]
+        [Trait("Category", Category)]
+        public async Task ProofKey_Request_No_CodeChallenge(string clientId, string responseType)
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, clientId);
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, responseType);
 
             var validator = Factory.CreateAuthorizeRequestValidator();
             var result = await validator.ValidateAsync(parameters);
@@ -158,15 +163,19 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.ErrorDescription.Should().Be("code challenge required");
         }
 
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
-        public async Task CodeWithProofKey_Request_CodeChallenge_Too_Short()
+        [Theory]
+        [InlineData("codewithproofkeyclient", Constants.ResponseTypes.Code)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdTokenToken)]
+        [Trait("Category", Category)]
+        public async Task ProofKey_Request_CodeChallenge_Too_Short(string clientId, string responseType)
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, clientId);
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, responseType);
             parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMinLength - 1));
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -177,15 +186,19 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
-        public async Task CodeWithProofKey_Request_CodeChallenge_Too_Long()
+        [Theory]
+        [InlineData("codewithproofkeyclient", Constants.ResponseTypes.Code)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdTokenToken)]
+        [Trait("Category", Category)]
+        public async Task ProofKey_Request_CodeChallenge_Too_Long(string clientId, string responseType)
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, clientId);
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, responseType);
             parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMaxLength + 1));
 
             var validator = Factory.CreateAuthorizeRequestValidator();
@@ -196,15 +209,19 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.Error.Should().Be(Constants.AuthorizeErrors.InvalidRequest);
         }
 
-        [Fact]
-        [Trait("Category", "AuthorizeRequest Client Validation - Code")]
-        public async Task CodeWithProofKey_Request_Unsupported_CodeChallengeMethod()
+        [Theory]
+        [InlineData("codewithproofkeyclient", Constants.ResponseTypes.Code)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeToken)]
+        [InlineData("hybridwithproofkeyclient", Constants.ResponseTypes.CodeIdTokenToken)]
+        [Trait("Category", Category)]
+        public async Task ProofKey_Request_Unsupported_CodeChallengeMethod(string clientId, string responseType)
         {
             var parameters = new NameValueCollection();
-            parameters.Add(Constants.AuthorizeRequest.ClientId, "codewithproofkeyclient");
+            parameters.Add(Constants.AuthorizeRequest.ClientId, clientId);
             parameters.Add(Constants.AuthorizeRequest.Scope, "openid profile");
             parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
-            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.Code);
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, responseType);
             parameters.Add(Constants.AuthorizeRequest.CodeChallenge, "a".Repeat(_options.InputLengthRestrictions.CodeChallengeMinLength));
             parameters.Add(Constants.AuthorizeRequest.CodeChallengeMethod, "unknown");
 

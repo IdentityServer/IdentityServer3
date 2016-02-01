@@ -167,9 +167,7 @@ namespace IdentityServer3.Core.Validation
             /////////////////////////////////////////////
             // check if client is authorized for grant type
             /////////////////////////////////////////////
-            if (_validatedRequest.Client.Flow != Flows.AuthorizationCode &&
-                _validatedRequest.Client.Flow != Flows.AuthorizationCodeWithProofKey &&
-                _validatedRequest.Client.Flow != Flows.Hybrid)
+            if (Constants.AllowedFlowsForAuthorizationCodeGrantType.Contains(_validatedRequest.Client.Flow) == false)
             {
                 LogError("Client not authorized for code flow");
                 return Invalid(Constants.TokenErrors.UnauthorizedClient);
@@ -233,7 +231,8 @@ namespace IdentityServer3.Core.Validation
             // validate PKCE parameters
             /////////////////////////////////////////////
             var codeVerifier = parameters.Get(Constants.TokenRequest.CodeVerifier);
-            if (authZcode.Client.Flow == Flows.AuthorizationCodeWithProofKey)
+            if (authZcode.Client.Flow == Flows.AuthorizationCodeWithProofKey ||
+                authZcode.Client.Flow == Flows.HybridWithProofKey)
             {
                 var proofKeyResult = ValidateAuthorizationCodeWithProofKeyParameters(codeVerifier, authZcode);
                 if (proofKeyResult.IsError)

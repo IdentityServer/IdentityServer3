@@ -214,7 +214,7 @@ namespace IdentityServer3.Core.Validation
             request.ResponseType = Constants.SupportedResponseTypes.First(
                 supportedResponseType => _responseTypeEqualityComparer.Equals(supportedResponseType, responseType));
 
-            if (request.ResponseType == Constants.ResponseTypes.Code && request.Client.Flow == Flows.AuthorizationCodeWithProofKey)
+            if (RequestMatchesProofKeyFlow(request))
             {
                 /////////////////////////////////////////////////////////////////////////////
                 // if client uses authorization code with proof key flow, we need to validate
@@ -226,7 +226,7 @@ namespace IdentityServer3.Core.Validation
                     return proofKeyResult;
                 }
 
-                request.Flow = Flows.AuthorizationCodeWithProofKey;
+                request.Flow = request.Client.Flow;
             }
             else
             {
@@ -558,6 +558,13 @@ namespace IdentityServer3.Core.Validation
             request.CodeChallengeMethod = codeChallengeMethod;
 
             return Valid(request);
+        }
+
+        private bool RequestMatchesProofKeyFlow(ValidatedAuthorizeRequest request)
+        {
+            return Constants.ProofKeyFlowToResponseTypesMapping.Any(x =>
+                request.Client.Flow == x.Key &&
+                x.Value.Contains(request.ResponseType));
         }
 
         private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)
