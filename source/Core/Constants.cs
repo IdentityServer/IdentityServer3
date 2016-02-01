@@ -182,7 +182,8 @@ namespace IdentityServer3.Core
                                 Flows.AuthorizationCode,
                                 Flows.AuthorizationCodeWithProofKey,
                                 Flows.Implicit,
-                                Flows.Hybrid
+                                Flows.Hybrid,
+                                Flows.HybridWithProofKey
                             };
 
         public static readonly List<Flows> AllowedFlowsForAuthorizationCodeGrantType = new List<Flows>
