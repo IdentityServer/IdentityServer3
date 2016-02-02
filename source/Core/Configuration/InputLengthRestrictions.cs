@@ -17,7 +17,7 @@
 namespace IdentityServer3.Core.Configuration
 {
     /// <summary>
-    /// 
+    /// Defines the input length restrictions for different values
     /// </summary>
     public class InputLengthRestrictions
     {
@@ -46,6 +46,10 @@ namespace IdentityServer3.Core.Configuration
             RefreshToken = Default;
             TokenHandle = Default;
             Jwt = 51200;
+            CodeChallengeMinLength = 43;
+            CodeChallengeMaxLength = 128;
+            CodeVerifierMinLength = 43;
+            CodeVerifierMaxLength = 128;
         }
 
         /// <summary>
@@ -137,5 +141,25 @@ namespace IdentityServer3.Core.Configuration
         /// Max length for JWTs
         /// </summary>
         public int Jwt { get; private set; }
+
+        /// <summary>
+        /// Min length for the code challenge
+        /// </summary>
+        public int CodeChallengeMinLength { get; private set; }
+
+        /// <summary>
+        /// Max length for the code challenge
+        /// </summary>
+        public int CodeChallengeMaxLength { get; private set; }
+
+        /// <summary>
+        /// Min length for the code verifier
+        /// </summary>
+        public int CodeVerifierMinLength { get; private set; }
+
+        /// <summary>
+        /// Max length for the code verifier
+        /// </summary>
+        public int CodeVerifierMaxLength { get; private set; }
     }
 }

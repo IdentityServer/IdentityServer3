@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Validation;
 using System.Threading.Tasks;
 
-namespace IdentityServer3.Core.Services.Default
+namespace IdentityServer3.Core.Services
 {
-    internal class NopCustomGrantValidator : ICustomGrantValidator
+    /// <summary>
+    /// Allows adding custom data to a token response
+    /// </summary>
+    public interface ICustomTokenResponseGenerator
     {
-        public Task<CustomGrantValidationResult> ValidateAsync(ValidatedTokenRequest request)
-        {
-            return Task.FromResult<CustomGrantValidationResult>(null);
-        }
-
-        public string GrantType
-        {
-            get { return ""; }
-        }
+        /// <summary>
+        /// Custom response generation
+        /// </summary>
+        /// <param name="request">The validated request.</param>
+        /// <param name="response">The standard token response.</param>
+        /// <returns>The custom token response.</returns>
+        Task<TokenResponse> GenerateAsync(ValidatedTokenRequest request, TokenResponse response);
     }
 }

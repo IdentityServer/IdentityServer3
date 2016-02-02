@@ -213,6 +213,23 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_PreAuthenticateReturnsErrorAndShowLoginPageOnErrorResultIsSet_ShowsLoginPageWithError()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
+                .Callback<PreAuthenticationContext>(ctx => {
+                    ctx.AuthenticateResult = new AuthenticateResult("SomeError");
+                    ctx.ShowLoginPageOnErrorResult = true;
+                })
+                .Returns(Task.FromResult(0));
+
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
+            model.ErrorMessage.Should().Be("SomeError");
+        }
+
+        [Fact]
         public void GetLogin_PreAuthenticateReturnsFullLogin_IssuesLoginCookie()
         {
             mockUserService
@@ -792,6 +809,49 @@ namespace IdentityServer3.Tests.Endpoints
             var id = WriteMessageToCookie(new SignOutMessage { ClientId = "foo", ReturnUrl = "http://foo" });
             var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
             resp.AssertPage("loggedOut");
+        }
+
+        [Fact]
+        public void Logout_SignOutMessagePassed_RequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "foo", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
+        public void Logout_SignOutMessagePassed_ClientRequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.clients.Single(x => x.ClientId == "implicitclient").RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
+        public void PostToLogout_SignOutMessagePassed_RequireSignOutPromptSet_LogoutPageHasReturnUrlInfo()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+
+            var logoutModel = resp.GetModel<LogoutViewModel>();
+            resp = PostForm(logoutModel.LogoutUrl, new { });
+
+            var loggedOutModel = resp.GetModel<LoggedOutViewModel>();
+
+            loggedOutModel.ClientName.Should().Be("Implicit Clients");
+            loggedOutModel.RedirectUrl.Should().Be("http://foo");
         }
 
         [Fact]

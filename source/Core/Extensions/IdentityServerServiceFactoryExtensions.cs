@@ -215,6 +215,29 @@ namespace IdentityServer3.Core.Configuration
         }
 
         /// <summary>
+        /// Configures a derived default view service.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="options">The default view service options.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// factory
+        /// or
+        /// options
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">ViewService is already configured</exception>
+        public static void ConfigureDefaultViewService<T>(this IdentityServerServiceFactory factory,
+            DefaultViewServiceOptions options)
+            where T : DefaultViewService
+        {
+            if (factory == null) throw new ArgumentNullException("factory");
+            if (options == null) throw new ArgumentNullException("options");
+
+            if (factory.ViewService != null) throw new InvalidOperationException("A ViewService is already configured");
+
+            factory.ViewService = new DefaultViewServiceRegistration<T>(options);
+        }
+
+        /// <summary>
         /// Configures the factory to use in-memory users.
         /// </summary>
         /// <param name="factory">The factory.</param>

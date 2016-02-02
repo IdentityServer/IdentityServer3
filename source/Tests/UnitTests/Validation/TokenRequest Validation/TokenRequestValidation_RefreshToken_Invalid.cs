@@ -183,6 +183,49 @@ namespace IdentityServer3.Tests.Validation.TokenRequest
 
         [Fact]
         [Trait("Category", Category)]
+        public async Task Client_has_no_Resource_Scope_anymore_at_RefreshToken_Request()
+        {
+            var subjectClaim = new Claim(Constants.ClaimTypes.Subject, "foo");
+            var resourceScope = new Claim("scope", "resource");
+            var offlineAccessScope = new Claim("scope", "offline_access");
+
+            var refreshToken = new RefreshToken
+            {
+                AccessToken = new Token("access_token")
+                { 
+                    Claims = new List<Claim> { subjectClaim, resourceScope, offlineAccessScope },
+
+                    Client = new Client
+                    {
+                        ClientId = "roclient_offline_only",
+                    },
+                },
+                LifeTime = 600,
+                CreationTime = DateTimeOffset.UtcNow
+            };
+            var handle = Guid.NewGuid().ToString();
+
+            var store = new InMemoryRefreshTokenStore();
+            await store.StoreAsync(handle, refreshToken);
+
+            var client = await _clients.FindClientByIdAsync("roclient_offline_only");
+
+            var validator = Factory.CreateTokenRequestValidator(
+                refreshTokens: store);
+
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.TokenRequest.GrantType, "refresh_token");
+            parameters.Add(Constants.TokenRequest.RefreshToken, handle);
+
+            var result = await validator.ValidateRequestAsync(parameters, client);
+
+            result.IsError.Should().BeTrue();
+            result.Error.Should().Be(Constants.TokenErrors.InvalidGrant);
+        }
+
+
+        [Fact]
+        [Trait("Category", Category)]
         public async Task RefreshToken_Request_with_disabled_User()
         {
             var mock = new Mock<IUserService>();

@@ -40,6 +40,9 @@ namespace IdentityServer3.Core.Validation
         private readonly ScopeValidator _scopeValidator;
         private readonly SessionCookie _sessionCookie;
 
+        private readonly ResponseTypeEqualityComparer
+            _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
+
         public AuthorizeRequestValidator(IdentityServerOptions options, IClientStore clients, ICustomRequestValidator customValidator, IRedirectUriValidator uriValidator, ScopeValidator scopeValidator, SessionCookie sessionCookie)
         {
             _options = options;
@@ -190,19 +193,48 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            if (!Constants.SupportedResponseTypes.Contains(responseType))
+            // The responseType may come in in an unconventional order.  
+            // Use an IEqualityComparer that doesn't care about the order of multiple values.
+            // Per https://tools.ietf.org/html/rfc6749#section-3.1.1 - 
+            // 'Extension response types MAY contain a space-delimited (%x20) list of
+            // values, where the order of values does not matter (e.g., response
+            // type "a b" is the same as "b a").'
+            // http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology - 
+            // 'If a response type contains one of more space characters (%20), it is compared 
+            // as a space-delimited list of values in which the order of values does not matter.'
+            if (!Constants.SupportedResponseTypes.Contains(responseType, _responseTypeEqualityComparer))
             {
                 LogError("Response type not supported: " + responseType, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnsupportedResponseType);
             }
 
-            request.ResponseType = responseType;
+            // Even though the responseType may have come in in an unconventional order,
+            // we still need the request's ResponseType property to be set to the
+            // conventional, supported response type.
+            request.ResponseType = Constants.SupportedResponseTypes.First(
+                supportedResponseType => _responseTypeEqualityComparer.Equals(supportedResponseType, responseType));
 
+            if (RequestMatchesProofKeyFlow(request))
+            {
+                /////////////////////////////////////////////////////////////////////////////
+                // if client uses authorization code with proof key flow, we need to validate
+                // code_challenge and code_challenge_method
+                /////////////////////////////////////////////////////////////////////////////
+                var proofKeyResult = ValidateProofKeyParameters(request);
+                if (proofKeyResult.IsError)
+                {
+                    return proofKeyResult;
+                }
 
-            //////////////////////////////////////////////////////////
-            // match response_type to flow
-            //////////////////////////////////////////////////////////
-            request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+                request.Flow = request.Client.Flow;
+            }
+            else
+            {
+                //////////////////////////////////////////////////////////
+                // match response_type to flow
+                //////////////////////////////////////////////////////////
+                request.Flow = Constants.ResponseTypeToFlowMapping[request.ResponseType];
+            }
 
 
             //////////////////////////////////////////////////////////
@@ -486,6 +518,53 @@ namespace IdentityServer3.Core.Validation
             }
 
             return Valid(request);
+        }
+
+        private AuthorizeRequestValidationResult ValidateProofKeyParameters(ValidatedAuthorizeRequest request)
+        {
+            var fail = Invalid(request, ErrorTypes.Client);
+
+            var codeChallenge = request.Raw.Get(Constants.AuthorizeRequest.CodeChallenge);
+            if (codeChallenge.IsMissing())
+            {
+                LogError("code_challenge is missing", request);
+                fail.ErrorDescription = "code challenge required";
+                return fail;
+            }
+
+            if (codeChallenge.Length < _options.InputLengthRestrictions.CodeChallengeMinLength ||
+                codeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
+            {
+                LogError("code_challenge is either too short or too long", request);
+                return fail;
+            }
+
+            request.CodeChallenge = codeChallenge;
+
+            var codeChallengeMethod = request.Raw.Get(Constants.AuthorizeRequest.CodeChallengeMethod);
+            if (codeChallengeMethod.IsMissing())
+            {
+                Logger.Info("Missing code_challenge_method, defaulting to plain");
+                codeChallengeMethod = Constants.CodeChallengeMethods.Plain;
+            }
+
+            if (!Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
+            {
+                LogError("Unsupported code_challenge_method: " + codeChallengeMethod, request);
+                fail.ErrorDescription = "transform algorithm not supported";
+                return fail;
+            }
+
+            request.CodeChallengeMethod = codeChallengeMethod;
+
+            return Valid(request);
+        }
+
+        private bool RequestMatchesProofKeyFlow(ValidatedAuthorizeRequest request)
+        {
+            return Constants.ProofKeyFlowToResponseTypesMapping.Any(x =>
+                request.Client.Flow == x.Key &&
+                x.Value.Contains(request.ResponseType));
         }
 
         private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, ErrorTypes errorType = ErrorTypes.User, string error = Constants.AuthorizeErrors.InvalidRequest)

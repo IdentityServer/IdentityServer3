@@ -49,7 +49,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
         public async Task<AuthorizeResponse> CreateResponseAsync(ValidatedAuthorizeRequest request)
         {
-            if (request.Flow == Flows.AuthorizationCode)
+            if (request.Flow == Flows.AuthorizationCode || request.Flow == Flows.AuthorizationCodeWithProofKey)
             {
                 return await CreateCodeFlowResponseAsync(request);
             }
@@ -57,7 +57,7 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 return await CreateImplicitFlowResponseAsync(request);
             }
-            if (request.Flow == Flows.Hybrid)
+            if (request.Flow == Flows.Hybrid || request.Flow == Flows.HybridWithProofKey)
             {
                 return await CreateHybridFlowResponseAsync(request);
             }
@@ -106,6 +106,8 @@ namespace IdentityServer3.Core.ResponseHandling
                 Client = request.Client,
                 Subject = request.Subject,
                 SessionId = request.SessionId,
+                CodeChallenge = request.CodeChallenge.Sha256(),
+                CodeChallengeMethod = request.CodeChallengeMethod,
 
                 IsOpenId = request.IsOpenIdRequest,
                 RequestedScopes = request.ValidatedScopes.GrantedScopes,
