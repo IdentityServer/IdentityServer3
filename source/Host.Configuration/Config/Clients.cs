@@ -25,9 +25,9 @@ namespace IdentityServer3.Host.Config
     {
         public static List<Client> Get()
         {
-            
             return new List<Client>
             {
+
                 /////////////////////////////////////////////////////////////
                 // Console Client Credentials Sample
                 /////////////////////////////////////////////////////////////
@@ -39,26 +39,26 @@ namespace IdentityServer3.Host.Config
                     Flow = Flows.ClientCredentials,
 
                     ClientSecrets = new List<Secret>
-                    {
-                        new Secret("secret".Sha256()),
-                        new Secret
                         {
-                            Value = "61B754C541BBCFC6A45A9E9EC5E47D8702B78C29",
-                            Type = Constants.SecretTypes.X509CertificateThumbprint,
-                            Description = "Client Certificate"
+                            new Secret("secret".Sha256()),
+                            new Secret
+                            {
+                                Value = "61B754C541BBCFC6A45A9E9EC5E47D8702B78C29",
+                                Type = Constants.SecretTypes.X509CertificateThumbprint,
+                                Description = "Client Certificate"
+                            },
                         },
-                    },
 
                     AllowedScopes = new List<string>
-                    {
-                        "read",
-                        "write"
-                    },
+                        {
+                            "read",
+                            "write"
+                        },
 
                     Claims = new List<Claim>
-                    {
-                        new Claim("location", "datacenter")
-                    }
+                        {
+                            new Claim("location", "datacenter")
+                        }
                 },
 
                 /////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ namespace IdentityServer3.Host.Config
                     {
                         new Secret("secret".Sha256())
                     },
-                    
+
                     AllowedScopes = new List<string>
                     {
                         "openid",
@@ -279,7 +279,7 @@ namespace IdentityServer3.Host.Config
                     {
                         new Secret("secret".Sha256())
                     },
-                    
+
                     AllowedScopes = new List<string>
                     {
                         Constants.StandardScopes.OpenId,
@@ -373,6 +373,34 @@ namespace IdentityServer3.Host.Config
                         "oob://localhost/wpf.webview.client",
                     },
                 },
+
+                /////////////////////////////////////////////////////////////
+                // WPF Client with Hybrid Flow and PKCE
+                /////////////////////////////////////////////////////////////
+                new Client
+                {
+                    ClientName = "WPF Client with Hybrid Flow and PKCE",
+                    ClientId = "wpf.hybrid",
+                    Flow = Flows.HybridWithProofKey,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = new List<string>
+                    {
+                        "http://localhost/wpf.hybrid"
+                    },
+
+                    AllowedScopes = new List<string>
+                    {
+                        StandardScopes.OpenId.Name,
+                        StandardScopes.Profile.Name,
+                        "read", "write"
+                    }
+                },
+                
 
                 /////////////////////////////////////////////////////////////
                 // UWP OIDC Client
