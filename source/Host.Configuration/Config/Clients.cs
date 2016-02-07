@@ -181,6 +181,9 @@ namespace IdentityServer3.Host.Config
                     {
                         "http://localhost:21575/index.html",
                         "http://localhost:21575/silent_renew.html",
+                        "http://localhost:21575/callback.html",
+                        "http://localhost:21575/frame.html",
+                        "http://localhost:21575/popup.html",
                     },
 
                     PostLogoutRedirectUris = new List<string>
