@@ -182,7 +182,12 @@ namespace IdentityServer3.Core.Endpoints
             var clients = new List<Client>();
             foreach (var clientId in clientIds)
             {
-                clients.Add(await _clientStore.FindClientByIdAsync(clientId));
+                var client = await _clientStore.FindClientByIdAsync(clientId);
+
+                if (client != null)
+                {
+                    clients.Add(client);
+                }
             }
 
             // get user's session id. session id will possibly 
