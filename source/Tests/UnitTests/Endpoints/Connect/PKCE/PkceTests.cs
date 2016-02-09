@@ -18,6 +18,7 @@ using FluentAssertions;
 using IdentityModel;
 using IdentityServer3.Core;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Tests.Conformance;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -26,7 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace IdentityServer3.Tests.Conformance.PKCE
+namespace IdentityServer3.Tests.Endpoints.Connect.PKCE
 {
     public class PkceTests : IdentityServerHostTest
     {
