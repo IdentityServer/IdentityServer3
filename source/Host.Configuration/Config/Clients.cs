@@ -401,7 +401,9 @@ namespace IdentityServer3.Host.Config
                         StandardScopes.OpenId.Name,
                         StandardScopes.Profile.Name,
                         "read", "write"
-                    }
+                    },
+
+                    AccessTokenType = AccessTokenType.Reference
                 },
                 
 
