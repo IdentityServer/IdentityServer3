@@ -347,6 +347,39 @@ namespace IdentityServer3.Host.Config
                 },
 
                 /////////////////////////////////////////////////////////////
+                // WebForms OWIN Implicit Client
+                /////////////////////////////////////////////////////////////
+                new Client
+                {
+                    ClientName = "WebForms OWIN Implicit Client",
+                    ClientId = "webforms.owin.implicit",
+                    Flow = Flows.Implicit,
+
+                    AllowedScopes = new List<string>
+                    {
+                        Constants.StandardScopes.OpenId,
+                        Constants.StandardScopes.Profile,
+                        Constants.StandardScopes.Email,
+                        Constants.StandardScopes.Roles,
+                        Constants.StandardScopes.Address,
+                    },
+
+                    ClientUri = "https://identityserver.io",
+
+                    RequireConsent = true,
+                    AllowRememberConsent = true,
+
+                    RedirectUris = new List<string>
+                    {
+                        "http://localhost:5969/"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "http://localhost:5969/"
+                    }
+                },
+
+                /////////////////////////////////////////////////////////////
                 // WPF WebView Client Sample
                 /////////////////////////////////////////////////////////////
                 new Client
