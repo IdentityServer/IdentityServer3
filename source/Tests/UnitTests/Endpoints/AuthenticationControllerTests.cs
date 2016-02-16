@@ -49,7 +49,13 @@ namespace IdentityServer3.Tests.Endpoints
                 props.Dictionary.Add(Constants.Authentication.SigninId, SignInId);
                 if(SignInIdentity.AuthenticationType == Constants.ExternalAuthenticationType)
                 {
-                    props.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, "Google");
+                    var issuer = "Google";
+                    var subClaim = SignInIdentity.FindFirst("sub");
+                    if (subClaim != null)
+                    {
+                        issuer = subClaim.Issuer;
+                    }
+                    props.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, issuer);
                 }
                 ctx.Authentication.SignIn(props, SignInIdentity);
                 SignInIdentity = null;
@@ -1058,6 +1064,23 @@ namespace IdentityServer3.Tests.Endpoints
             Get(Constants.RoutePaths.LoginExternalCallback);
 
             mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalAuthenticationContext>()));
+        }
+
+        [Fact]
+        public void LoginExternalCallback_UsersIdPDoesNotMatchSignInIdP_DisplaysErrorPage()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "999", ClaimValueTypes.String, "Google2");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            var response = Get(Constants.RoutePaths.LoginExternalCallback);
+            response.AssertPage("error");
         }
 
         [Fact]

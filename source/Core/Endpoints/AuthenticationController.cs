@@ -686,6 +686,17 @@ namespace IdentityServer3.Core.Endpoints
                 }
             }
 
+            // check to see if idp used to signin matches 
+            if (signInMessage.IdP.IsPresent() && 
+                authResult.IsPartialSignIn == false && 
+                authResult.HasSubject && 
+                authResult.User.GetIdentityProvider() != signInMessage.IdP)
+            {
+                // this is an error -- the user service did not set the idp to the one requested
+                Logger.ErrorFormat("IdP requested was: {0}, but the user service issued signin for IdP: {1}", signInMessage.IdP, authResult.User.GetIdentityProvider());
+                return RenderErrorPage();
+            }
+
             ClearAuthenticationCookiesForNewSignIn(authResult);
             IssueAuthenticationCookie(signInMessageId, authResult, rememberMe);
 
