@@ -683,5 +683,18 @@ namespace IdentityServer3.Core.Extensions
 
             return uri;
         }
+
+        /// <summary>
+        /// Returns collection of ClientIds that the user has signed into for the current authentication session.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetClientIdsForCurrentAuthenticationSession(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var clientListCookie = env.ResolveDependency<ClientListCookie>();
+            return clientListCookie.GetClients();
+        }
     }
 }
