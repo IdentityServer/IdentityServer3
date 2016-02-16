@@ -94,7 +94,7 @@ namespace IdentityServer3.Core.Services.InMemory
         /// <param name="subject">The subject.</param>
         /// <param name="client">The client.</param>
         /// <returns></returns>
-        public Task RevokeAsync(string subject, string client)
+        public async Task RevokeAsync(string subject, string client)
         {
             var query =
                 from item in _repository
@@ -103,10 +103,8 @@ namespace IdentityServer3.Core.Services.InMemory
 
             foreach (var key in query)
             {
-                RemoveAsync(key);
+                await RemoveAsync(key);
             }
-
-            return Task.FromResult(0);
         }
     }
 }
