@@ -20,6 +20,8 @@ Please log a new issue in the appropriate GitHub repo:
 * [AccessToken validation](https://github.com/IdentityServer/IdentityServer3.AccessTokenValidation)
 * [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
+Due to the security nature of IdentityServer, errors are very vague. Make sure you read and understand how to enable [logging](https://identityserver.github.io/Documentation/docsv2/configuration/logging.html) before opening an issue/bug report.
+
 ## Other discussions
 https://gitter.im/IdentityServer/IdentityServer3
 
