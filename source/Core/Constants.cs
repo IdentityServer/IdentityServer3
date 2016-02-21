@@ -567,7 +567,6 @@ namespace IdentityServer3.Core
             ClaimTypes.Issuer,
             ClaimTypes.NotBefore,
             ClaimTypes.Expiration,
-            ClaimTypes.UpdatedAt,
             ClaimTypes.IssuedAt,
             ClaimTypes.AuthenticationMethod,
             ClaimTypes.AuthenticationTime,
