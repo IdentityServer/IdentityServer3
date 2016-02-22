@@ -17,12 +17,17 @@
 using Host.Configuration;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Host.Config;
+using Kentor.AuthServices;
+using Kentor.AuthServices.Configuration;
+using Kentor.AuthServices.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
+using System.IdentityModel.Metadata;
+using System.IdentityModel.Selectors;
 
 namespace Owin
 {
@@ -156,6 +161,28 @@ namespace Owin
                 Wtrealm = "urn:idsrv3"
             };
             app.UseWsFederationAuthentication(was);
+
+            var saml2 = new KentorAuthServicesAuthenticationOptions(false)
+            {
+                AuthenticationType = "saml2",
+                Caption = "SAML2",
+                SignInAsAuthenticationType = signInAsType,
+                SPOptions = new SPOptions
+                {
+                    EntityId = new EntityId("https://localhost:44333/core/AuthServices"),
+                },
+            };
+
+            saml2.SPOptions.ServiceCertificates.Add(Cert.Load());
+
+            saml2.IdentityProviders.Add(new IdentityProvider(
+                new EntityId("http://stubidp.kentor.se/Metadata"),
+                saml2.SPOptions)
+            {
+                LoadMetadata = true
+            });
+
+            app.UseKentorAuthServicesAuthentication(saml2);
         }
     }
 }
