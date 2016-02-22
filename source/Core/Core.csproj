@@ -504,6 +504,7 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="Resources\T4resx.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4resx.cs</LastGenOutput>
@@ -560,10 +561,6 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js.map">
       <DependentUpon>crypto.min.js</DependentUpon>
     </None>
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js.bundle" />
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js.map">
-      <DependentUpon>scripts.2.0.0.min.js</DependentUpon>
-    </None>
     <None Include="Services\DefaultViewService\HttpAssets\styles.css.bundle" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -613,12 +610,7 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js">
-      <DependentUpon>scripts.2.0.0.js.bundle</DependentUpon>
-    </EmbeddedResource>
-    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js">
-      <DependentUpon>scripts.2.0.0.js</DependentUpon>
-    </Content>
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.5.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\styles.css">
       <DependentUpon>styles.css.bundle</DependentUpon>
     </Content>
