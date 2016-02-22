@@ -156,10 +156,11 @@ namespace IdentityServer3.Core.ResponseHandling
             }
             else
             {
-                oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
-                oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
+                var copy = new Token(oldAccessToken);
+                copy.CreationTime = DateTimeOffsetHelper.UtcNow;
+                copy.Lifetime = request.Client.AccessTokenLifetime;
 
-                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(copy);
             }
 
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);

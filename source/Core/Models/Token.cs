@@ -110,6 +110,18 @@ namespace IdentityServer3.Core.Models
             Type = tokenType;
         }
 
+        internal Token(Token other)
+        {
+            Audience = other.Audience;
+            Claims = other.Claims.ToList();
+            Client = other.Client;
+            CreationTime = other.CreationTime;
+            Issuer = other.Issuer;
+            Lifetime = other.Lifetime;
+            Type = other.Type;
+            Version = other.Version;
+        }
+
         /// <summary>
         /// Gets the subject identifier.
         /// </summary>
