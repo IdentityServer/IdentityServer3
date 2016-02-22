@@ -561,10 +561,13 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js.map">
       <DependentUpon>crypto.min.js</DependentUpon>
     </None>
-    <None Include="Services\DefaultViewService\HttpAssets\styles.css.bundle" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Services\DefaultViewService\HttpAssets\styles.css" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\styles.min.css">
+      <DependentUpon>styles.css</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\authorizeresponse.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\SignoutFrame.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\welcome.html" />
@@ -611,12 +614,6 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.5.0.js" />
-    <Content Include="Services\DefaultViewService\HttpAssets\styles.css">
-      <DependentUpon>styles.css.bundle</DependentUpon>
-    </Content>
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

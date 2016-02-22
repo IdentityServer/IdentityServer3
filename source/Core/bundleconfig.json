@@ -8,5 +8,13 @@
       "Services/DefaultViewService/HttpAssets/libs/encoder/encoder.min.js",
       "Services/DefaultViewService/HttpAssets/app/app.js"
     ]
+  },
+  {
+    "outputFileName": "Services/DefaultViewService/HttpAssets/styles.css",
+    "inputFiles": [
+      "Services/DefaultViewService/HttpAssets/libs/bootstrap/custom.css",
+      "Services/DefaultViewService/HttpAssets/libs/angular/angular-csp.css",
+      "Services/DefaultViewService/HttpAssets/app/app.css"
+    ]
   }
 ]
