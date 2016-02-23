@@ -16,6 +16,7 @@
 
 using IdentityModel;
 using IdentityServer3.Core.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,16 @@ namespace IdentityServer3.Core.Extensions
                 {
                     return value;
                 }
+            }
+
+            if (claim.ValueType == Constants.ClaimValueTypes.Json)
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject(claim.Value);
+                }
+                catch { }
+                
             }
 
             return claim.Value;

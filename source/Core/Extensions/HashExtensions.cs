@@ -22,7 +22,7 @@ using System.Text;
 namespace IdentityServer3.Core.Models
 {
     /// <summary>
-    /// Extension methods for hashing strings
+    /// Extension methods for hashing strings and byte arrays
     /// </summary>
     public static class HashExtensions
     {
@@ -41,6 +41,24 @@ namespace IdentityServer3.Core.Models
                 var hash = sha.ComputeHash(bytes);
 
                 return Convert.ToBase64String(hash);
+            }
+        }
+
+        /// <summary>
+        /// Creates a SHA256 hash of the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>A hash.</returns>
+        public static byte[] Sha256(this byte[] input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+
+            using (var sha = SHA256.Create())
+            {
+                return sha.ComputeHash(input);
             }
         }
 

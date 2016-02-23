@@ -56,7 +56,7 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IdentityModel.1.3.0\lib\net45\IdentityModel.Net45.dll</HintPath>
+      <HintPath>..\packages\IdentityModel.1.3.1\lib\net45\IdentityModel.Net45.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -84,9 +84,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -236,12 +236,17 @@
     <Compile Include="Services\Caching\CachingScopeStore.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceOptions.cs" />
     <Compile Include="Services\DefaultViewService\DefaultViewServiceRegistration.cs" />
+    <Compile Include="Services\Default\DefaultAuthenticationSessionValidator.cs" />
+    <Compile Include="Services\Default\DefaultCustomTokenResponseGenerator.cs" />
     <Compile Include="Services\Default\DefaultSigningKeyService.cs" />
     <Compile Include="Services\Default\DefaultTokenSigningService.cs" />
+    <Compile Include="Services\IAuthenticationSessionValidator.cs" />
+    <Compile Include="Services\ICustomTokenResponseGenerator.cs" />
     <Compile Include="Services\ISigningKeyService.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
+    <Compile Include="Validation\ResponseTypeEqualityComparer.cs" />
     <Compile Include="Validation\ScopeSecretValidationResult.cs" />
     <Compile Include="Validation\ScopeSecretValidator.cs" />
     <Compile Include="Validation\ClientAssertionSecretParser.cs" />
@@ -249,7 +254,6 @@
     <Compile Include="Services\Default\DefaultCache.cs" />
     <Compile Include="Services\Default\AutofacDependencyResolver.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyService.cs" />
-    <Compile Include="Services\Default\DefaultCustomGrantValidator.cs" />
     <Compile Include="Validation\EmbeddedCertificateJwtSecurityTokenHandler.cs" />
     <Compile Include="Validation\HashedSharedSecretValidator.cs" />
     <Compile Include="Services\Default\EventServiceDecorator.cs" />
@@ -311,6 +315,7 @@
     <Compile Include="Validation\TokenRevocationRequestValidationResult.cs" />
     <Compile Include="Validation\TokenRevocationRequestValidator.cs" />
     <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="ViewModels\AuthorizeResponseViewModel.cs" />
     <Compile Include="ViewModels\RevokeClientPermission.cs" />
     <Compile Include="ResponseHandling\EndSessionResponseGenerator.cs" />
     <Compile Include="Results\AuthorizeFormPostResult.cs" />
@@ -562,6 +567,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Services\DefaultViewService\PageAssets\authorizeresponse.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\SignoutFrame.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\welcome.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\checksession.html" />

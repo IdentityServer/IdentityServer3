@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Host.Configuration;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Host.Config;
 using Microsoft.Owin;
@@ -41,6 +42,7 @@ namespace Owin
                     .UseInMemoryScopes(Scopes.Get());
 
                 factory.AddCustomGrantValidators();
+                factory.AddCustomTokenResponseGenerator();
 
                 factory.ConfigureClientStoreCache();
                 factory.ConfigureScopeStoreCache();
@@ -60,7 +62,7 @@ namespace Owin
                     AuthenticationOptions = new AuthenticationOptions
                     {
                         IdentityProviders = ConfigureIdentityProviders,
-                        //EnablePostSignOutAutoRedirect = true
+                        EnablePostSignOutAutoRedirect = true
                     },
 
                     //LoggingOptions = new LoggingOptions

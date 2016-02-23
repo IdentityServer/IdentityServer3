@@ -15,6 +15,7 @@
  */
 
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
 using System;
 
 namespace IdentityServer3.Core.Services.Default
@@ -70,7 +71,17 @@ namespace IdentityServer3.Core.Services.Default
 
             if (options.ViewLoader == null)
             {
-                options.ViewLoader = new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>();
+                if (options.CustomViewDirectory.IsPresent())
+                {
+                    options.ViewLoader = new Registration<IViewLoader>(provider =>
+                    {
+                        return new FileSystemWithEmbeddedFallbackViewLoader(options.CustomViewDirectory);
+                    });
+                }
+                else
+                {
+                    options.ViewLoader = new Registration<IViewLoader, FileSystemWithEmbeddedFallbackViewLoader>();
+                }
             }
 
             if (options.CacheViews)

@@ -65,7 +65,17 @@ namespace IdentityServer3.Core.Models
         /// <summary>
         /// custom grant
         /// </summary>
-        Custom = 5
+        Custom = 5,
+
+        /// <summary>
+        /// authorization code with proof key flow
+        /// </summary>
+        AuthorizationCodeWithProofKey = 6,
+
+        /// <summary>
+        /// hybrid flow with proof key
+        /// </summary>
+        HybridWithProofKey = 7
     }
 
     /// <summary>

@@ -350,7 +350,34 @@ namespace IdentityServer3.Host.Config
 
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding
-                }
+                },
+
+                new Client
+                {
+                    ClientName = "UWP Demo Client",
+                    ClientId = "uwp",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.HybridWithProofKey,
+
+                    RedirectUris = new List<string>
+                    {
+                        "ms-app://s-1-15-2-491127476-3924255528-3585180829-1321445252-2746266865-3272304314-3346717936/"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "ms-app://s-1-15-2-491127476-3924255528-3585180829-1321445252-2746266865-3272304314-3346717936/"
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        "openid", "profile", "write"
+                    },
+
+                    AccessTokenType = AccessTokenType.Reference
+                },
             };
         }
     }

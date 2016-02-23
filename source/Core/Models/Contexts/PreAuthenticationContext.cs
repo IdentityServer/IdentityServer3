@@ -36,5 +36,10 @@ namespace IdentityServer3.Core.Models
         /// The authenticate result.
         /// </value>
         public AuthenticateResult AuthenticateResult { get; set; }
+
+        /// <summary>
+        /// Gets or sets if the login page should be used to show the error from the authenticate result (as opposed to the general error page).
+        /// </summary>
+        public bool ShowLoginPageOnErrorResult { get; set; }
     }
 }

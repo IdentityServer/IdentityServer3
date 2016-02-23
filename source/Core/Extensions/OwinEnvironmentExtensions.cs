@@ -569,7 +569,8 @@ namespace IdentityServer3.Core.Extensions
         }
 
         /// <summary>
-        /// Gets the origin for the current request.
+        /// Gets the explicitly configured per-request origin, or the current requests's origin.
+        /// Note: This API ignores any configured IdentityServerOptions' PublicOrigin property.
         /// </summary>
         /// <param name="env">The OWIN environment.</param>
         /// <returns></returns>
@@ -658,6 +659,29 @@ namespace IdentityServer3.Core.Extensions
                 var html = AssetManager.LoadSignoutFrame(iframeUrls);
                 await context.Response.WriteAsync(html);
             }
+        }
+
+        /// <summary>
+        /// Returns the IssuerUri from either the IdentityServerOptions or calculated from the incoming request URL.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static string GetIdentityServerIssuerUri(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var options = env.ResolveDependency<IdentityServerOptions>();
+
+            // if they've explicitly configured a URI then use it,
+            // otherwise dynamically calculate it
+            var uri = options.IssuerUri;
+            if (uri.IsMissing())
+            {
+                uri = env.GetIdentityServerBaseUrl();
+                if (uri.EndsWith("/")) uri = uri.Substring(0, uri.Length - 1);
+            }
+
+            return uri;
         }
     }
 }

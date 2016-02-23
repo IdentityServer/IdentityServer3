@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
+using IdentityServer3.Core.ViewModels;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -46,13 +49,34 @@ namespace IdentityServer3.Core.Results
             return AssetManager.LoadFormPost(root, redirect, fields);
         }
 
-        public override Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
+        public override async Task<HttpResponseMessage> ExecuteAsync(System.Threading.CancellationToken cancellationToken)
         {
             _request.SetSuppressXfo();
 
             Logger.Info("Posting to " + _response.RedirectUri);
 
-            return base.ExecuteAsync(cancellationToken);
+            // see if we have a DefaultViewService for the IViewService 
+            // to allow for customization of the authorize response page
+            var ctx = _request.GetOwinContext();
+            var defaultViewSvc = ctx.ResolveDependency<IViewService>() as DefaultViewService;
+            if (defaultViewSvc != null)
+            {
+                Logger.Debug("Using DefaultViewService to render authorization response HTML");
+
+                var vm = new AuthorizeResponseViewModel
+                {
+                    SiteName = _response.Request.Options.SiteName,
+                    SiteUrl = _request.GetIdentityServerBaseUrl(),
+                    ResponseFormUri = _response.RedirectUri,
+                    ResponseFormFields = _response.ToNameValueCollection().ToFormPost()
+                };
+
+                var result = new HtmlStreamActionResult(() => defaultViewSvc.AuthorizeResponse(vm));
+                return await result.ExecuteAsync(cancellationToken);
+            }
+
+            Logger.Debug("Using AssetManager to render authorization response HTML");
+            return await base.ExecuteAsync(cancellationToken);
         }
     }
 }

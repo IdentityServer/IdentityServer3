@@ -1,16 +1,25 @@
-﻿using IdentityServer3.Core.Services;
-using IdentityServer3.Host.Config;
+﻿using Host.Configuration.Extensions;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
 
-namespace IdentityServer3.Core.Configuration
+namespace Host.Configuration
 {
     static class FactoryExtensions
     {
         public static IdentityServerServiceFactory AddCustomGrantValidators(this IdentityServerServiceFactory factory)
         {
             factory.CustomGrantValidators.Add(
-                    new Registration<ICustomGrantValidator>(typeof(CustomGrantValidator)));
+                    new Registration<ICustomGrantValidator, CustomGrantValidator>());
             factory.CustomGrantValidators.Add(
-                new Registration<ICustomGrantValidator>(typeof(AnotherCustomGrantValidator)));
+                new Registration<ICustomGrantValidator, AnotherCustomGrantValidator>());
+
+            return factory;
+        }
+
+        public static IdentityServerServiceFactory AddCustomTokenResponseGenerator(this IdentityServerServiceFactory factory)
+        {
+            factory.CustomTokenResponseGenerator = 
+                new Registration<ICustomTokenResponseGenerator, CustomTokenResponseGenerator>();
 
             return factory;
         }

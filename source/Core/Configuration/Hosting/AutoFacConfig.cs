@@ -60,14 +60,16 @@ namespace IdentityServer3.Core.Configuration.Hosting
             
             builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
             builder.RegisterDefaultInstance<ICorsPolicyService, DefaultCorsPolicyService>(fact.CorsPolicyService);
-            
+
             builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
             builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
             builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);            
             builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
+            builder.RegisterDefaultType<ICustomTokenResponseGenerator, DefaultCustomTokenResponseGenerator>(fact.CustomTokenResponseGenerator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
+            builder.RegisterDefaultType<IAuthenticationSessionValidator, DefaultAuthenticationSessionValidator>(fact.AuthenticationSessionValidator);
 
             // todo remove in next major version
             if (fact.TokenSigningService != null)
@@ -94,10 +96,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 {
                     builder.Register(val);
                 }
-            }
-            else
-            {
-                builder.RegisterType<NopCustomGrantValidator>().As<ICustomGrantValidator>();
             }
 
             // register secret parsing/validation plumbing

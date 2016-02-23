@@ -95,5 +95,13 @@ namespace IdentityServer3.Core.Validation
         /// The authorization code handle.
         /// </value>
         public string AuthorizationCodeHandle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code verifier.
+        /// </summary>
+        /// <value>
+        /// The code verifier.
+        /// </value>
+        public string CodeVerifier { get; set; }
     }
 }

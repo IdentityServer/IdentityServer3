@@ -20,6 +20,8 @@ Please log a new issue in the appropriate GitHub repo:
 * [AccessToken validation](https://github.com/IdentityServer/IdentityServer3.AccessTokenValidation)
 * [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
+Due to the security nature of IdentityServer, errors are very vague. Make sure you read and understand how to enable [logging](https://identityserver.github.io/Documentation/docsv2/configuration/logging.html) before opening an issue/bug report.
+
 ## Other discussions
 https://gitter.im/IdentityServer/IdentityServer3
 
@@ -66,3 +68,7 @@ Summary of the changes (Less than 80 chars)
 -  Tests only need to be present for issues that need to be verified by QA (e.g. not tasks)
 -  If there is a scenario that is far too hard to test there does not need to be a test for it.
   - "Too hard" is determined by the team as a whole.
+
+**Contribution Packages**
+
+If you are planning to add functionality via contribution packages, we would like you to use `IdentityServer3.Contrib.*` as a naming convention.
