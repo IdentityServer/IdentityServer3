@@ -52,6 +52,8 @@ namespace IdentityServer3.Core.Services.Default
         
         public static string LoadLayoutWithContent(string content)
         {
+            if (content == null) return null;
+
             var layout = LoadResourceString(Layout);
             return ApplyContentToLayout(layout, content);
         }
@@ -114,10 +116,14 @@ namespace IdentityServer3.Core.Services.Default
             if (value == null)
             {
                 var assembly = typeof(AssetManager).Assembly;
-                using (var sr = new StreamReader(assembly.GetManifestResourceStream(name)))
+                var s = assembly.GetManifestResourceStream(name);
+                if (s != null)
                 {
-                    value = sr.ReadToEnd();
-                    cache.Write(name, value);
+                    using (var sr = new StreamReader(s))
+                    {
+                        value = sr.ReadToEnd();
+                        cache.Write(name, value);
+                    }
                 }
             }
             return value;
@@ -126,12 +132,16 @@ namespace IdentityServer3.Core.Services.Default
         static string LoadResourceString(string name, object data)
         {
             string value = LoadResourceString(name);
+            if (value == null) return null;
+
             value = Format(value, data);
             return value;
         }
 
         static string Format(string value, IDictionary<string, object> data)
         {
+            if (value == null) return null;
+
             foreach (var key in data.Keys)
             {
                 var val = data[key];

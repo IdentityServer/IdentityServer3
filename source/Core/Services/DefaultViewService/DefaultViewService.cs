@@ -216,6 +216,8 @@ namespace IdentityServer3.Core.Services.Default
             var data = BuildModelDictionary(model, page, stylesheets, scripts);
 
             string html = await LoadHtmlTemplate(page);
+            if (html == null) return null;
+
             html = FormatHtmlTemplate(html, data);
 
             return html.ToStream();
