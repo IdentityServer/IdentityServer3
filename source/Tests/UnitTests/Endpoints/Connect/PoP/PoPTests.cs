@@ -112,7 +112,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             var claims = JObject.Parse(json);
 
             claims["cnf"].Should().NotBeNull();
-            claims["cnf"].ToString().Should().Be(key);
+            var jcnf = JObject.Parse(claims["cnf"].ToString());
+
+            jcnf["kty"].ToString().Should().Be("RSA");
+            jcnf["e"].ToString().Should().Be(jwk.e);
+            jcnf["n"].ToString().Should().Be(jwk.n);
+            jcnf["alg"].ToString().Should().Be("RS256");
         }
 
         private RSACryptoServiceProvider CreateProvider(int keySize = 2048)
@@ -133,6 +138,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
 
             var jwk = new PublicKeyJwk("key1")
             {
+                kty = "RSA",
                 n = Base64Url.Encode(pubKey.Modulus),
                 e = Base64Url.Encode(pubKey.Exponent)
             };

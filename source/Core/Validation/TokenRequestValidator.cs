@@ -851,8 +851,9 @@ namespace IdentityServer3.Core.Validation
             }
 
             // todo: validate key
+            var jwk = Encoding.UTF8.GetString(Base64Url.Decode(key));
+            _validatedRequest.ProofKey = jwk;
 
-            _validatedRequest.ProofKey = key;
             return new TokenRequestValidationResult { IsError = false };
         }
 

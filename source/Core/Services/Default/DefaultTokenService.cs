@@ -207,7 +207,7 @@ namespace IdentityServer3.Core.Services.Default
             
             if (request.ProofKey.IsPresent())
             {
-                claims.Add(new Claim(Constants.ClaimTypes.Confirmation, request.ProofKey));
+                claims.Add(new Claim(Constants.ClaimTypes.Confirmation, request.ProofKey, Constants.ClaimValueTypes.Json));
             }
 
             var token = new Token(Constants.TokenTypes.AccessToken)
