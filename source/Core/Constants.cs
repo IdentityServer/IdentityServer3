@@ -92,6 +92,8 @@ namespace IdentityServer3.Core
             public const string UserName            = "username";
             public const string Password            = "password";
             public const string CodeVerifier        = "code_verifier";
+            public const string Algorithm           = "alg";
+            public const string Key                 = "key";
         }
 
         public static class EndSessionRequest
@@ -119,6 +121,7 @@ namespace IdentityServer3.Core
             public const string IdentityToken = "id_token";
             public const string RefreshToken  = "refresh_token";
             public const string Bearer        = "Bearer";
+            public const string PoP           = "pop";
         }
 
         public static class GrantTypes
@@ -763,5 +766,16 @@ namespace IdentityServer3.Core
         {
             public const string Json = "json";
         }
+
+        public static class ProofKeyAlgorithms
+        {
+            public const string RS256 = "RS256";
+            public const string HS256 = "HS256";
+        }
+
+        public static readonly string[] SupportedProofKeyAlgorithms =
+        {
+            ProofKeyAlgorithms.RS256
+        };
     }
 }
