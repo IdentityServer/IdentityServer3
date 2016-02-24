@@ -185,7 +185,6 @@
     <Compile Include="Endpoints\Connect\Introspection\Setup\IntrospectionIdentityServer.cs" />
     <Compile Include="Endpoints\Connect\Introspection\Setup\Scopes.cs" />
     <Compile Include="Endpoints\Connect\PoP\PoPTests.cs" />
-    <Compile Include="Endpoints\Connect\PoP\PublicKeyJwk.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />

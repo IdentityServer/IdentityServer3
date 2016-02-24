@@ -836,7 +836,7 @@ namespace IdentityServer3.Core.Validation
             // and must be supported
             if (!Constants.SupportedProofKeyAlgorithms.Contains(alg))
             {
-                invalid.ErrorDescription = "invalid alg";
+                invalid.ErrorDescription = "invalid alg.";
                 return invalid;
             }
 
@@ -852,6 +852,7 @@ namespace IdentityServer3.Core.Validation
 
             // todo: validate key
 
+            _validatedRequest.ProofKey = key;
             return new TokenRequestValidationResult { IsError = false };
         }
 

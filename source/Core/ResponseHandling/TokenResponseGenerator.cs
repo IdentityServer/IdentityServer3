@@ -82,6 +82,12 @@ namespace IdentityServer3.Core.ResponseHandling
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
 
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+            {
+                response.TokenType = Constants.TokenTypes.PoP;
+                response.Algorithm = request.ProofKeyAlgorithm;
+            }
+
             //////////////////////////
             // refresh token
             /////////////////////////
@@ -165,12 +171,20 @@ namespace IdentityServer3.Core.ResponseHandling
 
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);
 
-            return new TokenResponse
-                {
-                    AccessToken = accessTokenString,
-                    AccessTokenLifetime = request.Client.AccessTokenLifetime,
-                    RefreshToken = handle
-                };
+            var response = new TokenResponse
+            {
+                AccessToken = accessTokenString,
+                AccessTokenLifetime = request.Client.AccessTokenLifetime,
+                RefreshToken = handle
+            };
+
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+            {
+                response.TokenType = Constants.TokenTypes.PoP;
+                response.Algorithm = request.ProofKeyAlgorithm;
+            }
+
+            return response;
         }
 
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
@@ -201,6 +215,12 @@ namespace IdentityServer3.Core.ResponseHandling
                     Scopes = request.ValidatedScopes.GrantedScopes,
                     ValidatedRequest = request
                 };
+            }
+
+            // bind proof key to token if present
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP && request.ProofKey.IsPresent())
+            {
+                tokenRequest.ProofKey = request.ProofKey;
             }
 
             Token accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);

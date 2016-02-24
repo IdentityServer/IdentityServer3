@@ -27,6 +27,8 @@ using System.Security.Cryptography;
 using IdentityModel;
 using Newtonsoft.Json;
 using System.Text;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace IdentityServer3.Tests.Endpoints.Connect.PoP
 {
@@ -97,11 +99,20 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             var data = result.ReadJsonObject();
             data["token_type"].Should().NotBeNull();
             data["token_type"].ToString().Should().Be("pop");
+
             data["alg"].ToString().Should().NotBeNull();
             data["alg"].ToString().Should().Be("RS256");
+
             data["access_token"].Should().NotBeNull();
             data["expires_in"].Should().NotBeNull();
             data["id_token"].Should().NotBeNull();
+
+            var payload = data["access_token"].ToString().Split('.')[1];
+            var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
+            var claims = JObject.Parse(json);
+
+            claims["cnf"].Should().NotBeNull();
+            claims["cnf"].ToString().Should().Be(key);
         }
 
         private RSACryptoServiceProvider CreateProvider(int keySize = 2048)

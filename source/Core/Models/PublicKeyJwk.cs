@@ -15,16 +15,42 @@
  */
 
 
-namespace IdentityServer3.Tests.Endpoints.Connect.PoP
+namespace IdentityServer3.Core.Models
 {
-    class PublicKeyJwk
+    /// <summary>
+    /// Models an RSA public key JWK
+    /// </summary>
+    public class PublicKeyJwk
     {
+        /// <summary>
+        /// key type
+        /// </summary>
         public string kty { get; set; }
+
+        /// <summary>
+        /// modulus
+        /// </summary>
         public string n { get; set; }
+
+        /// <summary>
+        /// exponent
+        /// </summary>
         public string e { get; set; }
+
+        /// <summary>
+        /// algorithm
+        /// </summary>
         public string alg { get; set; }
+
+        /// <summary>
+        /// key identifier
+        /// </summary>
         public string kid { get; set; }
 
+        /// <summary>
+        /// Initializes the JWK with a key id
+        /// </summary>
+        /// <param name="kid"></param>
         public PublicKeyJwk(string kid)
         {
             alg = "RS256";

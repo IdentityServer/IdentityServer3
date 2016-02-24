@@ -540,6 +540,9 @@ namespace IdentityServer3.Core
             /// <summary>JWT ID. A unique identifier for the token, which can be used to prevent reuse of the token. These tokens MUST only be used once, unless conditions for reuse were negotiated between the parties; any such negotiation is beyond the scope of this specification.</summary>
             public const string JwtId                               = "jti";
 
+            /// <summary> Proof key confirmation </summary>
+            public const string Confirmation                        = "cnf";
+
             /// <summary>OAuth 2.0 Client Identifier valid at the Authorization Server.</summary>
             public const string ClientId         = "client_id";
             
