@@ -112,8 +112,8 @@ namespace IdentityServer3.Core.Services.Default
                 token.Issuer,
                 token.Audience,
                 null,
-                DateTimeHelper.UtcNow,
-                DateTimeHelper.UtcNow.AddSeconds(token.Lifetime));
+                token.CreationTime.UtcDateTime,
+                token.CreationTime.AddSeconds(token.Lifetime).UtcDateTime);
 
             var amrClaims = token.Claims.Where(x => x.Type == Constants.ClaimTypes.AuthenticationMethod);
             var jsonClaims = token.Claims.Where(x => x.ValueType == Constants.ClaimValueTypes.Json);
