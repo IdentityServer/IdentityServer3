@@ -653,6 +653,10 @@ namespace IdentityServer3.Core.Validation
 
                     return Invalid(result.Error, result.ErrorDescription);
                 }
+                else
+                {
+                    _validatedRequest.RequestedTokenType = RequestedTokenTypes.PoP;
+                }
             }
 
             Logger.Info("Validation of refresh token request success");

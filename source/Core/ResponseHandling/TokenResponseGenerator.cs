@@ -145,7 +145,7 @@ namespace IdentityServer3.Core.ResponseHandling
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
             
-            if (request.Client.UpdateAccessTokenClaimsOnRefresh)
+            if (request.Client.UpdateAccessTokenClaimsOnRefresh || request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
                 var subject = request.RefreshToken.GetOriginalSubject();
 
@@ -154,8 +154,13 @@ namespace IdentityServer3.Core.ResponseHandling
                     Client = request.Client,
                     Subject = subject,
                     ValidatedRequest = request,
-                    Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes)
+                    Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes),
                 };
+
+                if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+                {
+                    creationRequest.ProofKey = GetProofKey(request);
+                }
 
                 var newAccessToken = await _tokenService.CreateAccessTokenAsync(creationRequest);
                 accessTokenString = await _tokenService.CreateSecurityTokenAsync(newAccessToken);
@@ -218,9 +223,9 @@ namespace IdentityServer3.Core.ResponseHandling
             }
 
             // bind proof key to token if present
-            if (request.RequestedTokenType == RequestedTokenTypes.PoP && request.ProofKey.IsPresent())
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
-                tokenRequest.ProofKey = request.ProofKey;
+                tokenRequest.ProofKey = GetProofKey(request);
             }
 
             Token accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
@@ -233,6 +238,11 @@ namespace IdentityServer3.Core.ResponseHandling
 
             var securityToken = await _tokenService.CreateSecurityTokenAsync(accessToken);
             return Tuple.Create(securityToken, refreshToken);
+        }
+
+        private string GetProofKey(ValidatedTokenRequest request)
+        {
+            return request.ProofKey;
         }
     }
 }
