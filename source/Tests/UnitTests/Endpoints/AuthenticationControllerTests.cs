@@ -49,7 +49,13 @@ namespace IdentityServer3.Tests.Endpoints
                 props.Dictionary.Add(Constants.Authentication.SigninId, SignInId);
                 if(SignInIdentity.AuthenticationType == Constants.ExternalAuthenticationType)
                 {
-                    props.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, "Google");
+                    var issuer = "Google";
+                    var subClaim = SignInIdentity.FindFirst("sub");
+                    if (subClaim != null)
+                    {
+                        issuer = subClaim.Issuer;
+                    }
+                    props.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, issuer);
                 }
                 ctx.Authentication.SignIn(props, SignInIdentity);
                 SignInIdentity = null;
@@ -209,6 +215,23 @@ namespace IdentityServer3.Tests.Endpoints
             var resp = GetLoginPage();
             resp.AssertPage("error");
             var model = resp.GetModel<ErrorViewModel>();
+            model.ErrorMessage.Should().Be("SomeError");
+        }
+
+        [Fact]
+        public void GetLogin_PreAuthenticateReturnsErrorAndShowLoginPageOnErrorResultIsSet_ShowsLoginPageWithError()
+        {
+            mockUserService
+                .Setup(x => x.PreAuthenticateAsync(It.IsAny<PreAuthenticationContext>()))
+                .Callback<PreAuthenticationContext>(ctx => {
+                    ctx.AuthenticateResult = new AuthenticateResult("SomeError");
+                    ctx.ShowLoginPageOnErrorResult = true;
+                })
+                .Returns(Task.FromResult(0));
+
+            var resp = GetLoginPage();
+            resp.AssertPage("login");
+            var model = resp.GetModel<LoginViewModel>();
             model.ErrorMessage.Should().Be("SomeError");
         }
 
@@ -795,6 +818,49 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void Logout_SignOutMessagePassed_RequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "foo", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
+        public void Logout_SignOutMessagePassed_ClientRequireSignOutPromptSet_ShowsLogoutPromptPage()
+        {
+            this.clients.Single(x => x.ClientId == "implicitclient").RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+            resp.AssertPage("logout");
+        }
+
+        [Fact]
+        public void PostToLogout_SignOutMessagePassed_RequireSignOutPromptSet_LogoutPageHasReturnUrlInfo()
+        {
+            this.options.AuthenticationOptions.RequireSignOutPrompt = true;
+
+            Login();
+
+            var id = WriteMessageToCookie(new SignOutMessage { ClientId = "implicitclient", ReturnUrl = "http://foo" });
+            var resp = Get(Constants.RoutePaths.Logout + "?id=" + id);
+
+            var logoutModel = resp.GetModel<LogoutViewModel>();
+            resp = PostForm(logoutModel.LogoutUrl, new { });
+
+            var loggedOutModel = resp.GetModel<LoggedOutViewModel>();
+
+            loggedOutModel.ClientName.Should().Be("Implicit Clients");
+            loggedOutModel.RedirectUrl.Should().Be("http://foo");
+        }
+
+        [Fact]
         public void PostToLogout_AnonymousUser_DoesNotInvokeUserServiceSignOut()
         {
             var resp = PostForm(Constants.RoutePaths.Logout, (string)null);
@@ -998,6 +1064,23 @@ namespace IdentityServer3.Tests.Endpoints
             Get(Constants.RoutePaths.LoginExternalCallback);
 
             mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalAuthenticationContext>()));
+        }
+
+        [Fact]
+        public void LoginExternalCallback_UsersIdPDoesNotMatchSignInIdP_DisplaysErrorPage()
+        {
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "999", ClaimValueTypes.String, "Google2");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            var response = Get(Constants.RoutePaths.LoginExternalCallback);
+            response.AssertPage("error");
         }
 
         [Fact]

@@ -41,11 +41,18 @@ namespace IdentityServer3.Tests.Conformance
 {
     public static class Extensions
     {
-        public static NameValueCollection RequestAuthorizationCode(this IdentityServerHost host, string client_id, string redirect_uri, string scope, string nonce = null)
+        public static NameValueCollection RequestAuthorizationCode(
+            this IdentityServerHost host,
+            string client_id,
+            string redirect_uri,
+            string scope,
+            string nonce = null,
+            string code_challenge = null,
+            string code_challenge_method = null)
         {
             var state = Guid.NewGuid().ToString();
 
-            var url = host.GetAuthorizeUrl(client_id, redirect_uri, scope, "code", state, nonce);
+            var url = host.GetAuthorizeUrl(client_id, redirect_uri, scope, "code", state, nonce, code_challenge, code_challenge_method);
             var result = host.Client.GetAsync(url).Result;
             result.StatusCode.Should().Be(HttpStatusCode.Found);
 
@@ -194,7 +201,16 @@ namespace IdentityServer3.Tests.Conformance
         {
             return host.Url.EnsureTrailingSlash() + Constants.RoutePaths.Login + "?signin=" + signInId;
         }
-        public static string GetAuthorizeUrl(this IdentityServerHost host, string client_id = null, string redirect_uri = null, string scope = null, string response_type = null, string state = null, string nonce = null)
+        public static string GetAuthorizeUrl(
+            this IdentityServerHost host,
+            string client_id = null,
+            string redirect_uri = null,
+            string scope = null,
+            string response_type = null,
+            string state = null,
+            string nonce = null,
+            string code_challenge = null,
+            string code_challenge_method = null)
         {
             var disco = host.GetDiscoveryDocument();
             disco["authorization_endpoint"].Should().NotBeNull();
@@ -229,6 +245,14 @@ namespace IdentityServer3.Tests.Conformance
             if (nonce.IsPresent())
             {
                 query += "&nonce=" + HttpUtility.UrlEncode(nonce);
+            }
+            if (code_challenge.IsPresent())
+            {
+                query += "&code_challenge=" + HttpUtility.UrlEncode(code_challenge);
+            }
+            if (code_challenge_method.IsPresent())
+            {
+                query += "&code_challenge_method=" + HttpUtility.UrlEncode(code_challenge_method);
             }
 
             if (query.StartsWith("&"))

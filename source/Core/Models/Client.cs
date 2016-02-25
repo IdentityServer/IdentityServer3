@@ -94,10 +94,15 @@ namespace IdentityServer3.Core.Models
         public string LogoutUri { get; set; }
 
         /// <summary>
-        /// Specifies is the user's session id should be sent to the LogoutUri. Defaults to true.
+        /// Specifies if the user's session id should be sent to the LogoutUri. Defaults to true.
         /// </summary>
         public bool LogoutSessionRequired { get; set; }
 
+        /// <summary>
+        /// Specifies if the client will always show a confirmation page for sign-out. Defaults to false.
+        /// </summary>
+        public bool RequireSignOutPrompt { get; set; }
+        
         /// <summary>
         /// Gets or sets a value indicating whether the client has access to all scopes. Defaults to false.
         /// You can set the allowed scopes via the AllowedScopes list.

@@ -96,6 +96,27 @@ namespace IdentityServer3.Tests.TokenClients
 
                     AccessTokenType = AccessTokenType.Reference
                 },
+
+                ///////////////////////////////////////////
+                // Refresh Token Client
+                //////////////////////////////////////////
+                new Client
+                {
+                    ClientId = "refresh.roclient.reference",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.ResourceOwner,
+
+                    AllowedScopes = new List<string>
+                    {
+                        "api1", "offline_access"
+                    },
+
+                    AccessTokenType = AccessTokenType.Reference
+                },
             };
         }
     }

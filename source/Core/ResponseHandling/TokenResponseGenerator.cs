@@ -36,29 +36,36 @@ namespace IdentityServer3.Core.ResponseHandling
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly IScopeStore _scopes;
-       
-        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, IScopeStore scopes)
+        private readonly ICustomTokenResponseGenerator _customResponseGenerator;
+
+        public TokenResponseGenerator(ITokenService tokenService, IRefreshTokenService refreshTokenService, IScopeStore scopes, ICustomTokenResponseGenerator customResponseGenerator)
         {
             _tokenService = tokenService;
             _refreshTokenService = refreshTokenService;
             _scopes = scopes;
+            _customResponseGenerator = customResponseGenerator;
         }
 
         public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
         {
             Logger.Info("Creating token response");
 
+            TokenResponse response;
+
             if (request.GrantType == Constants.GrantTypes.AuthorizationCode)
             {
-                return await ProcessAuthorizationCodeRequestAsync(request);
+                response = await ProcessAuthorizationCodeRequestAsync(request);
             }
-
-            if (request.GrantType == Constants.GrantTypes.RefreshToken)
+            else if (request.GrantType == Constants.GrantTypes.RefreshToken)
             {
-                return await ProcessRefreshTokenRequestAsync(request);
+                response = await ProcessRefreshTokenRequestAsync(request);
+            }
+            else
+            {
+                response = await ProcessTokenRequestAsync(request);
             }
 
-            return await ProcessTokenRequestAsync(request);
+            return await _customResponseGenerator.GenerateAsync(request, response);
         }
 
         private async Task<TokenResponse> ProcessAuthorizationCodeRequestAsync(ValidatedTokenRequest request)
@@ -149,10 +156,11 @@ namespace IdentityServer3.Core.ResponseHandling
             }
             else
             {
-                oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
-                oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
+                var copy = new Token(oldAccessToken);
+                copy.CreationTime = DateTimeOffsetHelper.UtcNow;
+                copy.Lifetime = request.Client.AccessTokenLifetime;
 
-                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(copy);
             }
 
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);

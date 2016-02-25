@@ -77,7 +77,7 @@ namespace IdentityServer3.Core.Endpoints
             }
             else
             {
-                await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Token);
+                await _events.RaiseSuccessfulEndpointEventAsync(EventConstants.EndpointNames.Revocation);
             }
 
             Logger.Info("End token revocation request");

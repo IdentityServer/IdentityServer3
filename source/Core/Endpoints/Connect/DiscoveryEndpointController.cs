@@ -77,7 +77,8 @@ namespace IdentityServer3.Core.Endpoints
             {
                 issuer = _context.GetIdentityServerIssuerUri(),
                 subject_types_supported = new[] { "public" },
-                id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 }
+                id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 },
+                code_challenge_methods_supported = new[] { Constants.CodeChallengeMethods.Plain, Constants.CodeChallengeMethods.SHA_256 }
             };
             
             // scopes
@@ -282,6 +283,7 @@ namespace IdentityServer3.Core.Endpoints
             public string[] grant_types_supported { get; set; }
             public string[] subject_types_supported { get; set; }
             public string[] id_token_signing_alg_values_supported { get; set; }
+            public string[] code_challenge_methods_supported { get; set; }
             public string[] token_endpoint_auth_methods_supported { get; set; }
         };
 
