@@ -206,197 +206,117 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             jcnf["alg"].ToString().Should().Be("RS256");
         }
 
-        //[Fact]
-        //[Trait("Category", Category)]
-        //public void Valid_Asymmetric_Key_Reference()
-        //{
-        //    host.Login();
+        [Fact]
+        [Trait("Category", Category)]
+        public void Valid_Asymmetric_Key_Reference()
+        {
+            host.Login();
 
-        //    var nonce = Guid.NewGuid().ToString();
-        //    var query = host.RequestAuthorizationCode(client_id_reference, redirect_uri, "openid api", nonce);
-        //    var code = query["code"];
+            var nonce = Guid.NewGuid().ToString();
+            var query = host.RequestAuthorizationCode(client_id_reference, redirect_uri, "openid api offline_access", nonce);
+            var code = query["code"];
 
-        //    host.NewRequest();
-        //    host.Client.SetBasicAuthentication(client_id_reference, client_secret);
+            host.NewRequest();
+            host.Client.SetBasicAuthentication(client_id_reference, client_secret);
 
-        //    var jwk = Helper.CreateJwk();
-        //    var key = Helper.CreateJwkString(jwk);
+            var jwk = Helper.CreateJwk();
+            var key = Helper.CreateJwkString(jwk);
 
-        //    var result = host.PostForm(host.GetTokenUrl(),
-        //        new
-        //        {
-        //            grant_type = "authorization_code",
-        //            code,
-        //            redirect_uri,
-        //            token_type = "pop",
-        //            alg = "RS256",
-        //            key
-        //        }
-        //    );
+            var result = host.PostForm(host.GetTokenUrl(),
+                new
+                {
+                    grant_type = "authorization_code",
+                    code,
+                    redirect_uri,
+                    token_type = "pop",
+                    alg = "RS256",
+                    key
+                }
+            );
 
-        //    result.StatusCode.Should().Be(HttpStatusCode.OK);
-        //    result.Headers.CacheControl.NoCache.Should().BeTrue();
-        //    result.Headers.CacheControl.NoStore.Should().BeTrue();
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Headers.CacheControl.NoCache.Should().BeTrue();
+            result.Headers.CacheControl.NoStore.Should().BeTrue();
 
-        //    var data = result.ReadJsonObject();
-        //    data["token_type"].Should().NotBeNull();
-        //    data["token_type"].ToString().Should().Be("pop");
+            var data = result.ReadJsonObject();
+            data["token_type"].Should().NotBeNull();
+            data["token_type"].ToString().Should().Be("pop");
 
-        //    data["alg"].ToString().Should().NotBeNull();
-        //    data["alg"].ToString().Should().Be("RS256");
+            data["alg"].ToString().Should().NotBeNull();
+            data["alg"].ToString().Should().Be("RS256");
 
-        //    data["access_token"].Should().NotBeNull();
-        //    data["expires_in"].Should().NotBeNull();
-        //    data["id_token"].Should().NotBeNull();
+            data["access_token"].Should().NotBeNull();
+            data["expires_in"].Should().NotBeNull();
+            data["id_token"].Should().NotBeNull();
+            data["refresh_token"].ToString().Should().NotBeNull();
 
-        //    var referenceToken = data["access_token"].ToString();
+            var refresh_token = data["refresh_token"].ToString();
+            var referenceToken = data["access_token"].ToString();
 
-        //    host.NewRequest();
-        //    var introspectionResponse = host.Introspect("api", "secret", referenceToken);
+            host.NewRequest();
+            var introspectionResponse = host.Introspect("api", "secret", referenceToken);
 
-        //    introspectionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        //    data = introspectionResponse.ReadJsonObject();
+            introspectionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            data = introspectionResponse.ReadJsonObject();
 
-        //    data["cnf"].Should().NotBeNull();
-        //    var jcnf = JObject.Parse(data["cnf"].ToString());
+            data["cnf"].Should().NotBeNull();
+            var jcnf = JObject.Parse(data["cnf"].ToString());
 
-        //    jcnf["kty"].ToString().Should().Be("RSA");
-        //    jcnf["e"].ToString().Should().Be(jwk.e);
-        //    jcnf["n"].ToString().Should().Be(jwk.n);
-        //    jcnf["alg"].ToString().Should().Be("RS256");
-        //}
+            jcnf["kty"].ToString().Should().Be("RSA");
+            jcnf["e"].ToString().Should().Be(jwk.e);
+            jcnf["n"].ToString().Should().Be(jwk.n);
+            jcnf["alg"].ToString().Should().Be("RS256");
 
+            // request new token using refresh token
 
-        //[Fact]
-        //[Trait("Category", Category)]
-        //public void No_Alg_No_Key()
-        //{
-        //    host.Login();
+            jwk = Helper.CreateJwk();
+            key = Helper.CreateJwkString(jwk);
 
-        //    var nonce = Guid.NewGuid().ToString();
-        //    var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-        //    var code = query["code"];
+            host.NewRequest();
+            host.Client.SetBasicAuthentication(client_id_reference, client_secret);
 
-        //    host.NewRequest();
-        //    host.Client.SetBasicAuthentication(client_id, client_secret);
+            result = host.PostForm(host.GetTokenUrl(),
+                new
+                {
+                    grant_type = "refresh_token",
+                    refresh_token,
+                    token_type = "pop",
+                    alg = "RS256",
+                    key
+                }
+            );
 
-        //    var jwk = Helper.CreateJwk();
-        //    var key = Helper.CreateJwkString(jwk);
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Headers.CacheControl.NoCache.Should().BeTrue();
+            result.Headers.CacheControl.NoStore.Should().BeTrue();
 
-        //    var result = host.PostForm(host.GetTokenUrl(),
-        //        new
-        //        {
-        //            grant_type = "authorization_code",
-        //            code,
-        //            redirect_uri,
-        //            token_type = "pop"
-        //        }
-        //    );
+            data = result.ReadJsonObject();
 
-        //    result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            data["token_type"].Should().NotBeNull();
+            data["token_type"].ToString().Should().Be("pop");
 
-        //    var data = result.ReadJsonObject();
-        //    data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-        //}
+            data["alg"].ToString().Should().NotBeNull();
+            data["alg"].ToString().Should().Be("RS256");
 
-        //[Fact]
-        //[Trait("Category", Category)]
-        //public void Missing_Alg()
-        //{
-        //    host.Login();
+            data["access_token"].Should().NotBeNull();
+            data["refresh_token"].Should().NotBeNull();
+            data["expires_in"].Should().NotBeNull();
 
-        //    var nonce = Guid.NewGuid().ToString();
-        //    var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-        //    var code = query["code"];
+            referenceToken = data["access_token"].ToString();
 
-        //    host.NewRequest();
-        //    host.Client.SetBasicAuthentication(client_id, client_secret);
+            host.NewRequest();
+            introspectionResponse = host.Introspect("api", "secret", referenceToken);
 
-        //    var jwk = Helper.CreateJwk();
-        //    var key = Helper.CreateJwkString(jwk);
+            introspectionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            data = introspectionResponse.ReadJsonObject();
 
-        //    var result = host.PostForm(host.GetTokenUrl(),
-        //        new
-        //        {
-        //            grant_type = "authorization_code",
-        //            code,
-        //            redirect_uri,
-        //            token_type = "pop",
-        //            key
-        //        }
-        //    );
+            data["cnf"].Should().NotBeNull();
+            jcnf = JObject.Parse(data["cnf"].ToString());
 
-        //    result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-        //    var data = result.ReadJsonObject();
-        //    data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-        //    data["error_description"].ToString().Should().Be("alg is required.");
-        //}
-
-        //[Fact]
-        //[Trait("Category", Category)]
-        //public void Invalid_Alg()
-        //{
-        //    host.Login();
-
-        //    var nonce = Guid.NewGuid().ToString();
-        //    var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-        //    var code = query["code"];
-
-        //    host.NewRequest();
-        //    host.Client.SetBasicAuthentication(client_id, client_secret);
-
-        //    var jwk = Helper.CreateJwk();
-        //    var key = Helper.CreateJwkString(jwk);
-
-        //    var result = host.PostForm(host.GetTokenUrl(),
-        //        new
-        //        {
-        //            grant_type = "authorization_code",
-        //            code,
-        //            redirect_uri,
-        //            token_type = "pop",
-        //            key,
-        //            alg = "invalid"
-        //        }
-        //    );
-
-        //    result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-        //    var data = result.ReadJsonObject();
-        //    data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-        //    data["error_description"].ToString().Should().Be("invalid alg.");
-        //}
-
-        //[Fact]
-        //[Trait("Category", Category)]
-        //public void Missing_Key()
-        //{
-        //    host.Login();
-
-        //    var nonce = Guid.NewGuid().ToString();
-        //    var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-        //    var code = query["code"];
-
-        //    host.NewRequest();
-        //    host.Client.SetBasicAuthentication(client_id, client_secret);
-
-        //    var result = host.PostForm(host.GetTokenUrl(),
-        //        new
-        //        {
-        //            grant_type = "authorization_code",
-        //            code,
-        //            redirect_uri,
-        //            token_type = "pop",
-        //            alg = "RS256"
-        //        }
-        //    );
-
-        //    result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-        //    var data = result.ReadJsonObject();
-        //    data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-        //    data["error_description"].ToString().Should().Be("key is required.");
-        //}
+            jcnf["kty"].ToString().Should().Be("RSA");
+            jcnf["e"].ToString().Should().Be(jwk.e);
+            jcnf["n"].ToString().Should().Be(jwk.n);
+            jcnf["alg"].ToString().Should().Be("RS256");
+        }
     }
 }
