@@ -30,8 +30,6 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Endpoints.Connect.PoP
 {
-    //todo: key too long
-
     public class PoP_Asymmetrc_Tests_Code : IdentityServerHostTest
     {
         const string Category = "Endpoints.PoP.Asymmetric.Code";
@@ -145,12 +143,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             var claims = JObject.Parse(json);
 
             claims["cnf"].Should().NotBeNull();
-            var jcnf = JObject.Parse(claims["cnf"].ToString());
-
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            var jjwk = claims["cnf"]["jwk"];
+            
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
         }
 
         [Fact]
@@ -205,12 +203,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             data = introspectionResponse.ReadJsonObject();
 
             data["cnf"].Should().NotBeNull();
-            var jcnf = JObject.Parse(data["cnf"].ToString());
+            var jjwk = data["cnf"]["jwk"];
 
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
         }
         
         [Fact]

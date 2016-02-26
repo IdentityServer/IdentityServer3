@@ -857,7 +857,7 @@ namespace IdentityServer3.Core.Validation
                 return invalid;
             }
 
-            var jwk = Encoding.UTF8.GetString(Base64Url.Decode(key));
+            var jwk = string.Format("{{ \"jwk\":{0} }}", Encoding.UTF8.GetString(Base64Url.Decode(key)));
             _validatedRequest.ProofKey = jwk;
 
             return new TokenRequestValidationResult { IsError = false };

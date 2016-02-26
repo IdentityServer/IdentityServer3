@@ -149,12 +149,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             var claims = JObject.Parse(json);
 
             claims["cnf"].Should().NotBeNull();
-            var jcnf = JObject.Parse(claims["cnf"].ToString());
+            var jjwk = claims["cnf"]["jwk"];
 
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
 
 
             // request new token using refresh token
@@ -198,12 +198,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             claims = JObject.Parse(json);
 
             claims["cnf"].Should().NotBeNull();
-            jcnf = JObject.Parse(claims["cnf"].ToString());
+            jjwk = claims["cnf"]["jwk"];
 
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
         }
 
         [Fact]
@@ -260,12 +260,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             data = introspectionResponse.ReadJsonObject();
 
             data["cnf"].Should().NotBeNull();
-            var jcnf = JObject.Parse(data["cnf"].ToString());
+            var jjwk = data["cnf"]["jwk"];
 
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
 
             // request new token using refresh token
 
@@ -311,12 +311,12 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             data = introspectionResponse.ReadJsonObject();
 
             data["cnf"].Should().NotBeNull();
-            jcnf = JObject.Parse(data["cnf"].ToString());
+            jjwk = data["cnf"]["jwk"];
 
-            jcnf["kty"].ToString().Should().Be("RSA");
-            jcnf["e"].ToString().Should().Be(jwk.e);
-            jcnf["n"].ToString().Should().Be(jwk.n);
-            jcnf["alg"].ToString().Should().Be("RS256");
+            jjwk["kty"].ToString().Should().Be("RSA");
+            jjwk["e"].ToString().Should().Be(jwk.e);
+            jjwk["n"].ToString().Should().Be(jwk.n);
+            jjwk["alg"].ToString().Should().Be("RS256");
         }
     }
 }
