@@ -35,6 +35,14 @@
       <HintPath>..\packages\IdentityModel.1.3.1\lib\net45\IdentityModel.Net45.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Kentor.AuthServices, Version=0.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kentor.AuthServices.0.17.0\lib\net45\Kentor.AuthServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Kentor.AuthServices.Owin, Version=0.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Kentor.AuthServices.Owin.0.17.0\lib\net45\Kentor.AuthServices.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.2.33, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.2.206221351\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
       <Private>True</Private>
