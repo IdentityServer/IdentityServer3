@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -770,10 +771,19 @@ namespace IdentityServer3.Core
             public const string Json = "json";
         }
 
-        public static class ProofKeyAlgorithms
+        public static IEnumerable<string> AllowedProofKeyAlgorithms = new[]
         {
-            public const string RS256 = "RS256";
-            public const string HS256 = "HS256";
-        }
+            OidcConstants.Algorithms.Asymmetric.RS256,
+            OidcConstants.Algorithms.Asymmetric.RS384,
+            OidcConstants.Algorithms.Asymmetric.RS512,
+
+            OidcConstants.Algorithms.Asymmetric.ES256,
+            OidcConstants.Algorithms.Asymmetric.ES384,
+            OidcConstants.Algorithms.Asymmetric.ES512,
+
+            OidcConstants.Algorithms.Asymmetric.PS256,
+            OidcConstants.Algorithms.Asymmetric.PS384,
+            OidcConstants.Algorithms.Asymmetric.PS512,
+        };
     }
 }

@@ -833,10 +833,17 @@ namespace IdentityServer3.Core.Validation
             var alg = parameters.Get(Constants.TokenRequest.Algorithm);
             if (alg != null)
             {
+                // for now we only support asymmetric
+                if (!Constants.AllowedProofKeyAlgorithms.Contains(alg))
+                {
+                    invalid.ErrorDescription = "invalid alg.";
+                    return invalid;
+                }
+
                 _validatedRequest.ProofKeyAlgorithm = alg;
             }
             
-            // key is required - right now we only support client generated keys
+            // key is required - for now we only support client generated keys
             var key = parameters.Get(Constants.TokenRequest.Key);
             if (key == null)
             {

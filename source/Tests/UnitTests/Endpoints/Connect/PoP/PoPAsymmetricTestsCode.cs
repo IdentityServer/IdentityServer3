@@ -253,6 +253,41 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             data["access_token"].Should().NotBeNull();
             data["expires_in"].Should().NotBeNull();
             data["id_token"].Should().NotBeNull();
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void Invalid_Alg()
+        {
+            host.Login();
+
+            var nonce = Guid.NewGuid().ToString();
+            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
+            var code = query["code"];
+
+            host.NewRequest();
+            host.Client.SetBasicAuthentication(client_id, client_secret);
+
+            var jwk = Helper.CreateJwk();
+            var key = Helper.CreateJwkString(jwk);
+
+            var result = host.PostForm(host.GetTokenUrl(),
+                new
+                {
+                    grant_type = "authorization_code",
+                    code,
+                    redirect_uri,
+                    token_type = "pop",
+                    key,
+                    alg = "none"
+                }
+            );
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            var data = result.ReadJsonObject();
+            data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
+            data["error_description"].ToString().Should().Be("invalid alg.");
 
         }
 
