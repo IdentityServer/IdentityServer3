@@ -775,10 +775,5 @@ namespace IdentityServer3.Core
             public const string RS256 = "RS256";
             public const string HS256 = "HS256";
         }
-
-        public static readonly string[] SupportedProofKeyAlgorithms =
-        {
-            ProofKeyAlgorithms.RS256
-        };
     }
 }

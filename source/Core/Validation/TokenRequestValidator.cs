@@ -829,32 +829,27 @@ namespace IdentityServer3.Core.Validation
                 Error = Constants.TokenErrors.InvalidRequest
             };
 
-            // alg is required
+            // check optional alg
             var alg = parameters.Get(Constants.TokenRequest.Algorithm);
-            if (alg == null)
+            if (alg != null)
             {
-                invalid.ErrorDescription = "alg is required.";
-                return invalid;
+                _validatedRequest.ProofKeyAlgorithm = alg;
             }
-
-            // and must be supported
-            if (!Constants.SupportedProofKeyAlgorithms.Contains(alg))
-            {
-                invalid.ErrorDescription = "invalid alg.";
-                return invalid;
-            }
-
-            _validatedRequest.ProofKeyAlgorithm = alg;
-
-            // key is required
+            
+            // key is required - right now we only support client generated keys
             var key = parameters.Get(Constants.TokenRequest.Key);
             if (key == null)
             {
                 invalid.ErrorDescription = "key is required.";
                 return invalid;
             }
+            if (key.Length > _options.InputLengthRestrictions.ProofKey)
+            {
+                invalid.ErrorDescription = "invalid key.";
+                Logger.Warn("Proof key exceeds max allowed length.");
+                return invalid;
+            }
 
-            // todo: validate key
             var jwk = Encoding.UTF8.GetString(Base64Url.Decode(key));
             _validatedRequest.ProofKey = jwk;
 

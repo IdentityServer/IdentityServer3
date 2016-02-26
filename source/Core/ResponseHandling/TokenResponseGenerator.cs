@@ -145,6 +145,7 @@ namespace IdentityServer3.Core.ResponseHandling
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
             
+            // if pop request, claims must be updated because we need a fresh proof token
             if (request.Client.UpdateAccessTokenClaimsOnRefresh || request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
                 var subject = request.RefreshToken.GetOriginalSubject();
@@ -157,6 +158,7 @@ namespace IdentityServer3.Core.ResponseHandling
                     Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes),
                 };
 
+                // if pop request, embed proof token
                 if (request.RequestedTokenType == RequestedTokenTypes.PoP)
                 {
                     creationRequest.ProofKey = GetProofKey(request);
@@ -242,6 +244,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
         private string GetProofKey(ValidatedTokenRequest request)
         {
+            // for now we only support client generated proof keys
             return request.ProofKey;
         }
     }

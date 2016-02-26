@@ -30,9 +30,7 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Endpoints.Connect.PoP
 {
-    //todo: invalid key - not serializable
-    //todo: invalid key - alg does not match JWK
-    //todo: invalid key - n or e missing/invalid
+    //todo: key too long
 
     public class PoP_Asymmetrc_Tests_Code : IdentityServerHostTest
     {
@@ -214,43 +212,10 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             jcnf["n"].ToString().Should().Be(jwk.n);
             jcnf["alg"].ToString().Should().Be("RS256");
         }
-
-
+        
         [Fact]
         [Trait("Category", Category)]
-        public void No_Alg_No_Key()
-        {
-            host.Login();
-
-            var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-            var code = query["code"];
-
-            host.NewRequest();
-            host.Client.SetBasicAuthentication(client_id, client_secret);
-
-            var jwk = Helper.CreateJwk();
-            var key = Helper.CreateJwkString(jwk);
-
-            var result = host.PostForm(host.GetTokenUrl(),
-                new
-                {
-                    grant_type = "authorization_code",
-                    code,
-                    redirect_uri,
-                    token_type = "pop"
-                }
-            );
-
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var data = result.ReadJsonObject();
-            data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public void Missing_Alg()
+        public void No_Alg()
         {
             host.Login();
 
@@ -275,51 +240,25 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
                 }
             );
 
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            result.Headers.CacheControl.NoCache.Should().BeTrue();
+            result.Headers.CacheControl.NoStore.Should().BeTrue();
 
             var data = result.ReadJsonObject();
-            data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-            data["error_description"].ToString().Should().Be("alg is required.");
+            data["token_type"].Should().NotBeNull();
+            data["token_type"].ToString().Should().Be("pop");
+
+            data["alg"].Should().BeNull();
+
+            data["access_token"].Should().NotBeNull();
+            data["expires_in"].Should().NotBeNull();
+            data["id_token"].Should().NotBeNull();
+
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public void Invalid_Alg()
-        {
-            host.Login();
-
-            var nonce = Guid.NewGuid().ToString();
-            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
-            var code = query["code"];
-
-            host.NewRequest();
-            host.Client.SetBasicAuthentication(client_id, client_secret);
-
-            var jwk = Helper.CreateJwk();
-            var key = Helper.CreateJwkString(jwk);
-
-            var result = host.PostForm(host.GetTokenUrl(),
-                new
-                {
-                    grant_type = "authorization_code",
-                    code,
-                    redirect_uri,
-                    token_type = "pop",
-                    key,
-                    alg = "invalid"
-                }
-            );
-
-            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-            var data = result.ReadJsonObject();
-            data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
-            data["error_description"].ToString().Should().Be("invalid alg.");
-        }
-
-        [Fact]
-        [Trait("Category", Category)]
-        public void Missing_Key()
+        public void No_Key()
         {
             host.Login();
 
@@ -346,6 +285,38 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             var data = result.ReadJsonObject();
             data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
             data["error_description"].ToString().Should().Be("key is required.");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public void Key_too_long()
+        {
+            host.Login();
+
+            var nonce = Guid.NewGuid().ToString();
+            var query = host.RequestAuthorizationCode(client_id, redirect_uri, "openid", nonce);
+            var code = query["code"];
+
+            host.NewRequest();
+            host.Client.SetBasicAuthentication(client_id, client_secret);
+
+            var result = host.PostForm(host.GetTokenUrl(),
+                new
+                {
+                    grant_type = "authorization_code",
+                    code,
+                    redirect_uri,
+                    token_type = "pop",
+                    alg = "RS256",
+                    key = "a".Repeat(3000)
+                }
+            );
+
+            result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+            var data = result.ReadJsonObject();
+            data["error"].ToString().Should().Be(Constants.TokenErrors.InvalidRequest);
+            data["error_description"].ToString().Should().Be("invalid key.");
         }
     }
 }
