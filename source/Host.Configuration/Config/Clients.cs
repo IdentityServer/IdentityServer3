@@ -128,7 +128,7 @@ namespace IdentityServer3.Host.Config
                 },
 
                 /////////////////////////////////////////////////////////////
-                // JavaScript Implicit Client - Simple
+                // JavaScript Implicit Client - OAuth only
                 /////////////////////////////////////////////////////////////
                 new Client
                 {
@@ -151,6 +151,39 @@ namespace IdentityServer3.Host.Config
                     {
                         "http://localhost:37045/index.html",
                     },
+                },
+
+                /////////////////////////////////////////////////////////////
+                // JavaScript Implicit Client - Manual
+                /////////////////////////////////////////////////////////////
+                new Client
+                {
+                    ClientName = "JavaScript Implicit Client - Manual",
+                    ClientId = "js.manual",
+                    Flow = Flows.Implicit,
+
+                    AllowedScopes = new List<string>
+                    {
+                        "openid",
+                        "email",
+                        "read",
+                        "write"
+                    },
+
+                    ClientUri = "https://identityserver.io",
+
+                    RequireConsent = true,
+                    AllowRememberConsent = true,
+
+                    RedirectUris = new List<string>
+                    {
+                        "http://localhost:37046/index.html",
+                    },
+
+                    AllowedCorsOrigins = new List<string>
+                    {
+                        "http://localhost:37046"
+                    }
                 },
 
                 /////////////////////////////////////////////////////////////
