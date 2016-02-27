@@ -121,8 +121,19 @@ namespace IdentityServer3.Core
             public const string AccessToken   = "access_token";
             public const string IdentityToken = "id_token";
             public const string RefreshToken  = "refresh_token";
-            public const string Bearer        = "Bearer";
-            public const string PoP           = "pop";
+        }
+
+        public static class ResponseTokenTypes
+        {
+            public const string Bearer = "Bearer";
+            public const string PoP = "pop";
+        }
+
+        public static class AuthenticationSchemes
+        {
+            public const string BearerAuthorizationHeader = "Bearer";
+            public const string BearerFormPost = "access_token";
+            public const string BearerQueryString = "access_token";
         }
 
         public static class GrantTypes

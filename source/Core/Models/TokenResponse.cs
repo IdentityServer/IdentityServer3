@@ -35,7 +35,7 @@ namespace IdentityServer3.Core.Models
 
         public TokenResponse()
         {
-            TokenType = Constants.TokenTypes.Bearer;
+            TokenType = Constants.ResponseTokenTypes.Bearer;
             Custom = new Dictionary<string, object>();
         }
     }

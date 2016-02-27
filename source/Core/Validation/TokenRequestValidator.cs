@@ -320,7 +320,7 @@ namespace IdentityServer3.Core.Validation
             // validate token type and PoP parameters if pop token is requested
             /////////////////////////////////////////////
             var tokenType = parameters.Get("token_type");
-            if (tokenType != null && tokenType == Constants.TokenTypes.PoP)
+            if (tokenType != null && tokenType == Constants.ResponseTokenTypes.PoP)
             {
                 var result = ValidatePopParameters(parameters);
                 if (result.IsError)

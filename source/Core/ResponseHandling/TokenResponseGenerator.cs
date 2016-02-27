@@ -84,7 +84,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             if (request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
-                response.TokenType = Constants.TokenTypes.PoP;
+                response.TokenType = Constants.ResponseTokenTypes.PoP;
                 response.Algorithm = request.ProofKeyAlgorithm;
             }
 
@@ -187,7 +187,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             if (request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
-                response.TokenType = Constants.TokenTypes.PoP;
+                response.TokenType = Constants.ResponseTokenTypes.PoP;
                 response.Algorithm = request.ProofKeyAlgorithm;
             }
 
