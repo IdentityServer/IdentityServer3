@@ -16,6 +16,7 @@
 
 using Host.Configuration;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
@@ -23,6 +24,8 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
+using System;
+using System.Threading.Tasks;
 
 namespace Owin
 {
@@ -128,8 +131,33 @@ namespace Owin
 
                 Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
                 ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
-                RedirectUri = "https://localhost:44333/core/aadcb"
+                RedirectUri = "https://localhost:44333/core/aadcb",
+                PostLogoutRedirectUri = "https://localhost:44333/core/aad-signout",
+                Notifications = new OpenIdConnectAuthenticationNotifications
+                {
+                    RedirectToIdentityProvider = n =>
+                    {
+                        if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnectRequestType.LogoutRequest)
+                        {
+                            var signOutMessageId = n.OwinContext.Environment.GetSignOutMessageId();
+                            if (signOutMessageId != null)
+                            {
+                                n.OwinContext.Response.Cookies.Append("aad.signout.state", signOutMessageId);
+                            }
+                        }
+                        return Task.FromResult(0);
+                    }
+                }
             };
+            app.Map("/aad-signout", signout =>
+            {
+                signout.Run(async ctx =>
+                {
+                    var state = ctx.Request.Cookies["aad.signout.state"];
+                    ctx.Response.Cookies.Append("aad.signout.state", ".", new Microsoft.Owin.CookieOptions { Expires = DateTime.UtcNow.AddYears(-1) });
+                    await ctx.Environment.RenderLoggedOutViewAsync(state);
+                });
+            });
 
             app.UseOpenIdConnectAuthentication(aad);
 
