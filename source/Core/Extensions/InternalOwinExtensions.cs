@@ -453,7 +453,11 @@ namespace IdentityServer3.Core.Extensions
             context.Request.Method = "POST";
             context.Request.ContentType = "application/x-www-form-urlencoded";
             context.Request.Path = new PathString("/" + Constants.RoutePaths.Logout);
-            context.Request.QueryString = new QueryString("id", (string)context.Environment[QueueRenderLoggedOutPageFlag]);
+            var signOutId = context.Environment[QueueRenderLoggedOutPageFlag];
+            if (signOutId != null)
+            {
+                context.Request.QueryString = new QueryString("id", (string)context.Environment[QueueRenderLoggedOutPageFlag]);
+            }
 
             context.SetSuppressAntiForgeryCheck();
         }
