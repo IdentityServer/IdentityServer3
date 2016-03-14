@@ -175,7 +175,9 @@ namespace IdentityServer3.Core.Services.Default
         {
             var newModel = new CommonViewModel
             {
-                SiteName = model.SiteName, SiteUrl = model.SiteUrl
+                SiteName = model.SiteName,
+                SiteUrl = model.SiteUrl,
+                Custom = model.Custom
             };
 
             var scripts = new List<string>();
