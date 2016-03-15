@@ -46,11 +46,11 @@ namespace IdentityServer3.Core.Endpoints
         private readonly IOwinContext _context;
         private readonly ISigningKeyService _keyService;
 
-        static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        static readonly JsonSerializer Serializer = new JsonSerializer
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-        
+
         public DiscoveryEndpointController(IdentityServerOptions options, IScopeStore scopes, IOwinContext context, ISigningKeyService keyService, CustomGrantValidator customGrants)
         {
             _options = options;
@@ -200,7 +200,7 @@ namespace IdentityServer3.Core.Endpoints
                 }
             }
 
-            var jobject = JObject.FromObject(dto);
+            var jobject = JObject.FromObject(dto, Serializer);
 
             // custom entries
             if (_options.DiscoveryOptions.CustomEntries != null && _options.DiscoveryOptions.CustomEntries.Any())
