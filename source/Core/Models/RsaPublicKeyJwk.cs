@@ -20,7 +20,7 @@ namespace IdentityServer3.Core.Models
     /// <summary>
     /// Models an RSA public key JWK
     /// </summary>
-    public class PublicKeyJwk
+    public class RsaPublicKeyJwk
     {
         /// <summary>
         /// key type
@@ -51,7 +51,7 @@ namespace IdentityServer3.Core.Models
         /// Initializes the JWK with a key id
         /// </summary>
         /// <param name="kid"></param>
-        public PublicKeyJwk(string kid)
+        public RsaPublicKeyJwk(string kid)
         {
             alg = "RS256";
             this.kid = kid;

@@ -33,15 +33,15 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
                 KeyNumber = (int)KeyNumber.Signature
             };
 
-            return new RSACryptoServiceProvider(keySize);
+            return new RSACryptoServiceProvider(keySize, csp);
         }
 
-        public static PublicKeyJwk CreateJwk()
+        public static RsaPublicKeyJwk CreateJwk()
         {
             var prov = CreateProvider();
             var pubKey = prov.ExportParameters(false);
 
-            var jwk = new PublicKeyJwk("key1")
+            var jwk = new RsaPublicKeyJwk("key1")
             {
                 kty = "RSA",
                 n = Base64Url.Encode(pubKey.Modulus),
@@ -51,7 +51,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect.PoP
             return jwk;
         }
 
-        public static string CreateJwkString(PublicKeyJwk jwk = null)
+        public static string CreateJwkString(RsaPublicKeyJwk jwk = null)
         {
             if (jwk == null) jwk = CreateJwk();
 
