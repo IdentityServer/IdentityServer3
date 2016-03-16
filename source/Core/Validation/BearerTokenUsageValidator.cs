@@ -50,9 +50,9 @@ namespace IdentityServer3.Core.Validation
             if (authorizationHeaders != null)
             {
                 var header = authorizationHeaders.First().Trim();
-                if (header.StartsWith(Constants.TokenTypes.Bearer))
+                if (header.StartsWith(Constants.AuthenticationSchemes.BearerAuthorizationHeader))
                 {
-                    var value = header.Substring(Constants.TokenTypes.Bearer.Length).Trim();
+                    var value = header.Substring(Constants.AuthenticationSchemes.BearerAuthorizationHeader.Length).Trim();
                     if (value != null && value.Length > 0)
                     {
                         return new BearerTokenUsageValidationResult
@@ -72,7 +72,7 @@ namespace IdentityServer3.Core.Validation
         {
             var form = await context.ReadRequestFormAsNameValueCollectionAsync();
 
-            var token = form.Get("access_token");
+            var token = form.Get(Constants.AuthenticationSchemes.BearerFormPost);
             if (token.IsPresent())
             {
                 return new BearerTokenUsageValidationResult

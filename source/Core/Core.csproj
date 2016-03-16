@@ -55,8 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IdentityModel.1.3.1\lib\net45\IdentityModel.Net45.dll</HintPath>
+    <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityModel.1.9.0\lib\net45\IdentityModel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -216,6 +216,7 @@
     <Compile Include="Models\IsActiveContext.cs" />
     <Compile Include="Models\Contexts\LocalAuthenticationContext.cs" />
     <Compile Include="Models\Contexts\PreAuthenticationContext.cs" />
+    <Compile Include="Models\RsaPublicKeyJwk.cs" />
     <Compile Include="Models\Secret.cs" />
     <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
+    <Compile Include="Validation\RequestedTokenTypes.cs" />
     <Compile Include="Validation\ResponseTypeEqualityComparer.cs" />
     <Compile Include="Validation\ScopeSecretValidationResult.cs" />
     <Compile Include="Validation\ScopeSecretValidator.cs" />

@@ -204,6 +204,11 @@ namespace IdentityServer3.Core.Services.Default
             {
                 claims.Add(new Claim(Constants.ClaimTypes.JwtId, CryptoRandom.CreateUniqueId()));
             }
+            
+            if (request.ProofKey.IsPresent())
+            {
+                claims.Add(new Claim(Constants.ClaimTypes.Confirmation, request.ProofKey, Constants.ClaimValueTypes.Json));
+            }
 
             var token = new Token(Constants.TokenTypes.AccessToken)
             {
