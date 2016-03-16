@@ -22,7 +22,7 @@ Please log a new issue in the appropriate GitHub repo:
 
 Due to the security nature of IdentityServer, errors are very vague. Make sure you read and understand how to enable [logging](https://identityserver.github.io/Documentation/docsv2/configuration/logging.html) before opening an issue/bug report.
 
-## Other discussions
+## Chat with us and other identityserver users
 https://gitter.im/IdentityServer/IdentityServer3
 
 ## Filing issues
