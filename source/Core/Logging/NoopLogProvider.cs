@@ -24,16 +24,32 @@ namespace IdentityServer3.Core.Logging
     /// </summary>
     public class NoopLogProvider : ILogProvider
     {
+        /// <summary>
+        ///  Nop logger
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Logger GetLogger(string name)
         {
             return delegate { return false; };
         }
 
+        /// <summary>
+        ///  Nop logger
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public IDisposable OpenMappedContext(string key, string value)
         {
             return new NoopClass();
         }
 
+        /// <summary>
+        ///  Nop logger
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public IDisposable OpenNestedContext(string message)
         {
             return new NoopClass();
