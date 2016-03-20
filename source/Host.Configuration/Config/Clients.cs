@@ -471,7 +471,36 @@ namespace IdentityServer3.Host.Config
 
                     AccessTokenType = AccessTokenType.Reference
                 },
-                
+
+                /////////////////////////////////////////////////////////////
+                // WPF Client with Hybrid Flow and PKCE and PoP
+                /////////////////////////////////////////////////////////////
+                new Client
+                {
+                    ClientName = "WPF Client with Hybrid Flow and PKCE and PoP",
+                    ClientId = "wpf.hybrid.pop",
+                    Flow = Flows.HybridWithProofKey,
+
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = new List<string>
+                    {
+                        "http://localhost/wpf.hybrid.pop"
+                    },
+
+                    AllowedScopes = new List<string>
+                    {
+                        StandardScopes.OpenId.Name,
+                        StandardScopes.Profile.Name,
+                        StandardScopes.OfflineAccess.Name,
+                        "read", "write"
+                    },
+
+                    AccessTokenType = AccessTokenType.Reference
+                },
 
                 /////////////////////////////////////////////////////////////
                 // UWP OIDC Client
