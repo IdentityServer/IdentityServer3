@@ -617,6 +617,7 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(Constants.TokenErrors.InvalidRequest);
             }
 
+            _validatedRequest.Subject = principal;
             Logger.Info("Validation of refresh token request success");
             return Valid();
         }
