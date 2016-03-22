@@ -191,7 +191,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect
         private class AlwaysValidAccessTokenValidator : TokenValidator
         {
             public AlwaysValidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService context)
-                : base(options, clients, tokenHandles, customValidator, context, new DefaultSigningKeyService(options))
+                : base(options, clients, tokenHandles, customValidator, context, new DefaultSigningKeyService(options), new DefaultSigningKeyService(options))
             {
             }
 
@@ -214,7 +214,7 @@ namespace IdentityServer3.Tests.Endpoints.Connect
         private class AlwaysInvalidAccessTokenValidator : TokenValidator
         {
             public AlwaysInvalidAccessTokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService context)
-                : base(options, clients, tokenHandles, customValidator, context, new DefaultSigningKeyService(options))
+                : base(options, clients, tokenHandles, customValidator, context, new DefaultSigningKeyService(options), new DefaultSigningKeyService(options))
             {
             }
 

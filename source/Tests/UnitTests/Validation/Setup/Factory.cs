@@ -36,7 +36,8 @@ namespace IdentityServer3.Tests.Validation
 
         public static DefaultTokenSigningService CreateDefaultTokenSigningService()
         {
-            return new DefaultTokenSigningService(new DefaultSigningKeyService(TestIdentityServerOptions.Create()));
+            var defaultSigningKeyService = new DefaultSigningKeyService(TestIdentityServerOptions.Create());
+            return new DefaultTokenSigningService(defaultSigningKeyService, defaultSigningKeyService);
         }
 
         //public static ClientValidator CreateClientValidator(
@@ -179,6 +180,7 @@ namespace IdentityServer3.Tests.Validation
             options.Factory = new IdentityServerServiceFactory();
             var context = CreateOwinContext(options, clients, users);
 
+            var defaultSigningKeyService = new DefaultSigningKeyService(options);
             var validator = new TokenValidator(
                 options: options,
                 clients: clients,
@@ -187,7 +189,8 @@ namespace IdentityServer3.Tests.Validation
                     users: users,
                     clients: clients),
                 owinEnvironment: new OwinEnvironmentService(context),
-                keyService: new DefaultSigningKeyService(options));
+                keyService: defaultSigningKeyService,
+                certificateKeyService: defaultSigningKeyService);
 
             return validator;
         }

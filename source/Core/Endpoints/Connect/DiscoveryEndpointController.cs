@@ -239,22 +239,15 @@ namespace IdentityServer3.Core.Endpoints
             {
                 if (pubKey != null)
                 {
-                    var cert64 = Convert.ToBase64String(pubKey.RawData);
-                    var thumbprint = Base64Url.Encode(pubKey.GetCertHash());
-                    var key = pubKey.PublicKey.Key as RSACryptoServiceProvider;
-                    var parameters = key.ExportParameters(false);
-                    var exponent = Base64Url.Encode(parameters.Exponent);
-                    var modulus = Base64Url.Encode(parameters.Modulus);
-
                     var webKey = new JsonWebKeyDto
                     {
-                        kty = "RSA",
-                        use = "sig",
-                        kid = await _keyService.GetKidAsync(pubKey),
-                        x5t = thumbprint,
-                        e = exponent,
-                        n = modulus,
-                        x5c = new[] { cert64 }
+                        kty = pubKey.Kty,
+                        use = pubKey.Use,
+                        kid = pubKey.Kid,
+                        x5t = pubKey.X5t,
+                        e = pubKey.E,
+                        n = pubKey.N,
+                        x5c = pubKey.X5c.ToArray()
                     };
 
                     webKeys.Add(webKey);

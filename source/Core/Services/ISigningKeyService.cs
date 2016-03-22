@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Protocols;
 
 namespace IdentityServer3.Core.Services
 {
@@ -13,19 +13,12 @@ namespace IdentityServer3.Core.Services
         /// Retrieves the primary signing key
         /// </summary>
         /// <returns>Signing key</returns>
-        Task<X509Certificate2> GetSigningKeyAsync();
+        Task<JsonWebKey> GetSigningKeyAsync();
 
         /// <summary>
         /// Retrieves all public keys that can be used to validate tokens
         /// </summary>
         /// <returns>Public keys</returns>
-        Task<IEnumerable<X509Certificate2>> GetPublicKeysAsync();
-
-        /// <summary>
-        /// Calculates the key id for a given x509 certificate
-        /// </summary>
-        /// <param name="certificate"></param>
-        /// <returns></returns>
-        Task<string> GetKidAsync(X509Certificate2 certificate);
+        Task<IEnumerable<JsonWebKey>> GetPublicKeysAsync();
     }
 }
