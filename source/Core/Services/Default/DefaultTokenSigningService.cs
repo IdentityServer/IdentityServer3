@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IdentityServer3.Core.Services.Default
 {
@@ -41,6 +41,8 @@ namespace IdentityServer3.Core.Services.Default
         /// The signing key service
         /// </summary>
         private readonly ISigningKeyService _keyService;
+
+        private readonly ICertificateSigningKeyService _certificateKeyService;
 
         static DefaultTokenSigningService()
         {
@@ -62,9 +64,11 @@ namespace IdentityServer3.Core.Services.Default
         /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
         /// </summary>
         /// <param name="keyService">The signing key service.</param>
-        public DefaultTokenSigningService(ISigningKeyService keyService)
+        /// <param name="certificateKeyService">The ceritificate key service</param>
+        public DefaultTokenSigningService(ISigningKeyService keyService, ICertificateSigningKeyService certificateKeyService)
         {
             _keyService = keyService;
+            _certificateKeyService = certificateKeyService;
         }
 
         /// <summary>
@@ -86,7 +90,9 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>The signing credential</returns>
         protected virtual async Task<SigningCredentials> GetSigningCredentialsAsync()
         {
-            return new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
+            var key = await _keyService.GetSigningKeyAsync();
+            var certificate = await _certificateKeyService.GetCertificate(key);
+            return new X509SigningCredentials(certificate);
         }
 
         /// <summary>
@@ -196,7 +202,7 @@ namespace IdentityServer3.Core.Services.Default
             var x509credential = credential as X509SigningCredentials;
             if (x509credential != null)
             {
-                header.Add("kid", await _keyService.GetKidAsync(x509credential.Certificate));
+                header.Add("kid", (await _keyService.GetSigningKeyAsync()).Kid);
             }
 
             return header;

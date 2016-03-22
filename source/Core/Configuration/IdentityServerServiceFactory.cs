@@ -331,6 +331,14 @@ namespace IdentityServer3.Core.Configuration
         /// </value>
         public Registration<ISigningKeyService> SigningKeyService { get; set; }
 
+        /// <summary>
+        /// Gets or sets the certificate key service.
+        /// </summary>
+        /// <value>
+        /// The signing key service.
+        /// </value>
+        public Registration<ICertificateSigningKeyService> CertificateSigningKeyService { get; set; }
+
         internal void Validate()
         {
             if (UserService == null) LogAndStop("UserService not configured");

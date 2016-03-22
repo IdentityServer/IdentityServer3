@@ -31,6 +31,7 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.ServiceModel.Security;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Protocols;
 
 #pragma warning disable 1591
 
@@ -46,6 +47,7 @@ namespace IdentityServer3.Core.Validation
         private readonly IClientStore _clients;
         private readonly IOwinContext _context;
         private readonly ISigningKeyService _keyService;
+        private readonly ICertificateSigningKeyService _certificateKeyService;
 
         private readonly TokenValidationLog _log;
 
@@ -60,7 +62,7 @@ namespace IdentityServer3.Core.Validation
             _log = new TokenValidationLog();
         }
 
-        public TokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService owinEnvironment, ISigningKeyService keyService)
+        public TokenValidator(IdentityServerOptions options, IClientStore clients, ITokenHandleStore tokenHandles, ICustomTokenValidator customValidator, OwinEnvironmentService owinEnvironment, ISigningKeyService keyService, ICertificateSigningKeyService certificateKeyService)
         {
             _options = options;
             _clients = clients;
@@ -68,6 +70,7 @@ namespace IdentityServer3.Core.Validation
             _customValidator = customValidator;
             _context = new OwinContext(owinEnvironment.Environment);
             _keyService = keyService;
+            _certificateKeyService = certificateKeyService;
 
             _log = new TokenValidationLog();
         }
@@ -119,8 +122,9 @@ namespace IdentityServer3.Core.Validation
 
             _log.ClientName = client.ClientName;
 
-            var certs = await _keyService.GetPublicKeysAsync();
-            var result = await ValidateJwtAsync(token, clientId, certs, validateLifetime);
+            var keys = await _keyService.GetPublicKeysAsync();
+            
+            var result = await ValidateJwtAsync(token, clientId, keys, validateLifetime);
 
             result.Client = client;
 
@@ -225,7 +229,7 @@ namespace IdentityServer3.Core.Validation
             return customResult;
         }
 
-        private async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, IEnumerable<X509Certificate2> signingCertificates, bool validateLifetime = true)
+        private async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, IEnumerable<JsonWebKey> signingKeys, bool validateLifetime = true)
         {
             var handler = new JwtSecurityTokenHandler
             {
@@ -237,6 +241,7 @@ namespace IdentityServer3.Core.Validation
                     }
             };
 
+            var signingCertificates = await Task.WhenAll(signingKeys.Select(key => _certificateKeyService.GetCertificate(key)));
             var keys = (from c in signingCertificates select new X509SecurityKey(c)).ToList();
 
             var parameters = new TokenValidationParameters
