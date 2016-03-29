@@ -294,7 +294,7 @@ namespace IdentityServer3.Core.Models
             RequireConsent = true;
             AllowRememberConsent = true;
 
-            AllowAccessTokensViaBrowser = false;
+            AllowAccessTokensViaBrowser = true;
         }
     }
 }
