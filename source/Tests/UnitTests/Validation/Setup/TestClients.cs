@@ -60,6 +60,7 @@ namespace IdentityServer3.Tests.Validation
 
                     Flow = Flows.AuthorizationCodeWithProofKey,
                     AllowAccessToAllScopes = true,
+                    AllowAccessTokensViaBrowser = true,
 
                     RequireConsent = false,
 
@@ -82,6 +83,7 @@ namespace IdentityServer3.Tests.Validation
                     },
 
                     Flow = Flows.AuthorizationCode,
+                    AllowAccessTokensViaBrowser = true,
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
@@ -105,6 +107,7 @@ namespace IdentityServer3.Tests.Validation
                     },
 
                     Flow = Flows.HybridWithProofKey,
+                    AllowAccessTokensViaBrowser = true,
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
@@ -128,6 +131,7 @@ namespace IdentityServer3.Tests.Validation
                     },
 
                     Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = true,
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
@@ -148,6 +152,7 @@ namespace IdentityServer3.Tests.Validation
                     },
 
                     Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = true,
                     AllowAccessToAllScopes = true,
                     AllowClientCredentialsOnly = true,
                     RequireConsent = false,
@@ -391,6 +396,7 @@ namespace IdentityServer3.Tests.Validation
                     },
 
                     Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = true,
                     AllowAccessToAllScopes = true,
 
                     AccessTokenType = AccessTokenType.Reference
