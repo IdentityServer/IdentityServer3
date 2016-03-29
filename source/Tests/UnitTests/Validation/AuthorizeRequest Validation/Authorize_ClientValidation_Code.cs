@@ -24,7 +24,6 @@ using Xunit;
 
 namespace IdentityServer3.Tests.Validation.AuthorizeRequest
 {
-
     public class Authorize_ClientValidation_Code
     {
         const string Category = "AuthorizeRequest Client Validation - Code";
@@ -139,6 +138,24 @@ namespace IdentityServer3.Tests.Validation.AuthorizeRequest
             result.ErrorType.Should().Be(ErrorTypes.User);
             result.Error.Should().Be(Constants.AuthorizeErrors.UnauthorizedClient);
         }
+
+        [Fact]
+        [Trait("Category", Category)]
+        public async Task OpenId_CodeIdTokenToken_with_NoTokenViaBrowser_Request()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Add(Constants.AuthorizeRequest.ClientId, "hybridclient.nobrowser");
+            parameters.Add(Constants.AuthorizeRequest.Scope, "openid");
+            parameters.Add(Constants.AuthorizeRequest.RedirectUri, "https://server/cb");
+            parameters.Add(Constants.AuthorizeRequest.ResponseType, Constants.ResponseTypes.CodeIdTokenToken);
+            parameters.Add(Constants.AuthorizeRequest.Nonce, "nonce");
+
+            var validator = Factory.CreateAuthorizeRequestValidator();
+            var result = await validator.ValidateAsync(parameters);
+
+            result.IsError.Should().Be(true);
+        }
+
 
         [Theory]
         [InlineData("codewithproofkeyclient", Constants.ResponseTypes.Code)]

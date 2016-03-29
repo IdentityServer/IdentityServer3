@@ -82,8 +82,32 @@ namespace IdentityServer3.Tests.Validation
                         new Secret("secret".Sha256())
                     },
 
-                    Flow = Flows.AuthorizationCode,
+                    Flow = Flows.Hybrid,
                     AllowAccessTokensViaBrowser = true,
+                    AllowAccessToAllScopes = true,
+
+                    RequireConsent = false,
+
+                    RedirectUris = new List<string>
+                    {
+                        "https://server/cb",
+                    },
+
+                    AuthorizationCodeLifetime = 60
+                },
+
+                new Client
+                {
+                    ClientName = "Hybrid Client - No Access Token via Browser",
+                    Enabled = true,
+                    ClientId = "hybridclient.nobrowser",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.Hybrid,
+                    AllowAccessTokensViaBrowser = false,
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
@@ -132,6 +156,27 @@ namespace IdentityServer3.Tests.Validation
 
                     Flow = Flows.Implicit,
                     AllowAccessTokensViaBrowser = true,
+                    AllowAccessToAllScopes = true,
+
+                    RequireConsent = false,
+
+                    RedirectUris = new List<string>
+                    {
+                        "oob://implicit/cb"
+                    },
+                },
+                new Client
+                {
+                    ClientName = "Implicit Client - No Access Token via Browser",
+                    Enabled = true,
+                    ClientId = "implicitclient.nobrowser",
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = false,
                     AllowAccessToAllScopes = true,
 
                     RequireConsent = false,
