@@ -176,6 +176,8 @@
     <Compile Include="Conformance\Extensions.cs" />
     <Compile Include="Conformance\IdentityServerHostTest.cs" />
     <Compile Include="Conformance\NoDataProtector.cs" />
+    <Compile Include="Endpoints\Connect\RestrictAccessTokenViaBrowser\ImplicitFlowTests.cs" />
+    <Compile Include="Endpoints\Connect\RestrictAccessTokenViaBrowser\HybridFlowTests.cs" />
     <Compile Include="Endpoints\Connect\PKCE\PkceTests.cs" />
     <Compile Include="Endpoints\Connect\AuthenticationSessionValidatorTests.cs" />
     <Compile Include="Endpoints\Connect\IdentityTokenValidationControllerTests.cs" />
