@@ -175,6 +175,7 @@
     <Compile Include="Extensions\JwtSecurityTokenExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Extensions\OwinEnvironmentExtensions.cs" />
+    <Compile Include="Extensions\TokenExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\CodeChartHelper.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\Lower.cs" />
