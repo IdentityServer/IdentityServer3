@@ -554,8 +554,14 @@ namespace IdentityServer3.Core.Endpoints
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
         [HttpGet]
-        public async Task<IHttpActionResult> LogoutPrompt(string id = null)
+        public async Task<IHttpActionResult> LogoutPrompt(string id = null, string state = null)
         {
+            if (id == null)
+            {
+                // accept state in place of id for signout cleanups
+                id = state;
+            }
+
             if (id != null && id.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Logout prompt requested, but id param is longer than allowed length");
@@ -627,7 +633,7 @@ namespace IdentityServer3.Core.Endpoints
             Logger.Info("Clearing cookies");
             context.QueueRemovalOfSignOutMessageCookie(id);
             context.ClearAuthenticationCookies();
-            context.SignOutOfExternalIdP();
+            context.SignOutOfExternalIdP(id);
 
             string clientId = null;
             var message = signOutMessageCookie.Read(id);

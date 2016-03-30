@@ -65,21 +65,8 @@ namespace Owin
                     AuthenticationOptions = new AuthenticationOptions
                     {
                         IdentityProviders = ConfigureIdentityProviders,
-                        EnablePostSignOutAutoRedirect = true
+                        EnableAutoCallbackForFederatedSignout = true
                     },
-
-                    //LoggingOptions = new LoggingOptions
-                    //{
-                    //    EnableKatanaLogging = true
-                    //},
-
-                    //EventsOptions = new EventsOptions
-                    //{
-                    //    RaiseFailureEvents = true,
-                    //    RaiseInformationEvents = true,
-                    //    RaiseSuccessEvents = true,
-                    //    RaiseErrorEvents = true
-                    //}
                 };
 
                 coreApp.UseIdentityServer(idsrvOptions);
@@ -132,33 +119,7 @@ namespace Owin
                 Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
                 ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
                 RedirectUri = "https://localhost:44333/core/aadcb",
-                PostLogoutRedirectUri = "https://localhost:44333/core/aad-signout",
-                Notifications = new OpenIdConnectAuthenticationNotifications
-                {
-                    RedirectToIdentityProvider = n =>
-                    {
-                        if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnectRequestType.LogoutRequest)
-                        {
-                            var signOutMessageId = n.OwinContext.Environment.GetSignOutMessageId();
-                            if (signOutMessageId != null)
-                            {
-                                n.OwinContext.Response.Cookies.Append("aad.signout.state", signOutMessageId);
-                            }
-                        }
-                        return Task.FromResult(0);
-                    }
-                }
             };
-            app.Map("/aad-signout", signout =>
-            {
-                signout.Run(async ctx =>
-                {
-                    var state = ctx.Request.Cookies["aad.signout.state"];
-                    ctx.Response.Cookies.Append("aad.signout.state", ".", new Microsoft.Owin.CookieOptions { Expires = DateTime.UtcNow.AddYears(-1) });
-                    await ctx.Environment.RenderLoggedOutViewAsync(state);
-                });
-            });
-
             app.UseOpenIdConnectAuthentication(aad);
 
             var adfs = new WsFederationAuthenticationOptions

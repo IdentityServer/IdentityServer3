@@ -484,7 +484,7 @@ namespace IdentityServer3.Core.Extensions
                 Constants.PartialSignInAuthenticationType);
         }
 
-        public static void SignOutOfExternalIdP(this IOwinContext context)
+        public static void SignOutOfExternalIdP(this IOwinContext context, string signOutId)
         {
             if (context == null) throw new ArgumentNullException("context");
 
@@ -496,7 +496,18 @@ namespace IdentityServer3.Core.Extensions
                 var idp = user.GetIdentityProvider();
                 if (idp != Constants.BuiltInIdentityProvider)
                 {
-                    context.Authentication.SignOut(idp);
+                    var authProps = new AuthenticationProperties();
+                    var options = context.ResolveDependency<IdentityServerOptions>();
+
+                    if (options.AuthenticationOptions.EnableAutoCallbackForFederatedSignout)
+                    {
+                        authProps.RedirectUri = context.Environment.GetIdentityServerLogoutUrl().EnsureTrailingSlash();
+                        if (signOutId != null)
+                        {
+                            authProps.RedirectUri = authProps.RedirectUri.AddQueryString(Constants.Authentication.SignoutStateParamName + "=" + signOutId);
+                        }
+                    }
+                    context.Authentication.SignOut(authProps, idp);
                 }
             }
         }
