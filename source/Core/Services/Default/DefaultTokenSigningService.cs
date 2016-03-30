@@ -28,92 +28,23 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
-    /// Default token signing service
+    /// Factory that create a new <see cref="JwtPayload"/>
     /// </summary>
-    public class DefaultTokenSigningService : ITokenSigningService
+    public class JwtPayloadFactory
     {
         /// <summary>
-        /// The identity server options
+        /// Create a new <see cref="JwtPayload"/> from a <see cref="Token"/>
         /// </summary>
-        protected readonly IdentityServerOptions _options;
-
-        /// <summary>
-        /// The signing key service
-        /// </summary>
-        private readonly ISigningKeyService _keyService;
-
-        static DefaultTokenSigningService()
-        {
-            JsonExtensions.Serializer = JsonConvert.SerializeObject;
-        }
-
-        // todo: remove in next major version
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
-        public DefaultTokenSigningService(IdentityServerOptions options)
-        {
-            _options = options;
-            _keyService = new DefaultSigningKeyService(options);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
-        /// </summary>
-        /// <param name="keyService">The signing key service.</param>
-        public DefaultTokenSigningService(ISigningKeyService keyService)
-        {
-            _keyService = keyService;
-        }
-
-        /// <summary>
-        /// Signs the token.
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <returns>
-        /// A protected and serialized security token
-        /// </returns>
-        public virtual async Task<string> SignTokenAsync(Token token)
-        {
-            var credentials = await GetSigningCredentialsAsync();
-            return await CreateJsonWebToken(token, credentials);
-        }
-
-        /// <summary>
-        /// Retrieves the signing credential (override to load key from alternative locations)
-        /// </summary>
-        /// <returns>The signing credential</returns>
-        protected virtual async Task<SigningCredentials> GetSigningCredentialsAsync()
-        {
-            return new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
-        }
-
-        /// <summary>
-        /// Creates the json web token.
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <param name="credentials">The credentials.</param>
-        /// <returns>The signed JWT</returns>
-        protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
-        {
-            var payload = CreatePayload(token);
-            return await SignAsync(payload, credentials);
-        }
-
-        /// <summary>
-        /// Creates the JWT payload
-        /// </summary>
-        /// <param name="token">The token.</param>
-        /// <returns>The JWT payload</returns>
-        protected virtual string CreatePayload(Token token)
+        /// <param name="token">The token</param>
+        /// <returns>The payload</returns>
+        public JwtPayload Create(Token token)
         {
             var payload = new JwtPayload(
-                token.Issuer,
-                token.Audience,
-                null,
-                token.CreationTime.UtcDateTime,
-                token.CreationTime.AddSeconds(token.Lifetime).UtcDateTime);
+               token.Issuer,
+               token.Audience,
+               null,
+               token.CreationTime.UtcDateTime,
+               token.CreationTime.AddSeconds(token.Lifetime).UtcDateTime);
 
             var amrClaims = token.Claims.Where(x => x.Type == Constants.ClaimTypes.AuthenticationMethod);
             var jsonClaims = token.Claims.Where(x => x.ValueType == Constants.ClaimValueTypes.Json);
@@ -181,7 +112,93 @@ namespace IdentityServer3.Core.Services.Default
                 throw new Exception(String.Format("Unsupported JSON type for claim types: {0}", unsupportedJsonClaimTypes.Aggregate((x, y) => x + ", " + y)));
             }
 
-            return payload.SerializeToJson();
+            return payload;
+        }
+    }
+
+    /// <summary>
+    /// Default token signing service
+    /// </summary>
+    public class DefaultTokenSigningService : ITokenSigningService
+    {
+        /// <summary>
+        /// The identity server options
+        /// </summary>
+        protected readonly IdentityServerOptions _options;
+
+        /// <summary>
+        /// The signing key service
+        /// </summary>
+        private readonly ISigningKeyService _keyService;
+        private JwtPayloadFactory _jwtPayloadFactory = new JwtPayloadFactory();
+
+        static DefaultTokenSigningService()
+        {
+            JsonExtensions.Serializer = JsonConvert.SerializeObject;
+        }
+
+        // todo: remove in next major version
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        public DefaultTokenSigningService(IdentityServerOptions options)
+        {
+            _options = options;
+            _keyService = new DefaultSigningKeyService(options);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTokenSigningService"/> class.
+        /// </summary>
+        /// <param name="keyService">The signing key service.</param>
+        public DefaultTokenSigningService(ISigningKeyService keyService)
+        {
+            _keyService = keyService;
+        }
+
+        /// <summary>
+        /// Signs the token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>
+        /// A protected and serialized security token
+        /// </returns>
+        public virtual async Task<string> SignTokenAsync(Token token)
+        {
+            var credentials = await GetSigningCredentialsAsync();
+            return await CreateJsonWebToken(token, credentials);
+        }
+
+        /// <summary>
+        /// Retrieves the signing credential (override to load key from alternative locations)
+        /// </summary>
+        /// <returns>The signing credential</returns>
+        protected virtual async Task<SigningCredentials> GetSigningCredentialsAsync()
+        {
+            return new X509SigningCredentials(await _keyService.GetSigningKeyAsync());
+        }
+
+        /// <summary>
+        /// Creates the json web token.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <returns>The signed JWT</returns>
+        protected virtual async Task<string> CreateJsonWebToken(Token token, SigningCredentials credentials)
+        {
+            var payload = CreatePayload(token);
+            return await SignAsync(payload, credentials);
+        }
+
+        /// <summary>
+        /// Creates the JWT payload
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns>The JWT payload</returns>
+        protected virtual string CreatePayload(Token token)
+        {
+            return _jwtPayloadFactory.Create(token).SerializeToJson();
         }
 
         /// <summary>
