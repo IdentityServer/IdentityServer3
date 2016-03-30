@@ -246,6 +246,7 @@ namespace IdentityServer3.Core.Validation
                 return Invalid(request);
             }
 
+            
             //////////////////////////////////////////////////////////
             // check response_mode parameter and set response_mode
             //////////////////////////////////////////////////////////
@@ -284,6 +285,21 @@ namespace IdentityServer3.Core.Validation
             {
                 LogError("Invalid flow for client: " + request.Flow, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
+            }
+
+
+            //////////////////////////////////////////////////////////
+            // check if response type contains an access token, 
+            // and if client is allowed to request access token via browser
+            //////////////////////////////////////////////////////////
+            var responseTypes = responseType.FromSpaceSeparatedString();
+            if (responseTypes.Contains(Constants.ResponseTypes.Token))
+            {
+                if (!request.Client.AllowAccessTokensViaBrowser)
+                {
+                    LogError("Client requested access token - but client is not configured to receive access tokens via browser", request);
+                    return Invalid(request);
+                }
             }
 
             return Valid(request);
