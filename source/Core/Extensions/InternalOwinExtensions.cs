@@ -504,7 +504,7 @@ namespace IdentityServer3.Core.Extensions
                         authProps.RedirectUri = context.Environment.GetIdentityServerLogoutUrl().EnsureTrailingSlash();
                         if (signOutId != null)
                         {
-                            authProps.RedirectUri = authProps.RedirectUri.AddQueryString(Constants.Authentication.SignoutStateParamName + "=" + signOutId);
+                            authProps.RedirectUri = authProps.RedirectUri.AddQueryString(Constants.Authentication.SignoutId + "=" + signOutId);
                         }
                     }
                     context.Authentication.SignOut(authProps, idp);
