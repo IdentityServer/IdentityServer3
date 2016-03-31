@@ -10,13 +10,7 @@ window.identityServer = (function () {
 
     var identityServer = {
         getModel: function () {
-            var modelJson = document.getElementById("modelJson");
-            var encodedJson = '';
-            if (typeof (modelJson.textContent) !== undefined) {
-                encodedJson = modelJson.textContent;
-            } else {
-                encodedJson = modelJson.innerHTML;
-            }
+            var encodedJson = document.getElementById("modelJson").textContent;
             var json = Encoder.htmlDecode(encodedJson);
             var model = JSON.parse(json);
             return model;

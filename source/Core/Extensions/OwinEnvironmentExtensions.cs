@@ -18,6 +18,7 @@ using Autofac;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Configuration.Hosting;
 using IdentityServer3.Core.Models;
+using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -682,6 +683,47 @@ namespace IdentityServer3.Core.Extensions
             }
 
             return uri;
+        }
+
+        /// <summary>
+        /// Returns collection of ClientIds that the user has signed into for the current authentication session.
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> GetClientIdsForCurrentAuthenticationSession(this IDictionary<string, object> env)
+        {
+            if (env == null) throw new ArgumentNullException("env");
+
+            var clientListCookie = env.ResolveDependency<ClientListCookie>();
+            return clientListCookie.GetClients();
+        }
+
+        /// <summary>
+        /// Creates a JWT access token for situations where identityserver extensibility code needs to act as a client to a token protected service
+        /// </summary>
+        /// <param name="env">The OWIN environment.</param>
+        /// <param name="clientId">The value of the client_id claim in the token.</param>
+        /// <param name="scope">The value of the scope claim in the token.</param>
+        /// <param name="lifetime">The lifetime of the token.</param>
+        /// <returns>a JWT</returns>
+        public static async Task<string> IssueClientToken(this IDictionary<string, object> env, string clientId, string scope, int lifetime)
+        {
+            var signingService = env.ResolveDependency<ITokenSigningService>();
+            var issuerUri = env.GetIdentityServerIssuerUri();
+
+            var token = new Token
+            {
+                Issuer = issuerUri,
+                Audience = issuerUri + "/resources",
+                Lifetime = lifetime,
+                Claims = new List<Claim>
+                {
+                    new Claim("client_id", clientId),
+                    new Claim("scope", scope)
+                }
+            };
+
+            return await signingService.SignTokenAsync(token);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 }
                 else
                 {
-                    Logger.WarnFormat("CORS request made for path: {0} from origin: {1} but rejected because invalid CORS path", path, origin);
+                    Logger.InfoFormat("CORS request made for path: {0} from origin: {1} but rejected because invalid CORS path", path, origin);
                 }
             }
 

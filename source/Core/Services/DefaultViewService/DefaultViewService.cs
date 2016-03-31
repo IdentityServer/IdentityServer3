@@ -175,7 +175,9 @@ namespace IdentityServer3.Core.Services.Default
         {
             var newModel = new CommonViewModel
             {
-                SiteName = model.SiteName, SiteUrl = model.SiteUrl
+                SiteName = model.SiteName,
+                SiteUrl = model.SiteUrl,
+                Custom = model.Custom
             };
 
             var scripts = new List<string>();
@@ -216,6 +218,8 @@ namespace IdentityServer3.Core.Services.Default
             var data = BuildModelDictionary(model, page, stylesheets, scripts);
 
             string html = await LoadHtmlTemplate(page);
+            if (html == null) return null;
+
             html = FormatHtmlTemplate(html, data);
 
             return html.ToStream();

@@ -238,6 +238,15 @@ namespace IdentityServer3.Core.Models
         public List<string> AllowedCorsOrigins { get; set; }
 
         /// <summary>
+        /// Controls whether access tokens are transmitted via the browser for this client (defaults to true).
+        /// This can prevent accidental leakage of access tokens when multiple response types are allowed.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if access tokens can be transmitted via the browser; otherwise, <c>false</c>.
+        /// </value>
+        public bool AllowAccessTokensViaBrowser { get; set; }
+
+        /// <summary>
         /// Creates a Client with default values
         /// </summary>
         public Client()
@@ -284,6 +293,8 @@ namespace IdentityServer3.Core.Models
             
             RequireConsent = true;
             AllowRememberConsent = true;
+
+            AllowAccessTokensViaBrowser = true;
         }
     }
 }

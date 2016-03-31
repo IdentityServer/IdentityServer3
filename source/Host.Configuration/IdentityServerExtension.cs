@@ -16,6 +16,7 @@
 
 using Host.Configuration;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Extensions;
 using IdentityServer3.Host.Config;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Facebook;
@@ -23,6 +24,8 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
+using System;
+using System.Threading.Tasks;
 
 namespace Owin
 {
@@ -62,21 +65,8 @@ namespace Owin
                     AuthenticationOptions = new AuthenticationOptions
                     {
                         IdentityProviders = ConfigureIdentityProviders,
-                        EnablePostSignOutAutoRedirect = true
+                        EnableAutoCallbackForFederatedSignout = true
                     },
-
-                    //LoggingOptions = new LoggingOptions
-                    //{
-                    //    EnableKatanaLogging = true
-                    //},
-
-                    //EventsOptions = new EventsOptions
-                    //{
-                    //    RaiseFailureEvents = true,
-                    //    RaiseInformationEvents = true,
-                    //    RaiseSuccessEvents = true,
-                    //    RaiseErrorEvents = true
-                    //}
                 };
 
                 coreApp.UseIdentityServer(idsrvOptions);
@@ -128,9 +118,8 @@ namespace Owin
 
                 Authority = "https://login.windows.net/4ca9cb4c-5e5f-4be9-b700-c532992a3705",
                 ClientId = "65bbbda8-8b85-4c9d-81e9-1502330aacba",
-                RedirectUri = "https://localhost:44333/core/aadcb"
+                RedirectUri = "https://localhost:44333/core/aadcb",
             };
-
             app.UseOpenIdConnectAuthentication(aad);
 
             var adfs = new WsFederationAuthenticationOptions

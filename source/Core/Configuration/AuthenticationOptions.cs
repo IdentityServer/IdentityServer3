@@ -95,6 +95,14 @@ namespace IdentityServer3.Core.Configuration
         public bool EnableSignOutPrompt { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether IdentityServer automatically sends a callback URL for federated post-logout redirects. Defaults to false.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if callback URL sent for federated post-logout redirects; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableAutoCallbackForFederatedSignout { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether IdentityServer automatically redirects back to a validated post_logout_redirect_uri passed to the signout endpoint. Defaults to false.
         /// </summary>
         /// <value>

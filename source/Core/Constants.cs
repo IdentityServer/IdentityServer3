@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,8 @@ namespace IdentityServer3.Core
             public const string UserName            = "username";
             public const string Password            = "password";
             public const string CodeVerifier        = "code_verifier";
+            public const string Algorithm           = "alg";
+            public const string Key                 = "key";
         }
 
         public static class EndSessionRequest
@@ -118,7 +121,19 @@ namespace IdentityServer3.Core
             public const string AccessToken   = "access_token";
             public const string IdentityToken = "id_token";
             public const string RefreshToken  = "refresh_token";
-            public const string Bearer        = "Bearer";
+        }
+
+        public static class ResponseTokenTypes
+        {
+            public const string Bearer = "Bearer";
+            public const string PoP = "pop";
+        }
+
+        public static class AuthenticationSchemes
+        {
+            public const string BearerAuthorizationHeader = "Bearer";
+            public const string BearerFormPost = "access_token";
+            public const string BearerQueryString = "access_token";
         }
 
         public static class GrantTypes
@@ -537,6 +552,9 @@ namespace IdentityServer3.Core
             /// <summary>JWT ID. A unique identifier for the token, which can be used to prevent reuse of the token. These tokens MUST only be used once, unless conditions for reuse were negotiated between the parties; any such negotiation is beyond the scope of this specification.</summary>
             public const string JwtId                               = "jti";
 
+            /// <summary> Proof key confirmation </summary>
+            public const string Confirmation                        = "cnf";
+
             /// <summary>OAuth 2.0 Client Identifier valid at the Authorization Server.</summary>
             public const string ClientId         = "client_id";
             
@@ -567,7 +585,6 @@ namespace IdentityServer3.Core
             ClaimTypes.Issuer,
             ClaimTypes.NotBefore,
             ClaimTypes.Expiration,
-            ClaimTypes.UpdatedAt,
             ClaimTypes.IssuedAt,
             ClaimTypes.AuthenticationMethod,
             ClaimTypes.AuthenticationTime,
@@ -723,10 +740,10 @@ namespace IdentityServer3.Core
 
         public static class Authentication
         {
-            public const string SigninId                 = "signinid";
-            public const string SignoutId                = "id";
-            public const string KatanaAuthenticationType = "katanaAuthenticationType";
-            public const string PartialLoginRememberMe = "idsvr:rememberme";
+            public const string SigninId                    = "signinid";
+            public const string SignoutId                   = "id";
+            public const string KatanaAuthenticationType    = "katanaAuthenticationType";
+            public const string PartialLoginRememberMe      = "idsvr:rememberme";
         }
 
         public static class LocalizationCategories
@@ -764,5 +781,20 @@ namespace IdentityServer3.Core
         {
             public const string Json = "json";
         }
+
+        public static IEnumerable<string> AllowedProofKeyAlgorithms = new[]
+        {
+            OidcConstants.Algorithms.Asymmetric.RS256,
+            OidcConstants.Algorithms.Asymmetric.RS384,
+            OidcConstants.Algorithms.Asymmetric.RS512,
+
+            OidcConstants.Algorithms.Asymmetric.ES256,
+            OidcConstants.Algorithms.Asymmetric.ES384,
+            OidcConstants.Algorithms.Asymmetric.ES512,
+
+            OidcConstants.Algorithms.Asymmetric.PS256,
+            OidcConstants.Algorithms.Asymmetric.PS384,
+            OidcConstants.Algorithms.Asymmetric.PS512,
+        };
     }
 }

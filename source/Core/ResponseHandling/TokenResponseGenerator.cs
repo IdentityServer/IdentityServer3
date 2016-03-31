@@ -82,6 +82,12 @@ namespace IdentityServer3.Core.ResponseHandling
                 AccessTokenLifetime = request.Client.AccessTokenLifetime
             };
 
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+            {
+                response.TokenType = Constants.ResponseTokenTypes.PoP;
+                response.Algorithm = request.ProofKeyAlgorithm;
+            }
+
             //////////////////////////
             // refresh token
             /////////////////////////
@@ -139,7 +145,8 @@ namespace IdentityServer3.Core.ResponseHandling
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
             
-            if (request.Client.UpdateAccessTokenClaimsOnRefresh)
+            // if pop request, claims must be updated because we need a fresh proof token
+            if (request.Client.UpdateAccessTokenClaimsOnRefresh || request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
                 var subject = request.RefreshToken.GetOriginalSubject();
 
@@ -148,28 +155,43 @@ namespace IdentityServer3.Core.ResponseHandling
                     Client = request.Client,
                     Subject = subject,
                     ValidatedRequest = request,
-                    Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes)
+                    Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes),
                 };
+
+                // if pop request, embed proof token
+                if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+                {
+                    creationRequest.ProofKey = GetProofKey(request);
+                }
 
                 var newAccessToken = await _tokenService.CreateAccessTokenAsync(creationRequest);
                 accessTokenString = await _tokenService.CreateSecurityTokenAsync(newAccessToken);
             }
             else
             {
-                oldAccessToken.CreationTime = DateTimeOffsetHelper.UtcNow;
-                oldAccessToken.Lifetime = request.Client.AccessTokenLifetime;
+                var copy = new Token(oldAccessToken);
+                copy.CreationTime = DateTimeOffsetHelper.UtcNow;
+                copy.Lifetime = request.Client.AccessTokenLifetime;
 
-                accessTokenString = await _tokenService.CreateSecurityTokenAsync(oldAccessToken);
+                accessTokenString = await _tokenService.CreateSecurityTokenAsync(copy);
             }
 
             var handle = await _refreshTokenService.UpdateRefreshTokenAsync(request.RefreshTokenHandle, request.RefreshToken, request.Client);
 
-            return new TokenResponse
-                {
-                    AccessToken = accessTokenString,
-                    AccessTokenLifetime = request.Client.AccessTokenLifetime,
-                    RefreshToken = handle
-                };
+            var response = new TokenResponse
+            {
+                AccessToken = accessTokenString,
+                AccessTokenLifetime = request.Client.AccessTokenLifetime,
+                RefreshToken = handle
+            };
+
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+            {
+                response.TokenType = Constants.ResponseTokenTypes.PoP;
+                response.Algorithm = request.ProofKeyAlgorithm;
+            }
+
+            return response;
         }
 
         private async Task<Tuple<string, string>> CreateAccessTokenAsync(ValidatedTokenRequest request)
@@ -202,6 +224,12 @@ namespace IdentityServer3.Core.ResponseHandling
                 };
             }
 
+            // bind proof key to token if present
+            if (request.RequestedTokenType == RequestedTokenTypes.PoP)
+            {
+                tokenRequest.ProofKey = GetProofKey(request);
+            }
+
             Token accessToken = await _tokenService.CreateAccessTokenAsync(tokenRequest);
 
             string refreshToken = "";
@@ -212,6 +240,12 @@ namespace IdentityServer3.Core.ResponseHandling
 
             var securityToken = await _tokenService.CreateSecurityTokenAsync(accessToken);
             return Tuple.Create(securityToken, refreshToken);
+        }
+
+        private string GetProofKey(ValidatedTokenRequest request)
+        {
+            // for now we only support client generated proof keys
+            return request.ProofKey;
         }
     }
 }

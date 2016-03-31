@@ -93,6 +93,14 @@ namespace IdentityServer3.Core.Models
         /// </value>
         public string Nonce { get; set; }
 
+        /// <summary>
+        /// Gets or sets proof key that should be bound to the token.
+        /// </summary>
+        /// <value>
+        /// The key.
+        /// </value>
+        public string ProofKey { get; set; }
+
         internal void Validate()
         {
             if (Client == null) LogAndStop("client");

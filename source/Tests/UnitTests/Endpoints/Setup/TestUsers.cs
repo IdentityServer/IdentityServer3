@@ -45,6 +45,15 @@ namespace IdentityServer3.Tests.Endpoints
                             new Claim(Constants.ClaimTypes.Email, "BobSmith@email.com"),
                         }
                     },
+                    new InMemoryUser{Subject = "999", Username = "sam", Password = "sam",
+                        Claims = new Claim[]
+                        {
+                            new Claim(Constants.ClaimTypes.GivenName, "Sam"),
+                            new Claim(Constants.ClaimTypes.FamilyName, "Smith"),
+                            new Claim(Constants.ClaimTypes.Email, "SamSmith@email.com"),
+                        },
+                        Provider = "Google2", ProviderId = "999"
+                    },
                 };
         }
     }

@@ -55,8 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="IdentityModel.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IdentityModel.1.3.1\lib\net45\IdentityModel.Net45.dll</HintPath>
+    <Reference Include="IdentityModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityModel.1.9.2\lib\net45\IdentityModel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -85,7 +85,7 @@
       <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin">
@@ -175,6 +175,7 @@
     <Compile Include="Extensions\JwtSecurityTokenExtensions.cs" />
     <Compile Include="Extensions\LoginPageLinkExtensions.cs" />
     <Compile Include="Extensions\OwinEnvironmentExtensions.cs" />
+    <Compile Include="Extensions\TokenExtensions.cs" />
     <Compile Include="Extensions\X509Certificate2Extensions.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\CodeChartHelper.cs" />
     <Compile Include="Internal\AntiXssLibrary\CodeCharts\Lower.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Extensions\IEventServiceExtensions.cs" />
     <Compile Include="Extensions\ILocalizationServiceExtensions.cs" />
     <Compile Include="Logging\LibLogTraceListener.cs" />
+    <Compile Include="Logging\NoopLogProvider.cs" />
     <Compile Include="Models\ClientPermissionDescription.cs" />
     <Compile Include="Models\Contexts\ExternalAuthenticationContext.cs" />
     <Compile Include="Models\ParsedSecret.cs" />
@@ -215,6 +217,7 @@
     <Compile Include="Models\IsActiveContext.cs" />
     <Compile Include="Models\Contexts\LocalAuthenticationContext.cs" />
     <Compile Include="Models\Contexts\PreAuthenticationContext.cs" />
+    <Compile Include="Models\RsaPublicKeyJwk.cs" />
     <Compile Include="Models\Secret.cs" />
     <Compile Include="Models\AuthenticatedLogin.cs" />
     <Compile Include="Models\ITokenMetadata.cs" />
@@ -246,6 +249,7 @@
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
+    <Compile Include="Validation\RequestedTokenTypes.cs" />
     <Compile Include="Validation\ResponseTypeEqualityComparer.cs" />
     <Compile Include="Validation\ScopeSecretValidationResult.cs" />
     <Compile Include="Validation\ScopeSecretValidator.cs" />
@@ -503,6 +507,7 @@
       <Link>default.licenseheader</Link>
     </None>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="Resources\T4resx.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4resx.cs</LastGenOutput>
@@ -559,14 +564,13 @@
     <None Include="Services\DefaultViewService\HttpAssets\app\crypto.min.js.map">
       <DependentUpon>crypto.min.js</DependentUpon>
     </None>
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js.bundle" />
-    <None Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js.map">
-      <DependentUpon>scripts.2.0.0.min.js</DependentUpon>
-    </None>
-    <None Include="Services\DefaultViewService\HttpAssets\styles.css.bundle" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Services\DefaultViewService\HttpAssets\styles.css" />
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\styles.min.css">
+      <DependentUpon>styles.css</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\authorizeresponse.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\SignoutFrame.html" />
     <EmbeddedResource Include="Services\DefaultViewService\PageAssets\welcome.html" />
@@ -612,18 +616,7 @@
     <Content Include="Services\DefaultViewService\HttpAssets\libs\encoder\encoder.min.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.js" />
     <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.11.0.min.js" />
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.js">
-      <DependentUpon>scripts.2.0.0.js.bundle</DependentUpon>
-    </EmbeddedResource>
-    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.0.0.min.js">
-      <DependentUpon>scripts.2.0.0.js</DependentUpon>
-    </Content>
-    <Content Include="Services\DefaultViewService\HttpAssets\styles.css">
-      <DependentUpon>styles.css.bundle</DependentUpon>
-    </Content>
-    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.5.0.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
