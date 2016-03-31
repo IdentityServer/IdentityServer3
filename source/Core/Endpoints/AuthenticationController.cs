@@ -554,14 +554,8 @@ namespace IdentityServer3.Core.Endpoints
 
         [Route(Constants.RoutePaths.Logout, Name = Constants.RouteNames.LogoutPrompt)]
         [HttpGet]
-        public async Task<IHttpActionResult> LogoutPrompt(string id = null, string state = null)
+        public async Task<IHttpActionResult> LogoutPrompt(string id = null)
         {
-            if (id == null)
-            {
-                // accept state in place of id for signout cleanups
-                id = state;
-            }
-
             if (id != null && id.Length > MaxSignInMessageLength)
             {
                 Logger.Error("Logout prompt requested, but id param is longer than allowed length");
