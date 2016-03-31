@@ -310,6 +310,7 @@ namespace IdentityServer3.Host.Config
                     ClientName = "MVC OWIN Hybrid Client",
                     ClientId = "mvc.owin.hybrid",
                     Flow = Flows.Hybrid,
+                    AllowAccessTokensViaBrowser = false,
 
                     ClientSecrets = new List<Secret>
                     {
@@ -355,6 +356,7 @@ namespace IdentityServer3.Host.Config
                     ClientName = "MVC OWIN Implicit Client",
                     ClientId = "mvc.owin.implicit",
                     Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = false,
 
                     AllowedScopes = new List<string>
                     {
