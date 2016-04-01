@@ -113,7 +113,7 @@ namespace IdentityServer3.Core.Validation
             var client = await _clients.FindClientByIdAsync(clientId);
             if (client == null)
             {
-                LogError("Unknown or diabled client.");
+                LogError("Unknown or disabled client.");
                 return Invalid(Constants.ProtectedResourceErrors.InvalidToken);
             }
 
