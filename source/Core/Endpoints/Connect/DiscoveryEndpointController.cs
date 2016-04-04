@@ -194,10 +194,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (_options.DiscoveryOptions.ShowKeySet)
             {
-                if (_options.SigningCertificate != null)
-                {
-                    dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
-                }
+                dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
             }
 
             var jobject = JObject.FromObject(dto, Serializer);
