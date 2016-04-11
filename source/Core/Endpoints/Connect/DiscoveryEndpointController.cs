@@ -80,7 +80,7 @@ namespace IdentityServer3.Core.Endpoints
                 id_token_signing_alg_values_supported = new[] { Constants.SigningAlgorithms.RSA_SHA_256 },
                 code_challenge_methods_supported = new[] { Constants.CodeChallengeMethods.Plain, Constants.CodeChallengeMethods.SHA_256 }
             };
-            
+
             // scopes
             if (_options.DiscoveryOptions.ShowIdentityScopes)
             {
@@ -194,10 +194,7 @@ namespace IdentityServer3.Core.Endpoints
 
             if (_options.DiscoveryOptions.ShowKeySet)
             {
-                if (_options.SigningCertificate != null)
-                {
-                    dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
-                }
+                dto.jwks_uri = baseUrl + Constants.RoutePaths.Oidc.DiscoveryWebKeys;
             }
 
             var jobject = JObject.FromObject(dto, Serializer);
