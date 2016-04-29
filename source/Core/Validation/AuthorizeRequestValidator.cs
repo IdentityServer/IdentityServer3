@@ -104,8 +104,15 @@ namespace IdentityServer3.Core.Validation
 
             if (customResult.IsError)
             {
-                LogError("Error in custom validation: " + customResult.Error, request);
-                return Invalid(request, customResult.ErrorType, customResult.Error);
+                var message = "Custom token request validator error";
+
+                if (customResult.Error.IsPresent())
+                {
+                    message += ": " + customResult.Error;
+                }
+
+                LogError(message, request);
+                return Invalid(request, customResult.ErrorType, customResult.Error ?? message);
             }
 
             LogSuccess(request);

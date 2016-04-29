@@ -151,6 +151,10 @@ namespace IdentityServer3.Core.Validation
                 {
                     message += ": " + customResult.Error;
                 }
+                else
+                {
+                    customResult.Error = Constants.TokenErrors.InvalidRequest;
+                }
 
                 LogError(message);
                 return customResult;
