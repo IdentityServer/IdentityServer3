@@ -191,8 +191,8 @@ namespace IdentityServer3.Host.Config
                 /////////////////////////////////////////////////////////////
                 new Client
                 {
-                    ClientName = "JavaScript Implicit Client - TokenManager",
-                    ClientId = "js.tokenmanager",
+                    ClientName = "JavaScript Implicit Client - UserManager",
+                    ClientId = "js.usermanager",
                     Flow = Flows.Implicit,
 
                     AllowedScopes = new List<string>
