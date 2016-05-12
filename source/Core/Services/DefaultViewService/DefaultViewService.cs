@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Services.Default
 {
     /// <summary>
-    /// Default view service.
+    /// Default view service.    
     /// </summary>
     public class DefaultViewService : IViewService
     {
@@ -184,7 +184,7 @@ namespace IdentityServer3.Core.Services.Default
             scripts.AddRange(config.Scripts ?? Enumerable.Empty<string>());
             scripts.Add("~/assets/app.FormPostResponse.js");
 
-            var data = BuildModelDictionary(newModel, AuthorizeResponseView, config.Stylesheets, scripts);
+            var data = BuildModel(newModel, AuthorizeResponseView, config.Stylesheets, scripts);
             data.Add("responseUri", model.ResponseFormUri);
             data.Add("responseFields", model.ResponseFormFields);
 
@@ -215,7 +215,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns></returns>
         protected virtual async Task<Stream> Render(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
-            var data = BuildModelDictionary(model, page, stylesheets, scripts);
+            var data = BuildModel(model, page, stylesheets, scripts);
 
             string html = await LoadHtmlTemplate(page);
             if (html == null) return null;
@@ -261,7 +261,7 @@ namespace IdentityServer3.Core.Services.Default
         /// or
         /// scripts
         /// </exception>
-        protected object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
+        protected virtual IDictionary<string, object> BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
             return BuildModelDictionary(model, page, stylesheets, scripts);
         }
