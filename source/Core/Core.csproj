@@ -146,6 +146,7 @@
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
     <Compile Include="Events\Authentication\ClientAuthenticationDetails.cs" />
+    <Compile Include="Events\Authentication\TokenRevokedDetails.cs" />
     <Compile Include="Events\EndpointDetail.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />

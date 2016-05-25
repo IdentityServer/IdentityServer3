@@ -185,5 +185,14 @@ namespace IdentityServer3.Core.Resources {
                 return ResourceManager.GetString("ResourceOwnerFlowLoginSuccess", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token Revoked Event.
+        /// </summary>
+        public static string TokenRevoked {
+            get {
+                return ResourceManager.GetString("TokenRevoked", resourceCulture);
+            }
+        }
     }
 }
