@@ -31,8 +31,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
         
         public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
         {
-            Logger.ErrorException("Exception accessing: " + actionExecutedContext.Request.RequestUri.AbsolutePath, actionExecutedContext.Exception);
-
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
             var options = env.ResolveDependency<IdentityServerOptions>();
             var viewSvc = env.ResolveDependency<IViewService>();
