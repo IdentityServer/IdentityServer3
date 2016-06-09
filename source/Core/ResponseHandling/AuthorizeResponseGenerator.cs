@@ -77,7 +77,7 @@ namespace IdentityServer3.Core.ResponseHandling
             return response;
         }
 
-        public async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request)
+        public virtual async Task<AuthorizeResponse> CreateCodeFlowResponseAsync(ValidatedAuthorizeRequest request)
         {
             Logger.Info("Creating Authorization Code Flow response.");
 
@@ -99,7 +99,7 @@ namespace IdentityServer3.Core.ResponseHandling
             return response;
         }
 
-        private async Task<string> CreateCodeAsync(ValidatedAuthorizeRequest request)
+        public virtual async Task<string> CreateCodeAsync(ValidatedAuthorizeRequest request)
         {
             var code = new AuthorizationCode
             {
