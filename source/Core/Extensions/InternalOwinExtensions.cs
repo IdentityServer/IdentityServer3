@@ -274,8 +274,8 @@ namespace IdentityServer3.Core.Extensions
             if (String.IsNullOrWhiteSpace(uri))
             {
                 uri = context.GetIdentityServerBaseUrl();
-                if (uri.EndsWith("/")) uri = uri.Substring(0, uri.Length - 1);
             }
+            if (uri.EndsWith("/")) uri = uri.Substring(0, uri.Length - 1);
 
             return uri;
         }
