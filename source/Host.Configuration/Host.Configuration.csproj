@@ -99,6 +99,7 @@
     <Compile Include="Config\Scopes.cs" />
     <Compile Include="Config\Users.cs" />
     <Compile Include="Extensions\CustomTokenResponseGenerator.cs" />
+    <Compile Include="Extensions\SyncConfigurationManager.cs" />
     <Compile Include="FactoryExtensions.cs" />
     <Compile Include="IdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
