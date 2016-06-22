@@ -44,7 +44,7 @@ namespace IdentityServer3.Core.Configuration
         /// Gets or sets a value indicating whether web API diagnostics logging should be set to verbose.
         /// </summary>
         /// <value>
-        /// <c>true</c> if web API diagnostics logging shozld be verbose; otherwise, <c>false</c>.
+        /// <c>true</c> if web API diagnostics logging should be verbose; otherwise, <c>false</c>.
         /// </value>
         public bool WebApiDiagnosticsIsVerbose { get; set; }
 
