@@ -83,7 +83,7 @@ namespace IdentityServer3.Core.Results
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 //Content = new ObjectContent<JObject>(jobject, new JsonMediaTypeFormatter())
-                Content = new StringContent(jobject.ToString(), Encoding.UTF8, "application/json")
+                Content = new StringContent(jobject.ToString(Formatting.None), Encoding.UTF8, "application/json")
             };
 
             Logger.Info("Returning token response.");
