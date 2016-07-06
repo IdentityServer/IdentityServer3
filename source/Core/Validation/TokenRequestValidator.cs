@@ -875,23 +875,20 @@ namespace IdentityServer3.Core.Validation
             };
         }
 
-        private TokenRequestValidationResult Invalid(string error)
+        private TokenRequestValidationResult Invalid(string error, string errorDescription = "")
         {
-            return new TokenRequestValidationResult
+            var result = new TokenRequestValidationResult
             {
                 IsError = true,
                 Error = error
             };
-        }
 
-        private TokenRequestValidationResult Invalid(string error, string errorDescription)
-        {
-            return new TokenRequestValidationResult
+            if (errorDescription.IsPresent())
             {
-                IsError = true,
-                Error = error,
-                ErrorDescription = errorDescription
-            };
+                result.ErrorDescription = errorDescription;
+            }
+
+            return result;
         }
 
         private void LogError(string message)
