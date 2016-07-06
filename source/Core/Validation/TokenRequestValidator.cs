@@ -726,7 +726,7 @@ namespace IdentityServer3.Core.Validation
                 if (result.Error.IsPresent())
                 {
                     LogError("Invalid custom grant: " + result.Error);
-                    return Invalid(result.Error);
+                    return Invalid(result.Error, result.ErrorDescription ?? "");
                 }
                 else
                 {
