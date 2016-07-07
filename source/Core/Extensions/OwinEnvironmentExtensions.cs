@@ -714,7 +714,7 @@ namespace IdentityServer3.Core.Extensions
             var token = new Token
             {
                 Issuer = issuerUri,
-                Audience = issuerUri + "/resources",
+                Audience = string.Format(Constants.AccessTokenAudience, issuerUri.EnsureTrailingSlash()),
                 Lifetime = lifetime,
                 Claims = new List<Claim>
                 {

@@ -191,8 +191,8 @@ namespace IdentityServer3.Host.Config
                 /////////////////////////////////////////////////////////////
                 new Client
                 {
-                    ClientName = "JavaScript Implicit Client - TokenManager",
-                    ClientId = "js.tokenmanager",
+                    ClientName = "JavaScript Implicit Client - UserManager",
+                    ClientId = "js.usermanager",
                     Flow = Flows.Implicit,
 
                     AllowedScopes = new List<string>
@@ -310,6 +310,7 @@ namespace IdentityServer3.Host.Config
                     ClientName = "MVC OWIN Hybrid Client",
                     ClientId = "mvc.owin.hybrid",
                     Flow = Flows.Hybrid,
+                    AllowAccessTokensViaBrowser = false,
 
                     ClientSecrets = new List<Secret>
                     {
@@ -355,6 +356,7 @@ namespace IdentityServer3.Host.Config
                     ClientName = "MVC OWIN Implicit Client",
                     ClientId = "mvc.owin.implicit",
                     Flow = Flows.Implicit,
+                    AllowAccessTokensViaBrowser = false,
 
                     AllowedScopes = new List<string>
                     {

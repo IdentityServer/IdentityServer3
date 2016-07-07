@@ -151,6 +151,10 @@ namespace IdentityServer3.Core.Validation
                 {
                     message += ": " + customResult.Error;
                 }
+                else
+                {
+                    customResult.Error = Constants.TokenErrors.InvalidRequest;
+                }
 
                 LogError(message);
                 return customResult;
@@ -722,7 +726,7 @@ namespace IdentityServer3.Core.Validation
                 if (result.Error.IsPresent())
                 {
                     LogError("Invalid custom grant: " + result.Error);
-                    return Invalid(result.Error);
+                    return Invalid(result.Error, result.ErrorDescription ?? "");
                 }
                 else
                 {
@@ -871,23 +875,20 @@ namespace IdentityServer3.Core.Validation
             };
         }
 
-        private TokenRequestValidationResult Invalid(string error)
+        private TokenRequestValidationResult Invalid(string error, string errorDescription = "")
         {
-            return new TokenRequestValidationResult
+            var result = new TokenRequestValidationResult
             {
                 IsError = true,
                 Error = error
             };
-        }
 
-        private TokenRequestValidationResult Invalid(string error, string errorDescription)
-        {
-            return new TokenRequestValidationResult
+            if (errorDescription.IsPresent())
             {
-                IsError = true,
-                Error = error,
-                ErrorDescription = errorDescription
-            };
+                result.ErrorDescription = errorDescription;
+            }
+
+            return result;
         }
 
         private void LogError(string message)
