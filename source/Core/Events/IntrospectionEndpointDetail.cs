@@ -16,9 +16,8 @@
 
 namespace IdentityServer3.Core.Events
 {
-    class IntrospectionEndpointDetail
+    public class IntrospectionEndpointDetail : EndpointDetail
     {
-        public string EndpointName { get; set; }
         public string Token { get; set; }
         public string ScopeName { get; set; }
         public string TokenStatus { get; set; }

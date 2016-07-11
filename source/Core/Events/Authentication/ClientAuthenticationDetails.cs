@@ -16,7 +16,7 @@
 
 namespace IdentityServer3.Core.Events
 {
-    class ClientAuthenticationDetails
+    public class ClientAuthenticationDetails
     {
         public string ClientId { get; set; }
         public string ClientType { get; set; }
