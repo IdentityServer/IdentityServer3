@@ -16,7 +16,7 @@
 
 namespace IdentityServer3.Core.Events
 {
-    class EndpointDetail
+    public class EndpointDetail
     {
         public string EndpointName { get; set; }
     }
