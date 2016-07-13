@@ -67,10 +67,21 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 var ms = new MemoryStream(bytes);
                 ms.Seek(0, SeekOrigin.Begin);
                 var ctx = new OwinContext(env);
+                
+                // ASP.NET Core does not like changing the underlying stream
+                // so remember the old stream...
+                Stream oldStream = ctx.Request.Body;
+
                 ctx.Request.Body = ms;
 
                 var antiForgeryToken = env.ResolveDependency<AntiForgeryToken>();
                 success = await antiForgeryToken.IsTokenValid();
+
+                ms.Dispose();
+
+                // ... and revert it back to the original stream after
+                // completing the operation
+                ctx.Request.Body = oldStream;
             }
 
             if (!success)
