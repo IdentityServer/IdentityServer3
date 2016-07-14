@@ -325,17 +325,34 @@ namespace IdentityServer3.Core.Extensions
             // hack to clear a possible cached type from Katana in environment
             context.Environment.Remove("Microsoft.Owin.Form#collection");
 
-            if (!context.Request.Body.CanSeek)
+            IFormCollection form;
+
+            // WARNING - do not override Request.Body stream
+            // ASP.NET Core does not like changing the underlying stream
+            var bodyStream = context.Request.Body;
+
+            if (!bodyStream.CanSeek)
             {
                 var copy = new MemoryStream();
-                await context.Request.Body.CopyToAsync(copy);
-                copy.Seek(0L, SeekOrigin.Begin);
-                context.Request.Body = copy;
-            }
+                await bodyStream.CopyToAsync(copy);
 
-            context.Request.Body.Seek(0L, SeekOrigin.Begin);
-            var form = await context.Request.ReadFormAsync();
-            context.Request.Body.Seek(0L, SeekOrigin.Begin);
+                context.Request.Body = copy;
+
+                copy.Seek(0L, SeekOrigin.Begin);
+                form = await context.Request.ReadFormAsync();
+                copy.Seek(0L, SeekOrigin.Begin);
+
+                copy.Dispose();
+             
+                // Revert it back to the original stream
+                context.Request.Body = bodyStream;
+            }
+            else
+            {
+                bodyStream.Seek(0L, SeekOrigin.Begin);
+                form = await context.Request.ReadFormAsync();
+                bodyStream.Seek(0L, SeekOrigin.Begin);
+            }
 
             // hack to prevent caching of an internalized type from Katana in environment
             context.Environment.Remove("Microsoft.Owin.Form#collection");
@@ -347,24 +364,34 @@ namespace IdentityServer3.Core.Extensions
         {
             if (request == null) throw new ArgumentNullException("request");
 
-            if (!request.Body.CanSeek)
+            // WARNING - do not override Request.Body stream
+            // ASP.NET Core does not like changing the underlying stream
+            var bodyStream = request.Body;
+
+            if (!bodyStream.CanSeek)
             {
                 var copy = new MemoryStream();
-                await request.Body.CopyToAsync(copy);
-                copy.Seek(0L, SeekOrigin.Begin);
-                request.Body = copy;
+                await bodyStream.CopyToAsync(copy);
+
+                var body = await ReadBodyAsStringFromStreamAsync(copy);
+                copy.Dispose();
+                return body;
             }
 
-            request.Body.Seek(0L, SeekOrigin.Begin);
-            
-            string body = null;
-            using (var reader = new StreamReader(request.Body, Encoding.UTF8, true, 4096, true))
+            return await ReadBodyAsStringFromStreamAsync(bodyStream);
+        }
+
+        private static async Task<string> ReadBodyAsStringFromStreamAsync(Stream stream)
+        {
+            string body;
+            stream.Seek(0L, SeekOrigin.Begin);
+
+            using (var reader = new StreamReader(stream, Encoding.UTF8, true, 4096, true))
             {
                 body = await reader.ReadToEndAsync();
             }
 
-            request.Body.Seek(0L, SeekOrigin.Begin);
-            
+            stream.Seek(0L, SeekOrigin.Begin);
             return body;
         }
 
