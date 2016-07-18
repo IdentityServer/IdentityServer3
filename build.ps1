@@ -5,7 +5,7 @@ Param(
 
 gci .\source -Recurse "packages.config" |% {
 	"Restoring " + $_.FullName
-	.\source\.nuget\nuget.exe i $_.FullName -o .\source\packages
+	.\source\.nuget\nuget.exe install $_.FullName -o .\source\packages
     
     if ($LastExitCode -ne 0) {
         exit $LastExitCode
