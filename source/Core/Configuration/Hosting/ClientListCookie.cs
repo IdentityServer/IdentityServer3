@@ -159,12 +159,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 catch
                 {
                 }
-            }
 
-            if (!value.StartsWith("["))
-            {
-                // deal with double encoding or just invalid values
-                value = "";
+                if (!value.StartsWith("["))
+                {
+                    // deal with double encoding or just invalid values
+                    value = "";
+                }
             }
 
             return value;
