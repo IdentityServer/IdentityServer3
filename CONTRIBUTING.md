@@ -3,11 +3,11 @@
 The easiest ways to contribute is to open an issue and start a discussion. 
 Then we can decided if and how a feature or a change could be implemented and if you should submit a pull requests with code changes.
 
+## General questions around token-based authentication and architecture?
+We monitor the `identityserver3` tag on [StackOverflow](https://stackoverflow.com/questions/tagged/?tagnames=identityserver3&sort=newest).
 
-
-## General feedback and discussions?
+## Feedback and issues?
 Please start a discussion on the [core repo issue tracker](https://github.com/IdentityServer/IdentityServer3/issues).
-
 
 ## Bugs and feature requests?
 Please log a new issue in the appropriate GitHub repo:
@@ -20,7 +20,9 @@ Please log a new issue in the appropriate GitHub repo:
 * [AccessToken validation](https://github.com/IdentityServer/IdentityServer3.AccessTokenValidation)
 * [Samples](https://github.com/IdentityServer/IdentityServer3.Samples)
 
-## Other discussions
+Due to the security nature of IdentityServer, errors are very vague. Make sure you read and understand how to enable [logging](https://identityserver.github.io/Documentation/docsv2/configuration/logging.html) before opening an issue/bug report.
+
+## Chat with us and other identityserver users
 https://gitter.im/IdentityServer/IdentityServer3
 
 ## Filing issues
