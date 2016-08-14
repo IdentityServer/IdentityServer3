@@ -913,7 +913,7 @@ namespace IdentityServer3.Core.Validation
                 var validationLog = new TokenRequestValidationLog(_validatedRequest);
                 var json = LogSerializer.Serialize(validationLog);
 
-                return string.Format("{0}\n {1}", message, json);
+                return message + "\n " + json;
             };
         }
 
