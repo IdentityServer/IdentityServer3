@@ -76,6 +76,8 @@ namespace Owin
             app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
             app.ConfigureIdentityServerIssuer(options);
 
+            app.ConfigureRequestBodyBuffer();
+
             // this needs to be earlier than the autofac middleware so anything is disposed and re-initialized
             // if we send the request back into the pipeline to render the logged out page
             app.ConfigureRenderLoggedOutPage();
@@ -131,7 +133,7 @@ namespace Owin
             }
             if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
             {
-                Logger.Error("Signing certificate has not private key or private key is not accessible. Make sure the account running your application has access to the private key");
+                Logger.Error("Signing certificate has no private key or the private key is not accessible. Make sure the account running your application has access to the private key");
                 await eventSvc.RaiseCertificatePrivateKeyNotAccessibleEventAsync(cert);
 
                 return;

@@ -107,7 +107,7 @@ namespace IdentityServer3.Core.Models
         /// Initializes a new instance of the <see cref="AuthenticateResult"/> class. This
         /// version of the constructor indicates a full login.
         /// </summary>
-        /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
+        /// <param name="subject">The subject claim used to uniquely identify the user.</param>
         /// <param name="name">The name claim used as the display name.</param>
         /// <param name="claims">Additional claims that will be maintained in the principal.</param>
         /// <param name="identityProvider">The identity provider. This should used when an external 
@@ -136,7 +136,7 @@ namespace IdentityServer3.Core.Models
         /// current web server. The <c>"~/"</c> prefix is supported to allow application-relative
         /// paths to be used (e.g. "~/path").
         /// </param>
-        /// <param name="subject">The subject claim used to uniquely identifier the user.</param>
+        /// <param name="subject">The subject claim used to uniquely identify the user.</param>
         /// <param name="name">The name claim used as the display name.</param>
         /// <param name="claims">Additional claims that will be maintained in the principal.</param>
         /// <param name="identityProvider">The identity provider. This should used when an external 

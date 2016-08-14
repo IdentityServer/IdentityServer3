@@ -58,17 +58,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
                           actionContext.Request.Content.IsFormData();
             if (success)
             {
-                // ReadAsByteArrayAsync buffers the request body stream
-                // we then put the buffered copy into the owin context
-                // so we can read it in the IsTokenValid API without 
-                // disturbing the actual stream in the HttpRequestMessage
-                // that WebAPI uses it later for model binding. #lame
-                var bytes = await actionContext.Request.Content.ReadAsByteArrayAsync();
-                var ms = new MemoryStream(bytes);
-                ms.Seek(0, SeekOrigin.Begin);
-                var ctx = new OwinContext(env);
-                ctx.Request.Body = ms;
-
                 var antiForgeryToken = env.ResolveDependency<AntiForgeryToken>();
                 success = await antiForgeryToken.IsTokenValid();
             }
