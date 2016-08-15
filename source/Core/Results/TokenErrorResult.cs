@@ -46,12 +46,14 @@ namespace IdentityServer3.Core.Results
         public TokenErrorResult(string error)
         {
             Error = error;
+            CustomResponseParamaters = new Dictionary<string, object>();
         }
 
         public TokenErrorResult(string error, string errorDescription)
         {
             Error = error;
             ErrorDescription = errorDescription;
+            CustomResponseParamaters = new Dictionary<string, object>();
         }
 
         public TokenErrorResult(string error, IDictionary<string, object> customResponseParamaters)
