@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Results;
 using System.Web.Http;
@@ -35,6 +36,11 @@ namespace IdentityServer3.Core.Extensions
         public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error, string errorDescription)
         {
             return new TokenErrorResult(error, errorDescription);
+        }
+
+        public static IHttpActionResult TokenErrorResponse(this ApiController controller, string error, string errorDescription, IDictionary<string, object> customResponseParamaters)
+        {
+            return new TokenErrorResult(error, errorDescription, customResponseParamaters);
         }
     }
 }
