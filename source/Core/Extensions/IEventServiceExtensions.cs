@@ -478,6 +478,12 @@ namespace IdentityServer3.Core.Extensions
 
         public static async Task RaiseSuccessfulIntrospectionEndpointEventAsync(this IEventService events, string token, string tokenStatus, string scopeName)
         {
+            string last4chars = "****";
+            if (token.IsPresent() && token.Length > 4)
+            {
+                last4chars = token.Substring(token.Length - 4);
+            }
+            
             var evt = new Event<IntrospectionEndpointDetail>(
                 EventConstants.Categories.Endpoints,
                 "Introspection endpoint success",
@@ -485,7 +491,7 @@ namespace IdentityServer3.Core.Extensions
                 EventConstants.Ids.IntrospectionEndpointSuccess,
                 new IntrospectionEndpointDetail
                 {
-                    Token = token,
+                    Token = "***" + last4chars,
                     TokenStatus = tokenStatus,
                     ScopeName = scopeName
                 });
@@ -495,6 +501,12 @@ namespace IdentityServer3.Core.Extensions
 
         public static async Task RaiseFailureIntrospectionEndpointEventAsync(this IEventService events, string error, string token, string scopeName)
         {
+            string last4chars = "****";
+            if (token.IsPresent() && token.Length > 4)
+            {
+                last4chars = token.Substring(token.Length - 4);
+            }
+
             var evt = new Event<IntrospectionEndpointDetail>(
                  EventConstants.Categories.Endpoints,
                  "Introspection endpoint failure",
@@ -502,7 +514,7 @@ namespace IdentityServer3.Core.Extensions
                  EventConstants.Ids.IntrospectionEndpointFailure,
                  new IntrospectionEndpointDetail
                  {
-                     Token = token,
+                     Token = "***" + last4chars,
                      ScopeName = scopeName
                  },
                  error);
