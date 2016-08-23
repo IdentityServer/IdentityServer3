@@ -26,7 +26,10 @@ using IdentityServer3.Core.Services.InMemory;
 using IdentityServer3.Core.Validation;
 using Microsoft.Owin;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {
@@ -52,18 +55,18 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.Register(fact.ScopeStore);
             builder.Register(fact.ClientStore);
             builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
-            
+
             // optional from factory
             builder.RegisterDecoratorDefaultInstance<IAuthorizationCodeStore, KeyHashingAuthorizationCodeStore, InMemoryAuthorizationCodeStore>(fact.AuthorizationCodeStore);
             builder.RegisterDecoratorDefaultInstance<ITokenHandleStore, KeyHashingTokenHandleStore, InMemoryTokenHandleStore>(fact.TokenHandleStore);
             builder.RegisterDecoratorDefaultInstance<IRefreshTokenStore, KeyHashingRefreshTokenStore, InMemoryRefreshTokenStore>(fact.RefreshTokenStore);
-            
+
             builder.RegisterDefaultInstance<IConsentStore, InMemoryConsentStore>(fact.ConsentStore);
             builder.RegisterDefaultInstance<ICorsPolicyService, DefaultCorsPolicyService>(fact.CorsPolicyService);
 
             builder.RegisterDefaultType<IClaimsProvider, DefaultClaimsProvider>(fact.ClaimsProvider);
             builder.RegisterDefaultType<ITokenService, DefaultTokenService>(fact.TokenService);
-            builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);            
+            builder.RegisterDefaultType<IRefreshTokenService, DefaultRefreshTokenService>(fact.RefreshTokenService);
             builder.RegisterDefaultType<ICustomRequestValidator, DefaultCustomRequestValidator>(fact.CustomRequestValidator);
             builder.RegisterDefaultType<IExternalClaimsFilter, NopClaimsFilter>(fact.ExternalClaimsFilter);
             builder.RegisterDefaultType<ICustomTokenValidator, DefaultCustomTokenValidator>(fact.CustomTokenValidator);
@@ -177,7 +180,37 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 builder.Register(registration, registration.Name);
             }
 
+            // registering additional autofac modules
+            if (fact.AutofacModules != null && fact.AutofacModules.Any())
+            {
+                var thisAssembly = typeof(ContainerBuilder).Assembly;
+
+                var registerModuleMethod = GetExtensionMethods(thisAssembly, typeof(ContainerBuilder))
+                    .FirstOrDefault(x => x.Name == "RegisterModule" && x.IsGenericMethod);
+
+                foreach (var autofacModule in fact.AutofacModules)
+                {
+                    var genericRegisterModuleMethod = registerModuleMethod.MakeGenericMethod(autofacModule);
+                    genericRegisterModuleMethod.Invoke(builder, new object[] { builder });
+                }
+            }
+
             return builder.Build();
+
+        }
+
+        private static IEnumerable<MethodInfo> GetExtensionMethods(
+            Assembly assembly,
+            Type extendedType)
+        {
+            var query = from type in assembly.GetTypes()
+                        where type.IsSealed && !type.IsGenericType && !type.IsNested
+                        from method in type.GetMethods(BindingFlags.Static
+                            | BindingFlags.Public | BindingFlags.NonPublic)
+                        where method.IsDefined(typeof(ExtensionAttribute), false)
+                        where method.GetParameters()[0].ParameterType == extendedType
+                        select method;
+            return query;
         }
 
         private static void RegisterDefaultType<T, TDefault>(this ContainerBuilder builder, Registration<T> registration, string name = null)

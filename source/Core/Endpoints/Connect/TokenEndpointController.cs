@@ -23,6 +23,7 @@ using IdentityServer3.Core.ResponseHandling;
 using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
+using System;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -72,7 +73,7 @@ namespace IdentityServer3.Core.Endpoints
             Logger.Info("Start token request");
 
             var response = await ProcessAsync(await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync());
-            
+
             if (response is TokenErrorResult)
             {
                 var details = response as TokenErrorResult;
@@ -106,12 +107,20 @@ namespace IdentityServer3.Core.Endpoints
 
             if (requestResult.IsError)
             {
-                return this.TokenErrorResponse(requestResult.Error, requestResult.ErrorDescription);
+                return this.TokenErrorResponse(requestResult.Error, requestResult.ErrorDescription, requestResult.CustomResponseParamaters);
             }
 
-            // return response
-            var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest);
-            return this.TokenResponse(response);
+            try
+            {
+                // return response
+                var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest, requestResult.CustomResponseParamaters);
+                return this.TokenResponse(response);
+            }
+            catch (Exception ex)
+            {
+                Logger.DebugException("Exception on ProcessAsync occured : ", ex);
+                return this.TokenErrorResponse(IdentityModel.OidcConstants.TokenErrors.InvalidGrant);
+            }
         }
 
         private async Task RaiseFailureEventAsync(string error)
