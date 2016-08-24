@@ -22,7 +22,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,13 +75,19 @@ namespace IdentityServer3.Core.Results
                         throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
                     }
 
-                    jobject.Add(new JProperty(item.Key, item.Value));
+                    if (item.Value.GetType().IsClass)
+                    {
+                        jobject.Add(new JProperty(item.Key, JToken.FromObject(item.Value)));
+                    }
+                    else
+                    {
+                        jobject.Add(new JProperty(item.Key, item.Value));
+                    }
                 }
             }
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                //Content = new ObjectContent<JObject>(jobject, new JsonMediaTypeFormatter())
                 Content = new StringContent(jobject.ToString(Formatting.None), Encoding.UTF8, "application/json")
             };
 
