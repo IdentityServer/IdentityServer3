@@ -21,6 +21,14 @@ namespace IdentityServer3.Tests.TokenClients
 
             app.UseIdentityServer(new IdentityServerOptions
             {
+                EventsOptions = new EventsOptions
+                {
+                    RaiseErrorEvents = true,
+                    RaiseFailureEvents = true,
+                    RaiseInformationEvents = true,
+                    RaiseSuccessEvents = true
+                },
+
                 IssuerUri = "https://idsrv3",
                 SigningCertificate = TestCert.Load(),
 
