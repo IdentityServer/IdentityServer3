@@ -406,6 +406,23 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
+        public static async Task RaiseTokenRevokedEventAsync(this IEventService events, string subjectId, string token, string tokenType)
+        {
+            var evt = new Event<TokenRevokedDetails>(
+                EventConstants.Categories.Authentication,
+                Resources.Events.TokenRevoked,
+                EventTypes.Success,
+                EventConstants.Ids.TokenRevoked,
+                new TokenRevokedDetails()
+                {
+                    SubjectId = subjectId,
+                    Token = token,
+                    TokenType = tokenType
+                });
+
+            await events.RaiseEventAsync(evt);
+        }
+
         public static async Task RaiseUnhandledExceptionEventAsync(this IEventService events, Exception exception)
         {
             var evt = new Event<object>(
