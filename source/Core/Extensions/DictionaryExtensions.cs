@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace IdentityServer3.Core.Extensions
 {
-    public static class DictionaryExtensions
+    internal static class DictionaryExtensions
     {
         public static void AddDictionary(this JObject jobject, IDictionary<string, object> dictionary)
         {
