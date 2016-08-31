@@ -72,7 +72,7 @@ namespace IdentityServer3.Core.Endpoints
             Logger.Info("Start token request");
 
             var response = await ProcessAsync(await Request.GetOwinContext().ReadRequestFormAsNameValueCollectionAsync());
-            
+
             if (response is TokenErrorResult)
             {
                 var details = response as TokenErrorResult;
@@ -106,11 +106,11 @@ namespace IdentityServer3.Core.Endpoints
 
             if (requestResult.IsError)
             {
-                return this.TokenErrorResponse(requestResult.Error, requestResult.ErrorDescription);
+                return this.TokenErrorResponse(requestResult.Error, requestResult.ErrorDescription, requestResult.CustomResponseParamaters);
             }
 
             // return response
-            var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest);
+            var response = await _generator.ProcessAsync(_requestValidator.ValidatedRequest, requestResult.CustomResponseParamaters);
             return this.TokenResponse(response);
         }
 

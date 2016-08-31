@@ -62,13 +62,37 @@ namespace IdentityServer3.Core.Results
             // custom entries
             if (_response.Custom != null && _response.Custom.Any())
             {
+<<<<<<< HEAD
                 jObject.AddDictionary(_response.Custom);
+=======
+                foreach (var item in _response.Custom)
+                {
+                    JToken token;
+                    if (jobject.TryGetValue(item.Key, out token))
+                    {
+                        throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
+                    }
+
+                    if (item.Value.GetType().IsClass)
+                    {
+                        jobject.Add(new JProperty(item.Key, JToken.FromObject(item.Value)));
+                    }
+                    else
+                    {
+                        jobject.Add(new JProperty(item.Key, item.Value));
+                    }
+                }
+>>>>>>> upstream/dev
             }
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
+<<<<<<< HEAD
                 //Content = new ObjectContent<JObject>(jobject, new JsonMediaTypeFormatter())
                 Content = new StringContent(jObject.ToString(Formatting.None), Encoding.UTF8, "application/json")
+=======
+                Content = new StringContent(jobject.ToString(Formatting.None), Encoding.UTF8, "application/json")
+>>>>>>> upstream/dev
             };
 
             Logger.Info("Returning token response.");

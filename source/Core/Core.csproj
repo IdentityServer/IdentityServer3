@@ -170,6 +170,7 @@
     <Compile Include="Events\TokenService\TokenIssuedDetailsBase.cs" />
     <Compile Include="Events\Authentication\LocalLoginDetails.cs" />
     <Compile Include="Extensions\CookieOptionsExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\HashExtensions.cs" />
     <Compile Include="Extensions\IClientStoreExtensions.cs" />
     <Compile Include="Extensions\IContainerExtensions.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Services\IAuthenticationSessionValidator.cs" />
     <Compile Include="Services\ICustomTokenResponseGenerator.cs" />
     <Compile Include="Services\ISigningKeyService.cs" />
+    <Compile Include="Services\ObjectSerializer.cs" />
     <Compile Include="Validation\BasicAuthenticationSecretParser.cs" />
     <Compile Include="Validation\IntrospectionRequestValidationResult.cs" />
     <Compile Include="Validation\IntrospectionRequestValidator.cs" />
