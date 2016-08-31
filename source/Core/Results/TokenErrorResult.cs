@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using IdentityServer3.Core.Logging;
@@ -25,19 +24,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Newtonsoft.Json.Linq;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Services;
 
 namespace IdentityServer3.Core.Results
 {
     internal class TokenErrorResult : IHttpActionResult
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-
-        private readonly static JsonSerializer Serializer = new JsonSerializer
-        {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore
-        };
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         public IDictionary<string, object> CustomResponseParamaters { get; set; }
         public string Error { get; internal set; }
@@ -82,26 +76,16 @@ namespace IdentityServer3.Core.Results
                 error_description = ErrorDescription
             };
 
-            var jobject = JObject.FromObject(dto, Serializer);
+            var jObject = ObjectSerializer.ToJObject(dto);
 
-            // custom entries
             if (CustomResponseParamaters != null && CustomResponseParamaters.Any())
             {
-                foreach (var item in CustomResponseParamaters)
-                {
-                    JToken token;
-                    if (jobject.TryGetValue(item.Key, out token))
-                    {
-                        throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
-                    }
-
-                    jobject.Add(new JProperty(item.Key, item.Value));
-                }
+                jObject.AddDictionary(CustomResponseParamaters);
             }
 
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
-                Content = new StringContent(jobject.ToString(Formatting.None), Encoding.UTF8, "application/json")
+                Content = new StringContent(jObject.ToString(Formatting.None), Encoding.UTF8, "application/json")
             };
 
             Logger.Info("Returning error: " + Error);

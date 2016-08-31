@@ -195,7 +195,7 @@
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsRefresh.cs" />
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsCode.cs" />
     <Compile Include="Endpoints\Connect\PoP\RsaPublicKeyJwk.cs" />
-    <Compile Include="ResponseHandling\ResultExtensionsTests.cs" />
+    <Compile Include="ResponseHandling\TokenExtensionsTests.cs" />
     <Compile Include="ResponseHandling\TokenErrorResultTests.cs" />
     <Compile Include="ResponseHandling\TokenResponseGeneratorTests_CustomResponseParameters.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
