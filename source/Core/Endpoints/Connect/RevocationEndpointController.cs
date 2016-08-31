@@ -120,12 +120,13 @@ namespace IdentityServer3.Core.Endpoints
         private async Task<bool> RevokeAccessTokenAsync(string handle, Client client)
         {
             var token = await _tokenHandles.GetAsync(handle);
-
+            
             if (token != null)
             {
                 if (token.ClientId == client.ClientId)
                 {
                     await _tokenHandles.RemoveAsync(handle);
+                    await _events.RaiseTokenRevokedEventAsync(token.SubjectId, handle, Constants.TokenTypeHints.AccessToken);
                 }
                 else
                 {
@@ -152,6 +153,7 @@ namespace IdentityServer3.Core.Endpoints
                 {
                     await _refreshTokens.RevokeAsync(token.SubjectId, token.ClientId);
                     await _tokenHandles.RevokeAsync(token.SubjectId, token.ClientId);
+                    await _events.RaiseTokenRevokedEventAsync(token.SubjectId, handle, Constants.TokenTypeHints.RefreshToken);
                 }
                 else
                 {

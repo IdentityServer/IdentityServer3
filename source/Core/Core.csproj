@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRenderLoggedOutPageExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestBodyBufferExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureSignOutMessageCookieExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Endpoints\Connect\RevocationEndpointController.cs" />
     <Compile Include="Endpoints\WelcomeController.cs" />
     <Compile Include="Events\Authentication\ClientAuthenticationDetails.cs" />
+    <Compile Include="Events\Authentication\TokenRevokedDetails.cs" />
     <Compile Include="Events\EndpointDetail.cs" />
     <Compile Include="Extensions\DateTimeOffsetHelper.cs" />
     <Compile Include="Extensions\DateTimeHelper.cs" />

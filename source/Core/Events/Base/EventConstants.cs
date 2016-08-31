@@ -70,6 +70,8 @@ namespace IdentityServer3.Core.Events
             
             public const int Logout = AuthenticationEventsStart + 30;
 
+            public const int TokenRevoked = AuthenticationEventsStart + 35;
+
             public const int PartialLogin = AuthenticationEventsStart + 40;
             public const int PartialLoginComplete = AuthenticationEventsStart + 41;
 
@@ -77,7 +79,7 @@ namespace IdentityServer3.Core.Events
             public const int ResourceOwnerFlowLoginFailure = AuthenticationEventsStart + 51;
 
             public const int ClientAuthenticationSuccess = AuthenticationEventsStart + 60;
-            public const int ClientAuthenticationFailure = AuthenticationEventsStart + 51;
+            public const int ClientAuthenticationFailure = AuthenticationEventsStart + 61;
 
             ///////////////////////////
             /// Token service related events
