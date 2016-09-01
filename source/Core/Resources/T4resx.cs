@@ -19,6 +19,7 @@ namespace IdentityServer3.Core.Resources
 			public const string PreLoginSuccess = "PreLoginSuccess";
 			public const string ResourceOwnerFlowLoginFailure = "ResourceOwnerFlowLoginFailure";
 			public const string ResourceOwnerFlowLoginSuccess = "ResourceOwnerFlowLoginSuccess";
+	        public const string TokenRevoked = "TokenRevoked";
 	}
 	public class MessageIds
 	{
