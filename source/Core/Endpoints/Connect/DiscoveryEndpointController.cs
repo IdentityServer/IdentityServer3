@@ -210,7 +210,14 @@ namespace IdentityServer3.Core.Endpoints
                         throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
                     }
 
-                    jobject.Add(new JProperty(item.Key, item.Value));
+                    if (item.Value.GetType().IsClass)
+                    {
+                        jobject.Add(new JProperty(item.Key, JToken.FromObject(item.Value)));
+                    }
+                    else
+                    {
+                        jobject.Add(new JProperty(item.Key, item.Value));
+                    }
                 }
             }
 

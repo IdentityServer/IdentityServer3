@@ -194,6 +194,7 @@
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsRefresh.cs" />
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsCode.cs" />
     <Compile Include="Endpoints\Connect\PoP\RsaPublicKeyJwk.cs" />
+    <Compile Include="Endpoints\Setup\MockUserService.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenServiceTests.cs" />
