@@ -22,6 +22,7 @@ using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.InMemory;
 using IdentityServer3.Core.ViewModels;
+using IdentityServer3.Tests.Endpoints.Setup;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.Google;
@@ -46,7 +47,7 @@ namespace IdentityServer3.Tests.Endpoints
         protected IDataProtector protector;
         protected TicketDataFormat ticketFormatter;
 
-        protected Mock<InMemoryUserService> mockUserService;
+        protected MockUserService mockUserService;
         protected IdentityServerOptions options;
 
         protected IAppBuilder appBuilder;
@@ -81,9 +82,12 @@ namespace IdentityServer3.Tests.Endpoints
             {
                 appBuilder = app;
 
-                mockUserService = new Mock<InMemoryUserService>(TestUsers.Get());
-                mockUserService.CallBase = true;
-                factory.UserService = new Registration<IUserService>((resolver) => mockUserService.Object);
+                mockUserService = new MockUserService(TestUsers.Get());
+                factory.UserService = new Registration<IUserService>(resolver=>
+                {
+                    mockUserService.OwinEnvironmentService = resolver.Resolve<OwinEnvironmentService>();
+                    return mockUserService;
+                });
 
                 options = TestIdentityServerOptions.Create();
                 options.Factory = factory;
