@@ -58,6 +58,17 @@ namespace IdentityServer3.Core.Configuration.Hosting
                           actionContext.Request.Content.IsFormData();
             if (success)
             {
+                // ReadAsByteArrayAsync buffers the request body stream
+                // so Web API will re-use that later for model binding
+                // unfortunately the stream pointer is at the end, but 
+                // in our anti-forgery logic we use our internal ReadRequestFormAsync
+                // API to read the body, which has the side effect of resetting
+                // the stream pointer to the begining. subsequet calls to 
+                // read the form body will then succeed (e.g. via OwinContext)
+                // this is all rather unfortunate that web api prevents others
+                // from re-reading the form, but this sequence of code allow it. #lame
+                var bytes = await actionContext.Request.Content.ReadAsByteArrayAsync();
+
                 var antiForgeryToken = env.ResolveDependency<AntiForgeryToken>();
                 success = await antiForgeryToken.IsTokenValid();
             }

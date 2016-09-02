@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+using IdentityModel;
 using IdentityServer3.Core.Extensions;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {
@@ -124,6 +126,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 value = ".";
                 expires = DateTime.Now.AddYears(-1);
             }
+            else
+            {
+                // encode the value
+                var bytes = Encoding.UTF8.GetBytes(value);
+                value = Base64Url.Encode(bytes);
+            }
 
             var opts = new Microsoft.Owin.CookieOptions
             {
@@ -138,7 +146,28 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         string GetCookie()
         {
-            return this.ctx.Request.Cookies[CookieName];
+            var value = this.ctx.Request.Cookies[CookieName];
+
+            // the check here is to allow for handling cookies prior to manually encoding
+            if (!String.IsNullOrWhiteSpace(value) && !value.StartsWith("["))
+            {
+                try
+                {
+                    var bytes = Base64Url.Decode(value);
+                    value = Encoding.UTF8.GetString(bytes);
+                }
+                catch
+                {
+                }
+
+                if (!value.StartsWith("["))
+                {
+                    // deal with double encoding or just invalid values
+                    value = "";
+                }
+            }
+
+            return value;
         }
     }
 }
