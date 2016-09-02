@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using Autofac;
-using Autofac.Core;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Services.Default;
@@ -30,8 +28,6 @@ namespace IdentityServer3.Core.Configuration
     /// </summary>
     public class IdentityServerServiceFactory
     {
-
-
         static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         static readonly Registration<IExternalClaimsFilter> DefaultClaimsFilter;
 
@@ -102,22 +98,6 @@ namespace IdentityServer3.Core.Configuration
             where T : class
         {
             _registrations.Add(registration);
-        }
-
-        /// <summary>
-        /// Adds a registration of the module
-        /// </summary>
-        /// <typeparam name="T">Type of the moodule</typeparam>
-        public void RegisterAutofacModule<T>()
-             where T : class
-        {
-            if (AutofacModules == null)
-            {
-                AutofacModules = new List<Type>();
-            }
-            var genericType = typeof(T);
-
-            AutofacModules.Add(genericType);
         }
 
         ///////////////////////
@@ -294,7 +274,7 @@ namespace IdentityServer3.Core.Configuration
         /// The redirect URI validator.
         /// </value>
         public Registration<IRedirectUriValidator> RedirectUriValidator { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the localization service.
         /// </summary>
@@ -350,8 +330,6 @@ namespace IdentityServer3.Core.Configuration
         /// The signing key service.
         /// </value>
         public Registration<ISigningKeyService> SigningKeyService { get; set; }
-
-        public List<Type> AutofacModules { get; set; }
 
         internal void Validate()
         {

@@ -26,17 +26,16 @@ namespace IdentityServer3.Core.Extensions
 {
     internal static class IEventServiceExtensions
     {
-        public static async Task RaisePreLoginSuccessEventAsync(this IEventService events,
+        public static async Task RaisePreLoginSuccessEventAsync(this IEventService events, 
             string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LoginDetails>(
                 EventConstants.Categories.Authentication,
                 Resources.Events.PreLoginSuccess,
-                EventTypes.Success,
+                EventTypes.Success, 
                 EventConstants.Ids.PreLoginSuccess,
-                new LoginDetails
-                {
-                    SubjectId = authResult.HasSubject ? authResult.User.GetSubjectId() : null,
+                new LoginDetails {
+                    SubjectId = authResult.HasSubject ?  authResult.User.GetSubjectId() : null,
                     Name = authResult.User.Identity.Name,
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
@@ -46,7 +45,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaisePreLoginFailureEventAsync(this IEventService events,
+        public static async Task RaisePreLoginFailureEventAsync(this IEventService events, 
             string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LoginDetails>(
@@ -58,13 +57,13 @@ namespace IdentityServer3.Core.Extensions
                 {
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
-                },
+                }, 
                 error);
 
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseLocalLoginSuccessEventAsync(this IEventService events,
+        public static async Task RaiseLocalLoginSuccessEventAsync(this IEventService events, 
             string username, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -85,7 +84,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseLocalLoginFailureEventAsync(this IEventService events,
+        public static async Task RaiseLocalLoginFailureEventAsync(this IEventService events, 
             string username, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -98,13 +97,13 @@ namespace IdentityServer3.Core.Extensions
                     SignInId = signInMessageId,
                     SignInMessage = signInMessage,
                     LoginUserName = username
-                },
+                }, 
                 error);
 
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseExternalLoginSuccessEventAsync(this IEventService events,
+        public static async Task RaiseExternalLoginSuccessEventAsync(this IEventService events, 
             ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, AuthenticateResult authResult)
         {
             var evt = new Event<ExternalLoginDetails>(
@@ -126,7 +125,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseExternalLoginFailureEventAsync(this IEventService events,
+        public static async Task RaiseExternalLoginFailureEventAsync(this IEventService events, 
             ExternalIdentity externalIdentity, string signInMessageId, SignInMessage signInMessage, string error)
         {
             var evt = new Event<ExternalLoginDetails>(
@@ -140,7 +139,7 @@ namespace IdentityServer3.Core.Extensions
                     SignInMessage = signInMessage,
                     Provider = externalIdentity.Provider,
                     ProviderId = externalIdentity.ProviderId,
-                },
+                }, 
                 error);
 
             await events.RaiseEventAsync(evt);
@@ -158,7 +157,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseSuccessfulResourceOwnerFlowAuthenticationEventAsync(this IEventService events,
+        public static async Task RaiseSuccessfulResourceOwnerFlowAuthenticationEventAsync(this IEventService events, 
             string userName, string subjectId, SignInMessage message)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -176,7 +175,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseFailedResourceOwnerFlowAuthenticationEventAsync(this IEventService events,
+        public static async Task RaiseFailedResourceOwnerFlowAuthenticationEventAsync(this IEventService events, 
             string userName, SignInMessage message, string error)
         {
             var evt = new Event<LocalLoginDetails>(
@@ -194,7 +193,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaisePartialLoginCompleteEventAsync(this IEventService events,
+        public static async Task RaisePartialLoginCompleteEventAsync(this IEventService events, 
             ClaimsIdentity subject, string signInMessageId, SignInMessage signInMessage)
         {
             var evt = new Event<LoginDetails>(
@@ -213,7 +212,7 @@ namespace IdentityServer3.Core.Extensions
             await events.RaiseEventAsync(evt);
         }
 
-        public static async Task RaiseLogoutEventAsync(this IEventService events,
+        public static async Task RaiseLogoutEventAsync(this IEventService events, 
             ClaimsPrincipal subject, string signOutId, SignOutMessage signOutMessage)
         {
             var evt = new Event<LogoutDetails>(
@@ -240,8 +239,7 @@ namespace IdentityServer3.Core.Extensions
                 EventTypes.Information,
                 EventConstants.Ids.CspReport);
 
-            evt.DetailsFunc = () =>
-            {
+            evt.DetailsFunc = () => {
                 string subject = null;
                 string name = null;
                 if (user != null && user.Identity.IsAuthenticated)
@@ -255,7 +253,7 @@ namespace IdentityServer3.Core.Extensions
                 {
                     reportData = Newtonsoft.Json.JsonConvert.DeserializeObject(report);
                 }
-                catch (Newtonsoft.Json.JsonReaderException)
+                catch(Newtonsoft.Json.JsonReaderException)
                 {
                     reportData = "Error reading CSP report JSON";
                     evt.Message = "Raw Report Data: " + report;
@@ -402,8 +400,7 @@ namespace IdentityServer3.Core.Extensions
                 OldHandle = oldHandle,
                 NewHandle = newHandle,
                 ClientId = token.ClientId,
-                Lifetime = token.LifeTime,
-                Claims = token.Subject.Claims
+                Lifetime = token.LifeTime
             };
 
             await events.RaiseEventAsync(evt);
@@ -415,7 +412,7 @@ namespace IdentityServer3.Core.Extensions
                 EventConstants.Categories.InternalError,
                 "Unhandled exception",
                 EventTypes.Error,
-                EventConstants.Ids.UnhandledExceptionError,
+                EventConstants.Ids.UnhandledExceptionError, 
                 exception.ToString());
 
             await events.RaiseEventAsync(evt);

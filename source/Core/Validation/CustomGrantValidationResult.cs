@@ -28,14 +28,6 @@ namespace IdentityServer3.Core.Validation
     public class CustomGrantValidationResult : ValidationResult
     {
         /// <summary>
-        /// Gets or sets custom response parameters
-        /// </summary>
-        /// <value>
-        /// Custom response parameters
-        /// </value>
-        public IDictionary<string, object> CustomResponseParamaters { get; set; }
-
-        /// <summary>
         /// Gets or sets the principal which represents the result of the authentication.
         /// </summary>
         /// <value>
@@ -44,15 +36,12 @@ namespace IdentityServer3.Core.Validation
         public ClaimsPrincipal Principal { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class with an error message
-        /// and optional customResponseParameters
+        /// Initializes a new instance of the <see cref="CustomGrantValidationResult"/> class with an error message.
         /// </summary>
         /// <param name="errorMessage">The error message.</param>
-        /// <param name="customResponseParamaters">Additional response parameters</param>
-        public CustomGrantValidationResult(string errorMessage, IDictionary<string, object> customResponseParamaters = null)
+        public CustomGrantValidationResult(string errorMessage)
         {
             Error = errorMessage;
-            CustomResponseParamaters = customResponseParamaters;
         }
 
         /// <summary>
@@ -68,13 +57,11 @@ namespace IdentityServer3.Core.Validation
         /// <param name="authenticationMethod">The authentication method which describes the custom grant type.</param>
         /// <param name="claims">Additional claims that will be maintained in the principal.</param>
         /// <param name="identityProvider">The identity provider.</param>
-        /// <param name="customResponseParamaters">Additional response parameters</param>
         public CustomGrantValidationResult(
-            string subject,
+            string subject, 
             string authenticationMethod,
             IEnumerable<Claim> claims = null,
-            string identityProvider = Constants.BuiltInIdentityProvider,
-            IDictionary<string, object> customResponseParamaters = null)
+            string identityProvider = Constants.BuiltInIdentityProvider)
         {
             var resultClaims = new List<Claim>
             {
@@ -95,7 +82,6 @@ namespace IdentityServer3.Core.Validation
             Principal = new ClaimsPrincipal(id);
 
             IsError = false;
-            CustomResponseParamaters = customResponseParamaters;
         }
     }
 }

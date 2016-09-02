@@ -20,7 +20,6 @@ using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,7 +46,7 @@ namespace IdentityServer3.Core.ResponseHandling
             _customResponseGenerator = customResponseGenerator;
         }
 
-        public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request, IDictionary<string, object> customResponseParameters = null)
+        public async Task<TokenResponse> ProcessAsync(ValidatedTokenRequest request)
         {
             Logger.Info("Creating token response");
 
@@ -64,14 +63,6 @@ namespace IdentityServer3.Core.ResponseHandling
             else
             {
                 response = await ProcessTokenRequestAsync(request);
-            }
-
-            if (customResponseParameters != null && customResponseParameters.Any())
-            {
-                foreach (var customResponseParameter in customResponseParameters)
-                {
-                    response.Custom.Add(customResponseParameter.Key, customResponseParameter.Value);
-                }
             }
 
             return await _customResponseGenerator.GenerateAsync(request, response);
@@ -153,7 +144,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
-
+            
             // if pop request, claims must be updated because we need a fresh proof token
             if (request.Client.UpdateAccessTokenClaimsOnRefresh || request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
@@ -211,7 +202,7 @@ namespace IdentityServer3.Core.ResponseHandling
             if (request.AuthorizationCode != null)
             {
                 createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
-
+                
                 tokenRequest = new TokenCreationRequest
                 {
                     Subject = request.AuthorizationCode.Subject,
