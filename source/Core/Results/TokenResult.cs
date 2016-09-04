@@ -17,8 +17,6 @@
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -26,18 +24,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Services;
 
 namespace IdentityServer3.Core.Results
 {
     internal class TokenResult : IHttpActionResult
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly static JsonSerializer Serializer = new JsonSerializer
-        {
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
+        
         private readonly TokenResponse _response;
 
         public TokenResult(TokenResponse response)
@@ -62,33 +57,18 @@ namespace IdentityServer3.Core.Results
                 alg = _response.Algorithm
             };
 
-            var jobject = JObject.FromObject(dto, Serializer);
+            var jObject = ObjectSerializer.ToJObject(dto);
 
             // custom entries
             if (_response.Custom != null && _response.Custom.Any())
             {
-                foreach (var item in _response.Custom)
-                {
-                    JToken token;
-                    if (jobject.TryGetValue(item.Key, out token))
-                    {
-                        throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
-                    }
-
-                    if (item.Value.GetType().IsClass)
-                    {
-                        jobject.Add(new JProperty(item.Key, JToken.FromObject(item.Value)));
-                    }
-                    else
-                    {
-                        jobject.Add(new JProperty(item.Key, item.Value));
-                    }
-                }
+                jObject.AddDictionary(_response.Custom);
             }
 
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(jobject.ToString(Formatting.None), Encoding.UTF8, "application/json")
+                //Content = new ObjectContent<JObject>(jobject, new JsonMediaTypeFormatter())
+                Content = new StringContent(jObject.ToString(Formatting.None), Encoding.UTF8, "application/json")
             };
 
             Logger.Info("Returning token response.");

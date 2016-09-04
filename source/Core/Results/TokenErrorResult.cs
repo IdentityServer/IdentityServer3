@@ -14,33 +14,53 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Linq;
 using IdentityServer3.Core.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Formatting;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using IdentityServer3.Core.Extensions;
+using IdentityServer3.Core.Services;
 
 namespace IdentityServer3.Core.Results
 {
     internal class TokenErrorResult : IHttpActionResult
     {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
+        public IDictionary<string, object> CustomResponseParamaters { get; set; }
         public string Error { get; internal set; }
         public string ErrorDescription { get; internal set; }
 
         public TokenErrorResult(string error)
         {
             Error = error;
+            CustomResponseParamaters = new Dictionary<string, object>();
         }
 
         public TokenErrorResult(string error, string errorDescription)
         {
             Error = error;
             ErrorDescription = errorDescription;
+            CustomResponseParamaters = new Dictionary<string, object>();
+        }
+
+        public TokenErrorResult(string error, IDictionary<string, object> customResponseParamaters)
+        {
+            Error = error;
+            CustomResponseParamaters = customResponseParamaters;
+        }
+
+        public TokenErrorResult(string error, string errorDescription, IDictionary<string, object> customResponseParamaters)
+        {
+            Error = error;
+            ErrorDescription = errorDescription;
+            CustomResponseParamaters = customResponseParamaters;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
@@ -56,9 +76,16 @@ namespace IdentityServer3.Core.Results
                 error_description = ErrorDescription
             };
 
+            var jObject = ObjectSerializer.ToJObject(dto);
+
+            if (CustomResponseParamaters != null && CustomResponseParamaters.Any())
+            {
+                jObject.AddDictionary(CustomResponseParamaters);
+            }
+
             var response = new HttpResponseMessage(HttpStatusCode.BadRequest)
             {
-                Content = new ObjectContent<ErrorDto>(dto, new JsonMediaTypeFormatter())
+                Content = new StringContent(jObject.ToString(Formatting.None), Encoding.UTF8, "application/json")
             };
 
             Logger.Info("Returning error: " + Error);
@@ -70,6 +97,6 @@ namespace IdentityServer3.Core.Results
             public string error { get; set; }
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string error_description { get; set; }
-        }    
+        }
     }
 }
