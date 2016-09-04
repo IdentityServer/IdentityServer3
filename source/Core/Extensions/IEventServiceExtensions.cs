@@ -400,7 +400,8 @@ namespace IdentityServer3.Core.Extensions
                 OldHandle = oldHandle,
                 NewHandle = newHandle,
                 ClientId = token.ClientId,
-                Lifetime = token.LifeTime
+                Lifetime = token.LifeTime,
+                Claims = token.Subject.Claims.ToClaimsDictionary()
             };
 
             await events.RaiseEventAsync(evt);
