@@ -21,6 +21,7 @@ using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -160,8 +161,37 @@ namespace IdentityServer3.Core.Validation
                 return customResult;
             }
 
+            customResult.CustomResponseParamaters = ConcatenateCustomResponseParameters(
+                result.CustomResponseParamaters,
+                customResult.CustomResponseParamaters);
+
             LogSuccess();
             return customResult;
+        }
+
+        private IDictionary<string, object> ConcatenateCustomResponseParameters(
+             IDictionary<string, object> standardValidator,
+             IDictionary<string, object> customValidator)
+        {
+            if (standardValidator == null)
+            {
+                standardValidator = new Dictionary<string, object>();
+            }
+
+            if (customValidator == null)
+            {
+                customValidator = new Dictionary<string, object>();
+            }
+
+            foreach (var customResponseParameter in customValidator)
+            {
+                if (!standardValidator.ContainsKey(customResponseParameter.Key))
+                {
+                    standardValidator.Add(customResponseParameter.Key, customResponseParameter.Value);
+                }
+            }
+
+            return standardValidator;
         }
 
         private async Task<TokenRequestValidationResult> ValidateAuthorizationCodeRequestAsync(NameValueCollection parameters)
@@ -629,7 +659,7 @@ namespace IdentityServer3.Core.Validation
             // make sure user is enabled
             /////////////////////////////////////////////
             var principal = IdentityServerPrincipal.FromSubjectId(_validatedRequest.RefreshToken.SubjectId, refreshToken.AccessToken.Claims);
-            
+
             var isActiveCtx = new IsActiveContext(principal, _validatedRequest.Client);
             await _users.IsActiveAsync(isActiveCtx);
 
@@ -726,22 +756,21 @@ namespace IdentityServer3.Core.Validation
                 if (result.Error.IsPresent())
                 {
                     LogError("Invalid custom grant: " + result.Error);
-                    return Invalid(result.Error, result.ErrorDescription ?? "");
+                    return Invalid(result.Error, result.ErrorDescription ?? "", result.CustomResponseParamaters);
                 }
                 else
                 {
-                    LogError("Invalid custom grant.");
-                    return Invalid(Constants.TokenErrors.InvalidGrant);
+                    LogError("Invalid custom grant."); return Invalid(Constants.TokenErrors.InvalidGrant, string.Empty, result.CustomResponseParamaters);
                 }
             }
-            
+
             if (result.Principal != null)
             {
                 _validatedRequest.Subject = result.Principal;
             }
 
             Logger.Info("Validation of custom grant token request success");
-            return Valid();
+            return Valid(result.CustomResponseParamaters);
         }
 
         private async Task<bool> ValidateRequestedScopesAsync(NameValueCollection parameters)
@@ -846,7 +875,7 @@ namespace IdentityServer3.Core.Validation
 
                 _validatedRequest.ProofKeyAlgorithm = alg;
             }
-            
+
             // key is required - for now we only support client generated keys
             var key = parameters.Get(Constants.TokenRequest.Key);
             if (key == null)
@@ -867,20 +896,23 @@ namespace IdentityServer3.Core.Validation
             return new TokenRequestValidationResult { IsError = false };
         }
 
-        private TokenRequestValidationResult Valid()
+        private TokenRequestValidationResult Valid(IDictionary<string, object> customResponseParameters = null)
         {
-            return new TokenRequestValidationResult
+            return new TokenRequestValidationResult()
             {
-                IsError = false
+                IsError = false,
+                CustomResponseParamaters = customResponseParameters
             };
         }
 
-        private TokenRequestValidationResult Invalid(string error, string errorDescription = "")
+        private TokenRequestValidationResult Invalid(string error, string errorDescription = "",
+            IDictionary<string, object> customResponseParameters = null)
         {
             var result = new TokenRequestValidationResult
             {
                 IsError = true,
-                Error = error
+                Error = error,
+                CustomResponseParamaters = customResponseParameters
             };
 
             if (errorDescription.IsPresent())
