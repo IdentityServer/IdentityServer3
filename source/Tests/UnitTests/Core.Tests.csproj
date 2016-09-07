@@ -195,15 +195,6 @@
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsCode.cs" />
     <Compile Include="Endpoints\Connect\PoP\RsaPublicKeyJwk.cs" />
     <Compile Include="Endpoints\Setup\MockUserService.cs" />
-<<<<<<< Updated upstream
-=======
-    <Compile Include="Events\TokenRevokedDetailsTests.cs" />
-    <Compile Include="ResponseHandling\TokenErrorResultTests.cs" />
-    <Compile Include="ResponseHandling\TokenExtensionsTests.cs" />
-    <Compile Include="ResponseHandling\TokenResponseGeneratorTests_CustomResponseParameters.cs" />
-    <Compile Include="ResponseHandling\TokenResultTests.cs" />
-    <Compile Include="Events\RefreshTokenRefreshDetailsTests.cs" />
->>>>>>> Stashed changes
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="TestCert.cs" />
