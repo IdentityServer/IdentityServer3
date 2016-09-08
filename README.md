@@ -33,7 +33,7 @@ public void Configuration(IAppBuilder app)
 }
 ```
 
-*Note:* If you're hosting in IIS, make sure you [enable RAMMFAR in your web.config file](http://identityserver.github.io/Documentation/docs/configuration/overview.html).
+*Note:* If you're hosting in IIS, make sure you [enable RAMMFAR in your web.config file](http://identityserver.github.io/Documentation/docsv2/configuration/overview.html).
 
 For more information, e.g.
 
