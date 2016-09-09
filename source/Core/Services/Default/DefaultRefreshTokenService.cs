@@ -155,9 +155,8 @@ namespace IdentityServer3.Core.Services.Default
             }
 
             await RaiseRefreshTokenRefreshedEventAsync(handle, newHandle, refreshToken);
-            Logger.Debug("No updates to refresh token done");
 
-            return handle;
+            return newHandle;
         }
 
         /// <summary>
