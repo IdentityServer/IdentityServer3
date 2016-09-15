@@ -97,11 +97,31 @@ namespace IdentityServer3.Core.Endpoints
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> Get(HttpRequestMessage request)
+        [HttpPost]
+        public async Task<IHttpActionResult> Process(HttpRequestMessage request)
         {
             Logger.Info("Start authorize request");
 
-            var response = await ProcessRequestAsync(request.RequestUri.ParseQueryString());
+            NameValueCollection parameters = null;
+            if (request.Method == HttpMethod.Get)
+            {
+                parameters = request.RequestUri.ParseQueryString();
+            }
+            else if (request.Method == HttpMethod.Post)
+            {
+                if (!request.Content.IsFormData())
+                {
+                    return StatusCode(System.Net.HttpStatusCode.UnsupportedMediaType);
+                }
+
+                parameters = await request.Content.ReadAsFormDataAsync();
+            }
+            else
+            {
+                return StatusCode(System.Net.HttpStatusCode.MethodNotAllowed);
+            }
+
+            var response = await ProcessRequestAsync(parameters);
 
             Logger.Info("End authorize request");
             return response;
@@ -174,7 +194,7 @@ namespace IdentityServer3.Core.Endpoints
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public Task<IHttpActionResult> PostConsent(UserConsent model)
+        public Task<IHttpActionResult> SubmitConsent(UserConsent model)
         {
             Logger.Info("Resuming from consent, restarting validation");
             return ProcessRequestAsync(Request.RequestUri.ParseQueryString(), model ?? new UserConsent());

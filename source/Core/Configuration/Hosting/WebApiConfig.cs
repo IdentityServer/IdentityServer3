@@ -93,11 +93,11 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 config.Routes.MapHttpRoute(
                     Constants.RouteNames.Oidc.Authorize,
                     Constants.RoutePaths.Oidc.Authorize,
-                    new { controller = "AuthorizeEndpoint", action = "Get" });
+                    new { controller = "AuthorizeEndpoint", action = "Process" });
                 config.Routes.MapHttpRoute(
                     Constants.RouteNames.Oidc.Consent,
                     Constants.RoutePaths.Oidc.Consent,
-                    new { controller = "AuthorizeEndpoint", action = "PostConsent" });
+                    new { controller = "AuthorizeEndpoint", action = "SubmitConsent" });
                 config.Routes.MapHttpRoute(
                     Constants.RouteNames.Oidc.SwitchUser,
                     Constants.RoutePaths.Oidc.SwitchUser,
