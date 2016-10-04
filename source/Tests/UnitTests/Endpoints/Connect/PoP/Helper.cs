@@ -16,7 +16,6 @@
 
 
 using IdentityModel;
-using IdentityServer3.Core.Models;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;

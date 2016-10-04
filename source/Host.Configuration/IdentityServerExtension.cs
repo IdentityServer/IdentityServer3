@@ -17,7 +17,6 @@
 using Host.Configuration;
 using Host.Configuration.Extensions;
 using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
 using IdentityServer3.Host.Config;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
@@ -26,8 +25,6 @@ using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Twitter;
 using Microsoft.Owin.Security.WsFederation;
-using System;
-using System.Threading.Tasks;
 
 namespace Owin
 {

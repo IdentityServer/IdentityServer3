@@ -20,16 +20,15 @@ using IdentityServer3.Core.Extensions;
 using IdentityServer3.Core.Logging;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Services;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IdentityModel.Selectors;
-using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using System.ServiceModel.Security;
 using System.Threading.Tasks;
 
 #pragma warning disable 1591
@@ -227,15 +226,15 @@ namespace IdentityServer3.Core.Validation
 
         private async Task<TokenValidationResult> ValidateJwtAsync(string jwt, string audience, IEnumerable<X509Certificate2> signingCertificates, bool validateLifetime = true)
         {
-            var handler = new JwtSecurityTokenHandler
-            {
-                Configuration =
-                    new SecurityTokenHandlerConfiguration
-                    {
-                        CertificateValidationMode = X509CertificateValidationMode.None,
-                        CertificateValidator = X509CertificateValidator.None
-                    }
-            };
+            var handler = new JwtSecurityTokenHandler();
+            //{
+            //    Configuration =
+            //        new SecurityTokenHandlerConfiguration
+            //        {
+            //            CertificateValidationMode = X509CertificateValidationMode.None,
+            //            CertificateValidator = X509CertificateValidator.None
+            //        }
+            //};
 
             var keys = (from c in signingCertificates select new X509SecurityKey(c)).ToList();
 
@@ -244,7 +243,7 @@ namespace IdentityServer3.Core.Validation
                 ValidIssuer = IssuerUri,
                 IssuerSigningKeys = keys,
                 ValidateLifetime = validateLifetime,
-                ValidAudience = audience
+                ValidAudience = audience,
             };
 
             try

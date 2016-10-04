@@ -17,7 +17,7 @@
 using FluentAssertions;
 using IdentityServer3.Core;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,7 +30,7 @@ namespace IdentityServer3.Tests.Validation.Tokens
 
         static IdentityTokenValidation()
         {
-            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
         }
 
         [Fact]

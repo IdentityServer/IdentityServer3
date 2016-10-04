@@ -24,7 +24,6 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Owin
 {

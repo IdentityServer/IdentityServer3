@@ -1,191 +1,195 @@
-﻿/*
- * Copyright 2014, 2015 Dominick Baier, Brock Allen
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+﻿//todo
 
-using IdentityModel;
-using IdentityServer3.Core.Configuration;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Logging;
-using IdentityServer3.Core.Models;
-using IdentityServer3.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+///*
+// * Copyright 2014, 2015 Dominick Baier, Brock Allen
+// *
+// * Licensed under the Apache License, Version 2.0 (the "License");
+// * you may not use this file except in compliance with the License.
+// * You may obtain a copy of the License at
+// *
+// *   http://www.apache.org/licenses/LICENSE-2.0
+// *
+// * Unless required by applicable law or agreed to in writing, software
+// * distributed under the License is distributed on an "AS IS" BASIS,
+// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// * See the License for the specific language governing permissions and
+// * limitations under the License.
+// */
 
-namespace IdentityServer3.Core.Validation
-{
-    /// <summary>
-    /// Validates a secret based on RS256 signed JWT token
-    /// </summary>
-    public class PrivateKeyJwtSecretValidator : ISecretValidator
-    {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-        private readonly string audienceUri;
+//using IdentityModel;
+//using IdentityServer3.Core.Configuration;
+//using IdentityServer3.Core.Extensions;
+//using IdentityServer3.Core.Logging;
+//using IdentityServer3.Core.Models;
+//using IdentityServer3.Core.Services;
+//using Microsoft.IdentityModel.Tokens;
+//using System;
+//using System.Collections.Generic;
+//using System.IdentityModel.Tokens;
+//using System.IdentityModel.Tokens.Jwt;
+//using System.Linq;
+//using System.Security.Cryptography.X509Certificates;
+//using System.Threading.Tasks;
 
-        /// <summary>
-        /// Instantiates an instance of private_key_jwt secret validator
-        /// </summary>
-        /// <param name="options">IdentityServer options</param>
-        public PrivateKeyJwtSecretValidator(IdentityServerOptions options)
-        {
-            audienceUri = string.Concat(options.DynamicallyCalculatedIssuerUri.EnsureTrailingSlash(), Constants.RoutePaths.Oidc.Token);
-        }
+//namespace IdentityServer3.Core.Validation
+//{
+//    /// <summary>
+//    /// Validates a secret based on RS256 signed JWT token
+//    /// </summary>
+//    public class PrivateKeyJwtSecretValidator : ISecretValidator
+//    {
+//        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+//        private readonly string audienceUri;
 
-        /// <summary>
-        /// Validates a secret
-        /// </summary>
-        /// <param name="secrets">The stored secrets.</param>
-        /// <param name="parsedSecret">The received secret.</param>
-        /// <returns>
-        /// A validation result
-        /// </returns>
-        /// <exception cref="System.ArgumentException">ParsedSecret.Credential is not a JWT token</exception>
-        public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
-        {
-            var fail = Task.FromResult(new SecretValidationResult { Success = false });
-            var success = Task.FromResult(new SecretValidationResult { Success = true });
+//        /// <summary>
+//        /// Instantiates an instance of private_key_jwt secret validator
+//        /// </summary>
+//        /// <param name="options">IdentityServer options</param>
+//        public PrivateKeyJwtSecretValidator(IdentityServerOptions options)
+//        {
+//            audienceUri = string.Concat(options.DynamicallyCalculatedIssuerUri.EnsureTrailingSlash(), Constants.RoutePaths.Oidc.Token);
+//        }
 
-            if (parsedSecret.Type != Constants.ParsedSecretTypes.JwtBearer)
-            {
-                return fail;
-            }
+//        /// <summary>
+//        /// Validates a secret
+//        /// </summary>
+//        /// <param name="secrets">The stored secrets.</param>
+//        /// <param name="parsedSecret">The received secret.</param>
+//        /// <returns>
+//        /// A validation result
+//        /// </returns>
+//        /// <exception cref="System.ArgumentException">ParsedSecret.Credential is not a JWT token</exception>
+//        public Task<SecretValidationResult> ValidateAsync(IEnumerable<Secret> secrets, ParsedSecret parsedSecret)
+//        {
+//            var fail = Task.FromResult(new SecretValidationResult { Success = false });
+//            var success = Task.FromResult(new SecretValidationResult { Success = true });
 
-            var jwtTokenString = parsedSecret.Credential as string;
+//            if (parsedSecret.Type != Constants.ParsedSecretTypes.JwtBearer)
+//            {
+//                return fail;
+//            }
 
-            if (jwtTokenString == null)
-            {
-                throw new ArgumentException("ParsedSecret.Credential is not a string.");
-            }
+//            var jwtTokenString = parsedSecret.Credential as string;
 
-            var enumeratedSecrets = secrets.ToList().AsReadOnly();
+//            if (jwtTokenString == null)
+//            {
+//                throw new ArgumentException("ParsedSecret.Credential is not a string.");
+//            }
 
-            var trustedKeys = GetTrustedKeys(enumeratedSecrets, jwtTokenString);
+//            var enumeratedSecrets = secrets.ToList().AsReadOnly();
 
-            if (!trustedKeys.Any())
-            {
-                Logger.Warn("There are no certificates available to validate client assertion.");
-                return fail;
-            }
+//            var trustedKeys = GetTrustedKeys(enumeratedSecrets, jwtTokenString);
 
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                IssuerSigningKeys = trustedKeys,
-                ValidateIssuerSigningKey = true,
+//            if (!trustedKeys.Any())
+//            {
+//                Logger.Warn("There are no certificates available to validate client assertion.");
+//                return fail;
+//            }
 
-                ValidIssuer = parsedSecret.Id,
-                ValidateIssuer = true,
+//            var tokenValidationParameters = new TokenValidationParameters
+//            {
+//                IssuerSigningKeys = trustedKeys,
+//                ValidateIssuerSigningKey = true,
 
-                ValidAudience = audienceUri,
-                ValidateAudience = true,
+//                ValidIssuer = parsedSecret.Id,
+//                ValidateIssuer = true,
 
-                RequireSignedTokens = true,
-                RequireExpirationTime = true
-            };
-            try
-            {
-                SecurityToken token;
-                var handler = new EmbeddedCertificateJwtSecurityTokenHandler();
-                handler.ValidateToken(jwtTokenString, tokenValidationParameters, out token);
+//                ValidAudience = audienceUri,
+//                ValidateAudience = true,
 
-                var jwtToken = (JwtSecurityToken)token;
+//                RequireSignedTokens = true,
+//                RequireExpirationTime = true
+//            };
+//            try
+//            {
+//                SecurityToken token;
+//                var handler = new EmbeddedCertificateJwtSecurityTokenHandler();
+//                handler.ValidateToken(jwtTokenString, tokenValidationParameters, out token);
 
-                if (jwtToken.Subject != jwtToken.Issuer)
-                {
-                    Logger.Warn("Both 'sub' and 'iss' in the client assertion token must have a value of client_id.");
-                    return fail;
-                }
+//                var jwtToken = (JwtSecurityToken)token;
 
-                return success;
-            }
-            catch (Exception e)
-            {
-                Logger.Debug("JWT token validation error: " + e.Message);
-                return fail;
-            }
-        }
+//                if (jwtToken.Subject != jwtToken.Issuer)
+//                {
+//                    Logger.Warn("Both 'sub' and 'iss' in the client assertion token must have a value of client_id.");
+//                    return fail;
+//                }
 
-        private static List<SecurityKey> GetTrustedKeys(IReadOnlyCollection<Secret> secrets, string jwtTokenString)
-        {
-            var token = new JwtSecurityToken(jwtTokenString);
-            var certificate = token.GetCertificateFromToken();
-            if (EmbeddedCertificateIsTrusted(certificate, secrets))
-            {
-                return new List<SecurityKey>
-                {
-                    new X509SecurityKey(certificate)
-                };
-            }
+//                return success;
+//            }
+//            catch (Exception e)
+//            {
+//                Logger.Debug("JWT token validation error: " + e.Message);
+//                return fail;
+//            }
+//        }
 
-            var trustedKeys = GetAllTrustedCertificates(secrets)
-                                .Select(c => (SecurityKey)new X509SecurityKey(c))
-                                .ToList();
+//        private static List<SecurityKey> GetTrustedKeys(IReadOnlyCollection<Secret> secrets, string jwtTokenString)
+//        {
+//            var token = new JwtSecurityToken(jwtTokenString);
+//            var certificate = token.GetCertificateFromToken();
+//            if (EmbeddedCertificateIsTrusted(certificate, secrets))
+//            {
+//                return new List<SecurityKey>
+//                {
+//                    new X509SecurityKey(certificate)
+//                };
+//            }
 
-            if (!trustedKeys.Any()
-                && secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
-            {
-                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint.");
-            }
+//            var trustedKeys = GetAllTrustedCertificates(secrets)
+//                                .Select(c => (SecurityKey)new X509SecurityKey(c))
+//                                .ToList();
 
-            return trustedKeys;
-        }
+//            if (!trustedKeys.Any()
+//                && secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint))
+//            {
+//                Logger.Warn("Cannot validate client assertion token that does not embed full certificate using only thumbprint.");
+//            }
 
-        private static bool EmbeddedCertificateIsTrusted(X509Certificate2 certificate, IReadOnlyCollection<Secret> secrets)
-        {
-            if (certificate == null || certificate.Thumbprint == null)
-            {
-                return false;
-            }
+//            return trustedKeys;
+//        }
 
-            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint
-                                 && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
-            {
-                return true;
-            }
+//        private static bool EmbeddedCertificateIsTrusted(X509Certificate2 certificate, IReadOnlyCollection<Secret> secrets)
+//        {
+//            if (certificate == null || certificate.Thumbprint == null)
+//            {
+//                return false;
+//            }
 
-            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateBase64
-                                 && Equals(certificate, GetCertificateFromString(s.Value))))
-            {
-                return true;
-            }
+//            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateThumbprint
+//                                 && TimeConstantComparer.IsEqual(s.Value.ToLowerInvariant(), certificate.Thumbprint.ToLowerInvariant())))
+//            {
+//                return true;
+//            }
 
-            return false;
-        }
+//            if (secrets.Any(s => s.Type == Constants.SecretTypes.X509CertificateBase64
+//                                 && Equals(certificate, GetCertificateFromString(s.Value))))
+//            {
+//                return true;
+//            }
 
-        private static List<X509Certificate2> GetAllTrustedCertificates(IEnumerable<Secret> secrets)
-        {
-            return secrets
-                .Where(s => s.Type == Constants.SecretTypes.X509CertificateBase64)
-                .Select(s => GetCertificateFromString(s.Value))
-                .Where(c => c != null)
-                .ToList();
-        }
+//            return false;
+//        }
 
-        private static X509Certificate2 GetCertificateFromString(string value)
-        {
-            try
-            {
-                return new X509Certificate2(Convert.FromBase64String(value));
-            }
-            catch
-            {
-                Logger.Warn("Could not read certificate from string: " + value);
-                return null;
-            }
-        }
-    }
-}
+//        private static List<X509Certificate2> GetAllTrustedCertificates(IEnumerable<Secret> secrets)
+//        {
+//            return secrets
+//                .Where(s => s.Type == Constants.SecretTypes.X509CertificateBase64)
+//                .Select(s => GetCertificateFromString(s.Value))
+//                .Where(c => c != null)
+//                .ToList();
+//        }
+
+//        private static X509Certificate2 GetCertificateFromString(string value)
+//        {
+//            try
+//            {
+//                return new X509Certificate2(Convert.FromBase64String(value));
+//            }
+//            catch
+//            {
+//                Logger.Warn("Could not read certificate from string: " + value);
+//                return null;
+//            }
+//        }
+//    }
+//}

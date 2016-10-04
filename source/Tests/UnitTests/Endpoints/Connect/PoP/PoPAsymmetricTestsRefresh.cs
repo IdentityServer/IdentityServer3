@@ -17,7 +17,6 @@
 
 using FluentAssertions;
 using IdentityModel;
-using IdentityServer3.Core;
 using IdentityServer3.Core.Models;
 using IdentityServer3.Tests.Conformance;
 using Newtonsoft.Json.Linq;

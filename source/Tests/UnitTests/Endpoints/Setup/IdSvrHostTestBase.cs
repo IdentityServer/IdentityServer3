@@ -27,7 +27,6 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Testing;
-using Moq;
 using Owin;
 using System;
 using System.Collections.Generic;

@@ -21,7 +21,6 @@ using IdentityServer3.Tests.Endpoints;
 using System.Net;
 using System.Net.Http;
 using Xunit;
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Configuration;

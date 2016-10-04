@@ -25,7 +25,7 @@ using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Logging;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
 namespace Owin
@@ -56,8 +56,8 @@ namespace Owin
             options.Validate();
 
             // turn off weird claim mappings for JWTs
-            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
-            JwtSecurityTokenHandler.OutboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap = new Dictionary<string, string>();
 
             if (options.RequireSsl)
             {

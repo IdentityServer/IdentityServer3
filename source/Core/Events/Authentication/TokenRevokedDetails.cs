@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Core.Events
 {

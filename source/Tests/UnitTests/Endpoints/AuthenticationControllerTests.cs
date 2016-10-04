@@ -22,7 +22,6 @@ using IdentityServer3.Core.ViewModels;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Google;
-using Moq;
 using Owin;
 using System;
 using System.Collections.Generic;
