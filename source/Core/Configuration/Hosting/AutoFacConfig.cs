@@ -15,6 +15,7 @@
  */
 
 using Autofac;
+using Autofac.Core;
 using Autofac.Integration.WebApi;
 using IdentityServer3.Core.Endpoints;
 using IdentityServer3.Core.Logging;
@@ -40,6 +41,8 @@ namespace IdentityServer3.Core.Configuration.Hosting
         {
             if (options == null) throw new ArgumentNullException("options");
             if (options.Factory == null) throw new InvalidOperationException("null factory");
+            if (options.ExistingAutofacContainer != null && !(options.ExistingAutofacContainer is Container))
+                throw new InvalidOperationException("ExistingAutofacContainer should a an Autofac Container");
 
             IdentityServerServiceFactory fact = options.Factory;
             fact.Validate();
@@ -175,6 +178,13 @@ namespace IdentityServer3.Core.Configuration.Hosting
             foreach (var registration in fact.Registrations)
             {
                 builder.Register(registration, registration.Name);
+            }
+
+            if (options.ExistingAutofacContainer != null)
+            {
+                var existingContainer = options.ExistingAutofacContainer as Container;
+                builder.Update(existingContainer);
+                return existingContainer;
             }
 
             return builder.Build();
