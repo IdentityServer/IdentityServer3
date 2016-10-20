@@ -244,6 +244,14 @@ namespace IdentityServer3.Core.Configuration
         public Registration<ITokenSigningService> TokenSigningService { get; set; }
 
         /// <summary>
+        /// Gets or sets the token revocation service - Implements token revocation.
+        /// </summary>
+        /// <value>
+        /// The token revocation service.
+        /// </value>
+        public Registration<ITokenRevocationService> TokenRevocationService { get; set; }
+
+        /// <summary>
         /// Gets or sets the external claims filter - Implements filtering and transformation of claims for external identity providers.
         /// </summary>
         /// <value>

@@ -14,11 +14,28 @@
  * limitations under the License.
  */
 
+using IdentityServer3.Core.Models;
+
 namespace IdentityServer3.Core.Validation
 {
-    internal class TokenRevocationRequestValidationResult : ValidationResult
+    /// <summary>
+    /// Modles the validation result of token revocation requests.
+    /// </summary>
+    public class TokenRevocationRequestValidationResult : ValidationResult
     {
+        /// <summary>
+        /// The token_type_hint: refresh_token, access_token or custom token type
+        /// </summary>
         public string TokenTypeHint { get; set; }
+
+        /// <summary>
+        /// The token handle
+        /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        /// The client revoking the token(s)
+        /// </summary>
+        public Client Client { get; set; }
     }
 }
