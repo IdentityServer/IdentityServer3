@@ -508,7 +508,7 @@ namespace IdentityServer3.Core.Validation
                 {
                     error = "Partial signin returned from AuthenticateLocalAsync";
                 }
-                LogError("User authentication failed: " + error);
+                LogWarn("User authentication failed: " + error);
                 await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, signInMessage, error);
 
                 if (authnResult != null)
