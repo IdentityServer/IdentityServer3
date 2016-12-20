@@ -231,8 +231,11 @@ namespace IdentityServer3.Core.Endpoints
                 SignInMessage = signInMessage
             };
 
-            await userService.AuthenticateLocalAsync(authenticationContext);
-            
+            var authenticateTask = userService.AuthenticateLocalAsync(authenticationContext);
+            var waitToRespondTask = Task.Delay(6000);
+            Logger.Warn("going to wait 6 seconds");
+            await Task.WhenAll(authenticateTask, waitToRespondTask);
+
             var authResult = authenticationContext.AuthenticateResult;
             if (authResult == null)
             {
