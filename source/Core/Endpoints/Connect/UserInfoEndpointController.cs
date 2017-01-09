@@ -95,10 +95,9 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             // pass scopes/claims to profile service
-            var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
             var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
-            var payload = await _generator.ProcessAsync(subject, scopes, tokenResult.Client);
+            var payload = await _generator.ProcessAsync(tokenResult.Claims, scopes, tokenResult.Client);
 
             Logger.Info("End userinfo request");
             await RaiseSuccessEventAsync();

@@ -38,13 +38,13 @@ namespace IdentityServer3.Core.ResponseHandling
             _scopes = scopes;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes, Client client)
+        public async Task<Dictionary<string, object>> ProcessAsync(IEnumerable<Claim> claims, IEnumerable<string> scopes, Client client)
         {
             Logger.Info("Creating userinfo response");
             var profileData = new Dictionary<string, object>();
-            
+
             var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
-            var principal = Principal.Create("UserInfo", new Claim("sub", subject));
+            var principal = Principal.Create("UserInfo", claims.ToArray());
 
             IEnumerable<Claim> profileClaims;
             if (requestedClaimTypes.IncludeAllClaims)

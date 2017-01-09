@@ -563,6 +563,8 @@ namespace IdentityServer3.Core
             public const string Id               = "id";
             public const string Secret           = "secret";
             public const string IdentityProvider = "idp";
+            /// <summary>Claim created for tenant specified in ACR value.</summary>
+            public const string Tenant           = "tenant";
             public const string Role             = "role";
             public const string ReferenceTokenId = "reference_token_id";
 
