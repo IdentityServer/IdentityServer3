@@ -196,5 +196,19 @@ namespace IdentityServer3.Core.Extensions
             if (claim == null) throw new InvalidOperationException("idp claim is missing");
             return claim.Value;
         }
+
+        /// <summary>
+        /// Gets the tenant.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <returns>Tenant if claim exists, otherwise null.</returns>
+        [DebuggerStepThrough]
+        public static string GetTenant(this IIdentity identity)
+        {
+            var id = identity as ClaimsIdentity;
+            var claim = id.FindFirst(Constants.ClaimTypes.Tenant);
+
+            return claim == null ? null : claim.Value;
+        }
     }
 }
