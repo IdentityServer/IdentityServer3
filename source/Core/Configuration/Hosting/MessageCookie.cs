@@ -170,7 +170,14 @@ namespace IdentityServer3.Core.Configuration.Hosting
             var data = ctx.Request.Cookies[name];
             if (!String.IsNullOrWhiteSpace(data))
             {
-                return Unprotect(data);
+                try
+                {
+                    return Unprotect(data);
+                }
+                catch(Exception)
+                {
+                    ClearByCookieName(name);
+                }
             }
             return null;
         }
