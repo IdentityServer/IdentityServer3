@@ -226,8 +226,8 @@ namespace IdentityServer3.Core.Endpoints
 
             var authenticationContext = new LocalAuthenticationContext
             {
-                UserName = model.Username,
-                Password = model.Password,
+                UserName = model.Username.Trim(),
+                Password = model.Password.Trim(),
                 SignInMessage = signInMessage
             };
 
