@@ -174,8 +174,9 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 {
                     return Unprotect(data);
                 }
-                catch(Exception)
+                catch(Exception ex)
                 {
+                    Logger.WarnException("Error unprotecting cookie: {0}", ex, name);
                     ClearByCookieName(name);
                 }
             }
