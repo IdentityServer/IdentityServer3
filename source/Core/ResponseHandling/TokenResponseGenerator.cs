@@ -144,7 +144,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             var oldAccessToken = request.RefreshToken.AccessToken;
             string accessTokenString;
-            
+
             // if pop request, claims must be updated because we need a fresh proof token
             if (request.Client.UpdateAccessTokenClaimsOnRefresh || request.RequestedTokenType == RequestedTokenTypes.PoP)
             {
@@ -191,6 +191,8 @@ namespace IdentityServer3.Core.ResponseHandling
                 response.Algorithm = request.ProofKeyAlgorithm;
             }
 
+            response.IdentityToken = await CreateIdTokenFromRefreshTokenRequestAsync(request, accessTokenString);
+
             return response;
         }
 
@@ -202,7 +204,7 @@ namespace IdentityServer3.Core.ResponseHandling
             if (request.AuthorizationCode != null)
             {
                 createRefreshToken = request.AuthorizationCode.RequestedScopes.Select(s => s.Name).Contains(Constants.StandardScopes.OfflineAccess);
-                
+
                 tokenRequest = new TokenCreationRequest
                 {
                     Subject = request.AuthorizationCode.Subject,
@@ -246,6 +248,21 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             // for now we only support client generated proof keys
             return request.ProofKey;
+        }
+
+        private async Task<string> CreateIdTokenFromRefreshTokenRequestAsync(ValidatedTokenRequest request, string newAccessToken)
+        {
+            var oldAccessToken = request.RefreshToken.AccessToken;
+            var tokenRequest = new TokenCreationRequest
+            {
+                Subject = request.RefreshToken.GetOriginalSubject(),
+                Client = request.Client,
+                Scopes = await _scopes.FindScopesAsync(oldAccessToken.Scopes),
+                ValidatedRequest = request,
+                AccessTokenToHash = newAccessToken
+            };
+            var idToken = await _tokenService.CreateIdentityTokenAsync(tokenRequest);
+            return await _tokenService.CreateSecurityTokenAsync(idToken);
         }
     }
 }
