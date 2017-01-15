@@ -226,8 +226,8 @@ namespace IdentityServer3.Core.Endpoints
 
             var authenticationContext = new LocalAuthenticationContext
             {
-                UserName = model.Username,
-                Password = model.Password,
+                UserName = model.Username.Trim(),
+                Password = model.Password.Trim(),
                 SignInMessage = signInMessage
             };
 
@@ -672,7 +672,7 @@ namespace IdentityServer3.Core.Endpoints
         
         private async Task<IHttpActionResult> SignInAndRedirectAsync(SignInMessage signInMessage, string signInMessageId, AuthenticateResult authResult, bool? rememberMe = null)
         {
-            var postAuthenActionResult = await PostAuthenticateAsync(signInMessage, authResult);
+            var postAuthenActionResult = await PostAuthenticateAsync(signInMessage, signInMessageId, authResult);
             if (postAuthenActionResult != null)
             {
                 if (postAuthenActionResult.Item1 != null)
@@ -705,7 +705,7 @@ namespace IdentityServer3.Core.Endpoints
             return Redirect(redirectUrl);
         }
 
-        private async Task<Tuple<IHttpActionResult, AuthenticateResult>> PostAuthenticateAsync(SignInMessage signInMessage, AuthenticateResult result)
+        private async Task<Tuple<IHttpActionResult, AuthenticateResult>> PostAuthenticateAsync(SignInMessage signInMessage, string signInMessageId, AuthenticateResult result)
         {
             if (result.IsPartialSignIn == false)
             {
@@ -728,7 +728,16 @@ namespace IdentityServer3.Core.Endpoints
                 if (authResult.IsError)
                 {
                     Logger.WarnFormat("user service PostAuthenticateAsync returned an error message: {0}", authResult.ErrorMessage);
-                    return new Tuple<IHttpActionResult, AuthenticateResult>(RenderErrorPage(authResult.ErrorMessage), null);
+                    if (ctx.ShowLoginPageOnErrorResult)
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to true, showing login page with error");
+                        return new Tuple<IHttpActionResult, AuthenticateResult>(await RenderLoginPage(signInMessage, signInMessageId, authResult.ErrorMessage), null);
+                    }
+                    else
+                    {
+                        Logger.Debug("ShowLoginPageOnErrorResult set to false, showing error page with error");
+                        return new Tuple<IHttpActionResult, AuthenticateResult>(RenderErrorPage(authResult.ErrorMessage), null);
+                    }
                 }
 
                 if (result != authResult)

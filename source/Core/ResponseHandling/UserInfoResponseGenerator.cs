@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System;
 
 namespace IdentityServer3.Core.ResponseHandling
 {
@@ -38,15 +39,16 @@ namespace IdentityServer3.Core.ResponseHandling
             _scopes = scopes;
         }
 
-        public async Task<Dictionary<string, object>> ProcessAsync(string subject, IEnumerable<string> scopes, Client client)
+        public async Task<Dictionary<string, object>> ProcessAsync(IEnumerable<Claim> userClaims, IEnumerable<string> scopes, Client client)
         {
             Logger.Info("Creating userinfo response");
             var profileData = new Dictionary<string, object>();
-            
-            var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
-            var principal = Principal.Create("UserInfo", new Claim("sub", subject));
+
+            var principal = Principal.Create("UserInfo", userClaims.ToArray());
 
             IEnumerable<Claim> profileClaims;
+
+            var requestedClaimTypes = await GetRequestedClaimTypesAsync(scopes);
             if (requestedClaimTypes.IncludeAllClaims)
             {
                 Logger.InfoFormat("Requested claim types: all");

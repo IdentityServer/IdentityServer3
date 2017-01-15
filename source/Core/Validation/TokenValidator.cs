@@ -331,8 +331,8 @@ namespace IdentityServer3.Core.Validation
             {
                 new Claim(Constants.ClaimTypes.Audience, token.Audience),
                 new Claim(Constants.ClaimTypes.Issuer, token.Issuer),
-                new Claim(Constants.ClaimTypes.NotBefore, token.CreationTime.ToEpochTime().ToString()),
-                new Claim(Constants.ClaimTypes.Expiration, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString())
+                new Claim(Constants.ClaimTypes.NotBefore, token.CreationTime.ToEpochTime().ToString(), ClaimValueTypes.Integer),
+                new Claim(Constants.ClaimTypes.Expiration, token.CreationTime.AddSeconds(token.Lifetime).ToEpochTime().ToString(), ClaimValueTypes.Integer)
             };
 
             claims.AddRange(token.Claims);

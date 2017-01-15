@@ -599,6 +599,7 @@ namespace IdentityServer3.Core
         public static readonly string[] OidcProtocolClaimTypes = new string[]
         {
             ClaimTypes.Subject,
+            ClaimTypes.ClientId,
             //ClaimTypes.Name,
             ClaimTypes.AuthenticationMethod,
             ClaimTypes.IdentityProvider,
@@ -740,6 +741,7 @@ namespace IdentityServer3.Core
 
         public static class Authentication
         {
+            public const string SigninQueryParamName        = "signin";
             public const string SigninId                    = "signinid";
             public const string SignoutId                   = "id";
             public const string KatanaAuthenticationType    = "katanaAuthenticationType";

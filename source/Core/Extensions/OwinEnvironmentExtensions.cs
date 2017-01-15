@@ -436,7 +436,7 @@ namespace IdentityServer3.Core.Extensions
             if (env == null) throw new ArgumentNullException("env");
 
             var ctx = new OwinContext(env);
-            var id = ctx.Request.Query.Get(Constants.Authentication.SigninId);
+            var id = ctx.Request.Query.Get(Constants.Authentication.SigninQueryParamName);
 
             if (String.IsNullOrWhiteSpace(id)) return null;
 
@@ -705,8 +705,9 @@ namespace IdentityServer3.Core.Extensions
         /// <param name="clientId">The value of the client_id claim in the token.</param>
         /// <param name="scope">The value of the scope claim in the token.</param>
         /// <param name="lifetime">The lifetime of the token.</param>
+        /// <param name="extraClaims">Additional claims to include in token.</param>
         /// <returns>a JWT</returns>
-        public static async Task<string> IssueClientToken(this IDictionary<string, object> env, string clientId, string scope, int lifetime)
+        public static async Task<string> IssueClientToken(this IDictionary<string, object> env, string clientId, string scope, int lifetime, List<Claim> extraClaims = null)
         {
             var signingService = env.ResolveDependency<ITokenSigningService>();
             var issuerUri = env.GetIdentityServerIssuerUri();
@@ -722,6 +723,11 @@ namespace IdentityServer3.Core.Extensions
                     new Claim("scope", scope)
                 }
             };
+
+            if (extraClaims != null)
+            {
+                token.Claims.AddRange(extraClaims);
+            }
 
             return await signingService.SignTokenAsync(token);
         }

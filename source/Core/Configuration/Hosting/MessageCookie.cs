@@ -170,7 +170,15 @@ namespace IdentityServer3.Core.Configuration.Hosting
             var data = ctx.Request.Cookies[name];
             if (!String.IsNullOrWhiteSpace(data))
             {
-                return Unprotect(data);
+                try
+                {
+                    return Unprotect(data);
+                }
+                catch(Exception ex)
+                {
+                    Logger.WarnException("Error unprotecting cookie: {0}", ex, name);
+                    ClearByCookieName(name);
+                }
             }
             return null;
         }
