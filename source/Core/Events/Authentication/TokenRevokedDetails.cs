@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using IdentityServer3.Core.Models;
 
 namespace IdentityServer3.Core.Events
@@ -44,5 +45,14 @@ namespace IdentityServer3.Core.Events
         /// </summary>
         /// <value></value>
         public string SubjectId { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
+        public Dictionary<string, object> Claims { get; set; }
     }
 }

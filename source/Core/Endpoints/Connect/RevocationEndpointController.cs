@@ -24,7 +24,9 @@ using IdentityServer3.Core.Results;
 using IdentityServer3.Core.Services;
 using IdentityServer3.Core.Validation;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -37,7 +39,7 @@ namespace IdentityServer3.Core.Endpoints
     internal class RevocationEndpointController : ApiController
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+
         private readonly IEventService _events;
         private readonly ClientSecretValidator _clientValidator;
         private readonly IdentityServerOptions _options;
@@ -120,13 +122,13 @@ namespace IdentityServer3.Core.Endpoints
         private async Task<bool> RevokeAccessTokenAsync(string handle, Client client)
         {
             var token = await _tokenHandles.GetAsync(handle);
-            
+
             if (token != null)
             {
                 if (token.ClientId == client.ClientId)
                 {
                     await _tokenHandles.RemoveAsync(handle);
-                    await _events.RaiseTokenRevokedEventAsync(token.SubjectId, handle, Constants.TokenTypeHints.AccessToken);
+                    await _events.RaiseTokenRevokedEventAsync(token.Claims, token.SubjectId, handle, Constants.TokenTypeHints.AccessToken);
                 }
                 else
                 {
@@ -153,12 +155,12 @@ namespace IdentityServer3.Core.Endpoints
                 {
                     await _refreshTokens.RevokeAsync(token.SubjectId, token.ClientId);
                     await _tokenHandles.RevokeAsync(token.SubjectId, token.ClientId);
-                    await _events.RaiseTokenRevokedEventAsync(token.SubjectId, handle, Constants.TokenTypeHints.RefreshToken);
+                    await _events.RaiseTokenRevokedEventAsync(token.Subject.Claims.ToList(), token.SubjectId, handle, Constants.TokenTypeHints.RefreshToken);
                 }
                 else
                 {
                     var message = string.Format("Client {0} tried to revoke a refresh token belonging to a different client: {1}", client.ClientId, token.ClientId);
-                    
+
                     Logger.Warn(message);
                     await RaiseFailureEventAsync(message);
                 }
