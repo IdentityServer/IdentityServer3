@@ -730,13 +730,11 @@ namespace IdentityServer3.Tests.Endpoints
         [Fact]
         public void PostToLogin_PostAuthenticateReturnsErrorAndShowLoginPageOnErrorResultIsSet_ShowsLoginPageWithError()
         {
-            mockUserService
-                .Setup(x => x.PostAuthenticateAsync(It.IsAny<PostAuthenticationContext>()))
-                .Callback<PostAuthenticationContext>(ctx => {
-                    ctx.AuthenticateResult = new AuthenticateResult("SomeError");
-                    ctx.ShowLoginPageOnErrorResult = true;
-                })
-                .Returns(Task.FromResult(0));
+            mockUserService.OnPostAuthenticate = ctx => {
+                ctx.AuthenticateResult = new AuthenticateResult("SomeError");
+                ctx.ShowLoginPageOnErrorResult = true;
+                return Task.FromResult(0);
+            };
             
             GetLoginPage();
             var resp = PostForm(GetLoginUrl(), new LoginCredentials { Username = "alice", Password = "alice" });
