@@ -436,7 +436,7 @@ namespace IdentityServer3.Core.Extensions
             if (env == null) throw new ArgumentNullException("env");
 
             var ctx = new OwinContext(env);
-            var id = ctx.Request.Query.Get(Constants.Authentication.SigninId);
+            var id = ctx.Request.Query.Get(Constants.Authentication.SigninQueryParamName);
 
             if (String.IsNullOrWhiteSpace(id)) return null;
 
