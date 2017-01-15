@@ -95,10 +95,21 @@ namespace IdentityServer3.Core.Endpoints
             }
 
             // pass scopes/claims to profile service
-            var subject = tokenResult.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.Subject).Value;
+            var tokenClaims = tokenResult.Claims;
+            if (!tokenClaims.Any(x=>x.Type == Constants.ClaimTypes.Subject))
+            {
+                var error = "Token contains no sub claim";
+                Logger.Error(error);
+                await RaiseFailureEventAsync(error);
+                return Error(Constants.ProtectedResourceErrors.InvalidToken);
+            }
+
+
+            var userClaims = tokenClaims.Where(x => !Constants.OidcProtocolClaimTypes.Contains(x.Type) ||
+                Constants.AuthenticateResultClaimTypes.Contains(x.Type));
             var scopes = tokenResult.Claims.Where(c => c.Type == Constants.ClaimTypes.Scope).Select(c => c.Value);
 
-            var payload = await _generator.ProcessAsync(subject, scopes, tokenResult.Client);
+            var payload = await _generator.ProcessAsync(userClaims, scopes, tokenResult.Client);
 
             Logger.Info("End userinfo request");
             await RaiseSuccessEventAsync();

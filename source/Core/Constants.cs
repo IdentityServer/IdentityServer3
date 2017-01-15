@@ -599,6 +599,7 @@ namespace IdentityServer3.Core
         public static readonly string[] OidcProtocolClaimTypes = new string[]
         {
             ClaimTypes.Subject,
+            ClaimTypes.ClientId,
             //ClaimTypes.Name,
             ClaimTypes.AuthenticationMethod,
             ClaimTypes.IdentityProvider,
