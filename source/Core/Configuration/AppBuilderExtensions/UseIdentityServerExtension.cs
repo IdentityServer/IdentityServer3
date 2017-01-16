@@ -85,12 +85,12 @@ namespace Owin
             var container = AutofacConfig.Configure(options);
             app.UseAutofacMiddleware(container);
 
-            app.UseCors();
-            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
-
             // this needs to be before external middleware
+            app.UseCors();
+            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);            
             app.ConfigureSignOutMessageCookie();
 
+            app.UseMiddlewareFromContainer(container);
 
             if (options.PluginConfiguration != null)
             {

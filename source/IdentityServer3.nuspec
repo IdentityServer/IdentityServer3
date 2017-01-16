@@ -19,6 +19,7 @@
     <tags>IdentityServer OpenID Connect OpenIDConnect OAuth2 OWIN ASP.NET Katana WebApi SSO Federation Claims Identity</tags>
     <dependencies>
       <dependency id="Owin" version="1.0"/>
+	  <dependency id="Microsoft.Owin" version="3.0.1"/>
     </dependencies>
   </metadata>
 </package>
