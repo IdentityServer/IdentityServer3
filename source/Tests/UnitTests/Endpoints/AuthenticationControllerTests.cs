@@ -121,6 +121,26 @@ namespace IdentityServer3.Tests.Endpoints
         }
 
         [Fact]
+        public void GetLogin_SignInMessageHasLinkAccountIdentifier()
+        {
+            var id = Guid.NewGuid().ToString();
+            var msg = new SignInMessage();
+            msg.IdP = "Google";
+            msg.ReturnUrl = Url("authorize");
+            msg.LinkAccountId = id;
+            var resp1 = GetLoginPage(msg);
+
+            var sub = new Claim(Constants.ClaimTypes.Subject, "123", ClaimValueTypes.String, "Google");
+            SignInIdentity = new ClaimsIdentity(new Claim[] { sub }, Constants.ExternalAuthenticationType);
+            var resp2 = client.GetAsync(resp1.Headers.Location.AbsoluteUri).Result;
+            client.SetCookies(resp2.GetCookies());
+
+            Get(Constants.RoutePaths.LoginExternalCallback);
+
+            mockUserService.Verify(x => x.AuthenticateExternalAsync(It.IsAny<ExternalIdentity>(), It.Is<SignInMessage>(y => y.LinkAccountId == id)));
+        }
+
+        [Fact]
         public void GetLogin_SignInMessageHasLoginHint_UsernameIsPopulatedFromLoginHint()
         {
             options.AuthenticationOptions.EnableLoginHint = true;
