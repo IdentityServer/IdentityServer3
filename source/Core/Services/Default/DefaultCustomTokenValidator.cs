@@ -100,8 +100,8 @@ namespace IdentityServer3.Core.Services.Default
             var clientClaim = result.Claims.FirstOrDefault(c => c.Type == Constants.ClaimTypes.ClientId);
             if (clientClaim != null)
             {
-                var client = await _clients.FindClientByIdAsync(clientClaim.Value);
-                if (client == null || client.Enabled == false)
+                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value);
+                if (client == null)
                 {
                     Logger.Warn("Client deleted or disabled: " + clientClaim.Value);
 

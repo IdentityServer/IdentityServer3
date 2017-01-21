@@ -25,6 +25,22 @@ namespace IdentityServer3.Core.Extensions
 {
     internal static class IClientStoreExtensions
     {
+        internal static async Task<Client> FindEnabledClientByIdAsync(this IClientStore store, string clientId)
+        {
+            if (store == null) throw new ArgumentNullException("store");
+
+            if (clientId.IsPresent())
+            {
+                var client = await store.FindClientByIdAsync(clientId);
+                if (client != null && client.Enabled)
+                {
+                    return client;
+                }
+            }
+
+            return null;
+        }
+
         internal static async Task<IEnumerable<string>> GetIdentityProviderRestrictionsAsync(this IClientStore store, string clientId)
         {
             if (store == null) throw new ArgumentNullException("store");
