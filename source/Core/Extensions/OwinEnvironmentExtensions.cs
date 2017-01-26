@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace IdentityServer3.Core.Extensions
 {
@@ -35,6 +36,8 @@ namespace IdentityServer3.Core.Extensions
     /// </summary>
     public static class OwinEnvironmentExtensions
     {
+        private const string QueryStringFormat = "{0}={1}";
+
         /// <summary>
         /// Gets the public host name for IdentityServer.
         /// </summary>
@@ -101,7 +104,7 @@ namespace IdentityServer3.Core.Extensions
 
             return env.CreateSignInRequest(new SignInMessage());
         }
-        
+
         /// <summary>
         /// Creates and writes the signin cookie to the response and returns the associated URL to the login page.
         /// </summary>
@@ -138,9 +141,13 @@ namespace IdentityServer3.Core.Extensions
             var id = cookie.Write(message);
 
             var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Login;
-            var uri = new Uri(url.AddQueryString("signin=" + id));
+            url = url.AddQueryString(string.Format(QueryStringFormat, "signin", id));
+            foreach (var queryStringParams in message.QueryString)
+            {
+                url = url.AddQueryString(string.Format(QueryStringFormat, Uri.EscapeDataString(queryStringParams.Key),Uri.EscapeDataString(queryStringParams.Value)));
+            }
 
-            return uri.AbsoluteUri;
+            return new Uri(url).AbsoluteUri;
         }
 
         /// <summary>
@@ -252,7 +259,7 @@ namespace IdentityServer3.Core.Extensions
 
             var url = env.GetIdentityServerBaseUrl() + Constants.RoutePaths.Logout;
             var uri = new Uri(url.AddQueryString("id=" + id));
-            
+
             return uri.AbsoluteUri;
         }
 
@@ -305,7 +312,7 @@ namespace IdentityServer3.Core.Extensions
                 x.Type != Constants.ClaimTypes.PartialLoginReturnUrl &&
                 x.Type != Constants.ClaimTypes.ExternalProviderUserId &&
                 !x.Type.StartsWith(Constants.PartialLoginResumeClaimPrefix));
-            
+
             claims_to_keep.AddRange(claims);
 
             var new_user = new ClaimsIdentity(user.AuthenticationType, Constants.ClaimTypes.Name, Constants.ClaimTypes.Role);
@@ -371,7 +378,7 @@ namespace IdentityServer3.Core.Extensions
         public static async Task<string> GetPartialLoginResumeUrlAsync(this IDictionary<string, object> env)
         {
             if (env == null) throw new ArgumentNullException("env");
-            
+
             var context = new OwinContext(env);
             var result = await context.Authentication.AuthenticateAsync(Constants.PartialSignInAuthenticationType);
             if (result == null || result.Identity == null || result.Identity.IsAuthenticated == false)
@@ -512,7 +519,7 @@ namespace IdentityServer3.Core.Extensions
             var context = new OwinContext(env);
             return await context.GetIdentityFrom(Constants.PrimaryAuthenticationType);
         }
-        
+
         /// <summary>
         /// Gets the current partial logged in IdentityServer user. Returns null if the user is not logged in.
         /// </summary>

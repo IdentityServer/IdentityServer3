@@ -312,6 +312,7 @@ namespace IdentityServer3.Core
         {
             public const string HomeRealm = "idp:";
             public const string Tenant = "tenant:";
+            public const string SignInQueryString = "signInQueryString:";
         }
 
         public static class CodeChallengeMethods

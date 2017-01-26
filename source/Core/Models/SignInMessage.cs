@@ -93,11 +93,27 @@ namespace IdentityServer3.Core.Models
         public IEnumerable<string> AcrValues { get; set; }
 
         /// <summary>
+        /// The sign in query strings. This is provided via the <c>"signInQueryString:"</c> prefix to 
+        /// the <c>acr</c> parameter on the authorize request.
+        /// </summary>
+        /// <value>
+        /// The sign in query string.
+        /// </value>
+        public IEnumerable<SignInQueryString> QueryString { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SignInMessage"/> class.
         /// </summary>
         public SignInMessage()
         {
             AcrValues = Enumerable.Empty<string>();
+            QueryString = Enumerable.Empty<SignInQueryString>();
         }
+    }
+
+    public class SignInQueryString
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
