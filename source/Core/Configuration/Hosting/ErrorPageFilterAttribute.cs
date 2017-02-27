@@ -26,9 +26,7 @@ using System.Web.Http.Filters;
 namespace IdentityServer3.Core.Configuration.Hosting
 {
     internal class ErrorPageFilterAttribute : ExceptionFilterAttribute
-    {
-        private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
-        
+    {   
         public override async System.Threading.Tasks.Task OnExceptionAsync(HttpActionExecutedContext actionExecutedContext, System.Threading.CancellationToken cancellationToken)
         {
             var env = actionExecutedContext.ActionContext.Request.GetOwinEnvironment();
