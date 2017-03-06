@@ -18,6 +18,7 @@ using IdentityServer3.Core.Models;
 using IdentityServer3.Core.Validation;
 using IdentityServer3.Core.ViewModels;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace IdentityServer3.Core.Services
@@ -33,7 +34,7 @@ namespace IdentityServer3.Core.Services
         /// <param name="model">The model.</param>
         /// <param name="message">The message.</param>
         /// <returns>Stream for the HTML</returns>
-        Task<Stream> Login(LoginViewModel model, SignInMessage message);
+        Task<HttpResponseMessage> Login(LoginViewModel model, SignInMessage message);
 
         /// <summary>
         /// Loads the HTML for the logout prompt page.
@@ -43,7 +44,7 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        Task<Stream> Logout(LogoutViewModel model, SignOutMessage message);
+        Task<HttpResponseMessage> Logout(LogoutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the logged out page informing the user that they have successfully logged out.
@@ -53,7 +54,7 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message);
+        Task<HttpResponseMessage> LoggedOut(LoggedOutViewModel model, SignOutMessage message);
 
         /// <summary>
         /// Loads the HTML for the user consent page.
@@ -63,20 +64,20 @@ namespace IdentityServer3.Core.Services
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest);
+        Task<HttpResponseMessage> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest);
 
         /// <summary>
         /// Loads the HTML for the client permissions page.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>Stream for the HTML</returns>
-        Task<Stream> ClientPermissions(ClientPermissionsViewModel model);
+        Task<HttpResponseMessage> ClientPermissions(ClientPermissionsViewModel model);
 
         /// <summary>
         /// Loads the HTML for the error page.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>Stream for the HTML</returns>
-        Task<Stream> Error(ErrorViewModel model);
+        Task<HttpResponseMessage> Error(ErrorViewModel model);
     }
 }

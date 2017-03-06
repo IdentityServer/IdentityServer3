@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -96,7 +97,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Login(LoginViewModel model, SignInMessage message)
+        public virtual Task<HttpResponseMessage> Login(LoginViewModel model, SignInMessage message)
         {
             return Render(model, LoginView);
         }
@@ -109,7 +110,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Logout(LogoutViewModel model, SignOutMessage message)
+        public virtual Task<HttpResponseMessage> Logout(LogoutViewModel model, SignOutMessage message)
         {
             return Render(model, LogoutView);
         }
@@ -122,7 +123,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> LoggedOut(LoggedOutViewModel model, SignOutMessage message)
+        public virtual Task<HttpResponseMessage> LoggedOut(LoggedOutViewModel model, SignOutMessage message)
         {
             return Render(model, LoggedOutView);
         }
@@ -135,7 +136,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest)
+        public virtual Task<HttpResponseMessage> Consent(ConsentViewModel model, ValidatedAuthorizeRequest authorizeRequest)
         {
             return Render(model, ConsentView);
         }
@@ -147,7 +148,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
+        public Task<HttpResponseMessage> ClientPermissions(ClientPermissionsViewModel model)
         {
             return Render(model, ClientPermissionsView);
         }
@@ -159,7 +160,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public virtual Task<Stream> Error(ErrorViewModel model)
+        public virtual Task<HttpResponseMessage> Error(ErrorViewModel model)
         {
             return Render(model, ErrorView);
         }
@@ -200,9 +201,29 @@ namespace IdentityServer3.Core.Services.Default
         /// <param name="model">The model.</param>
         /// <param name="page">The page.</param>
         /// <returns></returns>
-        protected virtual Task<Stream> Render(CommonViewModel model, string page)
+        protected virtual async Task<HttpResponseMessage> Render(CommonViewModel model, string page)
         {
-            return Render(model, page, config.Stylesheets, config.Scripts);
+            var stream = await Render(model, page, config.Stylesheets, config.Scripts);
+            return CreateHttpResponseMessage(stream);
+        }
+
+        /// <summary>
+        /// Converts the page stream to a HttpResponseMessage
+        /// </summary>
+        /// <param name="stream">The page stream</param>
+        /// <returns></returns>
+        protected virtual HttpResponseMessage CreateHttpResponseMessage(Stream stream)
+        {
+            var content = new StreamContent(stream);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/html")
+            {
+                CharSet = Encoding.UTF8.WebName
+            };
+
+            return new HttpResponseMessage
+            {
+                Content = content
+            };
         }
 
         /// <summary>

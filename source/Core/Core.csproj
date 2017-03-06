@@ -233,6 +233,7 @@
     </Compile>
     <Compile Include="ResponseHandling\IntrospectionResponseGenerator.cs" />
     <Compile Include="Results\CheckSessionResult.cs" />
+    <Compile Include="Results\AsyncResponseActionResult.cs" />
     <Compile Include="Results\RevocationErrorResult.cs" />
     <Compile Include="Results\IntrospectionResult.cs" />
     <Compile Include="Results\WelcomeActionResult.cs" />

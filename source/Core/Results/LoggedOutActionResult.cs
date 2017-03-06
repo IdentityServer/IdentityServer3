@@ -21,7 +21,7 @@ using System;
 
 namespace IdentityServer3.Core.Results
 {
-    internal class LoggedOutActionResult : HtmlStreamActionResult
+    internal class LoggedOutActionResult : AsyncResponseActionResult
     {
         public LoggedOutActionResult(IViewService viewSvc, LoggedOutViewModel model, SignOutMessage message)
             : base(async () => await viewSvc.LoggedOut(model, message))

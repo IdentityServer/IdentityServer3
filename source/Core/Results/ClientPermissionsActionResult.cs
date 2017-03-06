@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace IdentityServer3.Core.Results
 {
-    internal class ClientPermissionsActionResult : HtmlStreamActionResult
+    internal class ClientPermissionsActionResult : AsyncResponseActionResult
     {
         public ClientPermissionsActionResult(IViewService viewSvc, IDictionary<string, object> env, ClientPermissionsViewModel model)
             : base(async () => await viewSvc.ClientPermissions(model))

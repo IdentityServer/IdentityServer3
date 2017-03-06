@@ -21,7 +21,7 @@ using System;
 
 namespace IdentityServer3.Core.Results
 {
-    internal class ConsentActionResult : HtmlStreamActionResult
+    internal class ConsentActionResult : AsyncResponseActionResult
     {
         public ConsentActionResult(IViewService viewSvc, ConsentViewModel model, ValidatedAuthorizeRequest validatedRequest)
             : base(async () => await viewSvc.Consent(model, validatedRequest))

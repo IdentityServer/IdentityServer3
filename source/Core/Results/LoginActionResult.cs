@@ -21,7 +21,7 @@ using System;
 
 namespace IdentityServer3.Core.Results
 {
-    internal class LoginActionResult : HtmlStreamActionResult
+    internal class LoginActionResult : AsyncResponseActionResult
     {
         public LoginActionResult(IViewService viewSvc, LoginViewModel model, SignInMessage message)
             : base(async () => await viewSvc.Login(model, message))
