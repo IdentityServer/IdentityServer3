@@ -20,6 +20,7 @@ using IdentityServer3.Core.Services.Default;
 using IdentityServer3.Core.Validation;
 using System;
 using System.Collections.Generic;
+using IdentityServer3.Core.ResponseHandling;
 
 namespace IdentityServer3.Core.Configuration
 {
@@ -282,6 +283,14 @@ namespace IdentityServer3.Core.Configuration
         /// The localization service.
         /// </value>
         public Registration<ILocalizationService> LocalizationService { get; set; }
+
+        /// <summary>
+        /// Gets or sets the authorize response generator
+        /// </summary>
+        /// <value>
+        ///  The authorize response generator.
+        /// </value>
+        public Registration<AuthorizeResponseGenerator> AuthorizeResponseGenerator { get; set; }
 
         /// <summary>
         /// Gets or sets the secret parsers.

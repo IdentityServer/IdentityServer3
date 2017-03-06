@@ -51,6 +51,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             // mandatory from factory
             builder.Register(fact.ScopeStore);
             builder.Register(fact.ClientStore);
+           
             builder.RegisterDecorator<IUserService, ExternalClaimsFilterUserService>(fact.UserService);
             
             // optional from factory
@@ -70,6 +71,8 @@ namespace IdentityServer3.Core.Configuration.Hosting
             builder.RegisterDefaultType<ICustomTokenResponseGenerator, DefaultCustomTokenResponseGenerator>(fact.CustomTokenResponseGenerator);
             builder.RegisterDefaultType<IConsentService, DefaultConsentService>(fact.ConsentService);
             builder.RegisterDefaultType<IAuthenticationSessionValidator, DefaultAuthenticationSessionValidator>(fact.AuthenticationSessionValidator);
+
+            builder.RegisterDefaultType<AuthorizeResponseGenerator, AuthorizeResponseGenerator>(fact.AuthorizeResponseGenerator);
 
             // todo remove in next major version
             if (fact.TokenSigningService != null)
@@ -149,7 +152,6 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
             // processors
             builder.RegisterType<TokenResponseGenerator>();
-            builder.RegisterType<AuthorizeResponseGenerator>();
             builder.RegisterType<AuthorizeInteractionResponseGenerator>();
             builder.RegisterType<UserInfoResponseGenerator>();
             builder.RegisterType<EndSessionResponseGenerator>();
