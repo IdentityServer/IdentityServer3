@@ -261,7 +261,7 @@ namespace IdentityServer3.Core.Services.Default
         /// or
         /// scripts
         /// </exception>
-        protected object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
+        protected virtual object BuildModel(CommonViewModel model, string page, IEnumerable<string> stylesheets, IEnumerable<string> scripts)
         {
             return BuildModelDictionary(model, page, stylesheets, scripts);
         }
