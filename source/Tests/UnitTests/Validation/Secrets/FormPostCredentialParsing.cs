@@ -119,7 +119,10 @@ namespace IdentityServer3.Tests.Validation.Secrets
 
             var secret = await _parser.ParseAsync(context.Environment);
 
-            secret.Should().BeNull();
+            secret.Should().NotBeNull();
+            secret.Type.Should().Be(Constants.ParsedSecretTypes.NoSecret);
+            secret.Id.Should().Be("client");
+            secret.Credential.Should().BeNull();
         }
 
         [Fact]

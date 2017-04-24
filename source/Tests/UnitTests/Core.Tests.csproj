@@ -203,6 +203,7 @@
     <Compile Include="TokenClients\ClientCredentialsClient.cs" />
     <Compile Include="TokenClients\CustomGrantClient.cs" />
     <Compile Include="TokenClients\RefreshTokenClient.cs" />
+    <Compile Include="TokenClients\ResourceOwnerPublicClient.cs" />
     <Compile Include="TokenClients\ResourceOwnerClient.cs" />
     <Compile Include="TokenClients\Setup\Clients.cs" />
     <Compile Include="TokenClients\Setup\CustomGrantValidator.cs" />

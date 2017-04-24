@@ -639,6 +639,7 @@ namespace IdentityServer3.Core
 
         public static class ParsedSecretTypes
         {
+            public const string NoSecret = "NoSecret";
             public const string SharedSecret = "SharedSecret";
             public const string X509Certificate = "X509Certificate";
             public const string JwtBearer = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
