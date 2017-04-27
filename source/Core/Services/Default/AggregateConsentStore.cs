@@ -35,10 +35,11 @@ namespace IdentityServer3.Core.Services.Default
         
         public async Task<IEnumerable<Consent>> LoadAllAsync(string subject)
         {
-            var result = 
-                await stores
-                    .Select(x => x.LoadAllAsync(subject))
-                    .Aggregate(async (t1, t2) => (await t1).Union(await t2));
+            List<Consent> result = new List<Consent>();
+            foreach (IPermissionsStore store in stores)
+            {
+                result.AddRange(await store.LoadAllAsync(subject).ConfigureAwait(false));
+            }
 
             var query = 
                 from item in result
