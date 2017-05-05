@@ -70,7 +70,7 @@ namespace IdentityServer3.Core.Services.Default
         /// The configuration
         /// </summary>
         protected readonly DefaultViewServiceOptions config;
-        
+
         /// <summary>
         /// The view loader
         /// </summary>
@@ -147,7 +147,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns>
         /// Stream for the HTML
         /// </returns>
-        public Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
+        public virtual Task<Stream> ClientPermissions(ClientPermissionsViewModel model)
         {
             return Render(model, ClientPermissionsView);
         }
@@ -164,7 +164,7 @@ namespace IdentityServer3.Core.Services.Default
             return Render(model, ErrorView);
         }
 
-         /// <summary>
+        /// <summary>
         /// Loads the HTML for the authorize response page.
         /// </summary>
         /// <param name="model">The model.</param>
