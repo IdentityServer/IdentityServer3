@@ -66,8 +66,7 @@ namespace Owin
 
                     AuthenticationOptions = new AuthenticationOptions
                     {
-                        IdentityProviders = ConfigureIdentityProviders,
-                        EnableAutoCallbackForFederatedSignout = true
+                        IdentityProviders = ConfigureIdentityProviders
                     },
                 };
 
