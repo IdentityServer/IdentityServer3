@@ -30,130 +30,130 @@ using System.Threading.Tasks;
 
 namespace Owin
 {
-	/// <summary>
-	/// Configuration extensions for identity server
-	/// </summary>
-	public static class UseIdentityServerExtension
-	{
-		private static readonly ILog Logger = LogProvider.GetLogger("Startup");
+    /// <summary>
+    /// Configuration extensions for identity server
+    /// </summary>
+    public static class UseIdentityServerExtension
+    {
+        private static readonly ILog Logger = LogProvider.GetLogger("Startup");
 
-		/// <summary>
-		/// Extension method to configure IdentityServer in the hosting application.
-		/// </summary>
-		/// <param name="app">The application.</param>
-		/// <param name="options">The <see cref="IdentityServer3.Core.Configuration.IdentityServerOptions"/>.</param>
-		/// <returns></returns>
-		/// <exception cref="System.ArgumentNullException">
-		/// app
-		/// or
-		/// options
-		/// </exception>
-		public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
-		{
-			if (app == null) throw new ArgumentNullException("app");
-			if (options == null) throw new ArgumentNullException("options");
+        /// <summary>
+        /// Extension method to configure IdentityServer in the hosting application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="options">The <see cref="IdentityServer3.Core.Configuration.IdentityServerOptions"/>.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// app
+        /// or
+        /// options
+        /// </exception>
+        public static IAppBuilder UseIdentityServer(this IAppBuilder app, IdentityServerOptions options)
+        {
+            if (app == null) throw new ArgumentNullException("app");
+            if (options == null) throw new ArgumentNullException("options");
 
-			options.Validate();
+            options.Validate();
 
-			// turn off weird claim mappings for JWTs
-			JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
-			JwtSecurityTokenHandler.OutboundClaimTypeMap = new Dictionary<string, string>();
+            // turn off weird claim mappings for JWTs
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.OutboundClaimTypeMap = new Dictionary<string, string>();
 
-			if (options.RequireSsl)
-			{
-				app.Use<RequireSslMiddleware>();
-			}
+            if (options.RequireSsl)
+            {
+                app.Use<RequireSslMiddleware>();
+            }
 
-			if (options.LoggingOptions.EnableKatanaLogging)
-			{
-				app.SetLoggerFactory(new LibLogKatanaLoggerFactory());
-			}
+            if (options.LoggingOptions.EnableKatanaLogging)
+            {
+                app.SetLoggerFactory(new LibLogKatanaLoggerFactory());
+            }
 
-			app.UseEmbeddedFileServer();
+            app.UseEmbeddedFileServer();
 
-			app.ConfigureRequestId();
-			app.ConfigureDataProtectionProvider(options);
-			app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
-			app.ConfigureIdentityServerIssuer(options);
+            app.ConfigureRequestId();
+            app.ConfigureDataProtectionProvider(options);
+            app.ConfigureIdentityServerBaseUrl(options.PublicOrigin);
+            app.ConfigureIdentityServerIssuer(options);
 
-			app.ConfigureRequestBodyBuffer();
+            app.ConfigureRequestBodyBuffer();
 
-			// this needs to be earlier than the autofac middleware so anything is disposed and re-initialized
-			// if we send the request back into the pipeline to render the logged out page
-			app.ConfigureRenderLoggedOutPage();
+            // this needs to be earlier than the autofac middleware so anything is disposed and re-initialized
+            // if we send the request back into the pipeline to render the logged out page
+            app.ConfigureRenderLoggedOutPage();
 
-			var container = AutofacConfig.Configure(options);
-			app.UseAutofacMiddleware(container);
+            var container = AutofacConfig.Configure(options);
+            app.UseAutofacMiddleware(container);
 
-			app.UseCors();
-			app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
+            app.UseCors();
+            app.ConfigureCookieAuthentication(options.AuthenticationOptions.CookieOptions, options.DataProtector);
 
-			// this needs to be before external middleware
-			app.ConfigureSignOutMessageCookie();
+            // this needs to be before external middleware
+            app.ConfigureSignOutMessageCookie();
 
 
-			if (options.PluginConfiguration != null)
-			{
-				options.PluginConfiguration(app, options);
-			}
+            if (options.PluginConfiguration != null)
+            {
+                options.PluginConfiguration(app, options);
+            }
 
-			if (options.AuthenticationOptions.IdentityProviders != null)
-			{
-				options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
-			}
+            if (options.AuthenticationOptions.IdentityProviders != null)
+            {
+                options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
+            }
 
-			SignatureConversions.AddConversions(app);
+            SignatureConversions.AddConversions(app);
 
-			var httpConfig = WebApiConfig.Configure(options, container);
-			app.UseAutofacWebApi(httpConfig);
-			app.UseWebApi(httpConfig);
+            var httpConfig = WebApiConfig.Configure(options, container);
+            app.UseAutofacWebApi(httpConfig);
+            app.UseWebApi(httpConfig);
 
-			using (var child = container.CreateScopeWithEmptyOwinContext())
-			{
-				var eventSvc = child.Resolve<IEventService>();
-				// TODO -- perhaps use AsyncHelper instead?
-				DoStartupDiagnosticsAsync(options, eventSvc).Wait();
-			}
+            using (var child = container.CreateScopeWithEmptyOwinContext())
+            {
+                var eventSvc = child.Resolve<IEventService>();
+                // TODO -- perhaps use AsyncHelper instead?
+                DoStartupDiagnosticsAsync(options, eventSvc).Wait();
+            }
 
-			return app;
-		}
+            return app;
+        }
 
-		private static async Task DoStartupDiagnosticsAsync(IdentityServerOptions options, IEventService eventSvc)
-		{
-			var cert = options.SigningCertificate;
+        private static async Task DoStartupDiagnosticsAsync(IdentityServerOptions options, IEventService eventSvc)
+        {
+            var cert = options.SigningCertificate;
 
-			if (cert == null)
-			{
-				Logger.Warn("No signing certificate configured.");
-				await eventSvc.RaiseNoCertificateConfiguredEventAsync();
+            if (cert == null)
+            {
+                Logger.Warn("No signing certificate configured.");
+                await eventSvc.RaiseNoCertificateConfiguredEventAsync();
 
-				return;
-			}
-			if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
-			{
-				Logger.Error("Signing certificate has no private key or the private key is not accessible. Make sure the account running your application has access to the private key");
-				await eventSvc.RaiseCertificatePrivateKeyNotAccessibleEventAsync(cert);
+                return;
+            }
+            if (!cert.HasPrivateKey || !cert.IsPrivateAccessAllowed())
+            {
+                Logger.Error("Signing certificate has no private key or the private key is not accessible. Make sure the account running your application has access to the private key");
+                await eventSvc.RaiseCertificatePrivateKeyNotAccessibleEventAsync(cert);
 
-				return;
-			}
-			if (cert.PublicKey.Key.KeySize < 2048)
-			{
-				Logger.Error("Signing certificate key length is less than 2048 bits.");
-				await eventSvc.RaiseCertificateKeyLengthTooShortEventAsync(cert);
+                return;
+            }
+            if (cert.PublicKey.Key.KeySize < 2048)
+            {
+                Logger.Error("Signing certificate key length is less than 2048 bits.");
+                await eventSvc.RaiseCertificateKeyLengthTooShortEventAsync(cert);
 
-				return;
-			}
+                return;
+            }
 
-			var timeSpanToExpire = cert.NotAfter - DateTimeHelper.UtcNow;
-			if (timeSpanToExpire < TimeSpan.FromDays(30))
-			{
-				Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());
-				await eventSvc.RaiseCertificateExpiringSoonEventAsync(cert);
+            var timeSpanToExpire = cert.NotAfter - DateTimeHelper.UtcNow;
+            if (timeSpanToExpire < TimeSpan.FromDays(30))
+            {
+                Logger.Warn("The signing certificate will expire in the next 30 days: " + cert.NotAfter.ToString());
+                await eventSvc.RaiseCertificateExpiringSoonEventAsync(cert);
 
-				return;
-			}
+                return;
+            }
 
-			await eventSvc.RaiseCertificateValidatedEventAsync(cert);
-		}
-	}
+            await eventSvc.RaiseCertificateValidatedEventAsync(cert);
+        }
+    }
 }
