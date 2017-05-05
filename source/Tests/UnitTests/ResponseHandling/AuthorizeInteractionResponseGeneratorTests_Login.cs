@@ -74,7 +74,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
         }
 
         [Fact]
-        public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
+        public async Task Authenticated_User_with_builtIn_Idp_must_not_SignIn()
         {
             var users = new Mock<IUserService>();
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
@@ -83,12 +83,41 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             {
                 ClientId = "foo",
                 Subject = IdentityServerPrincipal.Create("123", "dom"),
-                Client = new Client 
+                Client = new Client
                 {
-                    IdentityProviderRestrictions = new List<string> 
+                    IdentityProviderRestrictions = new List<string>
                     {
                         Constants.BuiltInIdentityProvider
                     }
+                }
+            };
+
+            var result = await generator.ProcessClientLoginAsync(request);
+
+            result.IsLogin.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task Authenticated_User_with_allowed_current_Idp_must_not_SignIn()
+        {
+            var users = new Mock<IUserService>();
+            var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
+
+            var currentIdp = "some_idp";
+
+            var request = new ValidatedAuthorizeRequest
+            {
+                ClientId = "foo",
+                Subject = IdentityServerPrincipal.Create("123", "dom", idp: currentIdp),
+                Client = new Client
+                {
+                    IdentityProviderRestrictions = new List<string>
+                    {
+                        currentIdp
+                    }
+                },
+                AuthenticationContextReferenceClasses = new List<string>{
+                    "idp:" + currentIdp
                 }
             };
 
@@ -103,16 +132,21 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             var users = new Mock<IUserService>();
             var generator = new AuthorizeInteractionResponseGenerator(options, null, users.Object, new DefaultLocalizationService());
 
+            var currentIdp = "some_other_idp";
+
             var request = new ValidatedAuthorizeRequest
             {
                 ClientId = "foo",
-                Subject = IdentityServerPrincipal.Create("123", "dom"),
+                Subject = IdentityServerPrincipal.Create("123", "dom", idp: currentIdp),
                 Client = new Client
                 {
-                    IdentityProviderRestrictions = new List<string> 
+                    IdentityProviderRestrictions = new List<string>
                     {
                         "some_idp"
                     }
+                },
+                AuthenticationContextReferenceClasses = new List<string>{
+                    "idp:" + currentIdp
                 }
             };
 
@@ -131,7 +165,7 @@ namespace IdentityServer3.Tests.Connect.ResponseHandling
             {
                 ClientId = "foo",
                 Client = new Client(),
-                 AuthenticationContextReferenceClasses = new List<string>{
+                AuthenticationContextReferenceClasses = new List<string>{
                     "idp:" + Constants.BuiltInIdentityProvider
                 }
             };
