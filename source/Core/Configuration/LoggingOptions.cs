@@ -16,43 +16,43 @@
 
 namespace IdentityServer3.Core.Configuration
 {
-	/// <summary>
-	/// Configures logging within IdentityServer.
-	/// </summary>
-	public class LoggingOptions
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="LoggingOptions"/> class.
-		/// </summary>
-		public LoggingOptions()
-		{
-			EnableWebApiDiagnostics = false;
-			WebApiDiagnosticsIsVerbose = false;
-			EnableKatanaLogging = false;
-		}
+    /// <summary>
+    /// Configures logging within IdentityServer.
+    /// </summary>
+    public class LoggingOptions
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoggingOptions"/> class.
+        /// </summary>
+        public LoggingOptions()
+        {
+            EnableWebApiDiagnostics = false;
+            WebApiDiagnosticsIsVerbose = false;
+            EnableKatanaLogging = false;
+        }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether web API diagnostics should be enabled.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if web API diagnostics should be enabled; otherwise, <c>false</c>.
-		/// </value>
-		public bool EnableWebApiDiagnostics { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether web API diagnostics should be enabled.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if web API diagnostics should be enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableWebApiDiagnostics { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether web API diagnostics logging should be set to verbose.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if web API diagnostics logging should be verbose; otherwise, <c>false</c>.
-		/// </value>
-		public bool WebApiDiagnosticsIsVerbose { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether web API diagnostics logging should be set to verbose.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if web API diagnostics logging should be verbose; otherwise, <c>false</c>.
+        /// </value>
+        public bool WebApiDiagnosticsIsVerbose { get; set; }
 
-		/// <summary>
-		/// Gets or sets a value indicating whether Katana logging should be forwarded to the standard logging output.
-		/// </summary>
-		/// <value>
-		///   <c>true</c> if Katana log forwarding is enabled; otherwise, <c>false</c>.
-		/// </value>
-		public bool EnableKatanaLogging { get; set; }
-	}
+        /// <summary>
+        /// Gets or sets a value indicating whether Katana logging should be forwarded to the standard logging output.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if Katana log forwarding is enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool EnableKatanaLogging { get; set; }
+    }
 }
