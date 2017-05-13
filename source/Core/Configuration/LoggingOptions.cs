@@ -28,7 +28,6 @@ namespace IdentityServer3.Core.Configuration
         {
             EnableWebApiDiagnostics = false;
             WebApiDiagnosticsIsVerbose = false;
-            EnableHttpLogging = false;
             EnableKatanaLogging = false;
         }
 
@@ -47,14 +46,6 @@ namespace IdentityServer3.Core.Configuration
         /// <c>true</c> if web API diagnostics logging should be verbose; otherwise, <c>false</c>.
         /// </value>
         public bool WebApiDiagnosticsIsVerbose { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether HTTP request/response logging is enabled
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if HTTP logging is enabled; otherwise, <c>false</c>.
-        /// </value>
-        public bool EnableHttpLogging { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Katana logging should be forwarded to the standard logging output.
