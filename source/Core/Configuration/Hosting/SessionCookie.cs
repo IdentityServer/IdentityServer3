@@ -38,9 +38,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         public virtual void IssueSessionId(bool? persistent, DateTimeOffset? expires = null)
         {
-            context.Response.Cookies.Append(
-                GetCookieName(), CryptoRandom.CreateUniqueId(), 
-                CreateCookieOptions(persistent, expires));
+            if (context.Request.Cookies[GetCookieName()] == null)
+            {
+                context.Response.Cookies.Append(
+                    GetCookieName(), CryptoRandom.CreateUniqueId(),
+                    CreateCookieOptions(persistent, expires));
+            }            
         }
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions(bool? persistent, DateTimeOffset? expires = null)
