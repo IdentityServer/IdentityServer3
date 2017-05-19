@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace IdentityServer3.Core.Events
 {
     /// <summary>
@@ -52,5 +54,13 @@ namespace IdentityServer3.Core.Events
         /// The lifetime.
         /// </value>
         public int Lifetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the claims.
+        /// </summary>
+        /// <value>
+        /// The claims.
+        /// </value>
+        public Dictionary<string, object> Claims { get; set; }
     }
 }
