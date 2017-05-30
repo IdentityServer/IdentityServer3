@@ -579,7 +579,7 @@ namespace IdentityServer3.Core
 
         public const string PartialLoginResumeClaimPrefix = "partial_login_resume_id:";
 
-        public static readonly string[] ClaimsProviderFilerClaimTypes = new string[]
+        public static readonly string[] ClaimsProviderFilterClaimTypes = new string[]
         {
             ClaimTypes.Audience,
             ClaimTypes.Issuer,
