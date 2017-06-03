@@ -114,7 +114,7 @@ namespace IdentityServer3.Core.Endpoints
                 return HandleNoSignin();
             }
 
-            Logger.DebugFormat("signin message passed to login: {0}", JsonConvert.SerializeObject(signInMessage, Formatting.Indented));
+            Logger.DebugFormat("signin message passed to login: {0}", LogSerializer.Serialize(signInMessage));
 
             var preAuthContext = new PreAuthenticationContext { SignInMessage = signInMessage };
             await userService.PreAuthenticateAsync(preAuthContext);
