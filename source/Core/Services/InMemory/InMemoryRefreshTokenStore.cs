@@ -76,15 +76,25 @@ namespace IdentityServer3.Core.Services.InMemory
         /// Retrieves all data for a subject identifier.
         /// </summary>
         /// <param name="subject">The subject identifier.</param>
+        /// <param name="offset">Amount of tokens to skip. Defaults to none.</param>
+        /// <param name="take">Maximum amount of tokens to return. Defaults to all.</param>
         /// <returns>
         /// A list of token metadata
         /// </returns>
-        public Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject)
+        public Task<IEnumerable<ITokenMetadata>> GetAllAsync(string subject, int? offset=null, int? take=null)
         {
             var query =
                 from item in _repository
                 where item.Value.SubjectId == subject
                 select item.Value;
+            if (offset.HasValue)
+            {
+                query = query.Skip(offset.Value);
+            }
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
             var list = query.ToArray();
             return Task.FromResult(list.Cast<ITokenMetadata>());
         }
