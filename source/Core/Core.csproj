@@ -140,6 +140,7 @@
     <Compile Include="Configuration\DiscoveryOptions.cs" />
     <Compile Include="Configuration\EventsOptions.cs" />
     <Compile Include="Configuration\Hosting\ClientListCookie.cs" />
+    <Compile Include="Configuration\Hosting\DiscoveryCacheControlAttribute.cs" />
     <Compile Include="Configuration\InputLengthRestrictions.cs" />
     <Compile Include="Configuration\IAuthenticationSessionStoreProvider.cs" />
     <Compile Include="Configuration\X509CertificateDataProtector.cs" />

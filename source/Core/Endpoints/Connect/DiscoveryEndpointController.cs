@@ -31,12 +31,14 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
+using IdentityServer3.Core.Configuration.Hosting;
 
 namespace IdentityServer3.Core.Endpoints
 {
     /// <summary>
     /// OpenID Connect discovery document endpoint
     /// </summary>
+    [DiscoveryCacheControl]
     internal class DiscoveryEndpointController : ApiController
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();

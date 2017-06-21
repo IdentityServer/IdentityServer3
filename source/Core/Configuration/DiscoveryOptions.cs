@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace IdentityServer3.Core.Configuration
 {
@@ -58,6 +59,14 @@ namespace IdentityServer3.Core.Configuration
         public bool ShowTokenEndpointAuthenticationMethods { get; set; }
 
         /// <summary>
+        /// Sets the maxage value of the cache control header. This gives clients a hint how often they should refresh their cached copy of the discovery document (defaults to one hour).
+        /// </summary>
+        /// <value>
+        /// The cache interval.
+        /// </value>
+        public TimeSpan ClientCacheInterval { get; set; }
+
+        /// <summary>
         /// Adds custom entries to the discovery document
         /// </summary>
         public Dictionary<string, object> CustomEntries { get; set; }
@@ -77,6 +86,7 @@ namespace IdentityServer3.Core.Configuration
             ShowGrantTypes = true;
             ShowCustomGrantTypes = true;
             ShowTokenEndpointAuthenticationMethods = true;
+            ClientCacheInterval = TimeSpan.FromHours(1);
             CustomEntries = new Dictionary<string, object>();
         }
     }
