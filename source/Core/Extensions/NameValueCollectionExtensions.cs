@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.Extensions
         public static string ToFormPost(this NameValueCollection collection)
         {
             var builder = new StringBuilder(128);
-            const string inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" />\n";
+            const string inputFieldFormat = "<input type=\"hidden\" name=\"{0}\" value=\"{1}\" ng-non-bindable />\n";
 
             foreach (string name in collection)
             {
