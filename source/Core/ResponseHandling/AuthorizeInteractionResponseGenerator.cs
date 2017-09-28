@@ -100,6 +100,12 @@ namespace IdentityServer3.Core.ResponseHandling
                 _signIn.AcrValues = acrValues;
             }
 
+            // pass through the prompt mode
+            if (request.PromptMode.IsPresent())
+            {
+                _signIn.Prompt = request.PromptMode;
+            }
+
             if (request.PromptMode == Constants.PromptModes.Login)
             {
                 // remove prompt so when we redirect back in from login page

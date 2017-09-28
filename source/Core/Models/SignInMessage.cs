@@ -93,6 +93,14 @@ namespace IdentityServer3.Core.Models
         public IEnumerable<string> AcrValues { get; set; }
 
         /// <summary>
+        /// The prompt value passed from the authorization request.
+        /// </summary>
+        /// <value>
+        /// The prompt value
+        /// </value>
+        public string Prompt { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SignInMessage"/> class.
         /// </summary>
         public SignInMessage()
