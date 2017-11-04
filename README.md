@@ -1,6 +1,7 @@
 # IdentityServer3 #
 
 ## Note: This repository is no longer in active development or maintenance, other than reported security vulnerabilities.
+## We highly encourage you to consider [IdentityServer4](https://github.com/IdentityServer/IdentityServer4/) instead.
 ## If you have questions and are seeking free support, see [here](http://docs.identityserver.io/en/release/intro/support.html#free-support) for more details.
 ## If you require commercial support, see [here](http://docs.identityserver.io/en/release/intro/support.html#commercial-support) for more details.
 
