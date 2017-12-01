@@ -92,6 +92,29 @@ namespace IdentityServer3.Core.Endpoints
         }
 
         /// <summary>
+        /// POST
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IHttpActionResult> Post(HttpRequestMessage request)
+        {
+            Logger.Info("Start authorize request POST");
+
+            if (!request.Content.IsFormData())
+            {
+                return StatusCode(System.Net.HttpStatusCode.UnsupportedMediaType);
+            }
+
+            NameValueCollection parameters = await request.Content.ReadAsFormDataAsync();
+
+            var response = await ProcessRequestAsync(parameters);
+
+            Logger.Info("End authorize request POST");
+            return response;
+        }
+
+        /// <summary>
         /// GET
         /// </summary>
         /// <param name="request">The request.</param>
@@ -111,7 +134,7 @@ namespace IdentityServer3.Core.Endpoints
         {
             // validate request
             var result = await _validator.ValidateAsync(parameters, User as ClaimsPrincipal);
-            
+
             if (result.IsError)
             {
                 return await this.AuthorizeErrorAsync(
@@ -227,7 +250,7 @@ namespace IdentityServer3.Core.Endpoints
                 loginWithDifferentAccountUrl = Url.Route(Constants.RouteNames.Oidc.SwitchUser, null)
                     .AddQueryString(requestParameters.ToQueryString());
             }
-            
+
             var env = Request.GetOwinEnvironment();
             var consentModel = new ConsentViewModel
             {

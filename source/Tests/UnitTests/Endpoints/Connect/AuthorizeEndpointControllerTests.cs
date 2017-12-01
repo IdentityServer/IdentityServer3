@@ -72,5 +72,12 @@ namespace IdentityServer3.Tests.Connect.Endpoints
             var resp = PostForm(Constants.RoutePaths.Oidc.Consent, (object)null);
             resp.AssertPage("error");
         }
+
+        [Fact]
+        public void PostAuthorize_Json_ReturnsError()
+        {
+            var response = client.PostAsJsonAsync(Url(Constants.RoutePaths.Oidc.Authorize), new { foo = "bar" }).Result;
+            response.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
+        }
     }
 }
