@@ -106,7 +106,19 @@ namespace IdentityServer3.Core.Endpoints
                 return StatusCode(System.Net.HttpStatusCode.UnsupportedMediaType);
             }
 
-            NameValueCollection parameters = await request.Content.ReadAsFormDataAsync();
+            NameValueCollection parameters = request.RequestUri.ParseQueryString();
+
+            NameValueCollection parametersContent = await request.Content.ReadAsFormDataAsync();
+            parameters.Add(parametersContent);
+            // TODO Check if it has existing names?
+            //foreach (string name in parametersContent)
+            //{
+            //    if (string.IsNullOrEmpty(parameters[name]))
+            //    {
+            //        var value = parametersContent[name];
+            //        parameters.Add(name, value);
+            //    }
+            //}
 
             var response = await ProcessRequestAsync(parameters);
 
