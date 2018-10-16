@@ -230,7 +230,15 @@ namespace IdentityServer3.Core.Configuration.Hosting
             var names = GetCookieNames();
             var toKeep = options.AuthenticationOptions.SignInMessageThreshold;
 
-            if (names.Count() >= toKeep)
+            if (names.Count() >= (toKeep * 2))
+            {
+                // we have way too many -- delete them all
+                foreach (var name in names)
+                {
+                    ClearByCookieName(name);
+                }
+            }
+            else if (names.Count() >= toKeep)
             {
                 var rankedCookieNames =
                     from name in names
