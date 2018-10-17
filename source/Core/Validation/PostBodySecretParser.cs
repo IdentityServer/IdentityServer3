@@ -61,21 +61,43 @@ namespace IdentityServer3.Core.Validation
                 var id = body.Get("client_id");
                 var secret = body.Get("client_secret");
 
-                if (id.IsPresent() && secret.IsPresent())
+                // client id must be present
+                if (id.IsPresent())
                 {
-                    if (id.Length > _options.InputLengthRestrictions.ClientId ||
-                        secret.Length > _options.InputLengthRestrictions.ClientSecret)
+                    if (id.Length > _options.InputLengthRestrictions.ClientId)
                     {
-                        Logger.Debug("Client ID or secret exceeds maximum lenght.");
+                        Logger.Debug("Client ID exceeds maximum length.");
                         return null;
                     }
 
-                    var parsedSecret = new ParsedSecret
+                    ParsedSecret parsedSecret;
+
+                    if (secret.IsPresent())
                     {
-                        Id = id,
-                        Credential = secret,
-                        Type = Constants.ParsedSecretTypes.SharedSecret
-                    };
+                        if (secret.Length > _options.InputLengthRestrictions.ClientSecret)
+                        {
+                            Logger.Debug("Client secret exceeds maximum length.");
+                            return null;
+                        }
+
+                        parsedSecret = new ParsedSecret
+                        {
+                            Id = id,
+                            Credential = secret,
+                            Type = Constants.ParsedSecretTypes.SharedSecret
+                        };
+                    }
+                    else
+                    {
+                        // client secret is optional
+                        Logger.Debug("Client id without secret found");
+
+                        parsedSecret = new ParsedSecret
+                        {
+                            Id = id,
+                            Type = Constants.ParsedSecretTypes.NoSecret
+                        };
+                    }
 
                     return parsedSecret;
                 }

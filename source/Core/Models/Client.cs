@@ -40,6 +40,11 @@ namespace IdentityServer3.Core.Models
         public List<Secret> ClientSecrets { get; set; }
 
         /// <summary>
+        /// If set to false, no client secret is needed to request tokens at the token endpoint (defaults to true)
+        /// </summary>
+        public bool RequireClientSecret { get; set; }
+
+        /// <summary>
         /// Client display name (used for logging and consent screen)
         /// </summary>
         public string ClientName { get; set; }
@@ -254,6 +259,7 @@ namespace IdentityServer3.Core.Models
             Flow = Flows.Implicit;
             
             ClientSecrets = new List<Secret>();
+            RequireClientSecret = true;
             AllowedScopes = new List<string>();
             RedirectUris = new List<string>();
             PostLogoutRedirectUris = new List<string>();

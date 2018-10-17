@@ -69,26 +69,32 @@ namespace IdentityServer3.Core.Validation
                 return fail;
             }
 
-            var result = await _validator.ValidateAsync(parsedSecret, client.ClientSecrets);
-
-            if (result.Success)
+            if (!client.RequireClientSecret)
             {
-                Logger.Info("Client validation success");
-
-                var success = new ClientSecretValidationResult
+                Logger.Info("Public Client - skipping secret validation success");
+            }
+            else
+            {
+                var result = await _validator.ValidateAsync(parsedSecret, client.ClientSecrets);
+                if (!result.Success)
                 {
-                    IsError = false,
-                    Client = client
-                };
+                    await RaiseFailureEvent(client.ClientId, "Invalid client secret");
+                    Logger.Info("Client validation failed.");
 
-                await RaiseSuccessEvent(client.ClientId);
-                return success;
+                    return fail;
+                }
             }
 
-            await RaiseFailureEvent(client.ClientId, "Invalid client secret");
-            Logger.Info("Client validation failed.");
-            
-            return fail;
+            Logger.Info("Client validation success");
+
+            var success = new ClientSecretValidationResult
+            {
+                IsError = false,
+                Client = client
+            };
+
+            await RaiseSuccessEvent(client.ClientId);
+            return success;
         }
 
         private async Task RaiseSuccessEvent(string clientId)

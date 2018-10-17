@@ -164,6 +164,20 @@ namespace IdentityServer3.Tests.TokenClients
             response.Error.Should().Be("invalid_grant");
         }
 
+        [Fact]
+        public async Task Missing_Client_Secret()
+        {
+            var client = new TokenClient(
+                TokenEndpoint,
+                "roclient",
+                innerHttpMessageHandler: _handler);
+
+            var response = await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1");
+
+            response.IsError.Should().Be(true);
+            response.Error.Should().Be("invalid_client");
+        }
+
 
         private Dictionary<string, object> GetPayload(TokenResponse response)
         {

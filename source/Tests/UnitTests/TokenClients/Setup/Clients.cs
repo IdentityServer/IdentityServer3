@@ -52,6 +52,22 @@ namespace IdentityServer3.Tests.TokenClients
                     }
                 },
 
+                //////////////////////////////////////////////////////////
+                // Console Resource Owner Flow with Public Client Sample
+                //////////////////////////////////////////////////////////
+                new Client
+                {
+                    ClientId = "roclient.public",
+                    RequireClientSecret = false,
+
+                    Flow = Flows.ResourceOwner,
+
+                    AllowedScopes = new List<string>
+                    {
+                        "api1", "api2"
+                    }
+                },
+
                 ///////////////////////////////////////////
                 // Console Custom Grant Flow Sample
                 //////////////////////////////////////////
