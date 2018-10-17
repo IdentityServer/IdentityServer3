@@ -745,6 +745,7 @@ namespace IdentityServer3.Core
             public const string SigninId                    = "signinid";
             public const string SignoutId                   = "id";
             public const string KatanaAuthenticationType    = "katanaAuthenticationType";
+			public const string LoginHint    				= "login_hint";
             public const string PartialLoginRememberMe      = "idsvr:rememberme";
         }
 

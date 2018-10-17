@@ -325,6 +325,12 @@ namespace IdentityServer3.Core.Endpoints
             // add the id to the dictionary so we can recall the cookie id on the callback
             authProp.Dictionary.Add(Constants.Authentication.SigninId, signin);
             authProp.Dictionary.Add(Constants.Authentication.KatanaAuthenticationType, provider);
+			
+			if (signInMessage.LoginHint.IsPresent())
+            {
+                authProp.Dictionary.Add(Constants.Authentication.LoginHint, signInMessage.LoginHint);
+            }
+			
             context.Authentication.Challenge(authProp, provider);
             
             return Unauthorized();
