@@ -60,12 +60,12 @@ namespace IdentityServer3.Core.Validation
             }
 
             // load client
-            var client = await _clients.FindClientByIdAsync(parsedSecret.Id);
+            var client = await _clients.FindEnabledClientByIdAsync(parsedSecret.Id);
             if (client == null)
             {
-                await RaiseFailureEvent(parsedSecret.Id, "Unknown client");
+                await RaiseFailureEvent(parsedSecret.Id, "Unknown or disabled client");
 
-                Logger.Info("No client with that id found. aborting");
+                Logger.Info("No client with that id found or client is disabled. aborting");
                 return fail;
             }
 

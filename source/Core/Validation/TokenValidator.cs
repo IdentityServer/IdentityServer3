@@ -110,7 +110,7 @@ namespace IdentityServer3.Core.Validation
             _log.ClientId = clientId;
             _log.ValidateLifetime = validateLifetime;
 
-            var client = await _clients.FindClientByIdAsync(clientId);
+            var client = await _clients.FindEnabledClientByIdAsync(clientId);
             if (client == null)
             {
                 LogError("Unknown or disabled client.");
@@ -264,10 +264,10 @@ namespace IdentityServer3.Core.Validation
                 var clientId = id.FindFirst(Constants.ClaimTypes.ClientId);
                 if (clientId != null)
                 {
-                    client = await _clients.FindClientByIdAsync(clientId.Value);
+                    client = await _clients.FindEnabledClientByIdAsync(clientId.Value);
                     if (client == null)
                     {
-                        throw new InvalidOperationException("Client does not exist anymore.");
+                        throw new InvalidOperationException("Client does not exist anymore or is disabled.");
                     }
                 }
 

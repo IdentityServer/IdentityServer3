@@ -158,8 +158,8 @@ namespace IdentityServer3.Core.Validation
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = await _clients.FindClientByIdAsync(request.ClientId);
-            if (client == null || client.Enabled == false)
+            var client = await _clients.FindEnabledClientByIdAsync(request.ClientId);
+            if (client == null)
             {
                 LogError("Unknown client or not enabled: " + request.ClientId, request);
                 return Invalid(request, ErrorTypes.User, Constants.AuthorizeErrors.UnauthorizedClient);
