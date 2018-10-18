@@ -272,7 +272,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <returns></returns>
         protected virtual IEnumerable<Claim> FilterProtocolClaims(IEnumerable<Claim> claims)
         {
-            return claims.Where(x => !Constants.ClaimsProviderFilerClaimTypes.Contains(x.Type));
+            return claims.Where(x => !Constants.ClaimsProviderFilterClaimTypes.Contains(x.Type));
         }
      }
 }
