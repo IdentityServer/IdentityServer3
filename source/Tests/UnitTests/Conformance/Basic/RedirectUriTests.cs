@@ -119,6 +119,35 @@ namespace IdentityServer3.Tests.Conformance.Basic
 
         [Fact]
         [Trait("Category", Category)]
+        public void POST_allowed_to_authorization_endpoint()
+        {
+            host.Login();
+
+            var disco = host.GetDiscoveryDocument();
+            var url = disco["authorization_endpoint"].ToString();
+
+
+            var nonce = Guid.NewGuid().ToString();
+            var state = Guid.NewGuid().ToString();
+
+            var data = new Dictionary<string, string>
+            {
+                {"client_id", client_id },
+                {"redirect_uri", redirect_uri },
+                {"scope", "openid" },
+                {"response_type", "code" },
+                {"state", state },
+                {"nonce", nonce},
+            };
+
+            var result = host.Client.PostAsync(url, new FormUrlEncodedContent(data)).Result;
+            result.StatusCode.Should().Be(HttpStatusCode.Redirect);
+            result.Headers.Location.AbsoluteUri.Should().StartWith("https://code_client/callback");
+            result.Headers.Location.AbsolutePath.Should().Be("/callback");
+        }
+
+        [Fact]
+        [Trait("Category", Category)]
         public void Rejects_redirect_uri_when_query_parameter_does_not_match()
         {
             var query_redirect_uri = redirect_uri + "?foo=bar&baz=quux";

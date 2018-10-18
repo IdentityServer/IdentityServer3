@@ -1,11 +1,3 @@
-- [ ] I read and understood how to enable [logging](https://identityserver.github.io/Documentation/docsv2/configuration/logging.html)
-
-### Question / Issue
-
-
-
-### Relevant parts of the log file
-
-```
-<log goes here>
-```
+## Note: This repository is no longer in active development or maintenance, other than reported security vulnerabilities.
+## If you have questions and are seeking free support, see [here](http://docs.identityserver.io/en/release/intro/support.html#free-support) for more details.
+## If you require commercial support, see [here](http://docs.identityserver.io/en/release/intro/support.html#commercial-support) for more details.

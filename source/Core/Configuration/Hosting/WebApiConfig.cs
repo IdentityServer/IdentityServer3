@@ -22,10 +22,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
+using System.Web.Http.Routing;
 
 namespace IdentityServer3.Core.Configuration.Hosting
 {
@@ -93,7 +95,13 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 config.Routes.MapHttpRoute(
                     Constants.RouteNames.Oidc.Authorize,
                     Constants.RoutePaths.Oidc.Authorize,
-                    new { controller = "AuthorizeEndpoint", action = "Get" });
+                    new { controller = "AuthorizeEndpoint", action = "Get" },
+                    new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) });
+                config.Routes.MapHttpRoute(
+                    Constants.RouteNames.Oidc.Authorize + "POST",
+                    Constants.RoutePaths.Oidc.Authorize,
+                    new { controller = "AuthorizeEndpoint", action = "Post" },
+                    new { httpMethod = new HttpMethodConstraint(HttpMethod.Post) });
                 config.Routes.MapHttpRoute(
                     Constants.RouteNames.Oidc.Consent,
                     Constants.RoutePaths.Oidc.Consent,
