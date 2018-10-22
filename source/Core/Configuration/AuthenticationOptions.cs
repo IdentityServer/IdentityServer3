@@ -33,6 +33,7 @@ namespace IdentityServer3.Core.Configuration
             EnableLocalLogin = true;
             EnableLoginHint = true;
             EnableSignOutPrompt = true;
+            EnableAutoCallbackForFederatedSignout = true;
             EnablePostSignOutAutoRedirect = false;
             PostSignOutAutoRedirectDelay = 0;
             RequireAuthenticatedUserForSignOutMessage = false;
@@ -83,7 +84,7 @@ namespace IdentityServer3.Core.Configuration
         /// <c>true</c> if sign-out prompt is required; otherwise, <c>false</c>.
         /// </value>
         public bool RequireSignOutPrompt { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether IdentityServer will show a confirmation page for sign-out.
         /// When a client initiates a sign-out, by default IdentityServer will ask the user for confirmation. This is a mitigation technique against "logout spam".
