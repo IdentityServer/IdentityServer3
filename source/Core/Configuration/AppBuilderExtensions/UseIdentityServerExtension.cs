@@ -102,10 +102,8 @@ namespace Owin
                 options.AuthenticationOptions.IdentityProviders(app, Constants.ExternalAuthenticationType);
             }
 
-            app.ConfigureHttpLogging(options.LoggingOptions);
-
             SignatureConversions.AddConversions(app);
-            
+
             var httpConfig = WebApiConfig.Configure(options, container);
             app.UseAutofacWebApi(httpConfig);
             app.UseWebApi(httpConfig);
@@ -116,14 +114,14 @@ namespace Owin
                 // TODO -- perhaps use AsyncHelper instead?
                 DoStartupDiagnosticsAsync(options, eventSvc).Wait();
             }
-            
+
             return app;
         }
 
         private static async Task DoStartupDiagnosticsAsync(IdentityServerOptions options, IEventService eventSvc)
         {
             var cert = options.SigningCertificate;
-            
+
             if (cert == null)
             {
                 Logger.Warn("No signing certificate configured.");
