@@ -38,14 +38,16 @@ namespace IdentityServer3.Core.Validation
                 return Task.FromResult(new TokenRevocationRequestValidationResult
                 {
                     IsError = true,
-                    Error = Constants.TokenErrors.InvalidRequest
+                    Error = Constants.TokenErrors.InvalidRequest,
+                    Client = client
                 });
             }
 
             var result = new TokenRevocationRequestValidationResult
             {
                 IsError = false,
-                Token = token
+                Token = token, 
+                Client = client
             };
 
 
