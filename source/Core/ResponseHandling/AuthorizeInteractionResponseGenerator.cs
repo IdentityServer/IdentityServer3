@@ -56,7 +56,7 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             // let the login page know the client requesting authorization
             _signIn.ClientId = request.ClientId;
-            
+
             // pass through display mode to signin service
             if (request.DisplayMode.IsPresent())
             {
@@ -77,7 +77,7 @@ namespace IdentityServer3.Core.ResponseHandling
 
             // process acr values
             var acrValues = request.AuthenticationContextReferenceClasses.Distinct().ToList();
-            
+
             // look for well-known acr value -- idp
             var idp = acrValues.FirstOrDefault(x => x.StartsWith(Constants.KnownAcrValues.HomeRealm));
             if (idp.IsPresent())
@@ -117,7 +117,7 @@ namespace IdentityServer3.Core.ResponseHandling
             // unauthenticated user
             var isAuthenticated = user.Identity.IsAuthenticated;
             if (!isAuthenticated) Logger.Info("User is not authenticated. Redirecting to login.");
-            
+
             // user de-activated
             bool isActive = false;
 
@@ -125,8 +125,8 @@ namespace IdentityServer3.Core.ResponseHandling
             {
                 var isActiveCtx = new IsActiveContext(user, request.Client);
                 await _users.IsActiveAsync(isActiveCtx);
-                
-                isActive = isActiveCtx.IsActive; 
+
+                isActive = isActiveCtx.IsActive;
                 if (!isActive) Logger.Info("User is not active. Redirecting to login.");
             }
 
@@ -194,27 +194,12 @@ namespace IdentityServer3.Core.ResponseHandling
 
         public Task<LoginInteractionResponse> ProcessClientLoginAsync(ValidatedAuthorizeRequest request)
         {
-            // check idp restrictions
             var currentIdp = request.Subject.GetIdentityProvider();
-            if (request.Client.IdentityProviderRestrictions != null && request.Client.IdentityProviderRestrictions.Any())
-            {
-                if (!request.Client.IdentityProviderRestrictions.Contains(currentIdp))
-                {
-                    var response = new LoginInteractionResponse
-                    {
-                        SignInMessage = _signIn
-                    };
-
-                    Logger.WarnFormat("User is logged in with idp: {0}, but idp not in client restriction list.", currentIdp); 
-                    
-                    return Task.FromResult(response);
-                }
-            }
 
             // check if idp is local and local logins are not allowed
             if (currentIdp == Constants.BuiltInIdentityProvider)
             {
-                if (_options.AuthenticationOptions.EnableLocalLogin == false || 
+                if (_options.AuthenticationOptions.EnableLocalLogin == false ||
                     request.Client.EnableLocalLogin == false)
                 {
                     var response = new LoginInteractionResponse
@@ -223,8 +208,26 @@ namespace IdentityServer3.Core.ResponseHandling
                     };
 
                     Logger.Warn("User is logged in with local idp, but local logins not enabled.");
-                    
+
                     return Task.FromResult(response);
+                }
+            }
+            else
+            {
+                // check idp restrictions (built in idp is excluded from these restrictions)
+                if (request.Client.IdentityProviderRestrictions != null && request.Client.IdentityProviderRestrictions.Any())
+                {
+                    if (!request.Client.IdentityProviderRestrictions.Contains(currentIdp))
+                    {
+                        var response = new LoginInteractionResponse
+                        {
+                            SignInMessage = _signIn
+                        };
+
+                        Logger.WarnFormat("User is logged in with idp: {0}, but idp not in client restriction list.", currentIdp);
+
+                        return Task.FromResult(response);
+                    }
                 }
             }
 
@@ -235,7 +238,7 @@ namespace IdentityServer3.Core.ResponseHandling
         {
             if (request == null) throw new ArgumentNullException("request");
 
-            if (request.PromptMode != null && 
+            if (request.PromptMode != null &&
                 request.PromptMode != Constants.PromptModes.None &&
                 request.PromptMode != Constants.PromptModes.Consent)
             {
@@ -280,11 +283,12 @@ namespace IdentityServer3.Core.ResponseHandling
                     {
                         // no need to show consent screen again
                         // build access denied error to return to client
-                        response.Error = new AuthorizeError { 
+                        response.Error = new AuthorizeError
+                        {
                             ErrorType = ErrorTypes.Client,
                             Error = Constants.AuthorizeErrors.AccessDenied,
                             ResponseMode = request.ResponseMode,
-                            ErrorUri = request.RedirectUri, 
+                            ErrorUri = request.RedirectUri,
                             State = request.State
                         };
                     }
@@ -309,12 +313,12 @@ namespace IdentityServer3.Core.ResponseHandling
                                 // remember what user actually selected
                                 scopes = request.ValidatedScopes.GrantedScopes.Select(x => x.Name);
                             }
-                            
+
                             await _consent.UpdateConsentAsync(request.Client, request.Subject, scopes);
                         }
                     }
                 }
-                
+
                 return response;
             }
 
