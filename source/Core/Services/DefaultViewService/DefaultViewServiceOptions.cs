@@ -45,7 +45,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <value>
         /// The stylesheets.
         /// </value>
-        public IList<string> Stylesheets { get; set; }
+        public IEnumerable<string> Stylesheets { get; set; }
         
         /// <summary>
         /// Scripts to be rendered into the layout.
@@ -53,7 +53,7 @@ namespace IdentityServer3.Core.Services.Default
         /// <value>
         /// The scripts.
         /// </value>
-        public IList<string> Scripts { get; set; }
+        public IEnumerable<string> Scripts { get; set; }
 
         /// <summary>
         /// Gets or sets the registration for the view loader.
