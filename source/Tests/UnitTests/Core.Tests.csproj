@@ -131,6 +131,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
@@ -195,6 +196,10 @@
     <Compile Include="Endpoints\Connect\PoP\PoPAsymmetricTestsCode.cs" />
     <Compile Include="Endpoints\Connect\PoP\RsaPublicKeyJwk.cs" />
     <Compile Include="Endpoints\Setup\MockUserService.cs" />
+    <Compile Include="ResponseHandling\TokenErrorResultTests.cs" />
+    <Compile Include="ResponseHandling\TokenExtensionsTests.cs" />
+    <Compile Include="ResponseHandling\TokenResponseGeneratorTests_CustomResponseParameters.cs" />
+    <Compile Include="ResponseHandling\TokenResultTests.cs" />
     <Compile Include="Services\Default\DefaultCorsPolicyServiceTests.cs" />
     <Compile Include="Services\Default\DefaultLocalizationServiceTests.cs" />
     <Compile Include="Services\Default\DefaultRefreshTokenServiceTests.cs" />

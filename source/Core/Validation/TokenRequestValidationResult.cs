@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace IdentityServer3.Core.Validation
 {
     /// <summary>
     /// Validation result for token requests
     /// </summary>
     public class TokenRequestValidationResult : ValidationResult
-    { }
+    {
+        public IDictionary<string, object> CustomResponseParamaters { get; set; }
+    }
 }
