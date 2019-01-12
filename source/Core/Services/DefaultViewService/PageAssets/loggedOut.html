@@ -7,5 +7,5 @@
         Click <a ng-href="{{model.redirectUrl}}">here</a> to return to the
         <span ng-bind="model.clientName"></span> application.
     </div>
-    <iframe class="signout" ng-repeat="url in model.iFrameUrls" ng-src="{{url}}"></iframe>
+    <iframe class="signout" ng-repeat="url in model.iFrameUrls" ng-src="{{url}}" iframe-onload></iframe>
 </div>

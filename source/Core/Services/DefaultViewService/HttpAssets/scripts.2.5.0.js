@@ -321,18 +321,33 @@ window.identityServer = (function () {
                 }
             };
         });
+
+        app.directive('iframeOnload', function () {
+            var model = identityServer.getModel();
+            return {
+                link: function (scope, elem, attrs) {
+                    elem.on('load', function (event) {
+                        if (!model.autoRedirect || !model.redirectUrl) return;
+                        if ($("iframe.signout").length > 1) {
+                            event.target.remove();
+                        } else {
+                            window.location = model.redirectUrl;
+                        };
+                    });
+                }
+            };
+        });
     })();
 
     (function () {
         var model = identityServer.getModel();
         angular.module("app").constant("Model", model);
         if (model.autoRedirect && model.redirectUrl) {
-            if (model.autoRedirectDelay < 0) {
-                model.autoRedirectDelay = 0;
+            if (model.autoRedirectDelay > 0) {
+                window.setTimeout(function () {
+                    window.location = model.redirectUrl;
+                }, model.autoRedirectDelay * 1000);
             }
-            window.setTimeout(function () {
-                window.location = model.redirectUrl;
-            }, model.autoRedirectDelay * 1000);
         }
     })();
 
