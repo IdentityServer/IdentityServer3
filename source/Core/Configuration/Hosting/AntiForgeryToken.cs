@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace IdentityServer3.Core.Configuration.Hosting
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public class AntiForgeryToken
+    internal class AntiForgeryToken
     {
         private readonly static ILog Logger = LogProvider.GetCurrentClassLogger();
 
