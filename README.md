@@ -1,10 +1,10 @@
 # IdentityServer3 #
 
-## Note: This repository is no longer in active development or maintenance, other than reported security vulnerabilities.
-## We highly encourage you to consider [IdentityServer4](https://github.com/IdentityServer/IdentityServer4/) instead.
-## If you have questions and are seeking free support, see [here](http://docs.identityserver.io/en/release/intro/support.html#free-support) for more details.
-## If you require commercial support, see [here](http://docs.identityserver.io/en/release/intro/support.html#commercial-support) for more details.
+## Note: This repository is no longer in active development or maintenance.
 
+## We highly encourage you to upgrade to [Duende IdentityServer](https://duendesoftware.com) instead.
+
+## This branch contains the necessary updates for SameSite cookie and some other misc security updates. You have to build this on your own, we do not support this.
 
 Dev build: [![Build status](https://ci.appveyor.com/api/projects/status/rtaj3nb7c60xg7cb/branch/dev?svg=true)](https://ci.appveyor.com/project/leastprivilege/thinktecture/branch/dev)
 [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/IdentityServer/IdentityServer3?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
