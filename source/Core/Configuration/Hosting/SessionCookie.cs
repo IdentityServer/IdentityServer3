@@ -38,9 +38,10 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         public virtual void IssueSessionId(bool? persistent, DateTimeOffset? expires = null)
         {
-            context.Response.Cookies.Append(
+            context.Response.AppendCookie(
                 GetCookieName(), CryptoRandom.CreateUniqueId(), 
-                CreateCookieOptions(persistent, expires));
+                CreateCookieOptions(persistent, expires), 
+                identityServerOptions);
         }
 
         private Microsoft.Owin.CookieOptions CreateCookieOptions(bool? persistent, DateTimeOffset? expires = null)
@@ -92,7 +93,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             options.Expires = DateTimeHelper.UtcNow.AddYears(-1);
             
             var name = GetCookieName();
-            context.Response.Cookies.Append(name, ".", options);
+            context.Response.AppendCookie(name, ".", options, identityServerOptions);
         }
     }
 }

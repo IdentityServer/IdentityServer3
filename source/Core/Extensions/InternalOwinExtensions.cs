@@ -25,6 +25,7 @@ using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -35,6 +36,41 @@ namespace IdentityServer3.Core.Extensions
 {
     internal static class InternalOwinExtensions
     {
+        public static void AppendCookie(this IOwinResponse response, string key, string value, Microsoft.Owin.CookieOptions options, IdentityServerOptions isOptions)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+
+            bool domainHasValue = !string.IsNullOrEmpty(options.Domain);
+            bool pathHasValue = !string.IsNullOrEmpty(options.Path);
+            bool expiresHasValue = options.Expires.HasValue;
+
+            var sameSite = "; SameSite=None";
+            if (isOptions.AuthenticationOptions.CookieOptions.SuppressSameSiteNoneCookiesCallback != null &&
+                isOptions.AuthenticationOptions.CookieOptions.SuppressSameSiteNoneCookiesCallback.Invoke(response.Environment))
+            {
+                sameSite = null;
+            }
+
+            string setCookieValue = string.Concat(
+                Uri.EscapeDataString(key),
+                "=",
+                Uri.EscapeDataString(value ?? string.Empty),
+                !domainHasValue ? null : "; domain=",
+                !domainHasValue ? null : options.Domain,
+                !pathHasValue ? null : "; path=",
+                !pathHasValue ? null : options.Path,
+                !expiresHasValue ? null : "; expires=",
+                !expiresHasValue ? null : options.Expires.Value.ToString("ddd, dd-MMM-yyyy HH:mm:ss \\G\\M\\T", CultureInfo.InvariantCulture),
+                !options.Secure ? null : "; secure",
+                !options.HttpOnly ? null : "; HttpOnly",
+                sameSite);
+
+            response.Headers.AppendValues("Set-Cookie", setCookieValue);
+        }
+        
         public static string GetRequestId(this IOwinContext context)
         {
             if (context == null) throw new ArgumentNullException("context");

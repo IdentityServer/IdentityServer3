@@ -122,12 +122,12 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 context.Request.Scheme == Uri.UriSchemeHttps;
 
             var path = context.Request.Environment.GetIdentityServerBasePath().CleanUrlPath();
-            context.Response.Cookies.Append(cookieName, token, new Microsoft.Owin.CookieOptions
+            context.Response.AppendCookie(cookieName, token, new Microsoft.Owin.CookieOptions
             {
                 HttpOnly = true,
                 Secure = secure,
                 Path = path
-            });
+            }, options);
 
             return bytes;
         }

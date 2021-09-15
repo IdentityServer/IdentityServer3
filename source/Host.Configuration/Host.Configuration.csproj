@@ -103,6 +103,7 @@
     <Compile Include="FactoryExtensions.cs" />
     <Compile Include="IdentityServerExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SameSiteOpenIdConnectAuthenticationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config\idsrv3test.pfx" />

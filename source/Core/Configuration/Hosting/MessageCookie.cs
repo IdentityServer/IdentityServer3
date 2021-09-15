@@ -145,7 +145,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
             var name = GetCookieName(id);
             var data = Protect(message);
 
-            ctx.Response.Cookies.Append(
+            ctx.Response.AppendCookie(
                 name,
                 data,
                 new Microsoft.Owin.CookieOptions
@@ -153,7 +153,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     HttpOnly = true,
                     Secure = Secure,
                     Path = CookiePath
-                });
+                }, options);
             return id;
         }
 
@@ -191,7 +191,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
 
         void ClearByCookieName(string name)
         {
-            ctx.Response.Cookies.Append(
+            ctx.Response.AppendCookie(
                 name,
                 ".",
                 new Microsoft.Owin.CookieOptions
@@ -200,7 +200,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     HttpOnly = true,
                     Secure = Secure,
                     Path = CookiePath
-                });
+                }, options);
         }
 
         private long GetCookieRank(string name)
