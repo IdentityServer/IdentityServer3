@@ -108,7 +108,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                     cookieOptions.Expires = DateTimeHelper.UtcNow.AddYears(-1);
                 }
 
-                ctx.Response.Cookies.Append(cookieName, username, cookieOptions);
+                ctx.Response.AppendCookie(cookieName, username, cookieOptions, options);
             }
         }
     }

@@ -134,6 +134,7 @@
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureIdentityServerIssuerExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureRequestIdExtension.cs" />
     <Compile Include="Configuration\AppBuilderExtensions\ConfigureHttpLoggingExtension.cs" />
+    <Compile Include="Configuration\AppBuilderExtensions\SameSiteChunkingCookieManager.cs" />
     <Compile Include="Configuration\AuthenticationSessionStoreWrapper.cs" />
     <Compile Include="Configuration\AuthenticationTicketModel.cs" />
     <Compile Include="Configuration\CookieSecureMode.cs" />
@@ -510,6 +511,13 @@
     </None>
     <None Include="app.config" />
     <None Include="bundleconfig.json" />
+    <None Include="bundleconfig.json.bindings">
+      <DependentUpon>bundleconfig.json</DependentUpon>
+    </None>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Resources\T4resx.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>T4resx.cs</LastGenOutput>
@@ -569,6 +577,22 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.3.20.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.7.9.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.3.20.min.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\angular\angular.1.7.9.min.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.12.4.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\libs\jquery\jquery-1.12.4.min.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.5.0.es5.js">
+      <DependentUpon>scripts.2.5.0.js</DependentUpon>
+    </Content>
+    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.5.0.es5.min.js">
+      <DependentUpon>scripts.2.5.0.es5.js</DependentUpon>
+    </Content>
+    <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\scripts.2.7.2.js" />
+    <Content Include="Services\DefaultViewService\HttpAssets\scripts.2.7.2.min.js">
+      <DependentUpon>scripts.2.7.2.js</DependentUpon>
+    </Content>
     <Content Include="Services\DefaultViewService\HttpAssets\styles.css" />
     <EmbeddedResource Include="Services\DefaultViewService\HttpAssets\styles.min.css">
       <DependentUpon>styles.css</DependentUpon>

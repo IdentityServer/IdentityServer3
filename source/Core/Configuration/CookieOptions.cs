@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+using Microsoft.Owin.Infrastructure;
 using System;
+using System.Collections.Generic;
 
 namespace IdentityServer3.Core.Configuration
 {
@@ -107,7 +109,9 @@ namespace IdentityServer3.Core.Configuration
         /// </summary>
         public IAuthenticationSessionStoreProvider SessionStoreProvider { get; set; }
 
-
-
+        /// <summary>
+        /// Callback to indicate if cookie should comit the "SameSite=none" attribute.
+        /// </summary>
+        public Func<IDictionary<string, object>, bool> SuppressSameSiteNoneCookiesCallback { get; set; }
     }
 }

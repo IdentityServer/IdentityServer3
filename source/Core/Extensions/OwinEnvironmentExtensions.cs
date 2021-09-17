@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityServer3.Core.Extensions;
 
 namespace IdentityServer3.Core.Extensions
 {
@@ -35,6 +36,44 @@ namespace IdentityServer3.Core.Extensions
     /// </summary>
     public static class OwinEnvironmentExtensions
     {
+        /// <summary>
+        /// Add the cookie.
+        /// </summary>
+        public static void AppendCookie(this IDictionary<string, object> env, string key, string value)
+        {
+            var ctx = new OwinContext(env);
+            var isOptions = ctx.ResolveDependency<IdentityServerOptions>();
+            
+            var secure =
+                isOptions.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always ||
+                ctx.Request.Scheme == Uri.UriSchemeHttps;
+
+            ctx.Response.AppendCookie(key, value, new Microsoft.Owin.CookieOptions { 
+                HttpOnly = true,
+                Secure = secure,
+            }, isOptions);
+        }
+
+        /// <summary>
+        /// Deletes the cookie.
+        /// </summary>
+        public static void DeleteCookie(this IDictionary<string, object> env, string key)
+        {
+            var ctx = new OwinContext(env);
+            var isOptions = ctx.ResolveDependency<IdentityServerOptions>();
+
+            var secure =
+                isOptions.AuthenticationOptions.CookieOptions.SecureMode == CookieSecureMode.Always ||
+                ctx.Request.Scheme == Uri.UriSchemeHttps;
+
+            ctx.Response.AppendCookie(key, ".", new Microsoft.Owin.CookieOptions
+            {
+                HttpOnly = true,
+                Secure = ctx.Request.IsSecure,
+                Expires = DateTime.UtcNow.AddYears(-1)
+            }, isOptions);
+        }
+
         /// <summary>
         /// Gets the public host name for IdentityServer.
         /// </summary>

@@ -141,7 +141,7 @@ namespace IdentityServer3.Core.Configuration.Hosting
                 Expires = expires
             };
 
-            this.ctx.Response.Cookies.Append(CookieName, value, opts);
+            this.ctx.Response.AppendCookie(CookieName, value, opts, options);
         }
 
         string GetCookie()
